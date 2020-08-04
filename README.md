@@ -2,6 +2,12 @@
   <img src="https://dspurl.github.io/dsshop_logo.jpg" width="150">
 </p>
 <p align="center">
+  <a href="https://github.com/vuejs/vue">
+    <img src="https://img.shields.io/badge/vue-2.5.17-brightgreen.svg" alt="vue">
+  </a>
+  <a href="https://github.com/ElemeFE/element">
+    <img src="https://img.shields.io/badge/element--ui-2.9.1-brightgreen.svg" alt="element-ui">
+  </a>
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
 </p>
 <h3 align="center">DSHOP电商商城</h3>
