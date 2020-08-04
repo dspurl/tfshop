@@ -40,9 +40,19 @@ git clone https://github.com/dspurl/dsshop.git
 # 搭建json API
 cd ./api
 composer install
-## 配置数据库
+#修改.env.dev为.env，添加数据库信息
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=表名
+DB_USERNAME=用户名
+DB_PASSWORD=密码
+
 php artisan migrate
+# 加载demo数据(demo和pure二选一)
 php artisan generate:demo
+# 加载纯净数据
+# php artisan generate:pure
 # 搭建后台
 cd ../admin
 npm install
