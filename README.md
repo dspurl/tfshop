@@ -105,7 +105,7 @@ npm install
 - **事务支持** 项目支持事务处理，并为必要的业务流程增加了事务的处理机制
 - **Redis支持** 项目部分数据采用Redis缓存和Redisis锁机制
 
-基于以下扩展或组件
+基于以下扩展或组件(不分排名，这里只罗列部分名称，具体请查看package和composer)
 ------------
 - [laravel](https://learnku.com/docs/laravel/7.x "laravel")
 - [easywechat](https://www.easywechat.com/docs/4.1/mini-program/app_code "easywechat微信公众号")
@@ -120,8 +120,8 @@ npm install
 
 加入我们
 ------------
-- 欢迎laravel或vue爱好者加入，一个人力量有限。
-- 有问题可以直接issue或扫码进微信群。
+- 欢迎爱好者加入，一个人力量有限。
+- 有问题可以直接issue或扫码进微信群咨询。
 - 扫码进群
 <p align="center">
   <img src="https://dspurl.github.io/12.png" width="150">
