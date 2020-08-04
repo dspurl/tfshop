@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["Iryo"],{Iryo:function(e,t,n){"use strict";n.r(t);var a={name:"VueTemplateUpdate",components:{Detail:n("FTY1").a}},i=n("KHd+"),l=Object(i.a)(a,function(){var e=this.$createElement;return(this._self._c||e)("detail",{attrs:{"is-edit":!0}})},[],!1,null,null,null);l.options.__file="edit.vue";t.default=l.exports}}]);

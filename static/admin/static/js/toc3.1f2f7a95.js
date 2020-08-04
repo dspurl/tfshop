@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["toc3"],{toc3:function(e,t,n){"use strict";n.r(t);var a={name:"CreateElementsList",components:{Detail:n("qaLa").a}},s=n("KHd+"),i=Object(s.a)(a,function(){var e=this.$createElement;return(this._self._c||e)("detail",{attrs:{"is-edit":!1}})},[],!1,null,null,null);i.options.__file="create.vue";t.default=i.exports}}]);

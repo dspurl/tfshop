@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["AMKH"],{AMKH:function(t,e,n){"use strict";n.r(e);var i={name:"EditElementsList",components:{Detail:n("qaLa").a}},s=n("KHd+"),a=Object(s.a)(i,function(){var t=this.$createElement;return(this._self._c||t)("detail",{attrs:{"is-edit":!0}})},[],!1,null,null,null);a.options.__file="edit.vue";e.default=a.exports}}]);

@@ -1,0 +1,7 @@
+[ignore]
+.*/www/.*
+[include]
+[libs]
+./flow-typed
+[options]
+[lints]
