@@ -2,6 +2,9 @@
   <img src="https://dspurl.github.io/dsshop_logo.jpg" width="150">
 </p>
 <p align="center">
+  <a href="https://github.com/laravel/framework">
+    <img src="https://img.shields.io/badge/laravel-7.22.4-brightgreen.svg" alt="laravel">
+  </a>
   <a href="https://github.com/vuejs/vue">
     <img src="https://img.shields.io/badge/vue-2.5.17-brightgreen.svg" alt="vue">
   </a>
