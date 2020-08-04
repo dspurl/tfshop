@@ -40,6 +40,8 @@ git clone https://github.com/dspurl/dsshop.git
 # 搭建json API
 cd ./api
 composer install
+php artisan key:generate
+php artisan passport:keys
 #修改.env.dev为.env，添加数据库信息
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -53,14 +55,30 @@ php artisan migrate
 php artisan generate:demo
 # 加载纯净数据
 # php artisan generate:pure
+php artisan storage:link
+# 创建密码授权客户端
+php artisan passport:client --password
+#修改.env.dev为.env，添加OAuth认证信息
+PASSPORT_CLIENT_ID="生成的Client ID"
+PASSPORT_CLIENT_SECRET="生成的 Client secret"
+
 # 搭建后台
 cd ../admin
-npm install
-## 配置json API地址
+#不要在linux下执行，会报错，推荐windows
+npm install 
+#admin/config/dev.env.js修改自己的api地址
+BASE_API: '"http://dsshop.com/api/v1/admin/"',
+
 npm run dev
-# 搭建H5/小程序
-# HBuilder X导入trade\Dsshop
-## 配置json API地址
+
+# 搭建H5
+cd ../trade/Dsshop
+npm install 
+# HBuilder X导入trade/Dsshop目录
+#trade/Dsshop/App.vue修改API地址
+#32  host = "http://dsshop.com/api/v1/app/"
+#40  secret: 'API的.env中的APP_KEY'
+
 ```
 文档
 ------------

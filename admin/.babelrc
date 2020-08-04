@@ -8,7 +8,7 @@
     }],
     "stage-2"
   ],
-  "plugins": ["transform-vue-jsx", "transform-runtime", "transform-decorators-legacy"],
+  "plugins": ["transform-vue-jsx", "transform-runtime", "transform-decorators-legacy", "transform-es2015-modules-commonjs"],
   "env": {
     "development":{
       "plugins": ["dynamic-import-node"]
