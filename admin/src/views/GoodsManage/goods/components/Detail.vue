@@ -131,7 +131,6 @@
         </el-select>
       </el-form-item>
       <sku ref="SkuDemo"/>
-      <span @click="getSkuData">获取数据</span>
       <h3>详情</h3>
       <el-form-item label="详情" prop="details">
         <tinymce
