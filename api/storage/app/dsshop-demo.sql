@@ -589,8 +589,7 @@ INSERT INTO `resources` (`id`, `type`, `depict`, `img`, `image_id`, `image_type`
 (231, 1, 'goods_18_zimg', 'http://dsshop.dswjcms.com/storage/image/good/ag2Lo1596108703.jpg', 18, 'App\\Models\\v1\\Good', '2020-07-30 11:33:33', '2020-07-30 11:33:33'),
 (232, 1, 'goods_19_zimg', 'http://dsshop.dswjcms.com/storage/image/good/nTr7x1596108875.jpg', 19, 'App\\Models\\v1\\Good', '2020-07-30 11:36:03', '2020-07-30 11:36:03'),
 (233, 1, 'goods_20_zimg', 'http://dsshop.dswjcms.com/storage/image/good/TzB6E1596108985.jpg', 20, 'App\\Models\\v1\\Good', '2020-07-30 11:38:38', '2020-07-30 11:38:38'),
-(234, 1, 'goods_21_zimg', 'http://dsshop.dswjcms.com/storage/image/good/kc2GW1596109301.jpg', 21, 'App\\Models\\v1\\Good', '2020-07-30 11:42:54', '2020-07-30 11:42:54'),
-(235, 1, 'goods_22_zimg', 'http://dsshop.dswjcms.com/storage/image/good/v64hr1596330171.jpg', 22, 'App\\Models\\v1\\Good', '2020-08-02 01:05:16', '2020-08-02 01:05:16');
+(234, 1, 'goods_21_zimg', 'http://dsshop.dswjcms.com/storage/image/good/kc2GW1596109301.jpg', 21, 'App\\Models\\v1\\Good', '2020-07-30 11:42:54', '2020-07-30 11:42:54');
 INSERT INTO `specifications` (`id`, `name`, `type`, `is_search`, `location`, `value`, `specification_group_id`, `label`, `sort`, `created_at`, `updated_at`) VALUES
 (1, '棉含量', 1, 0, 2, NULL, 1, '棉含量', 5, '2020-04-24 09:57:48', '2020-07-13 16:30:27'),
 (2, '材质', 2, 0, 2, '棉\n麻', 1, '材质', 5, '2020-04-24 09:59:00', '2020-07-13 16:30:07'),
