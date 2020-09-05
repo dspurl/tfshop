@@ -18,7 +18,7 @@
 
 说明
 ------------
-<p>如果因网络原因无法下载，可通过<a hrfe="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
+<p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
 
 介绍
 ------------
