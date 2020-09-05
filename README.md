@@ -16,6 +16,10 @@
 <h3 align="center">DSHOP电商商城</h3>
 <p align="center">前后端分离架构，VUE2.0+Laravel7，免费开源可商用。</p>
 
+说明
+------------
+<p>不要直接下载master代码，请在releases中下载非Pre-release的最新版本</p>
+
 介绍
 ------------
 Dsshop是一个商城解决方案，它采用前后端分离，后端基于laravel,前端基于Vue，我们不生成代码，我们只是代码的搬运工，60%的复制粘贴，30%的思考，10%的代码量。
