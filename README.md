@@ -91,8 +91,12 @@ npm install
 ```
 文档
 ------------
-<a href="https://dspurl.github.io/dsshop/">https://dspurl.github.io/dsshop/</a>
-<a href="https://dswjcms_purl.gitee.io/dsshop/">https://dswjcms_purl.gitee.io/dsshop/</a>
+<p><a href="https://dspurl.github.io/dsshop/">https://dspurl.github.io/dsshop/</a></p>
+<p><a href="https://dswjcms_purl.gitee.io/dsshop/">https://dswjcms_purl.gitee.io/dsshop/</a></p>
+
+插件
+------------
+<p><a href="https://github.com/dspurl/plugin">插件列表</a></p>
  
 功能介绍
 ------------
