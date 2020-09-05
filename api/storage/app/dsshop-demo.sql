@@ -92,7 +92,12 @@ INSERT INTO `auth_group_auth_rules` (`auth_group_id`, `auth_rule_id`) VALUES
 (1, 149),
 (1, 150),
 (1, 151),
-(1, 152);
+(1, 152),
+(1, 156),
+(1, 157),
+(1, 158),
+(1, 159),
+(1, 160);
 INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `sort`) VALUES
 (2, 'User', '', 'user', '用户管理', 0, 1, 1),
 (6, 'AdministratorList', NULL, '', '管理员管理', 2, 1, 0),
@@ -176,7 +181,11 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (151, 'StatisticsPay', '', '', '交易分析', 149, 1, 0),
 (152, 'StatisticsAgeAndSex', '', '', '用户画像', 149, 1, 0),
 (154, 'CreateUser', '', '', '添加用户', 10, 0, 0),
-(155, 'UpdataUser', '', '', '修改用户', 10, 0, 0);
+(155, 'UpdataUser', '', '', '修改用户', 10, 0, 0),
+(156, 'PlugIn', '', 'plug-in', '插件', 0, 1, 1),
+(157, 'PlugInList', '', '', '插件列表', 156, 1, 0),
+(158, 'PlugInUpdate', '', '', '更新插件', 156, 0, 0),
+(159, 'PlugInInstall', '', '', '安装插件', 156, 0, 0);
 INSERT INTO `banners` (`id`, `type`, `name`, `url`, `sort`, `state`, `created_at`, `updated_at`) VALUES
 (4, 0, '测试', '/pages/product/product?id=21', 5, 0, '2020-07-18 20:07:15', '2020-07-30 11:49:17'),
 (5, 0, '2', NULL, 5, 0, '2020-07-18 20:10:04', '2020-07-18 20:10:04'),

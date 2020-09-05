@@ -45,7 +45,12 @@ export const componentsMap = {
   // 统计
   StatisticsVisit: () => import('@/views/statistics/visit'),
   StatisticsAgeAndSex: () => import('@/views/statistics/user'),
-  StatisticsPay: () => import('@/views/statistics/pay')
+  StatisticsPay: () => import('@/views/statistics/pay'),
+  // 插件列表
+  // 插件
+  PlugIn: () => import('@/views/Plugin/index'),
+  PlugInList: () => import('@/views/Plugin/list')
+
 }
 
 const permission = {

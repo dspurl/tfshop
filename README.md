@@ -92,6 +92,7 @@ npm install
 文档
 ------------
 <a href="https://dspurl.github.io/dsshop/">https://dspurl.github.io/dsshop/</a>
+<a href="https://dswjcms_purl.gitee.io/dsshop/">https://dswjcms_purl.gitee.io/dsshop/</a>
  
 功能介绍
 ------------

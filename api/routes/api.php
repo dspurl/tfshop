@@ -141,6 +141,17 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('statistic/source', 'StatisticsController@source')->middleware(['permissions:StatisticsVisit']);    //来源分析
         Route::get('statistic/age_and_sex', 'StatisticsController@ageAndSex')->middleware(['permissions:StatisticsAgeAndSex']);    //来源分析
         Route::get('statistic/pay', 'StatisticsController@pay')->middleware(['permissions:StatisticsPay']);    //交易分析
+
+        //插件管理
+        Route::get('plugin', 'PluginController@index')->middleware(['permissions:PlugInList']);    //插件列表
+        Route::post('plugin/{photo}', 'PluginController@store')->middleware(['permissions:PlugInUpdate']);    //更新插件
+        Route::put('plugin/{photo}', 'PluginController@update')->middleware(['permissions:PlugInInstall']);    //安装插件
+
+
+    });
+    // 插件后台
+    Route::prefix('admin')->namespace('Plugin')->middleware(['auth:api'])->group(function () {
+        //前台插件列表
     });
     //app
     Route::prefix('app')->namespace('Element')->group(function () {
@@ -198,5 +209,9 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('collect/{photo}', 'CollectController@show');    //详情
         Route::post('collect', 'CollectController@store');    //添加保存
         Route::post('collectDelete/{photo}', 'CollectController@destroy');    //删除
+    });
+    // 插件前台
+    Route::prefix('app')->namespace('Plugin')->middleware(['appverify','auth:web'])->group(function () {
+        //APP插件列表
     });
 });

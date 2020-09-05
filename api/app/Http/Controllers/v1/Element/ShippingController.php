@@ -34,7 +34,7 @@ class ShippingController extends Controller
 
     public function one(Request $request)
     {
-        $return['shipping'] = Shipping::where('defaults',Shipping::SHIPPING_DEFAULTS_YES)->first();
+        $return['shipping'] = Shipping::where('defaults',Shipping::SHIPPING_DEFAULTS_YES)->where('user_id',auth('web')->user()->id)->first();
         if($return['shipping']){
             if(count(explode("省",$return['shipping']['address']))>1){
                 $name=explode("省",$return['shipping']['address'])[0].'省';
@@ -44,47 +44,46 @@ class ShippingController extends Controller
                 $name=explode("市",$return['shipping']['address'])[0].'市';
             }
             $provinces=config('provinces');
-
             foreach ($provinces as $p){
                 if($p['label'] == $name){
                     $value=$p['value'];
                 }
             }
-        }
-        $carriage=0;
-        $list=[];
-        foreach($request->all() as $all){
-            if(array_key_exists($all['freight_id'],$list)){
-                $list[$all['freight_id']]+= $all['number'];
-            }else{
-                $list[$all['freight_id']]=$all['number'];
-            }
-        }
-        foreach($list as $index=>$l){
-            Freight::$withoutAppends = false;
-            FreightWay::$withoutAppends = false;
-            $Freight=Freight::with(['FreightWay'])->find($index);
-            if(!in_array($value,$Freight['pinkage'])){ //不包邮
-                foreach ($Freight['FreightWay'] as $way){
-                    if(in_array($value,$way->location)) { //获取不包邮实际运费
-                        if($l== 1){ //只有一件
-                            $carriage+=$way->first_cost;
-                        } else {
-                            if($l<=$way->first_piece){    //未超过首件
-                                $carriage+=$way->first_cost;
-                            } else {
-                                $number=ceil(($l-$way->first_piece)/$way->add_piece);
-                                $carriage+=$way->first_cost+$way->add_cost*$number;
-                            }
-
-                        }
-                        break;
-                    }
-
+            $carriage=0;
+            $list=[];
+            foreach($request->all() as $all){
+                if(array_key_exists($all['freight_id'],$list)){
+                    $list[$all['freight_id']]+= $all['number'];
+                }else{
+                    $list[$all['freight_id']]=$all['number'];
                 }
             }
+            foreach($list as $index=>$l){
+                Freight::$withoutAppends = false;
+                FreightWay::$withoutAppends = false;
+                $Freight=Freight::with(['FreightWay'])->find($index);
+                if(!in_array($value,$Freight['pinkage'])){ //不包邮
+                    foreach ($Freight['FreightWay'] as $way){
+                        if(in_array($value,$way->location)) { //获取不包邮实际运费
+                            if($l== 1){ //只有一件
+                                $carriage+=$way->first_cost;
+                            } else {
+                                if($l<=$way->first_piece){    //未超过首件
+                                    $carriage+=$way->first_cost;
+                                } else {
+                                    $number=ceil(($l-$way->first_piece)/$way->add_piece);
+                                    $carriage+=$way->first_cost+$way->add_cost*$number;
+                                }
+
+                            }
+                            break;
+                        }
+
+                    }
+                }
+            }
+            $return['carriage']=$carriage;
         }
-        $return['carriage']=$carriage;
         return resReturn(1,$return);
     }
 

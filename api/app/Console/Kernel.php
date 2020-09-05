@@ -23,9 +23,6 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        if(env('APP_ENV') == 'local'){ //本地每一分钟执行一次
-        }else{
-        }
     }
 
     /**

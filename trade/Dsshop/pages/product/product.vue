@@ -5,7 +5,7 @@
 			<view v-if="video" class="showVideoClose" @click.stop="closeVideo">关闭</view>
 			<swiper indicator-dots circular="true" duration="400" v-if="getList.resources_many" @change="imgCtu">
 				<swiper-item class="swiper-item" v-for="(item, index) in resources_many" :key="index" @click="showVideo">
-					<view v-if="item.type === 'img'" class="image-wrapper" @click="imgList()"><image :src="item.img" lazy-load class="loaded" mode="aspectFill" lazy-load></image></view>
+					<view v-if="item.type === 'img'" class="image-wrapper" @click="imgList()"><image :src="item.img" class="loaded" mode="aspectFill" lazy-load></image></view>
 					<view v-else class="image-wrapper">
 						<image :src="poster" lazy-load class="loaded" mode="aspectFill" lazy-load></image>
 					</view>

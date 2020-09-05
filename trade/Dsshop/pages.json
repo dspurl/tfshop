@@ -211,14 +211,15 @@
 					"bounce": "none"
 				}
 			}
-		}, {
+		}, 
+		{
 			"path": "pages/product/list",
 			"style": {
 				"enablePullDownRefresh": true,
 				"navigationBarTitleText": "商品列表"
 			}
 		}
-		
+		// 插件列表
 	],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
