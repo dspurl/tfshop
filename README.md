@@ -18,7 +18,7 @@
 
 说明
 ------------
-<p>不要直接下载master代码，请在releases中下载非Pre-release的最新版本</p>
+<p>如果因网络原因无法下载，可通过<a hrfe="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
 
 介绍
 ------------
