@@ -2,13 +2,13 @@
   <img src="https://dspurl.github.io/dsshop_logo.jpg" width="150">
 </p>
 <p align="center">
-  <a href="https://github.com/laravel/framework" target="_blank">
+  <a href="https://github.com/laravel/framework">
     <img src="https://img.shields.io/badge/laravel-7.22.4-brightgreen.svg" alt="laravel">
   </a>
-  <a href="https://github.com/vuejs/vue" target="_blank">
+  <a href="https://github.com/vuejs/vue">
     <img src="https://img.shields.io/badge/vue-2.5.17-brightgreen.svg" alt="vue">
   </a>
-  <a href="https://github.com/ElemeFE/element" target="_blank">
+  <a href="https://github.com/ElemeFE/element">
     <img src="https://img.shields.io/badge/element--ui-2.9.1-brightgreen.svg" alt="element-ui">
   </a>
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
@@ -31,7 +31,7 @@ Dsshop是一个商城解决方案，它采用前后端分离，后端基于larav
 
 演示
 ------------
-- 后台演示地址：<a href="http://dsshop.dswjcms.com/admin" target="_blank">http://dsshop.dswjcms.com/admin</a> 用户名：admin 密码: admin
+- 后台演示地址：<a href="http://dsshop.dswjcms.com/admin">http://dsshop.dswjcms.com/admin</a> 用户名：admin 密码: admin
 - h5、小程序演示
 <p align="center">
   <img src="https://dspurl.github.io/gh_e79e7cd855e7_258.jpg">
@@ -95,12 +95,12 @@ npm install
 ```
 文档
 ------------
-<p><a href="https://dspurl.github.io/dsshop/" target="_blank">https://dspurl.github.io/dsshop/</a></p>
-<p><a href="https://dswjcms_purl.gitee.io/dsshop/" target="_blank">https://dswjcms_purl.gitee.io/dsshop/</a></p>
+<p><a href="https://dspurl.github.io/dsshop/">https://dspurl.github.io/dsshop/</a></p>
+<p><a href="https://dswjcms_purl.gitee.io/dsshop/">https://dswjcms_purl.gitee.io/dsshop/</a></p>
 
 插件
 ------------
-<p><a href="https://github.com/dspurl/plugin" target="_blank">插件列表</a></p>
+<p><a href="https://github.com/dspurl/plugin">插件列表</a></p>
  
 功能介绍
 ------------
