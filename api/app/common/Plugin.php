@@ -3,24 +3,22 @@
 namespace App\common;
 
 use App\Code;
-
-/**
- * Created by PhpStorm.
- * User: pang
- * Date: 2020/8/24
- * Time: 21:02
- */
 class Plugin
 {
+    private $pluginPath;
+    private $path;
 
+    function __construct() {
+        $file_path=explode("/",base_path());
+        unset($file_path[count($file_path)-1]);
+        $this->path=implode("/",$file_path);
+        $this->pluginPath=implode("/",$file_path).'/plugin';
+    }
     /**
      * 获取dswjcms.json
      */
     public function getDswjcmsJson(){
-        $file_path=explode("/",base_path());
-        unset($file_path[count($file_path)-1]);
-        $file_path=implode("/",$file_path);
-        $json_dswjcms= file_get_contents($file_path.'/plugin/dswjcms.json');
+        $json_dswjcms= file_get_contents($this->pluginPath.'/dswjcms.json');
         return json_decode($json_dswjcms, true);
     }
 
@@ -28,19 +26,148 @@ class Plugin
      * 获取本地插件列表
      */
     public function getLocalPlugin(){
-        $file_path=explode("/",base_path());
-        unset($file_path[count($file_path)-1]);
-        $file_path=implode("/",$file_path);
-        $data = scandir($file_path.'/plugin');
+        $data = scandir($this->pluginPath);
         $list=[];
+        $json_dswjcms= json_decode(file_get_contents($this->pluginPath.'/dswjcms.json'), true);
         foreach ($data as $value){
             if($value != '.' && $value != '..' && $value != 'dswjcms.json'){
-                $json_dswjcms= file_get_contents($file_path.'/plugin/'.$value.'/dswjcms.json');
-                $list[]=json_decode($json_dswjcms, true);
-
+                $dswjcms= json_decode(file_get_contents($this->pluginPath.'/'.$value.'/dswjcms.json'), true);
+                foreach ($json_dswjcms as $js){
+                    if($js['name']== $dswjcms['abbreviation']){
+                        $dswjcms['locality_versions']=$js['versions'];
+                    }
+                }
+                $list[]=$dswjcms;
             }
         }
         return $list;
+    }
+
+    /**
+     * 安装和更新插件
+     * @param $name //插件简称
+     */
+    public function autoPlugin($name){
+        $routes=$this->pluginPath.'/'.$name.'/routes.json';
+        $dswjcms=$this->pluginPath.'/'.$name.'/dswjcms.json';
+        if(!file_exists($routes)){
+            return resReturn(0,'插件缺少routes.json文件',Code::CODE_WRONG);
+        }
+        if(!file_exists($dswjcms)){
+            return resReturn(0,'插件缺少dswjcms.json文件',Code::CODE_WRONG);
+        }
+        $dswjcms=json_decode(file_get_contents($dswjcms), true);
+        // 文件自动部署
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/admin/api',$this->path.'/admin/src/api');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/admin/views/Coupon',$this->path.'/admin/src/views/tool/Coupon');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/api/config',$this->path.'/api/config');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/api/console',$this->path.'/api/app/Console/Commands');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/api/models',$this->path.'/api/app/Models/v1');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/api/plugin',$this->path.'/api/app/Http/Controllers/v1/Plugin');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/api/requests',$this->path.'/api/app/Http/Requests/v1');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/database',$this->path.'/api/database/migrations');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/api',$this->path.'/trade/Dsshop/api');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components/coupon',$this->path.'/trade/Dsshop/components/coupon');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/pages/coupon',$this->path.'/trade/Dsshop/pages/coupon');
+        // 路由自动部署
+        $routes=json_decode(file_get_contents($routes), true);
+        // api
+        if(array_key_exists('admin',$routes) || array_key_exists('app',$routes)){
+            $targetPath=$this->path.'/api/routes/api.php';
+            $file_get_contents=file_get_contents($targetPath);
+            //去除已存在的插件代码
+            $file_get_contents=preg_replace('/\/\/'.$dswjcms['name'].'_s(.*?)\/\/'.$dswjcms['name'].'_e/is','',$file_get_contents);
+            $file_get_contents=preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n",$file_get_contents);
+            // 添加新的插件代码
+            if(array_key_exists('admin',$routes)){
+                $file_get_contents=str_replace("前台插件列表",$dswjcms['name']."_s
+        ".$routes['admin']."
+        //".$dswjcms['name']."_e
+        //前台插件列表",$file_get_contents);
+            }
+
+            if(array_key_exists('app',$routes)){
+                $file_get_contents=str_replace("APP插件列表",$dswjcms['name']."_s
+        ".$routes['app']."
+        //".$dswjcms['name']."_e
+        //APP插件列表",$file_get_contents);
+            }
+            file_put_contents($targetPath,$file_get_contents);
+            unset($targetPath);
+            unset($file_get_contents);
+            unset($metadata);
+        }
+        // permission
+        if(array_key_exists('permission',$routes)){
+            $targetPath=$this->path.'/admin/src/store/modules/permission.js';
+            $file_get_contents=file_get_contents($targetPath);
+            //去除已存在的插件代码
+            $file_get_contents=preg_replace('/\/\/ '.$dswjcms['name'].'_s(.*?)\/\/ '.$dswjcms['name'].'_e/is','',$file_get_contents);
+            $file_get_contents=preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n",$file_get_contents);
+            // 添加新的插件代码
+            $metadata=str_replace("插件列表",$dswjcms['name']."_s
+  ".$routes['permission']."
+  // ".$dswjcms['name']."_e
+  // 插件列表",$file_get_contents);
+            $file_put_contents=file_put_contents($targetPath,$metadata);
+            unset($targetPath);
+            unset($file_get_contents);
+            unset($metadata);
+        }
+        // uni-app
+        if(array_key_exists('uniApp',$routes)){
+            $targetPath=$this->path.'/trade/Dsshop/pages.json';
+            $file_get_contents=file_get_contents($targetPath);
+            //去除已存在的插件代码
+            $file_get_contents=preg_replace('/\/\/ '.$dswjcms['name'].'_s(.*?)\/\/ '.$dswjcms['name'].'_e/is','',$file_get_contents);
+            $file_get_contents=preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n",$file_get_contents);
+            // 添加新的插件代码
+            $metadata=str_replace("插件列表",$dswjcms['name']."_s
+		".$routes['uniApp']."
+		// ".$dswjcms['name']."_e
+		// 插件列表",$file_get_contents);
+            $file_put_contents=file_put_contents($targetPath,$metadata);
+            unset($targetPath);
+            unset($file_get_contents);
+            unset($metadata);
+        }
+        //写入本地插件列表
+        $json_dswjcms=json_decode(file_get_contents($this->pluginPath.'/dswjcms.json'),true);
+        if(collect($json_dswjcms)->firstWhere('name',$name)){
+            foreach ($json_dswjcms as $id=>$js){
+                if($js['name'] == $dswjcms['abbreviation']){
+                    $json_dswjcms[$id]['versions']=$dswjcms['versions'];
+                    $json_dswjcms[$id]['time']=date('Y-m-d H:i:s');
+                }
+            }
+        }else{
+            $json_dswjcms[]=array(
+                'name'=>$name,
+                'versions'=>$dswjcms['versions'],
+                'time'=>date('Y-m-d H:i:s')
+            );
+        }
+        file_put_contents($this->pluginPath.'/dswjcms.json',json_encode($json_dswjcms));
+        return resReturn(1,'成功');
+    }
+
+    /**
+     * 拷贝目录下文件到指定目录下，没有目录则创建
+     * @param string $original//原始目录
+     * @param string $target//目标目录
+     */
+    protected function fileDeployment($original,$target){
+        if(file_exists($original)){
+            if(!file_exists($target)){
+                mkdir ($target,0777,true);
+            }
+            $data = scandir($original);
+            foreach ($data as $value){
+                if($value != '.' && $value != '..'){
+                    copy($original.'/'.$value,$target.'/'.$value);
+                }
+            }
+        }
     }
 
     /**
