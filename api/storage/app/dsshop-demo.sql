@@ -96,8 +96,7 @@ INSERT INTO `auth_group_auth_rules` (`auth_group_id`, `auth_rule_id`) VALUES
 (1, 156),
 (1, 157),
 (1, 158),
-(1, 159),
-(1, 160);
+(1, 159);
 INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `sort`) VALUES
 (2, 'User', '', 'user', '用户管理', 0, 1, 1),
 (6, 'AdministratorList', NULL, '', '管理员管理', 2, 1, 0),
