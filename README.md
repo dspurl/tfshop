@@ -53,15 +53,23 @@ git clone https://github.com/dspurl/dsshop.git
 # 搭建json API
 cd ./api
 composer install
+# 修改.env.dev为.env
 php artisan key:generate
 php artisan passport:keys
-#修改.env.dev为.env，添加数据库信息
+# 添加数据库信息
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
 DB_PORT=3306
 DB_DATABASE=表名
 DB_USERNAME=用户名
 DB_PASSWORD=密码
+
+#配置redis(需要事先装redis服务端)
+REDIS_HOST=127.0.0.1
+REDIS_PASSWORD='密码'
+REDIS_PORT='端口'
+REDIS_DB=1
+REDIS_CACHE_DB=1
 
 php artisan migrate
 # 加载demo数据(demo和pure二选一)
