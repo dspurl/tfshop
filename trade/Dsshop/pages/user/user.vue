@@ -43,8 +43,8 @@
 					<text class="num" v-else>0.00</text>
 					<text>余额</text>
 				</view>
-				<view class="tj-item">
-					<text class="num">0</text>
+				<view class="tj-item" @click="navTo('/pages/coupon/index?state=1')">
+					<text class="num">{{userCouponCount}}</text>
 					<text>优惠券</text>
 				</view>
 			</view>
@@ -95,6 +95,7 @@
 	import listCell from '@/components/mix-list-cell';
 	import Browse from '../../api/browse';
 	import User from '../../api/user';
+	import UserCoupon from '../../api/userCoupon.js';
     import {  
         mapState 
     } from 'vuex';  
@@ -105,6 +106,7 @@
 		},
 		data(){
 			return {
+				userCouponCount: 0,
 				coverTransform: 'translateY(0px)',
 				coverTransition: '0s',
 				moving: false,
@@ -119,6 +121,7 @@
 			if(this.hasLogin){
 				this.getUser()
 				this.browse()
+				this.getUserCouponCount()
 			} else {
 				this.browseList = []
 				this.user = {}
@@ -161,6 +164,12 @@
 					limit: 10
 				},function(res){
 					that.browseList = res.data
+				})
+			},
+			getUserCouponCount(){
+				const that = this
+				UserCoupon.getCount(function(res){
+					that.userCouponCount = res
 				})
 			},
 			navTo(url){

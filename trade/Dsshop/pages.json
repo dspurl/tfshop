@@ -1,6 +1,5 @@
 {
 	"pages": [
-
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -55,7 +54,6 @@
 				"navigationBarTitleText": "设置"
 			}
 		},
-
 		{
 			"path": "pages/userinfo/userinfo",
 			"style": {
@@ -219,6 +217,17 @@
 				"navigationBarTitleText": "商品列表"
 			}
 		}
+		// 优惠券_s
+		, {
+			"path": "pages/coupon/index",
+			"style": {
+				"navigationBarTitleText": "优惠券",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		}
+		// 优惠券_e
 		// 插件列表
 	],
 	"globalStyle": {

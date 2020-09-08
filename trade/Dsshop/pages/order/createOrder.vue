@@ -37,28 +37,28 @@
 		</view>
 
 		<!-- 优惠明细 -->
-		<!-- <view class="yt-list">
+		<view class="yt-list" v-if="couponMoney">
 			<view class="yt-list-cell b-b" @click="toggleMask('show')">
 				<view class="cell-icon">
 					券
 				</view>
 				<text class="cell-tit clamp">优惠券</text>
 				<text class="cell-tip active">
-					选择优惠券
+					{{couponList.length>0 ? couponList[couponIndex].title : '选择优惠券'}}
 				</text>
 				<text class="cell-more wanjia wanjia-gengduo-d"></text>
 			</view>
-		</view> -->
+		</view>
 		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">商品金额</text>
 				<text class="cell-tip">￥{{total | 1000}}</text>
 			</view>
-			<!-- <view class="yt-list-cell b-b">
+			<view class="yt-list-cell b-b" v-if="couponMoney">
 				<text class="cell-tit clamp">优惠金额</text>
-				<text class="cell-tip red">-￥35</text>
-			</view> -->
+				<text class="cell-tip red">-￥{{couponMoney}}</text>
+			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">
@@ -95,21 +95,21 @@
 		<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
 			<view class="mask-content" @click.stop.prevent="stopPrevent">
 				<!-- 优惠券页面，仿mt -->
-				<view class="coupon-item" v-for="(item,index) in couponList" :key="index">
+				<view class="coupon-item" v-for="(item,index) in couponList" :key="index" :class="couponIndex === index ? 'on' : ''" @tap="toggleCoupon(index)">
 					<view class="con">
 						<view class="left">
 							<text class="title">{{item.title}}</text>
-							<text class="time">有效期至2019-06-30</text>
+							<text class="time">有效期至{{item.endTime}}</text>
 						</view>
 						<view class="right">
 							<text class="price">{{item.price}}</text>
-							<text>满30可用</text>
+							<text>{{item.sill}}</text>
 						</view>
 						
 						<view class="circle l"></view>
 						<view class="circle r"></view>
 					</view>
-					<text class="tips">限新用户使用</text>
+					<text class="tips">{{item.type}}</text>
 				</view>
 			</view>
 		</view>
@@ -120,26 +120,16 @@
 <script>
 	import Address from '../../api/address'
 	import Indents from '../../api/indents'
+	import UserCouponApi from '../../api/userCoupon';
 	export default {
 		data() {
 			return {
 				maskState: 0, //优惠券面板显示状态
 				desc: '', //备注
 				payType: 1, //1微信 2支付宝
-				couponList: [
-					{
-						title: '新用户专享优惠券',
-						price: 5,
-					},
-					{
-						title: '庆五一发一波优惠券',
-						price: 10,
-					},
-					{
-						title: '优惠券优惠券优惠券优惠券',
-						price: 15,
-					}
-				],
+				couponMoney: 0,
+				couponIndex: null,
+				couponList: [],
 				goodList: [],
 				addressData: {},
 				carriage: 0,
@@ -149,26 +139,19 @@
 					indentCommodity: [],
 					address: {},
 					remark: '',
-					carriage: 0
+					carriage: 0,
+					user_coupon_id: ''
 				},
 				order: []
 			}
 		},
+		watch: {
+			total(newVal) {
+				this.getCouponList(newVal)
+			}
+		},
 		onLoad(option){
 			this.loadData()
-			// let data = JSON.parse(option.data)
-			// console.log(data)
-			// this.goodList = data.goodsData
-			// this.order = []
-			// this.goodList.forEach(item=>{
-			// 	this.order.push({
-			// 		id: item.good_id,
-			// 		number: item.number,
-			// 		freight_id: item.good.freight_id
-			// 	})
-			// })
-			
-			// this.getFreight()
 		},
 		methods: {
 			//商品数据
@@ -200,11 +183,6 @@
 						cartList.splice(k,1)
 					}
 				}
-				/* for(var k in cartList){
-					if(cartList[k].invalid === true){ //失效的商品
-						cartList.splice(k,1)
-					}
-				} */
 				this.goodList = cartList
 				that.data.indentCommodity = cartList
 				that.calcTotal()  //计算总价
@@ -216,9 +194,11 @@
 			getOne(){
 				const that = this
 				Address.getOne(this.order, function(res){
-					that.addressData = res.shipping
-					that.carriage = res.carriage
-					that.outPocketTotal() //实付金额
+					if(res.shipping){
+						that.addressData = res.shipping
+						that.carriage = res.carriage
+						that.outPocketTotal() //实付金额
+					}
 				})
 			},
 			//显示优惠券面板
@@ -243,6 +223,7 @@
 				}
 				this.data.address = this.addressData
 				this.data.carriage = this.carriage
+				this.data.user_coupon_id = this.couponList[this.couponIndex].id
 				Indents.createSubmit(this.data,function(res){
 					uni.removeStorageSync('dsshopOrderList')
 					uni.removeStorageSync('dsshopCartList')
@@ -273,8 +254,74 @@
 			//计算实付金额
 			outPocketTotal(){
 				let outPocket = 0
-				outPocket = outPocket + this.total + this.carriage
+				outPocket = outPocket + this.total + this.carriage  - this.couponMoney
 				this.outPocket = Number(outPocket.toFixed(2))
+			},
+			//获取可用的优惠券
+			getCouponList(money){
+				let that = this
+				let couponList = []
+				let couponMoney = 0 //默认优惠金额
+				let couponIndex = null //默认优惠券index
+				UserCouponApi.getList({
+					money: money,
+					limit: 100
+				}, function(res) {
+					res.data.forEach((item,index)=>{
+						let data = {
+							id: item.id,
+							title: item.coupon.name,
+							explain: item.coupon.explain,
+							endTime: item.coupon.endtime.split(' ')[0].replace(/-/g,".")
+						}
+						
+						switch(item.coupon.type){
+							case 1:
+							data.type = '满减优惠券'
+							data.price = item.coupon.cost/100
+							if(data.price > couponMoney){
+								couponMoney = data.price
+								couponIndex = index
+							}
+							
+							break
+							case 2:
+							data.type = '随机优惠券'
+							data.price = item.coupon.cost/100
+							if(data.price > couponMoney){
+								couponMoney = data.price
+								couponIndex = index
+							}
+							
+							break
+							case 3:
+							data.type = '折扣优惠券'
+							data.price = that.total * item.coupon.cost/10000
+							if(data.price > couponMoney){
+								couponMoney = data.price
+								couponIndex = index
+							}
+							break
+						}
+						if(item.coupon.sill){
+							data.sill = '满' + (item.coupon.sill/100) + '可用'
+						}else{
+							data.sill = '无门槛'
+						}
+						couponList.push(data)
+					})
+					that.couponList = couponList
+					that.couponMoney = couponMoney
+					that.couponIndex = couponIndex
+					that.outPocketTotal()
+				})
+			},
+			// 切换优惠券
+			toggleCoupon(index){
+				this.couponIndex = index
+				this.couponMoney = this.couponList[index].price
+				this.outPocketTotal()
+				this.toggleMask('hide')
 			},
 			stopPrevent(){}
 		}
@@ -692,5 +739,22 @@
 			}
 		}
 	}
-
+	.coupon-item.on{
+		background: #faa2a3;
+		.title{
+			color: #FFFFFF;
+		}
+		.time{
+			color: #FFFFFF;
+		}
+		.tips{
+			color: #FFFFFF;
+		}
+		.right{
+			color: #FFFFFF;
+		}
+		.price{
+			color: #FFFFFF;
+		}
+	}
 </style>

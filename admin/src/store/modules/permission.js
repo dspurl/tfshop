@@ -1,6 +1,5 @@
 import { constantRouterMap } from '@/router'
 import Layout from '@/views/layout/Layout'
-
 // 模板
 export const componentsMap = {
   dashboard: () => import('@/views/dashboard/index'),
@@ -46,13 +45,15 @@ export const componentsMap = {
   StatisticsVisit: () => import('@/views/statistics/visit'),
   StatisticsAgeAndSex: () => import('@/views/statistics/user'),
   StatisticsPay: () => import('@/views/statistics/pay'),
+  // 优惠券_s
+  Coupon: () => import('@/views/tool/Coupon/index'),
+  CouponList: () => import('@/views/tool/Coupon/list'),
+  // 优惠券_e
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
   PlugInList: () => import('@/views/Plugin/list')
-
 }
-
 const permission = {
   state: {
     routers: constantRouterMap,
@@ -77,7 +78,6 @@ const permission = {
     }
   }
 }
-
 function generateAsyncRouter(componentsMap, serverRouterMap) {
   serverRouterMap.forEach(function(item, index) {
     if (!item.redirect) {
@@ -91,5 +91,4 @@ function generateAsyncRouter(componentsMap, serverRouterMap) {
   })
   return serverRouterMap
 }
-
 export default permission

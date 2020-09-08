@@ -93,10 +93,12 @@ class WeChatController  extends Controller
             return resReturn(0,'重复密码和密码不相同',Code::CODE_WRONG);
         }
         $user=User::where('cellphone',$request->cellphone)->first();
+        $addUser=new User();
         if($user){
             return resReturn(0,'手机号已被注册',Code::CODE_WRONG);
+        }else{
+            $addUser->money = 10000*100;
         }
-        $addUser=new User();
         $addUser->name = $request->cellphone;
         $addUser->cellphone = $request->cellphone;
         $addUser->password=bcrypt($request->password);

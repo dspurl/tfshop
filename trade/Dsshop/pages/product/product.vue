@@ -5,9 +5,9 @@
 			<view v-if="video" class="showVideoClose" @click.stop="closeVideo">关闭</view>
 			<swiper indicator-dots circular="true" duration="400" v-if="getList.resources_many" @change="imgCtu">
 				<swiper-item class="swiper-item" v-for="(item, index) in resources_many" :key="index" @click="showVideo">
-					<view v-if="item.type === 'img'" class="image-wrapper" @click="imgList()"><image :src="item.img" class="loaded" mode="aspectFill" lazy-load></image></view>
+					<view v-if="item.type === 'img'" class="image-wrapper" @click="imgList()"><image :src="item.img" lazy-load class="loaded" mode="aspectFill" lazy-load></image></view>
 					<view v-else class="image-wrapper">
-						<image :src="poster" lazy-load class="loaded" mode="aspectFill" lazy-load></image>
+						<image :src="poster" lazy-load class="loaded" mode="aspectFill"></image>
 					</view>
 					<view v-if="item.type === 'video'" class="playVideo text-white cuIcon-videofill"></view>
 				</swiper-item>
@@ -57,12 +57,12 @@
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
-			<!-- <view class="c-row b-b">
+			<view class="c-row b-b" @click="changeShow(true)">
 				<text class="tit">优惠券</text>
-				<text class="con t-r red">领取优惠券</text>
+				<text class="con t-r red">满200减20元</text>
 				<text class="yticon icon-you"></text>
 			</view>
-			<view class="c-row b-b">
+			<!-- <view class="c-row b-b">
 				<text class="tit">促销活动</text>
 				<view class="con-list">
 					<text>新人首单送20元无门槛代金券</text>
@@ -132,7 +132,8 @@
 			<view class="mask"></view>
 			<view class="layer attr-content" @click.stop="stopPrevent"><sku :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku></view>
 		</view>
-
+		<!-- 优惠券-模态层弹窗  -->
+		<coupon :getList="couponList" :show="couponShow" @changeShow="changeShow"></coupon>
 		<!-- 分享 -->
 		<!-- <share ref="share" :contentHeight="580" :shareList="shareList"></share> -->
 	</view>
@@ -143,19 +144,24 @@ import Good from '../../api/good';
 import share from '@/components/share';
 import { param2Data } from '@/components/sku/sku2param';
 import sku from '@/components/sku';
+import coupon from '@/components/coupon';
 import Browse from '../../api/browse';
 import Collect from '../../api/collect';
+import CouponApi from '../../api/coupon';
 import {
 		mapState
 	} from 'vuex';
 export default {
 	components: {
 		share,
-		sku
+		sku,
+		coupon
 	},
 	data() {
 		return {
 			cartGood: {},
+			couponList: [],
+			couponShow: false,
 			id: '',
 			specClass: 'none',
 			specificationDefaultDisplay: '', // 规格默认显示
@@ -214,6 +220,24 @@ export default {
 					} else {
 						that.favorite = false
 					}
+				})
+				await CouponApi.getList({}, function(res) {
+					that.couponList = []
+					res.data.forEach(item=>{
+						let data = {
+							id: item.id,
+							money: item.cost/100,
+							title: item.explain,
+							type: item.type,
+							time: item.starttime.split(' ')[0].replace(/-/g,".") + "-" + item.endtime.split(' ')[0].replace(/-/g,"."),
+						}
+						if(item.limit_get && item.user_coupon_count >= item.limit_get){
+							data.state = "2"
+						} else{
+							data.state = "1"
+						}
+						that.couponList.push(data)
+					})
 				})
 			}
 		},
@@ -296,7 +320,15 @@ export default {
 		purchasePattern(data) {
 			this.specificationDefaultDisplay = data;
 		},
-		stopPrevent() {}
+		stopPrevent() {},
+		// 优惠券显示隐藏
+		changeShow(val){
+			if (!this.hasLogin){
+				this.$api.msg('请先登录')
+				return false
+			}
+			this.couponShow = val
+		}
 	},
 	filters: {
 		/**

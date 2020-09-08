@@ -12,6 +12,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  * @property mixed email
  * @property mixed portrait
  * @property int type
+ * @property int money
  * @property mixed cellphone
  * @property string api_token
  * @property string nickname

@@ -14,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string total
  * @property string remark
  * @property int carriage
+ * @property int coupon_money
  * @property int refund_money
  * @property int refund_way
  * @property string pay_time
@@ -131,6 +132,23 @@ class GoodIndent extends Model
     }
 
     /**
+     * 优惠金额
+     *
+     * @return float|int
+     */
+    public function getCouponMoneyAttribute()
+    {
+        if(isset($this->attributes['coupon_money'])){
+            if(self::$withoutAppends){
+                $return= $this->attributes['coupon_money'];
+            }else{
+                $return= $this->attributes['coupon_money']/100;
+            }
+            return $return>0 ? $return : '';
+        }
+    }
+
+    /**
      * 退款金额
      *
      * @return float|int
@@ -187,6 +205,17 @@ class GoodIndent extends Model
     }
 
     /**
+     * 优惠金额
+     *
+     * @param $value
+     * @return void
+     */
+    public function setCouponMoneyAttribute($value)
+    {
+        $this->attributes['coupon_money'] = sprintf("%01.2f",$value)*100;
+    }
+
+    /**
      * 运费
      *
      * @param  string  $value
@@ -222,5 +251,12 @@ class GoodIndent extends Model
      */
     public function Dhl(){
         return $this->hasOne(Dhl::class,'id','dhl_id');
+    }
+
+    /**
+     * 订单优惠券
+     */
+    public function GoodIndentUser(){
+        return $this->hasOne(GoodIndentUserCoupon::class,'good_indent_id','id');
     }
 }

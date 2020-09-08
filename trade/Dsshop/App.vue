@@ -29,7 +29,7 @@ export default {
 					}
 				});
 			}
-			var applySecret = '', host = "http://dswjcms.com/api/v1/app/" // 服务器后端地址
+			var applySecret = '', host = "https://dsshop.dswjcms.com/api/v1/app/" // 服务器后端地址
 			if (JSON.stringify(options) != '{}' && options.query.secret) {
 				applySecret = options;
 				applySecret.host = host;
@@ -37,7 +37,7 @@ export default {
 			} else {
 				if (!uni.getStorageSync('applyDsshopSecret')) {
 					applySecret = {
-						secret: 'base64:', //默认应用Secret
+						secret: 'base64:AsXHg1OmJNQ7pJlfCktOKVAVrtqQwdK52Oz3xg7s72Q=', //默认应用Secret
 						host: host,
 						name: 'Dsshop', // 平台默认名称
 					};

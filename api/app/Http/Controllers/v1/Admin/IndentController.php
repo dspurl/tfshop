@@ -8,6 +8,7 @@ use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodIndentCommodity;
 use App\Models\v1\MoneyLog;
 use App\Models\v1\User;
+use App\Models\v1\UserCoupon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
@@ -105,7 +106,7 @@ class IndentController extends Controller
         $lock=RedisLock::lock($redis,'goodRefund');
         if($lock){
             $return=DB::transaction(function ()use($request,$id){
-                $GoodIndent=GoodIndent::find($id);
+                $GoodIndent=GoodIndent::with(['GoodIndentUser'])->find($id);
                 $GoodIndent->refund_money = $request->refund_money;
                 $GoodIndent->refund_way = $request->refund_way;
                 $GoodIndent->refund_reason = $request->refund_reason;
@@ -120,6 +121,10 @@ class IndentController extends Controller
                     $Money->money = $GoodIndent->refund_money;
                     $Money->remark = '订单：'.$GoodIndent->identification.'的退款';
                     $Money->save();
+                }
+                //优惠券退还
+                if($GoodIndent->GoodIndentUser){
+                    UserCoupon::where('id',$GoodIndent->GoodIndentUser->user_coupon_id)->update(['state'=>UserCoupon::USER_COUPON_STATE_UNUSED]);
                 }
                 return array(1,'退款成功');
             });

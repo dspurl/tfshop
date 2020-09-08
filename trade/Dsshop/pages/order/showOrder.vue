@@ -59,6 +59,10 @@
 				<text class="cell-tit clamp">商品金额</text>
 				<text class="cell-tip">￥{{ total | 1000 }}</text>
 			</view>
+			<view class="yt-list-cell b-b" v-if="indentList.coupon_money>0">
+				<text class="cell-tit clamp">优惠金额</text>
+				<text class="cell-tip red">-￥{{indentList.coupon_money}}</text>
+			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">
