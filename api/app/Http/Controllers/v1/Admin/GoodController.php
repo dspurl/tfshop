@@ -111,6 +111,7 @@ class GoodController extends Controller
             $Good->price = $request->price;
             $Good->inventory = $request->inventory;
             $Good->is_inventory = $request->is_inventory;
+            $Good->sum = $request->inventory;
             $Good->keywords = $request->keywords;
             $Good->short_description = $request->short_description;
             $Good->details = imgFindReplaceUpdate($request->details,'good_details');
@@ -273,6 +274,7 @@ class GoodController extends Controller
             $Good->cost_price = $request->cost_price;
             $Good->price = $request->price;
             $Good->inventory = $request->inventory;
+            $Good->sum = $request->inventory;
             $Good->is_inventory = $request->is_inventory;
             $Good->keywords = $request->keywords;
             $Good->short_description = $request->short_description;

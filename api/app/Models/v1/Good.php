@@ -20,6 +20,7 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property int cost_price
  * @property int price
  * @property int order_price
+ * @property int sum
  * @property string keywords
  * @property string short_description
  * @property string details
