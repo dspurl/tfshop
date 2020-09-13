@@ -864,9 +864,4 @@ page {
 	opacity: 1;
 	font-size: 120upx;
 }
-/*  #ifdef  MP-ALIPAY  */
-button-primary{
-	border: none;
-}
-/*  #endif  */
 </style>

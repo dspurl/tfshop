@@ -533,5 +533,8 @@ button[type='default'] {
 .cu-btn[disabled]{
 	color: rgba(0,0,0,.3);
 }
+button-primary{
+	border: none;
+}
 /*  #endif  */
 </style>
