@@ -160,7 +160,11 @@ function requestLoading(url, method, params, header, message, success, fail) {
       if (message != "") {
         uni.hideLoading()
       }
-      fail({message: '服务器异常'})
+      if(res.data){
+      		fail({message: res.data.message})
+      }else{
+      		fail({message: '服务器异常'})
+      }
     },
     complete: function (res) {
 		

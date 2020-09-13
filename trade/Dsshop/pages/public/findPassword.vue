@@ -36,11 +36,11 @@
 			        </view>
 			        <view class="cu-form-group">
 			          <view class="title">新密码</view>
-			          <input type="password" v-model="ruleForm.password" @input="passwordInput"></input>
+			          <input type="password" password v-model="ruleForm.password" @input="passwordInput"></input>
 			        </view>
 					<view class="cu-form-group">
 					  <view class="title">确认密码</view>
-					  <input type="password" v-model="ruleForm.rPassword" @input="rPasswordInput"></input>
+					  <input type="password" password v-model="ruleForm.rPassword" @input="rPasswordInput"></input>
 					</view>
 			      </form>
 			    </view>

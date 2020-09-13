@@ -28,6 +28,7 @@ class ShippingController extends Controller
     {
         $q = Shipping::query();
         $limit=$request->limit;
+        $q->where('user_id',auth('web')->user()->id);
         $paginate=$q->paginate($limit);
         return resReturn(1,$paginate);
     }
