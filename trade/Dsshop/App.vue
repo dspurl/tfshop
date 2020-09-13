@@ -30,7 +30,7 @@ export default {
 				});
 			}
 			var applySecret = '', host = "http://dswjcms.com/api/v1/app/" // 服务器后端地址
-			if (JSON.stringify(options) != '{}' && options.query.secret) {
+			if (JSON.stringify(options) != '{}' && options.query  && JSON.stringify(options.query) != '{}') {
 				applySecret = options;
 				applySecret.host = host;
 				uni.setStorageSync('applyDsshopSecret', applySecret);
@@ -529,4 +529,9 @@ button[type='default'] {
 .placeholder {
 	color: #999999;
 }
+/*  #ifdef  MP-ALIPAY  */
+.cu-btn[disabled]{
+	color: rgba(0,0,0,.3);
+}
+/*  #endif  */
 </style>
