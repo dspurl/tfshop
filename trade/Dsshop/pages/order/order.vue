@@ -452,7 +452,7 @@
 	}
 	
 	.swiper-box{
-		height: calc(100% - 40px);
+		height: calc( 100vh - 40px );
 	}
 	.list-scroll-content{
 		height: 100%;
