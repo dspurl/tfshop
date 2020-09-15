@@ -35,7 +35,7 @@ class GoodController extends Controller
         if($request->activeIndex == 2){
             $q->where('is_show',Good::GOOD_SHOW_PUTAWAY);
         } else if($request->activeIndex == 3){
-            $q->where('time',NULL);
+            $q->where('is_show',Good::GOOD_SHOW_ENTREPOT);
         }
         if($request->title){
             $q->where(function($q1) use($request){
