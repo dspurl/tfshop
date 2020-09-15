@@ -37,7 +37,7 @@ export default {
 			} else {
 				if (!uni.getStorageSync('applyDsshopSecret')) {
 					applySecret = {
-						secret: 'base64:AsXHg1OmJNQ7pJlfCktOKVAVrtqQwdK52Oz3xg7s72Q=', //默认应用Secret
+						secret: 'base64:', //默认应用Secret
 						host: host,
 						name: 'Dsshop', // 平台默认名称
 					};
