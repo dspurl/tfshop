@@ -398,7 +398,7 @@ page {
 /* 标题简介 */
 .introduce-section {
 	background: #fff;
-	padding: 20upx 30upx;
+	padding: 40upx 30upx;
 
 	.title {
 		font-size: 32upx;

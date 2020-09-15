@@ -87,7 +87,6 @@
 					if(this.loadingType === 'nomore'){
 						return;
 					}
-					this.loadingType = 'loading';
 				}else{
 					this.loadingType = 'more'
 				}

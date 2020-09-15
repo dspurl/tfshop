@@ -16,7 +16,7 @@
 			    </view>
 				<view class="cu-form-group">
 				  <view class="title">密码</view>
-				  <input type="password" v-model="ruleForm.password" @input="passwordInput"></input>
+				  <input type="password" password v-model="ruleForm.password" @input="passwordInput"></input>
 				</view>
 			  </form>
 			</view>

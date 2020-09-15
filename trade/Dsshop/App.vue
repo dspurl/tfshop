@@ -29,8 +29,8 @@ export default {
 					}
 				});
 			}
-			var applySecret = '', host = "https://dsshop.dswjcms.com/api/v1/app/" // 服务器后端地址
-			if (JSON.stringify(options) != '{}' && options.query.secret) {
+			var applySecret = '', host = "http://dswjcms.com/api/v1/app/" // 服务器后端地址
+			if (JSON.stringify(options) != '{}' && options.query  && JSON.stringify(options.query) != '{}') {
 				applySecret = options;
 				applySecret.host = host;
 				uni.setStorageSync('applyDsshopSecret', applySecret);
@@ -124,7 +124,7 @@ uni-rich-text img {
 	font-family: yticon;
 	font-weight: normal;
 	font-style: normal;
-	src: url('~@/static/font_1078604_w4kpxh0rafi.ttf') format('truetype');
+	src: url('https://at.alicdn.com/t/font_1078604_w4kpxh0rafi.ttf') format('truetype');
 }
 
 .yticon {
@@ -529,4 +529,22 @@ button[type='default'] {
 .placeholder {
 	color: #999999;
 }
+/*  #ifdef  MP-ALIPAY  */
+.cu-btn[disabled]{
+	color: rgba(0,0,0,.3);
+}
+button-primary{
+	border: none;
+}
+/*  #endif  */
+/*  #ifdef  MP-BAIDU */
+swan-uni-button[type='default'], swan-button[type='default'] {
+   color:#FFFFFF;
+}
+/*  #endif  */
+/*  #ifdef  MP-TOUTIAO */
+uni-button[type='default'], tt-button[type='default']{
+   color:#FFFFFF;
+}
+/*  #endif  */
 </style>
