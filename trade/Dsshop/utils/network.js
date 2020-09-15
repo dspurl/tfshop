@@ -109,17 +109,19 @@ function requestLoading(url, method, params, header, message, success, fail) {
   uni.showNavigationBarLoading()
   
   if (message != "") {
+	// #ifndef APP-PLUS
     uni.showLoading({
       title: message,
     })
+	// #endif
   }
 
   let applytoken = uni.getStorageSync('dsshopApplytoken')
   // #ifndef MP
   // 微信内部加载H5时
-	if(getUrlKey('api_token')){
-		applytoken = getUrlKey('api_token')
-	}
+	// if(getUrlKey('api_token')){
+	// 	applytoken = getUrlKey('api_token')
+	// }
   // #endif
   
   

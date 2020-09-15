@@ -124,7 +124,7 @@ uni-rich-text img {
 	font-family: yticon;
 	font-weight: normal;
 	font-style: normal;
-	src: url('~@/static/font_1078604_w4kpxh0rafi.ttf') format('truetype');
+	src: url('https://at.alicdn.com/t/font_1078604_w4kpxh0rafi.ttf') format('truetype');
 }
 
 .yticon {
@@ -535,6 +535,16 @@ button[type='default'] {
 }
 button-primary{
 	border: none;
+}
+/*  #endif  */
+/*  #ifdef  MP-BAIDU */
+swan-uni-button[type='default'], swan-button[type='default'] {
+   color:#FFFFFF;
+}
+/*  #endif  */
+/*  #ifdef  MP-TOUTIAO */
+uni-button[type='default'], tt-button[type='default']{
+   color:#FFFFFF;
 }
 /*  #endif  */
 </style>
