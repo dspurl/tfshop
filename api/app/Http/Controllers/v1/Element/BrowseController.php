@@ -15,6 +15,7 @@ class BrowseController extends Controller
     {
         $q = Browse::query();
         Good::$withoutAppends = false;
+        $q->where('user_id',auth('web')->user()->id);
         $limit=$request->limit;
         $q->orderBy('updated_at','DESC');
         $paginate=$q->with(['Good'=>function($q){

@@ -26,7 +26,9 @@ class CouponWebController extends Controller
         $q->orderBy('cost','desc');
         $q->orderBy('id','desc');
         $q->select('id','cost','type','amount','residue','sill','starttime','endtime','limit_get','state');
-        $paginate=$q->withCount(['UserCoupon'])->paginate($limit);
+        $paginate=$q->withCount(['UserCoupon'=>function($q){
+            $q->where('user_id',auth('web')->user()->id);
+        }])->paginate($limit);
         return resReturn(1,$paginate);
     }
 }

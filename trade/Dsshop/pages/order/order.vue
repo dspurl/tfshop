@@ -4,7 +4,7 @@
 			<view 
 				v-for="(item, index) in navList" :key="index" 
 				class="nav-item" 
-				:class="{current: tabCurrentIndex === index}"
+				:class="{current: tabCurrentIndex == index}"
 				@click="tabClick(index)"
 			>
 				{{item.text}}
@@ -145,14 +145,7 @@
 			 * 替换onLoad下代码即可
 			 */
 			this.tabCurrentIndex = options.state;
-			// #ifndef MP
-			this.CustomBar = 42
 			this.loadData()
-			// #endif
-			// #ifdef MP
-			this.loadData()
-			// #endif
-			
 		},
 		computed: {
 			startDate() {
@@ -169,7 +162,6 @@
 				let index = this.tabCurrentIndex;
 				let navItem = this.navList[index];
 				let state = navItem.state;
-				
 				if(source === 'tabChange' && navItem.loaded === true){
 					//tab切换只有第一次需要加载数据
 					return;
@@ -183,6 +175,9 @@
 					//无更多数据时跳出
 					return;
 				}
+				// #ifndef MP-ALIPAY
+				navItem.loadingType = 'loading'
+				// #endif
 				var orderList = []
 				let that =this
 				await Indents.getList({
@@ -240,7 +235,7 @@
 
 			//swiper 切换
 			changeTab(e){
-				this.tabCurrentIndex = e.target.current;
+				this.tabCurrentIndex = e.target.current
 				this.loadData('tabChange')
 				this.page = 1
 			},

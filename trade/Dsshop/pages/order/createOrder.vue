@@ -223,7 +223,9 @@
 				}
 				this.data.address = this.addressData
 				this.data.carriage = this.carriage
-				this.data.user_coupon_id = this.couponList[this.couponIndex].id
+				if(this.couponList.length>0){
+					this.data.user_coupon_id = this.couponList[this.couponIndex].id
+				}
 				Indents.createSubmit(this.data,function(res){
 					uni.removeStorageSync('dsshopOrderList')
 					uni.removeStorageSync('dsshopCartList')
