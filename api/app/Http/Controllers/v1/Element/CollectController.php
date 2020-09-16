@@ -22,6 +22,7 @@ class CollectController extends Controller
     {
         $q = Collect::query();
         Good::$withoutAppends = false;
+        $q->where('user_id',auth('web')->user()->id);
         $limit=$request->limit;
         $paginate=$q->with(['Good'=>function($q){
             $q->select('id','order_price','name')->with(['resources']);
