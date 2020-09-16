@@ -66,24 +66,6 @@
         </el-upload>
         <div class="el-upload__tip">最多可上传5张，每张不能大于2M</div>
       </el-form-item>
-      <el-form-item label="市场价" prop="market_price">
-        <el-input v-model="ruleForm.market_price" maxlength="11" clearable style="width:200px;">
-          <template slot="append">元</template>
-        </el-input>
-        <div class="el-upload__tip">如有销售规格，市场价无效，反之必填</div>
-      </el-form-item>
-      <el-form-item label="成本价" prop="cost_price">
-        <el-input v-model="ruleForm.cost_price" maxlength="11" clearable style="width:200px;">
-          <template slot="append">元</template>
-        </el-input>
-        <div class="el-upload__tip">如有销售规格，成本价无效，反之必填</div>
-      </el-form-item>
-      <el-form-item label="销售价" prop="price">
-        <el-input v-model="ruleForm.price" maxlength="11" clearable style="width:200px;">
-          <template slot="append">元</template>
-        </el-input>
-        <div class="el-upload__tip">如有销售规格，售价无效，反之必填</div>
-      </el-form-item>
       <el-form-item label="库存" prop="inventory">
         <el-input v-model.number="ruleForm.inventory" maxlength="11" clearable style="width:200px;"/>
         <div class="el-upload__tip">如有销售规格，库存无效，反之必填</div>

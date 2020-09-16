@@ -72,18 +72,7 @@ class GoodController extends Controller
     public function store(SubmitGoodRequest $request)
     {
         if(count($request->good_sku) == 0){
-            if(!$request->market_price){
-                return resReturn(0,'请输入市场价',Code::CODE_PARAMETER_WRONG);
-            }
-            if(!$request->cost_price){
-                return resReturn(0,'请输入成本价',Code::CODE_PARAMETER_WRONG);
-            }
-            if(!$request->price){
-                return resReturn(0,'请输入销售价',Code::CODE_PARAMETER_WRONG);
-            }
-            if(!$request->inventory){
-                return resReturn(0,'请输入库存',Code::CODE_PARAMETER_WRONG);
-            }
+            return resReturn(0,'请设置产品规格',Code::CODE_PARAMETER_WRONG);
         }
         if($request->is_show == Good::GOOD_SHOW_TIMING && !$request->timing){
             return resReturn(0,'请选择上架时间',Code::CODE_PARAMETER_WRONG);
@@ -105,11 +94,8 @@ class GoodController extends Controller
             }
             $Good->number = $request->number;
             $Good->freight_id = $request->freight_id;
-            $Good->brand_id = $request->brand_id;
-            $Good->market_price = $request->market_price;
-            $Good->cost_price = $request->cost_price;
-            $Good->price = $request->price;
-            $Good->inventory = $request->inventory;
+            $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
+            $Good->inventory = $request->inventory ? $request->inventory : 0;
             $Good->is_inventory = $request->is_inventory;
             $Good->keywords = $request->keywords;
             $Good->short_description = $request->short_description;
@@ -236,18 +222,7 @@ class GoodController extends Controller
     public function update(SubmitGoodRequest $request, $id)
     {
         if(count($request->good_sku) == 0){
-            if(!$request->market_price){
-                return resReturn(0,'请输入市场价',Code::CODE_PARAMETER_WRONG);
-            }
-            if(!$request->cost_price){
-                return resReturn(0,'请输入成本价',Code::CODE_PARAMETER_WRONG);
-            }
-            if(!$request->price){
-                return resReturn(0,'请输入销售价',Code::CODE_PARAMETER_WRONG);
-            }
-            if(!$request->inventory){
-                return resReturn(0,'请输入库存',Code::CODE_PARAMETER_WRONG);
-            }
+            return resReturn(0,'请设置产品规格',Code::CODE_PARAMETER_WRONG);
         }
         if($request->is_show == Good::GOOD_SHOW_TIMING && !$request->timing){
             return resReturn(0,'请选择上架时间',Code::CODE_PARAMETER_WRONG);
@@ -268,11 +243,8 @@ class GoodController extends Controller
             $Good->name = $request->name;
             $Good->number = $request->number;
             $Good->freight_id = $request->freight_id;
-            $Good->brand_id = $request->brand_id;
-            $Good->market_price = $request->market_price;
-            $Good->cost_price = $request->cost_price;
-            $Good->price = $request->price;
-            $Good->inventory = $request->inventory;
+            $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
+            $Good->inventory = $request->inventory ? $request->inventory : 0;
             $Good->is_inventory = $request->is_inventory;
             $Good->keywords = $request->keywords;
             $Good->short_description = $request->short_description;
