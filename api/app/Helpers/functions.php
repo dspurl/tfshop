@@ -145,7 +145,7 @@ function imgPathShift($new,$img){
         }
 
     }else{
-        $path = request()->root() . '/storage/temporary/';
+        $path = 'storage/temporary/';
         $img = explode($path, $img);
         if(count($img) == 2){
             Storage::move('public/temporary/' . $img['1'], 'public/image/' . $new . '/' . $img['1']);
