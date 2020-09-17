@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1\Admin;
 
+use App\Code;
 use App\common\Plugin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -16,6 +17,7 @@ class PluginController extends Controller
      */
     public function index(Request $request)
     {
+        return resReturn(0,'演示不支持该操作',Code::CODE_NO_ACCESS);
         $Plugin=new Plugin();
         $Json=$Plugin->getLocalPlugin();
         return resReturn(1,$Json);
@@ -27,6 +29,7 @@ class PluginController extends Controller
      * @return string
      */
     public function update($name){
+        return resReturn(0,'演示不支持该操作',Code::CODE_NO_ACCESS);
         $Plugin=new Plugin();
         return $Plugin->autoPlugin($name);
     }

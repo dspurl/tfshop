@@ -24,6 +24,7 @@ class redisServiceController extends Controller
      */
     public function index(Request $request)
     {
+        return resReturn(0,'演示不支持该操作',Code::CODE_NO_ACCESS);
         if($request->has('type')){
             switch ($request->type){
                 case 1:
@@ -82,6 +83,7 @@ class redisServiceController extends Controller
 
     //获取Redis详情
     public function show($name,Request $request){
+        return resReturn(0,'演示不支持该操作',Code::CODE_NO_ACCESS);
         if(!$request->has('type') || !$name){
             return resReturn(0,'参数有误',Code::CODE_PARAMETER_WRONG);
         }
@@ -99,6 +101,7 @@ class redisServiceController extends Controller
 
     //redis面板
     public function panel(){
+        return resReturn(0,'演示不支持该操作',Code::CODE_NO_ACCESS);
         $default= Redis::connection('default');
         $cache= Redis::connection('cache');
         $queue= Redis::connection('queue');
@@ -120,6 +123,7 @@ class redisServiceController extends Controller
      */
     public function destroy($name, Request $request)
     {
+        return resReturn(0,'演示不支持该操作',Code::CODE_NO_ACCESS);
         if($name !=1) {
             $redis = Redis::connection($request->type);
             $redis->del($name);
