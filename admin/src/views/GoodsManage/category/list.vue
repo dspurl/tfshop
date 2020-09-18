@@ -63,7 +63,7 @@
 
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-      <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="120px" style="width:700px;">
+      <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="120px" style="width:90%;">
         <el-form-item label="类目名称" prop="name" style="width:400px;">
           <el-input v-model="temp.name" maxlength="30" clearable/>
         </el-form-item>
@@ -173,6 +173,9 @@
     width: 188px;
     height: 188px;
     display: block;
+  }
+  .el-dialog{
+    width:65% !important;
   }
 </style>
 
