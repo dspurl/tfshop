@@ -5,6 +5,7 @@ namespace App\Models\v1;
 use App\Models\v1\ApplyUsers;
 use DateTimeInterface;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * @property string password
@@ -21,6 +22,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
  */
 class User extends Authenticatable
 {
+    use Notifiable;
     const USER_GENDER_UNKNOWN= 0; //性别:未知
     const USER_GENDER_MAN= 1; //性别:男
     const USER_GENDER_WOMAN= 2; //性别:女

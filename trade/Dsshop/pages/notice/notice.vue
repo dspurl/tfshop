@@ -1,22 +1,33 @@
 <template>
 	<view>
-		<view class="notice-item">
-			<text class="time">11:30</text>
-			<view class="content">
-				<text class="title">新品上市，全场满199减50</text>
-				<view class="img-wrapper">
-					<image class="pic" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556465765776&di=57bb5ff70dc4f67dcdb856e5d123c9e7&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01fd015aa4d95fa801206d96069229.jpg%401280w_1l_2o_100sh.jpg"></image>
-				</view>
-				<text class="introduce">
-					虽然做了一件好事，但很有可能因此招来他人的无端猜测，例如被质疑是否藏有其他利己动机等，乃至谴责。即便如此，还是要做好事。
-				</text>
-				<view class="bot b-t">
-					<text>查看详情</text>
-					<text class="more-icon yticon icon-you"></text>
+		<view v-if="data.length === 0">
+			<view class="no-data flex justify-center">暂时没有通知哦~</view>
+		</view>
+		<block v-else>
+			<view class="notice-item" v-for="(item, index) in data" :key="index">
+				<text class="time">{{item.created_at}}</text>
+				<view class="content">
+					<text class="title">{{item.data.title}}</text>
+					<block v-if="item.type === 2">
+						<view class="text-center text-gray padding-bottom">付款金额</view>
+						<view class="text-center text-price text-sl padding-bottom padding-top">{{item.data.price}}</view>
+					</block>
+					<view class="padding-bottom" v-if="item.data.list.length > 0" v-for="(items, indexs) in item.data.list" :key="indexs">
+						<text class="text-gray padding-right">{{items.keyword}}</text><text>{{items.data}}</text>
+					</view>
+					<text class="introduce" v-if="item.data.remark">
+						{{item.data.remark}}
+					</text>
+					<view class="bot b-t" v-if="item.data.url" @click="goNavigator(item.data.url)">
+						<text>查看详情</text>
+						<text class="more-icon yticon icon-you"></text>
+					</view>
 				</view>
 			</view>
-		</view>
-		<view class="notice-item">
+			<uni-load-more :status="loadingType"></uni-load-more>
+		</block>
+		
+		<!-- <view class="notice-item">
 			<text class="time">昨天 12:30</text>
 			<view class="content">
 				<text class="title">新品上市，全场满199减50</text>
@@ -31,36 +42,65 @@
 					<text class="more-icon yticon icon-you"></text>
 				</view>
 			</view>
-		</view>
-		<view class="notice-item">
-			<text class="time">2019-07-26 12:30</text>
-			<view class="content">
-				<text class="title">新品上市，全场满199减50</text>
-				<view class="img-wrapper">
-					<image class="pic" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1556465765776&di=57bb5ff70dc4f67dcdb856e5d123c9e7&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01fd015aa4d95fa801206d96069229.jpg%401280w_1l_2o_100sh.jpg"></image>
-					<view class="cover">
-						活动结束
-					</view>
-				</view>
-				<text class="introduce">新品上市全场2折起，新品上市全场2折起，新品上市全场2折起，新品上市全场2折起，新品上市全场2折起</text>
-				<view class="bot b-t">
-					<text>查看详情</text>
-					<text class="more-icon yticon icon-you"></text>
-				</view>
-			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
 <script>
+	import Notification from '../../api/notification'
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 	export default {
+		components: {
+			uniLoadMore
+		},
 		data() {
 			return {
-
+				data: [],
+				page:1,
+				loadingType: 'more'
 			}
 		},
+		onLoad: function(options) {
+			this.loadData()
+		},
 		methods: {
-
+			//获取列表
+			loadData(type){
+				const that = this
+				Notification.getList({
+					limit: 8,
+					page: this.page
+				},function(res){
+					that.data = that.data.concat(res.data)
+					if (res.last_page > that.page){
+						that.page ++
+						//判断是否还有数据， 有改为 more， 没有改为noMore
+						that.loadingType = 'more'
+					} else {
+						that.loadingType = 'noMore'
+					}
+					if(type === 'pull'){
+						setTimeout(function () {
+							uni.stopPullDownRefresh();
+						}, 1000)
+					}
+				})
+			},
+			goNavigator(url){
+				uni.navigateTo({
+					url: url
+				})  
+			},
+			onPullDownRefresh() {
+				this.data = []
+				this.page = 1
+				this.loadData('pull')
+			},
+			onReachBottom(){
+				if(this.loadingType !== 'noMore'){
+					this.loadData()
+				}
+			}
 		}
 	}
 </script>
@@ -148,6 +188,10 @@
 	}
 
 	.more-icon {
+		font-size: 32upx;
+	}
+	.no-data{
+		padding-top:400upx;
 		font-size: 32upx;
 	}
 </style>
