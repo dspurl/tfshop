@@ -67,10 +67,10 @@ export default {
   data() {
     return {
       init: {
-        language_url: '/static/tinymce/langs/zh_CN.js',
+        language_url: './static/tinymce/langs/zh_CN.js',
         language: 'zh_CN',
-        skin_url: '/static/tinymce/skins/ui/oxide',
-        content_css: `/static/tinymce/skins/content/default/content.css`,
+        skin_url: './static/tinymce/skins/ui/oxide',
+        content_css: `./static/tinymce/skins/content/default/content.css`,
         height: 300,
         plugins: this.plugins,
         toolbar: this.toolbar,
