@@ -84,6 +84,7 @@
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
 				<!-- <list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell> -->
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" @eventClick="navTo('/pages/user/collect')" title="我的收藏"></list-cell>
+				<list-cell icon="icon-comment" iconColor="#e07472" title="通知" :tips="noticeNumber" @eventClick="navTo('/pages/notice/notice')"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="设置" @eventClick="navTo('/pages/set/set')"></list-cell>
 			</view>
 		</view>
@@ -96,6 +97,7 @@
 	import Browse from '../../api/browse';
 	import User from '../../api/user';
 	import UserCoupon from '../../api/userCoupon.js';
+	import Notification from '../../api/notification'
     import {  
         mapState 
     } from 'vuex';  
@@ -111,7 +113,8 @@
 				coverTransition: '0s',
 				moving: false,
 				browseList: [],
-				user: {}
+				user: {},
+				noticeNumber: 0
 			}
 		},
 		onLoad(){
@@ -122,6 +125,7 @@
 				this.getUser()
 				this.browse()
 				this.getUserCouponCount()
+				this.noticeConut()
 			} else {
 				this.browseList = []
 				this.user = {}
@@ -170,6 +174,10 @@
 				const that = this
 				UserCoupon.getCount(function(res){
 					that.userCouponCount = res
+			noticeConut(){
+				const that = this
+				Notification.getCount({},function(res){
+					that.noticeNumber = res
 				})
 			},
 			navTo(url){
@@ -397,5 +405,4 @@
 			}
 		}
 	}
-	
 </style>

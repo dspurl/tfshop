@@ -189,6 +189,11 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('collect/{photo}', 'CollectController@show');    //详情
         Route::post('collect', 'CollectController@store');    //添加保存
         Route::post('collectDelete/{photo}', 'CollectController@destroy');    //删除
+
+        //通知
+        Route::get('notice', 'NoticeController@index');    //列表
+        Route::get('noticeConut', 'NoticeController@count');    //未读数量
+        Route::post('notice/{photo}', 'NoticeController@destroy');    //删除
     });
     // 插件前台
     Route::prefix('app')->namespace('Plugin')->middleware(['appverify','auth:web'])->group(function () {

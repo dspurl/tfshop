@@ -15,6 +15,7 @@ use App\Models\v1\PaymentLog;
 use App\Models\v1\SmsLog;
 use App\Models\v1\User;
 use App\Models\v1\UserLog;
+use App\Notifications\InvoicePaid;
 use Carbon\Carbon;
 use EasyWeChat\Factory;
 use App\Http\Controllers\Controller;
@@ -295,17 +296,41 @@ class WeChatController  extends Controller
                 }
             }
         }
-        User::where('id',auth('web')->user()->id)->decrement('money');
-        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
-        $GoodIndent->pay_time= Carbon::now()->toDateTimeString();
-        $GoodIndent->save();
-        $Money=new MoneyLog();
-        $Money->user_id = auth('web')->user()->id;
-        $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;
-        $Money->money = $GoodIndent->total;
-        $Money->remark = '对订单：'.$GoodIndent->identification.'的付款';
-        $Money->save();
-        return resReturn(1,'支付成功');
+        $return=DB::transaction(function ()use($request,$GoodIndent){
+            User::where('id',auth('web')->user()->id)->decrement('money', $GoodIndent->total);
+            $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
+            $GoodIndent->pay_time= Carbon::now()->toDateTimeString();
+            $GoodIndent->save();
+            $Money=new MoneyLog();
+            $Money->user_id = auth('web')->user()->id;
+            $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;
+            $Money->money = $GoodIndent->total;
+            $Money->remark = '对订单：'.$GoodIndent->identification.'的付款';
+            $Money->save();
+            // 通知
+            $invoice=[
+               'type'=> InvoicePaid::NOTIFICATION_TYPE_DEAL,
+                'title'=>'对订单：'.$GoodIndent->identification.'的付款',
+                'list'=>[
+                    [
+                        'keyword'=>'支付方式',
+                        'data'=>'余额支付'
+                    ]
+                ],
+                'price'=>$GoodIndent->total,
+                'url'=>'/pages/finance/bill_show?id='.$Money->id,
+                'prefers'=>['database']
+            ];
+            $user = User::find(auth('web')->user()->id);
+            $user->notify(new InvoicePaid($invoice));
+            return array(1,'支付成功');
+        });
+        if($return[0] == 1){
+            return resReturn(1,$return[1]);
+        }else{
+            return resReturn(0,$return[0],$return[1]);
+        }
+
     }
 
     /**
@@ -329,8 +354,8 @@ class WeChatController  extends Controller
         $result = $app->order->unify([
             'body' => $body,
             'out_trade_no' => $number= orderNumber(),
-//            'total_fee' => $GoodIndent->total,
-            'total_fee' => 1,
+            'total_fee' => $GoodIndent->total,
+//            'total_fee' => 1,
             'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
             'openid' => $openid,
         ]);
@@ -382,11 +407,10 @@ class WeChatController  extends Controller
     public function paymentNotify(Request $request){
         $config = config('wechat.payment.default');
         $config['notify_url'] = request()->root().'/api/v1/app/paymentNotify';    // 你也可以在下单时单独设置来想覆盖它
-        Log::info(1111);
         $app = Factory::payment($config);
         $response = $app->handlePaidNotify(function ($message, $fail)
         {
-            Log::info('小程序:'.json_encode($message));
+//            Log::info('小程序:'.json_encode($message));
             // 根据返回的订单号查询订单数据
             $order = PaymentLog::where('number',$message['out_trade_no'])->first();
             if (!$order || $order->state == PaymentLog::PAYMENT_LOG_STATE_COMPLETE) {
@@ -412,6 +436,22 @@ class WeChatController  extends Controller
                     $Money->money = $order->money;
                     $Money->remark = '对订单：'.$GoodIndent->identification.'的付款';
                     $Money->save();
+                    // 通知
+                    $invoice=[
+                        'type'=> InvoicePaid::NOTIFICATION_TYPE_DEAL,
+                        'title'=>'对订单：'.$GoodIndent->identification.'的付款',
+                        'list'=>[
+                            [
+                                'keyword'=>'支付方式',
+                                'data'=>'微信支付'
+                            ]
+                        ],
+                        'price'=>$order->money,
+                        'url'=>'/pages/finance/bill_show?id='.$Money->id,
+                        'prefers'=>['database']
+                    ];
+                    $user = User::find($GoodIndent->user_id);
+                    $user->notify(new InvoicePaid($invoice));
                     // 用户支付失败
                 } elseif ($message['result_code'] === 'FAIL') {
                     $order->status = 'paid_fail';

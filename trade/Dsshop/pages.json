@@ -114,15 +114,6 @@
 								"width": "46px",
 								"background": "rgba(0,0,0,0)"
 							}
-							// ,
-							// {
-							// 	"fontSrc": "/static/yticon.ttf",
-							// 	"text": "\ue744",
-							// 	"fontSize": "28",
-							// 	"color": "#303133",
-							// 	"background": "rgba(0,0,0,0)",
-							// 	"redDot": true
-							// }
 						]
 					}
 				}
@@ -199,7 +190,9 @@
 		}, {
 			"path": "pages/notice/notice",
 			"style": {
-				"navigationBarTitleText": "通知"
+				"navigationBarTitleText": "通知",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50
 			}
 		}, {
 			"path": "pages/category/category",
