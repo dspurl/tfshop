@@ -87,7 +87,7 @@
         <div class="el-upload__tip">请选择商品的所属类型，进而完善此商品的规格</div>
       </el-form-item>
       <el-form-item v-if="goods_brand.length > 0" label="品牌" prop="brand_id">
-        <el-select v-model="ruleForm.brand_id" clearable placeholder="请选择">
+        <el-select v-model="ruleForm.brand_id" clearable placeholder="请选择" @change="change($event)">
           <el-option
             v-for="item in goods_brand"
             :key="item.id"
@@ -96,15 +96,15 @@
         </el-select>
       </el-form-item>
       <el-form-item v-for="(item, i) in good_attribute" :label="item.name" :key="i">
-        <el-input v-if="item.type === 1" v-model="ruleForm.good_specification[i]['data']" clearable style="width:400px;"/>
-        <el-select v-else-if="item.type === 2" v-model="ruleForm.good_specification[i]['data']" clearable placeholder="请选择">
+        <el-input v-if="item.type === 1" v-model="ruleForm.good_specification[i]['data']" clearable style="width:400px;" @input="change($event)"/>
+        <el-select v-else-if="item.type === 2" v-model="ruleForm.good_specification[i]['data']" clearable placeholder="请选择" @change="change($event)">
           <el-option
             v-for="(list, index) in item.value"
             :key="index"
             :label="list"
             :value="index"/>
         </el-select>
-        <el-select v-else v-model="ruleForm.good_specification[i]['data']" clearable multiple placeholder="请选择">
+        <el-select v-else v-model="ruleForm.good_specification[i]['data']" clearable multiple placeholder="请选择" @change="change($event)">
           <el-option
             v-for="(list, index) in item.value"
             :key="index"
@@ -497,45 +497,52 @@ export default {
       if (this.ruleForm.category_id.length) {
         category_id = this.ruleForm.category_id[this.ruleForm.category_id.length - 1]
       } else {
-        category_id = this.ruleForm.category_id
-      }
-      getSpecification(category_id).then(response => {
-        this.ruleForm.good_specification = []
-        if (!state) {
-          this.ruleForm.brand_id = null
+        if (this.ruleForm.category_id.length === 0) {
+          category_id = null
+        } else {
+          category_id = this.ruleForm.category_id
         }
-        this.goods_brand = []
-        this.good_attribute = []
-        const that = this
-        if (response.data.specification_on.length > 0) {
-          this.good_attribute = response.data.specification_on
-          response.data.specification_on.forEach(function(item, index) {
-            if (that.ruleForm.good_specification_old && state) {
-              const index = that.ruleForm.good_specification_old.findIndex(items => {
-                return items.specification_id === item.id
-              })
-              if (index === -1) { // 没有相同数据
+      }
+      if (category_id) {
+        getSpecification(category_id).then(response => {
+          this.ruleForm.good_specification = []
+          if (!state) {
+            this.ruleForm.brand_id = null
+          }
+          this.goods_brand = []
+          this.good_attribute = []
+          const that = this
+          if (response.data.specification_on.length > 0) {
+            this.good_attribute = response.data.specification_on
+            response.data.specification_on.forEach(function(item, index) {
+              if (that.ruleForm.good_specification_old && that.ruleForm.good_specification_old.length > 0 && state) {
+                const index = that.ruleForm.good_specification_old.findIndex(items => {
+                  return items.specification_id === item.id
+                })
+                if (index === -1) { // 没有相同数据
+                  that.ruleForm.good_specification.push({
+                    specification_id: item.id,
+                    data: null
+                  })
+                } else {
+                  that.ruleForm.good_specification.push(that.ruleForm.good_specification_old[index])
+                }
+              } else {
                 that.ruleForm.good_specification.push({
                   specification_id: item.id,
-                  data: ''
+                  data: null
                 })
-              } else {
-                that.ruleForm.good_specification.push(that.ruleForm.good_specification_old[index])
               }
-            } else {
-              that.ruleForm.good_specification.push({
-                specification_id: item.id,
-                data: ''
-              })
-            }
-          })
-        } else {
-          this.good_attribute = []
-        }
-        if (response.data.brand_on.length > 0) {
-          this.goods_brand = response.data.brand_on
-        }
-      })
+            })
+          } else {
+            this.good_attribute = []
+          }
+          if (response.data.brand_on.length > 0) {
+            this.ruleForm.brand_id = this.ruleForm.brand_id ? this.ruleForm.brand_id : null
+            this.goods_brand = response.data.brand_on
+          }
+        })
+      }
     },
     // 得到 sku 数据
     getSkuData() {
@@ -580,6 +587,10 @@ export default {
     // 设置视频封面
     setPoster(event) {
       this.playerOptions['poster'] = this.ruleForm.poster
+    },
+    // 重新加载无法输入或选择
+    change(e) {
+      this.$forceUpdate()
     }
   }
 }
