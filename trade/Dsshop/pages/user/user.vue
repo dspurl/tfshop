@@ -174,6 +174,8 @@
 				const that = this
 				UserCoupon.getCount(function(res){
 					that.userCouponCount = res
+				})
+			},
 			noticeConut(){
 				const that = this
 				Notification.getCount({},function(res){
