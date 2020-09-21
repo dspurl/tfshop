@@ -95,7 +95,6 @@ class GoodController extends Controller
             $Good->number = $request->number;
             $Good->freight_id = $request->freight_id;
             $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
-            $Good->inventory = $request->inventory ? $request->inventory : 0;
             $Good->is_inventory = $request->is_inventory;
             $Good->keywords = $request->keywords;
             $Good->short_description = $request->short_description;
@@ -244,7 +243,6 @@ class GoodController extends Controller
             $Good->number = $request->number;
             $Good->freight_id = $request->freight_id;
             $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
-            $Good->inventory = $request->inventory ? $request->inventory : 0;
             $Good->is_inventory = $request->is_inventory;
             $Good->keywords = $request->keywords;
             $Good->short_description = $request->short_description;
