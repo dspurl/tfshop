@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://dspurl.github.io/dsshop_logo.jpg" width="150">
+  <img src="https://dspurl.github.io/image/dsshop_logo.jpg" width="150">
 </p>
 <p align="center">
   <a href="https://github.com/laravel/framework">
@@ -34,8 +34,8 @@ Dsshop是一个商城解决方案，它采用前后端分离，后端基于larav
 - 后台演示地址：<a href="http://dsshop.dswjcms.com/admin">http://dsshop.dswjcms.com/admin</a> 用户名：admin 密码: admin
 - h5、小程序演示
 <p align="center">
-  <img src="https://dspurl.github.io/gh_e79e7cd855e7_258.jpg">
-  <img src="https://dspurl.github.io/13.png">
+  <img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg">
+  <img src="https://dspurl.github.io/image/13.png">
 </p>
 
 要求
@@ -124,6 +124,7 @@ npm install
 - **统计** 接入微信小程序部分统计，结合项目本身数据统计，让你全方位了解项目的真实数据
 - **事务支持** 项目支持事务处理，并为必要的业务流程增加了事务的处理机制
 - **Redis支持** 项目部分数据采用Redis缓存和Redisis锁机制
+- **消息通知** 支持数据库通知功能，可快速集成到各个业务场景中
 
 基于以下扩展或组件(不分排名，这里只罗列部分名称，具体请查看package和composer)
 ------------
@@ -144,5 +145,5 @@ npm install
 - 有问题可以直接issue或扫码进微信群咨询。
 - 扫码进群
 <p align="center">
-  <img src="https://dspurl.github.io/12.png" width="150">
+  <img src="https://dspurl.github.io/image/12.png" width="150">
 </p>
