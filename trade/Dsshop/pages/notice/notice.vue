@@ -8,9 +8,9 @@
 				<text class="time">{{item.created_at}}</text>
 				<view class="content">
 					<text class="title">{{item.data.title}}</text>
-					<block v-if="item.type === 2">
+					<block v-if="item.data.type === 2">
 						<view class="text-center text-gray padding-bottom">付款金额</view>
-						<view class="text-center text-price text-sl padding-bottom padding-top">{{item.data.price}}</view>
+						<view class="text-center text-price text-sl padding-bottom padding-top">{{item.data.price/100 | 1000}}</view>
 					</block>
 					<view class="padding-bottom" v-if="item.data.list.length > 0" v-for="(items, indexs) in item.data.list" :key="indexs">
 						<text class="text-gray padding-right">{{items.keyword}}</text><text>{{items.data}}</text>
