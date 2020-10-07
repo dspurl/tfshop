@@ -77,3 +77,34 @@ export function authMsg(tmplIds) {
     })
 	//#endif
   }
+
+//使用注释获取详细平台
+export function getPlatform(){
+	// #ifdef APP-PLUS
+	return "APP"
+	// #endif
+	// #ifdef APP-PLUS-NVUE
+	return "App nvue"
+	// #endif
+	// #ifdef H5
+	return "H5"
+	// #endif
+	// #ifdef MP-WEIXIN
+	return "miniWeixin"
+	// #endif
+	// #ifdef MP-ALIPAY
+	return "miniAlipay"
+	// #endif
+	// #ifdef MP-BAIDU
+	return "miniBaidu"
+	// #endif
+	// #ifdef MP-TOUTIAO
+	return "miniToutiao"
+	// #endif
+	// #ifdef MP-QQ
+	return "miniQq"
+	// #endif
+	// #ifdef MP-360
+	return "mini360"
+	// #endif
+}

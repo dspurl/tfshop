@@ -38,3 +38,11 @@ export function getDetails(id) {
     method: 'get'
   })
 }
+
+export function query(query) {
+  return request({
+    url: 'query',
+    method: 'get',
+    params: query
+  })
+}

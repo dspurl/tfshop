@@ -19,7 +19,7 @@ class CreatePaymentLogsTable extends Migration
             $table->bigInteger('user_id')->index()->comment('用户ID');
             $table->string('name',128)->nullable()->comment('订单描述');
             $table->string('number',50)->comment('订单号');
-            $table->string('transaction_id',50)->nullable()->comment('微信支付订单号');
+            $table->string('transaction_id',50)->nullable()->comment('支付订单号');
             $table->integer('money')->default(0)->comment('金额');
             $table->text('data')->nullable()->comment('订单详情json');
             $table->tinyInteger('state')->default(0)->comment('状态0生成1完成2失败');

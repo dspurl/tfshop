@@ -1,3 +1,4 @@
+import { getPlatform } from 'utils'
 function request(url, method, params, header, success, fail) {
   this.requestLoading(url, method, params, header, "", success, fail)
 }
@@ -55,15 +56,16 @@ function getLogin() {
 		success(res) {
 			if (res.code) {
 				uni.request({
-					url: applySecret.host + 'wxlogin',
+					url: applySecret.host + 'miniLogin',
 					data: {
-						code: res.code
+						code: res.code,
+						platform: getPlatform()
 					},
 					method: 'POST',
 					header: {
 						'Content-Type': 'application/json',
 						'apply-secret': uni.getStorageSync('applyDsshopSecret').secret,
-						// #ifdef  MP-WEIXIN
+						// #ifndef H5
 						openid: uni.getStorageSync('applyDsshopOpenid')
 						// #endif
 					},
@@ -145,11 +147,15 @@ function requestLoading(url, method, params, header, message, success, fail) {
       if (res.statusCode == 200) {
         success(res.data)
 	  }else if (res.statusCode == 500) {
+		  // #ifdef MP
+		  getLogin()
+		  // #endif
 		  fail({message: '服务器异常，请重新尝试'})
-		  getLogin()
 	  }else if (res.statusCode == 302) {
-		  fail({message: '登录超时，请重新登录'})
+		  // #ifdef MP
 		  getLogin()
+		  // #endif
+		  fail({message: '登录超时，请重新登录'})
 	  }else if (res.statusCode == 401) {
 		  fail({message: res.data.message})
       } else {

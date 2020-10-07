@@ -25,7 +25,7 @@ class CreateGoodIndentsTable extends Migration
             $table->string('odd', 255)->nullable()->comment('运单号');
             $table->string('remark', 200)->nullable()->comment('备注');
             $table->integer('refund_money')->default(0)->comment('退款金额');
-            $table->tinyInteger('refund_way')->default(0)->comment('退款方式0余额1线下');
+            $table->tinyInteger('refund_way')->default(0)->comment('退款方式0余额1原路退回');
             $table->tinyInteger('is_delete')->default(0)->comment('是否删除0否1是');
             $table->string('refund_reason', 500)->nullable()->comment('退款原因');
             $table->timestamp('pay_time')->nullable()->comment('付款时间');

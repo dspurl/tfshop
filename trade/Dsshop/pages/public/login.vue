@@ -23,6 +23,9 @@
 			<view class=" flex flex-direction padding">
 			  <button class="cu-btn round bg-red shadow lg" :disabled="logining" @click="toLogin">登录</button>
 			</view>
+			<view class=" flex flex-direction padding">
+			  <button class="cu-btn round bg-orange shadow lg" open-type="getPhoneNumber" @getphonenumber="decryptPhoneNumber">授权登录</button>
+			</view>
 			<view class="forget-section" @click="toFind">
 				忘记密码?
 			</view>
@@ -37,6 +40,8 @@
 
 <script>
 	import User from '../../api/user'
+	import { getPlatform } from '../../utils'
+	import App from '../../App.vue'
 	import {  
         mapMutations  
     } from 'vuex';
@@ -58,8 +63,13 @@
 			}
 		},
 		onLoad(){
-			// #ifndef  MP-WEIXIN
+			// #ifndef  MP
 			this.TabCur = 1
+			// #endif
+		},
+		onShow(){
+			// #ifdef MP
+			App.methods.checkSession()
 			// #endif
 		},
 		methods: {
@@ -71,27 +81,21 @@
 			async toLogin(e){
 				const ruleForm = this.ruleForm
 				const that = this
-				if(e.detail.iv){
-					ruleForm.iv = e.detail.iv
-					ruleForm.session_key = uni.getStorageSync('applyDsshopSession_key')
-					ruleForm.encryptedData = e.detail.encryptedData
-				}else{
-					if (!ruleForm.cellphone) {
-					  this.$api.msg('请填写手机号码')
-					  return false
-					} else if (ruleForm.cellphone.length != 11) {
-					  this.$api.msg('手机号长度有误')
-					  return false;
-					}
-					var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
-					if (!myreg.test(ruleForm.cellphone)) {
-					  this.$api.msg('手机号有误')
-					  return false
-					}
-					if (!ruleForm.password) {
-					  this.$api.msg('密码必须')
-					  return false
-					}
+				if (!ruleForm.cellphone) {
+				  this.$api.msg('请填写手机号码')
+				  return false
+				} else if (ruleForm.cellphone.length != 11) {
+				  this.$api.msg('手机号长度有误')
+				  return false;
+				}
+				var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+				if (!myreg.test(ruleForm.cellphone)) {
+				  this.$api.msg('手机号有误')
+				  return false
+				}
+				if (!ruleForm.password) {
+				  this.$api.msg('密码必须')
+				  return false
 				}
 				this.logining = true
 				User.goLogin(ruleForm,function(res){
@@ -145,6 +149,26 @@
 				}else{
 					this.logining = true
 				}
+			  },
+			  //授权登录
+			  decryptPhoneNumber(e){
+				  const that = this
+				  if(e.detail.iv){
+					  User.authorizedPhone({
+						iv: e.detail.iv,
+						encryptedData: e.detail.encryptedData,
+						session_key: uni.getStorageSync('applyDsshopSession_key'),
+						platform: getPlatform()
+					  },function(res){
+						uni.setStorageSync('dsshopApplytoken', res.api_token)
+						that.login(res)
+						that.$api.msg(`登录成功`);
+						uni.navigateBack()
+					  })
+				  }else{
+					  that.$api.msg(`您选择了拒绝授权，无法完成登录`)
+				  }
+				  
 			  }
 		}
 

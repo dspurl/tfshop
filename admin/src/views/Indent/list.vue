@@ -71,7 +71,8 @@
       </el-table-column>
       <el-table-column label="运费">
         <template slot-scope="scope">
-          <span>{{ scope.row.carriage | 1000 }}</span>
+          <span v-if="scope.row.carriage">{{ scope.row.carriage | 1000 }}</span>
+          <span v-else>免运费</span>
         </template>
       </el-table-column>
       <el-table-column label="备注">

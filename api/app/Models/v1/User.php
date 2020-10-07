@@ -18,7 +18,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string nickname
  * @property int state
  * @property int gender
- * @property int wechat_applet_openid
+ * @property int miniweixin
  */
 class User extends Authenticatable
 {

@@ -111,8 +111,8 @@ return [
              'app_id'             => env('WECHAT_PAYMENT_APPID', ''),
              'mch_id'             => env('WECHAT_PAYMENT_MCH_ID', ''),
              'key'                => env('WECHAT_PAYMENT_KEY', ''),
-             'cert_path'          => env('WECHAT_PAYMENT_CERT_PATH', ''),    // XXX: 绝对路径！！！！
-             'key_path'           => env('WECHAT_PAYMENT_KEY_PATH', ''),      // XXX: 绝对路径！！！！
+             'cert_path'          => storage_path().env('WECHAT_PAYMENT_CERT_PATH', ''),    // XXX: 绝对路径！！！！
+             'key_path'           => storage_path().env('WECHAT_PAYMENT_KEY_PATH', ''),      // XXX: 绝对路径！！！！
              'notify_url'         => '',                           // 默认支付结果通知地址
          ],
          // ...
