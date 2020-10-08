@@ -23,9 +23,11 @@
 			<view class=" flex flex-direction padding">
 			  <button class="cu-btn round bg-red shadow lg" :disabled="logining" @click="toLogin">登录</button>
 			</view>
+			<!--  #ifdef MP -->
 			<view class=" flex flex-direction padding">
 			  <button class="cu-btn round bg-orange shadow lg" open-type="getPhoneNumber" @getphonenumber="decryptPhoneNumber">授权登录</button>
 			</view>
+			<!--  #endif -->
 			<view class="forget-section" @click="toFind">
 				忘记密码?
 			</view>
