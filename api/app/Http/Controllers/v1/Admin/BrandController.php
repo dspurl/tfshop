@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v1\admin;
+namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\Http\Requests\v1\SubmitBrandTemplateRequest;
