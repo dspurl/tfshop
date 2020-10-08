@@ -13,7 +13,7 @@
 						<view class="text-center text-price text-sl padding-bottom padding-top">{{item.data.price/100 | 1000}}</view>
 					</block>
 					<view class="padding-bottom" v-if="item.data.list.length > 0" v-for="(items, indexs) in item.data.list" :key="indexs">
-						<text class="text-gray padding-right">{{items.keyword}}</text><text>{{items.data}}</text>
+						<text class="text-gray padding-right">{{items.keyword}}</text><text v-if="items.copy" @click="setCopy(items.data)">{{items.data}}</text><text v-else>{{items.data}}</text>
 					</view>
 					<text class="introduce" v-if="item.data.remark">
 						{{item.data.remark}}
@@ -85,6 +85,17 @@
 						}, 1000)
 					}
 				})
+			},
+			// 复制内容
+			setCopy(res){
+				// #ifndef H5
+				uni.setClipboardData({
+				    data: res,
+				    success: function () {
+				        
+				    }
+				})
+				// #endif
 			},
 			goNavigator(url){
 				uni.navigateTo({

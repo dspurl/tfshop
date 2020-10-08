@@ -112,6 +112,8 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('indent/{photo}', 'IndentController@show')->middleware(['permissions:EditIndent']);    //订单详情
         Route::post('indentShipments', 'IndentController@shipment')->middleware(['permissions:Shipment']); //发货
         Route::put('indentRefund/{photo}', 'IndentController@refund')->middleware(['permissions:Refund']); //退款
+        Route::get('query', 'IndentController@query')->middleware(['permissions:EditIndent']);    //查询订单
+
         //轮播
         Route::get('banner', 'BannerController@index')->middleware(['permissions:BannerList']);    //轮播列表
         Route::post('banner', 'BannerController@store')->middleware(['permissions:CreateBanner']);    //轮播添加保存
@@ -141,14 +143,18 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     //app
     Route::prefix('app')->namespace('Element')->group(function () {
         Route::any('paymentNotify', 'WeChatController@paymentNotify');    //微信支付回调
+        Route::any('refundNotify', 'WeChatController@refundNotify');    //微信退款回调
     });
     Route::prefix('app')->namespace('Element')->middleware(['appverify'])->group(function () {
         Route::post('uploadPictures', 'WeChatController@uploadPictures');  //上传
         Route::post('register', 'WeChatController@register');    //注册
         Route::post('login', 'WeChatController@login');    //登录
         Route::post('wxlogin', 'WeChatController@appUserlogin');    //登录
+        Route::post('miniLogin', 'WeChatController@miniLogin');    //小程序换取openid
+
         Route::post('findPassword', 'WeChatController@findPassword');    //找回密码
         Route::post('getRegisterCellphoneCode', 'WeChatController@getRegisterCellphoneCode');    //获取手机验证码
+        Route::post('authorizedPhone', 'WeChatController@authorizedPhone');    //授权获取手机号
         // 商品
         Route::get('good', 'GoodAppController@index');    //商品列表
         Route::get('good/{photo}', 'GoodAppController@show');    //商品详情
@@ -163,6 +169,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('finance/{photo}', 'MoneyLogController@show');    //收支详情
         Route::post('logout', 'WeChatController@logout');    //登出
         Route::post('wxPay', 'WeChatController@payment');    //微信支付
+        Route::post('unifiedPayment', 'WeChatController@unifiedPayment');    //在线支付
         Route::post('balancePay', 'WeChatController@balancePay');    //余额支付
         //订单
         Route::get('GoodIndent', 'GoodIndentController@index');    //列表

@@ -33,8 +33,8 @@ export default {
 			})
 		})
 	},
-	goWxLogin(data, success, fail) {
-		Network.setPost('wxlogin', data, function(res) {
+	authorizedPhone(data, success, fail) {
+		Network.setPost('authorizedPhone', data, function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({

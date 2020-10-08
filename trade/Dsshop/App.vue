@@ -3,11 +3,12 @@
  * vuex管理登陆状态，具体可以参考官方登陆模板示例
  */
 import { mapMutations } from 'vuex';
+import { getPlatform } from 'utils'
 export default {
 	onLaunch: function(options) {
 		// uni.clearStorage()
 		this.setSecret(options);
-		// #ifdef  MP-WEIXIN
+		// #ifdef MP
 		if (uni.getStorageSync('applyDsshopOpenid')) {
 			this.checkSession();
 		} else {
@@ -65,15 +66,16 @@ export default {
 				success(res) {
 					if (res.code) {
 						uni.request({
-							url: applySecret.host + 'wxlogin',
+							url: applySecret.host + 'miniLogin',
 							data: {
-								code: res.code
+								code: res.code,
+								platform: getPlatform()
 							},
 							method: 'POST',
 							header: {
 								'Content-Type': 'application/json',
 								'apply-secret': uni.getStorageSync('applyDsshopSecret').secret,
-								// #ifdef  MP-WEIXIN
+								// #ifndef H5
 								openid: uni.getStorageSync('applyDsshopOpenid')
 								// #endif
 							},

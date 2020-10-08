@@ -4,9 +4,7 @@ namespace App\Http\Controllers\v1\Element;
 
 use App\Code;
 use App\common\Aliyun;
-use App\Models\v1\Common;
-use App\Models\v1\ApplySms;
-use App\Models\v1\ApplySmsTemplate;
+use App\Models\v1\MiniProgram;
 use App\Models\v1\Good;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodSku;
@@ -19,11 +17,10 @@ use App\Notifications\InvoicePaid;
 use Carbon\Carbon;
 use EasyWeChat\Factory;
 use App\Http\Controllers\Controller;
-use EasyWeChat\Kernel\Http\StreamResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
 class WeChatController  extends Controller
@@ -134,7 +131,7 @@ class WeChatController  extends Controller
         $miniProgram = Factory::miniProgram($config); // 小程序
         $auth=$miniProgram->auth->session((string) $request->code);
         // 生成用户
-        $User=User::where('wechat_applet_openid',$auth['openid'])->first();
+        $User=User::where('miniweixin',$auth['openid'])->first();
         if($User){   //更新用户
             $User->updated_at=Carbon::now()->toDateTimeString();
             $User->save();
@@ -142,7 +139,7 @@ class WeChatController  extends Controller
         }else { //新建
             $return=DB::transaction(function ()use($request,$auth){
                 $User=new User();
-                $User->wechat_applet_openid=$auth['openid'];
+                $User->miniweixin=$auth['openid'];
                 $User->save();
                 return 1;
             }, 5);
@@ -334,6 +331,236 @@ class WeChatController  extends Controller
     }
 
     /**
+     * 小程序换取openid
+     * @param Request $request
+     * @return string
+     * @throws \Exception
+     */
+    public function miniLogin(Request $request){
+        // 不支持的直接返回
+        if(!in_array($request->platform,['miniWeixin','miniAlipay','miniToutiao'])){
+            return resReturn(1,[]);
+        }
+        $MiniProgram = new MiniProgram();
+        $mini=$MiniProgram->mini($request->platform,$request->code);
+        if($mini['result']== 'ok'){
+            return resReturn(1,$mini);
+        }else{
+            return resReturn(0,$mini['msg'],Code::CODE_WRONG);
+        }
+    }
+
+    /**
+     * 授权获取手机号
+     * @param Request $request
+     * @return array
+     */
+    public function authorizedPhone(Request $request){
+        if($request->has('iv')){
+            $openid=$request->header('openid');
+            if(!$openid){
+                return resReturn(0,'参数有误',Code::CODE_MISUSE);
+            }
+            $MiniProgram = new MiniProgram();
+            $miniPhoneNumber=$MiniProgram->miniPhoneNumber($request->platform,$request->session_key,$request->iv,$request->encryptedData);
+            if($miniPhoneNumber['result']== 'error'){
+                return resReturn(0,$miniPhoneNumber['msg'],Code::CODE_MISUSE);
+            }
+            $User = User::where('cellphone',$miniPhoneNumber['purePhoneNumber'])->first();
+            if(!$User){
+                $return =DB::transaction(function ()use($request,$miniPhoneNumber,$openid){
+                    $password = substr(MD5(time()),5,6);  //随机生成密码
+                    $user=new User();
+                    $user->name = $miniPhoneNumber['purePhoneNumber'];
+                    $user->cellphone = $miniPhoneNumber['purePhoneNumber'];
+                    $user->password=bcrypt($password);
+                    $user[strtolower($request->platform)]=$openid;
+                    $user->api_token = hash('sha256', Str::random(60));
+                    $user->save();
+                    // 通知
+                    $invoice=[
+                        'type'=> InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
+                        'title'=>'会员注册成功',
+                        'list'=>[
+                            [
+                                'keyword'=>'手机',
+                                'data'=>$miniPhoneNumber['purePhoneNumber']
+                            ],
+                            [
+                                'keyword'=>'初始密码',
+                                'data'=>$password,
+                                'copy'=>true
+                            ]
+                        ],
+                        'remark'=>'您第一次授权登录我们平台，我们将为您生成初始密码，请妥善保管',
+                        'prefers'=>['database']
+                    ];
+                    $user->notify(new InvoicePaid($invoice));
+                    $input = $request->all();
+                    $log = new UserLog();
+                    $log->user_id = $user->id;
+                    $log->path = $request->path();
+                    $log->method = $request->method();
+                    $log->ip = $request->ip();
+                    $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
+                    $log->save();   # 记录日志
+                    return [
+                        'state'=>1,
+                        'data'=>$user
+                    ];
+                }, 5);
+                if($return['state'] == 1){
+                    return resReturn(1,[
+                        'nickname'=>$return['data']->nickname,
+                        'cellphone'=>$return['data']->cellphone,
+                        'portrait'=>$return['data']->portrait,
+                        'api_token'=>$return['data']->api_token
+                    ]);
+                }
+            }else{
+                $return =DB::transaction(function ()use($request,$miniPhoneNumber,$User,$openid){
+                    $User->updated_at=Carbon::now()->toDateTimeString();
+                    if(!$User[strtolower($request->platform)]){
+                        $User[strtolower($request->platform)]=$openid;
+                    }
+                    $User->save();
+                    $input = $request->all();
+                    $log = new UserLog();
+                    $log->user_id = $User->id;
+                    $log->path = $request->path();
+                    $log->method = $request->method();
+                    $log->ip = $request->ip();
+                    $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
+                    $log->save();   # 记录日志
+                    return [
+                        'state'=>1,
+                        'data'=>$User
+                    ];
+                }, 5);
+                if($return['state'] == 1){
+                    return resReturn(1,[
+                        'nickname'=>$return['data']->nickname,
+                        'cellphone'=>$return['data']->cellphone,
+                        'portrait'=>$return['data']->portrait,
+                        'api_token'=>$return['data']->api_token
+                    ]);
+                }
+            }
+        }else{
+            return resReturn(0,'您拒绝授权，无法登录',Code::CODE_MISUSE);
+        }
+    }
+
+    /**
+     * 统一在线支付
+     * @param Request $request
+     * @return string
+     */
+    public function unifiedPayment(Request $request){
+        $reutn=[];
+        switch ($request->type){
+            case PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT:  //商品订单支付
+                $reutn = (new GoodIndent())->payment($request);
+                break;
+        }
+        if($reutn['result']=='ok'){
+            return resReturn(1,$reutn);
+        }else{
+            return resReturn(0,$reutn['msg'],Code::CODE_WRONG);
+        }
+    }
+
+    /**
+     * 微信支付回调
+     * @param Request $request
+     * @return string
+     * @throws \EasyWeChat\Kernel\Exceptions\Exception
+     */
+    public function paymentNotify(Request $request){
+        $config = config('wechat.payment.default');
+        $app = Factory::payment($config);
+        $response = $app->handlePaidNotify(function ($message, $fail)
+        {
+            // 根据返回的订单号查询订单数据
+            $order = PaymentLog::where('number',$message['out_trade_no'])->first();
+            if (!$order || $order->state  > PaymentLog::PAYMENT_LOG_STATE_CREATE) {
+                return true;
+            }
+            // 支付成功后的业务逻辑
+            if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
+                // 用户是否支付成功
+                if ($message['result_code'] === 'SUCCESS') {
+//                    $PaymentLog = PaymentLog::find($order->id);
+                    $order->state = PaymentLog::PAYMENT_LOG_STATE_COMPLETE;
+                    $order->transaction_id = $message['transaction_id'];
+                    $order->data = json_encode($message);
+                    $order->save();
+                    switch ($order->type){
+                        case PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT:  //商品订单支付
+                            (new GoodIndent())->goodIndentNotify($order['pay_id']);
+                            break;
+                    }
+                    // 用户支付失败
+                } elseif ($message['result_code'] === 'FAIL') {
+                    $order->state = PaymentLog::PAYMENT_LOG_STATE_FAILURE;
+                    $order->transaction_id = $message['transaction_id'];
+                    $order->data = json_encode($message);
+                    $order->save();
+                }
+            } else {
+                return $fail('Order not exists.');
+            }
+            return true;
+        });
+        return $response;
+    }
+
+    /**
+     * 微信支付退款回调
+     * @param Request $request
+     * @return string
+     * @throws \EasyWeChat\Kernel\Exceptions\Exception
+     */
+    public function refundNotify(Request $request){
+//        Log::info('退款:'.json_encode($request->all()));
+        $config = config('wechat.payment.default');
+        $app = Factory::payment($config);
+        $response = $app->handleRefundedNotify(function ($message, $reqInfo, $fail)
+        {
+
+            // 根据返回的订单号查询订单数据
+            $PaymentLog = PaymentLog::where('number',$reqInfo['out_trade_no'])->first();
+            if (!$PaymentLog || $PaymentLog->state > PaymentLog::PAYMENT_LOG_STATE_CREATE) {
+                return true;
+            }
+            // 支付成功后的业务逻辑
+            if ($message['return_code'] === 'SUCCESS') {
+                if ($message['return_code'] === 'SUCCESS') {
+                    $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_COMPLETE;
+                    $PaymentLog->transaction_id = $reqInfo['transaction_id'];
+                    $PaymentLog->data = json_encode($reqInfo);
+                    $PaymentLog->save();
+                    switch ($PaymentLog->type){
+                        case PaymentLog::PAYMENT_LOG_TYPE_REFUND:
+                            (new GoodIndent())->goodIndentRefundNotify($PaymentLog['pay_id']);
+                            break;
+                    }
+                    // 用户支付失败
+                } elseif ($message['result_code'] === 'FAIL') {
+                    $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_FAILURE;
+                    $PaymentLog->transaction_id = $message['transaction_id'];
+                    $PaymentLog->data = json_encode($message);
+                    $PaymentLog->save();
+                }
+            } else {
+                return $fail('Order not exists.');
+            }
+            return true;
+        });
+        return $response;
+    }
+
+    /**
      * 微信支付
      * @param Request $request
      * @return string
@@ -396,72 +623,5 @@ class WeChatController  extends Controller
             return resReturn(0,$result['return_msg'],Code::CODE_WRONG);
         }
         return resReturn(0,$result['err_code_des'],Code::CODE_WRONG);
-    }
-
-    /**
-     * 微信支付回调
-     * @param Request $request
-     * @return string
-     * @throws \EasyWeChat\Kernel\Exceptions\Exception
-     */
-    public function paymentNotify(Request $request){
-        $config = config('wechat.payment.default');
-        $config['notify_url'] = request()->root().'/api/v1/app/paymentNotify';    // 你也可以在下单时单独设置来想覆盖它
-        $app = Factory::payment($config);
-        $response = $app->handlePaidNotify(function ($message, $fail)
-        {
-//            Log::info('小程序:'.json_encode($message));
-            // 根据返回的订单号查询订单数据
-            $order = PaymentLog::where('number',$message['out_trade_no'])->first();
-            if (!$order || $order->state == PaymentLog::PAYMENT_LOG_STATE_COMPLETE) {
-                return true;
-            }
-            // 支付成功后的业务逻辑
-            if ($message['return_code'] === 'SUCCESS') { // return_code 表示通信状态，不代表支付状态
-                // 用户是否支付成功
-                if ($message['result_code'] === 'SUCCESS') {
-//                    $PaymentLog = PaymentLog::find($order->id);
-                    $order->state = PaymentLog::PAYMENT_LOG_STATE_COMPLETE;
-                    $order->transaction_id = $message['transaction_id'];
-                    $order->data = json_encode($message);
-                    $order->save();
-                    // 业务代码
-                    $GoodIndent=GoodIndent::find($order['pay_id']);
-                    $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
-                    $GoodIndent->pay_time= Carbon::now()->toDateTimeString();
-                    $GoodIndent->save();
-                    $Money=new MoneyLog();
-                    $Money->user_id = $GoodIndent->user_id;
-                    $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;
-                    $Money->money = $order->money;
-                    $Money->remark = '对订单：'.$GoodIndent->identification.'的付款';
-                    $Money->save();
-                    // 通知
-                    $invoice=[
-                        'type'=> InvoicePaid::NOTIFICATION_TYPE_DEAL,
-                        'title'=>'对订单：'.$GoodIndent->identification.'的付款',
-                        'list'=>[
-                            [
-                                'keyword'=>'支付方式',
-                                'data'=>'微信支付'
-                            ]
-                        ],
-                        'price'=>$order->money,
-                        'url'=>'/pages/finance/bill_show?id='.$Money->id,
-                        'prefers'=>['database']
-                    ];
-                    $user = User::find($GoodIndent->user_id);
-                    $user->notify(new InvoicePaid($invoice));
-                    // 用户支付失败
-                } elseif ($message['result_code'] === 'FAIL') {
-                    $order->status = 'paid_fail';
-                }
-            } else {
-                return $fail('Order not exists.');
-            }
-
-            return true;
-        });
-        return $response;
     }
 }

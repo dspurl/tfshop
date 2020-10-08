@@ -11,6 +11,7 @@
         "php": "^7.2.5",
         "ext-gd": "*",
         "ext-json": "*",
+        "96qbhy/tt-microapp": "^2.2",
         "alibabacloud/client": "^1.5",
         "fideloper/proxy": "^4.0",
         "iidestiny/laravel-filesystem-oss": "^1.2",
@@ -48,7 +49,8 @@
         },
         "classmap": [
             "database/seeds",
-            "database/factories"
+            "database/factories",
+            "app/lib/alipay-sdk"
         ],
         "files": [
             "app/Helpers/functions.php"

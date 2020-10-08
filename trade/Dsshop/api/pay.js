@@ -1,7 +1,7 @@
 import Network from '../utils/network.js'
 export default {
-	wxPay(data, success, fail) {
-		Network.setPostMessage('wxPay', data, '支付中', function(res) {
+	unifiedPayment(data, success, fail) {
+		Network.setPostMessage('unifiedPayment', data, '支付中', function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({

@@ -7,35 +7,35 @@
 
 		<view class="pay-type-list">
 
-			<view class="type-item b-b" @click="changePayType(1)">
+			<view class="type-item b-b" @click="changePayType('weixin')">
 				<text class="icon yticon icon-weixinzhifu"></text>
 				<view class="con">
 					<text class="tit">微信支付</text>
 					<text>推荐使用微信支付</text>
 				</view>
 				<label class="radio">
-					<radio value="" color="#fa436a" :checked='payType == 1' />
+					<radio value="" color="#fa436a" :checked="payType == 'weixin'"/>
 					</radio>
 				</label>
 			</view>
-			<!-- <view class="type-item b-b" @click="changePayType(2)">
+			<!-- <view class="type-item b-b" @click="changePayType('alipay')">
 				<text class="icon yticon icon-alipay"></text>
 				<view class="con">
 					<text class="tit">支付宝支付</text>
 				</view>
 				<label class="radio">
-					<radio value="" color="#fa436a" :checked='payType == 2' />
+					<radio value="" color="#fa436a" :checked="payType == 'alipay'" />
 					</radio>
 				</label>
 			</view> -->
-			<view class="type-item" @click="changePayType(3)">
+			<view class="type-item" @click="changePayType(1)">
 				<text class="icon yticon icon-erjiye-yucunkuan"></text>
 				<view class="con">
 					<text class="tit">预存款支付</text>
 					<text>可用余额 ¥{{orderInfo.user.money | 1000}}</text>
 				</view>
 				<label class="radio">
-					<radio value="" color="#fa436a" :checked='payType == 3' />
+					<radio value="" color="#fa436a" :checked="payType == 1" />
 					</radio>
 				</label>
 			</view>
@@ -55,7 +55,7 @@
 		data() {
 			return {
 				id: '',
-				payType: 1,
+				payType: 'weixin',
 				orderInfo: {
 					total: 0,
 					user: {
@@ -90,17 +90,27 @@
 			//确认支付
 			confirm: async function() {
 				const that = this
-				switch(this.payType){
-					case 1: // 微信支付
-					Pay.wxPay({
+				if(this.payType === 1) {
+					Pay.balancePay({
 						id: this.id
 					},function(res){
+						authMsg(['4iOC-HyjJeKK5HiYORcOtrKHvu2Ho1ScVF0aqP3KkzQ'])
+						uni.redirectTo({
+							url: '/pages/money/paySuccess'
+						})
+					})
+				} else {
+					Pay.unifiedPayment({
+						id: this.id,
+						platform: this.payType,
+						type: 'goodsIndent'
+					},function(res){
 						uni.requestPayment({
-							timeStamp: res.timestamp,
-							nonceStr: res.nonceStr,
-							package: res.package,
-							signType: res.signType,
-							paySign: res.paySign,
+							timeStamp: res.msg.timestamp,
+							nonceStr: res.msg.nonceStr,
+							package: res.msg.package,
+							signType: res.msg.signType,
+							paySign: res.msg.paySign,
 							success(res) {
 							  // console.log(res)
 							  // 订阅消息
@@ -115,17 +125,6 @@
 						})
 						
 					})
-					break
-					case 3:	// 余额支付
-					Pay.balancePay({
-						id: this.id
-					},function(res){
-						authMsg(['4iOC-HyjJeKK5HiYORcOtrKHvu2Ho1ScVF0aqP3KkzQ'])
-						uni.redirectTo({
-							url: '/pages/money/paySuccess'
-						})
-					})
-					break
 				}
 			},
 		}

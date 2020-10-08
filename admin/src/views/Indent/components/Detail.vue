@@ -79,6 +79,61 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <!-- 在线支付记录 -->
+    <el-card shadow="always" style="margin-top: 25px">
+      <div slot="header" class="clearfix">
+        <span>在线支付记录</span>
+      </div>
+      <el-table
+        :data="list.payment_log_all"
+        border
+        style="width: 100%">
+        <el-table-column label="订单描述" align="left">
+          <template slot-scope="scope">
+            <span>{{ scope.row.name }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="商户订单号" align="left">
+          <template slot-scope="scope">
+            <span>{{ scope.row.number }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="第三方订单号" align="left">
+          <template slot-scope="scope">
+            <span>{{ scope.row.transaction_id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="支付类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.type_show }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作金额（元）" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.money_show | 1000 }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="平台" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.platform_show }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.state_show }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="操作" align="center">
+          <template slot-scope="scope">
+            <el-button :loading="queryLoading" type="primary" round @click="queryNumber(scope.row)">同步</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-alert
+        title="可能存在用户支付成功，但平台支付状态未改变的情况，此时，可以主动点击“同步”进行支付状态同步，如果查询失败，可过段时间再同步一次;这里不支持对支付订单退款，请通过第三方支付平台后台操作，然后再调用同步操作"
+        type="warning"
+        style="margin-top:10px;"/>
+    </el-card>
     <!-- 配送 -->
     <el-card shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
@@ -140,15 +195,15 @@
     <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false" title="退款">
       <el-form ref="refundForm" :rules="refundRules" :model="refundTemp" label-position="left" label-width="120px" style="width:700px;">
         <el-form-item label="退款金额" prop="refund_money" style="width:300px;">
-          <el-input-number v-model="refundTemp.refund_money" :precision="2" :min="1" :max="list.total" label="退款金额"/>
+          <el-input-number v-model="refundTemp.refund_money" :precision="2" :min="0.01" :max="list.total" label="退款金额"/>
         </el-form-item>
         <el-form-item label="退款方式" prop="refund_way">
           <el-radio-group v-model="refundTemp.refund_way">
             <el-radio :label="0">退到余额</el-radio>
-            <el-radio :label="1">线下退款</el-radio>
+            <el-radio :label="1">原路退回</el-radio>
           </el-radio-group>
           <el-alert
-            title="退到余额：将款项退到用户余额中;线下退款：通过第三方退款或线下打款给用户"
+            title="退到余额：将款项退到用户余额中;原路退回：用户通过哪个支付途径付款，就退回哪里"
             type="warning"/>
         </el-form-item>
         <el-form-item label="退款理由" prop="refund_reason" style="width:600px;">
@@ -168,12 +223,13 @@
   }
 </style>
 <script>
-import { getDetails, createSubmit, updateSubmit } from '@/api/Indent'
+import { getDetails, createSubmit, updateSubmit, query } from '@/api/Indent'
 import { dhlList } from '@/api/dhl'
 export default {
   name: 'IndentListDetails',
   data() {
     return {
+      queryLoading: false,
       order_progress: 0,
       list: '',
       dialogFormVisible: false,
@@ -282,6 +338,20 @@ export default {
             setTimeout(this.$router.back(-1), 2000)
           })
         }
+      })
+    },
+    // 查询支付订单
+    queryNumber(row) {
+      this.queryLoading = true
+      query(row).then(() => {
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: '同步成功',
+          type: 'success',
+          duration: 2000
+        })
+        this.getList()
+        this.queryLoading = false
       })
     },
     getSummaries(param) {

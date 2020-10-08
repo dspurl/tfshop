@@ -1,8 +1,9 @@
 <?php
 
 namespace App\Models\v1;
+use App\Notifications\InvoicePaid;
+use Carbon\Carbon;
 use DateTimeInterface;
-use GuzzleHttp\Client;
 use Illuminate\Database\Eloquent\Model;
 /**
  * @property int user_id
@@ -29,8 +30,10 @@ class GoodIndent extends Model
     const GOOD_INDENT_STATE_ACCOMPLISH= 5; //状态：已完成
     const GOOD_INDENT_STATE_CANCEL= 6; //状态：已取消
     const GOOD_INDENT_STATE_REFUND= 7; //状态：已退款
+    const GOOD_INDENT_STATE_REFUND_PROCESSING= 8; //状态：退款处理中
+    const GOOD_INDENT_STATE_REFUND_FAILURE= 9; //状态：退款失败
     const GOOD_INDENT_REFUND_WAY_BALANCE= 0; //退款方式：退到余额
-    const GOOD_INDENT_REFUND_WAY_OFFLINE= 1; //退款方式：线下退款
+    const GOOD_INDENT_REFUND_WAY_BACK= 1; //退款方式：原路退回
     public static $withoutAppends = true;
     protected $appends = ['state_show'];
     /**
@@ -43,6 +46,130 @@ class GoodIndent extends Model
     {
         return $date->format('Y-m-d H:i:s');
     }
+
+    /**
+     * 支付处理
+     * @param $request
+     * @return array
+     */
+    public function payment($request){
+        $openid=$request->header('openid');
+        $GoodIndent=static::with(['goodsList'])->find($request->id);
+        $body='对订单：'.$GoodIndent->identification.'的付款';
+        $fee=$GoodIndent->total;
+//        $fee=1;
+        $trade_type="JSAPI";
+        $MiniProgram = new MiniProgram();
+        $payment=$MiniProgram->payment($request->platform,$body,$fee,$openid,$trade_type);
+        if($payment['result']== 'error'){
+            return $payment;
+        }
+        $PaymentLog = new PaymentLog();
+        $PaymentLog->name = $body;
+        $PaymentLog->number = $payment['number'];
+        $PaymentLog->money = $fee;
+        $PaymentLog->pay_id = $request->id; //订单ID
+        $PaymentLog->type = 'goodsIndent';
+        $PaymentLog->platform= $request->platform;
+        $PaymentLog->pay_type = 'App\Models\v1\GoodIndent';
+        $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;
+        $PaymentLog->save();
+        //库存判断
+        foreach ($GoodIndent->goodsList as $indentCommodity){
+            $Good=Good::select('id','is_inventory','inventory')->find($indentCommodity['good_id']);
+            if($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_FILM){ //付款减库存
+                if(!$indentCommodity['good_sku_id']){ //非SKU商品
+                    if($Good->inventory-$indentCommodity['number']<0){
+                        return [
+                            'result'=>'error',
+                            'msg'=>'存在库存不足的商品，请重新购买'
+                        ];
+                    }
+                    $Good->inventory = $Good->inventory-$indentCommodity['number'];
+                    $Good->save();
+                }else{
+                    $GoodSku=GoodSku::find($indentCommodity['good_sku_id']);
+                    if($GoodSku->inventory-$indentCommodity['number']<0){
+                        return [
+                            'result'=>'error',
+                            'msg'=>'存在库存不足的SKU商品，请重新购买'
+                        ];
+                    }
+                    $GoodSku->inventory = $GoodSku->inventory-$indentCommodity['number'];
+                    $GoodSku->save();
+                }
+            }
+        }
+        return $payment;
+    }
+
+    /**
+     * 支付回调
+     * @param $id
+     * @return string
+     */
+    public function goodIndentNotify($id){
+        $GoodIndent=GoodIndent::find($id);
+        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
+        $GoodIndent->pay_time= Carbon::now()->toDateTimeString();
+        $GoodIndent->save();
+        $Money=new MoneyLog();
+        $Money->user_id = $GoodIndent->user_id;
+        $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;
+        $Money->money = $GoodIndent->total;
+        $Money->remark = '对订单：'.$GoodIndent->identification.'的付款';
+        $Money->save();
+        // 通知
+        $invoice=[
+            'type'=> InvoicePaid::NOTIFICATION_TYPE_DEAL,
+            'title'=>'对订单：'.$GoodIndent->identification.'的付款',
+            'list'=>[
+                [
+                    'keyword'=>'支付方式',
+                    'data'=>'微信支付'
+                ]
+            ],
+            'price'=>$GoodIndent->total,
+            'url'=>'/pages/finance/bill_show?id='.$Money->id,
+            'prefers'=>['database']
+        ];
+        $user = User::find($GoodIndent->user_id);
+        $user->notify(new InvoicePaid($invoice));
+    }
+
+    /**
+     * 退款回调
+     * @param $id
+     * @return string
+     */
+    public function goodIndentRefundNotify($id){
+        $GoodIndent=GoodIndent::find($id);
+        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_REFUND;
+        $GoodIndent->save();
+        $Money=new MoneyLog();
+        $Money->user_id = $GoodIndent->user_id;
+        $Money->type = MoneyLog::MONEY_LOG_TYPE_INCOME;
+        $Money->money = $GoodIndent->refund_money;
+        $Money->remark = '订单：'.$GoodIndent->identification.'的退款，已退回到您的充值账号中';
+        $Money->save();
+        // 通知
+        $invoice=[
+            'type'=> InvoicePaid::NOTIFICATION_TYPE_DEAL,
+            'title'=>'对订单：'.$GoodIndent->identification.'的退款',
+            'list'=>[
+                [
+                    'keyword'=>'退款方式',
+                    'data'=>'原路退还'
+                ]
+            ],
+            'price'=>$GoodIndent->refund_money,
+            'url'=>'/pages/finance/bill_show?id='.$Money->id,
+            'prefers'=>['database']
+        ];
+        $user = User::find($GoodIndent->user_id);
+        $user->notify(new InvoicePaid($invoice));
+    }
+
     /**
      * 获取单张图片
      */
@@ -65,8 +192,8 @@ class GoodIndent extends Model
                     case static::GOOD_INDENT_REFUND_WAY_BALANCE:
                         $return = '退到余额';
                         break;
-                    case static::GOOD_INDENT_REFUND_WAY_OFFLINE:
-                        $return = '线下退款';
+                    case static::GOOD_INDENT_REFUND_WAY_BACK:
+                        $return = '原路退还';
                         break;
                 }
             }
@@ -107,7 +234,12 @@ class GoodIndent extends Model
                     case static::GOOD_INDENT_STATE_REFUND:
                         $return = '已退款';
                         break;
-
+                    case static::GOOD_INDENT_STATE_REFUND_PROCESSING:
+                        $return = '退款处理中';
+                        break;
+                    case static::GOOD_INDENT_STATE_REFUND_FAILURE:
+                        $return = '退款失败';
+                        break;
                 }
             }
             return $return;
@@ -258,5 +390,19 @@ class GoodIndent extends Model
      */
     public function GoodIndentUser(){
         return $this->hasOne(GoodIndentUserCoupon::class,'good_indent_id','id');
+    } 
+    
+    /** 
+     * 获取订单支付记录
+     */
+    public function PaymentLog(){
+        return $this->morphOne('App\Models\v1\PaymentLog', 'pay');
+    }
+
+    /**
+     * 获取订单支付记录列表
+     */
+    public function PaymentLogAll(){
+        return $this->morphMany('App\Models\v1\PaymentLog', 'pay');
     }
 }

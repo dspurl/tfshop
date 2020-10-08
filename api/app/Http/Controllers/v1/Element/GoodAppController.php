@@ -10,7 +10,6 @@ use App\Models\v1\ApplyUser;
 use App\Models\v1\GoodCategory;
 use App\Models\v1\GoodGoodCategory;
 use App\Models\v1\GoodSku;
-use App\Models\v1\GoodSpecification;
 use App\Models\v1\Resource;
 use App\Models\v1\Specification;
 use App\Models\v1\Category;
