@@ -13,6 +13,7 @@
         "ext-json": "*",
         "96qbhy/tt-microapp": "^2.2",
         "alibabacloud/client": "^1.5",
+        "doctrine/dbal": "^2.11",
         "fideloper/proxy": "^4.0",
         "iidestiny/laravel-filesystem-oss": "^1.2",
         "johnlui/aliyun-oss": "~2.0",
