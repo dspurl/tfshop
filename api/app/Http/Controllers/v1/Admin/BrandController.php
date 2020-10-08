@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v1\admin;
+namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\Http\Requests\v1\SubmitBrandTemplateRequest;
@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class brandController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.

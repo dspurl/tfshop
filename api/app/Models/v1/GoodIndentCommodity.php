@@ -4,7 +4,6 @@ namespace App\Models\v1;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
-use PhpParser\Node\Expr\Cast\Object_;
 
 /**
  * @property int good_indent_id

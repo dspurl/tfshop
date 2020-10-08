@@ -2,7 +2,6 @@
 
 namespace App\Models\v1;
 
-use App\Models\v1\ApplyUsers;
 use DateTimeInterface;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;

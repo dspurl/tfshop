@@ -1,20 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\v1\admin;
+namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
-use App\Http\Requests\v1\SubmitComponentsRequest;
-use App\Http\Requests\v1\SubmitSmsServiceRequest;
-use App\Http\Requests\v1\SubmitSmsTemplateRequest;
-use App\Models\v1\Component;
-use App\Models\v1\SmsService;
-use App\Models\v1\SmsTemplate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
 
-class redisServiceController extends Controller
+class RedisServiceController extends Controller
 {
     /**
      * Display a listing of the resource.

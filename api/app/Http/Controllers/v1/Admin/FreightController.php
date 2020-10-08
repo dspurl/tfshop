@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\v1\Admin;
 
-use App\Code;
 use App\Http\Requests\v1\SubmitFreightRequest;
 use App\Models\v1\Freight;
 use App\Models\v1\FreightWay;

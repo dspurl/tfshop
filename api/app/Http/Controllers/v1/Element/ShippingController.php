@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\v1\Element;
 
 use App\Code;
-use App\Http\Requests\v1\SubmitGoodLocationRequest;
 use App\Http\Requests\v1\SubmitShippingRequest;
 use App\Models\v1\Common;
 use App\Models\v1\Freight;

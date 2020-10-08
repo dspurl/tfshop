@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
-use App\Http\Requests\v1\SubmitGoodCategoryRequest;
 use App\Http\Requests\v1\SubmitGoodRequest;
 use App\Models\v1\Freight;
-use App\Models\v1\GoodCategory;
 use App\Models\v1\GoodSku;
 use App\Models\v1\GoodSpecification;
 use App\Models\v1\Resource;

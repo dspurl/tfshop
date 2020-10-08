@@ -1,19 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\v1\admin;
+namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\Http\Requests\v1\SubmitSpecificationRequest;
-use App\Http\Requests\v1\SubmitBrandTemplateRequest;
 use App\Models\v1\Specification;
-use App\Models\v1\Brand;
-use App\Models\v1\Resource;
 use App\Models\v1\SpecificationGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class specificationController extends Controller
+class SpecificationController extends Controller
 {
     /**
      * Display a listing of the resource.

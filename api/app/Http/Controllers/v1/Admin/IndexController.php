@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\v1\Admin;
 use App\Http\Controllers\Controller;
-use App\Models\v1\Browse;
 use App\Models\v1\Common;
 use App\Models\v1\Good;
 use App\Models\v1\GoodIndent;
