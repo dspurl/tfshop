@@ -10,6 +10,7 @@ use Illuminate\Notifications\Notifiable;
  * @property string password
  * @property mixed name
  * @property mixed email
+ *  @property int money
  * @property mixed portrait
  * @property int type
  * @property int money
