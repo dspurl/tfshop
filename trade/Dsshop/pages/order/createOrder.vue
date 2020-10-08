@@ -4,7 +4,7 @@
 		<view class="address-section" @click="addAddress()">
 			<view class="order-content">
 				<text class="yticon icon-shouhuodizhi"></text>
-				<view class="cen" v-if="addressData.id">
+				<view class="cen" v-if="addressData">
 					<view class="top">
 						<text class="name">{{addressData.name}}</text>
 						<text class="mobile">{{addressData.cellphone}}</text>
@@ -62,7 +62,7 @@
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">
-					<block v-if="addressData.id">
+					<block v-if="addressData">
 						<block v-if="carriage > 0">
 							{{carriage | 1000}}
 						</block>
@@ -217,7 +217,7 @@
 				const that = this
 				Address.getOne(this.order, function(res){
 					that.addressData = res.shipping
-					that.carriage = res.carriage
+					that.carriage = res.carriage ? res.carriage : 0
 					that.outPocketTotal() //实付金额
 				})
 			},
@@ -237,7 +237,7 @@
 				this.payType = type;
 			},
 			submit(){
-				if(!this.addressData.id){
+				if(!this.addressData){
 					this.$api.msg('请选择地址')
 					return false
 				}
@@ -273,6 +273,8 @@
 			//计算实付金额
 			outPocketTotal(){
 				let outPocket = 0
+				console.log('total',this.total)
+				console.log('carriage',this.carriage)
 				outPocket = outPocket + this.total + this.carriage
 				this.outPocket = Number(outPocket.toFixed(2))
 			},
