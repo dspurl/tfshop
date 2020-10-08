@@ -273,8 +273,6 @@
 			//计算实付金额
 			outPocketTotal(){
 				let outPocket = 0
-				console.log('total',this.total)
-				console.log('carriage',this.carriage)
 				outPocket = outPocket + this.total + this.carriage
 				this.outPocket = Number(outPocket.toFixed(2))
 			},
