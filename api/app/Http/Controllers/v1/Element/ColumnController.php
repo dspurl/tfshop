@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\v1\Element;
 
 use App\Http\Requests\v1\SubmitColumnRequest;
-use App\Models\v1\Article;
 use App\Models\v1\Column;
 use App\Models\v1\ColumnProperty;
 use Illuminate\Http\Request;

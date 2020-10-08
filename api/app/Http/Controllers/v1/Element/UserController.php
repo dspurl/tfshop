@@ -4,22 +4,10 @@ namespace App\Http\Controllers\v1\Element;
 
 use App\Code;
 use App\common\RedisLock;
-use App\Http\Requests\v1\SubmitLiveCodeRequest;
-use App\Models\v1\Common;
-use App\Models\v1\ApplyUser;
-use App\Models\v1\LiveCode;
-use App\Models\v1\LiveCodeLog;
-use App\Models\v1\LiveThirdCode;
 use App\Models\v1\User;
-use EasyWeChat\Kernel\Http\StreamResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redis;
-use EasyWeChat\Factory;
-use Illuminate\Support\Facades\Storage;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class UserController extends Controller
 {

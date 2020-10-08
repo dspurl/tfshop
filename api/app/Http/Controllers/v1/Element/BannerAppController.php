@@ -2,9 +2,7 @@
 
 namespace App\Http\Controllers\v1\Element;
 
-use App\Code;
 use App\Http\Requests\v1\SubmitBannerRequest;
-use App\Models\v1\Common;
 use App\Models\v1\Banner;
 use App\Models\v1\Resource;
 use Illuminate\Http\Request;

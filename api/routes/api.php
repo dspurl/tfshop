@@ -61,43 +61,43 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::delete('listTemplates/{photo}', 'ListTemplatesController@destroy')->middleware(['permissions:DeleteListTemplate']);    //列表模板删除
 
         //--Redis管理
-        Route::get('redis', 'redisServiceController@index')->middleware(['permissions:RedisServicesList']);    //Redis列表
-        Route::get('redis/{photo}', 'redisServiceController@show')->middleware(['permissions:RedisServicesList']);    //Redis详情
-        Route::delete('redis/{photo}', 'redisServiceController@destroy')->middleware(['permissions:DeleteRedisServices']);    //删除Redis
-        Route::get('redisPanel', 'redisServiceController@panel')->middleware(['permissions:RedisPanel']);    //Redis面板
+        Route::get('redis', 'RedisServiceController@index')->middleware(['permissions:RedisServicesList']);    //Redis列表
+        Route::get('redis/{photo}', 'RedisServiceController@show')->middleware(['permissions:RedisServicesList']);    //Redis详情
+        Route::delete('redis/{photo}', 'RedisServiceController@destroy')->middleware(['permissions:DeleteRedisServices']);    //删除Redis
+        Route::get('redisPanel', 'RedisServiceController@panel')->middleware(['permissions:RedisPanel']);    //Redis面板
 
         //--oauth管理
         Route::get('oauth', 'oauthManageController@index')->middleware(['permissions:OauthList']);    //Redis列表
 
         //--品牌
-        Route::get('brand', 'brandController@index')->middleware(['permissions:BrandList']);    //品牌列表
-        Route::post('brand', 'brandController@store')->middleware(['permissions:CreateBrand']);    //品牌添加保存
-        Route::put('brand/{photo}', 'brandController@update')->middleware(['permissions:EditBrand']);    //品牌编辑保存
-        Route::delete('brand/{photo}', 'brandController@destroy')->middleware(['permissions:DeleteBrand']);    //品牌删除
+        Route::get('brand', 'BrandController@index')->middleware(['permissions:BrandList']);    //品牌列表
+        Route::post('brand', 'BrandController@store')->middleware(['permissions:CreateBrand']);    //品牌添加保存
+        Route::put('brand/{photo}', 'BrandController@update')->middleware(['permissions:EditBrand']);    //品牌编辑保存
+        Route::delete('brand/{photo}', 'BrandController@destroy')->middleware(['permissions:DeleteBrand']);    //品牌删除
 
         //--资源
-        Route::get('resource', 'resourceController@index')->middleware(['permissions:ResourceDataList']);    //资源列表
-        Route::post('resource', 'resourceController@store')->middleware(['permissions:CreateResourceData']);    //资源添加保存
-        Route::put('resource/{photo}', 'resourceController@update')->middleware(['permissions:EditResourceData']);    //资源编辑保存
-        Route::delete('resource/{photo}', 'resourceController@destroy')->middleware(['permissions:DeleteResourceData']);    //资源删除
+        Route::get('resource', 'ResourceController@index')->middleware(['permissions:ResourceDataList']);    //资源列表
+        Route::post('resource', 'ResourceController@store')->middleware(['permissions:CreateResourceData']);    //资源添加保存
+        Route::put('resource/{photo}', 'ResourceController@update')->middleware(['permissions:EditResourceData']);    //资源编辑保存
+        Route::delete('resource/{photo}', 'ResourceController@destroy')->middleware(['permissions:DeleteResourceData']);    //资源删除
 
         //--分类
-        Route::get('category', 'categoryController@index')->middleware(['permissions:CategoryList']);    //分类列表
-        Route::post('category', 'categoryController@store')->middleware(['permissions:CreateCategory']);    //分类添加保存
-        Route::put('category/{photo}', 'categoryController@update')->middleware(['permissions:EditCategory']);    //分类编辑保存
-        Route::delete('category/{photo}', 'categoryController@destroy')->middleware(['permissions:DeleteCategory']);    //分类删除
+        Route::get('category', 'CategoryController@index')->middleware(['permissions:CategoryList']);    //分类列表
+        Route::post('category', 'CategoryController@store')->middleware(['permissions:CreateCategory']);    //分类添加保存
+        Route::put('category/{photo}', 'CategoryController@update')->middleware(['permissions:EditCategory']);    //分类编辑保存
+        Route::delete('category/{photo}', 'CategoryController@destroy')->middleware(['permissions:DeleteCategory']);    //分类删除
 
         //--规格
-        Route::get('specification', 'specificationController@index')->middleware(['permissions:SpecificationList']);    //规格列表
-        Route::post('specification', 'specificationController@store')->middleware(['permissions:CreateSpecification']);    //规格添加保存
-        Route::put('specification/{photo}', 'specificationController@update')->middleware(['permissions:EditSpecification']);    //规格编辑保存
-        Route::delete('specification/{photo}', 'specificationController@destroy')->middleware(['permissions:DeleteSpecification']);    //规格删除
+        Route::get('specification', 'SpecificationController@index')->middleware(['permissions:SpecificationList']);    //规格列表
+        Route::post('specification', 'SpecificationController@store')->middleware(['permissions:CreateSpecification']);    //规格添加保存
+        Route::put('specification/{photo}', 'SpecificationController@update')->middleware(['permissions:EditSpecification']);    //规格编辑保存
+        Route::delete('specification/{photo}', 'SpecificationController@destroy')->middleware(['permissions:DeleteSpecification']);    //规格删除
 
         //--规格组
-        Route::get('specificationGroup', 'specificationGroupController@index')->middleware(['permissions:SpecificationGroupList']);    //规格组列表
-        Route::post('specificationGroup', 'specificationGroupController@store')->middleware(['permissions:CreateSpecificationGroup']);    //规格组添加保存
-        Route::put('specificationGroup/{photo}', 'specificationGroupController@update')->middleware(['permissions:EditSpecificationGroup']);    //规格组编辑保存
-        Route::delete('specificationGroup/{photo}', 'specificationGroupController@destroy')->middleware(['permissions:DeleteSpecificationGroup']);    //规格组删除
+        Route::get('specificationGroup', 'SpecificationGroupController@index')->middleware(['permissions:SpecificationGroupList']);    //规格组列表
+        Route::post('specificationGroup', 'SpecificationGroupController@store')->middleware(['permissions:CreateSpecificationGroup']);    //规格组添加保存
+        Route::put('specificationGroup/{photo}', 'SpecificationGroupController@update')->middleware(['permissions:EditSpecificationGroup']);    //规格组编辑保存
+        Route::delete('specificationGroup/{photo}', 'SpecificationGroupController@destroy')->middleware(['permissions:DeleteSpecificationGroup']);    //规格组删除
 
         //商品管理
         Route::get('Good', 'GoodController@index')->middleware(['permissions:ProductList']);    //列表
@@ -163,7 +163,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('uploadPictures', 'WeChatController@uploadPictures');  //上传
         Route::post('register', 'WeChatController@register');    //注册
         Route::post('login', 'WeChatController@login');    //登录
-        Route::post('wxlogin', 'WeChatController@appUserlogin');    //登录
         Route::post('miniLogin', 'WeChatController@miniLogin');    //小程序换取openid
 
         Route::post('findPassword', 'WeChatController@findPassword');    //找回密码
@@ -183,7 +182,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('finance/{photo}', 'MoneyLogController@show');    //收支详情
         Route::post('logout', 'WeChatController@logout');    //登出
 
-        Route::post('wxPay', 'WeChatController@payment');    //微信支付
         Route::post('unifiedPayment', 'WeChatController@unifiedPayment');    //在线支付
         Route::post('balancePay', 'WeChatController@balancePay');    //余额支付
 

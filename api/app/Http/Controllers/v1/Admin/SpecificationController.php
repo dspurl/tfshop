@@ -3,13 +3,14 @@
 namespace App\Http\Controllers\v1\admin;
 
 use App\Code;
-use App\Http\Requests\v1\SubmitSpecificationGroupRequest;
+use App\Http\Requests\v1\SubmitSpecificationRequest;
+use App\Models\v1\Specification;
 use App\Models\v1\SpecificationGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class specificationGroupController extends Controller
+class SpecificationController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,27 +20,37 @@ class specificationGroupController extends Controller
      */
     public function index(Request $request)
     {
-        $q = SpecificationGroup::query();
+        $q = Specification::query();
         $limit=$request->limit;
         $q->orderBy('id','ASC');
         if($request->title){
             $q->where('name',$request->title);
         }
-        $paginate=$q->paginate($limit);
-        return resReturn(1,$paginate);
+        $paginate=$q->with(['SpecificationGroup'])->paginate($limit);
+        $return= [];
+        $return['paginate'] = $paginate;
+        $return['SpecificationGroup'] = SpecificationGroup::select('id','name')->get();
+        return resReturn(1,$return);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param SubmitSpecificationGroupRequest $request
+     * @param SubmitSpecificationRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(SubmitSpecificationGroupRequest $request)
+    public function store(SubmitSpecificationRequest $request)
     {
         $return=DB::transaction(function ()use($request){
-            $Specification=new SpecificationGroup();
+            $Specification=new Specification();
             $Specification->name=$request->name;
+            $Specification->label=$request->label ? $request->label : $request->name;
+            $Specification->type=$request->type;
+            $Specification->is_search=$request->is_search;
+            $Specification->location=$request->location;
+            $Specification->specification_group_id=$request->specification_group_id;
+            $Specification->value=$request->value;
+            $Specification->sort=$request->sort;
             $Specification->save();
             return 1;
         }, 5);
@@ -53,15 +64,22 @@ class specificationGroupController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param SubmitSpecificationGroupRequest|Request $request
+     * @param SubmitSpecificationRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(SubmitSpecificationGroupRequest $request, $id)
+    public function update(SubmitSpecificationRequest $request, $id)
     {
         $return=DB::transaction(function ()use($request,$id){
-            $Specification=SpecificationGroup::find($id);
+            $Specification=Specification::find($id);
             $Specification->name=$request->name;
+            $Specification->label=$request->label ? $request->label : $request->name;
+            $Specification->type=$request->type;
+            $Specification->is_search=$request->is_search;
+            $Specification->location=$request->location;
+            $Specification->specification_group_id=$request->specification_group_id;
+            $Specification->value=$request->value;
+            $Specification->sort=$request->sort;
             $Specification->save();
             return 1;
         }, 5);
@@ -82,7 +100,7 @@ class specificationGroupController extends Controller
     public function destroy($id, Request $request)
     {
         $return=DB::transaction(function ()use($request,$id){
-            SpecificationGroup::where('id',$id)->delete();
+            Specification::where('id',$id)->delete();
             return 1;
         }, 5);
         if($return == 1){

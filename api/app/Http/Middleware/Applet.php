@@ -3,11 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Code;
-use App\Models\v1\AdminLog;
-use App\Models\v1\AuthGroupAuthRule;
-use App\Models\v1\AuthRule;
 use Closure;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Redis;
 class Applet
 {

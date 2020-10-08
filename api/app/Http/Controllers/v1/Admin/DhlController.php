@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Http\Requests\v1\SubmitDhlRequest;
-use App\Http\Requests\v1\SubmitFreightRequest;
 use App\Models\v1\Dhl;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;

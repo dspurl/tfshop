@@ -2,33 +2,10 @@
 
 namespace App\Http\Controllers\v1\Admin;
 
-use App\Code;
-use App\common\RedisLock;
-use App\Http\Requests\v1\SubmitApplyGroupRequest;
-use App\Http\Requests\v1\SubmitLiveCodeRequest;
-use App\Http\Requests\v1\SubmitStaffingSystemRequest;
-use App\Models\v1\Common;
-use App\Models\v1\ApplyGroupElementRule;
-use App\Models\v1\ApplyUser;
-use App\Models\v1\ApplyUserLog;
-use App\Models\v1\Element;
-use App\Models\v1\ElementVersion;
-use App\Models\v1\ElementVersionElement;
-use App\Models\v1\ElementVersionGroupElementRule;
 use App\Models\v1\GoodIndent;
-use App\Models\v1\LiveCode;
-use App\Models\v1\LiveCodeLog;
-use App\Models\v1\LiveThirdCode;
-use App\Models\v1\MoneyLog;
-use App\Models\v1\User;
-use EasyWeChat\Kernel\Http\StreamResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 use EasyWeChat\Factory;
-use Illuminate\Support\Facades\Storage;
 
 class StatisticsController extends Controller
 {

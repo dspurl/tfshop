@@ -4,7 +4,6 @@ namespace App\Models\v1;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
-use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 
 /**

@@ -123,32 +123,6 @@ class WeChatController  extends Controller
         return resReturn(1,'密码重置成功');
     }
 
-    //微信用户登录/注册
-    public function appUserlogin(Request $request){
-        $config = config('wechat.mini_program.default');
-        $miniProgram = Factory::miniProgram($config); // 小程序
-        $auth=$miniProgram->auth->session((string) $request->code);
-        // 生成用户
-        $User=User::where('miniweixin',$auth['openid'])->first();
-        if($User){   //更新用户
-            $User->updated_at=Carbon::now()->toDateTimeString();
-            $User->save();
-            return resReturn(1,$auth);
-        }else { //新建
-            $return=DB::transaction(function ()use($request,$auth){
-                $User=new User();
-                $User->miniweixin=$auth['openid'];
-                $User->save();
-                return 1;
-            }, 5);
-            if($return == 1){
-                return resReturn(1,$auth);
-            }else{
-                return resReturn(0,$return[0],$return[1]);
-            }
-        }
-    }
-
     public function login(Request $request){
         if(!$request->has('cellphone')){
             return resReturn(0,'手机号不能为空',Code::CODE_WRONG);
@@ -556,70 +530,5 @@ class WeChatController  extends Controller
             return true;
         });
         return $response;
-    }
-
-    /**
-     * 微信支付
-     * @param Request $request
-     * @return string
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \GuzzleHttp\Exception\GuzzleException
-     */
-    public function payment(Request $request){
-        $openid=$request->header('openid');
-        if(!$openid){
-            return resReturn(0,'仅支持微信小程序支付',Code::CODE_WRONG);
-        }
-        $config = config('wechat.payment.default');
-        $config['notify_url'] = request()->root().'/api/v1/app/paymentNotify';    // 你也可以在下单时单独设置来想覆盖它
-        $GoodIndent=GoodIndent::with(['goodsList'])->find($request->id);
-        $app = Factory::payment($config);
-        $body='对订单：'.$GoodIndent->identification.'的付款';
-        $result = $app->order->unify([
-            'body' => $body,
-            'out_trade_no' => $number= orderNumber(),
-            'total_fee' => $GoodIndent->total,
-//            'total_fee' => 1,
-            'trade_type' => 'JSAPI', // 请对应换成你的支付方式对应的值类型
-            'openid' => $openid,
-        ]);
-        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $prepayId = $result['prepay_id'];
-            $config = $app->jssdk->sdkConfig($prepayId);
-            $PaymentLog = new PaymentLog();
-            $PaymentLog->name = $body;
-            $PaymentLog->number = $number;
-            $PaymentLog->money = $GoodIndent->total;
-            $PaymentLog->pay_id = $request->id; //订单ID
-            $PaymentLog->pay_type = 'App\Models\v1\GoodIndent';
-            $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;
-            $PaymentLog->save();
-            //库存判断
-            foreach ($GoodIndent->goodsList as $indentCommodity){
-                $Good=Good::select('id','is_inventory','inventory')->find($indentCommodity['good_id']);
-                if($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_FILM){ //付款减库存
-                    if(!$indentCommodity['good_sku_id']){ //非SKU商品
-                        if($Good->inventory-$indentCommodity['number']<0){
-                            return resReturn(0,'存在库存不足的商品，请重新购买',Code::CODE_PARAMETER_WRONG);
-                        }
-                        $Good->inventory = $Good->inventory-$indentCommodity['number'];
-                        $Good->save();
-                    }else{
-                        $GoodSku=GoodSku::find($indentCommodity['good_sku_id']);
-                        if($GoodSku->inventory-$indentCommodity['number']<0){
-                            return resReturn(0,'存在库存不足的SKU商品，请重新购买',Code::CODE_PARAMETER_WRONG);
-                        }
-                        $GoodSku->inventory = $GoodSku->inventory-$indentCommodity['number'];
-                        $GoodSku->save();
-                    }
-                }
-            }
-            return resReturn(1,$config);
-        }
-        if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
-            return resReturn(0,$result['return_msg'],Code::CODE_WRONG);
-        }
-        return resReturn(0,$result['err_code_des'],Code::CODE_WRONG);
     }
 }

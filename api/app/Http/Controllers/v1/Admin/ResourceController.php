@@ -2,20 +2,11 @@
 
 namespace App\Http\Controllers\v1\admin;
 
-use App\Code;
-use App\Http\Requests\v1\SubmitComponentsRequest;
-use App\Http\Requests\v1\SubmitSmsServiceRequest;
-use App\Http\Requests\v1\SubmitSmsTemplateRequest;
-use App\Models\v1\Brand;
-use App\Models\v1\Component;
 use App\Models\v1\Resource;
-use App\Models\v1\SmsService;
-use App\Models\v1\SmsTemplate;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
-class resourceController extends Controller
+class ResourceController extends Controller
 {
     /**
      * Display a listing of the resource.

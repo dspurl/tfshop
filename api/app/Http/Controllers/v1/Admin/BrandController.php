@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
-class brandController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.

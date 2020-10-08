@@ -3,7 +3,6 @@
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
-use Illuminate\Validation\Rule;
 class SubmitAuthGroupRequest extends Request
 {
     /**

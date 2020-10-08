@@ -2,16 +2,9 @@
 
 namespace App\Http\Controllers\v1\Element;
 
-use App\Code;
-use App\Http\Requests\v1\SubmitGoodIndentFinanceRequest;
-use App\Models\v1\Common;
-use App\Models\v1\GoodIndentFinance;
 use App\Models\v1\MoneyLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
-use App\common\RedisLock;
 
 class MoneyLogController extends Controller
 {

@@ -2,10 +2,8 @@
 
 namespace App\Http\Requests\v1;
 
-
 use App\Http\Requests\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\Validator;
+
 class SubmitElementRequest extends Request
 {
     /**
