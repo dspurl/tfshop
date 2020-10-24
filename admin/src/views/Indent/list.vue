@@ -6,6 +6,7 @@
         <el-menu-item index="1">待付款</el-menu-item>
         <el-menu-item index="2">待发货</el-menu-item>
         <el-menu-item index="3">待收货</el-menu-item>
+        <el-menu-item index="4">待评价</el-menu-item>
         <el-menu-item index="5">已完成</el-menu-item>
         <el-menu-item index="6">已取消</el-menu-item>
       </el-menu>
