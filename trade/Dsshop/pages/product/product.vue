@@ -80,27 +80,6 @@
 			</view> -->
 		</view>
 
-		<!-- 评价 -->
-		<!-- <view class="eva-section">
-			<view class="e-header">
-				<text class="tit">评价</text>
-				<text>(86)</text>
-				<text class="tip">好评率 100%</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="eva-box">
-				<image class="portrait" src="http://img3.imgtn.bdimg.com/it/u=1150341365,1327279810&fm=26&gp=0.jpg" mode="aspectFill"></image>
-				<view class="right">
-					<text class="name">Leo yo</text>
-					<text class="con">商品收到了，79元两件，质量不错，试了一下有点瘦，但是加个外罩很漂亮，我很喜欢</text>
-					<view class="bot">
-						<text class="attr">购买类型：XL 红色</text>
-						<text class="time">2019-04-01 19:21</text>
-					</view>
-				</view>
-			</view>
-		</view> -->
-
 		<view class="detail-desc">
 			<view class="d-header"><text>图文详情</text></view>
 			<!-- #ifdef MP-ALIPAY -->
@@ -154,7 +133,8 @@ import Browse from '../../api/browse';
 import Collect from '../../api/collect';
 import CouponApi from '../../api/coupon';
 import {
-		mapState
+		mapState,
+		mapMutations
 	} from 'vuex';
 export default {
 	components: {
@@ -195,6 +175,7 @@ export default {
 		this.videoContext = uni.createVideoContext('myVideo')
 	},
 	methods: {
+		...mapMutations(['loginCheck']),
 		//获取详情
 		async loadData(id) {
 			// 商品详情
@@ -287,8 +268,16 @@ export default {
 				}
 			});
 		},
+		goLogin(){
+			if(!this.hasLogin){
+				uni.navigateTo({
+					url:'/pages/public/login'
+				})
+			}
+		},
 		//规格弹窗开关
 		toggleSpec(state) {
+			this.loginCheck()
 			if (!this.hasLogin && state === true){
 				this.$api.msg('请先登录')
 				return false

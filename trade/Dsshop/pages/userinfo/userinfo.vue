@@ -45,6 +45,7 @@
 
 <script>
 	import User from '../../api/user';
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -53,9 +54,11 @@
 			};
 		},
 		onLoad(){
+			this.loginCheck()
 			this.getUser()
 		},
 		methods:{
+			...mapMutations(['loginCheck']),
 			getUser(){
 				const that = this
 				User.user(function(res){

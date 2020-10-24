@@ -46,6 +46,7 @@
 </template>
 
 <script>
+	import {mapMutations} from 'vuex'
 	import Finance from '../../api/finance'
 	export default {
 		components: {},
@@ -55,9 +56,11 @@
 			}
 		},
 		onLoad(options){
+			this.loginCheck()
 			this.getList(options.id)
 		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			async getList(id){
 				const that = this
 				if(id > 0){

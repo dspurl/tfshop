@@ -78,6 +78,7 @@
 </template> 
 
 <script>
+	import {mapMutations} from 'vuex'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import empty from "@/components/empty";
 	import Indents from '../../api/indents'
@@ -140,6 +141,7 @@
 		},
 		
 		onLoad: function(options) {
+			this.loginCheck()
 			/**
 			 * 修复app端点击除全部订单外的按钮进入时不加载数据的问题
 			 * 替换onLoad下代码即可
@@ -156,6 +158,7 @@
 			}
 		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			//获取订单列表
 			async loadData(source,search){
 				//这里是将订单挂载到tab列表下

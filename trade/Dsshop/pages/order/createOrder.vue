@@ -121,6 +121,7 @@
 	import Address from '../../api/address'
 	import Indents from '../../api/indents'
 	import UserCouponApi from '../../api/userCoupon';
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -151,9 +152,11 @@
 			}
 		},
 		onLoad(option){
+			this.loginCheck()
 			this.loadData()
 		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			//商品数据
 			async loadData(){
 				this.cartList = []

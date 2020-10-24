@@ -96,6 +96,7 @@
 
 <script>
 import Indents from '../../api/indents';
+import {mapMutations} from 'vuex'
 export default {
 	data() {
 		return {
@@ -111,6 +112,7 @@ export default {
 		};
 	},
 	onLoad(option) {
+		this.loginCheck()
 		if (!option.id) {
 			this.$api.msg('参数有误');
 			return false;
@@ -120,6 +122,7 @@ export default {
 		this.getList();
 	},
 	methods: {
+		...mapMutations(['loginCheck']),
 		async getList() {
 			let list = {};
 			const that = this;
