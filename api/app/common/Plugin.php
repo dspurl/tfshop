@@ -68,7 +68,7 @@ class Plugin
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/requests',$this->path.'/api/app/Http/Requests/v1');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/database',$this->path.'/api/database/migrations');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/api',$this->path.'/trade/Dsshop/api');
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components'.$name,$this->path.'/trade/Dsshop/components');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components',$this->path.'/trade/Dsshop/components');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/pages',$this->path.'/trade/Dsshop/pages');
         // 路由自动部署
         $routes=json_decode(file_get_contents($routes), true);
