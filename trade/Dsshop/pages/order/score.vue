@@ -1,6 +1,6 @@
 <template>
 	<view class="content">
-		<view class="score-list" v-for="(ite,ind) in commodity">
+		<view class="score-list" v-for="(ite,ind) in commodity" :key="ind">
 			<view class="goods-box-single margin-top">
 				<image class="goods-img" :src="ite.img" mode="aspectFill" lazy-load></image>
 				<view class="right">
