@@ -30,22 +30,33 @@ export default {
 					}
 				});
 			}
-			var applySecret = '', host = "http://dswjcms.com/api/v1/app/" // 服务器后端地址
+			var applySecret = '', host = "http://dsshop.test/api/v1/app/" // 服务器后端地址
 			if (JSON.stringify(options) != '{}' && options.query  && JSON.stringify(options.query) != '{}') {
-				applySecret = options;
-				applySecret.host = host;
+				if(options.host){	//防止刷新某个页面后applyDsshopSecret失效问题
+					applySecret = options;
+					applySecret.host = host;
+					uni.setStorageSync('applyDsshopSecret', applySecret);
+				}else{
+					this.setApplySecret(applySecret,host)
+				}
+				
+			} else {
+				this.setApplySecret(applySecret,host)
+			}
+		},
+		// 设置应用配置
+		setApplySecret(applySecret,host){
+			
+			if (!uni.getStorageSync('applyDsshopSecret')) {
+				applySecret = {
+					secret: 'base64:AsXHg1OmJNQ7pJlfCktOKVAVrtqQwdK52Oz3xg7s72Q=', //默认应用Secret
+					host: host,
+					name: 'Dsshop', // 平台默认名称
+				};
+				console.log(applySecret)
 				uni.setStorageSync('applyDsshopSecret', applySecret);
 			} else {
-				if (!uni.getStorageSync('applyDsshopSecret')) {
-					applySecret = {
-						secret: 'base64:', //默认应用Secret
-						host: host,
-						name: 'Dsshop', // 平台默认名称
-					};
-					uni.setStorageSync('applyDsshopSecret', applySecret);
-				} else {
-					applySecret = uni.getStorageSync('applyDsshopSecret');
-				}
+				applySecret = uni.getStorageSync('applyDsshopSecret');
 			}
 		},
 		// 检测登录状态是否过期

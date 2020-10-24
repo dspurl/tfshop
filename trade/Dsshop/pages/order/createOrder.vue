@@ -120,6 +120,7 @@
 <script>
 	import Address from '../../api/address'
 	import Indents from '../../api/indents'
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -155,6 +156,7 @@
 			}
 		},
 		onLoad(option){
+			this.loginCheck()
 			this.loadData()
 			// let data = JSON.parse(option.data)
 			// console.log(data)
@@ -171,6 +173,7 @@
 			// this.getFreight()
 		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			//商品数据
 			async loadData(){
 				this.cartList = []
