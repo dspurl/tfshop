@@ -46,6 +46,7 @@ class Plugin
     /**
      * 安装和更新插件
      * @param $name //插件简称
+     * @return string
      */
     public function autoPlugin($name){
         $routes=$this->pluginPath.'/'.$name.'/routes.json';
@@ -67,8 +68,8 @@ class Plugin
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/requests',$this->path.'/api/app/Http/Requests/v1');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/database',$this->path.'/api/database/migrations');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/api',$this->path.'/trade/Dsshop/api');
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components/'.$name,$this->path.'/trade/Dsshop/components/'.$name);
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/pages/'.$name,$this->path.'/trade/Dsshop/pages/'.$name);
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components'.$name,$this->path.'/trade/Dsshop/components');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/pages',$this->path.'/trade/Dsshop/pages');
         // 路由自动部署
         $routes=json_decode(file_get_contents($routes), true);
         // api
@@ -164,7 +165,11 @@ class Plugin
             $data = scandir($original);
             foreach ($data as $value){
                 if($value != '.' && $value != '..'){
-                    copy($original.'/'.$value,$target.'/'.$value);
+                    if(is_dir($original.'/'.$value)){ //如果是目录
+                        $this->fileDeployment($original.'/'.$value,$target.'/'.$value);
+                    }else{
+                        copy($original.'/'.$value,$target.'/'.$value);
+                    }
                 }
             }
         }
