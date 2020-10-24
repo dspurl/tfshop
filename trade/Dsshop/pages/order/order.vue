@@ -66,6 +66,9 @@
 							<block v-if="item.state === 3">
 								<button class="action-btn recom" @tap="confirmReceipt(item)">确认收货</button>
 							</block>
+							<block v-if="item.state === 4">
+								<button class="action-btn recom" @tap="goScore(item)">立即评价</button>
+							</block>
 						</view>
 					</view>
 					 
@@ -124,12 +127,12 @@
 						loadingType: 'more',
 						orderList: []
 					},
-					// {
-					// 	state: 4,
-					// 	text: '待评价',
-					// 	loadingType: 'more',
-					// 	orderList: []
-					// },
+					{
+						state: 4,
+						text: '待评价',
+						loadingType: 'more',
+						orderList: []
+					},
 					// {
 					// 	state: 5,
 					// 	text: '售后',
@@ -349,12 +352,12 @@
 						loadingType: 'more',
 						orderList: []
 					},
-					// {
-					// 	state: 4,
-					// 	text: '待评价',
-					// 	loadingType: 'more',
-					// 	orderList: []
-					// },
+					{
+						state: 4,
+						text: '待评价',
+						loadingType: 'more',
+						orderList: []
+					},
 					// {
 					// 	state: 5,
 					// 	text: '售后',
@@ -438,6 +441,18 @@
 				    }
 				})
 				
+			},
+			// 评价
+			goScore(item){
+				
+				uni.navigateTo({
+					url: `/pages/order/score?id=${item.id}`
+				})
+			},
+			//评价成功后回调
+			scoreList(id){
+				// 需要重新加载
+				this.loadData()
 			},
 		},
 	}

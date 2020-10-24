@@ -5,9 +5,9 @@
 			<view v-if="video" class="showVideoClose" @click.stop="closeVideo">关闭</view>
 			<swiper indicator-dots circular="true" duration="400" v-if="getList.resources_many" @change="imgCtu">
 				<swiper-item class="swiper-item" v-for="(item, index) in resources_many" :key="index" @click="showVideo">
-					<view v-if="item.type === 'img'" class="image-wrapper" @click="imgList()"><image :src="item.img" lazy-load class="loaded" mode="aspectFill" lazy-load></image></view>
+					<view v-if="item.type === 'img'" class="image-wrapper" @click="imgList()"><image :src="item.img" class="loaded" mode="aspectFill" lazy-load></image></view>
 					<view v-else class="image-wrapper">
-						<image :src="poster" lazy-load class="loaded" mode="aspectFill"></image>
+						<image :src="poster" lazy-load class="loaded" mode="aspectFill" lazy-load></image>
 					</view>
 					<view v-if="item.type === 'video'" class="playVideo text-white cuIcon-videofill"></view>
 				</swiper-item>
@@ -80,6 +80,27 @@
 			</view> -->
 		</view>
 
+		<!-- 评价 -->
+		<view class="eva-section">
+			<view class="e-header">
+				<text class="tit">评价</text>
+				<text>({{commentTotal}})</text>
+				<navigator hover-class="none" class="tip" :url="'comment?id='+ id">查看全部</navigator>
+				<text class="yticon icon-you"></text>
+			</view>
+			<view class="eva-box" v-for="(item,index) in commentList" :key="index">
+				<image class="portrait" :src="item.comment.portrait || '/static/missing-face.png'"  mode="aspectFill" lazy-load></image>
+				<view class="right">
+					<text class="name">{{item.comment.name}}</text>
+					<text class="con">{{item.comment.details}}</text>
+					<view class="bot">
+						<text class="attr">购买类型：<span v-for="(ite,ind) in item.good_sku.product_sku" :key="ind" class="padding-right-xs">{{ite.value}}</span></text>
+						<text class="time">{{item.comment.created_at.split(' ')[0]}}</text>
+					</view>
+				</view>
+			</view>
+		</view>
+
 		<view class="detail-desc">
 			<view class="d-header"><text>图文详情</text></view>
 			<!-- #ifdef MP-ALIPAY -->
@@ -132,6 +153,7 @@ import coupon from '@/components/coupon';
 import Browse from '../../api/browse';
 import Collect from '../../api/collect';
 import CouponApi from '../../api/coupon';
+import Comment from '../../api/comment'
 import {
 		mapState,
 		mapMutations
@@ -158,7 +180,9 @@ export default {
 			resources_many: [],
 			video: '',
 			index: 0,
-			buy: false
+			buy: false,
+			commentList: [],
+			commentTotal:0
 		};
 	},
 	async onLoad(options) {
@@ -167,6 +191,7 @@ export default {
 			this.id = id;
 			this.loadData(id);
 		}
+		this.goodEvaluate()
 	},
 	computed:{
 		...mapState(['hasLogin'])
@@ -346,6 +371,18 @@ export default {
 				}
 			}
 			return arr
+		},
+		// 获取评价列表
+		goodEvaluate(){
+			const that = this
+			Comment.goodEvaluate({
+				limit: 2,
+				page: 1,
+				good_id:that.id
+			},function(res){
+				that.commentList = res.data
+				that.commentTotal = res.total
+			})
 		}
 	},
 	filters: {

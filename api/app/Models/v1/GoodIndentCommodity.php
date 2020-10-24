@@ -79,4 +79,11 @@ class GoodIndentCommodity extends Model
     public function goodIndent(){
         return $this->hasOne(GoodIndent::class,'id','good_indent_id');
     }
+
+    /**
+     * 获取评价
+     */
+    public function Comment(){
+        return $this->morphOne('App\Models\v1\Comment', 'model');
+    }
 }

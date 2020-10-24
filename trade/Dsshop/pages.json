@@ -221,6 +221,25 @@
 			}
 		}
 		// 优惠券_e
+		// 评价_s
+		,{
+			"path": "pages/order/score",
+			"style": {
+				"navigationBarTitleText": "评价",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		}
+		, {
+			"path": "pages/product/comment",
+			"style": {
+				"navigationBarTitleText": "评价列表",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50
+			}
+		}
+		// 评价_e
 		// 插件列表
 	],
 	"globalStyle": {

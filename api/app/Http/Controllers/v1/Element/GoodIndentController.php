@@ -244,7 +244,7 @@ class GoodIndentController extends Controller
      */
     public function receipt($id){
         $GoodIndent=GoodIndent::find($id);
-        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_ACCOMPLISH;
+        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_EVALUATE;
         $GoodIndent->confirm_time = Carbon::now()->toDateTimeString();
         $GoodIndent->save();
         return resReturn(1,'收货成功');

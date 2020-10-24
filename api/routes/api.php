@@ -59,7 +59,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('redis/{photo}', 'RedisServiceController@show')->middleware(['permissions:RedisServicesList']);    //Redis详情
         Route::delete('redis/{photo}', 'RedisServiceController@destroy')->middleware(['permissions:DeleteRedisServices']);    //删除Redis
         Route::get('redisPanel', 'RedisServiceController@panel')->middleware(['permissions:RedisPanel']);    //Redis面板
-
         //--oauth管理
         Route::get('oauth', 'oauthManageController@index')->middleware(['permissions:OauthList']);    //Redis列表
         //--品牌
@@ -67,31 +66,26 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('brand', 'BrandController@store')->middleware(['permissions:CreateBrand']);    //品牌添加保存
         Route::put('brand/{photo}', 'BrandController@update')->middleware(['permissions:EditBrand']);    //品牌编辑保存
         Route::delete('brand/{photo}', 'BrandController@destroy')->middleware(['permissions:DeleteBrand']);    //品牌删除
-
         //--资源
         Route::get('resource', 'ResourceController@index')->middleware(['permissions:ResourceDataList']);    //资源列表
         Route::post('resource', 'ResourceController@store')->middleware(['permissions:CreateResourceData']);    //资源添加保存
         Route::put('resource/{photo}', 'ResourceController@update')->middleware(['permissions:EditResourceData']);    //资源编辑保存
         Route::delete('resource/{photo}', 'ResourceController@destroy')->middleware(['permissions:DeleteResourceData']);    //资源删除
-
         //--分类
         Route::get('category', 'CategoryController@index')->middleware(['permissions:CategoryList']);    //分类列表
         Route::post('category', 'CategoryController@store')->middleware(['permissions:CreateCategory']);    //分类添加保存
         Route::put('category/{photo}', 'CategoryController@update')->middleware(['permissions:EditCategory']);    //分类编辑保存
         Route::delete('category/{photo}', 'CategoryController@destroy')->middleware(['permissions:DeleteCategory']);    //分类删除
-
         //--规格
         Route::get('specification', 'SpecificationController@index')->middleware(['permissions:SpecificationList']);    //规格列表
         Route::post('specification', 'SpecificationController@store')->middleware(['permissions:CreateSpecification']);    //规格添加保存
         Route::put('specification/{photo}', 'SpecificationController@update')->middleware(['permissions:EditSpecification']);    //规格编辑保存
         Route::delete('specification/{photo}', 'SpecificationController@destroy')->middleware(['permissions:DeleteSpecification']);    //规格删除
-
         //--规格组
         Route::get('specificationGroup', 'SpecificationGroupController@index')->middleware(['permissions:SpecificationGroupList']);    //规格组列表
         Route::post('specificationGroup', 'SpecificationGroupController@store')->middleware(['permissions:CreateSpecificationGroup']);    //规格组添加保存
         Route::put('specificationGroup/{photo}', 'SpecificationGroupController@update')->middleware(['permissions:EditSpecificationGroup']);    //规格组编辑保存
         Route::delete('specificationGroup/{photo}', 'SpecificationGroupController@destroy')->middleware(['permissions:DeleteSpecificationGroup']);    //规格组删除
-
         //商品管理
         Route::get('Good', 'GoodController@index')->middleware(['permissions:ProductList']);    //列表
         Route::get('Good/{photo}', 'GoodController@details')->middleware(['permissions:CreateProduct']);    //产品详情页
@@ -119,7 +113,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('indentShipments', 'IndentController@shipment')->middleware(['permissions:Shipment']); //发货
         Route::put('indentRefund/{photo}', 'IndentController@refund')->middleware(['permissions:Refund']); //退款
         Route::get('query', 'IndentController@query')->middleware(['permissions:EditIndent']);    //查询订单
-
         //轮播
         Route::get('banner', 'BannerController@index')->middleware(['permissions:BannerList']);    //轮播列表
         Route::post('banner', 'BannerController@store')->middleware(['permissions:CreateBanner']);    //轮播添加保存
@@ -144,6 +137,12 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::put('coupon/{photo}', 'CouponController@update')->middleware(['permissions:EditCoupon']);    //优惠券操作
         Route::delete('coupon/{photo}', 'CouponController@destroy')->middleware(['permissions:DeleteCoupon']);    //优惠券删除
         //优惠券_e
+        //评价_s
+        Route::get('comment', 'CommentController@index')->middleware(['permissions:CommentList']);    //评价列表
+        Route::post('comment', 'CommentController@reply')->middleware(['permissions:CreateComment']);    //评价回复
+        Route::put('comment/{photo}', 'CommentController@update')->middleware(['permissions:EditComment']);    //评价操作
+        Route::delete('comment/{photo}', 'CommentController@destroy')->middleware(['permissions:DeleteComment']);    //评价删除
+        //评价_e
         //前台插件列表
     });
     //app
@@ -156,7 +155,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('register', 'WeChatController@register');    //注册
         Route::post('login', 'WeChatController@login');    //登录
         Route::post('miniLogin', 'WeChatController@miniLogin');    //小程序换取openid
-
         Route::post('findPassword', 'WeChatController@findPassword');    //找回密码
         Route::post('getRegisterCellphoneCode', 'WeChatController@getRegisterCellphoneCode');    //获取手机验证码
         Route::post('authorizedPhone', 'WeChatController@authorizedPhone');    //授权获取手机号
@@ -200,7 +198,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('collect/{photo}', 'CollectController@show');    //详情
         Route::post('collect', 'CollectController@store');    //添加保存
         Route::post('collectDelete/{photo}', 'CollectController@destroy');    //删除
-
         //通知
         Route::get('notice', 'NoticeController@index');    //列表
         Route::get('noticeConut', 'NoticeController@count');    //未读数量
@@ -214,6 +211,14 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('userCoupon', 'UserCouponController@index');    //我的优惠券列表
         Route::post('userCoupon', 'UserCouponController@store');    //领取优惠券
         //优惠券_e
+        //评价_s
+         Route::get('comment', 'CommentController@index');    //列表
+        Route::get('comment/{photo}', 'CommentController@show');    //详情
+        Route::get('goodIndentCommodity/{photo}', 'CommentController@goodIndentCommodity');    //获取需要评价的商品列表
+        Route::get('goodEvaluate', 'CommentController@goodEvaluate');    //获取商品评价列表
+        Route::post('comment/{photo}', 'CommentController@store');    //添加保存
+        Route::post('commentDelete/{photo}', 'CommentController@destroy');    //删除
+        //评价_e
         //APP插件列表
     });
 });

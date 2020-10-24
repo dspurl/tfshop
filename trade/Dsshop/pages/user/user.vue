@@ -66,6 +66,10 @@
 					<text class="yticon icon-yishouhuo"></text>
 					<text>待收货</text>
 				</view>
+				<view class="order-item" @click="navTo('/pages/order/order?state=4')" hover-class="common-hover"  :hover-stay-time="50">
+					<text class="cuIcon-edit"></text>
+					<text>待评价</text>
+				</view>
 				<!-- <view class="order-item" @click="navTo('/pages/order/order?state=4')" hover-class="common-hover"  :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
 					<text>退款/售后</text>
@@ -366,6 +370,11 @@
 			border-radius: 10upx;
 			font-size: $font-sm;
 			color: $font-color-dark;
+			.cuIcon-edit{
+				color: #fa436a;
+				font-size: 48upx;
+				margin-bottom: 18upx;
+			}
 		}
 		.yticon{
 			font-size: 48upx;
