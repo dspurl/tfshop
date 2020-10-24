@@ -187,8 +187,8 @@
       </el-row>
     </el-card>
     <div class="right" style="margin-top: 20px;">
+      <el-button v-if="list.state !== 1 && !list.refund_money" type="danger" @click="dialogFormVisible = true">退款</el-button>
       <el-button v-if="list.state === 2" type="primary" @click="createSubmit()">发货</el-button>
-      <el-button v-if="list.state !== 1 && !list.refund_money" type="primary" @click="dialogFormVisible = true">退款</el-button>
     </div>
     <!--退款-->
     <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false" title="退款">

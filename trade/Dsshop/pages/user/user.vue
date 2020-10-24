@@ -84,7 +84,7 @@
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
 				<!-- <list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell> -->
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" @eventClick="navTo('/pages/user/collect')" title="我的收藏"></list-cell>
-				<list-cell icon="icon-comment" iconColor="#e07472" title="通知" :tips="noticeNumber ? noticeNumber : ''" @eventClick="navTo('/pages/notice/notice')"></list-cell>
+				<list-cell icon="icon-comment" iconColor="#e07472" title="通知" :tips="noticeNumber ? noticeNumber : '0'" @eventClick="navTo('/pages/notice/notice')"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="设置" @eventClick="navTo('/pages/set/set')"></list-cell>
 			</view>
 		</view>
@@ -112,7 +112,7 @@
 				moving: false,
 				browseList: [],
 				user: {},
-				noticeNumber: 0
+				noticeNumber: '0'
 			}
 		},
 		onLoad(){
@@ -170,7 +170,7 @@
 			noticeConut(){
 				const that = this
 				Notification.getCount({},function(res){
-					that.noticeNumber = res
+					that.noticeNumber = res.toString()
 				})
 			},
 			navTo(url){

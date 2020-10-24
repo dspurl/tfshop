@@ -53,7 +53,6 @@ export default {
 					host: host,
 					name: 'Dsshop', // 平台默认名称
 				};
-				console.log(applySecret)
 				uni.setStorageSync('applyDsshopSecret', applySecret);
 			} else {
 				applySecret = uni.getStorageSync('applyDsshopSecret');
