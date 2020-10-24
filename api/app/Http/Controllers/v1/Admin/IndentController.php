@@ -33,8 +33,11 @@ class IndentController extends Controller
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
         $q = GoodIndent::query();
-        if($request->state){
-            $q->where('state',$request->state);
+        if($request->activeIndex){
+            $q->where('state',$request->activeIndex);
+        }
+        if($request->title){
+            $q->where('identification',$request->title);
         }
         $limit=$request->limit;
         $q->orderBy('updated_at','DESC');
