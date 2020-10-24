@@ -59,7 +59,7 @@ class Plugin
         $dswjcms=json_decode(file_get_contents($dswjcms), true);
         // 文件自动部署
         $this->fileDeployment($this->pluginPath.'/'.$name.'/admin/api',$this->path.'/admin/src/api');
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/admin/views/Coupon',$this->path.'/admin/src/views/tool/Coupon');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/admin/views/'.ucwords($name),$this->path.'/admin/src/views/tool/'.ucwords($name));
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/config',$this->path.'/api/config');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/console',$this->path.'/api/app/Console/Commands');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/models',$this->path.'/api/app/Models/v1');
@@ -67,8 +67,8 @@ class Plugin
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/requests',$this->path.'/api/app/Http/Requests/v1');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/database',$this->path.'/api/database/migrations');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/api',$this->path.'/trade/Dsshop/api');
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components/coupon',$this->path.'/trade/Dsshop/components/coupon');
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/pages/coupon',$this->path.'/trade/Dsshop/pages/coupon');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components/'.$name,$this->path.'/trade/Dsshop/components/'.$name);
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/pages/'.$name,$this->path.'/trade/Dsshop/pages/'.$name);
         // 路由自动部署
         $routes=json_decode(file_get_contents($routes), true);
         // api
