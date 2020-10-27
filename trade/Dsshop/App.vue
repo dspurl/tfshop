@@ -30,33 +30,6 @@ export default {
 					}
 				});
 			}
-			var applySecret = '', host = "http://dsshop.test/api/v1/app/" // 服务器后端地址
-			if (JSON.stringify(options) != '{}' && options.query  && JSON.stringify(options.query) != '{}') {
-				if(options.host){	//防止刷新某个页面后applyDsshopSecret失效问题
-					applySecret = options;
-					applySecret.host = host;
-					uni.setStorageSync('applyDsshopSecret', applySecret);
-				}else{
-					this.setApplySecret(applySecret,host)
-				}
-				
-			} else {
-				this.setApplySecret(applySecret,host)
-			}
-		},
-		// 设置应用配置
-		setApplySecret(applySecret,host){
-			
-			if (!uni.getStorageSync('applyDsshopSecret')) {
-				applySecret = {
-					secret: 'base64:AsXHg1OmJNQ7pJlfCktOKVAVrtqQwdK52Oz3xg7s72Q=', //默认应用Secret
-					host: host,
-					name: 'Dsshop', // 平台默认名称
-				};
-				uni.setStorageSync('applyDsshopSecret', applySecret);
-			} else {
-				applySecret = uni.getStorageSync('applyDsshopSecret');
-			}
 		},
 		// 检测登录状态是否过期
 		checkSession() {
@@ -71,12 +44,11 @@ export default {
 		// 登录
 		getLogin() {
 			let that = this;
-			let applySecret = uni.getStorageSync('applyDsshopSecret');
 			uni.login({
 				success(res) {
 					if (res.code) {
 						uni.request({
-							url: applySecret.host + 'miniLogin',
+							url: that.configURL.BaseURL + 'miniLogin',
 							data: {
 								code: res.code,
 								platform: getPlatform()
@@ -84,7 +56,7 @@ export default {
 							method: 'POST',
 							header: {
 								'Content-Type': 'application/json',
-								'apply-secret': uni.getStorageSync('applyDsshopSecret').secret,
+								'apply-secret': that.configURL.secret,
 								// #ifndef H5
 								openid: uni.getStorageSync('applyDsshopOpenid')
 								// #endif

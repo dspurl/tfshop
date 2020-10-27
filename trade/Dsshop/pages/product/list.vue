@@ -55,7 +55,6 @@
 </template>
 
 <script>
-	import {mapMutations} from 'vuex'
 	import Good from '../../api/good'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
@@ -78,7 +77,6 @@
 		},
 		
 		onLoad(options){
-			this.loginCheck()
 			// #ifdef H5
 			this.headerTop = '80upx';
 			// #endif
@@ -103,7 +101,6 @@
 			this.loadData();
 		},
 		methods: {
-			...mapMutations(['loginCheck']),
 			//加载分类
 			async loadCateList(fid, sid){
 				const that = this
