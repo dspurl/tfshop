@@ -110,6 +110,7 @@ npm install
 ------------
 <p>下载请切换至<a href="https://github.com/dspurl/plugin">插件列表</a></p>
 - 优惠券
+- 评价
  
 功能介绍
 ------------
