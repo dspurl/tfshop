@@ -14,7 +14,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     // 后台API
     Route::prefix('admin')->namespace('Admin')->group(function () {
         Route::post('login', 'LoginController@index')-> name('login');  //登录
-        Route::get('login', 'LoginController@login')-> name('weblogin');  //登录页
+        Route::post('login', 'LoginController@login')-> name('weblogin');  //登录页
         Route::post('gologin', 'LoginController@index')->middleware(['auth:api']);  //不需要token登录
     });
 
