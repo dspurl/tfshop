@@ -36,7 +36,7 @@ class BrowseController extends Controller
             $Browse=new Browse();
             $Browse->user_id = auth('web')->user()->id;
             $Browse->good_id = $request->id;
-            $Browse->save();
+            $Browse->updateOrCreate(['user_id' => $Browse->user_id], ['good_id' => $Browse->good_id])->save( );
             return 1;
         }, 5);
         if($return == 1){
