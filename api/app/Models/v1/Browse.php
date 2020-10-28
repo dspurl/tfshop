@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class Browse extends Model
 {
     public static $withoutAppends = true;
+    protected $fillable = ['user_id','good_id'];
     /**
      * Prepare a date for array / JSON serialization.
      *
