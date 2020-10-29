@@ -14,7 +14,7 @@
 					<text :class="{active: priceOrder === 2 && filterIndex === 2}" class="yticon icon-shang xia"></text>
 				</view>
 			</view>
-			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
+			<text v-if="showCateMask === 1" class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 		</view>
 		<view class="goods-list">
 			<view 
@@ -27,8 +27,10 @@
 				</view>
 				<text class="title clamp">{{item.name}}</text>
 				<view class="price-box">
-					<text class="price">{{item.order_price | 1000}}</text>
+					<text class="price">{{item.order_price}}</text>
 					<!-- <text>已售 {{item.sales}}</text> -->
+					<text class="m-price" v-if="item.market_price_show.length > 1">¥{{ item.market_price_show[1] }}</text>
+					<text class="m-price" v-else-if="item.market_price_show.length === 1">¥{{ item.market_price_show[0] }}</text>
 				</view>
 			</view>
 		</view>
@@ -65,10 +67,12 @@
 		data() {
 			return {
 				cateMaskState: 0, //分类面板展开状态
+				showCateMask: 1,
 				headerPosition:"fixed",
 				headerTop:"0px",
 				loadingType: 'more', //加载更多状态
 				filterIndex: 0, 
+				searchValue: "", //搜索值
 				cateId: 0, //已选三级分类id
 				priceOrder: 0, //1 价格从低到高 2价格从高到低
 				cateList: [],
@@ -83,6 +87,12 @@
 			this.headerTop = '80upx';
 			// #endif
 			this.cateId = options.tid;
+			if (options.search) {
+                this.searchValue = options.search;
+            }
+			if (options.showCateMake) {
+			    this.showCateMask = options.showCateMake;
+			}
 			this.loadCateList(options.fid,options.sid);
 			this.loadData();
 		},
@@ -140,9 +150,10 @@
 				await Good.getList({
 					limit: 6,
 					pid: this.cateId,
+					searchValue: this.searchValue,
 					page: this.page,
 					order: this.filterIndex,
-					priceOrder: this.priceOrder
+					priceOrder: this.priceOrder,
 				},function(res){
 					that.goodsList = that.goodsList.concat(res.data)
 					if (res.last_page > that.page){
@@ -390,7 +401,7 @@
 		.price-box{
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
+			/*justify-content: space-between;*/
 			padding-right: 10upx;
 			font-size: 24upx;
 			color: $font-color-light;
@@ -403,6 +414,12 @@
 				content: '￥';
 				font-size: 26upx;
 			}
+		}
+		.m-price {
+			margin: 0 12upx;
+			/*margin-left: 0;*/
+			color: $font-color-light;
+			text-decoration: line-through;
 		}
 	}
 	
