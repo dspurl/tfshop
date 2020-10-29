@@ -172,6 +172,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('good', 'GoodAppController@index');    //商品列表
         Route::get('good/{photo}', 'GoodAppController@show');    //商品详情
         Route::get('banner', 'BannerAppController@index');    //轮播列表
+        Route::get('topCategory', 'CategoryAppController@index');    //to分类列表
         Route::get('advertising', 'BannerAppController@advertising');    //单条广告
         Route::get('goodCategory', 'GoodAppController@goodCategory');    //商品分类展示
     });
