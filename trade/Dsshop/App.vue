@@ -30,7 +30,7 @@ export default {
 					}
 				});
 			}
-			var applySecret = '', host = "http://dsshop.test/api/v1/app/" // 服务器后端地址
+			var applySecret = '', host = "http://127.0.0.1:88/api/v1/app/" // 服务器后端地址
 			if (JSON.stringify(options) != '{}' && options.query  && JSON.stringify(options.query) != '{}') {
 				if(options.host){	//防止刷新某个页面后applyDsshopSecret失效问题
 					applySecret = options;
@@ -49,7 +49,7 @@ export default {
 			
 			if (!uni.getStorageSync('applyDsshopSecret')) {
 				applySecret = {
-					secret: 'base64:AsXHg1OmJNQ7pJlfCktOKVAVrtqQwdK52Oz3xg7s72Q=', //默认应用Secret
+					secret: 'base64:edGHe7j+Kv0GH6HKPFvFEiWUAFfG68ywq1Yy2L0zz+8=', //默认应用Secret
 					host: host,
 					name: 'Dsshop', // 平台默认名称
 				};
