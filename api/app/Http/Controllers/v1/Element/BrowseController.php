@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1\Element;
 
+use Carbon\Carbon;
 use App\Http\Requests\v1\SubmitBrowseRequest;
 use App\Models\v1\Browse;
 use App\Models\v1\Good;
@@ -33,11 +34,16 @@ class BrowseController extends Controller
     public function store(SubmitBrowseRequest $request)
     {
         $return=DB::transaction(function ()use($request){
-            $Browse=new Browse();
-            $Browse->user_id = auth('web')->user()->id;
-            $Browse->good_id = $request->id;
-            $Browse->save();
-            return 1;
+            $user_id = auth('web')->user()->id;
+            $where = ['user_id' => $user_id,'good_id' => $request->id];
+            $data = ['user_id' => $user_id,'good_id' => $request->id,'updated_at'=>Carbon::now()->toDateTimeString()];
+
+            $Browse =  Browse::updateOrCreate($where,$data);
+            if (!$Browse->wasRecentlyCreated) {
+                return 1;
+            }else{
+                return 0;
+            }
         }, 5);
         if($return == 1){
             return resReturn(1,'添加成功');
