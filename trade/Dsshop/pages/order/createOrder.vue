@@ -4,7 +4,7 @@
 		<view class="address-section" @click="addAddress()">
 			<view class="order-content">
 				<text class="yticon icon-shouhuodizhi"></text>
-				<view class="cen" v-if="addressData">
+				<view class="cen" v-if="addressData.location">
 					<view class="top">
 						<text class="name">{{addressData.name}}</text>
 						<text class="mobile">{{addressData.cellphone}}</text>
@@ -240,7 +240,7 @@
 				this.payType = type;
 			},
 			submit(){
-				if(!this.addressData){
+				if(!this.addressData.location){
 					this.$api.msg('请选择地址')
 					return false
 				}
