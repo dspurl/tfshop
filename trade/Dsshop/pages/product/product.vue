@@ -157,6 +157,19 @@ export default {
 			this.loadData(id);
 		}
 	},
+	async onShow(){
+		if (this.hasLogin){
+			var that=this;
+			await Collect.getDetails(this.id, function(res) {
+				if(res === 1){
+					that.favorite = true
+				} else {
+					that.favorite = false
+				}
+			})
+			
+		}		
+	},	
 	computed:{
 		...mapState(['hasLogin'])
 	},
@@ -191,15 +204,6 @@ export default {
 					that.browse()
 				}
 			})
-			if (that.hasLogin){
-				await Collect.getDetails(id, function(res) {
-					if(res === 1){
-						that.favorite = true
-					} else {
-						that.favorite = false
-					}
-				})
-			}
 		},
 		// 切换swiper
 		imgCtu(item){
