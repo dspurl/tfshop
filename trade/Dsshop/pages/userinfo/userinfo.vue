@@ -76,11 +76,11 @@
 					sizeType: ['compressed'],
 					success: (res) => {
 						uni.uploadFile({
-						  url: uni.getStorageSync('applyDsshopSecret').host + 'uploadPictures',
+						  url: that.configURL.BaseURL + 'uploadPictures',
 						  filePath: res.tempFilePaths[0],
 						  name: 'file',
 						  header: {
-							'apply-secret': uni.getStorageSync('applyDsshopSecret').secret,
+							'apply-secret': that.configURL.secret,
 							'Authorization': 'Bearer ' + uni.getStorageSync('dsshopApplytoken')
 						  },
 						  formData: {

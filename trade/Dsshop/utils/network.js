@@ -1,4 +1,5 @@
 import { getPlatform } from 'utils'
+import configURL from './config.js'
 function request(url, method, params, header, success, fail) {
   this.requestLoading(url, method, params, header, "", success, fail)
 }
@@ -51,12 +52,11 @@ function getUrlKey(name){
 // 登录
 function getLogin() {
 	let that = this;
-	let applySecret = uni.getStorageSync('applyDsshopSecret');
 	uni.login({
 		success(res) {
 			if (res.code) {
 				uni.request({
-					url: applySecret.host + 'miniLogin',
+					url: configURL.BaseURL + 'miniLogin',
 					data: {
 						code: res.code,
 						platform: getPlatform()
@@ -64,7 +64,7 @@ function getLogin() {
 					method: 'POST',
 					header: {
 						'Content-Type': 'application/json',
-						'apply-secret': uni.getStorageSync('applyDsshopSecret').secret,
+						'apply-secret': configURL.secret,
 						// #ifndef H5
 						openid: uni.getStorageSync('applyDsshopOpenid')
 						// #endif
@@ -126,14 +126,13 @@ function requestLoading(url, method, params, header, message, success, fail) {
 	// }
   // #endif
   
-  
   uni.request({
-    url: uni.getStorageSync('applyDsshopSecret').host + url,
+    url: configURL.BaseURL + url,
     data: params,
     header: header ? header : {
       //'Content-Type': 'application/x-www-form-urlencoded'
       'content-type': 'application/json',
-      'apply-secret': uni.getStorageSync('applyDsshopSecret').secret,
+      'apply-secret': configURL.secret,
       'openid': uni.getStorageSync('applyDsshopOpenid'),
 	  'Authorization': 'Bearer ' + applytoken
     },

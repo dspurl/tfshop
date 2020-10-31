@@ -97,8 +97,8 @@ cd ../trade/Dsshop
 npm install 
 # HBuilder X导入trade/Dsshop目录
 #trade/Dsshop/App.vue修改API地址
-#32  host = "http://dsshop.com/api/v1/app/"
-#40  secret: 'API的.env中的APP_KEY'
+#33  host = "http://dsshop.com/api/v1/app/"
+#52  secret: 'API的.env中的APP_KEY'
 
 ```
 文档

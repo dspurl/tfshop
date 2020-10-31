@@ -13,9 +13,6 @@ use Carbon\Carbon;
 
 class LoginController extends Controller
 {
-    public function login(){
-        return redirect('login');
-    }
 
     public function index(Request $request)
     {
