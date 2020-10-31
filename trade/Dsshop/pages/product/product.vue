@@ -229,6 +229,24 @@ export default {
 						that.favorite = false
 					}
 				})
+				await CouponApi.getList({}, function(res) {
+					that.couponList = []
+					res.data.forEach(item=>{
+						let data = {
+							id: item.id,
+							money: item.cost/100,
+							title: item.explain,
+							type: item.type,
+							time: item.starttime.split(' ')[0].replace(/-/g,".") + "-" + item.endtime.split(' ')[0].replace(/-/g,"."),
+						}
+						if(item.limit_get && item.user_coupon_count >= item.limit_get){
+							data.state = "2"
+						} else{
+							data.state = "1"
+						}
+						that.couponList.push(data)
+					})
+				})
 			}
 		},
 		// 切换swiper
