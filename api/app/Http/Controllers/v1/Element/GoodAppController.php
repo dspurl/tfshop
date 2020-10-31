@@ -75,25 +75,20 @@ class GoodAppController extends Controller
                 ->orderBy('time','DESC');
         }
         // 自定义类目
-        if($request->has('pid') && !empty($request->pid)){
+        if($request->has('pid')){
             $q->whereHas('category',function($query) use ($request){
-                $query->whereIn('category_id', Category::getAllChildrenCategoryID((int)$request->pid));
+                $query->where('category_id', $request->pid);
             });
-        }
-        //搜索
-        if($request->has('searchValue') && !empty($request->searchValue)) {
-            $q->where('name', 'like', '%' . $request->searchValue . '%');
         }
         $paginate=$q->with(['resources'=>function($q){
             $q->where('depict','like','%_zimg');
         },'goodSku'=>function($q){
-            $q->select('good_id','price', 'market_price','inventory');
+            $q->select('good_id','price','inventory');
         }])->select('updated_at','id','name','number','market_price','sales','order_price','brand_id','price','is_show','is_recommend','is_new','is_hot','sort','time')->paginate($limit);
         if($paginate){
             foreach ($paginate as $id=>$p){
                 $paginate[$id]['price_show']=Good::getPriceShow($p);
                 $paginate[$id]['inventory_show']=Good::getInventoryShow($p);
-                $paginate[$id]['market_price_show']=Good::getMarketPriceShow($p);
             }
         }
         return resReturn(1,$paginate);

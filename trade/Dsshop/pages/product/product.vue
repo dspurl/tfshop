@@ -148,22 +148,12 @@ export default {
 		};
 	},
 	async onLoad(options) {
-		this.id= options.id;
-		if (this.id) {
-			this.loadData(this.id);
+		let id = options.id;
+		if (id) {
+			this.id = id;
+			this.loadData(id);
 		}
 	},
-	async onShow(){
-		if (this.hasLogin){
-			var that=this;
-			await Collect.getDetails(this.id, function(res) {
-				if(res === 1){
-					that.favorite = true
-				} else {
-					that.favorite = false
-				}
-			})
-	},		
 	computed:{
 		...mapState(['hasLogin'])
 	},
@@ -195,7 +185,15 @@ export default {
 					that.browse()
 				}
 			})
-
+			if (that.hasLogin){
+				await Collect.getDetails(id, function(res) {
+					if(res === 1){
+						that.favorite = true
+					} else {
+						that.favorite = false
+					}
+				})
+			}
 		},
 		// 切换swiper
 		imgCtu(item){
