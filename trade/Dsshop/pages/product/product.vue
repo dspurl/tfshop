@@ -183,23 +183,13 @@ export default {
 		};
 	},
 	async onLoad(options) {
-		this.id= options.id;
-		if (this.id) {
-			this.loadData(this.id);
+		let id = options.id;
+		if (id) {
+			this.id = id;
+			this.loadData(id);
 		}
 		this.goodEvaluate()
 	},
-	async onShow(){
-		if (this.hasLogin){
-			var that=this;
-			await Collect.getDetails(this.id, function(res) {
-				if(res === 1){
-					that.favorite = true
-				} else {
-					that.favorite = false
-				}
-			})
-	},		
 	computed:{
 		...mapState(['hasLogin'])
 	},
@@ -238,24 +228,6 @@ export default {
 					} else {
 						that.favorite = false
 					}
-				})
-				await CouponApi.getList({}, function(res) {
-					that.couponList = []
-					res.data.forEach(item=>{
-						let data = {
-							id: item.id,
-							money: item.cost/100,
-							title: item.explain,
-							type: item.type,
-							time: item.starttime.split(' ')[0].replace(/-/g,".") + "-" + item.endtime.split(' ')[0].replace(/-/g,"."),
-						}
-						if(item.limit_get && item.user_coupon_count >= item.limit_get){
-							data.state = "2"
-						} else{
-							data.state = "1"
-						}
-						that.couponList.push(data)
-					})
 				})
 			}
 		},
