@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import store from './store'
 import App from './App'
+import configURL from './utils/config.js'
 import filter from './utils/filter.js'
 const msg = (title, duration=1500, mask=false, icon='none')=>{
 	//统一提示方便全局修改
@@ -36,6 +37,7 @@ import VueClipboard from 'vue-clipboard2'
 Vue.use(VueClipboard)
 
 Vue.config.productionTip = false
+Vue.prototype.configURL = configURL
 Vue.prototype.$fire = new Vue();
 Vue.prototype.$store = store;
 Vue.prototype.$api = {msg, prePage};

@@ -103,12 +103,7 @@
 
 		<view class="detail-desc">
 			<view class="d-header"><text>图文详情</text></view>
-			<!-- #ifdef MP-ALIPAY -->
-				<rich-text :nodes="getList.details"></rich-text>
-			<!-- #endif -->
-			<!-- #ifndef MP-ALIPAY -->
-				<rich-text :nodes="getList.details | formatRichText"></rich-text>
-			<!-- #endif -->
+			<u-parse :content="getList.details" lazyLoad/>
 		</view>
 
 		<!-- 底部操作菜单 -->
@@ -145,6 +140,7 @@
 </template>
 
 <script>
+import uParse from '@/components/gaoyia-parse/parse.vue'
 import Good from '../../api/good';
 import share from '@/components/share';
 import { param2Data } from '@/components/sku/sku2param';
@@ -162,7 +158,8 @@ export default {
 	components: {
 		share,
 		sku,
-		coupon
+		coupon,
+		uParse
 	},
 	data() {
 		return {
@@ -186,13 +183,23 @@ export default {
 		};
 	},
 	async onLoad(options) {
-		let id = options.id;
-		if (id) {
-			this.id = id;
-			this.loadData(id);
+		this.id= options.id;
+		if (this.id) {
+			this.loadData(this.id);
 		}
 		this.goodEvaluate()
 	},
+	async onShow(){
+		if (this.hasLogin){
+			var that=this;
+			await Collect.getDetails(this.id, function(res) {
+				if(res === 1){
+					that.favorite = true
+				} else {
+					that.favorite = false
+				}
+			})
+	},		
 	computed:{
 		...mapState(['hasLogin'])
 	},
@@ -220,9 +227,6 @@ export default {
 					})
 				}
 				that.getList = res
-				// #ifdef MP-ALIPAY
-				that.getList.details = that.htmlToImageJson(that.getList.details)
-				// #endif
 				if (that.hasLogin){
 					that.browse()
 				}

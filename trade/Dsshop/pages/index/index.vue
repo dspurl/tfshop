@@ -1,6 +1,10 @@
 <template>
 	<view class="container">
-		
+		<!-- 搜索 -->
+		<view>
+			<uni-search-bar placeholder="搜索商品" cancelButton="none" @confirm="search" @input="input" ></uni-search-bar>
+		</view>
+
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<!-- 标题栏和状态栏占位符 -->
@@ -21,26 +25,18 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=1&sid=3&tid=20')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/hIHaW1594624050.png" lazy-load></image>
-				<text>男士T恤</text>
+<!--			<view class="cate-item" @click="navTo('/pages/product/list?fid=1&sid=3&tid=20')">-->
+<!--				<image src="https://dsshop.dswjcms.com/storage/image/category/hIHaW1594624050.png" lazy-load></image>-->
+<!--				<text>男士T恤</text>-->
+<!--			</view>-->
+			<view v-for="(item, index) in categoryList"
+				  :key="index"
+				  class="cate-item"
+				  @click="navTo('/pages/product/list?fid=' + item.id + '&sid=3&tid=' + item.id)">
+				<image :src="item.resources.img" lazy-load></image>
+				<text>{{item.name}}</text>
 			</view>
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=49&sid=51&tid=60')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/ylEI21594626437.png" lazy-load></image>
-				<text>女士T恤</text>
-			</view>
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=49&sid=69&tid=73')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/iNMVW1594627177.png" lazy-load></image>
-				<text>高根鞋</text>
-			</view>
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=49&sid=50&tid=53')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/zZo6m1594626068.png" lazy-load></image>
-				<text>半身裙</text>
-			</view>
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=49&sid=50&tid=65')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/pPNfP1594626192.png" lazy-load></image>
-				<text>打底裙</text>
-			</view>
+
 		</view>
 		
 		<view class="ad-1">
@@ -225,10 +221,14 @@
 					<image :src="item.resources.img" mode="aspectFill" lazy-load></image>
 				</view>
 				<text class="title clamp">{{item.name}}</text>
-				<text class="price">￥{{item.order_price | 1000}}</text>
+				<view class="price-box">
+					<text class="price">￥{{item.order_price}}</text>
+					<text class="m-price" v-if="item.market_price_show.length > 1">¥{{ item.market_price_show[1] }}</text>
+					<text class="m-price" v-else-if="item.market_price_show.length === 1">¥{{ item.market_price_show[0] }}</text>
+				</view>
+
 			</view>
 		</view>
-		
 
 	</view>
 </template>
@@ -236,6 +236,8 @@
 <script>
 import Good from '../../api/good'
 import Banner from '../../api/banner'
+import Category from '../../api/category'
+import {uniSearchBar} from '@/components/uni-search-bar/uni-search-bar'
 	export default {
 
 		data() {
@@ -245,6 +247,7 @@ import Banner from '../../api/banner'
 				swiperLength: 0,
 				carouselList: [],
 				goodsList: [],
+				categoryList: [],
 				adData: {}
 			};
 		},
@@ -252,6 +255,13 @@ import Banner from '../../api/banner'
 		onLoad() {
 			this.loadData()
 		},
+		onShareAppMessage(res) {
+			return {
+				title: 'kyshop',
+				path: '/pages/index/index'
+			}
+		},
+        components: {uniSearchBar},
 		methods: {
 			/**
 			 * 请求数据
@@ -279,7 +289,17 @@ import Banner from '../../api/banner'
 				},function(res){
 					that.goodsList = res.data
 				})
-				
+				//商品分类
+				await Category.getTopCategoryList({
+				},function(res){
+					that.categoryList = res
+				})
+			},
+            search(e) {
+                this.navTo('/pages/product/list?fid=49&sid=3&tid=0&showCateMake=-1&search=' + e.value);
+            },
+            input(e) {
+                // console.log(e);
 			},
 			//轮播图切换修改背景色
 			swiperChange(e) {
@@ -288,7 +308,6 @@ import Banner from '../../api/banner'
 			},
 			//轮播跳转
 			navToWwiperPage(item) {
-				console.log(item)
 			},
 			//详情页
 			navToDetailPage(item) {
@@ -752,6 +771,21 @@ import Banner from '../../api/banner'
 			font-size: $font-lg;
 			color: $uni-color-primary;
 			line-height: 1;
+		}
+
+		.m-price {
+			margin: 0 12upx;
+			color: $font-color-light;
+			text-decoration: line-through;
+		}
+
+		.price-box {
+			display: flex;
+			align-items: baseline;
+			height: 64upx;
+			padding: 10upx 0;
+			font-size: 26upx;
+			color: $uni-color-primary;
 		}
 	}
 	
