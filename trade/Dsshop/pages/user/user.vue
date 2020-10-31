@@ -182,6 +182,12 @@
 					url
 				})  
 			}, 
+			// 不验证跳转
+			navToNoValidation(url){
+				uni.navigateTo({  
+					url
+				})  
+			}, 
 			/**
 			 *  会员卡下拉和回弹
 			 *  1.关闭bounce避免ios端下拉冲突
