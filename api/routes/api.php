@@ -220,6 +220,9 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     });
     // 插件前台
     Route::prefix('app')->namespace('Plugin')->middleware(['appverify','auth:web'])->group(function () {
-        //APP插件列表
+        //APP验证插件列表
+    });
+    Route::prefix('app')->namespace('Plugin')->middleware(['appverify'])->group(function () {
+        //APP无需验证插件列表
     });
 });

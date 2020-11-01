@@ -73,7 +73,7 @@ class Plugin
         // 路由自动部署
         $routes=json_decode(file_get_contents($routes), true);
         // api
-        if(array_key_exists('admin',$routes) || array_key_exists('app',$routes)){
+        if(array_key_exists('admin',$routes) || array_key_exists('app',$routes) || array_key_exists('notValidatedApp',$routes)){
             $targetPath=$this->path.'/api/routes/api.php';
             $file_get_contents=file_get_contents($targetPath);
             //去除已存在的插件代码
@@ -87,11 +87,18 @@ class Plugin
         //前台插件列表",$file_get_contents);
             }
 
+            if(array_key_exists('notValidatedApp',$routes)){
+                $file_get_contents=str_replace("APP无需验证插件列表",$dswjcms['name']."_s
+        ".$routes['notValidatedApp']."
+        //".$dswjcms['name']."_e
+        //APP无需验证插件列表",$file_get_contents);
+            }
+
             if(array_key_exists('app',$routes)){
-                $file_get_contents=str_replace("APP插件列表",$dswjcms['name']."_s
+                $file_get_contents=str_replace("APP验证插件列表",$dswjcms['name']."_s
         ".$routes['app']."
         //".$dswjcms['name']."_e
-        //APP插件列表",$file_get_contents);
+        //APP验证插件列表",$file_get_contents);
             }
             file_put_contents($targetPath,$file_get_contents);
             unset($targetPath);
