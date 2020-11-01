@@ -54,8 +54,6 @@ git clone https://github.com/dspurl/dsshop.git
 cd ./api
 composer install
 # 修改.env.dev为.env
-php artisan key:generate
-php artisan passport:keys
 # 添加数据库信息
 DB_CONNECTION=mysql
 DB_HOST=127.0.0.1
@@ -77,6 +75,10 @@ php artisan generate:demo
 # 加载纯净数据
 # php artisan generate:pure
 php artisan storage:link
+# 生成APP_KEY
+php artisan key:generate
+# 生成oauth文件
+php artisan passport:keys
 # 创建密码授权客户端
 php artisan passport:client --password
 #修改.env.dev为.env，添加OAuth认证信息
@@ -101,6 +103,11 @@ npm install
 #修改`secret`为API密钥'API的.env中的APP_KEY'
 
 ```
+常见错误
+------------
+<p><a href="https://dspurl.github.io/dsshop/guide/faq.html">https://dspurl.github.io/dsshop/guide/faq.html</a></p>
+<p><a href="https://dswjcms_purl.gitee.io/dsshop/guide/faq.html">https://dswjcms_purl.gitee.io/dsshop/guide/faq.html</a></p>
+
 文档
 ------------
 <p><a href="https://dspurl.github.io/dsshop/">https://dspurl.github.io/dsshop/</a></p>
