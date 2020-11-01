@@ -53,6 +53,16 @@ export const componentsMap = {
   Comment: () => import('@/views/tool/Comment/index'),
   CommentList: () => import('@/views/tool/Comment/list'),
   // 评价_e
+  // 栏目文章_s
+  Column: () => import('@/views/tool/Article/Column/index'),
+  ColumnList: () => import('@/views/tool/Article/Column/list'),
+  CreateColumn: () => import('@/views/tool/Article/Column/create'),
+  EditColumn: () => import('@/views/tool/Article/Column/edit'),
+  Article: () => import('@/views/tool/Article/Article/index'),
+  ArticleList: () => import('@/views/tool/Article/Article/list'),
+  CreateArticle: () => import('@/views/tool/Article/Article/create'),
+  EditArticle: () => import('@/views/tool/Article/Article/edit'),
+  // 栏目文章_e
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),

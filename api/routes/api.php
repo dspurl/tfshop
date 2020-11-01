@@ -142,6 +142,18 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::put('comment/{photo}', 'CommentController@update')->middleware(['permissions:EditComment']);    //评价操作
         Route::delete('comment/{photo}', 'CommentController@destroy')->middleware(['permissions:DeleteComment']);    //评价删除
         //评价_e
+        //栏目文章_s
+        Route::get('column', 'ColumnController@index')->middleware(['permissions:ColumnList']);    //栏目列表
+        Route::get('column/{photo}', 'ColumnController@show')->middleware(['permissions:CreateColumn']);    //栏目详情
+        Route::post('column', 'ColumnController@store')->middleware(['permissions:CreateColumn']);    //栏目添加保存
+        Route::put('column/{photo}', 'ColumnController@update')->middleware(['permissions:EditColumn']);    //栏目编辑保存
+        Route::delete('column/{photo}', 'ColumnController@destroy')->middleware(['permissions:DeleteColumn']);    //栏目删除
+        Route::get('article', 'ArticleController@index')->middleware(['permissions:ArticleList']);    //文章列表
+        Route::get('article/{photo}', 'ArticleController@show')->middleware(['permissions:CreateArticle']);    //文章详情
+        Route::post('article', 'ArticleController@store')->middleware(['permissions:CreateArticle']);    //文章添加保存
+        Route::put('article/{photo}', 'ArticleController@update')->middleware(['permissions:EditArticle']);    //文章编辑保存
+        Route::delete('article/{photo}', 'ArticleController@destroy')->middleware(['permissions:DeleteArticle']);    //文章删除
+        //栏目文章_e
         //前台插件列表
     });
     //app
@@ -218,6 +230,17 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('comment/{photo}', 'CommentController@store');    //添加保存
         Route::post('commentDelete/{photo}', 'CommentController@destroy');    //删除
         //评价_e
-        //APP插件列表
+        //APP验证插件列表
+    });
+    Route::prefix('app')->namespace('Plugin')->middleware(['appverify'])->group(function () {
+        //栏目文章_s
+        Route::get('column', 'ColumnController@appIndex');    //栏目列表
+        Route::get('column/{photo}', 'ColumnController@appShow');    //栏目详情
+        Route::post('column/{photo}', 'ColumnController@pv');    //增加栏目访问量
+        Route::get('articleList/{photo}', 'ArticleController@appIndex');    //文章列表
+        Route::get('article/{photo}', 'ArticleController@appShow');    //文章详情
+        Route::post('article/{photo}', 'ArticleController@pv');    //增加文章访问量
+        //栏目文章_e
+        //APP无需验证插件列表
     });
 });

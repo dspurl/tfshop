@@ -43,8 +43,8 @@
 					<text class="num" v-else>0.00</text>
 					<text>余额</text>
 				</view>
-				<view class="tj-item" @click="navTo('/pages/coupon/index?state=1')">
-					<text class="num">{{userCouponCount}}</text>
+				<view class="tj-item">
+					<text class="num">0</text>
 					<text>优惠券</text>
 				</view>
 			</view>
@@ -66,10 +66,6 @@
 					<text class="yticon icon-yishouhuo"></text>
 					<text>待收货</text>
 				</view>
-				<view class="order-item" @click="navTo('/pages/order/order?state=4')" hover-class="common-hover"  :hover-stay-time="50">
-					<text class="cuIcon-edit"></text>
-					<text>待评价</text>
-				</view>
 				<!-- <view class="order-item" @click="navTo('/pages/order/order?state=4')" hover-class="common-hover"  :hover-stay-time="50">
 					<text class="yticon icon-shouhoutuikuan"></text>
 					<text>退款/售后</text>
@@ -89,6 +85,7 @@
 				<!-- <list-cell icon="icon-share" iconColor="#9789f7" title="分享" tips="邀请好友赢10万大礼"></list-cell> -->
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" @eventClick="navTo('/pages/user/collect')" title="我的收藏"></list-cell>
 				<list-cell icon="icon-comment" iconColor="#e07472" title="通知" :tips="noticeNumber ? noticeNumber : null" @eventClick="navTo('/pages/notice/notice')"></list-cell>
+				<list-cell icon="icon-xiaoxi" iconColor="#9789f7" title="帮助中心" @eventClick="navToNoValidation('/pages/article/column')"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="设置" @eventClick="navTo('/pages/set/set')"></list-cell>
 			</view>
 		</view>
@@ -100,7 +97,6 @@
 	import listCell from '@/components/mix-list-cell';
 	import Browse from '../../api/browse';
 	import User from '../../api/user';
-	import UserCoupon from '../../api/userCoupon.js';
 	import Notification from '../../api/notification'
     import {  
         mapState 
@@ -112,7 +108,6 @@
 		},
 		data(){
 			return {
-				userCouponCount: 0,
 				coverTransform: 'translateY(0px)',
 				coverTransition: '0s',
 				moving: false,
@@ -128,7 +123,6 @@
 			if(this.hasLogin){
 				this.getUser()
 				this.browse()
-				this.getUserCouponCount()
 				this.noticeConut()
 			} else {
 				this.browseList = []
@@ -173,12 +167,6 @@
 					limit: 10
 				},function(res){
 					that.browseList = res.data
-				})
-			},
-			getUserCouponCount(){
-				const that = this
-				UserCoupon.getCount(function(res){
-					that.userCouponCount = res
 				})
 			},
 			noticeConut(){
@@ -377,11 +365,6 @@
 			border-radius: 10upx;
 			font-size: $font-sm;
 			color: $font-color-dark;
-			.cuIcon-edit{
-				color: #fa436a;
-				font-size: 48upx;
-				margin-bottom: 18upx;
-			}
 		}
 		.yticon{
 			font-size: 48upx;

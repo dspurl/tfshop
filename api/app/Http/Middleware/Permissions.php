@@ -19,6 +19,9 @@ class Permissions
      */
     public function handle($request, Closure $next,$role)
     {
+//        if($request->method() != 'GET'){
+//            return resReturn(0,'演示版不支持数据库操作，请下载源码自行测试',Code::CODE_PERMISSION_CONFIGURATION);
+//        }
         if(!$role){
             return resReturn(0,'权限配置有误',Code::CODE_PERMISSION_CONFIGURATION);
         }
