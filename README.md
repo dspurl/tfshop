@@ -96,9 +96,9 @@ npm run dev
 cd ../trade/Dsshop
 npm install 
 # HBuilder X导入trade/Dsshop目录
-#trade/Dsshop/App.vue修改API地址
-#33  host = "http://dsshop.com/api/v1/app/"
-#52  secret: 'API的.env中的APP_KEY'
+#trade/Dsshop/utils/config.js修改服务器地址
+#修改`BaseURL`为API访问地址
+#修改`secret`为API密钥'API的.env中的APP_KEY'
 
 ```
 文档
@@ -109,8 +109,9 @@ npm install
 插件
 ------------
 <p>下载请切换至<a href="https://github.com/dspurl/plugin">插件列表</a></p>
-- 优惠券
-- 评价
+<p>优惠券</p>
+<p>评价</p>
+<p>栏目文章</p>
  
 功能介绍
 ------------
