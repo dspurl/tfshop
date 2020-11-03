@@ -24,6 +24,7 @@ import 'tinymce/plugins/code'// HTML编辑
 import 'tinymce/plugins/fullscreen'// 全屏
 import 'tinymce/plugins/link'// 链接
 import 'tinymce/plugins/preview'// 预览
+import '../../../static/tinymce/plugins/axupimgs/plugin'// 多图批量上传
 
 export default {
   name: 'Tinymce',
@@ -53,11 +54,11 @@ export default {
     },
     plugins: {
       type: [String, Array],
-      default: 'lists image media table link wordcount code fullscreen preview'
+      default: 'lists image media table link wordcount code fullscreen preview axupimgs'
     },
     toolbar: {
       type: [String, Array],
-      default: 'undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | lists image media table link | removeformat code fullscreen preview'
+      default: 'axupimgs media lists table link | undo redo |  formatselect | bold italic forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent  | removeformat code fullscreen image preview'
     },
     header: {
       type: [String, Object],
