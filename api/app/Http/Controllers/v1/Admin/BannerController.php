@@ -100,6 +100,7 @@ class BannerController extends Controller
             $Banner->sort = $request->sort;
             $Banner->state = $request->state;
             $Banner->save();
+           //如果有旧图, 替换
             if($request->resources && $request->img){
                 $Resource=Resource::find($request->resources['id']);
                 if($request->img !=$Resource->img){
@@ -107,7 +108,20 @@ class BannerController extends Controller
                 }
                 $Resource->img = imgPathShift('banner',$request->img);
                 $Resource->save();
+                return 1;
             }
+            //如果无旧图, 上传新图
+            if($request->img){
+                $Resource=new Resource();
+                $Resource->type = Resource::RESOURCE_TYPE_IMG;
+                $Resource->depict = 'banner_'.$Banner->id;
+                $Resource->image_id = $Banner->id;
+                $Resource->image_type = 'App\Models\v1\Banner';
+                $Resource->img = imgPathShift('banner',$request->img);
+                $Resource->save();
+                return 1;
+            }
+
             return 1;
         }, 5);
         if($return == 1){

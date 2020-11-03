@@ -29,7 +29,8 @@
 
 <script>
 	import {
-		mapState
+		mapState,
+		mapMutations
 	} from 'vuex';
 	import Collect from '../../api/collect'
 	export default {
@@ -41,7 +42,11 @@
 		onShow(){
 			this.loadData()
 		},
+		onLoad(option){
+			this.loginCheck()
+		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			//请求数据
 			async loadData(){
 				const that = this

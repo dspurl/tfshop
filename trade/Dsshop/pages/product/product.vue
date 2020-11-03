@@ -58,11 +58,6 @@
 				<text class="yticon icon-you"></text>
 			</view>
 			<!-- <view class="c-row b-b">
-				<text class="tit">优惠券</text>
-				<text class="con t-r red">领取优惠券</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="c-row b-b">
 				<text class="tit">促销活动</text>
 				<view class="con-list">
 					<text>新人首单送20元无门槛代金券</text>
@@ -80,35 +75,9 @@
 			</view> -->
 		</view>
 
-		<!-- 评价 -->
-		<!-- <view class="eva-section">
-			<view class="e-header">
-				<text class="tit">评价</text>
-				<text>(86)</text>
-				<text class="tip">好评率 100%</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<view class="eva-box">
-				<image class="portrait" src="http://img3.imgtn.bdimg.com/it/u=1150341365,1327279810&fm=26&gp=0.jpg" mode="aspectFill"></image>
-				<view class="right">
-					<text class="name">Leo yo</text>
-					<text class="con">商品收到了，79元两件，质量不错，试了一下有点瘦，但是加个外罩很漂亮，我很喜欢</text>
-					<view class="bot">
-						<text class="attr">购买类型：XL 红色</text>
-						<text class="time">2019-04-01 19:21</text>
-					</view>
-				</view>
-			</view>
-		</view> -->
-
 		<view class="detail-desc">
 			<view class="d-header"><text>图文详情</text></view>
-			<!-- #ifdef MP-ALIPAY -->
-				<rich-text :nodes="getList.details"></rich-text>
-			<!-- #endif -->
-			<!-- #ifndef MP-ALIPAY -->
-				<rich-text :nodes="getList.details | formatRichText"></rich-text>
-			<!-- #endif -->
+			<u-parse :content="getList.details" lazyLoad/>
 		</view>
 
 		<!-- 底部操作菜单 -->
@@ -144,6 +113,7 @@
 </template>
 
 <script>
+import uParse from '@/components/gaoyia-parse/parse.vue'
 import Good from '../../api/good';
 import share from '@/components/share';
 import { param2Data } from '@/components/sku/sku2param';
@@ -151,12 +121,14 @@ import sku from '@/components/sku';
 import Browse from '../../api/browse';
 import Collect from '../../api/collect';
 import {
-		mapState
+		mapState,
+		mapMutations
 	} from 'vuex';
 export default {
 	components: {
 		share,
-		sku
+		sku,
+		uParse
 	},
 	data() {
 		return {
@@ -189,6 +161,7 @@ export default {
 		this.videoContext = uni.createVideoContext('myVideo')
 	},
 	methods: {
+		...mapMutations(['loginCheck']),
 		//获取详情
 		async loadData(id) {
 			// 商品详情
@@ -208,9 +181,6 @@ export default {
 					})
 				}
 				that.getList = res
-				// #ifdef MP-ALIPAY
-				that.getList.details = that.htmlToImageJson(that.getList.details)
-				// #endif
 				if (that.hasLogin){
 					that.browse()
 				}
@@ -263,8 +233,16 @@ export default {
 				}
 			});
 		},
+		goLogin(){
+			if(!this.hasLogin){
+				uni.navigateTo({
+					url:'/pages/public/login'
+				})
+			}
+		},
 		//规格弹窗开关
 		toggleSpec(state) {
+			this.loginCheck()
 			if (!this.hasLogin && state === true){
 				this.$api.msg('请先登录')
 				return false
@@ -304,57 +282,7 @@ export default {
 		purchasePattern(data) {
 			this.specificationDefaultDisplay = data;
 		},
-		stopPrevent() {},
-		// HTML转Json图片
-		htmlToImageJson(html) {
-			let img = html.match(/<img[^>]*>/gi)
-			let arr = []
-			if(img){
-				for (let i = 0; i < img.length; i++) {
-				 let src = img[i].match(/src=[\'\"]?([^\'\"]*)[\'\"]?/i)
-				 //获取图片地址
-				 if(src[1]){
-					arr.push({
-						name: 'img',
-						attrs: {
-							style: 'max-width:100%;height:auto;display:inline-block;margin:10rpx auto;vertical-align:top;margin-top:-4px',
-							src: src[1]
-						}
-				  })
-				 }
-				}
-			}
-			return arr
-		}
-	},
-	filters: {
-		/**
-		 * 处理富文本里的图片宽度自适应
-		 * 1.去掉img标签里的style、width、height属性
-		 * 2.img标签添加style属性：max-width:100%;height:auto
-		 * 3.修改所有style里的width属性为max-width:100%
-		 * 4.去掉<br/>标签
-		 * @param html
-		 * @returns {void|string|*}
-		 */
-		formatRichText(html) {
-			//控制小程序中图片大小
-			if (html) {
-				let newContent = html.replace(/<img[^>]*>/gi, function(match, capture) {
-					match = match.replace(/style="[^"]+"/gi, '').replace(/style='[^']+'/gi, '');
-					match = match.replace(/width="[^"]+"/gi, '').replace(/width='[^']+'/gi, '');
-					match = match.replace(/height="[^"]+"/gi, '').replace(/height='[^']+'/gi, '');
-					return match;
-				});
-				newContent = newContent.replace(/style="[^"]+"/gi, function(match, capture) {
-					match = match.replace(/width:[^;]+;/gi, 'max-width:100%;').replace(/width:[^;]+;/gi, 'max-width:100%;');
-					return match;
-				});
-				newContent = newContent.replace(/<br[^>]*\/>/gi, '');
-				newContent = newContent.replace(/\<img/gi, '<img style="vertical-align:top;max-width:100%;height:auto;display:inline-block;margin:10rpx auto;"');
-				return newContent;
-			}
-		}
+		stopPrevent() {}
 	}
 };
 </script>

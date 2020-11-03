@@ -4,7 +4,7 @@
 		<view class="address-section" @click="addAddress()">
 			<view class="order-content">
 				<text class="yticon icon-shouhuodizhi"></text>
-				<view class="cen" v-if="addressData">
+				<view class="cen" v-if="addressData.location">
 					<view class="top">
 						<text class="name">{{addressData.name}}</text>
 						<text class="mobile">{{addressData.cellphone}}</text>
@@ -120,6 +120,7 @@
 <script>
 	import Address from '../../api/address'
 	import Indents from '../../api/indents'
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -155,6 +156,7 @@
 			}
 		},
 		onLoad(option){
+			this.loginCheck()
 			this.loadData()
 			// let data = JSON.parse(option.data)
 			// console.log(data)
@@ -171,6 +173,7 @@
 			// this.getFreight()
 		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			//商品数据
 			async loadData(){
 				this.cartList = []
@@ -237,7 +240,7 @@
 				this.payType = type;
 			},
 			submit(){
-				if(!this.addressData){
+				if(!this.addressData.location){
 					this.$api.msg('请选择地址')
 					return false
 				}

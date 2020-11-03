@@ -30,23 +30,6 @@ export default {
 					}
 				});
 			}
-			var applySecret = '', host = "http://dswjcms.com/api/v1/app/" // 服务器后端地址
-			if (JSON.stringify(options) != '{}' && options.query  && JSON.stringify(options.query) != '{}') {
-				applySecret = options;
-				applySecret.host = host;
-				uni.setStorageSync('applyDsshopSecret', applySecret);
-			} else {
-				if (!uni.getStorageSync('applyDsshopSecret')) {
-					applySecret = {
-						secret: 'base64:', //默认应用Secret
-						host: host,
-						name: 'Dsshop', // 平台默认名称
-					};
-					uni.setStorageSync('applyDsshopSecret', applySecret);
-				} else {
-					applySecret = uni.getStorageSync('applyDsshopSecret');
-				}
-			}
 		},
 		// 检测登录状态是否过期
 		checkSession() {
@@ -61,12 +44,11 @@ export default {
 		// 登录
 		getLogin() {
 			let that = this;
-			let applySecret = uni.getStorageSync('applyDsshopSecret');
 			uni.login({
 				success(res) {
 					if (res.code) {
 						uni.request({
-							url: applySecret.host + 'miniLogin',
+							url: that.configURL.BaseURL + 'miniLogin',
 							data: {
 								code: res.code,
 								platform: getPlatform()
@@ -74,7 +56,7 @@ export default {
 							method: 'POST',
 							header: {
 								'Content-Type': 'application/json',
-								'apply-secret': uni.getStorageSync('applyDsshopSecret').secret,
+								'apply-secret': that.configURL.secret,
 								// #ifndef H5
 								openid: uni.getStorageSync('applyDsshopOpenid')
 								// #endif

@@ -33,6 +33,7 @@
 
 <script>
 	import Address from '../../api/address'
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -49,6 +50,7 @@
 			}
 		},
 		onLoad(option){
+			this.loginCheck()
 			let title = '新增收货地址';
 			const that = this
 			if(option.type==='edit'){
@@ -64,6 +66,7 @@
 			})
 		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			switchChange(e){
 				this.addressData.default = e.detail;
 			},

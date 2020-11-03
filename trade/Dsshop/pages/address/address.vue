@@ -20,6 +20,7 @@
 
 <script>
 	import Address from '../../api/address'
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -29,12 +30,14 @@
 			}
 		},
 		onLoad(option){
+			this.loginCheck()
 			if(option.type){
 				this.type = option.type
 			}
 			this.loadData()
 		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			//获取列表
 			loadData(){
 				const that = this
@@ -121,7 +124,7 @@
 	.list{
 		display: flex;
 		align-items: center;
-		padding: 20upx 30upx;;
+		padding: 20upx 30upx;
 		background: #fff;
 		position: relative;
 	}

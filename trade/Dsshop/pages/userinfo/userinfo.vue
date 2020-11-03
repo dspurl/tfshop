@@ -45,6 +45,7 @@
 
 <script>
 	import User from '../../api/user';
+	import {mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
@@ -53,9 +54,11 @@
 			};
 		},
 		onLoad(){
+			this.loginCheck()
 			this.getUser()
 		},
 		methods:{
+			...mapMutations(['loginCheck']),
 			getUser(){
 				const that = this
 				User.user(function(res){
@@ -73,11 +76,11 @@
 					sizeType: ['compressed'],
 					success: (res) => {
 						uni.uploadFile({
-						  url: uni.getStorageSync('applyDsshopSecret').host + 'uploadPictures',
+						  url: that.configURL.BaseURL + 'uploadPictures',
 						  filePath: res.tempFilePaths[0],
 						  name: 'file',
 						  header: {
-							'apply-secret': uni.getStorageSync('applyDsshopSecret').secret,
+							'apply-secret': that.configURL.secret,
 							'Authorization': 'Bearer ' + uni.getStorageSync('dsshopApplytoken')
 						  },
 						  formData: {

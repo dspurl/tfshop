@@ -11,8 +11,8 @@
       </el-menu>
       <br>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="关键字">
-          <el-input v-model="listQuery.title" placeholder="商品标题/商品货号" clearable/>
+        <el-form-item label="订单号">
+          <el-input v-model="listQuery.title" placeholder="订单号" clearable/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleFilter">搜索</el-button>

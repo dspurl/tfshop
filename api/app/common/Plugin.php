@@ -46,6 +46,7 @@ class Plugin
     /**
      * 安装和更新插件
      * @param $name //插件简称
+     * @return string
      */
     public function autoPlugin($name){
         $routes=$this->pluginPath.'/'.$name.'/routes.json';
@@ -59,7 +60,7 @@ class Plugin
         $dswjcms=json_decode(file_get_contents($dswjcms), true);
         // 文件自动部署
         $this->fileDeployment($this->pluginPath.'/'.$name.'/admin/api',$this->path.'/admin/src/api');
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/admin/views/Coupon',$this->path.'/admin/src/views/tool/Coupon');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/admin/views/'.ucwords($name),$this->path.'/admin/src/views/tool/'.ucwords($name));
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/config',$this->path.'/api/config');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/console',$this->path.'/api/app/Console/Commands');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/models',$this->path.'/api/app/Models/v1');
@@ -67,12 +68,12 @@ class Plugin
         $this->fileDeployment($this->pluginPath.'/'.$name.'/api/requests',$this->path.'/api/app/Http/Requests/v1');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/database',$this->path.'/api/database/migrations');
         $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/api',$this->path.'/trade/Dsshop/api');
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components/coupon',$this->path.'/trade/Dsshop/components/coupon');
-        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/pages/coupon',$this->path.'/trade/Dsshop/pages/coupon');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/components',$this->path.'/trade/Dsshop/components');
+        $this->fileDeployment($this->pluginPath.'/'.$name.'/uniApp/pages',$this->path.'/trade/Dsshop/pages');
         // 路由自动部署
         $routes=json_decode(file_get_contents($routes), true);
         // api
-        if(array_key_exists('admin',$routes) || array_key_exists('app',$routes)){
+        if(array_key_exists('admin',$routes) || array_key_exists('app',$routes) || array_key_exists('notValidatedApp',$routes)){
             $targetPath=$this->path.'/api/routes/api.php';
             $file_get_contents=file_get_contents($targetPath);
             //去除已存在的插件代码
@@ -86,11 +87,18 @@ class Plugin
         //前台插件列表",$file_get_contents);
             }
 
+            if(array_key_exists('notValidatedApp',$routes)){
+                $file_get_contents=str_replace("APP无需验证插件列表",$dswjcms['name']."_s
+        ".$routes['notValidatedApp']."
+        //".$dswjcms['name']."_e
+        //APP无需验证插件列表",$file_get_contents);
+            }
+
             if(array_key_exists('app',$routes)){
-                $file_get_contents=str_replace("APP插件列表",$dswjcms['name']."_s
+                $file_get_contents=str_replace("APP验证插件列表",$dswjcms['name']."_s
         ".$routes['app']."
         //".$dswjcms['name']."_e
-        //APP插件列表",$file_get_contents);
+        //APP验证插件列表",$file_get_contents);
             }
             file_put_contents($targetPath,$file_get_contents);
             unset($targetPath);
@@ -164,7 +172,11 @@ class Plugin
             $data = scandir($original);
             foreach ($data as $value){
                 if($value != '.' && $value != '..'){
-                    copy($original.'/'.$value,$target.'/'.$value);
+                    if(is_dir($original.'/'.$value)){ //如果是目录
+                        $this->fileDeployment($original.'/'.$value,$target.'/'.$value);
+                    }else{
+                        copy($original.'/'.$value,$target.'/'.$value);
+                    }
                 }
             }
         }

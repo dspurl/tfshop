@@ -55,6 +55,7 @@
 </template>
 
 <script>
+	import {mapMutations} from 'vuex'
 	import Finance from '../../api/finance'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 	export default {
@@ -72,10 +73,12 @@
 			}
 		},
 		onLoad(options){
+			this.loginCheck()
 			this.loadData()
 			this.date = this.getDate()
 		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			//获取列表
 			async loadData(type='add',loading){
 				if(type === 'refresh'){

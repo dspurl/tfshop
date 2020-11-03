@@ -26,6 +26,14 @@ const store = new Vuex.Store({
                 key: 'dsshopUserInfo'  
             })
 		},
+		// 登录验证
+		loginCheck(state){
+			if(!state.hasLogin){
+				uni.navigateTo({
+					url:'/pages/public/login'
+				}) 
+			}
+		}
 	},
 	actions: {
 	

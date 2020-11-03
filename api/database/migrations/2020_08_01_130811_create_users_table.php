@@ -26,7 +26,9 @@ class CreateUsersTable extends Migration
             $table->string('cellphone',11)->comment('手机');
             $table->string('password',255)->comment('密码');
             $table->string('portrait',255)->nullable()->comment('头像');
-            $table->string('wechat_applet_openid',255)->nullable()->comment('微信小程序openid');
+            $table->string('miniweixin',255)->nullable()->comment('微信小程序openid');
+            $table->string('minialipay',255)->nullable()->comment('支付宝小程序openid');
+            $table->string('minitoutiao',255)->nullable()->comment('字节跳动小程序openid');
             $table->timestamps();
             $table->charset = 'utf8';
             $table->engine = 'InnoDB';
