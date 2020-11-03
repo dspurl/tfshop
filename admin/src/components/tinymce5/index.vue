@@ -120,7 +120,7 @@ export default {
     }
   },
   mounted() {
-     tinymce.init({})
+    tinymce.init({})
   },
   methods: {
     // 添加相关的事件，可用的事件参照文档=> https://github.com/tinymce/tinymce-vue => All available events
