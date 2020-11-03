@@ -228,5 +228,9 @@ export default {
   text-overflow: ellipsis;
   overflow: hidden;
   word-break: break-all;
+  counter-increment: counter_ll;
+}
+.ll:before {
+		content: counter(counter_ll)".";
 }
 </style>
