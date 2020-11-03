@@ -29,6 +29,9 @@ class StatisticsController extends Controller
         $date = $request->has('date') ? $request->date : 7;
         for ($i=$date; $i>=1;$i--){
             $summaryTrend=$this->app->data_cube->summaryTrend(date("Ymd",strtotime("-$i day")),date("Ymd",strtotime("-$i day")));
+            if(count($summaryTrend['list'])<1){
+                return array();
+            }
             $return[]=array(
                 'country'=>'累计访问人数',
                 'date'=>$summaryTrend['list'][0]['ref_date'],
@@ -60,6 +63,9 @@ class StatisticsController extends Controller
         $date = $request->has('date') ? $request->date : 7;
         for ($i=$date; $i>=1;$i--){
             $summaryTrend=$this->app->data_cube->dailyVisitTrend(date("Ymd",strtotime("-$i day")),date("Ymd",strtotime("-$i day")));
+            if(count($summaryTrend['list'])<1){
+                return array();
+            }
             $return[]=array(
                 'country'=>'新增用户留存',
                 'date'=>$summaryTrend['list'][0]['ref_date'],
