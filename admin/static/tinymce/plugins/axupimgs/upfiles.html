@@ -134,7 +134,7 @@
 		file_i = n;
 		if(len == n){
 			file_i=0;
-            document.querySelector('#topbar .upall').innerText='全部上传';
+            document.querySelector('#topbar .upall').innerText='2 全部上传';
 			return true;
 		}
 		if( axupimgs.res[n].url!='' ){
@@ -161,7 +161,7 @@
 				n++
 				upAllFiles(n);
 			},function(err){
-                document.querySelector('#topbar .upall').innerText='全部上传';
+                document.querySelector('#topbar .upall').innerText='2 全部上传';
                 document.querySelectorAll('#file_list li.up-now').forEach((el,i)=>{
                     el.setAttribute('class','up-no');
                 });
@@ -172,7 +172,7 @@
 	}
 
     document.querySelector('#topbar .upall').addEventListener('click',(e)=>{
-        if(e.target.innerText!='全部上传'){return false;}
+        if(e.target.innerText!='2 全部上传'){return false;}
         if(axupimgs.res.length>0){
             document.querySelectorAll('#file_list li.up-no').forEach((el,i)=>{
                 el.classList ? el.classList.add('up-now') : el.className+=' up-now';
