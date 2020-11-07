@@ -137,6 +137,11 @@ npm install
 - **Redis支持** 项目部分数据采用Redis缓存和Redisis锁机制
 - **消息通知** 支持数据库通知功能，可快速集成到各个业务场景中
 
+图标
+------------
+- 后端使用svg图标，路径在admin/src/icons/svg，根据文件名可以看出图标用途
+- 前端使用了用了1个ttf图标文件(https://at.alicdn.com/t/font_1078604_w4kpxh0rafi.ttf)，在App.vue中引用，用[百度字体编辑器](http://fontstore.baidu.com/static/editor/index.html)可以查看和编辑字体，预览使用: https://vkceyugu.cdn.bspapp.com/VKCEYUGU-market/872f2160-d6e1-11ea-81ea-f115fe74321c.html
+
 基于以下扩展或组件(不分排名，这里只罗列部分名称，具体请查看package和composer)
 ------------
 - [laravel](https://learnku.com/docs/laravel/7.x "laravel")
