@@ -11,6 +11,7 @@ use App\Models\v1\Resource;
 use App\Models\v1\Specification;
 use App\Models\v1\Category;
 use App\Models\v1\Good;
+use App\Models\v1\Browse;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -509,10 +510,12 @@ class GoodController extends Controller
     {
         // 不进行资源删除，因为商品在订单的时候也会有对应的图片，而商品图片不管主图还是SKU都会涉及
         $return=DB::transaction(function ()use($request,$id){
+            $user_id = auth('web')->user()->id;
             if($id>0){
                 Good::where('id',$id)->delete();
                 GoodSku::where('good_id',$id)->delete();
                 GoodSpecification::where('good_id',$id)->delete();
+                Browse::where('good_id',$id)->where('user_id', $user_id)->delete();
             }else{
                 if(!$request->all()){
                     return resReturn(0,'请选择内容',Code::CODE_WRONG);
@@ -521,6 +524,7 @@ class GoodController extends Controller
                 Good::whereIn('id',$idData)->delete();
                 GoodSku::whereIn('good_id',$idData)->delete();
                 GoodSpecification::whereIn('good_id',$idData)->delete();
+                Browse::whereIn('good_id',$idData)->where('user_id', $user_id)->delete();
             }
             return 1;
         }, 5);
