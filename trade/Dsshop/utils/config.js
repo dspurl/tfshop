@@ -28,7 +28,7 @@ if (process.env.NODE_ENV === "development") {
 	}
 }
 if(applyDsshopNodeEnv !== uni.getStorageSync('applyDsshopNodeEnv')){	//如果当前环境和上一次环境不同，则清空缓存
-	uni.clearStorage()
+	uni.clearStorageSync()
 	uni.setStorageSync('applyDsshopNodeEnv', applyDsshopNodeEnv)
 }
 export default configURL
