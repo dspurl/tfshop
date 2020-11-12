@@ -362,6 +362,7 @@
 					// 	orderList: []
 					// }
 				]
+				this.page = 1
 				this.loadData()
 			},
 			showModal(e) {
