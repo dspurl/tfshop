@@ -11,6 +11,8 @@ use App\Models\v1\Resource;
 use App\Models\v1\Specification;
 use App\Models\v1\Category;
 use App\Models\v1\Good;
+use App\Models\v1\Browse;
+use App\Models\v1\Collect;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -514,6 +516,7 @@ class GoodController extends Controller
                 GoodSku::where('good_id',$id)->delete();
                 GoodSpecification::where('good_id',$id)->delete();
                 Browse::where('good_id',$id)->delete();
+                Collect::where('good_id',$id)->delete();
             }else{
                 if(!$request->all()){
                     return resReturn(0,'请选择内容',Code::CODE_WRONG);
@@ -523,6 +526,7 @@ class GoodController extends Controller
                 GoodSku::whereIn('good_id',$idData)->delete();
                 GoodSpecification::whereIn('good_id',$idData)->delete();
                 Browse::whereIn('good_id',$idData)->delete();
+                Collect::whereIn('good_id',$idData)->delete();
             }
             return 1;
         }, 5);
