@@ -60,7 +60,7 @@
 				</view>
 			</block>
 			<block v-else>
-				<view v-if="specificationDefaultDisplay" class="c-row b-b" @click="!getList.is_delete ? toggleSpec(true): ''">
+				<view v-if="specificationDefaultDisplay" class="c-row b-b" @click="toggleSpec(true)">
 					<text class="tit">购买类型</text>
 					<view class="con">
 						<text class="selected-text">{{ specificationDefaultDisplay }}</text>
@@ -843,5 +843,6 @@ page {
 	width: 100%;
 	background-color: #999999;
 	color: #FFFFFF;
+	z-index: 3;
 }
 </style>
