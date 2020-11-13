@@ -5,6 +5,7 @@
         <el-menu-item index="1">全部商品</el-menu-item>
         <el-menu-item index="2">出售中</el-menu-item>
         <el-menu-item index="3">仓库中</el-menu-item>
+		<el-menu-item index="4">已删除</el-menu-item>
       </el-menu>
       <br>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">

@@ -1,5 +1,8 @@
 <template>
-	<view class="container">
+	<view class="container" :class="disableBuy?'gray-page':''">
+		<view v-if="disableBuy==1">
+				<h1>本商品已经下架或删除, 请购买其他商品</h1>
+		</view>		
 		<view class="carousel">
 			<video v-if="video" id="showVideo" :src="video" :poster="poster" class="showVideo"/>
 			<view v-if="video" class="showVideoClose" @click.stop="closeVideo">关闭</view>
@@ -95,7 +98,7 @@
 				<text>收藏</text>
 			</view>
 
-			<view class="action-btn-group">
+			<view class="action-btn-group" v-if="disableBuy==0">
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec(false)">加入购物车</button>
 			</view>
@@ -144,7 +147,8 @@ export default {
 			resources_many: [],
 			video: '',
 			index: 0,
-			buy: false
+			buy: false,
+			disableBuy:0,//禁止购买
 		};
 	},
 	async onLoad(options) {
@@ -181,6 +185,9 @@ export default {
 					})
 				}
 				that.getList = res
+				if(res.deleted==1 || res.is_show==0){
+					that.disableBuy = 1
+				}
 				if (that.hasLogin){
 					that.browse()
 				}
@@ -288,6 +295,9 @@ export default {
 </script>
 
 <style lang="scss">
+.gray-page{
+	 filter:grayscale(100%);
+}	
 page {
 	background: $page-color-base;
 	padding-bottom: 160upx;

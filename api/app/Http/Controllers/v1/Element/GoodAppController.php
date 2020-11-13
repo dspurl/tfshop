@@ -48,6 +48,7 @@ class GoodAppController extends Controller
         if($request->has('is_recommend')){
             $q->where('is_recommend',$request->is_recommend);
         }
+        $q->where('deleted',0);
         //排序
         if($request->has('order')){
             if($request->order == 1){   //销量

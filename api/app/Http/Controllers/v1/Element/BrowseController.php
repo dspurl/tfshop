@@ -21,7 +21,7 @@ class BrowseController extends Controller
         $limit=$request->limit;
         $q->orderBy('updated_at','DESC');
         $paginate=$q->with(['Good'=>function($q){
-            $q->select('id','order_price','name')->with(['resources']);
+            $q->select('id','order_price','name','is_show','deleted')->with(['resources']);
         }])->paginate($limit);
         return resReturn(1,$paginate);
     }
