@@ -17,7 +17,5 @@ Route::get('/home', function () {
     return view('home');
 });
 Route::namespace('v1')->group(function () {
-    Route::post('echo', 'EchoController@index')-> name('echo');  //智能音箱设备管理
-    Route::get('echo', 'EchoController@index')-> name('echo');
 });
 Auth::routes();

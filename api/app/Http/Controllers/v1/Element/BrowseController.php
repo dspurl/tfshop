@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v1\Element;
 
+use App\Code;
 use Carbon\Carbon;
 use App\Http\Requests\v1\SubmitBrowseRequest;
 use App\Models\v1\Browse;
@@ -35,20 +36,28 @@ class BrowseController extends Controller
     {
         $return=DB::transaction(function ()use($request){
             $user_id = auth('web')->user()->id;
-            $where = ['user_id' => $user_id,'good_id' => $request->id];
-            $data = ['user_id' => $user_id,'good_id' => $request->id,'updated_at'=>Carbon::now()->toDateTimeString()];
 
-            $Browse =  Browse::updateOrCreate($where,$data);
-            if (!$Browse->wasRecentlyCreated) {
-                return 1;
+            // 浏览记录方式一：没有浏览记录的新增，有的更新
+            $Browse=Browse::where('user_id',$user_id)->where('good_id',$request->id)->first();
+            if(!$Browse){
+                $Browse = new Browse();
             }else{
-                return 0;
+                $Browse->updated_at = Carbon::now()->toDateTimeString();
             }
+            $Browse->user_id = $user_id;
+            $Browse->good_id = $request->id;
+            $Browse->save();
+            // 浏览记录方式二：所有的浏览记录都添加，用于后期的用户行为分析
+//            $Browse = new Browse();
+//            $Browse->user_id = $user_id;
+//            $Browse->good_id = $request->id;
+//            $Browse->save();
+            return 1;
         }, 5);
         if($return == 1){
             return resReturn(1,'添加成功');
         }else{
-            return resReturn(0,$return[0],$return[1]);
+            return resReturn(0,'添加失败',Code::CODE_MISUSE);
         }
     }
 }

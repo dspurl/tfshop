@@ -42,31 +42,13 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::put('power', 'UserController@updataPower')->middleware(['permissions:UpdataPower']);  //修改权限
         Route::delete('power/{id}', 'UserController@destroyPower')->middleware(['permissions:DeletePower']);  //删除权限
 
-        //组件
-        //--组件
-        Route::get('elements', 'ElementController@index')->middleware(['permissions:ElementsList']);    //组件列表
-        Route::get('elements/{photo}', 'ElementController@show')->middleware(['permissions:EditElementsList']);    //组件详情页
-        Route::get('relevance/{photo}', 'ElementController@relevance')->middleware(['permissions:EditElementsList']);    //组件关联属性列表
-        Route::post('elements', 'ElementController@store')->middleware(['permissions:CreateElementsList']);    //组件添加保存
-        Route::put('elements/{photo}', 'ElementController@update')->middleware(['permissions:EditElementsList']);    //组件编辑保存
-        Route::delete('elements/{photo}', 'ElementController@destroy')->middleware(['permissions:DeleteElementsList']);    //组件删除
-        Route::post('elementRule', 'ElementController@elementRule')->middleware(['permissions:ElementRule']);    //获取组件权限
         //工具
-        //--列表
-        Route::get('listTemplates', 'ListTemplatesController@index')->middleware(['permissions:ListTemplate']);    //列表模板
-        Route::get('listTemplates/{photo}', 'ListTemplatesController@show')->middleware(['permissions:EditListTemplate']);    //列表模板详情页
-        Route::post('listTemplates', 'ListTemplatesController@store')->middleware(['permissions:CreateListTemplate']);    //列表模板添加保存
-        Route::put('listTemplates/{photo}', 'ListTemplatesController@update')->middleware(['permissions:EditListTemplate']);    //列表模板编辑保存
-        Route::delete('listTemplates/{photo}', 'ListTemplatesController@destroy')->middleware(['permissions:DeleteListTemplate']);    //列表模板删除
 
         //--Redis管理
         Route::get('redis', 'RedisServiceController@index')->middleware(['permissions:RedisServicesList']);    //Redis列表
         Route::get('redis/{photo}', 'RedisServiceController@show')->middleware(['permissions:RedisServicesList']);    //Redis详情
         Route::delete('redis/{photo}', 'RedisServiceController@destroy')->middleware(['permissions:DeleteRedisServices']);    //删除Redis
         Route::get('redisPanel', 'RedisServiceController@panel')->middleware(['permissions:RedisPanel']);    //Redis面板
-
-        //--oauth管理
-        Route::get('oauth', 'oauthManageController@index')->middleware(['permissions:OauthList']);    //Redis列表
 
         //--品牌
         Route::get('brand', 'BrandController@index')->middleware(['permissions:BrandList']);    //品牌列表

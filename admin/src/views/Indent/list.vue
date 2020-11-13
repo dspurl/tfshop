@@ -8,6 +8,7 @@
         <el-menu-item index="3">待收货</el-menu-item>
         <el-menu-item index="5">已完成</el-menu-item>
         <el-menu-item index="6">已取消</el-menu-item>
+        <el-menu-item index="7">已退款</el-menu-item>
       </el-menu>
       <br>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">

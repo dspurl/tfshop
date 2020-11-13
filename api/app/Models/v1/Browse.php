@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int user_id
  * @property int good_id
+ * @property int updated_at
  */
 class Browse extends Model
 {

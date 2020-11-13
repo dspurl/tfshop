@@ -188,11 +188,11 @@ class IndentController extends Controller
                     $GoodIndent->refund_time = Carbon::now()->toDateTimeString();
                     $GoodIndent->state =GoodIndent::GOOD_INDENT_STATE_REFUND;
                     $GoodIndent->save();
-                    User::where('id',$GoodIndent->user_id)->increment('money',$request->refund_money);
+                    User::where('id',$GoodIndent->user_id)->increment('money',$request->refund_money*100);
                     $Money=new MoneyLog();
                     $Money->user_id = $GoodIndent->user_id;
                     $Money->type = MoneyLog::MONEY_LOG_TYPE_INCOME;
-                    $Money->money = $request->refund_money;
+                    $Money->money = $request->refund_money*100;
                     $Money->remark = '订单：'.$GoodIndent->identification.'的退款';
                     $Money->save();
                     // 通知
@@ -205,11 +205,11 @@ class IndentController extends Controller
                                 'data'=>'退到余额'
                             ]
                         ],
-                        'price'=>$request->refund_money,
+                        'price'=>$request->refund_money*100,
                         'url'=>'/pages/finance/bill_show?id='.$Money->id,
                         'prefers'=>['database']
                     ];
-                    $user = User::find(auth('web')->user()->id);
+                    $user = User::find($GoodIndent->user_id);
                     $user->notify(new InvoicePaid($invoice));
                     return [
                         'result'=>'ok',
