@@ -46,6 +46,8 @@ class Good extends Model
     const GOOD_NEW_YES= 1; //推荐：是
     const GOOD_HOT_NO= 0; //热销：否
     const GOOD_HOT_YES= 1; //热销：是
+    const GOOD_DELETE_NO= 0; //删除：否
+    const GOOD_DELETE_YES= 1; //删除：是
     const GOOD_IS_INVENTORY_NO= 0; //减库存方式：拍下减库存
     const GOOD_IS_INVENTORY_FILM= 1; //减库存方式：付款减库存
 

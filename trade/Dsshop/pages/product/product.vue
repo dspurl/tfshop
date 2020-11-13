@@ -50,7 +50,7 @@
 		</view> -->
 
 		<view class="c-list">
-			<view v-if="specificationDefaultDisplay" class="c-row b-b" @click="toggleSpec(true)">
+			<view v-if="specificationDefaultDisplay" class="c-row b-b" @click="!getList.is_delete ? toggleSpec(true): ''">
 				<text class="tit">购买类型</text>
 				<view class="con">
 					<text class="selected-text">{{ specificationDefaultDisplay }}</text>
@@ -81,7 +81,7 @@
 		</view>
 
 		<!-- 底部操作菜单 -->
-		<view class="page-bottom">
+		<view class="page-bottom" v-if="!getList.is_delete">
 			<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
 				<text>首页</text>
@@ -106,7 +106,8 @@
 			<view class="mask"></view>
 			<view class="layer attr-content" @click.stop="stopPrevent"><sku :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku></view>
 		</view>
-
+		<!-- 已删除-->
+		<view class="sold-out padding">商品已经下架了~</view>
 		<!-- 分享 -->
 		<!-- <share ref="share" :contentHeight="580" :shareList="shareList"></share> -->
 	</view>
@@ -820,5 +821,14 @@ page {
 	top:300upx;
 	opacity: 1;
 	font-size: 120upx;
+}
+.sold-out{
+	text-align: center;
+	position: fixed;
+	left:0;
+	bottom:0;
+	width: 100%;
+	background-color: #999999;
+	color: #FFFFFF;
 }
 </style>

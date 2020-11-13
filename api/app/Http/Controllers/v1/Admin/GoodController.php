@@ -37,6 +37,7 @@ class GoodController extends Controller
         } else if($request->activeIndex == 3){
             $q->where('is_show',Good::GOOD_SHOW_ENTREPOT);
         }
+        $q->where('is_delete',Good::GOOD_DELETE_NO);
         if($request->title){
             $q->where(function($q1) use($request){
                 $q1->where('name','like','%'.$request->title.'%')
@@ -509,24 +510,15 @@ class GoodController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        // 不进行资源删除，因为商品在订单的时候也会有对应的图片，而商品图片不管主图还是SKU都会涉及
         $return=DB::transaction(function ()use($request,$id){
             if($id>0){
-                Good::where('id',$id)->delete();
-                GoodSku::where('good_id',$id)->delete();
-                GoodSpecification::where('good_id',$id)->delete();
-                Browse::where('good_id',$id)->delete();
-                Collect::where('good_id',$id)->delete();
+                Good::where('id',$id)->update(['is_delete' => Good::GOOD_DELETE_YES]);
             }else{
                 if(!$request->all()){
                     return resReturn(0,'请选择内容',Code::CODE_WRONG);
                 }
                 $idData=collect($request->all())->pluck('id');
-                Good::whereIn('id',$idData)->delete();
-                GoodSku::whereIn('good_id',$idData)->delete();
-                GoodSpecification::whereIn('good_id',$idData)->delete();
-                Browse::whereIn('good_id',$idData)->delete();
-                Collect::whereIn('good_id',$idData)->delete();
+                Good::whereIn('id',$idData)->update(['is_delete' => Good::GOOD_DELETE_YES]);
             }
             return 1;
         }, 5);
