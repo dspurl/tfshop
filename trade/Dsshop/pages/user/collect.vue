@@ -4,7 +4,7 @@
 		<view class="cart-list">
 			<block v-for="(item, index) in cartList" :key="index">
 				<view
-					class="cart-item" :class="(item.good.deleted==1 || item.good.is_show==0)?'gray-item':''"
+					class="cart-item" :class="(item.good.is_deleted==1 || item.good.is_show==0)?'gray-item':''"
 				@click.stop="goProduct(item)">
 					<view class="image-wrapper">
 						<image :src="item.good.resources.img"

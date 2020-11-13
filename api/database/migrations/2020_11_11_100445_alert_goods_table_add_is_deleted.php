@@ -15,7 +15,7 @@ class AlertGoodsTableAddIsDeleted extends Migration
     {
         //
 	Schema::table('goods', function (Blueprint $table) {
-            $table->integer('deleted')->default(0)->comment('逻辑删除');
+            $table->tinyInteger('is_deleted')->default(0)->comment('逻辑删除,0否1是');
         });
     }
 

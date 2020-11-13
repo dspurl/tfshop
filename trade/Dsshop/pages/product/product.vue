@@ -185,7 +185,7 @@ export default {
 					})
 				}
 				that.getList = res
-				if(res.deleted==1 || res.is_show==0){
+				if(res.is_deleted==1 || res.is_show==0){
 					that.disableBuy = 1
 				}
 				if (that.hasLogin){

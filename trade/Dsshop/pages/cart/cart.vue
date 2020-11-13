@@ -173,7 +173,7 @@
 							})
 							cartList[k].specification = cartList[k].specification.substr(0,cartList[k].specification.length-1)
 						}
-						if(cartList[k].good.deleted == 1 || cartList[k].good.is_show == 0){
+						if(cartList[k].good.is_deleted == 1 || cartList[k].good.is_show == 0){
 							cartList[k].invalid = true
 						}
 						if(cartList[k].invalid === true){ //失效的商品

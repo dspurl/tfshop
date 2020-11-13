@@ -25,7 +25,7 @@ class CollectController extends Controller
         $q->where('user_id',auth('web')->user()->id);
         $limit=$request->limit;
         $paginate=$q->with(['Good'=>function($q){
-            $q->select('id','order_price','name','is_show','deleted')->with(['resources']);
+            $q->select('id','order_price','name','is_show','is_deleted')->with(['resources']);
         }])->paginate($limit);
         return resReturn(1,$paginate);
     }

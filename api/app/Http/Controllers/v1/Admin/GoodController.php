@@ -34,14 +34,14 @@ class GoodController extends Controller
         $limit=$request->limit;
         if($request->activeIndex == 2){
             $q->where('is_show',Good::GOOD_SHOW_PUTAWAY);
-            $q->where('deleted',0);
+           $q->where('is_delete',Good::GOOD_DELETE_NO);
         } else if($request->activeIndex == 3){
             $q->where('is_show',Good::GOOD_SHOW_ENTREPOT);
-            $q->where('deleted',0);
+            $q->where('is_delete',Good::GOOD_DELETE_NO);
         }else if($request->activeIndex == 4){
-            $q->where('deleted',1);
+            $q->where('is_delete',Good::GOOD_DELETE_YES);
         }else{
-            $q->where('deleted',0);
+           $q->where('is_delete',Good::GOOD_DELETE_NO);
         }
         if($request->title){
             $q->where(function($q1) use($request){
@@ -49,7 +49,6 @@ class GoodController extends Controller
                     ->orWhere('number',$request->title);
             });
         }
-        $q->where('deleted',0);
         $q->orderBy('created_at','DESC');
         $paginate=$q->with(['resources'=>function($q){
             $q->where('depict','like','%_zimg');
@@ -519,25 +518,13 @@ class GoodController extends Controller
         // 不进行资源删除，因为商品在订单的时候也会有对应的图片，而商品图片不管主图还是SKU都会涉及
         $return=DB::transaction(function ()use($request,$id){
             if($id>0){
-                $Good=Good::find($id);
-                $Good->deleted=1;
-                $Good->save();
-                /*
-                GoodSku::where('good_id',$id)->delete();
-                GoodSpecification::where('good_id',$id)->delete();
-                */
+			Good::where('id',$id)->update(['is_delete' => Good::GOOD_DELETE_YES]);
             }else{
                 if(!$request->all()){
                     return resReturn(0,'请选择内容',Code::CODE_WRONG);
                 }
                 $idData=collect($request->all())->pluck('id');
-                Good::whereIn('id',$idData)->update(['deleted' => 1]);
-                /*
-                GoodSku::whereIn('good_id',$idData)->delete();
-                GoodSpecification::whereIn('good_id',$idData)->delete();
-                Browse::whereIn('good_id',$idData)->delete();
-                Collect::whereIn('good_id',$idData)->delete();
-                */
+		 Good::whereIn('id',$idData)->update(['is_delete' => Good::GOOD_DELETE_YES]);
             }
             return 1;
         }, 5);
