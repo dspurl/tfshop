@@ -34,14 +34,14 @@ class GoodController extends Controller
         $limit=$request->limit;
         if($request->activeIndex == 2){
             $q->where('is_show',Good::GOOD_SHOW_PUTAWAY);
-           $q->where('is_delete',Good::GOOD_DELETE_NO);
+           $q->where('is_deleted',Good::GOOD_DELETE_NO);
         } else if($request->activeIndex == 3){
             $q->where('is_show',Good::GOOD_SHOW_ENTREPOT);
-            $q->where('is_delete',Good::GOOD_DELETE_NO);
+            $q->where('is_deleted',Good::GOOD_DELETE_NO);
         }else if($request->activeIndex == 4){
-            $q->where('is_delete',Good::GOOD_DELETE_YES);
+            $q->where('is_deleted',Good::GOOD_DELETE_YES);
         }else{
-           $q->where('is_delete',Good::GOOD_DELETE_NO);
+           $q->where('is_deleted',Good::GOOD_DELETE_NO);
         }
         if($request->title){
             $q->where(function($q1) use($request){
@@ -518,13 +518,13 @@ class GoodController extends Controller
         // 不进行资源删除，因为商品在订单的时候也会有对应的图片，而商品图片不管主图还是SKU都会涉及
         $return=DB::transaction(function ()use($request,$id){
             if($id>0){
-			Good::where('id',$id)->update(['is_delete' => Good::GOOD_DELETE_YES]);
+			Good::where('id',$id)->update(['is_deleted' => Good::GOOD_DELETE_YES]);
             }else{
                 if(!$request->all()){
                     return resReturn(0,'请选择内容',Code::CODE_WRONG);
                 }
                 $idData=collect($request->all())->pluck('id');
-		 Good::whereIn('id',$idData)->update(['is_delete' => Good::GOOD_DELETE_YES]);
+		 Good::whereIn('id',$idData)->update(['is_deleted' => Good::GOOD_DELETE_YES]);
             }
             return 1;
         }, 5);
