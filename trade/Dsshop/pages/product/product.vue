@@ -107,7 +107,7 @@
 			<view class="layer attr-content" @click.stop="stopPrevent"><sku :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku></view>
 		</view>
 		<!-- 已删除-->
-		<view class="sold-out padding">商品已经下架了~</view>
+		<view v-if="!getList.is_delete" class="sold-out padding">商品已经下架了~</view>
 		<!-- 分享 -->
 		<!-- <share ref="share" :contentHeight="580" :shareList="shareList"></share> -->
 	</view>
