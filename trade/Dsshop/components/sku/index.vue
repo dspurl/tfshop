@@ -15,7 +15,7 @@
 <template>
 	<view>
 		<view class="a-t">
-			<image :src="specificationDefaultDisplay.img"></image>
+			<image :src="specificationDefaultDisplay.img" @click="previewImage(specificationDefaultDisplay.img)"></image>
 			<view class="right">
 				<template v-if="getLists.price_show && specificationDefaultDisplay.price_show">
 					<text class="price" v-if="specificationDefaultDisplay.price_show.length > 1">¥{{specificationDefaultDisplay.price_show[0]}} - {{specificationDefaultDisplay.price_show[1]}}</text>
@@ -570,6 +570,14 @@ export default{
 			this.productSkus = []
 			this.shoppingAttributes = []
 			this.loadData()
+		},
+		previewImage(imageUrl){ 
+			var images = [];
+			images.push(imageUrl);
+			uni.previewImage({
+				current:0,
+				urls:images,
+			});
 		},
 	},
 
