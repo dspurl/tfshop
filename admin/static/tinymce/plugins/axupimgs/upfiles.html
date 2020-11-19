@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 <meta name="format-detection" content="telephone=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<script type="text/javascript" src="js/jquery.min.js"></script>
+<script type="text/javascript" src="js/jquery-migrate-1.1.1.js"></script>
+<script type="text/javascript" src="js/jquery.dragsort-0.5.1.min.js"></script>
 <style>
 	html,body{height:100%;margin:0;padding:0;background:#fff;}
 	ul{margin:0;padding:0;list-style:none;}
@@ -21,7 +24,7 @@
 	#topbar button:hover{background-color:#207ab7;color:#fff;}
 	#topbar button.removeall{float:left}
 	#file_list {display:grid;grid-gap:10px;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));padding-top:10px;}
-    #file_list:empty:after{content:'可以直接拖拽文件到这里';color:#777;font-size:0.8em;}
+    #file_list:empty:after{content:'';color:#777;font-size:0.8em;}
 	#file_list li{position:relative;display:block;vertical-align:top;padding:5px 5px;border-radius:5px;}
 	#file_list li.up-over {}
 	#file_list li.up-now {}
@@ -42,7 +45,7 @@
 </head>
 <body>
 <div id="wrap">
-	<div id="topbar"><button class="addfile primary">1 加文件</button><button class="upall primary">2 全部上传</button><button class="removeall">清空列表</button></div>
+	<div id="topbar"><button class="addfile primary">加文件</button><!--<button class="upall primary">2 全部上传</button>--><button class="removeall">清空列表</button></div>
 	<ul id="file_list"></ul>
 </div>
 
@@ -57,12 +60,17 @@
 
 	//为列表添加排序
 	function reSort(){
+        //return false;
+       
         document.querySelectorAll('#file_list li').forEach((el,i)=>{
             el.setAttribute('data-num',i);
         });
+         /**/
 	}
 
     function addList(files){
+        //console.log(files)
+       // return
         var files_sum = files.length;
         var vDom = document.createDocumentFragment();
         for(let i=0;i<files_sum;i++){
@@ -72,10 +80,11 @@
             let li = document.createElement('li');
             li.setAttribute('class','up-no');
             li.setAttribute('data-time',file.lastModified);
-            li.innerHTML='<div class="picbox"><img src="'+blobUrl+'"></div><div class="namebox"><span>'+file.name+'</span></div><div class="tools"><a class="remove"></a></div>';
+            li.innerHTML='<div class="picbox"><img src="'+blobUrl+'"></div><div class="namebox"><span>'+file.name+'</span></div><div class="tools"><!--<a class="remove"></a>--></div>';
             vDom.appendChild(li);
         }
         document.querySelector('#file_list').appendChild(vDom);
+        upAllFiles(0);
         //reSort();
     }
 
@@ -87,6 +96,9 @@
             el.parentNode.removeChild(el)
         });
     });
+
+    
+    
     //拖拽添加
     document.addEventListener('dragover', (e)=>{
         e.stopPropagation();
@@ -113,6 +125,7 @@
         }
         if(files.length>0){ addList(files) }
     });
+    
 
     //添加文件
     document.querySelector('#topbar .addfile').addEventListener('click',()=>{
@@ -134,7 +147,7 @@
 		file_i = n;
 		if(len == n){
 			file_i=0;
-            document.querySelector('#topbar .upall').innerText='2 全部上传';
+            //document.querySelector('#topbar .upall').innerText='2 全部上传';
 			return true;
 		}
 		if( axupimgs.res[n].url!='' ){
@@ -161,7 +174,7 @@
 				n++
 				upAllFiles(n);
 			},function(err){
-                document.querySelector('#topbar .upall').innerText='2 全部上传';
+                //document.querySelector('#topbar .upall').innerText='2 全部上传';
                 document.querySelectorAll('#file_list li.up-now').forEach((el,i)=>{
                     el.setAttribute('class','up-no');
                 });
@@ -170,7 +183,7 @@
 		}
 		
 	}
-
+    /*
     document.querySelector('#topbar .upall').addEventListener('click',(e)=>{
         if(e.target.innerText!='2 全部上传'){return false;}
         if(axupimgs.res.length>0){
@@ -181,7 +194,7 @@
             upAllFiles(0);
         }
     });
-
+ 
     var observ_flist = new MutationObserver( (muList,observe)=>{
         if(muList[0].addedNodes.length>0){
             muList[0].addedNodes.forEach((el)=>{
@@ -194,10 +207,29 @@
                 });
             });
         }
-        reSort();
+        //reSort();
     });
     observ_flist.observe(document.querySelector('#file_list'),{childList:true});
-
+    */
+    //拖动图片排序
+$(function() {
+	try{
+		$("#file_list").dragsort({
+			dragSelector: "li",
+			dragBetween: true ,
+			dragEnd:function(){
+                axupimgs.res=[]
+                document.querySelectorAll('#file_list li').forEach((el,i)=>{
+                    var blobUrl = el.children[0].childNodes[0].currentSrc;
+                    var name = el.children[1].innerText;
+                    //console.log(el.children[1].innerText)
+                    axupimgs.res.push({file:name,blobUrl:'',url:blobUrl});
+                });
+			}
+		});
+	}catch(e){
+	}
+});
 </script>
 </body>
 </html>
