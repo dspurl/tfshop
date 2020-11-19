@@ -21,7 +21,7 @@ tinymce.PluginManager.add('axupimgs', function(editor, url) {
 				},
 				{
 					type: 'custom',
-					text: '3 插入图片',
+					text: '插入图片',
 					name: 'save',
 					primary: true
 				},
@@ -31,6 +31,7 @@ tinymce.PluginManager.add('axupimgs', function(editor, url) {
 					case 'save':
 						var html = '';
 						var imgs = axupimgs.res;
+						//console.log(axupimgs.res);
 						var len = imgs.length;
 						if(len<1){
 							alert('请选上传文件')
