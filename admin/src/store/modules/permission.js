@@ -47,10 +47,6 @@ export const componentsMap = {
   StatisticsAgeAndSex: () => import('@/views/statistics/user'),
   StatisticsPay: () => import('@/views/statistics/pay'),
   // 插件列表
-  // 分销_s
-  Distribution: () => import('@/views/tool/Distribution/index'),
-  DistributionList: () => import('@/views/tool/Distribution/list'),
-  // 分销_e
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
   PlugInList: () => import('@/views/Plugin/list')
