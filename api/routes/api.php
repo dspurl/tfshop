@@ -133,6 +133,12 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     });
     // 插件后台
     Route::prefix('admin')->namespace('Plugin')->middleware(['auth:api'])->group(function () {
+        //分销_s
+        Route::get('distribution', 'DistributionController@index')->middleware(['permissions:DistributionList']);    //分销列表
+        Route::post('distribution', 'DistributionController@store')->middleware(['permissions:CreateDistribution']);    //分销添加
+        Route::put('distribution/{photo}', 'DistributionController@update')->middleware(['permissions:EditDistribution']);    //分销更新
+        Route::delete('distribution/{photo}', 'DistributionController@destroy')->middleware(['permissions:DeleteDistribution']);    //分销删除
+        //分销_e
         //前台插件列表
     });
     //app
