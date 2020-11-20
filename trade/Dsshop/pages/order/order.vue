@@ -165,8 +165,7 @@
 				let index = this.tabCurrentIndex;
 				let navItem = this.navList[index];
 				let state = navItem.state;
-				if(source === 'tabChange' && navItem.loaded === true){
-					//tab切换只有第一次需要加载数据
+				if(navItem.loaded === true){
 					return;
 				}
 				
