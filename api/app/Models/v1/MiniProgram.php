@@ -256,6 +256,9 @@ class MiniProgram extends Model
         $config = config('wechat.payment.default');
         $config['notify_url'] = request()->root().'/api/v1/app/paymentNotify';
         $app = Factory::payment($config);
+        if($config['sandbox'] == true){
+            $fee = '101';
+        }      
         $result = $app->order->unify([
             'body' => $body,
             'out_trade_no' => $number,
