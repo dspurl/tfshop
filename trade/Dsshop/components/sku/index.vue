@@ -184,8 +184,12 @@ export default{
 				}
 				this.cartGood.price = this.getLists.price
 			}
-			
-			
+			//自动选择默认第一项规格
+			if (typeof(this.specification[0].leaf[0]) != 'undefined'){
+				for (var i=0;i<this.specification.length;i++){
+					this.selectSpec(i, 0,this.specification[i].leaf[0])
+				}								
+			}
 		},
 		//初始化选中项
 		initSelectSpec(newVal){
