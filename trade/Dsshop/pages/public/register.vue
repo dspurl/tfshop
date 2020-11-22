@@ -59,16 +59,21 @@
 					cellphone: '',
 					code: '',
 					password: '',
-					rPassword: ''
+					rPassword: '',
+					uuid: ''
 				},
 				disabled: false,
 				logining: false
 			}
 		},
-		onLoad(){
+		onLoad(option){
 			// #ifndef  MP-WEIXIN
 			this.TabCur = 1
 			// #endif
+			if(option.uuid){
+				this.ruleForm.uuid = option.uuid
+			}
+			
 		},
 		methods: {
 			...mapMutations(['login']),

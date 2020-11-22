@@ -27,26 +27,26 @@ class StatisticsController extends Controller
     {
         $return=[];
         $date = $request->has('date') ? $request->date : 7;
+
         for ($i=$date; $i>=1;$i--){
             $summaryTrend=$this->app->data_cube->summaryTrend(date("Ymd",strtotime("-$i day")),date("Ymd",strtotime("-$i day")));
-            if(count($summaryTrend['list'])<1){
-                return array();
-            }
-            $return[]=array(
-                'country'=>'累计访问人数',
-                'date'=>$summaryTrend['list'][0]['ref_date'],
-                'value'=>$summaryTrend['list'][0]['visit_total'],
-            );
-            $return[]=array(
+            if(array_key_exists('list',$summaryTrend)){
+                $return[]=array(
+                    'country'=>'累计访问人数',
+                    'date'=>$summaryTrend['list'][0]['ref_date'],
+                    'value'=>$summaryTrend['list'][0]['visit_total'],
+                );
+                $return[]=array(
                     'country'=>'转发次数',
                     'date'=>$summaryTrend['list'][0]['ref_date'],
                     'value'=>$summaryTrend['list'][0]['share_pv'],
-            );
-            $return[]=array(
+                );
+                $return[]=array(
                     'country'=>'转发人数',
                     'date'=>$summaryTrend['list'][0]['ref_date'],
                     'value'=>$summaryTrend['list'][0]['share_uv'],
-            );
+                );
+            }
         }
         return resReturn(1,array_values($return));
     }

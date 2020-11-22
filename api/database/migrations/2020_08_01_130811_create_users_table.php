@@ -16,6 +16,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->char('uuid',36)->index()->comment('uuid');
             $table->string('api_token',80)->comment('token');
             $table->tinyInteger('state')->default(1)->comment('状态1正常2禁止访问');
             $table->string('name',30)->comment('账号');
@@ -35,7 +36,7 @@ class CreateUsersTable extends Migration
             $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
-        DB::statement("ALTER TABLE `users` COMMENT='规格组'");
+        DB::statement("ALTER TABLE `users` COMMENT='用户'");
     }
 
     /**
