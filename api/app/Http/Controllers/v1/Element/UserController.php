@@ -8,6 +8,7 @@ use App\Models\v1\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Redis;
+use Webpatser\Uuid\Uuid;
 
 class UserController extends Controller
 {
@@ -55,6 +56,7 @@ class UserController extends Controller
      *
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function show(Request $request)
     {
@@ -62,8 +64,14 @@ class UserController extends Controller
         $lock=RedisLock::lock($redis,'dsShopUser');
         if($lock){
             User::$withoutAppends = false;
-            $User=User::select('cellphone','nickname','portrait','money')->find(auth('web')->user()->id);
+            $User=User::select('cellphone','nickname','portrait','money','uuid')->find(auth('web')->user()->id);
             RedisLock::unlock($redis,'dsShopUser');
+            // 做uuid兼容
+            if(!$User->uuid){
+                $uuid=(string) Uuid::generate();
+                User::where('id',auth('web')->user()->id)->update(['uuid' =>$uuid]);
+                $User->uuid = $uuid;
+            }
             return resReturn(1,$User);
         }else{
             return resReturn(0,'业务繁忙，请稍后再试',Code::CODE_SYSTEM_BUSY);

@@ -19,10 +19,11 @@ use EasyWeChat\Factory;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redis;
+use Webpatser\Uuid\Uuid;
+
 class WeChatController  extends Controller
 {
     /**
@@ -94,13 +95,21 @@ class WeChatController  extends Controller
         if($user){
             return resReturn(0,'手机号已被注册',Code::CODE_WRONG);
         }
-        $addUser=new User();
-        $addUser->name = $request->cellphone;
-        $addUser->cellphone = $request->cellphone;
-        $addUser->password=bcrypt($request->password);
-        $addUser->api_token = hash('sha256', Str::random(60));
-        $addUser->save();
-        return resReturn(1,'注册成功');
+        $return=DB::transaction(function ()use($request){
+            $addUser=new User();
+            $addUser->name = $request->cellphone;
+            $addUser->cellphone = $request->cellphone;
+            $addUser->password=bcrypt($request->password);
+            $addUser->api_token = hash('sha256', Str::random(60));
+            $addUser->uuid = (string) Uuid::generate();
+            $addUser->save();
+            return 1;
+        }, 5);
+        if($return == 1){
+            return resReturn(1,'注册成功');
+        }else{
+            return resReturn(0,'注册失败',Code::CODE_PARAMETER_WRONG);
+        }
     }
 
     //找回密码
