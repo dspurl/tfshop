@@ -38,7 +38,7 @@
 				v-for="(item, index) in indentList.goods_list"
 				:key="index"
 			>
-				<image :src="item.img" lazy-load></image>
+				<image :src="item.img  | smallImage" lazy-load></image>
 				<view class="right">
 					<text class="title clamp">{{ item.name }}</text>
 					<text class="spec">{{ item.specification }}</text>

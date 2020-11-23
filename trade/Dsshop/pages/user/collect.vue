@@ -7,7 +7,7 @@
 					class="cart-item" 
 				@click.stop="goProduct(item)">
 					<view class="image-wrapper">
-						<image :src="item.good.resources.img"
+						<image :src="item.good.resources.img | smallImage"
 							class="loaded"
 							mode="aspectFill" 
 							lazy-load

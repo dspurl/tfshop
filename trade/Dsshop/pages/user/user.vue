@@ -78,7 +78,7 @@
 					<text>浏览历史</text>
 				</view>
 				<scroll-view scroll-x class="h-list">
-					<image v-for="(item, index) in browseList" :key="index" @click="navTo('/pages/product/product?id=' + item.good_id)" :src="item.good.resources.img" mode="aspectFill" lazy-load></image>
+					<image v-for="(item, index) in browseList" :key="index" @click="navTo('/pages/product/product?id=' + item.good_id)" :src="item.good.resources.img | smallImage" mode="aspectFill" lazy-load></image>
 				</scroll-view>
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="账单" @eventClick="navTo('/pages/finance/bill')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>

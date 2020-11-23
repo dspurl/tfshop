@@ -21,7 +21,7 @@
 						:class="{'b-b': index!==cartList.length-1}"
 					@click.stop="goProduct(item)">
 						<view class="image-wrapper">
-							<image :src="item.img" 
+							<image :src="item.img  | smallImage" 
 								:class="[item.loaded]"
 								mode="aspectFill" 
 								lazy-load 

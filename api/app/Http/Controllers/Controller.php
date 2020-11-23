@@ -64,20 +64,33 @@ class Controller extends BaseController
             return resReturn(0,'上传文件无效',Code::CODE_PARAMETER_WRONG);
         }
         //生成文件名
-        $fileName = str_random(5). time() . '.' . $file->getClientOriginalExtension();
+        $extension = $file->getClientOriginalExtension();
+        $randFileName = str_random(5). time();
+        $fileName = $randFileName . '.' . $extension;
+        $fileNameSmall = $randFileName . '_small.' . $extension; //列表图片
         $pathName = 'temporary/'.$fileName;
+        $pathNameSmall = 'temporary/'.$fileNameSmall;
+
         // 获取图片在临时文件中的地址
         $files = file_get_contents($file->getRealPath());
         $disk = Storage::disk('public');
         $disk->put($pathName, $files);
+        //写入小图片
+        $realBasePath = public_path().'/storage/';
+        $imgSmall=\Image::make($realBasePath.$pathName);
+        $imgSmall->widen(300);
+        $imgSmall->save($realBasePath.$pathNameSmall);
+
         $url = request()->root().'/storage/'.$pathName;
+        $urlSmall = request()->root().'/storage/'.$pathNameSmall;
         return array(
-            "state" => "SUCCESS",          //上传状态，上传成功时必须返回"SUCCESS"
-            "url" => $url,            //返回的地址
-            "title" => $fileName,          //新文件名
-            "original" => $file->getClientOriginalName(),       //原始文件名
-            "type" => $file->getClientMimeType(),            //文件类型
-            "size" => $file->getSize()           //文件大小
+            "state"     => "SUCCESS",        //上传状态，上传成功时必须返回"SUCCESS"
+            "url"       => $url,            //返回的地址
+            "urlSmall"  => $urlSmall,       //返回小图片的地址
+            "title"     => $fileName,       //新文件名
+            "original"  => $file->getClientOriginalName(),       //原始文件名
+            "type"      => $file->getClientMimeType(),            //文件类型
+            "size"      => $file->getSize()           //文件大小
         );
     }
 }

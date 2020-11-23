@@ -23,7 +23,7 @@
 				@click="navToDetailPage(item)"
 			>
 				<view class="image-wrapper">
-					<image :src="item.resources.img" mode="aspectFill"></image>
+					<image :src="item.resources.img | smallImage" mode="aspectFill"></image>
 				</view>
 				<text class="title clamp">{{item.name}}</text>
 				<view class="price-box">

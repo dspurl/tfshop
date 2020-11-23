@@ -16,6 +16,7 @@
         "doctrine/dbal": "^2.11",
         "fideloper/proxy": "^4.0",
         "iidestiny/laravel-filesystem-oss": "^1.2",
+        "intervention/image": "^2.5",
         "johnlui/aliyun-oss": "~2.0",
         "laravel/framework": "^7.0",
         "laravel/passport": "^7.5.1",

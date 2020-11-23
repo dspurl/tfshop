@@ -137,6 +137,11 @@ function imgPathShift($new,$img){
             if (file_exists ( 'storage/temporary/' . $img['1'] )) { // 存在图片时进行拷贝操作
                 copy('storage/temporary/' . $img['1'],'storage/image/' . $new . '/' . $img['1']);
                 unlink('storage/temporary/' . $img['1']);
+                //拷贝小图片
+                $iarr = explode('.',$img['1']);
+                $smallImg = $iarr[0].'_small.'.$iarr['1'];
+                copy('storage/temporary/' . $smallImg,'storage/image/' . $new . '/' . $smallImg);
+                unlink('storage/temporary/' . $smallImg);
             }
 
             return request()->root() . '/storage/image/'.$new.'/' . $img['1'];
@@ -149,6 +154,10 @@ function imgPathShift($new,$img){
         $img = explode($path, $img);
         if(count($img) == 2){
             Storage::move('public/temporary/' . $img['1'], 'public/image/' . $new . '/' . $img['1']);
+            //拷贝小图片
+            $iarr = explode('.',$img['1']);
+            $smallImg = $iarr[0].'_small.'.$iarr['1'];
+            Storage::move('public/temporary/' . $smallImg, 'public/image/' . $new . '/' . $smallImg);
             return request()->root() . '/storage/image/'.$new.'/' . $img['1'];
         }else{
             return $img['0'];
