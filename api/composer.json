@@ -24,7 +24,8 @@
         "nyholm/psr7": "^1.3",
         "overtrue/laravel-wechat": "~5.0",
         "predis/predis": "^1.1",
-        "simplesoftwareio/simple-qrcode": "^2.0"
+        "simplesoftwareio/simple-qrcode": "^2.0",
+        "webpatser/laravel-uuid": "^3.0"
     },
     "require-dev": {
         "beyondcode/laravel-dump-server": "^1.0",

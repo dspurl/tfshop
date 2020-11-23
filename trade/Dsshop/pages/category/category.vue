@@ -30,6 +30,7 @@
 				flist: [],
 				slist: [],
 				tlist: [],
+				tap: 0,
 			}
 		},
 		onLoad(){
@@ -56,10 +57,14 @@
 				if(!this.sizeCalcState){
 					this.calcSize();
 				}
-				
+				this.tap = 1
 				this.currentId = item.id;
 				let index = this.slist.findIndex(sitem=>sitem.pid === item.id);
-				this.tabScrollTop = this.slist[index].top;
+				if(this.tabScrollTop === this.slist[index].top){
+					this.tabScrollTop = this.slist[index].top+1
+				}else{
+					this.tabScrollTop = this.slist[index].top
+				}
 			},
 			//右侧栏滚动
 			asideScroll(e){
@@ -68,9 +73,10 @@
 				}
 				let scrollTop = e.detail.scrollTop;
 				let tabs = this.slist.filter(item=>item.top <= scrollTop).reverse();
-				if(tabs.length > 0){
+				if(tabs.length > 0 && !this.tap){
 					this.currentId = tabs[0].pid;
 				}
+				this.tap = 0
 			},
 			//计算右侧栏每个tab的高度等信息
 			calcSize(){
