@@ -10,7 +10,7 @@
 				{{item.text}}
 			</view>
 		</view>
-		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
+		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300">
 			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
 				<scroll-view 
 					class="list-scroll-content" 
@@ -235,12 +235,6 @@
 				
 			}, 
 
-			//swiper 切换
-			changeTab(e){
-				this.tabCurrentIndex = e.target.current
-				this.loadData('tabChange')
-				this.page = 1
-			},
 			//顶部tab点击
 			tabClick(index){
 				this.tabCurrentIndex = index

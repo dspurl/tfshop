@@ -31,14 +31,14 @@ class GoodIndentController extends Controller
         GoodIndentCommodity::$withoutAppends = false;
         $q = GoodIndent::query();
         $q->where('user_id',auth('web')->user()->id);
-        if($request->index){
+        if(intval($request->index)!==0){
             $q->where('state',$request->index);
         }
         if($request->search == 1){
             $q->where('created_at','>=',date("Y-m-d 00:00:00",strtotime($request->startTime)))->where('created_at','<=',date("Y-m-d 23:59:59",strtotime($request->endTime)));
         }
         $limit=$request->limit;
-        $q->orderBy('state','ASC')->orderBy('updated_at','DESC');
+        $q->orderBy('id','DESC');
         $paginate=$q->with(['goodsList'=>function($q){
             $q->with(['goodSku']);
         }])->paginate($limit);
