@@ -222,7 +222,7 @@
 				@click="navToDetailPage(item)"
 			>
 				<view class="image-wrapper">
-					<image :src="item.resources.img | smallImage" mode="aspectFill" lazy-load></image>
+					<image :src="item.resources.img | smallImage(300)" mode="aspectFill" lazy-load></image>
 				</view>
 				<text class="title clamp">{{item.name}}</text>
 				<text class="price">￥{{item.order_price | 1000}}</text>

@@ -66,20 +66,41 @@ class Controller extends BaseController
         //生成文件名
         $extension = $file->getClientOriginalExtension();
         $randFileName = str_random(5). time();
-        $fileName = $randFileName . '.' . $extension;
-        $fileNameSmall = $randFileName . '_small.' . $extension; //列表图片
-        $pathName = 'temporary/'.$fileName;
-        $pathNameSmall = 'temporary/'.$fileNameSmall;
+        $fileName       = $randFileName . '.' . $extension;
+        $fileName350 = $randFileName . '_350.' . $extension;
+        $fileName300 = $randFileName . '_300.' . $extension;
+        $fileName250 = $randFileName . '_250.' . $extension;
+        $fileName200 = $randFileName . '_200.' . $extension;
+        $fileName150 = $randFileName . '_150.' . $extension;
+        $fileName80  = $randFileName . '_80.' . $extension;
+        $pathName    = 'temporary/'.$fileName;
+        $fileName350 = 'temporary/'.$fileName350;
+        $fileName300 = 'temporary/'.$fileName300;
+        $fileName250 = 'temporary/'.$fileName250;
+        $fileName200 = 'temporary/'.$fileName200;
+        $fileName150 = 'temporary/'.$fileName150;
+        $fileName80  = 'temporary/'.$fileName80;
 
         // 获取图片在临时文件中的地址
         $files = file_get_contents($file->getRealPath());
         $disk = Storage::disk('public');
         $disk->put($pathName, $files);
+        
         //写入小图片
         $realBasePath = public_path().'/storage/';
         $imgSmall=\Image::make($realBasePath.$pathName);
+        $imgSmall->widen(350);
+        $imgSmall->save($realBasePath.$fileName350);
         $imgSmall->widen(300);
-        $imgSmall->save($realBasePath.$pathNameSmall);
+        $imgSmall->save($realBasePath.$fileName300);
+        $imgSmall->widen(250);
+        $imgSmall->save($realBasePath.$fileName250);
+        $imgSmall->widen(200);
+        $imgSmall->save($realBasePath.$fileName200);
+        $imgSmall->widen(150);
+        $imgSmall->save($realBasePath.$fileName150);
+        $imgSmall->widen(80);
+        $imgSmall->save($realBasePath.$fileName80);
 
         $url = request()->root().'/storage/'.$pathName;
         $urlSmall = request()->root().'/storage/'.$pathNameSmall;
