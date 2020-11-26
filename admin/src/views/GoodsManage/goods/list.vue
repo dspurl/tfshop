@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column label="图片" width="100">
         <template slot-scope="scope">
-          <img :src="scope.row.resources.img  | smallImage(150)" style="width:80px;height:80px;">
+          <img :src="scope.row.resources.img | smallImage(150)" style="width:80px;height:80px;">
         </template>
       </el-table-column>
       <el-table-column label="商品" width="200">
@@ -248,14 +248,6 @@ export default {
   created() {
     this.getList()
   },
-	filters:{
-			smallImage(img,size){
-        var index=img.lastIndexOf('.');
-	      if(!size) 
-		      size=300;
-        return img.substring(0,index) + '_'+ size +'.' + img.substring(index+1,img.length);
-			}
-	},	
   methods: {
     getList() {
       this.listLoading = true

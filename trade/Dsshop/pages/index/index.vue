@@ -21,25 +21,9 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=1&sid=3&tid=20')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/hIHaW1594624050.png" lazy-load></image>
-				<text>男士T恤</text>
-			</view>
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=49&sid=51&tid=60')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/ylEI21594626437.png" lazy-load></image>
-				<text>女士T恤</text>
-			</view>
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=49&sid=69&tid=73')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/iNMVW1594627177.png" lazy-load></image>
-				<text>高根鞋</text>
-			</view>
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=49&sid=50&tid=53')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/zZo6m1594626068.png" lazy-load></image>
-				<text>半身裙</text>
-			</view>
-			<view class="cate-item" @click="navTo('/pages/product/list?fid=49&sid=50&tid=65')">
-				<image src="https://dsshop.dswjcms.com/storage/image/category/pPNfP1594626192.png" lazy-load></image>
-				<text>打底裙</text>
+			<view v-for="item in ctegory" :key="item.id" class="cate-item" @click="navTo('/pages/product/list?fid='+item.fid+'&sid='+item.sid+'&tid='+item.tid)">
+				<image :src="item.image" lazy-load></image>
+				<text>{{item.name}}</text>
 			</view>
 		</view>
 		
@@ -222,7 +206,7 @@
 				@click="navToDetailPage(item)"
 			>
 				<view class="image-wrapper">
-					<image :src="item.resources.img | smallImage(300)" mode="aspectFill" lazy-load></image>
+					<image :src="item.resources.img | smallImage(250)" mode="aspectFill" lazy-load></image>
 				</view>
 				<text class="title clamp">{{item.name}}</text>
 				<text class="price">￥{{item.order_price | 1000}}</text>
@@ -245,7 +229,49 @@ import Banner from '../../api/banner'
 				swiperLength: 0,
 				carouselList: [],
 				goodsList: [],
-				adData: {}
+				adData: {},
+				ctegory:[
+					{
+						id:1,
+						fid: 1,
+						sid: 3,
+						tid: 20,
+						image: this.configURL.DomainName + '/storage/image/category/kowi71606364058_80.png',
+						name: '男士T恤'
+					},
+					{
+						id:2,
+						fid: 49,
+						sid: 51,
+						tid: 60,
+						image: this.configURL.DomainName + '/storage/image/category/1elzX1606364770_80.png',
+						name: '女士T恤'
+					},
+					{
+						id:3,
+						fid: 49,
+						sid: 69,
+						tid: 73,
+						image: this.configURL.DomainName + '/storage/image/category/TvDmG1606364847_80.png',
+						name: '高根鞋'
+					},
+					{
+						id:4,
+						fid: 49,
+						sid: 50,
+						tid: 53,
+						image: this.configURL.DomainName + '/storage/image/category/ANegJ1606364546_80.png',
+						name: '半身裙'
+					},
+					{
+						id:5,
+						fid: 49,
+						sid: 50,
+						tid: 65,
+						image: this.configURL.DomainName + '/storage/image/category/FKRuC1606364582_80.png',
+						name: '打底裙'
+					}
+				]
 			};
 		},
 

@@ -44,7 +44,7 @@ class Controller extends BaseController
                 return resReturn(0,'您上传的文件过大',Code::CODE_PARAMETER_WRONG);
             }
         }
-        $url = $this->uploadFiles($file);
+        $url = $this->uploadFiles($file,$request);
 
         //微信小程序图片安全内容检测
         if($request->header('apply-secret')){
@@ -58,7 +58,7 @@ class Controller extends BaseController
         return $url['url'];
     }
     //上传文件
-    protected function uploadFiles($file){
+    protected function uploadFiles($file,$request){
         // 判断图片有效性
         if (!$file->isValid()) {
             return resReturn(0,'上传文件无效',Code::CODE_PARAMETER_WRONG);
@@ -67,47 +67,33 @@ class Controller extends BaseController
         $extension = $file->getClientOriginalExtension();
         $randFileName = str_random(5). time();
         $fileName       = $randFileName . '.' . $extension;
-        $fileName350 = $randFileName . '_350.' . $extension;
-        $fileName300 = $randFileName . '_300.' . $extension;
-        $fileName250 = $randFileName . '_250.' . $extension;
-        $fileName200 = $randFileName . '_200.' . $extension;
-        $fileName150 = $randFileName . '_150.' . $extension;
-        $fileName80  = $randFileName . '_80.' . $extension;
-        $pathName    = 'temporary/'.$fileName;
-        $fileName350 = 'temporary/'.$fileName350;
-        $fileName300 = 'temporary/'.$fileName300;
-        $fileName250 = 'temporary/'.$fileName250;
-        $fileName200 = 'temporary/'.$fileName200;
-        $fileName150 = 'temporary/'.$fileName150;
-        $fileName80  = 'temporary/'.$fileName80;
 
+        $pathName    = 'temporary/'.$fileName;
         // 获取图片在临时文件中的地址
         $files = file_get_contents($file->getRealPath());
         $disk = Storage::disk('public');
         $disk->put($pathName, $files);
-        
-        //写入小图片
-        $realBasePath = public_path().'/storage/';
-        $imgSmall=\Image::make($realBasePath.$pathName);
-        $imgSmall->widen(350);
-        $imgSmall->save($realBasePath.$fileName350);
-        $imgSmall->widen(300);
-        $imgSmall->save($realBasePath.$fileName300);
-        $imgSmall->widen(250);
-        $imgSmall->save($realBasePath.$fileName250);
-        $imgSmall->widen(200);
-        $imgSmall->save($realBasePath.$fileName200);
-        $imgSmall->widen(150);
-        $imgSmall->save($realBasePath.$fileName150);
-        $imgSmall->widen(80);
-        $imgSmall->save($realBasePath.$fileName80);
-
+        // 根据前端传递值动态生成多规格图片
+        if($request->has('specification')){
+            $specificationArr=explode(',',$request->specification);
+            if(count($specificationArr)<1){
+                return resReturn(0,'specification格式有误',Code::CODE_PARAMETER_WRONG);
+            }
+            $realBasePath = public_path().'/storage/';
+            $imgSmall=\Image::make($realBasePath.$pathName);
+            $imageSpecification=config('image.specification');
+            rsort($specificationArr);   //将前端输入的规格按大到小排序，不然将导致先生成小图片后再生成大图模糊的问题
+            foreach ($specificationArr as $specification){
+                if(in_array($specification,$imageSpecification)){
+                    $imgSmall->widen($specification);
+                    $imgSmall->save($realBasePath.'temporary/'.$randFileName . "_$specification." . $extension);
+                }
+            }
+        }
         $url = request()->root().'/storage/'.$pathName;
-        $urlSmall = request()->root().'/storage/'.$pathNameSmall;
         return array(
             "state"     => "SUCCESS",        //上传状态，上传成功时必须返回"SUCCESS"
             "url"       => $url,            //返回的地址
-            "urlSmall"  => $urlSmall,       //返回小图片的地址
             "title"     => $fileName,       //新文件名
             "original"  => $file->getClientOriginalName(),       //原始文件名
             "type"      => $file->getClientMimeType(),            //文件类型
