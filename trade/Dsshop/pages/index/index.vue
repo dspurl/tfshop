@@ -236,7 +236,7 @@ import Banner from '../../api/banner'
 						fid: 1,
 						sid: 3,
 						tid: 20,
-						image: this.configURL.DomainName + '/storage/image/category/kowi71606364058_80.png',
+						image: this.configURL.DomainName + '/storage/image/category/nQNqh1606374465_80.png',
 						name: '男士T恤'
 					},
 					{
@@ -244,7 +244,7 @@ import Banner from '../../api/banner'
 						fid: 49,
 						sid: 51,
 						tid: 60,
-						image: this.configURL.DomainName + '/storage/image/category/1elzX1606364770_80.png',
+						image: this.configURL.DomainName + '/storage/image/category/gSh0W1606375215_80.png',
 						name: '女士T恤'
 					},
 					{
@@ -252,7 +252,7 @@ import Banner from '../../api/banner'
 						fid: 49,
 						sid: 69,
 						tid: 73,
-						image: this.configURL.DomainName + '/storage/image/category/TvDmG1606364847_80.png',
+						image: this.configURL.DomainName + '/storage/image/category/h6OZV1606375632_80.png',
 						name: '高根鞋'
 					},
 					{
@@ -260,7 +260,7 @@ import Banner from '../../api/banner'
 						fid: 49,
 						sid: 50,
 						tid: 53,
-						image: this.configURL.DomainName + '/storage/image/category/ANegJ1606364546_80.png',
+						image: this.configURL.DomainName + '/storage/image/category/Ncdvt1606375053_80.png',
 						name: '半身裙'
 					},
 					{
@@ -268,7 +268,7 @@ import Banner from '../../api/banner'
 						fid: 49,
 						sid: 50,
 						tid: 65,
-						image: this.configURL.DomainName + '/storage/image/category/FKRuC1606364582_80.png',
+						image: this.configURL.DomainName + '/storage/image/category/rpuxK1606375087_80.png',
 						name: '打底裙'
 					}
 				]
