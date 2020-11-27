@@ -27,7 +27,7 @@
           :on-progress="handleProgress"
           :action="actionurl"
           :headers="imgHeaders"
-          :data="imgData"
+          :data="imgMasterData"
           class="avatar-uploader">
           <span v-if="imgProgress">
             <el-progress :percentage="imgProgressPercent" type="circle" class="progress-img"/>
@@ -286,6 +286,11 @@ export default {
       },
       good_attribute: [],
       goods_type: [],
+      imgMasterData: {
+        type: 1,
+        size: 1024 * 1024 * 2,
+        specification: [80, 150, 200, 250, 300, 350]
+      },
       imgData: {
         type: 1,
         size: 1024 * 1024 * 2

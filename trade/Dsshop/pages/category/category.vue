@@ -10,7 +10,7 @@
 				<text class="s-item">{{item.name}}</text>
 				<view class="t-list">
 					<view @click="navToList(item.id, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
-						<image :src="titem.resources.img  | smallImage" lazy-load></image>
+						<image :src="titem.resources.img  | smallImage(80)" lazy-load></image>
 						<text class="text-cut text-center">{{titem.name}}</text>
 					</view>
 				</view>

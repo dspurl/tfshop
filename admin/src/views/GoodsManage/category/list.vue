@@ -29,7 +29,7 @@
       </el-table-column>
       <el-table-column label="类目图标" align="center">
         <template slot-scope="scope">
-          <img v-if="scope.row.resources" :src="scope.row.resources.img" style="width: 120px;">
+          <img v-if="scope.row.resources" :src="scope.row.resources.img | smallImage(300)" style="width: 120px;">
           <span v-else>无</span>
         </template>
       </el-table-column>
@@ -223,7 +223,8 @@ export default {
       },
       imgData: {
         type: 1,
-        size: 1024 * 500
+        size: 1024 * 500,
+        specification: [80, 300]
       },
       actionurl: process.env.BASE_API + 'uploadPictures',
       imgHeaders: {
