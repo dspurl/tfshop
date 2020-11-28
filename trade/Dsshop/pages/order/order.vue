@@ -257,12 +257,6 @@
 						}
 				    }
 				})
-				setTimeout(()=>{
-					Indents.deleteSubmit(that.navList[that.tabCurrentIndex].orderList[index].id,function(res){
-						that.navList[that.tabCurrentIndex].orderList.splice(index, 1);
-					})
-					uni.hideLoading();
-				}, 600)
 			},
 			//去支付
 			goPay(item){
