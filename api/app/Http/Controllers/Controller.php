@@ -47,8 +47,8 @@ class Controller extends BaseController
         $url = $this->uploadFiles($file,$request);
 
         //微信小程序图片安全内容检测
-        if($request->header('apply-secret')){
-            $config = config('wechat.mini_program.default');
+        $config = config('wechat.mini_program.default');
+        if($request->header('apply-secret') && $config['app_id']){
             $miniProgram = Factory::miniProgram($config); // 小程序
             $result = $miniProgram->content_security->checkImage('storage/temporary/'.$url['title']);
             if($result['errcode']== 87014){
