@@ -12,10 +12,10 @@
 			</view>
 		</view>
 		<!-- 地址 -->
-		<view class="address-section">
+		<view v-if="indentList.good_location" class="address-section">
 			<view class="order-content">
 				<text class="yticon icon-shouhuodizhi"></text>
-				<view class="cen" v-if="indentList.good_location">
+				<view class="cen">
 					<view class="top">
 						<text class="name">{{ indentList.good_location.name }}</text>
 						<text class="mobile">{{ indentList.good_location.cellphone }}</text>
