@@ -480,6 +480,7 @@ INSERT INTO `good_specifications` (`id`, `good_id`, `specification_id`, `data`, 
 (46, 9, 3, NULL, '2020-07-13 20:33:52', '2020-07-13 20:33:52'),
 (47, 9, 4, NULL, '2020-07-13 20:33:52', '2020-07-13 20:33:52'),
 (48, 9, 5, NULL, '2020-07-13 20:33:52', '2020-07-13 20:33:52');
+INSERT INTO `resources` (`id`, `type`, `depict`, `img`, `image_id`, `image_type`, `created_at`, `updated_at`) VALUES
 (15, 1, 'goods_4_zimg', 'https://dsshop.dswjcms.com/storage/image/good/3Vt8L1606374292.jpg', 4, 'App\\Models\\v1\\Good', '2020-04-24 12:13:22', '2020-11-26 07:04:55'),
 (24, 1, 'goods_5_zimg', 'https://dsshop.dswjcms.com/storage/image/good/YaNmz1606374273.jpg', 5, 'App\\Models\\v1\\Good', '2020-04-24 12:18:09', '2020-11-26 07:04:36'),
 (28, 1, 'goods_6_zimg', 'https://dsshop.dswjcms.com/storage/image/good/vfHQn1606374254.jpg', 6, 'App\\Models\\v1\\Good', '2020-04-24 12:32:54', '2020-11-26 07:04:17'),

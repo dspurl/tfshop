@@ -19,7 +19,7 @@
 说明
 ------------
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
-
+<p>已验证版本(经测试后可以正常安装的版本):1.3.2</p>
 介绍
 ------------
 Dsshop是一个商城解决方案，它采用前后端分离，后端基于laravel,前端基于Vue，我们不生成代码，我们只是代码的搬运工，60%的复制粘贴，30%的思考，10%的代码量。
@@ -44,7 +44,7 @@ Dsshop是一个商城解决方案，它采用前后端分离，后端基于larav
  - laravel = 7.22.4
  - mysql > 5.2
  - vue = 2.5.17
- 
+
 安装
 ------------
 ```shell
@@ -81,6 +81,7 @@ php artisan key:generate
 php artisan passport:keys
 # 创建密码授权客户端
 php artisan passport:client --password
+# 选择`admins`
 #修改.env.dev为.env，添加OAuth认证信息
 PASSPORT_CLIENT_ID="生成的Client ID"
 PASSPORT_CLIENT_SECRET="生成的 Client secret"
@@ -119,7 +120,10 @@ npm install
 <p>优惠券</p>
 <p>评价</p>
 <p>栏目文章</p>
- 
+<p>分销功能</p>
+
+
+
 功能介绍
 ------------
 - **RBAC权限** 支持为不同管理员分配不同的权限
