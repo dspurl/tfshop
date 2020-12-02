@@ -51,6 +51,11 @@
 						}
 					}) 
 				})
+				setTimeout(() => {
+				  if(!this.sizeCalcState){
+				  	this.calcSize();
+				  }
+				}, 1000)
 			},
 			//一级分类点击
 			tabtap(item){
