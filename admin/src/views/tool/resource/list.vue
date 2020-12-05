@@ -173,6 +173,7 @@ export default {
       })
     },
     handleFilter() {
+      this.listQuery.page = 1
       this.getList()
     },
     handleDelete(row) { // 删除

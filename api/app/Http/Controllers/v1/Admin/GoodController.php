@@ -39,10 +39,18 @@ class GoodController extends Controller
         }
         $q->where('is_delete',Good::GOOD_DELETE_NO);
         if($request->title){
+            /*
+            MySQL<5.7并且商品不多时可用模糊搜索方式
             $q->where(function($q1) use($request){
                 $q1->where('name','like','%'.$request->title.'%')
                     ->orWhere('number',$request->title);
             });
+            */
+            $q->where(function($q1) use($request){
+                $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\''.$request->title.'\' IN NATURAL LANGUAGE MODE)')
+                    ->orWhere('number',$request->title);
+            });         
+            
         }
         $q->orderBy('created_at','DESC');
         $paginate=$q->with(['resources'=>function($q){

@@ -45,10 +45,13 @@ class Controller extends BaseController
             }
         }
         $url = $this->uploadFiles($file,$request);
+        if($url['state']!= 'SUCCESS'){
+            return resReturn(0,$url['msg'],Code::CODE_PARAMETER_WRONG);
+        }
 
         //微信小程序图片安全内容检测
-        if($request->header('apply-secret')){
-            $config = config('wechat.mini_program.default');
+        $config = config('wechat.mini_program.default');
+        if($request->header('apply-secret') && $config['app_id']){
             $miniProgram = Factory::miniProgram($config); // 小程序
             $result = $miniProgram->content_security->checkImage('storage/temporary/'.$url['title']);
             if($result['errcode']== 87014){
@@ -59,9 +62,27 @@ class Controller extends BaseController
     }
     //上传文件
     protected function uploadFiles($file,$request){
+        //多一层验证，防止直接调用此方法，对文件直接放行
+        $extension = $request->file->extension();
+        if(!isset($request->type) || ($request->type !=1 && $request->type !=2)){ //验证图片
+            return array(
+                "state"=>'no',
+                'msg'=>'图片参数有误'
+            );
+        }else{
+            if(!in_array($extension,array('gif','jpg','jpeg','bmp','png'))) {
+                return array(
+                    "state"=>'no',
+                    'msg'=>'图片格式有误'
+                );
+            }
+        }
         // 判断图片有效性
         if (!$file->isValid()) {
-            return resReturn(0,'上传文件无效',Code::CODE_PARAMETER_WRONG);
+            return array(
+                "state"=>'no',
+                'msg'=>'上传文件无效'
+            );
         }
         //生成文件名
         $extension = $file->getClientOriginalExtension();
@@ -77,7 +98,10 @@ class Controller extends BaseController
         if($request->has('specification')){
             $specificationArr=explode(',',$request->specification);
             if(count($specificationArr)<1){
-                return resReturn(0,'specification格式有误',Code::CODE_PARAMETER_WRONG);
+                return array(
+                    "state"=>'no',
+                    'msg'=>'specification格式有误'
+                );
             }
             $realBasePath = public_path().'/storage/';
             $imgSmall=\Image::make($realBasePath.$pathName);
