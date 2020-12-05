@@ -47,6 +47,7 @@ class CreateGoodsTable extends Migration
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `goods` COMMENT='商品'");
+        DB::statement('ALTER TABLE goods ADD fulltext index full_text(name,keywords,number) with parser ngram');
     }
 
     /**
