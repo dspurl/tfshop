@@ -389,7 +389,7 @@ class GoodController extends Controller
                 }
                 $Good->order_price = $order_price;
                 $Good->save();
-                //删除去除的SKU
+                /*//删除去除的SKU
                 GoodSku::where('good_id',$Good->id)->whereNotIn('id',$GoodSkuAll)->delete();
                 //删除去除的资源
                 $ResourceDelete=Resource::where('image_type','App\Models\v1\GoodSku')->where('depict','not like','%_zimg')->whereNotIn('id',$ResourceAll)->get();
@@ -397,7 +397,7 @@ class GoodController extends Controller
                     foreach ($ResourceDelete as $r){
                         imgPathDelete('good',$r->img);
                     }
-                }
+                }*/
                 Resource::where('image_type','App\Models\v1\GoodSku')->where('depict','not like','%_zimg')->whereNotIn('id',$ResourceAll)->delete();
             }
             return 1;
