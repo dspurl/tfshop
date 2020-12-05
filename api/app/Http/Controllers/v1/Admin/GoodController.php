@@ -47,7 +47,7 @@ class GoodController extends Controller
             });
             */
             $q->where(function($q1) use($request){
-                $q1->orWhereRaw('MATCH (name,keywords) AGAINST (\''.$request->title.'\' IN NATURAL LANGUAGE MODE)')
+                $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\''.$request->title.'\' IN NATURAL LANGUAGE MODE)')
                     ->orWhere('number',$request->title);
             });         
             

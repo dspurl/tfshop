@@ -57,7 +57,7 @@ class GoodAppController extends Controller
                     ->orWhere('number',$request->title)
                     ->orWhere('keywords','like','%'.$request->title.'%');
                 */
-                $q1->orWhereRaw('MATCH (name,keywords) AGAINST (\''.$request->title.'\' IN NATURAL LANGUAGE MODE)')
+                $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\''.$request->title.'\' IN NATURAL LANGUAGE MODE)')
                     ->orWhere('number',$request->title);
             });           
         } 
