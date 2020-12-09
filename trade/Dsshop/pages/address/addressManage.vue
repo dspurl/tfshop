@@ -55,7 +55,10 @@
 			const that = this
 			if(option.type==='edit'){
 				title = '编辑收货地址'
+			}
+			if(option.data){
 				this.addressData = JSON.parse(option.data)
+				console.log(this.addressData,this.addressData)
 			}
 			if(option.sid){
 				this.addressData.good_indent_id = Number(option.sid)
