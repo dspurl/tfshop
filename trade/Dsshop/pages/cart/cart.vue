@@ -139,13 +139,7 @@
 			}
 		},
 		watch:{
-			//显示空白页
-			cartList(e){
-				let empty = e.length === 0 ? true: false;
-				if(this.empty !== empty){
-					this.empty = empty;
-				}
-			}
+
 		},
 		computed:{
 			...mapState(['hasLogin'])
@@ -314,6 +308,7 @@
 				})
 				this.allChecked = checked;
 				this.total = Number(total.toFixed(2));
+				this.empty = false;
 			},
 			//重新加载数据
 			loadCart(){
