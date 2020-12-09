@@ -41,23 +41,15 @@ class SubmitShippingRequest extends Request
         {
             case 'POST':    //create
                 return [
-                    'cellphone' => 'required|numeric',
+                    'cellphone' => 'required',
                     'name' => 'required|string|max:30',
-                    'location' => 'required|string|max:255',
                     'address' => 'nullable|string|max:255',
-                    'latitude' => 'required|numeric',
-                    'longitude' => 'required|numeric',
-                    'house' => 'required|string|max:255',
                 ];
             case 'PUT': //update
                 return [
-                    'cellphone' => 'required|numeric',
+                    'cellphone' => 'required',
                     'name' => 'required|string|max:30',
-                    'location' => 'required|string|max:255',
                     'address' => 'nullable|string|max:255',
-                    'latitude' => 'required|numeric',
-                    'longitude' => 'required|numeric',
-                    'house' => 'required|string|max:255',
                 ];
             case 'PATCH':
             case 'GET':
@@ -75,9 +67,6 @@ class SubmitShippingRequest extends Request
             'cellphone.required' =>'手机号必须',
             'name.required' =>'联系人必须',
             'location.required' =>'地址必须',
-            'latitude.required' =>'纬度必须',
-            'longitude.required' =>'经度必须',
-            'house.required' =>'门牌号必须',
         ];
     }
 }
