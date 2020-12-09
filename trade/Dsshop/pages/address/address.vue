@@ -4,7 +4,7 @@
 			<view class="wrapper">
 				<view class="address-box">
 					<text v-if="item.defaults" class="tag">默认</text>
-					<text class="address">{{item.location}}({{item.address}}) {{item.house}}</text>
+					<text class="address">{{item.location?item.location+'(':''}}{{item.address}} {{item.house?')'+item.house:''}}</text>
 				</view>
 				<view class="u-box">
 					<text class="name">{{item.name}}</text>
@@ -14,19 +14,36 @@
 			<text class="yticon icon-bianji" @click.stop="addAddress('edit', item)"></text>
 			<text class="cuIcon-delete" @click.stop="deleteAddress(index, item)"></text>
 		</view>
-		<button class="add-btn" @click="addAddress('add')">新增地址</button>
+		<view v-if="addressList.length==0">
+			<text class="noAddressInfo">还没有收货地址, 请添加</text>		
+		</view>
+		<!-- #ifdef MP -->
+		<button class="add-btn1" @click="getWxaddAddress()">获取微信地址</button>
+		<!-- #endif -->		
+		<button class="add-btn2" @click="addAddress('add')">手动新增地址</button> 
+
 	</view>
 </template>
 
 <script>
 	import Address from '../../api/address'
-	import {mapMutations} from 'vuex'
+	import {mapMutations} from 'vuex'	
 	export default {
 		data() {
 			return {
 				source: 0,
 				addressList: [],
-				type: 0
+				type: 0,
+				addressData: {
+					name: '',
+					cellphone: '',
+					location: '',
+					address: '',
+					latitude: '',
+					longitude: '',
+					house: '',
+					default: false
+				}
 			}
 		},
 		onLoad(option){
@@ -86,6 +103,24 @@
 				uni.navigateTo({
 					url: `/pages/address/addressManage?type=${type}&data=${JSON.stringify(item)}`
 				})
+			},
+			//自动获取微信地址
+			getWxaddAddress(){
+				let that = this
+				//#ifdef MP
+					wx.chooseAddress({
+					  success (res) {					
+						let data 		= that.addressData;
+						data.name 		= res.userName
+						data.cellphone 	= res.telNumber		
+						//data.location 	= res.provinceName + res.cityName + res.countyName
+						data.address 	= res.provinceName + res.cityName + res.countyName + res.detailInfo
+						Address.createSubmit(data,function(res){
+							that.refreshList()	
+						})						
+					  }
+					})
+				//#endif
 			},
 			//添加或修改成功之后回调
 			refreshList(){
@@ -169,16 +204,31 @@
 		padding-left: 30upx;
 	}
 	
-	.add-btn{
+	.add-btn1{
 		position: fixed;
 		left: 30upx;
+		bottom: 16upx;
+		z-index: 95;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 290upx;
+		height: 80upx;
+		font-size: 32upx;
+		color: #fff;
+		background-color: $base-color;
+		border-radius: 10upx;
+		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);		
+	}
+	.add-btn2{
+		position: fixed;
 		right: 30upx;
 		bottom: 16upx;
 		z-index: 95;
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		width: 690upx;
+		width: 290upx;
 		height: 80upx;
 		font-size: 32upx;
 		color: #fff;
