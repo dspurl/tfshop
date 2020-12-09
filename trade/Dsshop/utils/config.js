@@ -7,6 +7,8 @@ if (process.env.NODE_ENV === "development") {
 	//本地环境(小程序调试时请勾选不检验合法域名，且手机无法调试，需要调试，请修改此地址为外网地址)
 	const domainName = 'http://dsshop.test'
 	configURL = {
+		// 腾讯地图的key，参考：https://lbs.qq.com/service/webService/webServiceGuide/webServiceGeocoder
+		lbsQq: '',
 		DomainName: domainName,
 		BaseURL: domainName +INTERFACE,	//api_URL
 		secret: 'base64:'
@@ -17,6 +19,7 @@ if (process.env.NODE_ENV === "development") {
 		//测试环境
 		const domainName = 'http://dsshop.test'
 		configURL = {
+			lbsQq: '',
 			DomainName: domainName,
 			BaseURL: domainName +INTERFACE,
 			secret: 'base64:'
@@ -26,6 +29,7 @@ if (process.env.NODE_ENV === "development") {
 		//生产环境
 		const domainName = 'http://dsshop.test'
 		configURL = {
+			lbsQq: '',
 			DomainName: domainName,
 			BaseURL: domainName +INTERFACE,
 			secret: 'base64:'

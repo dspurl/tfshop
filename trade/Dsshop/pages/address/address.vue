@@ -16,9 +16,12 @@
 		</view>
 		<view v-if="addressList.length == 0"><view class="no-data flex justify-center">还没有收货地址, 请添加~</view></view>
 		<!-- #ifdef MP -->
-		<button class="add-btn1" @click="getWxaddAddress()">获取微信地址</button>
-		<!-- #endif -->
+		<button class="add-btn1" @click="getWxaddAddress()">获取收货地址</button>
 		<button class="add-btn2" @click="addAddress('add')">手动新增地址</button>
+		<!-- #endif -->
+		<!-- #ifndef MP -->
+		<button class="add-btn" @click="addAddress('add')">新增地址</button>
+		<!-- #endif -->
 	</view>
 </template>
 
@@ -100,23 +103,47 @@ export default {
 				url: `/pages/address/addressManage?type=${type}&data=${JSON.stringify(item)}`
 			});
 		},
-		//自动获取微信地址
+		//自动获取收货地址
 		getWxaddAddress() {
 			let that = this;
+			if(!that.configURL.lbsQq){
+				that.$api.msg('请配置config.js的lbsQq参数')
+				return false
+			}
 			//#ifdef MP
 			uni.chooseAddress({
 				success(res) {
 					let data = that.addressData;
 					data.name = res.userName;
 					data.cellphone = res.telNumber;
-					data.location 	= '选择地址'
-					// data.address = res.provinceName + res.cityName + res.countyName + res.detailInfo;
-					uni.navigateTo({
-						url: `/pages/address/addressManage?type=add&data=${JSON.stringify(data)}`
+					data.address = res.provinceName + res.cityName + res.countyName + res.detailInfo;
+					uni.request({
+						url: 'https://apis.map.qq.com/ws/geocoder/v1/',
+						data: {
+							address: data.address,
+							key: that.configURL.lbsQq
+						},
+						success: res => {
+							if (res.statusCode === 200) {
+								data.location 	= res.data.result.title
+								data.latitude = res.data.result.location.lat
+								data.longitude =res.data.result.location.lng
+								uni.navigateTo({
+									url: `/pages/address/addressManage?type=add&data=${JSON.stringify(data)}`
+								});
+								console.log('res',res.data)
+								console.log('data',data)
+							} else {
+								
+							}
+						},
+						fail: res => {
+							uni.showToast({
+								title: '服务器无响应',
+								duration: 2000
+							});
+						}
 					});
-					// Address.createSubmit(data,function(res){
-					// 	that.refreshList()
-					// })
 				}
 			});
 			//#endif
