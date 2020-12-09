@@ -1,4 +1,4 @@
-import { getPlatform } from 'utils'
+import { getPlatform,getLogin } from 'utils'
 import configURL from './config.js'
 function request(url, method, params, header, success, fail) {
   this.requestLoading(url, method, params, header, "", success, fail)
@@ -47,54 +47,6 @@ function setDeleteMessage(url, params, message, success, fail) {
 //获取URL参数
 function getUrlKey(name){
 	return decodeURIComponent((new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null
-}
-
-// 登录
-function getLogin() {
-	let that = this;
-	uni.login({
-		success(res) {
-			if (res.code) {
-				uni.request({
-					url: configURL.BaseURL + 'miniLogin',
-					data: {
-						code: res.code,
-						platform: getPlatform()
-					},
-					method: 'POST',
-					header: {
-						'Content-Type': 'application/json',
-						'apply-secret': configURL.secret,
-						// #ifndef H5
-						openid: uni.getStorageSync('applyDsshopOpenid')
-						// #endif
-					},
-					success: res => {
-						if (res.statusCode === 200) {
-							if (res.data.openid) {
-								uni.setStorageSync('applyDsshopSession_key', res.data.session_key);
-								uni.setStorageSync('applyDsshopOpenid', res.data.openid);
-							}
-						} else {
-							uni.showToast({
-								icon: 'none',
-								title: res.data.message,
-								duration: 2000
-							});
-						}
-					},
-					fail: res => {
-						uni.showToast({
-							title: '服务器无响应',
-							duration: 2000
-						});
-					}
-				});
-			} else {
-				console.log('无响应');
-			}
-		}
-	});
 }
 
 // 展示进度条的网络请求
