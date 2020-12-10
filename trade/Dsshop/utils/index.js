@@ -1,3 +1,4 @@
+import configURL from './config.js'
 /**
  * @returns {string}
  */

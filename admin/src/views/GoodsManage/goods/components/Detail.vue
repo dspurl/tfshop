@@ -548,7 +548,7 @@ export default {
     // 得到 sku 数据
     getSkuData() {
       const product_skus = this.$refs.SkuDemo._getData().map(item => {
-        const { format, img, market_price, cost_price, price, inventory, skus } = item
+        const { id, format, img, market_price, cost_price, price, inventory, skus } = item
         const skuText = skus.reduce(
           (str, prev) => `${str}${prev.k}：${prev.v}——`,
           '',
@@ -567,6 +567,7 @@ export default {
           throw new Error('请输入库存')
         }
         return {
+          id,
           format,
           img,
           market_price,

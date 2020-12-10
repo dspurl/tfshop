@@ -219,7 +219,7 @@
 			getOne(){
 				const that = this
 				Address.getOne(this.order, function(res){
-					that.addressData = res.shipping
+					that.addressData = res.shipping ? res.shipping : ''
 					that.carriage = res.carriage ? res.carriage : 0
 					that.outPocketTotal() //实付金额
 				})
