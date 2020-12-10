@@ -10,7 +10,7 @@
 				{{item.text}}
 			</view>
 		</view>
-		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300">
+		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300" vertical="false">
 			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
 				<scroll-view 
 					class="list-scroll-content" 
