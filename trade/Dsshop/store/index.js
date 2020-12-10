@@ -20,11 +20,11 @@ const store = new Vuex.Store({
 		},
 		logout(state) {
 			uni.removeStorageSync('dsshopApplytoken')
+			uni.removeStorageSync('applyDsshopSession_key')
+			uni.removeStorageSync('applyDsshopOpenid')
+			uni.removeStorageSync('dsshopUserInfo')
 			state.hasLogin = false;
 			state.userInfo = {};
-			uni.removeStorage({  
-                key: 'dsshopUserInfo'  
-            })
 		},
 		// 登录验证
 		loginCheck(state){

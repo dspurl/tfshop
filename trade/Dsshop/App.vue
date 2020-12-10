@@ -3,7 +3,7 @@
  * vuex管理登陆状态，具体可以参考官方登陆模板示例
  */
 import { mapMutations } from 'vuex';
-import { getPlatform } from 'utils'
+import { getPlatform,getLogin } from 'utils'
 export default {
 	onLaunch: function(options) {
 		// uni.clearStorage()
@@ -12,7 +12,7 @@ export default {
 		if (uni.getStorageSync('applyDsshopOpenid')) {
 			this.checkSession();
 		} else {
-			this.getLogin();
+			getLogin();
 		}
 		// #endif
 		
@@ -23,12 +23,7 @@ export default {
 			let userInfo = uni.getStorageSync('dsshopUserInfo') || '';
 			if (userInfo && uni.getStorageSync('dsshopApplytoken')) {
 				//更新登陆状态
-				uni.getStorage({
-					key: 'dsshopUserInfo',
-					success: res => {
-						this.login(res.data);
-					}
-				});
+				this.login(userInfo)
 			}
 		},
 		// 检测登录状态是否过期
@@ -37,57 +32,11 @@ export default {
 			uni.checkSession({
 				success() {},
 				fail() {
-					that.getLogin();
+					getLogin();
 				}
 			});
 		},
-		// 登录
-		getLogin() {
-			let that = this;
-			uni.login({
-				success(res) {
-					if (res.code) {
-						uni.request({
-							url: that.configURL.BaseURL + 'miniLogin',
-							data: {
-								code: res.code,
-								platform: getPlatform()
-							},
-							method: 'POST',
-							header: {
-								'Content-Type': 'application/json',
-								'apply-secret': that.configURL.secret,
-								// #ifndef H5
-								openid: uni.getStorageSync('applyDsshopOpenid')
-								// #endif
-							},
-							success: res => {
-								if (res.statusCode === 200) {
-									if (res.data.openid) {
-										uni.setStorageSync('applyDsshopSession_key', res.data.session_key);
-										uni.setStorageSync('applyDsshopOpenid', res.data.openid);
-									}
-								} else {
-									uni.showToast({
-										icon: 'none',
-										title: res.data.message,
-										duration: 2000
-									});
-								}
-							},
-							fail: res => {
-								uni.showToast({
-									title: '服务器无响应',
-									duration: 2000
-								});
-							}
-						});
-					} else {
-						console.log('无响应');
-					}
-				}
-			});
-		}
+		
 	},
 	onShow: function() {},
 	onHide: function() {}

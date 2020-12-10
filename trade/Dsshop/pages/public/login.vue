@@ -42,8 +42,7 @@
 
 <script>
 	import User from '../../api/user'
-	import { getPlatform } from '../../utils'
-	import App from '../../App.vue'
+	import { getPlatform,getLogin } from '../../utils'
 	import {  
         mapMutations  
     } from 'vuex';
@@ -71,7 +70,7 @@
 		},
 		onShow(){
 			// #ifdef MP
-			App.methods.checkSession()
+			getLogin();
 			// #endif
 		},
 		methods: {
