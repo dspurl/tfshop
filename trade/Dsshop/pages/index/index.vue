@@ -1,6 +1,52 @@
 <template>
 	<view class="container">
-		
+		<!-- 引导添加小程序 -->
+		<!-- #ifdef MP-WEIXIN -->
+		<view class="guidance-my" v-if="guidanceMy">
+			<view class="triangle-top"></view>
+			<view @click="popupBoot()" class="bg-black padding-sm margin-top flex">
+				<view><span @tap="setGuidanceMy" class="icon cuIcon-close text-gray"></span></view>
+				<view class="flex-twice text-center">添加到我的小程序，<span class="text-bold">红包、优惠券不错过</span></view>
+				<view><span class="icon cuIcon-right text-gray"></span></view>
+			</view>
+		</view>
+		<view class="cu-modal" :class="modalName=='guidanceMy'?'show':''">
+			<view class="guidance-modal">
+				<view class="triangle-top"></view>
+				<view class="title bg-red text-xl padding">点<image style="height: 60upx;position: relative;top:20upx;" mode="heightFix" src="../../static/guidance-white.png"></image>添加小程序</view>
+				<view class="list">
+					<view class="padding text-left min-title">
+						<span class="text-red">1、</span>
+						点右上
+						<image style="height: 60upx;position: relative;top:20upx;" mode="heightFix" src="../../static/guidance.png"></image>
+						添加到“我的小程序”
+					</view>
+					<view>
+						<image src="../../static/guidance-1.png" style="height: 100upx;" mode="aspectFit"></image>
+					</view>
+					<view class="padding text-left min-title">
+						<span class="text-red">2、</span>
+						回到微信首页，向下拉动
+					</view>
+					<view>
+						<image src="../../static/guidance-2.png" style="height: 140upx;" mode="aspectFit"></image>
+					</view>
+					<view class="padding text-left min-title">
+						<span class="text-red">3、</span>
+						从“我的小程序”中，进入
+					</view>
+					<view>
+						<image src="../../static/guidance-3.png" style="height: 140upx;" mode="aspectFit"></image>
+					</view>
+				</view>
+				<view @tap="modalName = null" class="guidance-modal-close">
+					<view class="cuIcon-roundclose"></view>
+				</view>
+			</view>
+			
+		</view>
+		<official-account v-if="!wechat"></official-account>
+		<!-- #endif -->
 		<!-- 头部轮播 -->
 		<view class="carousel-section">
 			<!-- 标题栏和状态栏占位符 -->
@@ -224,6 +270,9 @@ import Banner from '../../api/banner'
 
 		data() {
 			return {
+				modalName: null,
+				wechat: null,
+				guidanceMy: false,
 				titleNViewBackground: '',
 				swiperCurrent: 0,
 				swiperLength: 0,
@@ -277,6 +326,12 @@ import Banner from '../../api/banner'
 
 		onLoad() {
 			this.loadData()
+			// #ifdef MP-WEIXIN 
+			this.wechat=uni.getStorageSync('dsshopUserInfo').wechat
+			// #endif
+			if(!uni.getStorageSync('applyDsshopGuidanceMy')){
+				this.guidanceMy = true
+			}
 		},
 		methods: {
 			/**
@@ -333,6 +388,19 @@ import Banner from '../../api/banner'
 				}
 				
 			}, 
+			// #ifdef MP-WEIXIN
+			//弹出引导页
+			popupBoot(){
+				this.modalName = 'guidanceMy'
+				this.guidanceMy = false
+				uni.setStorageSync('applyDsshopGuidanceMy', true)
+			},
+			// 引导添加小程序
+			setGuidanceMy(){
+				this.guidanceMy = false
+				uni.setStorageSync('applyDsshopGuidanceMy', true)
+			},
+			// #endif
 		},
 		// #ifndef MP
 		// 标题栏input搜索框点击
@@ -780,6 +848,63 @@ import Banner from '../../api/banner'
 			line-height: 1;
 		}
 	}
-	
-
+	/* #ifdef MP-WEIXIN */
+	.guidance-my{
+		position: relative;
+		background-color: #FFFFFF;
+		.triangle-top{
+			position: absolute;
+			right: 120upx;
+			top: -39upx;
+			width: 0;
+			height: 0;
+			border: 20upx solid;
+			border-color: transparent transparent #333333;
+		}
+		.icon{
+			line-height: 40upx;
+		}
+	}
+	.guidance-modal{
+		position: relative;
+		display: inline-block;
+		margin-left: auto;
+		margin-right: auto;
+		top:40upx;
+		width: 90%;
+		max-width: 100%;
+		background-color: #f8f8f8;
+		-webkit-border-radius: 5px;
+		border-radius: 10rpx;
+		padding-bottom: 60upx;
+		.title{
+			border-top-left-radius: 10rpx;
+			border-top-right-radius: 10rpx;
+			padding-bottom: 40upx;
+		}
+		.min-title{
+			padding-left: 120upx;
+		}
+		.triangle-top{
+			position: absolute;
+			right: 100upx;
+			top: -39upx;
+			width: 0;
+			height: 0;
+			border: 20upx solid;
+			border-color: transparent transparent #e54d42;
+			z-index: 1;
+		}
+	}
+	.guidance-modal-close{
+		position: absolute;
+		width: 100%;
+		bottom: -120upx;
+		text-align: center;
+		.cuIcon-roundclose{
+			font-size: 80upx;
+			color: #FFFFFF;
+		}
+	}
+	/* #endif */
 </style>

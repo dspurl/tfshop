@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "774086b174ca98142f81e2c99400dd45",
+    "content-hash": "518e6c2511deb68c25d884dbfc735aff",
     "packages": [
         {
             "name": "96qbhy/tt-microapp",

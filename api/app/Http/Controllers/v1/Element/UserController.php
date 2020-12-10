@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Element;
 
 use App\Code;
 use App\common\RedisLock;
+use App\Models\v1\GoodIndent;
 use App\Models\v1\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -77,5 +78,20 @@ class UserController extends Controller
             return resReturn(0,'业务繁忙，请稍后再试',Code::CODE_SYSTEM_BUSY);
         }
 
+    }
+
+    /**
+     * 注销
+     * @param Request $request
+     * @return string
+     */
+    public function unsubscribe(Request $request){
+        //判断订单是否在未完成的
+        $GoodIndentCount=GoodIndent::where('user_id',auth('web')->user()->id)->where('state','!=',GoodIndent::GOOD_INDENT_STATE_ACCOMPLISH)->count();
+        if($GoodIndentCount>0){
+            return resReturn(0,'您有未完成的业务，无法注销',Code::CODE_PARAMETER_WRONG);
+        }
+        User::where('id',auth('web')->user()->id)->update(['unsubscribe'=>User::USER_UNSUBSCRIBE_YES]);
+        return resReturn(1,'注销成功');
     }
 }

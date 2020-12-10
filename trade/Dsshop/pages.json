@@ -54,6 +54,16 @@
 			"style": {
 				"navigationBarTitleText": "设置"
 			}
+		}, {
+			"path": "pages/set/about",
+			"style": {
+				"navigationBarTitleText": "关于我们"
+			}
+		}, {
+			"path": "pages/set/unsubscribe",
+			"style": {
+				"navigationBarTitleText": "注销申请"
+			}
 		},
 
 		{

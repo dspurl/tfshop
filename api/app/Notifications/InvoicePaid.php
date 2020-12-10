@@ -2,11 +2,16 @@
 
 namespace App\Notifications;
 
+use App\Channels\SmsChannel;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
+//class InvoicePaid extends Notification implements ShouldQueue
 class InvoicePaid extends Notification
 {
+//    use Queueable;
     public $invoice;
     const NOTIFICATION_TYPE_SYSTEM_MESSAGES= 1; //通知类型:系统消息
     const NOTIFICATION_TYPE_DEAL= 2; //通知类型:交易
@@ -29,7 +34,26 @@ class InvoicePaid extends Notification
      */
     public function via($notifiable)
     {
-        return array_key_exists("prefers",$this->invoice) ? $this->invoice['prefers']: ['database'];
+        if(array_key_exists("prefers",$this->invoice)){ //多种通知方式
+            $return = [];
+            foreach ($this->invoice['prefers'] as $prefers){
+                switch ($prefers){
+                    case 'mail':
+                    case 'database':
+                    case 'broadcast':
+                    case 'nexmo':
+                    case 'slack':
+                        $return[]=$prefers;
+                        break;
+                    case 'sms': //短信
+                        $return[]=SmsChannel::class;
+                        break;
+                }
+            }
+            return $return;
+        }else{  //默认仅数据库通知
+            return ['database'];
+        }
     }
 
     /**
@@ -40,10 +64,26 @@ class InvoicePaid extends Notification
      */
     public function toMail($notifiable)
     {
-        return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+        $this->invoice['appName']=config('app.name');
+        $this->invoice['type']= array_key_exists("type",$this->invoice) ? $this->invoice['type'] : static::NOTIFICATION_TYPE_SYSTEM_MESSAGES;    //通知类型：1系统消息（默认）2交易3活动
+        $this->invoice['url']= array_key_exists("url",$this->invoice) ? request()->root().'/h5/#'.$this->invoice['url']: '';   //跳转地址
+        $this->invoice['image']= array_key_exists("image",$this->invoice) ? $this->invoice['image'] : '';   //带图
+        $this->invoice['price']= array_key_exists("price",$this->invoice) ? sprintf("%01.2f",$this->invoice['price']/100) : '';   //金额
+        $this->invoice['list']= array_key_exists("list",$this->invoice) ? $this->invoice['list'] : '';   //列表
+        $this->invoice['remark']=array_key_exists("remark",$this->invoice) ? $this->invoice['remark'] : '';   //通知备注
+        return (new MailMessage)->view('emails.notification',$this->invoice)
+            ->subject($this->invoice['title']);
+    }
+
+    /**
+     * 获取语音形式的通知。
+     *
+     * @param  mixed  $notifiable
+     * @return string
+     */
+    public function toSms($notifiable)
+    {
+        return $this->invoice;
     }
 
     /**

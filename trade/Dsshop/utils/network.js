@@ -144,7 +144,12 @@ function requestLoading(url, method, params, header, message, success, fail) {
         uni.hideLoading()
       }
       if (res.statusCode == 200) {
-        success(res.data)
+		  if(res.data.result === 'ok'){
+			  success(res.data.message)
+		  }else{
+			  fail({message: res.data})
+		  }
+		  
 	  }else if (res.statusCode == 500) {
 		  // #ifdef MP
 		  getLogin()

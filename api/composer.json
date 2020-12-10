@@ -15,6 +15,7 @@
         "alibabacloud/client": "^1.5",
         "doctrine/dbal": "^2.11",
         "fideloper/proxy": "^4.0",
+        "guzzlehttp/guzzle": "^7.2",
         "iidestiny/laravel-filesystem-oss": "^1.2",
         "intervention/image": "^2.5",
         "johnlui/aliyun-oss": "~2.0",

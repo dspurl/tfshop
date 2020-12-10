@@ -159,6 +159,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     Route::prefix('app')->namespace('Element')->middleware(['appverify','auth:web'])->group(function () {
         Route::get('user', 'UserController@show');    //用户详情
         Route::post('user', 'UserController@update');    //设置用户信息
+        Route::post('unsubscribe', 'UserController@unsubscribe');    //注销账号
         Route::get('finance', 'MoneyLogController@index');    //收支列表
         Route::get('finance/{photo}', 'MoneyLogController@show');    //收支详情
         Route::post('logout', 'WeChatController@logout');    //登出

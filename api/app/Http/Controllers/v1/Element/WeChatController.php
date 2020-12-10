@@ -41,7 +41,7 @@ class WeChatController  extends Controller
         if(!$request->has('secret')){
             return resReturn(0,'非法操作',Code::CODE_MISUSE);
         }
-        $config = config('wechat.mini_program.default');
+        $config = config('wechat.official_account');
         $app = Factory::miniProgram($config);
         $app->server->push(function($message){
             switch ($message['MsgType']) {
@@ -79,6 +79,35 @@ class WeChatController  extends Controller
 
     //注册
     public function register(Request $request){
+        $invoice=[
+            'type'=> InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
+            'title'=>'您购买的商品已发货，请到订单详情查看',
+            'list'=>[
+                [
+                    'keyword'=>'订单编号',
+                    'data'=>333
+                ],
+                [
+                    'keyword'=>'物流公司',
+                    'data'=>22
+                ],
+                [
+                    'keyword'=>'快递单号',
+                    'data'=>$request->odd
+                ],
+                [
+                    'keyword'=>'发货时间',
+                    'data'=> Carbon::now()->toDateTimeString()
+                ]
+            ],
+            'remark'=>'感谢您的支持。',
+            'url'=>'/pages/order/showOrder?id=',
+            'prefers'=>['mail']
+        ];
+        $user = User::find(1);
+        $user->notify(new InvoicePaid($invoice));
+        exit();
+
         if(!$request->has('cellphone')){
             return resReturn(0,'手机号不能为空',Code::CODE_WRONG);
         }
@@ -92,6 +121,9 @@ class WeChatController  extends Controller
             return resReturn(0,'重复密码和密码不相同',Code::CODE_WRONG);
         }
         $user=User::where('cellphone',$request->cellphone)->first();
+        if($user->unsubscribe == User::USER_UNSUBSCRIBE_YES){
+            return resReturn(0,'您的账号已注销，无法重新注册',Code::CODE_WRONG);
+        }
         if($user){
             return resReturn(0,'手机号已被注册',Code::CODE_WRONG);
         }
@@ -143,7 +175,10 @@ class WeChatController  extends Controller
         if(!$user){
             return resReturn(0,'手机号未注册过',Code::CODE_WRONG);
         }
-        if(!$user->state == User::USER_STATE_FORBID){
+        if($user->unsubscribe == User::USER_UNSUBSCRIBE_YES){
+            return resReturn(0,'您的账号已注销，无法重新注册',Code::CODE_WRONG);
+        }
+        if($user->state == User::USER_STATE_FORBID){
             return resReturn(0,'您的账户禁止访问，请联系管理员',Code::CODE_WRONG);
         }
         if (!Hash::check($request->password, $user->password)) {
@@ -167,7 +202,8 @@ class WeChatController  extends Controller
             'nickname'=>$user->nickname,
             'cellphone'=>$user->cellphone,
             'portrait'=>$user->portrait,
-            'api_token'=>$user->api_token
+            'api_token'=>$user->api_token,
+            'wechat'=>$user->wechat
         ];
     }
 
@@ -205,8 +241,11 @@ class WeChatController  extends Controller
             'code'=>$code,
             'failuretime'=>config('dswjcms.failuretime'),
         ]));
-        return resReturn(1,['code'=>$code]);  //不走接口，直接返回验证码
-        $return=$this->getCode(1,$request->cellphone,$code);
+        $Config = config('sms');
+        if(!$Config[$Config['service']]['access_id']){    //没有配置短信账号，直接返回验证码
+            return resReturn(1,['code'=>$code]);
+        }
+        $return=$this->getCode($Config['service'],$request->cellphone,$code);
         if($return['Code'] == "OK"){
             return resReturn(1,'成功');
         }else{
@@ -216,25 +255,18 @@ class WeChatController  extends Controller
     }
 
     /**
-     * @param $apply_id //短信商ID
+     * @param $service //短信商标识
      * @param $cellphone //手机号
      * @param $code //验证码
      * @internal param $applySecret
      * @return string
+     * @throws \AlibabaCloud\Client\Exception\ClientException
      */
-    protected function getCode($apply_id,$cellphone,$code){
-        $aliyunConfig = config('sms.aliyun');
-        $config=[
-            'accessKeyId'=>$aliyunConfig['access_id'],
-            'accessSecret'=>$aliyunConfig['secret'],
-            'SignName'=>$aliyunConfig['signature'],
-            'TemplateCode'=>$aliyunConfig['verification_code'],
-        ];
+    protected function getCode($service,$cellphone,$code){
         $Aliyun=new Aliyun();
-        $return =$Aliyun->sendCode($config,$cellphone,$code);
-
+        $return =$Aliyun->sendCode($cellphone,$code);
         SmsLog::setSmsLog(array(
-            'sms_service_id'=>$apply_id,
+            'sms_service'=>$service,
             'phone'=>$cellphone,
             'data'=>$return
         ));
@@ -297,7 +329,7 @@ class WeChatController  extends Controller
                 ],
                 'price'=>$GoodIndent->total,
                 'url'=>'/pages/finance/bill_show?id='.$Money->id,
-                'prefers'=>['database']
+                'prefers'=>['database','mail']
             ];
             $user = User::find(auth('web')->user()->id);
             $user->notify(new InvoicePaid($invoice));
@@ -395,10 +427,14 @@ class WeChatController  extends Controller
                         'nickname'=>$return['data']->nickname,
                         'cellphone'=>$return['data']->cellphone,
                         'portrait'=>$return['data']->portrait,
-                        'api_token'=>$return['data']->api_token
+                        'api_token'=>$return['data']->api_token,
+                        'wechat'=>$return['data']->wechat
                     ]);
                 }
             }else{
+                if($User->unsubscribe == User::USER_UNSUBSCRIBE_YES){
+                    return resReturn(0,'您的账号已注销，无法重新注册',Code::CODE_WRONG);
+                }
                 $return =DB::transaction(function ()use($request,$miniPhoneNumber,$User,$openid){
                     $User->updated_at=Carbon::now()->toDateTimeString();
                     if(!$User[strtolower($request->platform)]){
@@ -423,7 +459,8 @@ class WeChatController  extends Controller
                         'nickname'=>$return['data']->nickname,
                         'cellphone'=>$return['data']->cellphone,
                         'portrait'=>$return['data']->portrait,
-                        'api_token'=>$return['data']->api_token
+                        'api_token'=>$return['data']->api_token,
+                        'wechat'=>$return['data']->wechat
                     ]);
                 }
             }

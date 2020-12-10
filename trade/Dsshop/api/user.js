@@ -88,4 +88,15 @@ export default {
 			})
 		})
 	},
+	unsubscribe(data,success, fail){
+		Network.setPost('unsubscribe', data, function(res) {
+			success(res)
+		}, function(res) {
+			uni.showToast({
+				title: res.message,
+				icon: 'none',
+				duration: 2000
+			})
+		})
+	}
 };

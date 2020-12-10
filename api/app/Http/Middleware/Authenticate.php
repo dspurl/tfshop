@@ -15,7 +15,8 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            return route('login');
+//            return route('login');
+            exit('密钥已失效，请清空本地缓存');
         }
     }
 }

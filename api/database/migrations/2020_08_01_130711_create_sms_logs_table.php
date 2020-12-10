@@ -16,7 +16,7 @@ class CreateSmsLogsTable extends Migration
     {
         Schema::create('sms_logs', function (Blueprint $table) {
             $table->id();
-            $table->integer('sms_service_id')->default(1)->comment('短信服务商1阿里云');
+            $table->string('sms_service',60)->nullable()->comment('短信服务商标识');
             $table->string('phone',11)->comment('接收短信的手机号');
             $table->text('data')->nullable()->comment('返回数据');
             $table->timestamps();

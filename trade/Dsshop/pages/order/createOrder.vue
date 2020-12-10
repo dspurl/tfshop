@@ -240,7 +240,7 @@
 				this.payType = type;
 			},
 			submit(){
-				if(!this.addressData.location){
+				if(!this.addressData){
 					this.$api.msg('请选择地址')
 					return false
 				}

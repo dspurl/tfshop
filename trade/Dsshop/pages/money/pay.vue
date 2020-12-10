@@ -42,6 +42,23 @@
 		</view>
 		
 		<text class="mix-btn" @click="confirm">确认支付</text>
+		<view class="cu-modal" :class="modalName=='payHint'?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">提醒</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-xl">
+					是否已完成支付
+				</view>
+				<view class="flex cu-bar bg-white justify-between">
+					<button class="margin-left cu-btn line-green text-green" @tap="hideModal">取消</button>
+					<button class="margin-right cu-btn bg-green margin-left" @tap="goBack">已完成</button>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -61,7 +78,10 @@
 					user: {
 						money: 0
 					}
-				}
+				},
+				index:0,
+				jweixin:null,
+				modalName: null,
 			};
 		},
 		computed: {
@@ -87,6 +107,18 @@
 			changePayType(type) {
 				this.payType = type;
 			},
+			showModal(e) {
+				this.modalName = e
+			},
+			hideModal(e) {
+				this.modalName = null
+			},
+			goBack(){
+				this.hideModal()
+				uni.redirectTo({
+					url: '/pages/order/order?state=2'
+				})
+			},
 			//确认支付
 			confirm: async function() {
 				const that = this
@@ -100,9 +132,22 @@
 						})
 					})
 				} else {
+					// #ifdef H5
+					Pay.unifiedPayment({
+						platform: this.payType,
+						type: 'goodsIndent',
+						trade_type: 'MWEB',
+						id: this.id,
+					},function(res){
+						that.showModal('payHint')
+						window.location.href = res.mweb_url
+					})
+					// #endif
+					// #ifndef H5
 					Pay.unifiedPayment({
 						id: this.id,
 						platform: this.payType,
+						trade_type: 'JSAPI',
 						type: 'goodsIndent'
 					},function(res){
 						uni.requestPayment({
@@ -125,6 +170,7 @@
 						})
 						
 					})
+					// #endif
 				}
 			},
 		}

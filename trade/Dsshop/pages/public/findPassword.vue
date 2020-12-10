@@ -202,6 +202,10 @@
 							that.disabled = false
 						}
 					}, 1000)
+					// 模拟短信发送
+					if(res.code){
+						that.ruleForm.code = res.code.toString()
+					}
 				})
 			  },
 		}

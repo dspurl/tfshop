@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'service'=>env('SMS_SERVICE', 'aliyun'),         // 服务商
     // 阿里云
     'aliyun'=>[
         'access_id' => env('SMS_ALIYUN_ACCESS_ID', ''),         // 账号ID

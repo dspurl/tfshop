@@ -57,9 +57,9 @@ class GoodIndent extends Model
         $body='对订单：'.$GoodIndent->identification.'的付款';
         $fee=$GoodIndent->total;
 //        $fee=1;
-        $trade_type="JSAPI";
+//        $trade_type="JSAPI";
         $MiniProgram = new MiniProgram();
-        $payment=$MiniProgram->payment($request->platform,$body,$fee,$openid,$trade_type);
+        $payment=$MiniProgram->payment($request->platform,$body,$fee,$openid,$request->trade_type);
         if($payment['result']== 'error'){
             return $payment;
         }

@@ -10,7 +10,7 @@
 				{{item.text}}
 			</view>
 		</view>
-		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300">
+		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300" @change="changeTab">
 			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
 				<scroll-view 
 					class="list-scroll-content" 
@@ -141,12 +141,10 @@
 		},
 		
 		onLoad: function(options) {
-			this.loginCheck()
-			/**
-			 * 修复app端点击除全部订单外的按钮进入时不加载数据的问题
-			 * 替换onLoad下代码即可
-			 */
 			this.tabCurrentIndex = options.state;
+		},
+		onShow(){
+			this.loginCheck()
 			this.loadData()
 		},
 		computed: {
@@ -165,8 +163,9 @@
 				let index = this.tabCurrentIndex;
 				let navItem = this.navList[index];
 				let state = navItem.state;
-				if(navItem.loaded === true){
-					return;
+				if(source === 'tabChange' || !source){
+					navItem.loadingType = 'more'
+					navItem.orderList = []
 				}
 				
 				if(navItem.loadingType === 'loading'){
@@ -235,10 +234,16 @@
 				
 			}, 
 
+			//swiper 切换
+			changeTab(e){
+				this.tabCurrentIndex = e.target.current
+				this.loadData('tabChange')
+				this.page = 1
+			},
 			//顶部tab点击
 			tabClick(index){
 				this.tabCurrentIndex = index
-				this.loadData('tabChange')
+				// this.loadData('tabChange')
 				this.page = 1
 			},
 			//删除订单

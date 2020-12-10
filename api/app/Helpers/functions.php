@@ -15,9 +15,13 @@ function resReturn($state=1,$message='',$code='',$httpcode='')
         return response()->json(array(
             'code' => $code?$code:\App\Code::CODE_SYSTEM_BUSY,
             'message' => $message,
+            'result'=> 'error',
         ),$httpcode ? $httpcode : Response::HTTP_UNAUTHORIZED);
     }else{
-        return response()->json($message,Response::HTTP_OK);
+        return response()->json(array(
+            'result'=>'ok',
+            'message' => $message,
+        ),Response::HTTP_OK);
     }
 }
 

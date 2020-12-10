@@ -3,6 +3,7 @@
 namespace App\Models\v1;
 
 use DateTimeInterface;
+use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -18,10 +19,11 @@ use Illuminate\Notifications\Notifiable;
  * @property string nickname
  * @property int state
  * @property int gender
- * @property int miniweixin
+ * @property string miniweixin
  * @property string uuid
+ * @property string wechat
  */
-class User extends Authenticatable
+class User extends Authenticatable implements HasLocalePreference
 {
     use Notifiable;
     const USER_GENDER_UNKNOWN= 0; //性别:未知
@@ -29,8 +31,20 @@ class User extends Authenticatable
     const USER_GENDER_WOMAN= 2; //性别:女
     const USER_STATE_NORMAL= 1; //状态：正常
     const USER_STATE_FORBID= 2; //状态：禁止访问
+    const USER_UNSUBSCRIBE_YES= 1; //注销状态：1是
+    const USER_UNSUBSCRIBE_NO= 0; //注销状态：0否
     protected $appends = ['gender_show','state_show'];
     public static $withoutAppends = true;
+
+    /**
+     * 获取用户首选区域设置
+     *
+     * @return string
+     */
+    public function preferredLocale()
+    {
+        return $this->locale;
+    }
     /**
      * Prepare a date for array / JSON serialization.
      *

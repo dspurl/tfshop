@@ -4,14 +4,22 @@
 			<text class="cell-tit">个人资料</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<view class="list-cell m-t b-b" @click="clearCache()" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell b-b m-t" @click="navTo('/pages/userinfo/userinfo')" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">通知与提醒</text>
+			<text class="cell-more yticon icon-you"></text>
+		</view>
+		<view class="list-cell b-b" @click="clearCache()" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<!-- <view class="list-cell b-b" @click="navTo('关于我们')" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell b-b" @click="navTo('/pages/set/about')" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">关于我们</text>
 			<text class="cell-more yticon icon-you"></text>
-		</view> -->
+		</view>
+		<view class="list-cell" @click="navTo('/pages/set/unsubscribe')" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">注销服务</text>
+			<text class="cell-more yticon icon-you"></text>
+		</view>
 		<!-- <view class="list-cell" @click="testVersion()">
 			<text class="cell-tit">检查更新</text>
 			<text class="cell-tip">当前版本 1.0.0</text>

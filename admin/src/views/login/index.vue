@@ -36,9 +36,10 @@
           <svg-icon icon-class="eye" />
         </span>
       </el-form-item>
-
+      <el-form-item>
+        <Verify :type="3" :bar-size="{ width:'100%',height:'40px' }" :show-button="false" @success="verification = 1"/>
+      </el-form-item>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
-
       <div style="position:relative">
         <!--<div class="tips">
           <span>{{ $t('login.username') }} : admin</span>
@@ -68,10 +69,10 @@
 import LangSelect from '@/components/LangSelect'
 import SocialSign from './socialsignin'
 import { removeToken } from '@/utils/auth'
-
+import Verify from 'vue2-verify'
 export default {
   name: 'Login',
-  components: { LangSelect, SocialSign },
+  components: { LangSelect, SocialSign, Verify },
   data() {
     const validateUsername = (rule, value, callback) => {
       if (!value) {
@@ -96,6 +97,7 @@ export default {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
         password: [{ required: true, trigger: 'blur', validator: validatePassword }]
       },
+      verification: false,
       passwordType: 'password',
       loading: false,
       showDialog: false,
@@ -126,6 +128,10 @@ export default {
     },
     handleLogin() {
       this.$refs.loginForm.validate(valid => {
+        if (!this.verification) {
+          this.$message.error('请完成验证!')
+          return false
+        }
         if (valid) {
           // 防止登录时存在缓存，导致登录报错
           removeToken()

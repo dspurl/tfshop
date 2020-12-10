@@ -78,6 +78,54 @@ export function authMsg(tmplIds) {
 	//#endif
   }
 
+// 登录
+export function getLogin() {
+	let that = this;
+	uni.login({
+		success(res) {
+			if (res.code) {
+				uni.request({
+					url: configURL.BaseURL + 'miniLogin',
+					data: {
+						code: res.code,
+						platform: getPlatform()
+					},
+					method: 'POST',
+					header: {
+						'Content-Type': 'application/json',
+						'apply-secret': configURL.secret,
+						// #ifndef H5
+						openid: uni.getStorageSync('applyDsshopOpenid')
+						// #endif
+					},
+					success: res => {
+						if (res.statusCode === 200) {
+							if (res.data.result === 'ok') {
+								uni.setStorageSync('applyDsshopSession_key', res.data.message.session_key);
+								uni.setStorageSync('applyDsshopOpenid', res.data.message.openid);
+							}
+						} else {
+							uni.showToast({
+								icon: 'none',
+								title: res.data.message,
+								duration: 2000
+							});
+						}
+					},
+					fail: res => {
+						uni.showToast({
+							title: '服务器无响应',
+							duration: 2000
+						});
+					}
+				});
+			} else {
+				console.log('无响应');
+			}
+		}
+	});
+}
+
 //使用注释获取详细平台
 export function getPlatform(){
 	// #ifdef APP-PLUS

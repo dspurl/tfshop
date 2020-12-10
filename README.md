@@ -163,8 +163,9 @@ npm install
 
 加入我们
 ------------
-- 有问题可以直接issue，请详细说明问题。
-- 如果你想贡献代码或反馈BUG，扫码进群（不提供问题解答，问题一律只通过issue处理）
+- 有问题可以直接discussions，请详细说明问题，如果你不习惯用discussions，也可以通过issue。
+- dsshop交流群，微信扫码进群
+- 现开通“技术交流”（面向技术，方便碰到问题解决问题和一些技术相关的沟通）和“运营交流”（面向站长/运营/UI，该群的成立主要是站在使用者的角度去优化项目，如后台报表、操作流程等）二大群
 <p align="center">
   <img src="https://dspurl.github.io/image/12.png" width="150">
 </p>
