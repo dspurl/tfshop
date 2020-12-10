@@ -88,19 +88,19 @@ export default {
 					}
 				});
 			} else {
-				that.$api.prePage().refreshAddress(item);
-				uni.navigateBack();
-			}
-
-			if (this.source == 1) {
-				//this.$api.prePage()获取上一页实例，在App.vue定义
-				this.$api.prePage().addressData = item;
-				uni.navigateBack();
+				if (that.type === '1') {
+					that.$api.prePage().refreshAddress(item);
+					uni.navigateBack();
+				}
 			}
 		},
 		addAddress(type, item) {
+			let data = ''
+			if(item){
+				data = '&data='+JSON.stringify(item)
+			}
 			uni.navigateTo({
-				url: `/pages/address/addressManage?type=${type}&data=${JSON.stringify(item)}`
+				url: `/pages/address/addressManage?type=${type}${data}`
 			});
 		},
 		//自动获取收货地址
@@ -228,7 +228,23 @@ page {
 	color: $font-color-light;
 	padding-left: 30upx;
 }
-
+.add-btn{
+		position: fixed;
+		left: 30upx;
+		right: 30upx;
+		bottom: 16upx;
+		z-index: 95;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 690upx;
+		height: 80upx;
+		font-size: 32upx;
+		color: #fff;
+		background-color: $base-color;
+		border-radius: 10upx;
+		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);		
+	}
 .add-btn1 {
 	position: fixed;
 	left: 30upx;
