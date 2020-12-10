@@ -16,8 +16,8 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use EasyWeChat\Factory;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 use App\common\RedisLock;
+use Redis;
 
 class IndentController extends Controller
 {
@@ -176,7 +176,8 @@ class IndentController extends Controller
         if(!$request->has('refund_reason')){
             return resReturn(0,'退款原因有误',Code::CODE_PARAMETER_WRONG);
         }
-        $redis = Redis::connection('default');
+        $redis = new Redis();
+        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
         $lock=RedisLock::lock($redis,'goodRefund');
         if($lock){
             $return=DB::transaction(function ()use($request,$id){

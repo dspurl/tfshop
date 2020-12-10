@@ -21,8 +21,9 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Redis;
 use Webpatser\Uuid\Uuid;
+use Redis;
+
 
 class WeChatController  extends Controller
 {
@@ -186,7 +187,8 @@ class WeChatController  extends Controller
 
     //注册手机验证码
     public function getRegisterCellphoneCode(Request $request){
-        $redis = Redis::connection('default');
+        $redis = new Redis();
+        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
         if(!$request->has('cellphone')){
             return resReturn(0,'手机号不能为空',Code::CODE_WRONG);
         }

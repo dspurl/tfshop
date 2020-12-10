@@ -9,11 +9,12 @@ use App\Models\v1\Freight;
 use App\Models\v1\FreightWay;
 use App\Models\v1\GoodLocation;
 use App\Models\v1\Shipping;
-use Illuminate\Support\Facades\Redis;
 use App\common\RedisLock;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Redis;
+
 
 class ShippingController extends Controller
 {
@@ -98,7 +99,8 @@ class ShippingController extends Controller
      */
     public function store(SubmitShippingRequest $request)
     {
-        $redis = Redis::connection('default');
+        $redis = new Redis();
+        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
         $lock=RedisLock::lock($redis,'shipping');
         if($lock){
             $return=DB::transaction(function ()use($request){
@@ -153,7 +155,8 @@ class ShippingController extends Controller
      */
     public function update(SubmitShippingRequest $request, $id)
     {
-        $redis = Redis::connection('default');
+        $redis = new Redis();
+        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
         $lock=RedisLock::lock($redis,'shipping');
         if($lock){
             $return=DB::transaction(function ()use($request,$id){

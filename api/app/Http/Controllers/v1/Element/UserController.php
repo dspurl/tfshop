@@ -7,8 +7,9 @@ use App\common\RedisLock;
 use App\Models\v1\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Redis;
 use Webpatser\Uuid\Uuid;
+use Redis;
+
 
 class UserController extends Controller
 {
@@ -33,7 +34,8 @@ class UserController extends Controller
         if(!$request->portrait && !$request->nickname){
             return resReturn(0,'参数有误',Code::CODE_PARAMETER_WRONG);
         }
-        $redis = Redis::connection('default');
+        $redis = new Redis();
+        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
         $lock=RedisLock::lock($redis,'dsShopUser');
         if($lock){
             $User=User::find(auth('web')->user()->id);
@@ -60,7 +62,8 @@ class UserController extends Controller
      */
     public function show(Request $request)
     {
-        $redis = Redis::connection('default');
+        $redis = new Redis();
+        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
         $lock=RedisLock::lock($redis,'dsShopUser');
         if($lock){
             User::$withoutAppends = false;
