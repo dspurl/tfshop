@@ -72,8 +72,10 @@ export default {
 						if (confirmRes.confirm) {
 							Address.checkSubmit(item, function(res) {
 								if (that.type === '1') {
-									that.$api.prePage().refreshAddress(item);
-									uni.navigateBack();
+									if(typeof that.$api.prePage().refreshAddress === "function" && typeof that.$api.prePage().refreshAddress !== "undefined") {
+										that.$api.prePage().refreshAddress(item);
+										uni.navigateBack();
+									}
 								} else {
 									that.$api.msg('设置成功');
 									that.loadData();
@@ -81,21 +83,29 @@ export default {
 							});
 						} else {
 							if (that.type === '1') {
-								that.$api.prePage().refreshAddress(item);
-								uni.navigateBack();
+								if(typeof that.$api.prePage().refreshAddress === "function" && typeof that.$api.prePage().refreshAddress !== "undefined") {
+									that.$api.prePage().refreshAddress(item);
+									uni.navigateBack();
+								}
 							}
 						}
 					}
 				});
 			} else {
-				that.$api.prePage().refreshAddress(item);
-				uni.navigateBack();
+				if(that.$api.prePage().route == 'pages/user/user')
+					return false
+				if(typeof that.$api.prePage().refreshAddress === "function" && typeof that.$api.prePage().refreshAddress !== "undefined") {
+					that.$api.prePage().refreshAddress(item);
+					uni.navigateBack();
+				}
 			}
 
 			if (this.source == 1) {
 				//this.$api.prePage()获取上一页实例，在App.vue定义
-				this.$api.prePage().addressData = item;
-				uni.navigateBack();
+				if(typeof that.$api.prePage().addressData !== "undefined") {
+					this.$api.prePage().addressData = item;
+					uni.navigateBack();
+				}
 			}
 		},
 		addAddress(type, item) {

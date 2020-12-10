@@ -56,7 +56,7 @@
 			if(option.type==='edit'){
 				title = '编辑收货地址'
 			}
-			if(option.data){
+			if(option.data && option.data != 'undefined'){
 				this.addressData = JSON.parse(option.data)
 				console.log(this.addressData,this.addressData)
 			}
@@ -137,19 +137,23 @@
 				data.cellphone = Number(data.cellphone)
 				if(data.id){
 					Address.updateSubmit(data,function(res){
-						that.$api.prePage().refreshList()
-						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
-						setTimeout(()=>{
-							uni.navigateBack()
-						}, 800)
+						if(typeof that.$api.prePage().refreshList === "function" && typeof that.$api.prePage().refreshList !== "undefined") {
+							that.$api.prePage().refreshList()
+							that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
+							setTimeout(()=>{
+								uni.navigateBack()
+							}, 800)
+						}
 					})
 				}else{
 					Address.createSubmit(data,function(res){
-						that.$api.prePage().refreshList()
-						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
-						setTimeout(()=>{
-							uni.navigateBack()
-						}, 800)
+						if(typeof that.$api.prePage().refreshList === "function" && typeof that.$api.prePage().refreshList !== "undefined") {
+							that.$api.prePage().refreshList()
+							that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
+							setTimeout(()=>{
+								uni.navigateBack()
+							}, 800)
+						}
 					})
 				}
 			},
