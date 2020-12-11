@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Element;
 
 use App\Code;
+use App\common\RedisService;
 use App\Http\Requests\v1\SubmitGoodIndentRequest;
 use App\Models\v1\Good;
 use App\Models\v1\GoodLocation;
@@ -15,7 +16,6 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use Redis;
 
 class GoodIndentController extends Controller
 {
@@ -53,8 +53,7 @@ class GoodIndentController extends Controller
      */
     public function store(SubmitGoodIndentRequest $request)
     {
-        $redis = new Redis();
-        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
+        $redis = new RedisService();
         $lock=RedisLock::lock($redis,'goodIndent');
         if($lock){
             $return=DB::transaction(function ()use($request){

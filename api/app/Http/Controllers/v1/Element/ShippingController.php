@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Element;
 
 use App\Code;
+use App\common\RedisService;
 use App\Http\Requests\v1\SubmitShippingRequest;
 use App\Models\v1\Common;
 use App\Models\v1\Freight;
@@ -13,7 +14,6 @@ use App\common\RedisLock;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Redis;
 
 
 class ShippingController extends Controller
@@ -99,8 +99,7 @@ class ShippingController extends Controller
      */
     public function store(SubmitShippingRequest $request)
     {
-        $redis = new Redis();
-        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
+        $redis = new RedisService();
         $lock=RedisLock::lock($redis,'shipping');
         if($lock){
             $return=DB::transaction(function ()use($request){
@@ -155,8 +154,7 @@ class ShippingController extends Controller
      */
     public function update(SubmitShippingRequest $request, $id)
     {
-        $redis = new Redis();
-        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
+        $redis = new RedisService();
         $lock=RedisLock::lock($redis,'shipping');
         if($lock){
             $return=DB::transaction(function ()use($request,$id){

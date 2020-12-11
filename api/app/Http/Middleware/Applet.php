@@ -3,8 +3,8 @@
 namespace App\Http\Middleware;
 
 use App\Code;
+use App\common\RedisService;
 use Closure;
-use Redis;
 class Applet
 {
     /**
@@ -16,8 +16,7 @@ class Applet
      */
     public function handle($request, Closure $next)
     {
-        $redis = new Redis();
-        $redis->pconnect(env('REDIS_HOST'),env('REDIS_PORT'));
+        $redis = new RedisService();
         if(!$request->header('apply-secret')){
             return resReturn(0,'请配置applySecret',Code::CODE_MISUSE);
         }
