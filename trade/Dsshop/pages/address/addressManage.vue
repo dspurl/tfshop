@@ -58,7 +58,6 @@
 			}
 			if(option.data){
 				this.addressData = JSON.parse(option.data)
-				console.log(this.addressData,this.addressData)
 			}
 			if(option.sid){
 				this.addressData.good_indent_id = Number(option.sid)

@@ -99,7 +99,7 @@ class IndentController extends Controller
             $Dhl=Dhl::find($request->dhl_id);
             //通知
             $config = config('wechat.mini_program.default');
-            if($config['app_id']) {  //配置了小程序才触发
+            if($config['app_id'] && $GoodIndent->User->miniweixin) {  //配置了小程序才触发
                 $delivery_release = config('wechat.subscription_information.delivery_release');
                 $app = Factory::miniProgram($config); // 小程序
                 $data = [
