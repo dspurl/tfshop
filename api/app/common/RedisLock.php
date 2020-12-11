@@ -29,7 +29,7 @@ class RedisLock
         if (empty($expire_time)) {
             $expire_time = self::EXPIRE_TIME;
         }
-        return $redis->set($key, self::LOCK_VALUE, self::IF_NOT_EXISTS, self::MILLISECOND_EXPIRE_TIME ,$expire_time);
+        return $redis->set($key, self::LOCK_VALUE, $expire_time);
     }
 
     /**
@@ -49,7 +49,6 @@ else
     return 0
 end
 EOT;
-        $result = $redis->eval($lua,1,$key,self::LOCK_VALUE);
-        return $result;
+        return $redis->eval($lua,[$key],1);
     }
 }
