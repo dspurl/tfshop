@@ -123,7 +123,8 @@ import { getToken } from '@/utils/auth'
       },
       imgData: {
         type: 1,
-        size: 1024 * 1024 * 2
+        size: 1024 * 1024 * 2,
+        specification: [80, 150, 200, 250, 300, 350]
       }
     }
   },
