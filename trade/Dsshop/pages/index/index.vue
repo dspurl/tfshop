@@ -274,7 +274,11 @@ import Banner from '../../api/banner'
 				]
 			};
 		},
-
+		onShow() {
+			if(this.hasLogin){
+				this.$api.setTabBarBadgeForCart();
+			}
+		},
 		onLoad() {
 			this.loadData()
 		},

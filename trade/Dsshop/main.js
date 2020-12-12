@@ -24,7 +24,20 @@ const prePage = ()=>{
 	// #endif
 	return prePage.$vm;
 }
-
+const setTabBarBadgeForCart = ()=>{
+	let cartList =  uni.getStorageSync('dsshopCartList') || {}
+	let cartNum = Object.keys(cartList).length
+	if(cartNum>0){
+		uni.setTabBarBadge({
+			index: 2,
+			text:  ''+cartNum+''
+		})
+	}else{
+		uni.removeTabBarBadge({
+			index: 2
+		})
+	}
+}
 /* 注册过滤器 */
 for (const key in filter) {
   if (filter.hasOwnProperty(key)) {
@@ -40,7 +53,7 @@ Vue.config.productionTip = false
 Vue.prototype.configURL = configURL
 Vue.prototype.$fire = new Vue();
 Vue.prototype.$store = store;
-Vue.prototype.$api = {msg, prePage};
+Vue.prototype.$api = {msg, prePage,setTabBarBadgeForCart};
 
 App.mpType = 'app'
 

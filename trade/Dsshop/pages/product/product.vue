@@ -165,6 +165,11 @@ export default {
 			buy: false
 		};
 	},
+	async onShow(){
+		if (this.hasLogin){		
+			this.$api.setTabBarBadgeForCart();	
+		}	
+	},
 	async onLoad(options) {
 		let id = options.id;
 		if (id) {

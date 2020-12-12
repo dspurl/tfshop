@@ -262,6 +262,7 @@
 				uni.setStorageSync('dsshopCartList', cartList)
 				this.cartList.splice(index, 1);
 				this.calcTotal();
+				this.$api.setTabBarBadgeForCart();
 			},
 			//删除失效的商品
 			deleteInvalidGood(index){
@@ -277,6 +278,7 @@
 				
 				uni.setStorageSync('dsshopCartList', cartList)
 				this.invalidGood.splice(index, 1);
+				this.$api.setTabBarBadgeForCart();
 			},
 			//清空
 			clearCart(){
@@ -285,7 +287,8 @@
 					success: (e)=>{
 						if(e.confirm){
 							this.cartList = [];
-							 uni.removeStorageSync('dsshopCartList')
+							uni.removeStorageSync('dsshopCartList')
+							this.$api.setTabBarBadgeForCart();
 						}
 					}
 				})

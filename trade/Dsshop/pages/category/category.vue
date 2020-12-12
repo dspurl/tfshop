@@ -33,6 +33,11 @@
 				tap: 0,
 			}
 		},
+		onShow() {
+			if(this.hasLogin){
+				this.$api.setTabBarBadgeForCart();
+			}
+		},		
 		onLoad(){
 			this.loadData();
 		},

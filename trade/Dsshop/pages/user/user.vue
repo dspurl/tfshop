@@ -120,6 +120,7 @@
 		},
 		onShow(){
 			if(this.hasLogin){
+				this.$api.setTabBarBadgeForCart();
 				this.getUser()
 				this.browse()
 				this.noticeConut()
