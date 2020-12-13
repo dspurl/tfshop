@@ -32,6 +32,7 @@ class CreateUsersTable extends Migration
             $table->string('miniweixin',255)->nullable()->comment('微信小程序openid');
             $table->string('minialipay',255)->nullable()->comment('支付宝小程序openid');
             $table->string('minitoutiao',255)->nullable()->comment('字节跳动小程序openid');
+            $table->json('notification')->nullable()->comment('用户通知接收状态');
             $table->timestamps();
             $table->charset = 'utf8';
             $table->engine = 'InnoDB';

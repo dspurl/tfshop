@@ -2,7 +2,9 @@
 
 namespace App\Notifications;
 
+use App\Channels\MiNiWeiXinChannel;
 use App\Channels\SmsChannel;
+use App\Channels\WechatChannel;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -48,6 +50,12 @@ class InvoicePaid extends Notification
                     case 'sms': //短信
                         $return[]=SmsChannel::class;
                         break;
+                    case 'miniweixin': //微信小程序
+                        $return[]=MiNiWeiXinChannel::class;
+                        break;
+                    case 'wechat': //微信公众平台
+                        $return[]=WechatChannel::class;
+                        break;
                 }
             }
             return $return;
@@ -64,24 +72,38 @@ class InvoicePaid extends Notification
      */
     public function toMail($notifiable)
     {
-        $this->invoice['appName']=config('app.name');
-        $this->invoice['type']= array_key_exists("type",$this->invoice) ? $this->invoice['type'] : static::NOTIFICATION_TYPE_SYSTEM_MESSAGES;    //通知类型：1系统消息（默认）2交易3活动
-        $this->invoice['url']= array_key_exists("url",$this->invoice) ? request()->root().'/h5/#'.$this->invoice['url']: '';   //跳转地址
-        $this->invoice['image']= array_key_exists("image",$this->invoice) ? $this->invoice['image'] : '';   //带图
-        $this->invoice['price']= array_key_exists("price",$this->invoice) ? sprintf("%01.2f",$this->invoice['price']/100) : '';   //金额
-        $this->invoice['list']= array_key_exists("list",$this->invoice) ? $this->invoice['list'] : '';   //列表
-        $this->invoice['remark']=array_key_exists("remark",$this->invoice) ? $this->invoice['remark'] : '';   //通知备注
-        return (new MailMessage)->view('emails.notification',$this->invoice)
-            ->subject($this->invoice['title']);
+        //配置了邮箱并用户验证了邮箱
+        if($notifiable['email'] && config('mail.username')){
+            $this->invoice['appName']=config('app.name');
+            $this->invoice['type']= array_key_exists("type",$this->invoice) ? $this->invoice['type'] : static::NOTIFICATION_TYPE_SYSTEM_MESSAGES;    //通知类型：1系统消息（默认）2交易3活动
+            $this->invoice['url']= array_key_exists("url",$this->invoice) ? request()->root().'/h5/#'.$this->invoice['url']: '';   //跳转地址
+            $this->invoice['image']= array_key_exists("image",$this->invoice) ? $this->invoice['image'] : '';   //带图
+            $this->invoice['price']= array_key_exists("price",$this->invoice) ? sprintf("%01.2f",$this->invoice['price']/100) : '';   //金额
+            $this->invoice['list']= array_key_exists("list",$this->invoice) ? $this->invoice['list'] : '';   //列表
+            $this->invoice['remark']=array_key_exists("remark",$this->invoice) ? $this->invoice['remark'] : '';   //通知备注
+            return (new MailMessage)->view('emails.notification',$this->invoice)
+                ->subject($this->invoice['title']);
+        }
     }
 
     /**
-     * 获取语音形式的通知。
+     * 获取短信形式的通知。
      *
      * @param  mixed  $notifiable
      * @return string
      */
     public function toSms($notifiable)
+    {
+        return $this->invoice;
+    }
+
+    /**
+     * 获取微信小程序的通知。
+     *
+     * @param  mixed  $notifiable
+     * @return string
+     */
+    public function MiNiWeiXin($notifiable)
     {
         return $this->invoice;
     }

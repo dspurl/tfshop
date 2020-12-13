@@ -171,9 +171,7 @@
 			noticeConut(){
 				const that = this
 				Notification.getCount({},function(res){
-					if(res.result === 'ok'){
-						that.noticeNumber = res ? res.toString() : null
-					}
+					that.noticeNumber = res ? res.toString() : null
 				})
 			},
 			navTo(url){

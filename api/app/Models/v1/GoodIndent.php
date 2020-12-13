@@ -5,6 +5,7 @@ use App\Notifications\InvoicePaid;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use App\Notifications\Common;
 /**
  * @property int user_id
  * @property int identification
@@ -118,22 +119,13 @@ class GoodIndent extends Model
         $Money->money = $GoodIndent->total;
         $Money->remark = '对订单：'.$GoodIndent->identification.'的付款';
         $Money->save();
-        // 通知
-        $invoice=[
-            'type'=> InvoicePaid::NOTIFICATION_TYPE_DEAL,
-            'title'=>'对订单：'.$GoodIndent->identification.'的付款',
-            'list'=>[
-                [
-                    'keyword'=>'支付方式',
-                    'data'=>'微信支付'
-                ]
-            ],
-            'price'=>$GoodIndent->total,
-            'url'=>'/pages/finance/bill_show?id='.$Money->id,
-            'prefers'=>['database']
-        ];
-        $user = User::find($GoodIndent->user_id);
-        $user->notify(new InvoicePaid($invoice));
+        (new Common)->finishPayment([
+            'money_id'=>$Money->id,  //资金记录ID
+            'identification'=>$GoodIndent->identification,  //订单号
+            'total'=>$GoodIndent->total,    //付款金额
+            'type'=> '微信支付',
+            'user_id'=>$GoodIndent->user_id   //用户ID
+        ]);
     }
 
     /**
@@ -151,22 +143,13 @@ class GoodIndent extends Model
         $Money->money = $GoodIndent->refund_money;
         $Money->remark = '订单：'.$GoodIndent->identification.'的退款，已退回到您的充值账号中';
         $Money->save();
-        // 通知
-        $invoice=[
-            'type'=> InvoicePaid::NOTIFICATION_TYPE_DEAL,
-            'title'=>'对订单：'.$GoodIndent->identification.'的退款',
-            'list'=>[
-                [
-                    'keyword'=>'退款方式',
-                    'data'=>'原路退还'
-                ]
-            ],
-            'price'=>$GoodIndent->refund_money,
-            'url'=>'/pages/finance/bill_show?id='.$Money->id,
-            'prefers'=>['database']
-        ];
-        $user = User::find($GoodIndent->user_id);
-        $user->notify(new InvoicePaid($invoice));
+        (new Common)->refund([
+            'money_id'=>$Money->id,  //资金记录ID
+            'identification'=>$GoodIndent->identification,  //订单号
+            'total'=>$GoodIndent->refund_money,    //退款金额
+            'type'=>'原路退还', //退款方式
+            'user_id'=>$GoodIndent->user_id   //用户ID
+        ]);
     }
 
     /**

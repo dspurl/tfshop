@@ -29,7 +29,7 @@ service.interceptors.request.use(
 
 // response interceptor
 service.interceptors.response.use(
-  response => response,
+  // response => response,
   /**
    * 下面的注释为通过在response里，自定义code来标示请求状态
    * 当code返回如下情况则说明权限有问题，登出并返回到登录页
@@ -37,15 +37,15 @@ service.interceptors.response.use(
    * 以下代码均为样例，请结合自生需求加以修改，若不需要，则可删除
    */
   response => {
-    if (!response.response) {
+    if (response.data.result === 'error') {
       Message({
         message: '服务器返回格式有误',
         type: 'error',
         duration: 5 * 1000
       })
     }
-    const res = response.response.data
-    if (response.response.status !== 200) {
+    const res = response.data.message
+    if (response.status !== 200) {
       Message({
         message: res.message || 'Error',
         type: 'error',
@@ -66,7 +66,9 @@ service.interceptors.response.use(
       }
       return Promise.reject(new Error(res.message || 'Error'))
     } else {
-      return res
+      return {
+        data: res
+      }
     }
   },
   error => {

@@ -258,7 +258,7 @@ class MiniProgram extends Model
         $app = Factory::payment($config);
         if($config['sandbox'] == true){
             $fee = '101';
-        }      
+        }
         $result = $app->order->unify([
             'body' => $body,
             'out_trade_no' => $number,

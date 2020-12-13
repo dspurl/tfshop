@@ -237,3 +237,16 @@ function imgFindReplaceUpdate($str,$path) {
     }
     return $str;
 }
+
+/**
+ * 将下划线命名转换为驼峰式命名
+ * @param $str
+ * @param bool $ucfirst
+ * @return mixed|string
+ */
+function convertUnderline ( $str , $ucfirst = true)
+{
+    $str = ucwords(str_replace('_', ' ', $str));
+    $str = str_replace(' ','',lcfirst($str));
+    return $str;
+}

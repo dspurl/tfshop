@@ -85,6 +85,8 @@ php artisan passport:client --password
 #修改.env.dev为.env，添加OAuth认证信息
 PASSPORT_CLIENT_ID="生成的Client ID"
 PASSPORT_CLIENT_SECRET="生成的 Client secret"
+# 需要安装PhpRedis
+# 参考：https://github.com/dspurl/dsshop/pull/84
 
 # 搭建后台
 cd ../admin
