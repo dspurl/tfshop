@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
+use App\common\RedisService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Redis;
 
 class RedisServiceController extends Controller
 {
@@ -17,28 +17,25 @@ class RedisServiceController extends Controller
      */
     public function index(Request $request)
     {
+        $default= new RedisService();
+        $cache= new RedisService('cache');
+        $queue= new RedisService('queue');
         if($request->has('type')){
             switch ($request->type){
                 case 1:
-                    $default= Redis::connection('default');
-                    $data['default']=$default->keys('*');
+                    $data['default']=$default->Keys('*');
                     break;
                 case 2:
-                    $cache= Redis::connection('cache');
-                    $data['cache']=$cache->keys('*');
+                    $data['cache']=$cache->Keys('*');
                     break;
                 case 3:
-                    $queue= Redis::connection('queue');
-                    $data['queue']=$queue->keys('*');
+                    $data['queue']=$queue->Keys('*');
                     break;
             }
         }else{
-            $default= Redis::connection('default');
-            $cache= Redis::connection('cache');
-            $queue= Redis::connection('queue');
-            $data['default']=$default->keys('*');
-            $data['cache']=$cache->keys('*');
-            $data['queue']=$queue->keys('*');
+            $data['default']=$default->Keys('*');
+            $data['cache']=$cache->Keys('*');
+            $data['queue']=$queue->Keys('*');
         }
 
         $return=array();
@@ -78,7 +75,7 @@ class RedisServiceController extends Controller
         if(!$request->has('type') || !$name){
             return resReturn(0,'参数有误',Code::CODE_PARAMETER_WRONG);
         }
-        $redis= Redis::connection($request->type);
+        $redis= new RedisService($request->type);
         $data=$redis->get($name);
         $return['type']=0;
         $return['data']=$data;
@@ -92,9 +89,9 @@ class RedisServiceController extends Controller
 
     //redis面板
     public function panel(){
-        $default= Redis::connection('default');
-        $cache= Redis::connection('cache');
-        $queue= Redis::connection('queue');
+        $default= new RedisService('default');
+        $cache= new RedisService('cache');
+        $queue= new RedisService('queue');
         $data['default']=$default->keys('*');
         $data['cache']=$cache->keys('*');
         $data['queue']=$queue->keys('*');
@@ -107,18 +104,18 @@ class RedisServiceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param $name
      * @param Request $request
      * @return \Illuminate\Http\Response
      */
     public function destroy($name, Request $request)
     {
         if($name !=1) {
-            $redis = Redis::connection($request->type);
+            $redis = new RedisService($request->type);
             $redis->del($name);
         }else{
             foreach ($request->all() as $all){
-                $redis= Redis::connection($all['type']);
+                $redis= new RedisService($all['type']);
                 $redis->del($all['name']);
             }
         }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
+use App\common\RedisService;
 use App\Models\v1\Dhl;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodIndentCommodity;
@@ -16,7 +17,6 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use EasyWeChat\Factory;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Redis;
 use App\common\RedisLock;
 
 class IndentController extends Controller
@@ -99,7 +99,7 @@ class IndentController extends Controller
             $Dhl=Dhl::find($request->dhl_id);
             //通知
             $config = config('wechat.mini_program.default');
-            if($config['app_id']) {  //配置了小程序才触发
+            if($config['app_id'] && $GoodIndent->User->miniweixin) {  //配置了小程序才触发
                 $delivery_release = config('wechat.subscription_information.delivery_release');
                 $app = Factory::miniProgram($config); // 小程序
                 $data = [
@@ -176,7 +176,7 @@ class IndentController extends Controller
         if(!$request->has('refund_reason')){
             return resReturn(0,'退款原因有误',Code::CODE_PARAMETER_WRONG);
         }
-        $redis = Redis::connection('default');
+        $redis = new RedisService();
         $lock=RedisLock::lock($redis,'goodRefund');
         if($lock){
             $return=DB::transaction(function ()use($request,$id){
