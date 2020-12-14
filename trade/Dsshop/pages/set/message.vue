@@ -9,7 +9,8 @@
 					</view>
 				</view>
 				<view class="action">
-					<switch class='red' data-type="email" @change="setNotification" :class="user.notification.email?'checked':''" :checked="user.notification.email?true:false" color="#e54d42"></switch>
+					<switch v-if="user.email" class='red' data-type="email" @change="setNotification" :class="user.notification.email?'checked':''" :checked="user.notification.email?true:false" color="#e54d42"></switch>
+					<switch v-else class='red' @click="setNotification" data-type="email" :disabled="true" ></switch>
 				</view>
 			</view>
 		</view>
