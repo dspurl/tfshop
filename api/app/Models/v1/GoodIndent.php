@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Models\v1;
-use App\Notifications\InvoicePaid;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;

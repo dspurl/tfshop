@@ -148,7 +148,7 @@
 						window.location.href = res.mweb_url
 					})
 					// #endif
-					// #ifndef H5
+					// #ifdef MP
 					Pay.unifiedPayment({
 						id: this.id,
 						platform: this.payType,

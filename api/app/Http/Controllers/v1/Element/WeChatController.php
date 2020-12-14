@@ -16,14 +16,12 @@ use App\Models\v1\SmsLog;
 use App\Models\v1\User;
 use App\Models\v1\UserLog;
 use App\Notifications\Common;
-use App\Notifications\InvoicePaid;
 use Carbon\Carbon;
 use EasyWeChat\Factory;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Webpatser\Uuid\Uuid;
@@ -290,12 +288,6 @@ class WeChatController  extends Controller
      * @return string
      */
     public function verifyEmail(Request $request){
-        $invoice=[
-            'prefers'=>['mail']
-        ];
-        $user = User::find(auth('web')->user()->id);
-        $user->notify(new InvoicePaid($invoice));
-        exit;
         if(!$request->email){
             return resReturn(0,'邮箱不能为空',Code::CODE_WRONG);
         }
@@ -406,7 +398,7 @@ class WeChatController  extends Controller
                 'user_id'=>auth('web')->user()->id    //用户ID
             ]);
             if($Common['result']== 'ok'){
-                return array(1,'发货成功');
+                return array(1,'支付成功');
             }else{
                 return array($Common['msg'],Code::CODE_PARAMETER_WRONG);
             }
