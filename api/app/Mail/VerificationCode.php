@@ -30,7 +30,6 @@ class VerificationCode extends Mailable
      */
     public function build()
     {
-//        Mail::to('383354826@qq.com')->send(new VerificationCode());
         return $this->view('emails.verification_code')
             ->with([
                 'appName' => config('app.name'),

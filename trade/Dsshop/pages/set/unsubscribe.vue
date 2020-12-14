@@ -33,8 +33,11 @@
 				agree:false,
 			};
 		},
+		onShow(){
+			this.loginCheck()
+		},
 		methods:{
-			...mapMutations(['logout']),
+			...mapMutations(['loginCheck']),
 			navTo(url){
 				uni.navigateTo({
 					url

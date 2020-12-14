@@ -55,6 +55,11 @@
 				"navigationBarTitleText": "设置"
 			}
 		}, {
+			"path": "pages/set/message",
+			"style": {
+				"navigationBarTitleText": "通知与提醒"
+			}
+		}, {
 			"path": "pages/set/about",
 			"style": {
 				"navigationBarTitleText": "关于我们"
@@ -70,6 +75,11 @@
 			"path": "pages/userinfo/userinfo",
 			"style": {
 				"navigationBarTitleText": "个人资料"
+			}
+		},{
+			"path": "pages/userinfo/email",
+			"style": {
+				"navigationBarTitleText": "修改邮箱"
 			}
 		}, {
 			"path": "pages/cart/cart",

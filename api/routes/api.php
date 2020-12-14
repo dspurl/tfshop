@@ -148,7 +148,11 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 
         Route::post('findPassword', 'WeChatController@findPassword');    //找回密码
         Route::post('getRegisterCellphoneCode', 'WeChatController@getRegisterCellphoneCode');    //获取手机验证码
+        Route::post('getRegisterEmailCode', 'WeChatController@getRegisterEmailCode');    //获取邮箱验证码
         Route::post('authorizedPhone', 'WeChatController@authorizedPhone');    //授权获取手机号
+        Route::post('verifyEmail', 'WeChatController@verifyEmail');    //邮箱验证
+        Route::post('userNotification', 'UserController@userNotification');    //更新接收通知状态
+
         // 商品
         Route::get('good', 'GoodAppController@index');    //商品列表
         Route::get('good/{photo}', 'GoodAppController@show');    //商品详情

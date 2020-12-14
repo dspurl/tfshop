@@ -66,14 +66,14 @@ class UserController extends Controller
         $lock=RedisLock::lock($redis,'dsShopUser');
         if($lock){
             User::$withoutAppends = false;
-            $User=User::select('cellphone','nickname','portrait','money','uuid')->find(auth('web')->user()->id);
-            RedisLock::unlock($redis,'dsShopUser');
+            $User=User::select('cellphone','nickname','portrait','money','uuid','email','notification')->find(auth('web')->user()->id);
             // 做uuid兼容
             if(!$User->uuid){
                 $uuid=(string) Uuid::generate();
                 User::where('id',auth('web')->user()->id)->update(['uuid' =>$uuid]);
                 $User->uuid = $uuid;
             }
+            RedisLock::unlock($redis,'dsShopUser');
             return resReturn(1,$User);
         }else{
             return resReturn(0,'业务繁忙，请稍后再试',Code::CODE_SYSTEM_BUSY);
@@ -94,5 +94,20 @@ class UserController extends Controller
         }
         User::where('id',auth('web')->user()->id)->update(['unsubscribe'=>User::USER_UNSUBSCRIBE_YES]);
         return resReturn(1,'注销成功');
+    }
+
+    /**
+     * 更新接收通知状态
+     * @param Request $request
+     * @return string
+     */
+    public function userNotification(Request $request){
+        if(!$request->notification){
+            return resReturn(0,'参数有误',Code::CODE_MISUSE);
+        }
+        $User=User::find(auth('web')->user()->id);
+        $User->notification=$request->notification;
+        $User->save();
+        return resReturn(1,'操作成功');
     }
 }

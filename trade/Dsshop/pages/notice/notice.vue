@@ -49,6 +49,9 @@
 <script>
 	import Notification from '../../api/notification'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
+	import {
+	    mapMutations  
+	} from 'vuex';
 	export default {
 		components: {
 			uniLoadMore
@@ -63,7 +66,11 @@
 		onLoad: function(options) {
 			this.loadData()
 		},
+		onShow(){
+			this.loginCheck()
+		},
 		methods: {
+			...mapMutations(['loginCheck']),
 			//获取列表
 			loadData(type){
 				const that = this

@@ -33,6 +33,8 @@ class User extends Authenticatable implements HasLocalePreference
     const USER_STATE_FORBID= 2; //状态：禁止访问
     const USER_UNSUBSCRIBE_YES= 1; //注销状态：1是
     const USER_UNSUBSCRIBE_NO= 0; //注销状态：0否
+    const USER_NOTIFICATION_EMAIL='email';  //通知类型：邮件
+    const USER_NOTIFICATION_WECHAT='wechat';  //通知类型：微信公众号模板消息
     protected $appends = ['gender_show','state_show'];
     public static $withoutAppends = true;
 
@@ -75,6 +77,27 @@ class User extends Authenticatable implements HasLocalePreference
                 return '禁止访问';
             }
         }
+    }
+
+    public  function getNotificationAttribute(){
+        if(self::$withoutAppends){
+            $return= $this->attributes['notification'];
+        }else{
+            if($this->attributes['notification']){
+                $return= json_decode($this->attributes['notification']);
+            }else{
+                $return=[
+                    static::USER_NOTIFICATION_EMAIL=>false,
+                    static::USER_NOTIFICATION_WECHAT=>false,
+                ];
+            }
+        }
+        return $return;
+    }
+
+    public function setNotificationAttribute($value)
+    {
+        $this->attributes['notification'] =json_encode($value);
     }
 
     /**

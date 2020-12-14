@@ -1,38 +1,61 @@
 <template>
 	<view class="container">
-		<view class="bg-white text-center padding">
-			<image style="width: 300upx;height: 300upx;" src="/static/logo.png" lazy-load></image>
-		</view>
-		<view class="list-cell solid-top" @click="navTo('/pages/article/details?list=0&id=2')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">用户协议</text>
-			<text class="cell-more yticon icon-you"></text>
-		</view>
-		<view class="list-cell solid-top" @click="navTo('/pages/article/details?list=0&id=1')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">隐私政策</text>
-			<text class="cell-more yticon icon-you"></text>
+		<view class="cu-list menu" v-if="user.notification">
+			<view class="cu-item">
+				<view class="content padding-tb-sm">
+					<view>邮件通知</view>
+					<view class="text-gray text-sm">
+						在邮箱上接收通知等重要消息
+					</view>
+				</view>
+				<view class="action">
+					<switch class='red' data-type="email" @change="setNotification" :class="user.notification.email?'checked':''" :checked="user.notification.email?true:false" color="#e54d42"></switch>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import User from '../../api/user';
 	import {  
 	    mapMutations  
 	} from 'vuex';
 	export default {
 		data() {
 			return {
-				
+				user: {}
 			};
 		},
 		onShow(){
 			this.loginCheck()
+			this.getUser()
 		},
 		methods:{
 			...mapMutations(['loginCheck']),
-			navTo(url){
-				uni.navigateTo({
-					url
-				})  
+			getUser(){
+				const that = this
+				User.user(function(res){
+					that.user = res
+				})
+			},
+			// 设置通知状态
+			setNotification(e){
+				const type = e.currentTarget.dataset.type
+				if(type === 'email'){
+					if(!this.user.email){
+						this.$api.msg(`请先绑定邮箱`)
+						setTimeout(()=>{
+							uni.navigateTo({
+							    url: '/pages/userinfo/email'
+							})
+						}, 1000)
+						return false
+					}
+				}
+				this.user.notification[type] = e.detail.value
+				// 更新通知状态
+				User.setNotification(this.user,function(res){})
 			}
 		}
 	}

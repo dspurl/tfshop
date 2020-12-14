@@ -22,6 +22,17 @@ export default {
 			})
 		})
 	},
+	toVerifyEmail(data, success, fail) {
+		Network.setPostMessage('verifyEmail', data, '处理中', function(res) {
+			success(res)
+		}, function(res) {
+			uni.showToast({
+				title: res.message,
+				icon: 'none',
+				duration: 2000
+			})
+		})
+	},
 	findPassword(data, success, fail) {
 		Network.setPostMessage('findPassword', data, '处理中', function(res) {
 			success(res)
@@ -55,6 +66,17 @@ export default {
 			})
 		})
 	},
+	getRegisterEmailCode(data, success, fail) {
+		Network.setPostMessage('getRegisterEmailCode', data, '处理中', function(res) {
+			success(res)
+		}, function(res) {
+			uni.showToast({
+				title: res.message,
+				icon: 'none',
+				duration: 2000
+			})
+		})
+	},
 	logout(data, success, fail) {
 		Network.setPostMessage('logout', {}, '退出中', function(res) {
 			success(res)
@@ -79,6 +101,17 @@ export default {
 	},
 	setUser(data,success, fail) {
 		Network.setPost('user', data, function(res) {
+			success(res)
+		}, function(res) {
+			uni.showToast({
+				title: res.message,
+				icon: 'none',
+				duration: 2000
+			})
+		})
+	},
+	setNotification(data,success, fail) {
+		Network.setPost('userNotification', data, function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({

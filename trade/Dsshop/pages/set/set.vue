@@ -4,6 +4,10 @@
 			<text class="cell-tit">个人资料</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
+		<view class="list-cell b-b" @click="navTo('/pages/set/message')" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">通知与提醒</text>
+			<text class="cell-more yticon icon-you"></text>
+		</view>
 		<view class="list-cell b-b" @click="clearCache()" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">清除缓存</text>
 			<text class="cell-more yticon icon-you"></text>
@@ -38,8 +42,11 @@
 				notification: false
 			};
 		},
+		onShow(){
+			this.loginCheck()
+		},
 		methods:{
-			...mapMutations(['logout']),
+			...mapMutations(['logout','loginCheck']),
 			//检测版本
 			testVersion(){
 				this.$api.msg('已经最新了')

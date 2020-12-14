@@ -68,6 +68,9 @@
 	import {
 	  authMsg
 	} from '../../utils'
+	import {
+	    mapMutations  
+	} from 'vuex';
 	export default {
 		data() {
 			return {
@@ -93,10 +96,12 @@
 				return false
 			}
 			this.id = options.id
+			this.loginCheck()
 			this.getList()
 		},
 
 		methods: {
+			...mapMutations(['loginCheck']),
 			getList(){
 				const that = this
 				Indents.getPay(this.id,function(res){

@@ -18,7 +18,7 @@ return [
     */
 
     'homestead' => env('HOMESTEAD_WINDOWS', false),
-    'failuretime'=> time()+5*60, // 失效时间
+    'failuretime'=> env('DSWJCMS_FAILURE_TIME', 60), // 失效时间秒，默认60秒
     'versions'=> env('API_VERSIONS',1),   //当前版本
     'applySecret'=> env('APP_KEY', ''), //API密钥串
 ];

@@ -40,6 +40,13 @@
 				{{user.cellphone}}
 			</view>
 		</view>
+		<view class="list-cell b-b" @click="navTo('/pages/userinfo/email?email='+(user.email ? user.email : ''))" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">邮箱</text>
+			<view class="action">
+				{{user.email}}
+			</view>
+			<text class="cell-more yticon icon-you"></text>
+		</view>
 	</view>
 </template>
 
@@ -53,7 +60,7 @@
 				modalName: null,
 			};
 		},
-		onLoad(){
+		onShow(){
 			this.loginCheck()
 			this.getUser()
 		},
@@ -99,6 +106,11 @@
 						})
 					}
 				});
+			},
+			navTo(url){
+				uni.navigateTo({
+					url
+				})  
 			},
 			setUser(type){
 				const that = this
