@@ -3,7 +3,6 @@
 namespace App\Http\Middleware;
 
 use App\Code;
-use App\Models\v1\User;
 use Closure;
 
 class AppVerify
@@ -17,7 +16,6 @@ class AppVerify
      */
     public function handle($request, Closure $next)
     {
-        User::$withoutAppends = false;
         if(!$request->header('apply-secret')){
             return resReturn(0,'非法apply-secret',Code::CODE_INEXISTENCE);
         }

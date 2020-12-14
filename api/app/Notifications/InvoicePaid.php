@@ -38,12 +38,15 @@ class InvoicePaid extends Notification
     {
         if(array_key_exists("prefers",$this->invoice)){ //多种通知方式
             $return = [];
+            $notification = json_decode($notifiable->notification);
             foreach ($this->invoice['prefers'] as $prefers){
                 switch ($prefers){
                     case 'mail':
                         //配置了邮箱&用户验证了邮箱&用户开启了邮件通知
-                        if($notifiable->email && config('mail.username') && $notifiable->notification->email){
-                            $return[]=$prefers;
+                        if($notification !=null){
+                            if($notifiable->email && config('mail.username') && $notification->email){
+                                $return[]=$prefers;
+                            }
                         }
                         break;
                     case 'database':
