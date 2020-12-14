@@ -1,6 +1,6 @@
 INSERT INTO `admins` (`id`, `state`, `name`, `email`, `cellphone`, `password`, `portrait`, `time`, `created_at`, `updated_at`, `last_login_at`) VALUES
-(1, 1, 'admin', 'admin@gmail.com', '13333333333', '$2y$10$nxcmBpwq2/0d4QKom9ZevuxmJlZ4dBi12Uyn2V65e2rBtnXYq49.q', 'https://dssaas.dswjcms.com/storage/image/portrait/IC3io1562981785.jpg', '2020-08-01 08:00:00', '2020-08-01 20:56:32', '2020-08-01 23:41:30', '2020-08-01 23:41:30'),
-(2, 1, 'abcd12345', 'abcd12345@123.com', '13333333334', '$2y$10$jEUYHRTGofk5h3ZuS.BiCewYU3/zLxBuMtS8.Qchu2l2RMd6BT5h2', 'https://dssaas.dswjcms.com/storage/image/portrait/IaOyF1562983431.jpg', '2020-08-01 18:10:37', '2020-08-01 18:10:37', '2020-08-01 10:23:05', '2020-08-01 18:10:37');
+(1, 1, 'admin', 'admin@gmail.com', '13333333333', '$2y$10$nxcmBpwq2/0d4QKom9ZevuxmJlZ4dBi12Uyn2V65e2rBtnXYq49.q', 'https://dsshop.dswjcms.com/storage/image/portrait/4dq8h1607946382.png', '2020-08-01 08:00:00', '2020-08-01 20:56:32', '2020-08-01 23:41:30', '2020-08-01 23:41:30'),
+(2, 1, 'abcd12345', 'abcd12345@123.com', '13333333334', '$2y$10$jEUYHRTGofk5h3ZuS.BiCewYU3/zLxBuMtS8.Qchu2l2RMd6BT5h2', 'https://dsshop.dswjcms.com/storage/image/portrait/4dq8h1607946382.png', '2020-08-01 18:10:37', '2020-08-01 18:10:37', '2020-08-01 10:23:05', '2020-08-01 18:10:37');
 INSERT INTO `admin_auth_group` (`admin_id`, `auth_group_id`) VALUES
 (1, 1),
 (2, 2);
