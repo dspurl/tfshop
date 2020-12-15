@@ -90,7 +90,7 @@
 						清空
 					</view>
 				</view>
-				<view class="total-box">
+				<view class="total-box" v-if="total>0">
 					<text class="price">¥{{total}}</text>
 					<text class="coupon">
 						不包含配送费
@@ -285,7 +285,8 @@
 					success: (e)=>{
 						if(e.confirm){
 							this.cartList = [];
-							 uni.removeStorageSync('dsshopCartList')
+							this.total = 0;
+							uni.removeStorageSync('dsshopCartList')
 						}
 					}
 				})
