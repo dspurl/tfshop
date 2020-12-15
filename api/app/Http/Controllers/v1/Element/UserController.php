@@ -66,7 +66,7 @@ class UserController extends Controller
         $lock=RedisLock::lock($redis,'dsShopUser');
         if($lock){
             User::$withoutAppends = false;
-            $User=User::select('cellphone','nickname','portrait','money','uuid','email','notification')->find(auth('web')->user()->id);
+            $User=User::select('cellphone','nickname','portrait','money','uuid','email','notification','wechat')->find(auth('web')->user()->id);
             // 做uuid兼容
             if(!$User->uuid){
                 $uuid=(string) Uuid::generate();

@@ -137,6 +137,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     });
     //app
     Route::prefix('app')->namespace('Element')->group(function () {
+        Route::any('/serve', 'WeChatController@serve');    //微信认证
         Route::any('paymentNotify', 'WeChatController@paymentNotify');    //微信支付回调
         Route::any('refundNotify', 'WeChatController@refundNotify');    //微信退款回调
     });

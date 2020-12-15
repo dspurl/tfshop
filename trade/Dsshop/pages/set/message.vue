@@ -13,6 +13,18 @@
 					<switch v-else class='red' @click="setNotification" data-type="email" :disabled="true" ></switch>
 				</view>
 			</view>
+			<view class="cu-item">
+				<view class="content padding-tb-sm">
+					<view>微信通知</view>
+					<view class="text-gray text-sm">
+						在微信上接收通知等重要消息
+					</view>
+				</view>
+				<view class="action">
+					<switch v-if="user.wechat" class='red' data-type="wechat" @change="setNotification" :class="user.notification.wechat?'checked':''" :checked="user.notification.wechat?true:false" color="#e54d42"></switch>
+					<switch v-else class='red' @click="setNotification" data-type="wechat" :disabled="true" ></switch>
+				</view>
+			</view>
 		</view>
 	</view>
 </template>
@@ -50,7 +62,17 @@
 							uni.navigateTo({
 							    url: '/pages/userinfo/email'
 							})
-						}, 1000)
+						}, 800)
+						return false
+					}
+				}else if(type === 'wechat'){
+					if(!this.user.wechat){
+						this.$api.msg(`请先关注微信公众号`)
+						setTimeout(()=>{
+							uni.navigateTo({
+							    url: '/pages/public/subscribe'
+							})
+						}, 800)
 						return false
 					}
 				}

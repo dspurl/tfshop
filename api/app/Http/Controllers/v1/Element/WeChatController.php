@@ -16,6 +16,7 @@ use App\Models\v1\SmsLog;
 use App\Models\v1\User;
 use App\Models\v1\UserLog;
 use App\Notifications\Common;
+use App\Services\Entrance;
 use Carbon\Carbon;
 use EasyWeChat\Factory;
 use App\Http\Controllers\Controller;
@@ -34,50 +35,14 @@ class WeChatController  extends Controller
      *
      * @param Request $request
      * @return string
-     * @throws \EasyWeChat\Kernel\Exceptions\BadRequestException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
-     * @throws \ReflectionException
      */
     public function serve(Request $request)
     {
-        if(!$request->has('secret')){
+        if(!$request->has('client')){
             return resReturn(0,'非法操作',Code::CODE_MISUSE);
         }
-        $config = config('wechat.official_account');
-        $app = Factory::miniProgram($config);
-        $app->server->push(function($message){
-            switch ($message['MsgType']) {
-                case 'event':
-                    return '收到事件消息';
-                    break;
-                case 'text':
-                    return '收到文字消息';
-                    break;
-                case 'image':
-                    return '收到图片消息';
-                    break;
-                case 'voice':
-                    return '收到语音消息';
-                    break;
-                case 'video':
-                    return '收到视频消息';
-                    break;
-                case 'location':
-                    return '收到坐标消息';
-                    break;
-                case 'link':
-                    return '收到链接消息';
-                    break;
-                case 'file':
-                    return '收到文件消息';
-                // ... 其它消息
-                default:
-                    return '收到其它消息';
-                    break;
-            }
-        });
-        return $app->server->serve();
+       $Entrance=(new Entrance($request->client))->informationDistribution();
+        return $Entrance;
     }
 
     //注册
