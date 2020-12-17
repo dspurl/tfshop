@@ -79,7 +79,7 @@
 				</block>
 			</view>
 			<!-- 底部菜单栏 -->
-			<view class="action-section">
+			<view class="action-section" v-if="total>0">
 				<view class="checkbox">
 					<image 
 						:src="allChecked?'/static/selected.png':'/static/select.png'" 
@@ -285,7 +285,9 @@
 					success: (e)=>{
 						if(e.confirm){
 							this.cartList = [];
-							 uni.removeStorageSync('dsshopCartList')
+							this.total = 0;
+							this.empty = true;
+							uni.removeStorageSync('dsshopCartList')
 						}
 					}
 				})
