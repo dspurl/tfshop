@@ -3,18 +3,23 @@
     <div class="tip">
       <p>部分Redis会存在删除不了的问题，可忽略！</p>
     </div>
-    <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-      <el-form-item label="redis类型">
-        <el-select v-model="listQuery.type" placeholder="类型" clearable>
-          <el-option label="默认" value="1"/>
-          <el-option label="数据库" value="2"/>
-          <el-option label="队列" value="3"/>
-        </el-select>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="handleFilter">搜索</el-button>
-      </el-form-item>
-    </el-form>
+    <div class="filter-container">
+      <el-form :inline="true" :model="listQuery" class="demo-form-inline">
+        <el-form-item label="Redis站点">
+          <el-select v-model="listQuery.site" placeholder="站点" clearable>
+            <el-option v-for="item in site" :key="item.value" :label="item.name" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="数据类型">
+          <el-select v-model="listQuery.type" placeholder="类型" clearable>
+            <el-option v-for="item in type" :key="item.value" :label="item.name" :value="item.value"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleFilter">搜索</el-button>
+        </el-form-item>
+      </el-form>
+    </div>
     <el-table
       v-loading="listLoading"
       ref="multipleTable"
@@ -42,7 +47,7 @@
       </el-table-column>
       <el-table-column label="大小" align="center" width="200px;">
         <template slot-scope="scope">
-          <span>{{ scope.row.size }}KB</span>
+          <span>{{ scope.row.size }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" width="160" fixed="right">
@@ -177,7 +182,47 @@ export default {
         contents: [
           { required: true, message: '请输入场景用例', trigger: 'blur' }
         ]
-      }
+      },
+      site: [
+        {
+          name: 'default',
+          value: 1
+        },
+        {
+          name: 'cache',
+          value: 2
+        },
+        {
+          name: 'queue',
+          value: 3
+        }
+      ],
+      type: [
+        {
+          name: 'string',
+          value: 1
+        },
+        {
+          name: 'set',
+          value: 2
+        },
+        {
+          name: 'list',
+          value: 3
+        },
+        {
+          name: 'zset',
+          value: 4
+        },
+        {
+          name: 'hash',
+          value: 5
+        },
+        {
+          name: 'other',
+          value: 6
+        }
+      ]
     }
   },
   created() {

@@ -389,8 +389,9 @@ class GoodController extends Controller
                 }
                 $Good->order_price = $order_price;
                 $Good->save();
-                /*//删除去除的SKU
-                GoodSku::where('good_id',$Good->id)->whereNotIn('id',$GoodSkuAll)->delete();
+                //删除去除的SKU
+                GoodSku::where('good_id',$Good->id)->whereNotIn('id',$GoodSkuAll)->where('is_delete',GoodSku::GOOD_SKU_DELETE_NO)->update(['is_delete'=>GoodSku::GOOD_SKU_DELETE_YES]);
+                /*
                 //删除去除的资源
                 $ResourceDelete=Resource::where('image_type','App\Models\v1\GoodSku')->where('depict','not like','%_zimg')->whereNotIn('id',$ResourceAll)->get();
                 if($ResourceDelete){
@@ -425,7 +426,7 @@ class GoodController extends Controller
         $return['goods']= [];
         if($id){
             $Good=Good::with(['resourcesMany','goodSpecificationOld','brand','goodSku'=>function($q){
-                $q->with('resources');
+                $q->where('is_delete',GoodSku::GOOD_SKU_DELETE_NO)->with('resources');
             }])->find($id);
             if($Good->goodSku){
                 foreach ($Good->goodSku as $id =>$goodSku){

@@ -126,17 +126,25 @@ class GoodIndentController extends Controller
         foreach ($request->all() as $id=> $all){
             if($all['good_sku_id']){ //sku商品
                 $GoodSku=GoodSku::find($all['good_sku_id']);
-                if($GoodSku->inventory<$all['number']){ //库存不足时
+                if($GoodSku->is_delete == GoodSku::GOOD_SKU_DELETE_YES){
                     $return[$id]['invalid']= true;  //标记为失效
                 }else{
-                    $return[$id]['invalid']= false;
+                    if($GoodSku->inventory<$all['number']){ //库存不足时
+                        $return[$id]['invalid']= true;  //标记为失效
+                    }else{
+                        $return[$id]['invalid']= false;
+                    }
                 }
             }else{
                 $Good=Good::find($all['good_id']);
-                if($Good->inventory<$all['number']){
+                if($Good->is_delete == Good::GOOD_DELETE_YES){
                     $return[$id]['invalid']= true;  //标记为失效
-                }else{
-                    $return[$id]['invalid']= false;
+                }else {
+                    if($Good->inventory<$all['number']){
+                        $return[$id]['invalid']= true;  //标记为失效
+                    }else{
+                        $return[$id]['invalid']= false;
+                    }
                 }
             }
         }

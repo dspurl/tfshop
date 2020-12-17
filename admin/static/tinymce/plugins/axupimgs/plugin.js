@@ -4,6 +4,9 @@ tinymce.PluginManager.add('axupimgs', function(editor, url) {
 
 	//var baseURL=tinymce.baseURL;
 	var baseURL='../../../static/tinymce';
+	if( process.env.ENV_CONFIG === 'prod'){
+		baseURL='./static/tinymce'
+	}
 	var iframe1 = baseURL+'/plugins/axupimgs/upfiles.html';
     axupimgs.images_upload_handler = editor.getParam('images_upload_handler', undefined, 'function');
     axupimgs.images_upload_base_path = editor.getParam('images_upload_base_path', '', 'string');
