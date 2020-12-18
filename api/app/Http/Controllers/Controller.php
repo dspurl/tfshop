@@ -86,6 +86,10 @@ class Controller extends BaseController
         }
         //生成文件名
         $extension = $file->getClientOriginalExtension();
+        if($extension==""){//前端批量上传组件在拖动改变图片排序后, 扩展名会为空, 这里修补一下
+            $extension = $request->file->extension();
+            if($extension=='jpeg') $extension='jpg';
+        }
         $randFileName = str_random(5). time();
         $fileName       = $randFileName . '.' . $extension;
 
