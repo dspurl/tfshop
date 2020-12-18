@@ -14,7 +14,7 @@ class RedisLock
 {
     const IF_NOT_EXISTS = 'NX';
     const MILLISECOND_EXPIRE_TIME = 'PX';
-    const EXPIRE_TIME = 20000;
+    const EXPIRE_TIME = 5;
     const LOCK_VALUE = 5;
 
     /**

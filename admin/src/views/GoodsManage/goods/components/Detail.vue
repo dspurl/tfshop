@@ -417,7 +417,7 @@ export default {
               type: 'success',
               duration: 2000
             })
-            setTimeout(this.$router.back(-1), 2000)
+            setTimeout(this.$router.push({ path: '/goodsManage/product/productList?page=' + this.$route.query.page + '&activeIndex=' + this.$route.query.activeIndex }), 2000)
           })
         }
       })
