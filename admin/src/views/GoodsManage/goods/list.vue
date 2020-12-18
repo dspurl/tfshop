@@ -104,7 +104,7 @@
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" width="250" fixed="right">
         <template slot-scope="scope">
-          <router-link v-permission="$store.jurisdiction.EditProduct" :to="{ path: 'EditProduct', query: { id: scope.row.id }}">
+          <router-link v-permission="$store.jurisdiction.EditProduct" :to="{ path: 'EditProduct', query: { id: scope.row.id,page:listQuery.page,activeIndex:listQuery.activeIndex }}">
             <el-button type="primary" size="mini">编辑</el-button>
           </router-link>
           <el-button v-permission="$store.jurisdiction.EditProduct" v-if="scope.row.is_show !== 1" type="success" size="mini" @click="handleState(scope.row)">立即发布</el-button>
@@ -217,10 +217,10 @@ export default {
       dialogStatus: '',
       dialogFormVisible: false,
       listQuery: {
-        page: 1,
         limit: 10,
+        page: this.$route.query.page ? Number(this.$route.query.page) : 1,
         sort: '+id',
-        activeIndex: '1'
+        activeIndex: this.$route.query.activeIndex ? this.$route.query.activeIndex : '1'
       },
       temp: {},
       rules: {
