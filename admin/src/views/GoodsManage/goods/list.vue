@@ -217,9 +217,10 @@ export default {
       dialogStatus: '',
       dialogFormVisible: false,
       listQuery: {
+        limit: 10,
         page: this.$route.query.page ? Number(this.$route.query.page) : 1,
         sort: '+id',
-        activeIndex: this.$route.query.activeIndex ? this.$route.query.activeIndex : '1',
+        activeIndex: this.$route.query.activeIndex ? this.$route.query.activeIndex : '1'
       },
       temp: {},
       rules: {
