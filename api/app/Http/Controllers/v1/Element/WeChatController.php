@@ -358,8 +358,10 @@ class WeChatController  extends Controller
             $Common=(new Common)->finishPayment([
                 'money_id'=>$Money->id,  //资金记录ID
                 'identification'=>$GoodIndent->identification,  //订单号
+                'name'=> $GoodIndent->goodsList[0].(count($GoodIndent->goodsList)>1 ? '等多件': ''),    //商品名称
                 'total'=>$GoodIndent->total,    //订单金额
                 'type'=> '余额支付',
+                'time'=>$GoodIndent->pay_time,  //下单时间(付款时间)
                 'user_id'=>auth('web')->user()->id    //用户ID
             ]);
             if($Common['result']== 'ok'){

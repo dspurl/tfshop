@@ -62,7 +62,12 @@ class InvoicePaid extends Notification
                         $return[]=MiNiWeiXinChannel::class;
                         break;
                     case 'wechat': //微信公众平台
-                        $return[]=WechatChannel::class;
+                        //配置了微信公众平台&用户验证了微信公众平台&用户开启了微信公众平台通知
+                        if($notification !=null){
+                            if($notifiable->wechat && config('wechat.official_account.token') && $notification->wechat){
+                                $return[]=WechatChannel::class;
+                            }
+                        }
                         break;
                 }
             }
@@ -109,6 +114,17 @@ class InvoicePaid extends Notification
      * @return string
      */
     public function MiNiWeiXin($notifiable)
+    {
+        return $this->invoice;
+    }
+
+    /**
+     * 获取微信公众号的通知。
+     *
+     * @param  mixed  $notifiable
+     * @return string
+     */
+    public function Wechat($notifiable)
     {
         return $this->invoice;
     }

@@ -89,7 +89,7 @@ class IndentController extends Controller
     // 发货
     public function shipment(Request $request){
         $return=DB::transaction(function ()use($request){
-            $GoodIndent=GoodIndent::with(['User'])->find($request->id);
+            $GoodIndent=GoodIndent::with(['User','GoodLocation'])->find($request->id);
             $GoodIndent->dhl_id = $request->dhl_id;
             $GoodIndent->odd = $request->odd;
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_TAKE;
@@ -102,6 +102,8 @@ class IndentController extends Controller
                 'dhl'=>$Dhl->name,  //快递公司
                 'odd'=>$request->odd,   // 快递单号
                 'total'=>$GoodIndent->total,    //订单金额
+                'shipping_time'=>$GoodIndent->shipping_time,    //发货时间
+                'location'=>$GoodIndent->GoodLocation,    //收货地址
                 'user_id'=>$GoodIndent->User->id    //用户ID
             ]);
             if($Common['result']== 'ok'){

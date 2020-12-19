@@ -129,14 +129,6 @@ return [
     //          //...
     //      ],
     // ],
-
-    /**
-     * 模板信息
-     */
-    'subscription_information'=>[
-        'delivery_release'=>env('WECHAT_SUBSCRIPTION_INFORMATION_SHIPMENTS',''),  //发货通知
-    ],
-
     /**
      * 访问来源 key 对应关系
      */

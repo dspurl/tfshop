@@ -106,6 +106,7 @@ class Common
             ],
             'price'=>$parameter['total'],
             'url'=>'/pages/finance/bill_show?id='.$parameter['money_id'],
+            'parameter'=>$parameter,
             'prefers'=>['database','mail']
         ];
         $user = User::find($parameter['user_id']);
@@ -139,6 +140,7 @@ class Common
             ],
             'price'=>$parameter['total'],
             'url'=>'/pages/finance/bill_show?id='.$parameter['money_id'],
+            'parameter'=>$parameter,
             'prefers'=>['database','mail']
         ];
         $user = User::find($parameter['user_id']);
@@ -176,6 +178,7 @@ class Common
                 ]
             ],
             'remark'=>'您第一次授权登录我们平台，我们将为您生成初始密码，请妥善保管',
+            'parameter'=>$parameter,
             'prefers'=>['database']
         ];
         $user = User::find($parameter['user_id']);

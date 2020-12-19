@@ -1,6 +1,6 @@
 <?php
 /**
- * 短信
+ * 微信小程序模板消息
  */
 
 namespace App\Channels;
@@ -18,7 +18,7 @@ class MiNiWeiXinChannel
     {
         $this->config = config('wechat.mini_program.default');
         $this->app = Factory::miniProgram($this->config);
-        $this->information = config('wechat.subscription_information');
+        $this->information = config('notification.miniweixin');
     }
     /**
      * 发送指定的通知.
@@ -30,8 +30,8 @@ class MiNiWeiXinChannel
     public function send($notifiable, Notification $notification)
     {
         $message = $notification->MiNiWeiXin($notifiable);
-        //配置了微信小程序、miniweixin存在值、配置过模板ID、配置过附加参数
-        if($this->config['app_id'] && $notifiable->miniweixin &&  $message['identification'] && $message['parameter']){
+        //配置了微信小程序、miniweixin存在值、配置过模板ID
+        if($this->config['app_id'] && $notifiable->miniweixin){
             if($this->information[$message['identification']]){
                 $identification=convertUnderline($message['identification']);
                 $this->$identification($notifiable,$message);
