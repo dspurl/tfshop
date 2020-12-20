@@ -5,7 +5,7 @@
 		<view class="guidance-my" v-if="guidanceMy">
 			<view class="triangle-top"></view>
 			<view @click="popupBoot()" class="bg-black padding-sm margin-top flex">
-				<view><span @tap="setGuidanceMy" class="icon cuIcon-close text-gray"></span></view>
+				<view><span @click.stop="setGuidanceMy" class="icon cuIcon-close text-gray"></span></view>
 				<view class="flex-twice text-center">添加到我的小程序，<span class="text-bold">红包、优惠券不错过</span></view>
 				<view><span class="icon cuIcon-right text-gray"></span></view>
 			</view>
