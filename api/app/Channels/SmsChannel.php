@@ -18,7 +18,7 @@ class SmsChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        $message = $notification->toSms($notifiable);
+        $message = $notification->invoice['parameter'];
         $Config = config('sms');
         //判断短信账号是否配置
         if($Config[$Config['service']]['access_id']){

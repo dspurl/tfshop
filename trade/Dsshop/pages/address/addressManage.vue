@@ -77,37 +77,65 @@
 			chooseLocation(){
 				const that = this
 				// #ifndef MP-WEIXIN
-				uni.chooseLocation({
-					latitude: that.addressData.latitude,
-					longitude: that.addressData.longitude,
-					success: (data)=> {
-						that.addressData.location = data.name
-						that.addressData.address = data.address
-						that.addressData.latitude = data.latitude
-						that.addressData.longitude = data.longitude
-					},
-					fail: (res)=>{
-						// this.$api.msg(res.errMsg)
-					}
-				})
+				if(that.addressData.latitude){
+					uni.chooseLocation({
+						latitude: that.addressData.latitude,
+						longitude: that.addressData.longitude,
+						success: (data)=> {
+							that.addressData.location = data.name
+							that.addressData.address = data.address
+							that.addressData.latitude = data.latitude
+							that.addressData.longitude = data.longitude
+						},
+						fail: (res)=>{
+							// this.$api.msg(res.errMsg)
+						}
+					})
+				}else{
+					uni.chooseLocation({
+						success: (data)=> {
+							that.addressData.location = data.name
+							that.addressData.address = data.address
+							that.addressData.latitude = data.latitude
+							that.addressData.longitude = data.longitude
+						},
+						fail: (res)=>{
+							// this.$api.msg(res.errMsg)
+						}
+					})
+				}
 				// #endif
 				// #ifdef MP-WEIXIN
 				uni.authorize({
 				    scope: 'scope.userLocation',
 				    success() {
-				        uni.chooseLocation({
-							latitude: that.addressData.latitude,
-							longitude: that.addressData.longitude,
-				        	success: (data)=> {
-				        		that.addressData.location = data.name
-				        		that.addressData.address = data.address
-				        		that.addressData.latitude = data.latitude
-				        		that.addressData.longitude = data.longitude
-				        	},
-				        	fail: (res)=>{
-				        		// that.$api.msg(res.errMsg)
-				        	}
-				        })
+						if(that.addressData.latitude){
+							uni.chooseLocation({
+								latitude: that.addressData.latitude,
+								longitude: that.addressData.longitude,
+								success: (data)=> {
+									that.addressData.location = data.name
+									that.addressData.address = data.address
+									that.addressData.latitude = data.latitude
+									that.addressData.longitude = data.longitude
+								},
+								fail: (res)=>{
+									// that.$api.msg(res.errMsg)
+								}
+							})
+						}else{
+							uni.chooseLocation({
+								success: (data)=> {
+									that.addressData.location = data.name
+									that.addressData.address = data.address
+									that.addressData.latitude = data.latitude
+									that.addressData.longitude = data.longitude
+								},
+								fail: (res)=>{
+									// that.$api.msg(res.errMsg)
+								}
+							})
+						}
 				    }
 				})
 				// #endif
@@ -140,7 +168,7 @@
 						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
 						setTimeout(()=>{
 							uni.navigateBack()
-						}, 800)
+						}, 1000)
 					})
 				}else{
 					Address.createSubmit(data,function(res){
@@ -148,7 +176,7 @@
 						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
 						setTimeout(()=>{
 							uni.navigateBack()
-						}, 800)
+						}, 1000)
 					})
 				}
 			},

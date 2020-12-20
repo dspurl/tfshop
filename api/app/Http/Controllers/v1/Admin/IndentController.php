@@ -104,6 +104,7 @@ class IndentController extends Controller
                 'total'=>$GoodIndent->total,    //订单金额
                 'shipping_time'=>$GoodIndent->shipping_time,    //发货时间
                 'location'=>$GoodIndent->GoodLocation,    //收货地址
+                'template'=>'delivery_release',   //通知模板标识
                 'user_id'=>$GoodIndent->User->id    //用户ID
             ]);
             if($Common['result']== 'ok'){
@@ -158,6 +159,8 @@ class IndentController extends Controller
                         'identification'=>$GoodIndent->identification,  //订单号
                         'total'=>$request->refund_money*100,    //退款金额
                         'type'=>'退到余额', //退款方式
+                        'refund_reason'=>$GoodIndent->refund_reason,    //退款理由
+                        'template'=>'refund_success',   //通知模板标识
                         'user_id'=>$GoodIndent->user_id   //用户ID
                     ]);
                 }else if($request->refund_way == GoodIndent::GOOD_INDENT_REFUND_WAY_BACK){

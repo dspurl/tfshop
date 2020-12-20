@@ -29,11 +29,11 @@ class MiNiWeiXinChannel
      */
     public function send($notifiable, Notification $notification)
     {
-        $message = $notification->MiNiWeiXin($notifiable);
+        $message = $notification->invoice['parameter'];
         //配置了微信小程序、miniweixin存在值、配置过模板ID
         if($this->config['app_id'] && $notifiable->miniweixin){
-            if($this->information[$message['identification']]){
-                $identification=convertUnderline($message['identification']);
+            if($this->information[$message['template']]){
+                $identification=convertUnderline($message['template']);
                 $this->$identification($notifiable,$message);
             }
         }
@@ -49,31 +49,31 @@ class MiNiWeiXinChannel
      */
     protected function deliveryRelease($notifiable,$message){
         $data = [
-            'template_id' => $this->information[$message['identification']],
+            'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->miniweixin,
-            'page' => 'pages/order/showOrder?id=' . $message['parameter']['id'],
+            'page' => 'pages/order/showOrder?id=' . $message['id'],
             'data' => [
                 'character_string1' => [
-                    'value' => $message['parameter']['identification'],
+                    'value' => $message['identification'],
                 ],
                 'thing3' => [
-                    'value' => $message['parameter']['dhl'],
+                    'value' => $message['dhl'],
                 ],
                 'character_string4' => [
-                    'value' => $message['parameter']['odd'],
+                    'value' => $message['odd'],
                 ],
                 'amount9' => [
-                    'value' => $message['parameter']['total'] / 100,
+                    'value' => $message['total'] / 100,
                 ],
                 'date6' => [
-                    'value' => Carbon::now()->toDateTimeString(),
+                    'value' => $message['shipping_time'],
                 ]
             ],
         ];
         //发送记录
         $send=$this->app->subscribe_message->send($data);
         $NotificationLog =new NotificationLog();
-        $NotificationLog->user_id = $message['parameter']['user_id'];
+        $NotificationLog->user_id = $message['user_id'];
         $NotificationLog->type = NotificationLog::NOTIFICATION_LOG_TYPE_MINIWEIXIN;
         $NotificationLog->msg = json_encode($data);
         $NotificationLog->feedback = json_encode($send);

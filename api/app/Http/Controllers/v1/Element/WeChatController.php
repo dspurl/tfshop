@@ -356,16 +356,30 @@ class WeChatController  extends Controller
             $Money->remark = '对订单：'.$GoodIndent->identification.'的付款';
             $Money->save();
             $Common=(new Common)->finishPayment([
-                'money_id'=>$Money->id,  //资金记录ID
+                'id'=>$GoodIndent->id,  //订单ID
                 'identification'=>$GoodIndent->identification,  //订单号
-                'name'=> $GoodIndent->goodsList[0].(count($GoodIndent->goodsList)>1 ? '等多件': ''),    //商品名称
+                'name'=> $GoodIndent->goodsList[0]->name.(count($GoodIndent->goodsList)>1 ? '等多件': ''),    //商品名称
                 'total'=>$GoodIndent->total,    //订单金额
                 'type'=> '余额支付',
+                'template'=>'finish_payment',   //通知模板标识
                 'time'=>$GoodIndent->pay_time,  //下单时间(付款时间)
                 'user_id'=>auth('web')->user()->id    //用户ID
             ]);
             if($Common['result']== 'ok'){
-                return array(1,'支付成功');
+                $AdminCommon=(new Common)->adminOrderSendGood([
+                    'id'=>$GoodIndent->id,  //订单ID
+                    'identification'=>$GoodIndent->identification,  //订单号
+                    'cellphone'=>auth('web')->user()->cellphone,    //用户手机
+                    'total'=>$GoodIndent->total,    //订单金额
+                    'type'=> '余额支付',
+                    'template'=>'admin_order_send_good',   //通知模板标识
+                    'time'=>$GoodIndent->pay_time,  //下单时间(付款时间)
+                ]);
+                if($AdminCommon['result']== 'ok'){
+                    return array(1,'支付成功');
+                }else{
+                    return array($AdminCommon['msg'],Code::CODE_PARAMETER_WRONG);
+                }
             }else{
                 return array($Common['msg'],Code::CODE_PARAMETER_WRONG);
             }
@@ -436,6 +450,7 @@ class WeChatController  extends Controller
                     $Common=(new Common)->register([
                         'phoneNumber'=>$miniPhoneNumber['purePhoneNumber'],  //手机号
                         'password'=>$password,  //密码
+                        'template'=>'registered_success',   //通知模板标识
                         'user_id'=>$user->id   //用户ID
                     ]);
                     if($Common['result']== 'error'){

@@ -16,13 +16,11 @@ return [
         'delivery_release'=>env('MINIWEIXIN_SUBSCRIPTION_INFORMATION_SHIPMENTS',''),  //发货通知
     ],
     'wechat'=>[ //微信公众号
-        'finishPayment'=>env('WECHAT_SUBSCRIPTION_INFORMATION_FINISH_PAYMENT',''),  //订单支付成功通知
+        'finish_payment'=>env('WECHAT_SUBSCRIPTION_INFORMATION_FINISH_PAYMENT',''),  //订单支付成功通知
         'order_confirm_receipt'=>env('WECHAT_SUBSCRIPTION_INFORMATION_ORDER_CONFIRM_RECEIPT',''),  //订单确认收货通知
-        'order_evaluate'=>env('WECHAT_SUBSCRIPTION_INFORMATION_ORDER_EVALUATE',''),  //订单评价提醒
         'delivery_release'=>env('WECHAT_SUBSCRIPTION_INFORMATION_SHIPMENTS',''),  //发货通知
         'refund_success'=>env('WECHAT_SUBSCRIPTION_INFORMATION_REFUND_SUCCESS',''),  //退款成功通知
         'admin_order_send_good'=>env('WECHAT_SUBSCRIPTION_INFORMATION_ADMIN_ORDER_SEND_GOOD',''),  //待发货提醒
         'admin_order_completion'=>env('WECHAT_SUBSCRIPTION_INFORMATION_ADMIN_ORDER_COMPLETION',''),  //订单完成通知
-        'admin_order_evaluate'=>env('WECHAT_SUBSCRIPTION_INFORMATION_ADMIN_ORDER_EVALUATE',''),  //用户评价通知
     ],
 ];

@@ -53,7 +53,7 @@
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">备注</text>
-				<text class="cell-tip">{{ indentList.remark }}</text>
+				<text class="cell-tip">{{ indentList.remark ? indentList.remark : '' }}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">商品金额</text>
