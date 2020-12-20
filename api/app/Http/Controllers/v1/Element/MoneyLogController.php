@@ -34,9 +34,9 @@ class MoneyLogController extends Controller
         $return['expend']=0;
         foreach ($get as $g){
             if($g->type == MoneyLog::MONEY_LOG_TYPE_INCOME){
-                $return['income']+=$g->money;
+                $return['income']+=$g->money/100;
             }else{
-                $return['expend']+=$g->money;
+                $return['expend']+=$g->money/100;
             }
         }
         return resReturn(1,$return);

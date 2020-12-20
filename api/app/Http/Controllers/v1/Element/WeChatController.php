@@ -82,9 +82,12 @@ class WeChatController  extends Controller
             $addUser->api_token = hash('sha256', Str::random(60));
             $addUser->uuid = (string) Uuid::generate();
             $addUser->save();
-            return 1;
+            return [
+                'result'=>'ok',
+                'msg'=>'成功'
+            ];
         }, 5);
-        if($return == 1){
+        if($return['result'] == 'ok'){
             return resReturn(1,'注册成功');
         }else{
             return resReturn(0,'注册失败',Code::CODE_PARAMETER_WRONG);

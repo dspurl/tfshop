@@ -16,6 +16,7 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property string price
  * @property string inventory
  * @property Object_ product_sku
+ * @property int is_delete
  *
  */
 class GoodSku extends Model
