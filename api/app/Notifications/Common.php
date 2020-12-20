@@ -211,7 +211,7 @@ class Common
                 ],
                 [
                     'keyword'=>'订单总额',
-                    'data'=>$parameter['total']
+                    'data'=>sprintf("%01.2f",$parameter['total']/100),
                 ],
                 [
                     'keyword'=>'支付方式',
@@ -261,7 +261,7 @@ class Common
                 ],
                 [
                     'keyword'=>'订单总额',
-                    'data'=>$parameter['total']
+                    'data'=>sprintf("%01.2f",$parameter['total']/100),
                 ],
                 [
                     'keyword'=>'买家',
