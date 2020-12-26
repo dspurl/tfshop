@@ -50,6 +50,9 @@ export default {
 uni-rich-text img {
 	max-width: 100% !important;
 }
+image {
+	display: block; /*更改ColorUI中的默认值display: inline-block; 商品详情中图片会有空白间隙*/
+}
 /*
 		全局公共样式和字体图标
 	*/
