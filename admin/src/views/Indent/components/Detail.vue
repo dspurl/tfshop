@@ -22,6 +22,7 @@
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
         <el-col v-if="list.good_location" :span="14">收货地址：{{ list.good_location.location }} ({{ list.good_location.address }})</el-col>
       </el-row>
+      <el-button   type="primary" style="margin-top:15px;" @click="copyReciverInfo()">复制收货人信息</el-button>
     </el-card>
     <!-- 订单进度 -->
     <el-card shadow="always" style="margin-top: 25px">
@@ -224,6 +225,7 @@
 <script>
 import { getDetails, createSubmit, updateSubmit, query } from '@/api/Indent'
 import { dhlList } from '@/api/dhl'
+import Clipboard from 'clipboard'; 
 export default {
   name: 'IndentListDetails',
   data() {
@@ -306,6 +308,17 @@ export default {
         this.dhl = response.data
       })
     },
+    //复制收货人信息, 方便生成订单
+    copyReciverInfo() {
+      var oInput = document.createElement('input'); //创建一个隐藏input（重要！）
+      oInput.value =  this.list.good_location.name+'，'+ this.list.good_location.cellphone+ '，'+ this.list.good_location.address;    //赋值
+      document.body.appendChild(oInput); 
+      oInput.select(); // 选择对象
+      document.execCommand("Copy"); // 执行浏览器复制命令
+      oInput.className = 'oInput';
+      oInput.style.display = 'none';
+      this.$message.success('收货人地址信息复制成功');  
+    },    
     createSubmit() {
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
