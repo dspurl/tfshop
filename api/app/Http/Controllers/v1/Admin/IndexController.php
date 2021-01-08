@@ -42,6 +42,19 @@ class IndexController extends Controller
         $return['salesList']=Good::select('id','name')->withCount(['goodIndentCommodity as commodity_sum' =>function($query){
             $query->whereRaw('now()-created_at<86400')->select(DB::raw("sum(number) as commodity_sum"));
         }])->get()->sortByDesc('commodity_sum')->values()->take(10);
+        
+        //$inventoryVal=Option::select('val')->where('id',4)->value('val'); (也可实现一个店铺配置机制)
+        $inventoryVal = 10;//低库存 
+        $return['inventoryLess']= GoodSku::select('goods.id')
+            ->leftJoin('goods', 'good_skus.good_id', '=', 'goods.id')
+            ->where('good_skus.inventory','<',$inventoryVal)
+            ->where('goods.is_delete',Good::GOOD_DELETE_NO)
+            ->count();
+        $return['inventoryList']= GoodSku::select('goods.id','goods.name')
+            ->leftJoin('goods', 'good_skus.good_id', '=', 'goods.id')
+            ->where('good_skus.inventory','<',$inventoryVal)
+            ->where('goods.is_delete',Good::GOOD_DELETE_NO)
+            ->get()->sortByDesc('inventory')->values()->take(20); 
         $return['chart']=array_values($return['chart']);
         return resReturn(1,$return);
     }
