@@ -25,7 +25,7 @@ class IndexController extends Controller
             $return['chart']['订单量'.date('Y-m-d H',strtotime($g->created_at))]['value']+=1;
         }
         $return['indent']=$GoodIndent->count();
-        $MoneyLog=MoneyLog::whereRaw('now()-created_at<86400 AND sfrom=0')
+        $MoneyLog=MoneyLog::whereRaw('now()-created_at<86400')
             ->where('type',MoneyLog::MONEY_LOG_TYPE_EXPEND)->get();
         foreach ($MoneyLog as $m){
             $return['chart']['销售金额'.date('Y-m-d H',strtotime($m->created_at))]['value']+=$m->money_show;
