@@ -57,16 +57,16 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="goInventory">
+        <div class="card-panel">
           <div class="card-panel-icon-wrapper icon-money">
             <svg-icon icon-class="goods" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
             <div class="card-panel-text">库存不足商品数量</div>
-            <div class="card-panel-num">{{options.inventoryLess}}</div>
+            <div class="card-panel-num">{{ options.inventoryLess }}</div>
           </div>
         </div>
-      </el-col>      
+      </el-col>
     </el-row>
     <el-row>
       <el-col :span="24" style="padding-bottom: 20px;">
@@ -76,16 +76,16 @@
       </el-col>
     </el-row>
     <el-row :gutter="12">
-       <el-col :span="8">
-        <el-card  id="inventory" shadow="hover">
+      <el-col :span="8">
+        <el-card id="inventory" shadow="hover">
           <h3>低库存</h3>
           <div v-for="(item) in options.inventoryList" :key="item.id" class="ll">
-            <router-link  class="inventory_link" :to="{ path: '/goodsManage/product/EditProduct', query: { id: item.id }}" :title="item.name">
+            <router-link :to="{ path: '/goodsManage/product/EditProduct', query: { id:item.id }}" :title="item.name" class="inventory_link">
               {{ item.name }} - {{ item.inventory }}
             </router-link>
           </div>
         </el-card>
-      </el-col>    
+      </el-col>
       <el-col :span="8">
         <el-card shadow="hover">
           <h3>商品访问榜</h3>
