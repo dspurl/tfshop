@@ -35,7 +35,7 @@ class IndentController extends Controller
             $q->where('state',$request->activeIndex);
         }
         if($request->title){
-            $q->where('identification',$request->title);
+            $q->whereRaw("identification like '%$request->title%' OR odd like '%$request->title%' OR cellphone like '%$request->title%' ");
         }
         $limit=$request->limit;
         $q->orderBy('updated_at','DESC');
