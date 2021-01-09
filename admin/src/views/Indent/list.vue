@@ -12,8 +12,8 @@
       </el-menu>
       <br>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="订单号">
-          <el-input v-model="listQuery.title" placeholder="订单号" clearable/>
+        <el-form-item label="订单信息">
+          <el-input v-model="listQuery.title" placeholder="订单号、收货人等" clearable/>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleFilter">搜索</el-button>
@@ -65,15 +65,45 @@
           <span>{{ scope.row.identification }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="订单状态">
+        <template slot-scope="scope">
+          <span>{{ scope.row.state_show }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="订单总额">
         <template slot-scope="scope">
-          <span>{{ scope.row.total | 1000 }}</span>
+          <span>{{ scope.row.total ? scope.row.total : 0 | 1000 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="运费">
         <template slot-scope="scope">
           <span v-if="scope.row.carriage">{{ scope.row.carriage | 1000 }}</span>
           <span v-else>免运费</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="收货人">
+        <template slot-scope="scope">
+          <span>{{ scope.row.good_location ? scope.row.good_location.name : '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="手机号">
+        <template slot-scope="scope">
+          <span>{{ scope.row.good_location ? scope.row.good_location.cellphone : '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="地址">
+        <template slot-scope="scope">
+          <span>{{ scope.row.good_location ? scope.row.good_location.location : '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="快递公司">
+        <template slot-scope="scope">
+          <span>{{ scope.row.dhl ? scope.row.dhl.name : '' }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="运单号">
+        <template slot-scope="scope">
+          <span>{{ scope.row.odd }}</span>
         </template>
       </el-table-column>
       <el-table-column label="备注">
@@ -84,11 +114,6 @@
       <el-table-column label="订单时间">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单状态">
-        <template slot-scope="scope">
-          <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" width="200">

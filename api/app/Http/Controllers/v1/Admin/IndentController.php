@@ -35,13 +35,22 @@ class IndentController extends Controller
             $q->where('state',$request->activeIndex);
         }
         if($request->title){
-            $q->where('identification',$request->title);
+            $q->where(function($q1) use($request){
+                $q1->orWhere('identification',$request->title)
+                    ->orWhere('odd',$request->title);
+            });
+            $q->orWhereHas('GoodLocation', function($query) use ($request){
+                $query->where('cellphone',$request->title)->orWhere('name',$request->title);
+            });
+            $q->orWhereHas('goodsList', function($query) use ($request){
+                $query->where('name','like',"%$request->title%");
+            });
         }
         $limit=$request->limit;
         $q->orderBy('updated_at','DESC');
         $paginate=$q->with(['goodsList'=>function($q){
             $q->with(['goodSku']);
-        }])->paginate($limit);
+        },'GoodLocation','Dhl'])->paginate($limit);
         return resReturn(1,$paginate);
     }
 
