@@ -31,12 +31,17 @@ class IndentController extends Controller
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
         $q = GoodIndent::query();
+        $q->selectRaw('good_indents.*,dhls.name AS dhl_name,good_locations.cellphone,good_locations.name AS real_name,good_locations.location');
+
         if($request->activeIndex){
             $q->where('state',$request->activeIndex);
         }
         if($request->title){
-            $q->where('identification',$request->title);
+            $q->whereRaw("identification like '%$request->title%' OR odd like '%$request->title%' OR cellphone like '%$request->title%' ");
         }
+        $q->leftJoin('dhls', 'dhls.id', '=', 'good_indents.dhl_id');
+        $q->leftJoin('good_locations', 'good_locations.good_indent_id', '=', 'good_indents.id');
+      
         $limit=$request->limit;
         $q->orderBy('updated_at','DESC');
         $paginate=$q->with(['goodsList'=>function($q){

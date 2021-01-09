@@ -65,9 +65,14 @@
           <span>{{ scope.row.identification }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="订单状态">
+        <template slot-scope="scope">
+          <span>{{ scope.row.state_show }}</span>
+        </template>
+      </el-table-column>      
       <el-table-column label="订单总额">
         <template slot-scope="scope">
-          <span>{{ scope.row.total | 1000 }}</span>
+          <span>{{ scope.row.total ? scope.row.total : 0 | 1000 }}</span>
         </template>
       </el-table-column>
       <el-table-column label="运费">
@@ -76,6 +81,31 @@
           <span v-else>免运费</span>
         </template>
       </el-table-column>
+       <el-table-column label="快递公司">
+        <template slot-scope="scope">
+          <span>{{ scope.row.dhl_name }}</span>
+        </template>
+      </el-table-column>      
+       <el-table-column label="运单号">
+        <template slot-scope="scope">
+          <span>{{ scope.row.odd }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="收货人">
+        <template slot-scope="scope">
+          <span>{{ scope.row.real_name }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="手机号">
+        <template slot-scope="scope">
+          <span>{{ scope.row.cellphone }}</span>
+        </template>
+      </el-table-column>  
+       <el-table-column label="地址">
+        <template slot-scope="scope">
+          <span>{{ scope.row.location }}</span>
+        </template>
+      </el-table-column>               
       <el-table-column label="备注">
         <template slot-scope="scope">
           <span>{{ scope.row.remark }}</span>
@@ -84,11 +114,6 @@
       <el-table-column label="订单时间">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="订单状态">
-        <template slot-scope="scope">
-          <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" width="200">
