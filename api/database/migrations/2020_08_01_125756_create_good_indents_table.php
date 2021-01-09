@@ -17,12 +17,16 @@ class CreateGoodIndentsTable extends Migration
         Schema::create('good_indents', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->default(0)->index()->comment('用户ID');
+            $table->string('consignee', 30)->nullable()->comment('收货人名称');
             $table->tinyInteger('state')->default(1)->comment('状态：1待付款2待发货3待收货4待评价5已完成6已取消7已退款');
             $table->integer('total')->default(0)->comment('订单总金额');
             $table->string('identification', 50)->comment('订单标识');
             $table->integer('carriage')->default(0)->comment('运费');
             $table->bigInteger('dhl_id')->default(0)->index()->comment('快递公司ID');
+            $table->string('dhl_name', 30)->nullable()->comment('快递公司');
             $table->string('odd', 255)->nullable()->comment('运单号');
+            $table->string('cellphone', 30)->nullable()->comment('收货人手机号');
+            $table->string('address', 30)->nullable()->comment('收货具体地址');
             $table->string('remark', 200)->nullable()->comment('备注');
             $table->integer('refund_money')->default(0)->comment('退款金额');
             $table->tinyInteger('refund_way')->default(0)->comment('退款方式0余额1原路退回');
