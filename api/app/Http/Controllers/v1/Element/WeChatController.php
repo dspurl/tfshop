@@ -431,7 +431,7 @@ class WeChatController  extends Controller
             if($miniPhoneNumber['result']== 'error'){
                 return resReturn(0,$miniPhoneNumber['msg'],Code::CODE_MISUSE);
             }
-            $User = User::where('cellphone',$miniPhoneNumber['purePhoneNumber'])->first();
+            $User = User::where('miniweixin',$openid)->first();
             if(!$User){
                 $return =DB::transaction(function ()use($request,$miniPhoneNumber,$openid){
                     $password = substr(MD5(time()),5,6);  //随机生成密码
