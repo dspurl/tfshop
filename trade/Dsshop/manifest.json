@@ -1,5 +1,5 @@
 {
-    "name" : "DSHOP电商商城",
+    "name" : "DSSHOP电商商城",
     "appid" : "",
     "description" : "",
     "versionName" : "1.0.0",
@@ -70,7 +70,7 @@
     },
     "h5" : {
         "devServer" : {},
-        "title" : "DSHOP电商商城",
+        "title" : "DSSHOP电商商城",
         "domain" : "",
         "router" : {
             "base" : "/h5/"
