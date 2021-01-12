@@ -13,7 +13,7 @@
   </a>
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
 </p>
-<h3 align="center">DSHOP电商商城</h3>
+<h3 align="center">DSSHOP电商商城</h3>
 <p align="center">前后端分离架构，VUE2.0+Laravel7，免费开源可商用。</p>
 
 说明
