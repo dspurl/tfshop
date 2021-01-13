@@ -113,6 +113,15 @@
             title="如有子类，选择隐藏，将不会显示子类"
             type="warning"/>
         </el-form-item>
+        <el-form-item label="是否首页推荐" prop="is_recommend">
+          <el-radio-group v-model="temp.is_recommend">
+            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">否</el-radio>
+          </el-radio-group>
+          <el-alert
+            title="设置推荐后，将在首页展示，只有三级分类能正常访问"
+            type="warning"/>
+        </el-form-item>
         <el-form-item label="规格" prop="specification">
           <el-transfer
             :filter-method="filterMethod"
@@ -246,7 +255,8 @@ export default {
         pid: [],
         attribute: [],
         brand: [],
-        sort: 5
+        sort: 5,
+        is_recommend: 0
       },
       dialogFormVisible: false,
       dialogStatus: '',

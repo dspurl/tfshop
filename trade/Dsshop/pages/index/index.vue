@@ -67,8 +67,8 @@
 		</view>
 		<!-- 分类 -->
 		<view class="cate-section">
-			<view v-for="item in ctegory" :key="item.id" class="cate-item" @click="navTo('/pages/product/list?fid='+item.fid+'&sid='+item.sid+'&tid='+item.tid)">
-				<image :src="item.image" lazy-load></image>
+			<view v-for="item in ctegory" :key="item.id" class="cate-item" @click="navTo('/pages/product/list?fid='+item.category.pid+'&sid='+item.pid+'&tid='+item.id)">
+				<image v-if="item.resources" :src="item.resources.img | smallImage(80)" lazy-load></image>
 				<text>{{item.name}}</text>
 			</view>
 		</view>
@@ -360,7 +360,13 @@ import Banner from '../../api/banner'
 				},function(res){
 					that.goodsList = res.data
 				})
-				
+				// 推荐分类
+				await Good.getCategoryShow({
+					is_recommend: 1
+				},function(res){
+					console.log('res',res)
+					that.ctegory = res
+				})
 			},
 			//轮播图切换修改背景色
 			swiperChange(e) {

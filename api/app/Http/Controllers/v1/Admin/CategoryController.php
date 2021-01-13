@@ -59,6 +59,7 @@ class CategoryController extends Controller
             $Category->name=$request->name;
             $Category->pid=$request->pid;
             $Category->sort=$request->sort;
+            $Category->is_recommend=$request->is_recommend;
             $Category->state=$request->state;
             $Category->save();
             if($request->logo){
@@ -114,6 +115,7 @@ class CategoryController extends Controller
             $Category->pid=$request->pid;
             $Category->sort=$request->sort;
             $Category->state=$request->state;
+            $Category->is_recommend=$request->is_recommend;
             $Category->save();
             if($request->resources['id'] && $request->logo){
                 $Resource=Resource::find($request->resources['id']);

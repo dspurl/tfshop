@@ -11,12 +11,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property int pid
  * @property int state
  * @property string resources
+ * @property int is_recommend
  */
 class Category extends Model
 {
     public static $withoutAppends = false;
     const CATEGORY_STATE_YES= 0; //状态：正常
     const CATEGORY_STATE_NO= 1; //状态：隐藏
+    const CATEGORY_IS_RECONMEND_NO= 0; //首页推荐：否
+    const CATEGORY_IS_RECONMEND_YES= 1; //首页推荐：是
     protected $table = 'categorys';
 
     protected $appends = ['state_show'];
@@ -50,6 +53,13 @@ class Category extends Model
      */
     public function resources(){
         return $this->morphOne('App\Models\v1\Resource', 'image');
+    }
+
+    /**
+     * 获取父分类
+     */
+    public function  Category(){
+        return $this->hasOne('App\Models\v1\Category', 'id','pid');
     }
 
     /**

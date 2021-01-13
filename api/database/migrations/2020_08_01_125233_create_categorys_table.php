@@ -20,6 +20,7 @@ class CreateCategorysTable extends Migration
             $table->integer('pid')->default(0)->comment('上级类目');
             $table->integer('sort')->default(0)->comment('排序');
             $table->tinyInteger('state')->default(0)->comment('是否显示0显示1不显示');
+            $table->tinyInteger('is_recommend')->default(0)->comment('首页推荐0否1是');
             $table->timestamps();
             $table->charset = 'utf8';
             $table->engine = 'InnoDB';

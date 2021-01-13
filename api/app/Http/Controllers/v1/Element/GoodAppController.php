@@ -140,6 +140,12 @@ class GoodAppController extends Controller
     {
         $q = Category::query();
         $q->where('state',Category::CATEGORY_STATE_YES);
+        if($request->has('is_recommend')){
+            $q->where('is_recommend',$request->is_recommend);
+            $q->with(['Category'=>function($q){
+                $q->select('id','pid');
+            }]);
+        }
         $q->orderBy('sort','ASC');
         $paginate=$q->with(['resources'])->get();
         return resReturn(1,$paginate);

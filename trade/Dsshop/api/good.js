@@ -67,7 +67,7 @@ export default {
 		})
 	},
 	getCategoryShow(data,success,fail) {
-		Network.setGetMessage('goodCategory',{},'加载中', function (res) {
+		Network.setGetMessage('goodCategory',data,'加载中', function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({

@@ -360,6 +360,7 @@
 		padding: 0 30upx;
 		background: #fff;
 		.goods-item{
+			padding-top:20upx;
 			display:flex;
 			flex-direction: column;
 			width: 48%;
