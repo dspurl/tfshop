@@ -324,6 +324,12 @@ class MiniProgram extends Model
                 'msg'=>$result['return_msg']
             ];
         }
+        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'FAIL' && isset($result['err_code_des'])) {
+            $return =[
+                'result'=>'error',
+                'msg'=>$result['err_code_des']
+            ];
+        }       
         return $return;
     }
 
