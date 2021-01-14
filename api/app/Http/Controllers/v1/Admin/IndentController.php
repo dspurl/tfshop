@@ -128,6 +128,26 @@ class IndentController extends Controller
             return resReturn(0,$return[0],$return[1]);
         }
     }
+
+    /**
+     * 保存配送信息
+     * @param Request $request
+     * @return string
+     */
+    public function updateDhl(Request $request){
+        $return=DB::transaction(function ()use($request){
+            $GoodIndent=GoodIndent::find($request->id);
+            $GoodIndent->dhl_id = $request->dhl_id;
+            $GoodIndent->odd = $request->odd;
+            $GoodIndent->save();
+            return array(1,'修改成功');
+        });
+        if($return[0] == 1){
+            return resReturn(1,$return[1]);
+        }else{
+            return resReturn(0,$return[0],$return[1]);
+        }
+    }
     // 退款
     public function refund($id,Request $request){
         if(!$id){
