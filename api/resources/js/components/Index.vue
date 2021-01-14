@@ -31,9 +31,6 @@
                 </el-carousel-item>
             </el-carousel>
         </div>
-        <!-- 版权 end -->
-        <div class="copyright">
-            Copyright © 2020 宁波市鄞州区天发网络科技有限公司</div>
     </div>
 </template>
 
