@@ -324,6 +324,12 @@ class MiniProgram extends Model
                 'msg'=>$result['return_msg']
             ];
         }
+        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'FAIL' && isset($result['err_code_des'])) {
+            $return =[
+                'result'=>'error',
+                'msg'=>$result['err_code_des']
+            ];
+        }       
         return $return;
     }
 
@@ -348,7 +354,7 @@ class MiniProgram extends Model
             $transaction_id = $result['refund_id_0'];
         }else{  //其它
             $result=$app->order->queryByOutTradeNumber($number);
-            $transaction_id = $result['transaction_id'];
+            $transaction_id = isset($result['transaction_id']) ? $result['transaction_id'] : '';
         }
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
             $return =[
