@@ -354,7 +354,7 @@ class MiniProgram extends Model
             $transaction_id = $result['refund_id_0'];
         }else{  //其它
             $result=$app->order->queryByOutTradeNumber($number);
-            $transaction_id = $result['transaction_id'];
+            $transaction_id = isset($result['transaction_id']) ? $result['transaction_id'] : '';
         }
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
             $return =[
