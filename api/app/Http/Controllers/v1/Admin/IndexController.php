@@ -5,6 +5,7 @@ use App\Http\Controllers\Controller;
 use App\Models\v1\Common;
 use App\Models\v1\Good;
 use App\Models\v1\GoodIndent;
+use App\Models\v1\GoodSku;
 use App\Models\v1\MoneyLog;
 use App\Models\v1\User;
 use Illuminate\Support\Facades\DB;

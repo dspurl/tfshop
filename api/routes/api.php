@@ -46,76 +46,76 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 
         //--Redis管理
         Route::get('redis', 'RedisServiceController@index')->middleware(['permissions:RedisServicesList']);    //Redis列表
-        Route::get('redis/{photo}', 'RedisServiceController@show')->middleware(['permissions:RedisServicesList']);    //Redis详情
-        Route::delete('redis/{photo}', 'RedisServiceController@destroy')->middleware(['permissions:DeleteRedisServices']);    //删除Redis
+        Route::get('redis/{id}', 'RedisServiceController@show')->middleware(['permissions:RedisServicesList']);    //Redis详情
+        Route::delete('redis/{id}', 'RedisServiceController@destroy')->middleware(['permissions:DeleteRedisServices']);    //删除Redis
         Route::get('redisPanel', 'RedisServiceController@panel')->middleware(['permissions:RedisPanel']);    //Redis面板
 
         //--品牌
         Route::get('brand', 'BrandController@index')->middleware(['permissions:BrandList']);    //品牌列表
         Route::post('brand', 'BrandController@store')->middleware(['permissions:CreateBrand']);    //品牌添加保存
-        Route::put('brand/{photo}', 'BrandController@update')->middleware(['permissions:EditBrand']);    //品牌编辑保存
-        Route::delete('brand/{photo}', 'BrandController@destroy')->middleware(['permissions:DeleteBrand']);    //品牌删除
+        Route::put('brand/{id}', 'BrandController@update')->middleware(['permissions:EditBrand']);    //品牌编辑保存
+        Route::delete('brand/{id}', 'BrandController@destroy')->middleware(['permissions:DeleteBrand']);    //品牌删除
 
         //--资源
         Route::get('resource', 'ResourceController@index')->middleware(['permissions:ResourceDataList']);    //资源列表
         Route::post('resource', 'ResourceController@store')->middleware(['permissions:CreateResourceData']);    //资源添加保存
-        Route::put('resource/{photo}', 'ResourceController@update')->middleware(['permissions:EditResourceData']);    //资源编辑保存
-        Route::delete('resource/{photo}', 'ResourceController@destroy')->middleware(['permissions:DeleteResourceData']);    //资源删除
+        Route::put('resource/{id}', 'ResourceController@update')->middleware(['permissions:EditResourceData']);    //资源编辑保存
+        Route::delete('resource/{id}', 'ResourceController@destroy')->middleware(['permissions:DeleteResourceData']);    //资源删除
 
         //--分类
         Route::get('category', 'CategoryController@index')->middleware(['permissions:CategoryList']);    //分类列表
         Route::post('category', 'CategoryController@store')->middleware(['permissions:CreateCategory']);    //分类添加保存
-        Route::put('category/{photo}', 'CategoryController@update')->middleware(['permissions:EditCategory']);    //分类编辑保存
-        Route::delete('category/{photo}', 'CategoryController@destroy')->middleware(['permissions:DeleteCategory']);    //分类删除
+        Route::put('category/{id}', 'CategoryController@update')->middleware(['permissions:EditCategory']);    //分类编辑保存
+        Route::delete('category/{id}', 'CategoryController@destroy')->middleware(['permissions:DeleteCategory']);    //分类删除
 
         //--规格
         Route::get('specification', 'SpecificationController@index')->middleware(['permissions:SpecificationList']);    //规格列表
         Route::post('specification', 'SpecificationController@store')->middleware(['permissions:CreateSpecification']);    //规格添加保存
-        Route::put('specification/{photo}', 'SpecificationController@update')->middleware(['permissions:EditSpecification']);    //规格编辑保存
-        Route::delete('specification/{photo}', 'SpecificationController@destroy')->middleware(['permissions:DeleteSpecification']);    //规格删除
+        Route::put('specification/{id}', 'SpecificationController@update')->middleware(['permissions:EditSpecification']);    //规格编辑保存
+        Route::delete('specification/{id}', 'SpecificationController@destroy')->middleware(['permissions:DeleteSpecification']);    //规格删除
 
         //--规格组
         Route::get('specificationGroup', 'SpecificationGroupController@index')->middleware(['permissions:SpecificationGroupList']);    //规格组列表
         Route::post('specificationGroup', 'SpecificationGroupController@store')->middleware(['permissions:CreateSpecificationGroup']);    //规格组添加保存
-        Route::put('specificationGroup/{photo}', 'SpecificationGroupController@update')->middleware(['permissions:EditSpecificationGroup']);    //规格组编辑保存
-        Route::delete('specificationGroup/{photo}', 'SpecificationGroupController@destroy')->middleware(['permissions:DeleteSpecificationGroup']);    //规格组删除
+        Route::put('specificationGroup/{id}', 'SpecificationGroupController@update')->middleware(['permissions:EditSpecificationGroup']);    //规格组编辑保存
+        Route::delete('specificationGroup/{id}', 'SpecificationGroupController@destroy')->middleware(['permissions:DeleteSpecificationGroup']);    //规格组删除
 
         //商品管理
         Route::get('Good', 'GoodController@index')->middleware(['permissions:ProductList']);    //列表
-        Route::get('Good/{photo}', 'GoodController@details')->middleware(['permissions:CreateProduct']);    //产品详情页
-        Route::get('goodSpecification/{photo}', 'GoodController@specification')->middleware(['permissions:CreateProduct']);    //获取产品规格
+        Route::get('Good/{id}', 'GoodController@details')->middleware(['permissions:CreateProduct']);    //产品详情页
+        Route::get('goodSpecification/{id}', 'GoodController@specification')->middleware(['permissions:CreateProduct']);    //获取产品规格
         Route::post('Good', 'GoodController@store')->middleware(['permissions:CreateProduct']);    //添加保存
-        Route::put('Good/{photo}', 'GoodController@update')->middleware(['permissions:EditProduct']);    //编辑保存
-        Route::put('GoodState/{photo}', 'GoodController@goodState')->middleware(['permissions:EditProduct']);    //变更商品状态
-        Route::delete('Good/{photo}', 'GoodController@destroy')->middleware(['permissions:DeleteProduct']);    //删除
+        Route::put('Good/{id}', 'GoodController@update')->middleware(['permissions:EditProduct']);    //编辑保存
+        Route::put('GoodState/{id}', 'GoodController@goodState')->middleware(['permissions:EditProduct']);    //变更商品状态
+        Route::delete('Good/{id}', 'GoodController@destroy')->middleware(['permissions:DeleteProduct']);    //删除
 
         //运费模板
         Route::get('freight', 'FreightController@index')->middleware(['permissions:FreightList']);    //运费模板列表
-        Route::get('freight/{photo}', 'FreightController@show')->middleware(['permissions:EditFreight']);    //运费模板详情
+        Route::get('freight/{id}', 'FreightController@show')->middleware(['permissions:EditFreight']);    //运费模板详情
         Route::post('freight', 'FreightController@store')->middleware(['permissions:CreateFreight']);    //运费模板添加保存
-        Route::put('freight/{photo}', 'FreightController@update')->middleware(['permissions:EditFreight']);    //运费模板编辑保存
-        Route::delete('freight/{photo}', 'FreightController@destroy')->middleware(['permissions:DeleteFreight']);    //运费模板删除
+        Route::put('freight/{id}', 'FreightController@update')->middleware(['permissions:EditFreight']);    //运费模板编辑保存
+        Route::delete('freight/{id}', 'FreightController@destroy')->middleware(['permissions:DeleteFreight']);    //运费模板删除
 
         //快递公司
         Route::get('dhl', 'DhlController@index')->middleware(['permissions:DhlList']);    //快递公司列表
-        Route::get('dhl/{photo}', 'DhlController@show')->middleware(['permissions:EditDhl']);    //快递公司详情
+        Route::get('dhl/{id}', 'DhlController@show')->middleware(['permissions:EditDhl']);    //快递公司详情
         Route::post('dhl', 'DhlController@store')->middleware(['permissions:CreateDhl']);    //快递公司添加保存
-        Route::put('dhl/{photo}', 'DhlController@update')->middleware(['permissions:EditDhl']);    //快递公司编辑保存
-        Route::delete('dhl/{photo}', 'DhlController@destroy')->middleware(['permissions:DeleteDhl']);    //快递公司删除
+        Route::put('dhl/{id}', 'DhlController@update')->middleware(['permissions:EditDhl']);    //快递公司编辑保存
+        Route::delete('dhl/{id}', 'DhlController@destroy')->middleware(['permissions:DeleteDhl']);    //快递公司删除
         Route::get('dhlList', 'DhlController@list')->middleware(['permissions:DhlList']);
 
         //订单管理
         Route::get('indent', 'IndentController@index')->middleware(['permissions:IndentList']);    //订单列表
-        Route::get('indent/{photo}', 'IndentController@show')->middleware(['permissions:EditIndent']);    //订单详情
+        Route::get('indent/{id}', 'IndentController@show')->middleware(['permissions:EditIndent']);    //订单详情
         Route::post('indentShipments', 'IndentController@shipment')->middleware(['permissions:Shipment']); //发货
-        Route::put('indentRefund/{photo}', 'IndentController@refund')->middleware(['permissions:Refund']); //退款
+        Route::put('indentRefund/{id}', 'IndentController@refund')->middleware(['permissions:Refund']); //退款
         Route::get('query', 'IndentController@query')->middleware(['permissions:EditIndent']);    //查询订单
 
         //轮播
         Route::get('banner', 'BannerController@index')->middleware(['permissions:BannerList']);    //轮播列表
         Route::post('banner', 'BannerController@store')->middleware(['permissions:CreateBanner']);    //轮播添加保存
-        Route::put('banner/{photo}', 'BannerController@update')->middleware(['permissions:EditBanner']);    //轮播编辑保存
-        Route::delete('banner/{photo}', 'BannerController@destroy')->middleware(['permissions:DeleteBanner']);    //轮播删除
+        Route::put('banner/{id}', 'BannerController@update')->middleware(['permissions:EditBanner']);    //轮播编辑保存
+        Route::delete('banner/{id}', 'BannerController@destroy')->middleware(['permissions:DeleteBanner']);    //轮播删除
 
         //统计
         Route::get('statistic/behavior', 'StatisticsController@behavior')->middleware(['permissions:StatisticsVisit']);    //使用分析
@@ -126,8 +126,8 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 
         //插件管理
         Route::get('plugin', 'PluginController@index')->middleware(['permissions:PlugInList']);    //插件列表
-        Route::post('plugin/{photo}', 'PluginController@store')->middleware(['permissions:PlugInUpdate']);    //更新插件
-        Route::put('plugin/{photo}', 'PluginController@update')->middleware(['permissions:PlugInInstall']);    //安装插件
+        Route::post('plugin/{id}', 'PluginController@store')->middleware(['permissions:PlugInUpdate']);    //更新插件
+        Route::put('plugin/{id}', 'PluginController@update')->middleware(['permissions:PlugInInstall']);    //安装插件
 
 
     });
@@ -156,7 +156,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 
         // 商品
         Route::get('good', 'GoodAppController@index');    //商品列表
-        Route::get('good/{photo}', 'GoodAppController@show');    //商品详情
+        Route::get('good/{id}', 'GoodAppController@show');    //商品详情
         Route::get('banner', 'BannerAppController@index');    //轮播列表
         Route::get('advertising', 'BannerAppController@advertising');    //单条广告
         Route::get('goodCategory', 'GoodAppController@goodCategory');    //商品分类展示
@@ -166,7 +166,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('user', 'UserController@update');    //设置用户信息
         Route::post('unsubscribe', 'UserController@unsubscribe');    //注销账号
         Route::get('finance', 'MoneyLogController@index');    //收支列表
-        Route::get('finance/{photo}', 'MoneyLogController@show');    //收支详情
+        Route::get('finance/{id}', 'MoneyLogController@show');    //收支详情
         Route::post('logout', 'WeChatController@logout');    //登出
 
         Route::post('unifiedPayment', 'WeChatController@unifiedPayment');    //在线支付
@@ -174,21 +174,21 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 
         //订单
         Route::get('GoodIndent', 'GoodIndentController@index');    //列表
-        Route::get('GoodPay/{photo}', 'GoodIndentController@pay');    //支付订单详情
+        Route::get('GoodPay/{id}', 'GoodIndentController@pay');    //支付订单详情
         Route::post('GoodCount', 'GoodIndentController@gcount');    //更新商品库存
         Route::post('GoodIndent', 'GoodIndentController@store');    //添加保存
-        Route::get('GoodIndent/{photo}', 'GoodIndentController@show');    //详情
-        Route::post('GoodIndentReceipt/{photo}', 'GoodIndentController@receipt');    //确认收货
-        Route::post('GoodIndentCancel/{photo}', 'GoodIndentController@cancel');    //取消订单
-        Route::post('GoodIndentDelete/{photo}', 'GoodIndentController@destroy');    //删除订单
+        Route::get('GoodIndent/{id}', 'GoodIndentController@show');    //详情
+        Route::post('GoodIndentReceipt/{id}', 'GoodIndentController@receipt');    //确认收货
+        Route::post('GoodIndentCancel/{id}', 'GoodIndentController@cancel');    //取消订单
+        Route::post('GoodIndentDelete/{id}', 'GoodIndentController@destroy');    //删除订单
 
         //收货地址
         Route::get('shipping', 'ShippingController@index');    //列表
         Route::post('shippingOne', 'ShippingController@one');    //获取默认收货地址
-        Route::get('shipping/{photo}', 'ShippingController@show');    //详情
+        Route::get('shipping/{id}', 'ShippingController@show');    //详情
         Route::post('shipping', 'ShippingController@store');    //添加保存
-        Route::post('shipping/{photo}', 'ShippingController@update');    //编辑保存
-        Route::post('shippingDelete/{photo}', 'ShippingController@destroy');    //删除
+        Route::post('shipping/{id}', 'ShippingController@update');    //编辑保存
+        Route::post('shippingDelete/{id}', 'ShippingController@destroy');    //删除
         Route::post('shippingCheck', 'ShippingController@check');    //设为默认
 
         //浏览记录
@@ -197,14 +197,14 @@ Route::prefix('v1')->namespace('v1')->group(function () {
 
         //收藏
         Route::get('collect', 'CollectController@index');    //列表
-        Route::get('collect/{photo}', 'CollectController@show');    //详情
+        Route::get('collect/{id}', 'CollectController@show');    //详情
         Route::post('collect', 'CollectController@store');    //添加保存
-        Route::post('collectDelete/{photo}', 'CollectController@destroy');    //删除
+        Route::post('collectDelete/{id}', 'CollectController@destroy');    //删除
 
         //通知
         Route::get('notice', 'NoticeController@index');    //列表
         Route::get('noticeConut', 'NoticeController@count');    //未读数量
-        Route::post('notice/{photo}', 'NoticeController@destroy');    //删除
+        Route::post('notice/{id}', 'NoticeController@destroy');    //删除
     });
     // 插件前台
     Route::prefix('app')->namespace('Plugin')->middleware(['appverify','auth:web'])->group(function () {

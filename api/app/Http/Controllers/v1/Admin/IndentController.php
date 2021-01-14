@@ -31,22 +31,26 @@ class IndentController extends Controller
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
         $q = GoodIndent::query();
-        $q->selectRaw('good_indents.*,dhls.name AS dhl_name,good_locations.cellphone,good_locations.name AS real_name,good_locations.location');
-
         if($request->activeIndex){
             $q->where('state',$request->activeIndex);
         }
         if($request->title){
-            $q->whereRaw("identification like '%$request->title%' OR odd like '%$request->title%' OR cellphone like '%$request->title%' ");
+            $q->where(function($q1) use($request){
+                $q1->orWhere('identification',$request->title)
+                    ->orWhere('odd',$request->title);
+            });
+            $q->orWhereHas('GoodLocation', function($query) use ($request){
+                $query->where('cellphone',$request->title)->orWhere('name',$request->title);
+            });
+            $q->orWhereHas('goodsList', function($query) use ($request){
+                $query->where('name','like',"%$request->title%");
+            });
         }
-        $q->leftJoin('dhls', 'dhls.id', '=', 'good_indents.dhl_id');
-        $q->leftJoin('good_locations', 'good_locations.good_indent_id', '=', 'good_indents.id');
-      
         $limit=$request->limit;
         $q->orderBy('updated_at','DESC');
         $paginate=$q->with(['goodsList'=>function($q){
             $q->with(['goodSku']);
-        }])->paginate($limit);
+        },'GoodLocation','Dhl'])->paginate($limit);
         return resReturn(1,$paginate);
     }
 
