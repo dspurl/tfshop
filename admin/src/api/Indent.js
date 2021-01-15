@@ -46,3 +46,15 @@ export function query(query) {
     params: query
   })
 }
+
+export function updateDhl(data) {
+  data = Qs.parse({
+    data
+  })
+  data = data.data
+  return request({
+    url: 'updateDhl',
+    method: 'POST',
+    data
+  })
+}

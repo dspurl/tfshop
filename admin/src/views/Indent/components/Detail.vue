@@ -138,14 +138,15 @@
       <div slot="header" class="clearfix">
         <span>配送</span>
       </div>
-      <div v-if="list.state === 2">
-        <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
+      <div>
+        <el-form ref="dataForm" :rules="rules" :model="temp" label-width="120px" style="width: 400px; margin-left:50px;">
           <el-form-item label="运费">
             <span v-if="list.carriage">{{ list.carriage | 1000 }}元</span>
             <span v-else>免运费</span>
           </el-form-item>
           <el-form-item label="物流公司" prop="dhl_id">
-            <el-select v-model="temp.dhl_id" placeholder="请选择" clearable>
+            <div v-if="list.dhl && !temp.dhl">{{ list.dhl.name }}</div>
+            <el-select v-else v-model="temp.dhl_id" placeholder="请选择" clearable>
               <el-option
                 v-for="(item,index) in dhl"
                 :key="index"
@@ -154,21 +155,14 @@
             </el-select>
           </el-form-item>
           <el-form-item label="运单号" prop="odd">
-            <el-input v-model="temp.odd" maxlength="255" clearable/>
+            <div v-if="list.odd && !temp.odd">{{ list.odd }}</div>
+            <el-input v-else v-model="temp.odd" maxlength="255" clearable/>
+          </el-form-item>
+          <el-form-item v-if="list.state === 3">
+            <el-button v-if="temp.id" :loading="dhlLoading" type="primary" @click="setDhlUpdate">保存</el-button>
+            <el-button v-else type="primary" @click="dhlUpdate">编辑</el-button>
           </el-form-item>
         </el-form>
-      </div>
-      <div v-else>
-        <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-          <el-col v-if="list.carriage" :span="24">运费：{{ list.carriage | 1000 }}元</el-col>
-          <el-col v-else :span="24">运费：免运费</el-col>
-        </el-row>
-        <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-          <el-col v-if="list.dhl" :span="24">物流公司：{{ list.dhl.name }}</el-col>
-        </el-row>
-        <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-          <el-col :span="24">运单号：{{ list.odd }}</el-col>
-        </el-row>
       </div>
     </el-card>
     <!-- 退款记录 -->
@@ -187,7 +181,7 @@
       </el-row>
     </el-card>
     <div class="right" style="margin-top: 20px;">
-      <el-button v-if="list.state !== 1 && !list.refund_money" type="danger" @click="dialogFormVisible = true">退款</el-button>
+      <el-button v-if="(list.state !== 1 && !list.refund_money) || !list.state === 8" type="danger" @click="dialogFormVisible = true">退款</el-button>
       <el-button v-if="list.state === 2" type="primary" @click="createSubmit()">发货</el-button>
     </div>
     <!--退款-->
@@ -222,14 +216,16 @@
   }
 </style>
 <script>
-import { getDetails, createSubmit, updateSubmit, query } from '@/api/Indent'
+import { getDetails, createSubmit, updateSubmit, query, updateDhl } from '@/api/Indent'
 import { dhlList } from '@/api/dhl'
 export default {
   name: 'IndentListDetails',
   data() {
     return {
+      dhlLoading: false,
       queryLoading: false,
       order_progress: 0,
+      logistics: false,
       list: '',
       dialogFormVisible: false,
       listLoading: true,
@@ -351,6 +347,24 @@ export default {
         })
         this.getList()
         this.queryLoading = false
+      })
+    },
+    // 编辑配送信息
+    dhlUpdate() {
+      this.temp = this.list
+    },
+    // 保存配送信息
+    setDhlUpdate() {
+      this.dhlLoading = true
+      updateDhl(this.temp).then(() => {
+        this.dhlLoading = false
+        this.temp = {}
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: '保存成功',
+          type: 'success',
+          duration: 2000
+        })
       })
     },
     getSummaries(param) {

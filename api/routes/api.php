@@ -108,6 +108,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('indent', 'IndentController@index')->middleware(['permissions:IndentList']);    //订单列表
         Route::get('indent/{id}', 'IndentController@show')->middleware(['permissions:EditIndent']);    //订单详情
         Route::post('indentShipments', 'IndentController@shipment')->middleware(['permissions:Shipment']); //发货
+        Route::post('updateDhl', 'IndentController@updateDhl')->middleware(['permissions:EditIndent']); //修改配送信息
         Route::put('indentRefund/{id}', 'IndentController@refund')->middleware(['permissions:Refund']); //退款
         Route::get('query', 'IndentController@query')->middleware(['permissions:EditIndent']);    //查询订单
 
