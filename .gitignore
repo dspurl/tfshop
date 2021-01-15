@@ -4,5 +4,4 @@
 admin/config/dev.env.js
 trade/Dsshop/App.vue
 trade/Dsshop/unpackage/
-version/node_modules
-version/dist
+version
