@@ -63,6 +63,8 @@ Dsshop是一个商城解决方案，它采用前后端分离，后端基于larav
 
 <p><a href="https://dspurl.github.io/dsshop/guide/getting-started.html#%E5%82%BB%E7%93%9C%E5%BC%8F%E5%AE%89%E8%A3%85%E5%8C%85">点击查阅详细步骤</a></p>
 
+<p><a href="https://dswjcms_purl.gitee.io/dsshop/guide/getting-started.html#%E5%82%BB%E7%93%9C%E5%BC%8F%E5%AE%89%E8%A3%85%E5%8C%85">点击查阅详细步骤（上面访问慢的话，点击这里）</a></p>
+
 
 
 命令行安装
