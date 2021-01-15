@@ -95,7 +95,7 @@ class UserController extends Controller
                 break;
         }
         if($request->title){
-            $q->where('id',$request->title)->orWhere('phone',$request->title)->orWhere('name','like','%'.$request->title.'%');
+            $q->where('id',$request->title)->orWhere('cellphone',$request->title)->orWhere('name','like','%'.$request->title.'%');
         }
         if($request->timeInterval){
             $timeInterval=explode("至",$request->timeInterval);
