@@ -32,7 +32,11 @@ class IndentController extends Controller
         GoodIndentCommodity::$withoutAppends = false;
         $q = GoodIndent::query();
         if($request->activeIndex){
-            $q->where('state',$request->activeIndex);
+            if($request->activeIndex==7){
+                $q->whereRaw('(state=7 OR state=8)');
+             }else{
+                $q->where('state',$request->activeIndex);
+            }           
         }
         if($request->title){
             $q->where(function($q1) use($request){
