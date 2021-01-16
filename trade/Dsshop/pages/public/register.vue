@@ -167,7 +167,7 @@
 					  this.$api.msg('手机号长度有误')
 					  return false;
 					}
-					var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+					var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
 					if (!myreg.test(ruleForm.cellphone)) {
 					  this.$api.msg('手机号有误')
 					  return false
