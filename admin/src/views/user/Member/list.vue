@@ -5,7 +5,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
       <el-button v-permission="$store.jurisdiction.CreateAdmin" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
-
     <el-table
       v-loading="listLoading"
       :key="tableKey"
@@ -50,9 +49,9 @@
           <span>{{ scope.row.time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
+      <el-table-column v-if="$store.jurisdiction.UpdataAdmin || $store.jurisdiction.DeleteAdmin" :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.UpdataPower" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="$store.jurisdiction.UpdataAdmin" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
           <el-button v-permission="$store.jurisdiction.DeleteAdmin" type="danger" size="mini" @click="handleDelete(scope.row)">{{ $t('usuel.delete') }}</el-button>
         </template>
       </el-table-column>
@@ -137,7 +136,7 @@ import { getToken } from '@/utils/auth'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 export default {
-  name: 'AdministratorList',
+  name: 'AdminList',
   components: { Pagination },
   directives: { waves },
   data() {

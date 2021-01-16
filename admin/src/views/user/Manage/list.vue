@@ -63,7 +63,7 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.UpdataPower" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-button v-permission="$store.jurisdiction.UpdataUser" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -155,7 +155,7 @@ import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
 export default {
-  name: 'UsersList',
+  name: 'MemberList',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -163,7 +163,7 @@ export default {
       if (value === '') {
         callback(new Error(this.$t('hint.enterMobile')))
       } else {
-        if (!(/^1[34578]\d{9}$/.test(value))) {
+        if (!(/^1[345678]\d{9}$/.test(value))) {
           callback(new Error(this.$t('hint.mobileFormatWrong')))
         }
         callback()

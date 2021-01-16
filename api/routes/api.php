@@ -23,12 +23,12 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         //首页
         Route::get('index', 'IndexController@index');  //首页
         //用户管理
-        Route::get('admin', 'UserController@index')->middleware(['permissions:AdministratorList']);  //管理员列表
+        Route::get('admin', 'UserController@index')->middleware(['permissions:AdminList']);  //管理员列表
         Route::post('admin/create', 'UserController@createAdmin')->middleware(['permissions:CreateAdmin']);  //添加管理员
         Route::put('admin', 'UserController@updataAdmin')->middleware(['permissions:UpdataAdmin']);  //修改管理员/密码
         Route::delete('admin/{id}', 'UserController@destroyAdmin')->middleware(['permissions:DeleteAdmin']);  //删除管理员
 
-        Route::get('user', 'UserController@user')->middleware(['permissions:UsersList']);  //用户列表
+        Route::get('user', 'UserController@user')->middleware(['permissions:MemberList']);  //用户列表
         Route::post('user', 'UserController@createUser')->middleware(['permissions:CreateUser']);  //添加用户
         Route::put('user', 'UserController@updataUser')->middleware(['permissions:UpdataUser']);  //修改用户
 
