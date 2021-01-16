@@ -3,7 +3,7 @@ import Layout from '@/views/layout/Layout'
 
 // 模板
 export const componentsMap = {
-  dashboard: () => import('@/views/Dashboard/index'),
+  Dashboard: () => import('@/views/Dashboard/index'),
   Admin: () => import('@/views/User/Admin/index'),
   AdminList: () => import('@/views/User/Admin/list'),
   Manage: () => import('@/views/User/Manage/index'),
@@ -33,16 +33,16 @@ export const componentsMap = {
   EditProduct: () => import('@/views/GoodsManage/goods/edit'),
   // 运费模板
   Freight: () => import('@/views/Freight/index'),
-  freightList: () => import('@/views/Freight/list'),
+  FreightList: () => import('@/views/Freight/list'),
   CreateFreight: () => import('@/views/Freight/create'),
   EditFreight: () => import('@/views/Freight/edit'),
   // 运费模板
   Dhl: () => import('@/views/Dhl/index'),
-  dhlList: () => import('@/views/Dhl/list'),
+  DhlList: () => import('@/views/Dhl/list'),
   // 订单管理
   Indent: () => import('@/views/Indent/index'),
-  indentList: () => import('@/views/Indent/list'),
-  shipment: () => import('@/views/Indent/shipment'),
+  IndentList: () => import('@/views/Indent/list'),
+  Shipment: () => import('@/views/Indent/shipment'),
   // 轮播
   Banner: () => import('@/views/Tool/Banner/index'),
   BannerList: () => import('@/views/Tool/Banner/list'),
