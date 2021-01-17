@@ -53,7 +53,9 @@ export const componentsMap = {
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
-  PlugInList: () => import('@/views/Plugin/list')
+  PlugInList: () => import('@/views/Plugin/list'),
+  CreatePlugIn: () => import('@/views/Plugin/create'),
+  EditPlugIn: () => import('@/views/Plugin/edit'),
 
 }
 

@@ -1,5 +1,24 @@
 <template>
   <div class="app-container">
+    <div class="filter-container">
+      <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
+        <el-menu-item index="1">已安装</el-menu-item>
+        <el-menu-item index="2">插件市场</el-menu-item>
+      </el-menu>
+      <br/>
+      <el-form :inline="true" :model="listQuery" class="demo-form-inline">
+        <el-form-item label="关键字">
+          <el-input v-model="listQuery.title" placeholder="商品标题/商品货号" clearable/>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="handleFilter">搜索</el-button>
+        </el-form-item>
+      </el-form>
+      <br>
+      <router-link v-permission="$store.jurisdiction.CreatePlugIn" :to="'createPlugIn'">
+        <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">创建插件</el-button>
+      </router-link>
+    </div>
     <el-table
       v-loading="listLoading"
       ref="multipleTable"
