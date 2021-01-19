@@ -47,23 +47,23 @@ class ResourceMigration extends Command
             $con = explode("/storage", $r->img);
             if (count($con) > 1) {
                 $con[0] = request()->root();
-                Resource::where('id',$r->id)->update(['img' => implode("/storage",$con)]);
+                Resource::where('id', $r->id)->update(['img' => implode("/storage", $con)]);
             }
         }
-        $Admin=Admin::get();
+        $Admin = Admin::get();
         foreach ($Admin as $a) {
             $con = explode("/storage", $a->portrait);
             if (count($con) > 1) {
                 $con[0] = request()->root();
-                Admin::where('id',$a->id)->update(['portrait' => implode("/storage",$con)]);
+                Admin::where('id', $a->id)->update(['portrait' => implode("/storage", $con)]);
             }
         }
-        $User=User::get();
+        $User = User::get();
         foreach ($User as $u) {
             $con = explode("/storage", $u->portrait);
             if (count($con) > 1) {
                 $con[0] = request()->root();
-                User::where('id',$u->id)->update(['portrait' => implode("/storage",$con)]);
+                User::where('id', $u->id)->update(['portrait' => implode("/storage", $con)]);
             }
         }
         $GoodIndentCommodity = GoodIndentCommodity::get();
@@ -71,7 +71,7 @@ class ResourceMigration extends Command
             $con = explode("/storage", $g->img);
             if (count($con) > 1) {
                 $con[0] = request()->root();
-                GoodIndentCommodity::where('id',$g->id)->update(['img' => implode("/storage",$con)]);
+                GoodIndentCommodity::where('id', $g->id)->update(['img' => implode("/storage", $con)]);
             }
         }
     }
