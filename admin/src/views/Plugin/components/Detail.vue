@@ -17,19 +17,6 @@
       <el-form-item label="插件描述" prop="description">
         <el-input v-model="ruleForm.description" type="textarea" maxlength="30" clearable style="width:250px;"/>
       </el-form-item>
-      <el-form-item label="插件类型" prop="type">
-        <el-radio-group v-model="ruleForm.type" @change="getRelevance">
-          <el-radio :label="1">通用组件</el-radio>
-          <el-radio :label="2">功能组件</el-radio>
-          <el-radio :label="3">行业组件</el-radio>
-        </el-radio-group>
-        <div class="tip">
-          <p>1、通用组件：不可出售，不可关联其它组件</p>
-          <p>2、功能组件：不可单独出售，可关联通用组件和功能组件</p>
-          <p>3、行业组件：可以单独出售、捆绑出售、可关联通用组件、功能组件、其它行业组件</p>
-          <p>4、一般情况出售给租户的应该是行业组件，而功能组件是在行业组件下作为各版本功能区分升级之用</p>
-        </div>
-      </el-form-item>
       <el-form-item v-if="ruleForm.type != 3" label="组件权限">
         <el-table
           :data="ruleForm.element_rule"
@@ -108,65 +95,13 @@
           <p>9.编辑组件权限时，如果是新增，请不要将原先已存在的权限直接修改</p>
         </div>
       </el-form-item>
-      <div v-if="ruleForm.type != 1">
+      
+      <div>
         <el-form-item label="销售属性">
           <el-table
             :data="ruleForm.element_version"
             border
             style="width: 100%">
-            <el-table-column v-if="ruleForm.type === 3" type="expand">
-              <template slot-scope="scope">
-                <el-table
-                  :data="scope.row.rule"
-                  border
-                  style="width: 100%">
-                  <el-table-column
-                    prop="introduction"
-                    label="角色名称">
-                    <template slot-scope="props">
-                      <div class="drawing">
-                        {{ props.row.introduction }}
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="roles"
-                    label="角色标识">
-                    <template slot-scope="props">
-                      <div class="drawing">
-                        {{ props.row.roles }}
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    prop="description"
-                    label="角色描述">
-                    <template slot-scope="props">
-                      <div class="drawing">
-                        {{ props.row.description }}
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    label="操作">
-                    <template slot-scope="props">
-                      <div class="drawing">
-                        <el-button type="primary" icon="el-icon-edit" circle @click="updateVersionRule(props.row, scope.$index, props.$index)"/>
-                        <el-button type="danger" icon="el-icon-delete" circle @click="deleteVersionRule(scope.$index, props.$index)"/>
-                      </div>
-                    </template>
-                  </el-table-column>
-                </el-table>
-                <br>
-                <el-form-item>
-                  <el-button type="primary" round @click="addVersionRole(scope.$index)">添加角色</el-button>
-                  <div class="tip">
-                    <p>1.角色必须要有admin，不然租户登录时将没有任何权限</p>
-                    <p>2.角色权限即租户端的菜单，有做缓存，只有在更新角色权限时，才会触发租户端更新</p>
-                  </div>
-                </el-form-item>
-              </template>
-            </el-table-column>
             <el-table-column
               prop="name"
               label="版本名称"
@@ -294,44 +229,10 @@
       <el-form-item label="组件详情" prop="details">
         <!--<ds-editor :layouts="ruleForm.details"/>-->
       </el-form-item>
-      <el-form-item label="是否显示" prop="shows">
-        <el-radio-group v-model="ruleForm.shows">
-          <el-radio :label="1">显示</el-radio>
-          <el-radio :label="2">隐藏</el-radio>
-        </el-radio-group>
-      </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">提交</el-button>
       </el-form-item>
     </el-form>
-    <!--添加角色-->
-    <el-dialog v-loading="rolesloading" :title="textMap[dialogRolesStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-      <el-form ref="dataForm" :rules="temprules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="角色名称" prop="introduction">
-          <el-input v-model="temp.introduction" maxlength="80" clearable/>
-        </el-form-item>
-        <el-form-item label="角色标识" prop="roles">
-          <el-input v-model="temp.roles" maxlength="30" clearable style="width:120px;"/>
-        </el-form-item>
-        <el-form-item label="角色描述" prop="description">
-          <el-input :autosize="{ minRows: 2, maxRows: 4}" v-model="temp.description" type="textarea" maxlength="255" clearable/>
-        </el-form-item>
-        <el-form-item label="权限" prop="jurisdiction">
-          <el-tree
-            ref="tree"
-            :data="lementRule"
-            :props="defaultProps"
-            :default-checked-keys="temp.rule"
-            default-expand-all
-            show-checkbox
-            node-key="id"/>
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogRolesStatus==='create'?createMap():updateMap()">确定</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <script>
