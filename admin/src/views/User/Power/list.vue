@@ -12,7 +12,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
       <el-button v-permission="$store.jurisdiction.CreatePower" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('usuel.add') }}</el-button>
     </div>
-    
     <el-table
       v-loading="listLoading"
       :key="tableKey"
@@ -60,10 +59,8 @@
         </template>
       </el-table-column>
     </el-table>
-    
     <!--分页-->
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
-    
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
@@ -124,192 +121,192 @@
 </style>
 
 <script>
-  import { powerList, createPower, updatePower, deletePower } from '@/api/user'
-  import waves from '@/directive/waves' // Waves directiveimport { jurisdiction } from '@/utils'
-  import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-  
-  export default {
-    name: 'PowerList',
-    components: { Pagination },
-    directives: { waves },
-    data() {
-      var validateApi = (rule, value, callback) => {
-        if (value === '') {
-          if (this.temp.pid === '') {
-            callback(new Error(this.$t('user.apiAndGroupAtLeastOneItemToFillIn')))
-          } else if (this.temp.pid > 0) {
-            callback(new Error(this.$t('user.apiCannotBeEmpty')))
-          } else {
-            callback()
-          }
+import { powerList, createPower, updatePower, deletePower } from '@/api/user'
+import waves from '@/directive/waves' // Waves directiveimport { jurisdiction } from '@/utils'
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+
+export default {
+  name: 'PowerList',
+  components: { Pagination },
+  directives: { waves },
+  data() {
+    var validateApi = (rule, value, callback) => {
+      if (value === '') {
+        if (this.temp.pid === '') {
+          callback(new Error(this.$t('user.apiAndGroupAtLeastOneItemToFillIn')))
+        } else if (this.temp.pid > 0) {
+          callback(new Error(this.$t('user.apiCannotBeEmpty')))
         } else {
           callback()
         }
+      } else {
+        callback()
       }
-      return {
-        tableKey: 0,
-        options: [],
-        list: null,
-        total: 0,
-        textMap: {
-          update: this.$t('usuel.amend'),
-          create: this.$t('usuel.add')
-        },
-        listLoading: true,
-        listQuery: {
-          page: 1,
-          limit: 10,
-          sort: '+id',
-          pid: []
-        },
-        temp: {
-          title: '',
-          api: '',
-          state: 0,
-          pid: [],
-          sort: 0
-        },
-        dialogFormVisible: false,
-        dialogStatus: '',
-        adminRules: {
-          api: [
-            { validator: validateApi, trigger: 'blur' }
-          ],
-          pid: [
-            { required: true, message: this.$t('user.thePermissionNameCannotBeEmpty'), trigger: 'blur' }
-          ],
-          title: [
-            { required: true, message: this.$t('user.thePermissionNameCannotBeEmpty'), trigger: 'blur' }
-          ]
-        },
-        downloadLoading: false
-      }
+    }
+    return {
+      tableKey: 0,
+      options: [],
+      list: null,
+      total: 0,
+      textMap: {
+        update: this.$t('usuel.amend'),
+        create: this.$t('usuel.add')
+      },
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        limit: 10,
+        sort: '+id',
+        pid: []
+      },
+      temp: {
+        title: '',
+        api: '',
+        state: 0,
+        pid: [],
+        sort: 0
+      },
+      dialogFormVisible: false,
+      dialogStatus: '',
+      adminRules: {
+        api: [
+          { validator: validateApi, trigger: 'blur' }
+        ],
+        pid: [
+          { required: true, message: this.$t('user.thePermissionNameCannotBeEmpty'), trigger: 'blur' }
+        ],
+        title: [
+          { required: true, message: this.$t('user.thePermissionNameCannotBeEmpty'), trigger: 'blur' }
+        ]
+      },
+      downloadLoading: false
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      this.listLoading = true
+      powerList(this.listQuery).then(response => {
+        this.list = response.data.data
+        this.options = response.data.options
+        this.total = response.data.total
+        this.listLoading = false
+      })
     },
-    created() {
+    handleFilter() {
+      this.listQuery.page = 1
+      if (this.listQuery.timeInterval) {
+        this.listQuery.timeInterval = this.listQuery.timeInterval.join('至')
+      }
       this.getList()
     },
-    methods: {
-      getList() {
-        this.listLoading = true
-        powerList(this.listQuery).then(response => {
-          this.list = response.data.data
-          this.options = response.data.options
-          this.total = response.data.total
-          this.listLoading = false
-        })
-      },
-      handleFilter() {
-        this.listQuery.page = 1
-        if (this.listQuery.timeInterval) {
-          this.listQuery.timeInterval = this.listQuery.timeInterval.join('至')
-        }
-        this.getList()
-      },
-      
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'id') {
-          this.sortByID(order)
-        } else if (prop === 'time') {
-          this.sortByTIME(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+id'
-        } else {
-          this.listQuery.sort = '-id'
-        }
-        this.handleFilter()
-      },
-      resetTemp() {
-        this.temp = {
-          title: '',
-          api: '',
-          state: 0,
-          pid: [],
-          sort: 0
-        }
-      },
-      handleCreate(row = null) {
-        if (!row) {
-          this.resetTemp()
-        } else {
-          this.temp = Object.assign({}, row)
-        }
-        this.dialogStatus = 'create'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      createData() { // 添加
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            createPower(this.temp).then(() => {
-              this.getList()
-              this.dialogFormVisible = false
-              this.$notify({
-                title: this.$t('hint.succeed'),
-                message: this.$t('hint.creatingSuccessful'),
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
-      updateData() { // 更新
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            updatePower(this.temp).then(() => {
-              this.getList()
-              this.dialogFormVisible = false
-              this.$notify({
-                title: this.$t('hint.succeed'),
-                message: this.$t('hint.updateSuccessful'),
-                type: 'success',
-                duration: 2000
-              })
-              this.updateUserinfo()
-            })
-          }
-        })
-      },
-      handleUpdate(row) { // 修改
-        row.password = ''
-        this.temp = Object.assign({}, row) // copy obj
-        this.temp.pid = this.temp.pid
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      handleDelete(row) { // 删除
-        this.$confirm(this.$t('hint.deleteDetermine'), this.$t('hint.hint'), {
-          confirmButtonText: this.$t('usuel.confirm'),
-          cancelButtonText: this.$t('usuel.cancel'),
-          type: 'warning'
-        }).then(() => {
-          deletePower(row.id).then(() => {
+
+    sortChange(data) {
+      const { prop, order } = data
+      if (prop === 'id') {
+        this.sortByID(order)
+      } else if (prop === 'time') {
+        this.sortByTIME(order)
+      }
+    },
+    sortByID(order) {
+      if (order === 'ascending') {
+        this.listQuery.sort = '+id'
+      } else {
+        this.listQuery.sort = '-id'
+      }
+      this.handleFilter()
+    },
+    resetTemp() {
+      this.temp = {
+        title: '',
+        api: '',
+        state: 0,
+        pid: [],
+        sort: 0
+      }
+    },
+    handleCreate(row = null) {
+      if (!row) {
+        this.resetTemp()
+      } else {
+        this.temp = Object.assign({}, row)
+      }
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    createData() { // 添加
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          createPower(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
               title: this.$t('hint.succeed'),
-              message: this.$t('hint.deletedSuccessful'),
+              message: this.$t('hint.creatingSuccessful'),
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
+    updateData() { // 更新
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          updatePower(this.temp).then(() => {
+            this.getList()
+            this.dialogFormVisible = false
+            this.$notify({
+              title: this.$t('hint.succeed'),
+              message: this.$t('hint.updateSuccessful'),
               type: 'success',
               duration: 2000
             })
             this.updateUserinfo()
           })
-        }).catch(() => {
+        }
+      })
+    },
+    handleUpdate(row) { // 修改
+      row.password = ''
+      this.temp = Object.assign({}, row) // copy obj
+      this.temp.pid = this.temp.pid
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    handleDelete(row) { // 删除
+      this.$confirm(this.$t('hint.deleteDetermine'), this.$t('hint.hint'), {
+        confirmButtonText: this.$t('usuel.confirm'),
+        cancelButtonText: this.$t('usuel.cancel'),
+        type: 'warning'
+      }).then(() => {
+        deletePower(row.id).then(() => {
+          this.getList()
+          this.dialogFormVisible = false
+          this.$notify({
+            title: this.$t('hint.succeed'),
+            message: this.$t('hint.deletedSuccessful'),
+            type: 'success',
+            duration: 2000
+          })
+          this.updateUserinfo()
         })
-      },
-      updateUserinfo() {
-        // this.$store.dispatch('ChangeRoles') // 此方法会导致VUE提示死循环
-        location.reload()
-      }
+      }).catch(() => {
+      })
+    },
+    updateUserinfo() {
+      // this.$store.dispatch('ChangeRoles') // 此方法会导致VUE提示死循环
+      location.reload()
     }
   }
+}
 </script>

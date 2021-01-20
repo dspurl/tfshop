@@ -55,8 +55,7 @@ export const componentsMap = {
   PlugIn: () => import('@/views/Plugin/index'),
   PlugInList: () => import('@/views/Plugin/list'),
   CreatePlugIn: () => import('@/views/Plugin/create'),
-  EditPlugIn: () => import('@/views/Plugin/edit'),
-
+  EditPlugIn: () => import('@/views/Plugin/edit')
 }
 
 const permission = {

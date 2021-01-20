@@ -5,7 +5,6 @@
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
       <el-button v-permission="$store.jurisdiction.CreateAdmin" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
-    
     <el-table
       v-loading="listLoading"
       :key="tableKey"
@@ -57,10 +56,8 @@
         </template>
       </el-table-column>
     </el-table>
-    
     <!--分页-->
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
-    
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
@@ -105,7 +102,6 @@
     </el-dialog>
   </div>
 </template>
-
 <style rel="stylesheet/scss" lang="scss">
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
@@ -132,230 +128,230 @@
   }
 </style>
 <script>
-  import { fetchList, createAdmin, amendAdmin, deleteAdmin } from '@/api/user'
-  import { getToken } from '@/utils/auth'
-  import waves from '@/directive/waves' // Waves directive
-  import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
-  export default {
-    name: 'AdministratorList',
-    components: { Pagination },
-    directives: { waves },
-    data() {
-      var validateMobile = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error(this.$t('hint.enterEmail')))
-        } else {
-          if (!(/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(value))) {
-            callback(new Error(this.$t('hint.EmailFormatWrong')))
-          }
-          callback()
+import { fetchList, createAdmin, amendAdmin, deleteAdmin } from '@/api/user'
+import { getToken } from '@/utils/auth'
+import waves from '@/directive/waves' // Waves directive
+import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+export default {
+  name: 'AdministratorList',
+  components: { Pagination },
+  directives: { waves },
+  data() {
+    var validateMobile = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(this.$t('hint.enterEmail')))
+      } else {
+        if (!(/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(value))) {
+          callback(new Error(this.$t('hint.EmailFormatWrong')))
         }
+        callback()
       }
-      return {
-        actionurl: process.env.BASE_API + 'uploadPictures',
-        imgProgress: false,
-        imgProgressPercent: 0,
-        imgHeaders: {
-          Authorization: 'Bearer ' + getToken('access_token')
-        },
-        imgData: {
-          type: 1,
-          size: 1024 * 500
-        },
-        uploadData: {},
-        imageUrl: '',
-        portrait: '',
-        tableKey: 0,
-        list: null,
-        textMap: {
-          update: '修改',
-          create: '添加'
-        },
-        total: 0,
-        listLoading: true,
-        listQuery: {
-          page: 1,
-          limit: 10,
-          sort: '-id'
-        },
-        temp: {
-          password: '',
-          name: '',
-          portrait: ''
-        },
-        dialogFormVisible: false,
-        dialogStatus: '',
-        rules: {
-          name: [
-            { required: true, message: this.$t('hint.enterUsername'), trigger: 'blur' },
-            { min: 4, max: 16, message: this.$t('hint.length4_16'), trigger: 'blur' }
-          ],
-          email: [
-            { required: true, message: this.$t('hint.enterEmail'), trigger: 'blur' },
-            { validator: validateMobile, trigger: 'blur' }
-          ],
-          cellphone: [
-            { required: true, message: '手机号不能为空', trigger: 'blur' }
-          ],
-          portrait: [
-            { required: true, message: '请选择头像', trigger: 'change' }
-          ],
-          password: [
-            { required: true, message: this.$t('hint.enterCode'), trigger: 'blur' }
-          ]
-        },
-        downloadLoading: false
-      }
+    }
+    return {
+      actionurl: process.env.BASE_API + 'uploadPictures',
+      imgProgress: false,
+      imgProgressPercent: 0,
+      imgHeaders: {
+        Authorization: 'Bearer ' + getToken('access_token')
+      },
+      imgData: {
+        type: 1,
+        size: 1024 * 500
+      },
+      uploadData: {},
+      imageUrl: '',
+      portrait: '',
+      tableKey: 0,
+      list: null,
+      textMap: {
+        update: '修改',
+        create: '添加'
+      },
+      total: 0,
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        limit: 10,
+        sort: '-id'
+      },
+      temp: {
+        password: '',
+        name: '',
+        portrait: ''
+      },
+      dialogFormVisible: false,
+      dialogStatus: '',
+      rules: {
+        name: [
+          { required: true, message: this.$t('hint.enterUsername'), trigger: 'blur' },
+          { min: 4, max: 16, message: this.$t('hint.length4_16'), trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: this.$t('hint.enterEmail'), trigger: 'blur' },
+          { validator: validateMobile, trigger: 'blur' }
+        ],
+        cellphone: [
+          { required: true, message: '手机号不能为空', trigger: 'blur' }
+        ],
+        portrait: [
+          { required: true, message: '请选择头像', trigger: 'change' }
+        ],
+        password: [
+          { required: true, message: this.$t('hint.enterCode'), trigger: 'blur' }
+        ]
+      },
+      downloadLoading: false
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      this.listLoading = true
+      fetchList(this.listQuery).then(response => {
+        this.list = response.data.data
+        this.total = response.data.total
+        this.listLoading = false
+      })
     },
-    created() {
+    handleFilter() {
+      this.listQuery.page = 1
       this.getList()
     },
-    methods: {
-      getList() {
-        this.listLoading = true
-        fetchList(this.listQuery).then(response => {
-          this.list = response.data.data
-          this.total = response.data.total
-          this.listLoading = false
-        })
-      },
-      handleFilter() {
-        this.listQuery.page = 1
-        this.getList()
-      },
-      
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'id') {
-          this.sortByID(order)
-        } else if (prop === 'time') {
-          this.sortByTIME(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+id'
-        } else {
-          this.listQuery.sort = '-id'
-        }
-        this.handleFilter()
-      },
-      sortByTIME(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+time'
-        } else {
-          this.listQuery.sort = '-time'
-        }
-        this.handleFilter()
-      },
-      resetTemp() {
-        this.temp = {
-          imageUrl: '',
-          password: '',
-          name: '',
-          portrait: ''
-        }
-      },
-      handleCreate() {
-        this.resetTemp()
-        this.dialogStatus = 'create'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      handleUpdate(row) { // 编辑
-        this.temp = null
-        this.temp = row
-        this.rules.password[0].required = false
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      createSubmit() { // 添加
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            createAdmin(this.temp).then(() => {
-              this.getList()
-              this.dialogFormVisible = false
-              this.$notify({
-                title: this.$t('hint.succeed'),
-                message: this.$t('hint.creatingSuccessful'),
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
-      updateSubmit() { // 更新
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            amendAdmin(this.temp).then(() => {
-              this.getList()
-              this.dialogFormVisible = false
-              this.$store.dispatch('GetUserInfo').then(res => {}) // 更新管理员信息
-              this.$notify({
-                title: this.$t('hint.succeed'),
-                message: this.$t('hint.updateSuccessful'),
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
-      // 上传成功
-      handleAvatarSuccess(res, file) {
-        this.temp.portrait = file.response
-        this.imgProgress = false
-        this.imgProgressPercent = 0
-      },
-      // 上传时
-      handleProgress(file, fileList) {
-        this.imgProgressPercent = file.percent
-      },
-      // 图片格式大小验证
-      beforeAvatarUpload(file) {
-        const isLt2M = file.size / 1024 < 500
-        if (
-          ['image/jpeg',
-            'image/gif',
-            'image/png',
-            'image/bmp'
-          ].indexOf(file.type) === -1) {
-          this.$message.error('请上传正确的图片格式')
-          return false
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 500KB!')
-        }
-        this.imgProgress = true
-        return isLt2M
-      },
-      handleDelete(row) { // 删除
-        this.$confirm(this.$t('user.deleteAdmin'), this.$t('hint.hint'), {
-          confirmButtonText: this.$t('usuel.confirm'),
-          cancelButtonText: this.$t('usuel.cancel'),
-          type: 'warning'
-        }).then(() => {
-          deleteAdmin(row.id).then(() => {
+
+    sortChange(data) {
+      const { prop, order } = data
+      if (prop === 'id') {
+        this.sortByID(order)
+      } else if (prop === 'time') {
+        this.sortByTIME(order)
+      }
+    },
+    sortByID(order) {
+      if (order === 'ascending') {
+        this.listQuery.sort = '+id'
+      } else {
+        this.listQuery.sort = '-id'
+      }
+      this.handleFilter()
+    },
+    sortByTIME(order) {
+      if (order === 'ascending') {
+        this.listQuery.sort = '+time'
+      } else {
+        this.listQuery.sort = '-time'
+      }
+      this.handleFilter()
+    },
+    resetTemp() {
+      this.temp = {
+        imageUrl: '',
+        password: '',
+        name: '',
+        portrait: ''
+      }
+    },
+    handleCreate() {
+      this.resetTemp()
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    handleUpdate(row) { // 编辑
+      this.temp = null
+      this.temp = row
+      this.rules.password[0].required = false
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    createSubmit() { // 添加
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          createAdmin(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
               title: this.$t('hint.succeed'),
-              message: this.$t('hint.deletedSuccessful'),
+              message: this.$t('hint.creatingSuccessful'),
               type: 'success',
               duration: 2000
             })
           })
-        }).catch(() => {
-        })
+        }
+      })
+    },
+    updateSubmit() { // 更新
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          amendAdmin(this.temp).then(() => {
+            this.getList()
+            this.dialogFormVisible = false
+            this.$store.dispatch('GetUserInfo').then(res => {}) // 更新管理员信息
+            this.$notify({
+              title: this.$t('hint.succeed'),
+              message: this.$t('hint.updateSuccessful'),
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
+    // 上传成功
+    handleAvatarSuccess(res, file) {
+      this.temp.portrait = file.response
+      this.imgProgress = false
+      this.imgProgressPercent = 0
+    },
+    // 上传时
+    handleProgress(file, fileList) {
+      this.imgProgressPercent = file.percent
+    },
+    // 图片格式大小验证
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 < 500
+      if (
+        ['image/jpeg',
+          'image/gif',
+          'image/png',
+          'image/bmp'
+        ].indexOf(file.type) === -1) {
+        this.$message.error('请上传正确的图片格式')
+        return false
       }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 500KB!')
+      }
+      this.imgProgress = true
+      return isLt2M
+    },
+    handleDelete(row) { // 删除
+      this.$confirm(this.$t('user.deleteAdmin'), this.$t('hint.hint'), {
+        confirmButtonText: this.$t('usuel.confirm'),
+        cancelButtonText: this.$t('usuel.cancel'),
+        type: 'warning'
+      }).then(() => {
+        deleteAdmin(row.id).then(() => {
+          this.getList()
+          this.dialogFormVisible = false
+          this.$notify({
+            title: this.$t('hint.succeed'),
+            message: this.$t('hint.deletedSuccessful'),
+            type: 'success',
+            duration: 2000
+          })
+        })
+      }).catch(() => {
+      })
     }
   }
+}
 </script>
 <style>
   .avatar-uploader .el-upload {

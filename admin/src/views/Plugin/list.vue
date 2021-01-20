@@ -5,7 +5,7 @@
         <el-menu-item index="1">已安装</el-menu-item>
         <el-menu-item index="2">插件市场</el-menu-item>
       </el-menu>
-      <br/>
+      <br>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="关键字">
           <el-input v-model="listQuery.title" placeholder="商品标题/商品货号" clearable/>

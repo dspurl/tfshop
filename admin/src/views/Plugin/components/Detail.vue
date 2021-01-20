@@ -108,7 +108,6 @@
           <p>9.编辑组件权限时，如果是新增，请不要将原先已存在的权限直接修改</p>
         </div>
       </el-form-item>
-      
       <div v-if="ruleForm.type != 1">
         <el-form-item label="销售属性">
           <el-table
@@ -336,338 +335,338 @@
   </div>
 </template>
 <script>
-  import { getShow, createSubmit, updateSubmit, getRelevance, getElementRule } from '@/api/elements'
-  import DsEditor from '@/components/DsEditor'
-  export default {
-    name: 'ElementsListDetail',
-    components: { DsEditor },
-    props: {
-      isEdit: {
-        type: Boolean,
-        default: false
-      }
-    },
-    data() {
-      var validateIdentify = (rule, value, callback) => {
-        if (!/^[A-Za-z_]+$/.test(value)) {
-          callback(new Error('组件标识只能是英文字母加下划线'))
-        } else {
-          callback()
-        }
-      }
-      var validateRoles = (rule, value, callback) => {
-        var reg = /^[A-Za-z]+$/
-        if (!reg.test(value)) {
-          callback(new Error(this.$t('hint.pleaseEnterLetter')))
-        } else {
-          callback()
-        }
-      }
-      return {
-        submitLoading: false,
-        rolesloading: false,
-        step: 0,
-        textMap: {
-          update: '修改',
-          create: '添加'
-        },
-        defaultProps: {
-          children: 'children',
-          label: 'label'
-        },
-        lementRule: [],
-        dialogStatus: 'create',
-        dialogRolesStatus: 'create',
-        actionurl: process.env.BASE_API + 'uploadPictures',
-        dialogVisible: false,
-        dialogImageUrl: '',
-        loading: false,
-        dialogFormVisible: false,
-        temprules: {
-          introduction: [
-            { required: true, message: '角色名称不能为空', trigger: 'change' }
-          ],
-          roles: [
-            { required: true, message: '角色标识不能为空', trigger: 'change' },
-            { validator: validateRoles, trigger: 'blur' }
-          ],
-          description: [
-            { required: true, message: '角色描述不能为空', trigger: 'change' }
-          ]
-        },
-        temp: {
-          introduction: '',
-          roles: '',
-          description: '',
-          rule: []
-        },
-        id: '',
-        versionRolesIndex: '',
-        rolesIndex: '',
-        ruleForm: {
-          name: '',
-          type: 1,
-          identify: '',
-          description: '',
-          details: [],
-          shows: 1,
-          element_version: [],
-          element_rule: [],
-          rule: []
-        },
-        relevance: [],
-        imgProgress: false,
-        imglimit: 10,
-        imgData: {
-          type: 1,
-          size: 1024 * 1024 * 2
-        },
-        imgProgressPercent: 0,
-        rules: {
-          name: [
-            { required: true, message: '请填写组件名称', trigger: 'blur' }
-          ],
-          identify: [
-            { required: true, message: '请填写组件标识', trigger: 'blur' },
-            { validator: validateIdentify, trigger: 'blur' }
-          ],
-          description: [
-            { required: true, message: '请填写组件描述', trigger: 'blur' }
-          ],
-          type: [
-            { required: true, message: '请选择组件类型', trigger: 'change' }
-          ],
-          shows: [
-            { required: true, message: '请选择是否显示', trigger: 'change' }
-          ]
-        }
-      }
-    },
-    created() {
-      if (this.isEdit) {
-        this.id = this.$route.query.id
-      }
-      // this.getList()
-    },
-    methods: {
-      getList() {
-        this.loading = true
-        if (this.id > 0) {
-          getShow(this.id).then(response => {
-            this.ruleForm = response.data
-            if (this.ruleForm.type !== 1) {
-              this.getRelevance(this.ruleForm.type)
-            }
-            this.dialogStatus = 'update'
-            this.loading = false
-          })
-        } else {
-          this.ruleForm.element_rule = [{
-            api: 'List',
-            icon: '',
-            title: '查看',
-            menu: true,
-            sort: 5
-          }, {
-            api: 'Create',
-            icon: '',
-            title: '添加',
-            menu: false,
-            sort: 5
-          }, {
-            api: 'Update',
-            icon: '',
-            title: '编辑',
-            menu: false,
-            sort: 5
-          }, {
-            api: 'Delete',
-            icon: '',
-            title: '删除',
-            menu: false,
-            sort: 5
-          }]
-          getShow(0).then(response => {
-            this.loading = false
-          })
-        }
-      },
-      // 获取关联属性
-      getRelevance(value) {
-        if (value !== 1) {
-          getRelevance(this.ruleForm.type, this.ruleForm.id).then(response => {
-            this.relevance = response.data
-          })
-        }
-      },
-      createSubmit() { // 添加
-        this.$refs['ruleForm'].validate((valid) => {
-          if (valid) {
-            createSubmit(this.ruleForm).then(() => {
-              this.dialogFormVisible = false
-              this.$notify({
-                title: this.$t('hint.succeed'),
-                message: this.$t('hint.creatingSuccessful'),
-                type: 'success',
-                duration: 2000
-              })
-              setTimeout(this.$router.back(-1), 2000)
-            })
-          }
-        })
-      },
-      updateSubmit() { // 更新
-        this.$refs['ruleForm'].validate((valid) => {
-          if (valid) {
-            updateSubmit(this.ruleForm.id, this.ruleForm).then(() => {
-              this.dialogFormVisible = false
-              this.$notify({
-                title: this.$t('hint.succeed'),
-                message: this.$t('hint.updateSuccessful'),
-                type: 'success',
-                duration: 2000
-              })
-              setTimeout(this.$router.back(-1), 2000)
-            })
-          }
-        })
-      },
-      // 删除
-      handleGoodsGalleryRemove(index) {
-        this.ruleForm.img.splice(index, 1)
-      },
-      // 添加组件权限
-      addRule() {
-        this.ruleForm.element_rule.push({
-          api: '',
-          icon: '',
-          title: '',
-          menu: false,
-          sort: 5
-        })
-      },
-      // 删除组件权限
-      deleteRule(index) {
-        this.ruleForm.element_rule.splice(index, 1)
-      },
-      // 添加销售属性
-      addSalesProperty() {
-        this.ruleForm.element_version.push({
-          name: '',
-          price: '',
-          number: '',
-          terminal: '',
-          discounts: '',
-          min: '',
-          max: '',
-          rule: []
-        })
-      },
-      // 删除销售属性
-      deleteSalesProperty(index) {
-        this.ruleForm.element_version.splice(index, 1)
-      },
-      // 添加角色
-      addVersionRole(index) {
-        this.rolesloading = true
-        this.temp = {
-          introduction: '',
-          roles: '',
-          description: '',
-          rule: []
-        }
-        this.rolesIndex = index
-        var relevance = this.ruleForm.element_version[index].relevance
-        getElementRule(relevance).then(response => {
-          this.lementRule = response.data
-          // 添加角色组
-          this.dialogFormVisible = true
-          this.dialogRolesStatus = 'create'
-          this.$nextTick(() => {
-            this.$refs['dataForm'].clearValidate()
-          })
-          this.rolesloading = false
-        })
-        if (this.$refs.tree) {
-          this.$refs.tree.setCheckedKeys([])
-        }
-      },
-      // 更新角色权限
-      updateVersionRule(row, index, indexs) {
-        this.rolesloading = true
-        this.temp = row
-        /* if (this.$refs.tree) {
-          this.$refs.tree.setCheckedKeys(this.temp.rule)
-        } */
-        this.rolesIndex = index // 版本index
-        this.versionRolesIndex = indexs // 版本对应的权限index
-        var relevance = this.ruleForm.element_version[index].relevance
-        getElementRule(relevance).then(response => {
-          this.lementRule = response.data
-          // 添加角色组
-          this.dialogFormVisible = true
-          this.dialogRolesStatus = 'update'
-          this.$nextTick(() => {
-            this.$refs['dataForm'].clearValidate()
-          })
-          this.rolesloading = false
-        })
-      },
-      // 删除角色权限
-      deleteVersionRule(index, indexs) {
-        this.ruleForm.element_version[index].rule.splice(indexs, 1)
-      },
-      // 生成角色权限
-      createMap() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            this.temp.rule = this.$refs.tree.getCheckedKeys()
-            this.$set(this.ruleForm.element_version[this.rolesIndex].rule, this.ruleForm.element_version[this.rolesIndex].rule.length, JSON.parse(JSON.stringify(this.temp)))
-            this.dialogFormVisible = false
-            this.$refs['dataForm'].resetFields()
-          }
-        })
-      },
-      // 生成更新角色权限
-      updateMap() {
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            this.temp.rule = this.$refs.tree.getCheckedKeys()
-            this.$set(this.ruleForm.element_version[this.rolesIndex].rule, this.versionRolesIndex, JSON.parse(JSON.stringify(this.temp)))
-            this.dialogFormVisible = false
-            this.$refs['dataForm'].resetFields()
-          }
-        })
-      },
-      // 点击列表
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url
-        this.dialogVisible = true
-      },
-      // 上传成功
-      handleAvatarSuccess(res, file, fileList) {
-        this.ruleForm.img.push(file.response)
-      },
-      // 图片格式大小验证
-      beforeAvatarUpload(file) {
-        const isLt2M = file.size / 1024 / 1024 < 2
-        if (
-          ['image/jpeg',
-            'image/gif',
-            'image/png',
-            'image/bmp'
-          ].indexOf(file.type) === -1) {
-          this.$message.error('请上传正确的图片格式')
-          return false
-        }
-        if (!isLt2M) {
-          this.$message.error('上传头像图片大小不能超过 2MB!')
-        }
-        this.imgProgress = true
-        return isLt2M
+import { getShow, createSubmit, updateSubmit, getRelevance, getElementRule } from '@/api/elements'
+import DsEditor from '@/components/DsEditor'
+export default {
+  name: 'ElementsListDetail',
+  components: { DsEditor },
+  props: {
+    isEdit: {
+      type: Boolean,
+      default: false
+    }
+  },
+  data() {
+    var validateIdentify = (rule, value, callback) => {
+      if (!/^[A-Za-z_]+$/.test(value)) {
+        callback(new Error('组件标识只能是英文字母加下划线'))
+      } else {
+        callback()
       }
     }
+    var validateRoles = (rule, value, callback) => {
+      var reg = /^[A-Za-z]+$/
+      if (!reg.test(value)) {
+        callback(new Error(this.$t('hint.pleaseEnterLetter')))
+      } else {
+        callback()
+      }
+    }
+    return {
+      submitLoading: false,
+      rolesloading: false,
+      step: 0,
+      textMap: {
+        update: '修改',
+        create: '添加'
+      },
+      defaultProps: {
+        children: 'children',
+        label: 'label'
+      },
+      lementRule: [],
+      dialogStatus: 'create',
+      dialogRolesStatus: 'create',
+      actionurl: process.env.BASE_API + 'uploadPictures',
+      dialogVisible: false,
+      dialogImageUrl: '',
+      loading: false,
+      dialogFormVisible: false,
+      temprules: {
+        introduction: [
+          { required: true, message: '角色名称不能为空', trigger: 'change' }
+        ],
+        roles: [
+          { required: true, message: '角色标识不能为空', trigger: 'change' },
+          { validator: validateRoles, trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '角色描述不能为空', trigger: 'change' }
+        ]
+      },
+      temp: {
+        introduction: '',
+        roles: '',
+        description: '',
+        rule: []
+      },
+      id: '',
+      versionRolesIndex: '',
+      rolesIndex: '',
+      ruleForm: {
+        name: '',
+        type: 1,
+        identify: '',
+        description: '',
+        details: [],
+        shows: 1,
+        element_version: [],
+        element_rule: [],
+        rule: []
+      },
+      relevance: [],
+      imgProgress: false,
+      imglimit: 10,
+      imgData: {
+        type: 1,
+        size: 1024 * 1024 * 2
+      },
+      imgProgressPercent: 0,
+      rules: {
+        name: [
+          { required: true, message: '请填写组件名称', trigger: 'blur' }
+        ],
+        identify: [
+          { required: true, message: '请填写组件标识', trigger: 'blur' },
+          { validator: validateIdentify, trigger: 'blur' }
+        ],
+        description: [
+          { required: true, message: '请填写组件描述', trigger: 'blur' }
+        ],
+        type: [
+          { required: true, message: '请选择组件类型', trigger: 'change' }
+        ],
+        shows: [
+          { required: true, message: '请选择是否显示', trigger: 'change' }
+        ]
+      }
+    }
+  },
+  created() {
+    if (this.isEdit) {
+      this.id = this.$route.query.id
+    }
+    // this.getList()
+  },
+  methods: {
+    getList() {
+      this.loading = true
+      if (this.id > 0) {
+        getShow(this.id).then(response => {
+          this.ruleForm = response.data
+          if (this.ruleForm.type !== 1) {
+            this.getRelevance(this.ruleForm.type)
+          }
+          this.dialogStatus = 'update'
+          this.loading = false
+        })
+      } else {
+        this.ruleForm.element_rule = [{
+          api: 'List',
+          icon: '',
+          title: '查看',
+          menu: true,
+          sort: 5
+        }, {
+          api: 'Create',
+          icon: '',
+          title: '添加',
+          menu: false,
+          sort: 5
+        }, {
+          api: 'Update',
+          icon: '',
+          title: '编辑',
+          menu: false,
+          sort: 5
+        }, {
+          api: 'Delete',
+          icon: '',
+          title: '删除',
+          menu: false,
+          sort: 5
+        }]
+        getShow(0).then(response => {
+          this.loading = false
+        })
+      }
+    },
+    // 获取关联属性
+    getRelevance(value) {
+      if (value !== 1) {
+        getRelevance(this.ruleForm.type, this.ruleForm.id).then(response => {
+          this.relevance = response.data
+        })
+      }
+    },
+    createSubmit() { // 添加
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          createSubmit(this.ruleForm).then(() => {
+            this.dialogFormVisible = false
+            this.$notify({
+              title: this.$t('hint.succeed'),
+              message: this.$t('hint.creatingSuccessful'),
+              type: 'success',
+              duration: 2000
+            })
+            setTimeout(this.$router.back(-1), 2000)
+          })
+        }
+      })
+    },
+    updateSubmit() { // 更新
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          updateSubmit(this.ruleForm.id, this.ruleForm).then(() => {
+            this.dialogFormVisible = false
+            this.$notify({
+              title: this.$t('hint.succeed'),
+              message: this.$t('hint.updateSuccessful'),
+              type: 'success',
+              duration: 2000
+            })
+            setTimeout(this.$router.back(-1), 2000)
+          })
+        }
+      })
+    },
+    // 删除
+    handleGoodsGalleryRemove(index) {
+      this.ruleForm.img.splice(index, 1)
+    },
+    // 添加组件权限
+    addRule() {
+      this.ruleForm.element_rule.push({
+        api: '',
+        icon: '',
+        title: '',
+        menu: false,
+        sort: 5
+      })
+    },
+    // 删除组件权限
+    deleteRule(index) {
+      this.ruleForm.element_rule.splice(index, 1)
+    },
+    // 添加销售属性
+    addSalesProperty() {
+      this.ruleForm.element_version.push({
+        name: '',
+        price: '',
+        number: '',
+        terminal: '',
+        discounts: '',
+        min: '',
+        max: '',
+        rule: []
+      })
+    },
+    // 删除销售属性
+    deleteSalesProperty(index) {
+      this.ruleForm.element_version.splice(index, 1)
+    },
+    // 添加角色
+    addVersionRole(index) {
+      this.rolesloading = true
+      this.temp = {
+        introduction: '',
+        roles: '',
+        description: '',
+        rule: []
+      }
+      this.rolesIndex = index
+      var relevance = this.ruleForm.element_version[index].relevance
+      getElementRule(relevance).then(response => {
+        this.lementRule = response.data
+        // 添加角色组
+        this.dialogFormVisible = true
+        this.dialogRolesStatus = 'create'
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
+        this.rolesloading = false
+      })
+      if (this.$refs.tree) {
+        this.$refs.tree.setCheckedKeys([])
+      }
+    },
+    // 更新角色权限
+    updateVersionRule(row, index, indexs) {
+      this.rolesloading = true
+      this.temp = row
+      /* if (this.$refs.tree) {
+        this.$refs.tree.setCheckedKeys(this.temp.rule)
+      } */
+      this.rolesIndex = index // 版本index
+      this.versionRolesIndex = indexs // 版本对应的权限index
+      var relevance = this.ruleForm.element_version[index].relevance
+      getElementRule(relevance).then(response => {
+        this.lementRule = response.data
+        // 添加角色组
+        this.dialogFormVisible = true
+        this.dialogRolesStatus = 'update'
+        this.$nextTick(() => {
+          this.$refs['dataForm'].clearValidate()
+        })
+        this.rolesloading = false
+      })
+    },
+    // 删除角色权限
+    deleteVersionRule(index, indexs) {
+      this.ruleForm.element_version[index].rule.splice(indexs, 1)
+    },
+    // 生成角色权限
+    createMap() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          this.temp.rule = this.$refs.tree.getCheckedKeys()
+          this.$set(this.ruleForm.element_version[this.rolesIndex].rule, this.ruleForm.element_version[this.rolesIndex].rule.length, JSON.parse(JSON.stringify(this.temp)))
+          this.dialogFormVisible = false
+          this.$refs['dataForm'].resetFields()
+        }
+      })
+    },
+    // 生成更新角色权限
+    updateMap() {
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          this.temp.rule = this.$refs.tree.getCheckedKeys()
+          this.$set(this.ruleForm.element_version[this.rolesIndex].rule, this.versionRolesIndex, JSON.parse(JSON.stringify(this.temp)))
+          this.dialogFormVisible = false
+          this.$refs['dataForm'].resetFields()
+        }
+      })
+    },
+    // 点击列表
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url
+      this.dialogVisible = true
+    },
+    // 上传成功
+    handleAvatarSuccess(res, file, fileList) {
+      this.ruleForm.img.push(file.response)
+    },
+    // 图片格式大小验证
+    beforeAvatarUpload(file) {
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (
+        ['image/jpeg',
+          'image/gif',
+          'image/png',
+          'image/bmp'
+        ].indexOf(file.type) === -1) {
+        this.$message.error('请上传正确的图片格式')
+        return false
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      this.imgProgress = true
+      return isLt2M
+    }
   }
+}
 </script>
 <style rel="stylesheet/scss" lang="scss">
   .avatar-uploader .el-upload {

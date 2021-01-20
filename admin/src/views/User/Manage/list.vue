@@ -3,7 +3,6 @@
     <div class="filter-container">
       <el-button v-permission="$store.jurisdiction.CreateManage" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('usuel.add') }}</el-button>
     </div>
-    
     <el-table
       v-loading="listLoading"
       :key="tableKey"
@@ -49,7 +48,6 @@
         </template>
       </el-table-column>
     </el-table>
-    
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="80px">
@@ -109,216 +107,216 @@
   }
 </style>
 <script>
-  import { manageGroupsList, createManageGroups, updateManageGroups, deleteManageGroups } from '@/api/user'
-  import waves from '@/directive/waves' // Waves directive
-  import treeTransfer from 'el-tree-transfer'
-  
-  export default {
-    name: 'ManageList',
-    components: { treeTransfer },
-    directives: { waves },
-    data() {
-      var validateRoles = (rule, value, callback) => {
-        var reg = /^[A-Za-z]+$/
-        if (!reg.test(value)) {
-          callback(new Error(this.$t('hint.pleaseEnterLetter')))
-        } else {
-          callback()
-        }
+import { manageGroupsList, createManageGroups, updateManageGroups, deleteManageGroups } from '@/api/user'
+import waves from '@/directive/waves' // Waves directive
+import treeTransfer from 'el-tree-transfer'
+
+export default {
+  name: 'ManageList',
+  components: { treeTransfer },
+  directives: { waves },
+  data() {
+    var validateRoles = (rule, value, callback) => {
+      var reg = /^[A-Za-z]+$/
+      if (!reg.test(value)) {
+        callback(new Error(this.$t('hint.pleaseEnterLetter')))
+      } else {
+        callback()
       }
-      return {
-        options: [],
-        oldOptions: [],
-        tableKey: 0,
-        list: null,
-        total: 0,
-        textMap: {
-          update: this.$t('usuel.amend'),
-          create: this.$t('usuel.add')
-        },
-        listLoading: true,
-        listQuery: {
-          page: 1,
-          limit: 20,
-          sort: '+id',
-          timeInterval: ''
-        },
-        fromData: [],
-        oldFromData: [],
-        toData: [],
-        temp: {
-          roles: '',
-          introduction: '',
-          group: [],
-          groupname: [],
-          oldGroupValue: [],
-          oldGroup: [],
-          rules: []
-        },
-        dialogFormVisible: false,
-        dialogStatus: '',
-        adminRules: {
-          roles: [
-            { required: true, message: this.$t('user.theRoleNameCannotBeEmpty'), trigger: 'blur' },
-            { validator: validateRoles, trigger: 'blur' }
-          ],
-          introduction: [
-            { required: true, message: this.$t('user.theRoleDescriptionCannotBeEmpty'), trigger: 'blur' }
-          ],
-          rules: [
-            { type: 'array', required: true, message: this.$t('user.pleaseAssignPermissions'), trigger: 'blur' }
-          
-          ]
-        },
-        downloadLoading: false,
-        title: [this.$t('usuel.undistributed'), this.$t('usuel.allocated')],
-        mode: 'transfer'
+    }
+    return {
+      options: [],
+      oldOptions: [],
+      tableKey: 0,
+      list: null,
+      total: 0,
+      textMap: {
+        update: this.$t('usuel.amend'),
+        create: this.$t('usuel.add')
+      },
+      listLoading: true,
+      listQuery: {
+        page: 1,
+        limit: 20,
+        sort: '+id',
+        timeInterval: ''
+      },
+      fromData: [],
+      oldFromData: [],
+      toData: [],
+      temp: {
+        roles: '',
+        introduction: '',
+        group: [],
+        groupname: [],
+        oldGroupValue: [],
+        oldGroup: [],
+        rules: []
+      },
+      dialogFormVisible: false,
+      dialogStatus: '',
+      adminRules: {
+        roles: [
+          { required: true, message: this.$t('user.theRoleNameCannotBeEmpty'), trigger: 'blur' },
+          { validator: validateRoles, trigger: 'blur' }
+        ],
+        introduction: [
+          { required: true, message: this.$t('user.theRoleDescriptionCannotBeEmpty'), trigger: 'blur' }
+        ],
+        rules: [
+          { type: 'array', required: true, message: this.$t('user.pleaseAssignPermissions'), trigger: 'blur' }
+
+        ]
+      },
+      downloadLoading: false,
+      title: [this.$t('usuel.undistributed'), this.$t('usuel.allocated')],
+      mode: 'transfer'
+    }
+  },
+  created() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      this.listLoading = true
+      manageGroupsList(this.listQuery).then(response => {
+        this.list = response.data.data
+        this.options = response.data.options
+        this.oldOptions = response.data.options
+        this.fromData = response.data.fromData
+        this.oldFromData = response.data.fromData
+        this.toData = response.data.toData
+        this.listLoading = false
+      })
+    },
+    sortChange(data) {
+      const { prop, order } = data
+      if (prop === 'id') {
+        this.sortByID(order)
       }
     },
-    created() {
-      this.getList()
+    sortByID(order) {
+      if (order === 'ascending') {
+        this.listQuery.sort = '+id'
+      } else {
+        this.listQuery.sort = '-id'
+      }
+      this.handleFilter()
     },
-    methods: {
-      getList() {
-        this.listLoading = true
-        manageGroupsList(this.listQuery).then(response => {
-          this.list = response.data.data
-          this.options = response.data.options
-          this.oldOptions = response.data.options
-          this.fromData = response.data.fromData
-          this.oldFromData = response.data.fromData
-          this.toData = response.data.toData
-          this.listLoading = false
-        })
-      },
-      sortChange(data) {
-        const { prop, order } = data
-        if (prop === 'id') {
-          this.sortByID(order)
-        }
-      },
-      sortByID(order) {
-        if (order === 'ascending') {
-          this.listQuery.sort = '+id'
-        } else {
-          this.listQuery.sort = '-id'
-        }
-        this.handleFilter()
-      },
-      resetTemp() {
-        this.temp = {
-          roles: '',
-          introduction: '',
-          group: [],
-          groupname: [],
-          oldGroupValue: [],
-          oldGroup: [],
-          rules: []
-        }
-      },
-      // 添加控件
-      handleCreate() {
-        this.resetTemp()
-        this.fromData = this.oldFromData
-        this.toData = []
-        this.dialogStatus = 'create'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      createData() { // 添加
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            createManageGroups(this.temp).then(() => {
-              this.getList()
-              this.dialogFormVisible = false
-              this.$notify({
-                title: this.$t('hint.succeed'),
-                message: this.$t('hint.creatingSuccessful'),
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
-      updateData() { // 更新
-        this.$refs['dataForm'].validate((valid) => {
-          if (valid) {
-            updateManageGroups(this.temp).then(() => {
-              this.getList()
-              this.dialogFormVisible = false
-              this.$notify({
-                title: this.$t('hint.succeed'),
-                message: this.$t('hint.updateSuccessful'),
-                type: 'success',
-                duration: 2000
-              })
-            })
-          }
-        })
-      },
-      handleUpdate(row) { // 修改
-        this.temp = Object.assign({}, row) // copy obj
-        // this.temp.group = this.temp.group ? this.temp.group : []
-        this.toData = []
-        if (this.temp.toData) {
-          this.toData = this.temp.toData
-        }
-        this.fromData = []
-        if (this.temp.fromData) {
-          this.fromData = this.temp.fromData
-        }
-        /*
-        if (this.temp.oldGroup) {
-          this.options = this.oldOptions.concat(this.temp.oldGroup)
-        }*/
-        this.dialogStatus = 'update'
-        this.dialogFormVisible = true
-        this.$nextTick(() => {
-          this.$refs['dataForm'].clearValidate()
-        })
-      },
-      handleDelete(row) { // 删除
-        this.$confirm(this.$t('hint.deleteDetermine'), this.$t('hint.hint'), {
-          confirmButtonText: this.$t('usuel.confirm'),
-          cancelButtonText: this.$t('usuel.cancel'),
-          type: 'warning'
-        }).then(() => {
-          deleteManageGroups(row.id).then(() => {
+    resetTemp() {
+      this.temp = {
+        roles: '',
+        introduction: '',
+        group: [],
+        groupname: [],
+        oldGroupValue: [],
+        oldGroup: [],
+        rules: []
+      }
+    },
+    // 添加控件
+    handleCreate() {
+      this.resetTemp()
+      this.fromData = this.oldFromData
+      this.toData = []
+      this.dialogStatus = 'create'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    createData() { // 添加
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          createManageGroups(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
               title: this.$t('hint.succeed'),
-              message: this.$t('hint.deletedSuccessful'),
+              message: this.$t('hint.creatingSuccessful'),
               type: 'success',
               duration: 2000
             })
           })
-        }).catch(() => {
-        })
-      },
-      // 切换模式 现有树形穿梭框模式transfer 和通讯录模式addressList
-      changeMode() {
-        if (this.mode === 'transfer') {
-          this.mode = 'addressList'
-        } else {
-          this.mode = 'transfer'
         }
-      },
-      // 监听穿梭框组件添加
-      add(fromData, toData, obj) {
-        // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
-        // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
-        this.temp.rules = toData
-        // console.log('fromData:', fromData)
-        // console.log('toData:', toData)
-      },
-      // 监听穿梭框组件移除
-      remove(fromData, toData, obj) {
-        this.temp.rules = toData
+      })
+    },
+    updateData() { // 更新
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          updateManageGroups(this.temp).then(() => {
+            this.getList()
+            this.dialogFormVisible = false
+            this.$notify({
+              title: this.$t('hint.succeed'),
+              message: this.$t('hint.updateSuccessful'),
+              type: 'success',
+              duration: 2000
+            })
+          })
+        }
+      })
+    },
+    handleUpdate(row) { // 修改
+      this.temp = Object.assign({}, row) // copy obj
+      // this.temp.group = this.temp.group ? this.temp.group : []
+      this.toData = []
+      if (this.temp.toData) {
+        this.toData = this.temp.toData
       }
+      this.fromData = []
+      if (this.temp.fromData) {
+        this.fromData = this.temp.fromData
+      }
+      /*
+      if (this.temp.oldGroup) {
+        this.options = this.oldOptions.concat(this.temp.oldGroup)
+      }*/
+      this.dialogStatus = 'update'
+      this.dialogFormVisible = true
+      this.$nextTick(() => {
+        this.$refs['dataForm'].clearValidate()
+      })
+    },
+    handleDelete(row) { // 删除
+      this.$confirm(this.$t('hint.deleteDetermine'), this.$t('hint.hint'), {
+        confirmButtonText: this.$t('usuel.confirm'),
+        cancelButtonText: this.$t('usuel.cancel'),
+        type: 'warning'
+      }).then(() => {
+        deleteManageGroups(row.id).then(() => {
+          this.getList()
+          this.dialogFormVisible = false
+          this.$notify({
+            title: this.$t('hint.succeed'),
+            message: this.$t('hint.deletedSuccessful'),
+            type: 'success',
+            duration: 2000
+          })
+        })
+      }).catch(() => {
+      })
+    },
+    // 切换模式 现有树形穿梭框模式transfer 和通讯录模式addressList
+    changeMode() {
+      if (this.mode === 'transfer') {
+        this.mode = 'addressList'
+      } else {
+        this.mode = 'transfer'
+      }
+    },
+    // 监听穿梭框组件添加
+    add(fromData, toData, obj) {
+      // 树形穿梭框模式transfer时，返回参数为左侧树移动后数据、右侧树移动后数据、移动的{keys,nodes,halfKeys,halfNodes}对象
+      // 通讯录模式addressList时，返回参数为右侧收件人列表、右侧抄送人列表、右侧密送人列表
+      this.temp.rules = toData
+      // console.log('fromData:', fromData)
+      // console.log('toData:', toData)
+    },
+    // 监听穿梭框组件移除
+    remove(fromData, toData, obj) {
+      this.temp.rules = toData
     }
   }
+}
 </script>
