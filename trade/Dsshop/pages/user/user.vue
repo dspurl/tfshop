@@ -51,19 +51,19 @@
 			<!-- 订单 -->
 			<view class="order-section">
 				<view class="order-item" @click="navTo('/pages/order/order?state=0')" hover-class="common-hover"  :hover-stay-time="50">
-					<text class="yticon icon-shouye"></text>
+					<text class="yticon icon-shouye"><text v-if="quantity.all" class="cu-tag badge">{{quantity.all}}</text></text>
 					<text>全部订单</text>
 				</view>
 				<view class="order-item" @click="navTo('/pages/order/order?state=1')"  hover-class="common-hover" :hover-stay-time="50">
-					<text class="yticon icon-daifukuan"></text>
+					<text class="yticon icon-daifukuan"><text v-if="quantity.obligation" class="cu-tag badge">{{quantity.obligation}}</text></text>
 					<text>待付款</text>
 				</view>
 				<view class="order-item" @click="navTo('/pages/order/order?state=2')" hover-class="common-hover"  :hover-stay-time="50">
-					<text class="yticon icon-gouwuche_"></text>
+					<text class="yticon icon-gouwuche_"><text v-if="quantity.waitdeliver" class="cu-tag badge">{{quantity.waitdeliver}}</text></text>
 					<text>待发货</text>
 				</view>
 				<view class="order-item" @click="navTo('/pages/order/order?state=3')" hover-class="common-hover"  :hover-stay-time="50">
-					<text class="yticon icon-yishouhuo"></text>
+					<text class="yticon icon-yishouhuo"><text v-if="quantity.waitforreceiving" class="cu-tag badge">{{quantity.waitforreceiving}}</text></text>
 					<text>待收货</text>
 				</view>
 				<!-- <view class="order-item" @click="navTo('/pages/order/order?state=7')" hover-class="common-hover"  :hover-stay-time="50">
@@ -96,6 +96,7 @@
 	import listCell from '@/components/mix-list-cell';
 	import Browse from '../../api/browse';
 	import User from '../../api/user';
+	import Indents from '../../api/indents';
 	import Notification from '../../api/notification'
     import {  
         mapState 
@@ -112,7 +113,8 @@
 				moving: false,
 				browseList: [],
 				user: {},
-				noticeNumber: null
+				noticeNumber: null,
+				quantity: {}
 			}
 		},
 		onLoad(){
@@ -123,6 +125,7 @@
 				this.getUser()
 				this.browse()
 				this.noticeConut()
+				this.getQuantity()
 			} else {
 				this.browseList = []
 				this.user = {}
@@ -172,6 +175,13 @@
 				const that = this
 				Notification.getCount({},function(res){
 					that.noticeNumber = res ? res.toString() : null
+				})
+			},
+			getQuantity(){
+				const that = this
+				Indents.getQuantity(function(res){
+					console.log('getQuantity',res)
+					that.quantity = res
 				})
 			},
 			navTo(url){
@@ -364,6 +374,9 @@
 			border-radius: 10upx;
 			font-size: $font-sm;
 			color: $font-color-dark;
+			.yticon{
+				position: relative;
+			}
 		}
 		.yticon{
 			font-size: 48upx;

@@ -98,5 +98,16 @@ export default {
 			duration: 2000
 		  })
 		})
-	}
+	},
+	getQuantity(success,fail) {
+		Network.setGetMessage('GoodIndentQuantity',{},'加载中', function (res) {
+		  success(res)
+		}, function (res) {
+		  uni.showToast({
+			title: res.message,
+			icon: 'none',
+			duration: 2000
+		  })
+		})
+	},
 };
