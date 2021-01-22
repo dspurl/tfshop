@@ -261,6 +261,7 @@
 				}
 				
 				uni.setStorageSync('dsshopCartList', cartList)
+				uni.setStorageSync('dsshopOrderList', cartList)
 				getApp().showDsshopCartNumber()
 				this.cartList.splice(index, 1);
 				this.calcTotal();
@@ -278,6 +279,7 @@
 				}
 				
 				uni.setStorageSync('dsshopCartList', cartList)
+				uni.setStorageSync('dsshopOrderList', cartList)
 				this.invalidGood.splice(index, 1);
 			},
 			//清空
@@ -290,6 +292,7 @@
 							this.total = 0;
 							this.empty = true;
 							uni.removeStorageSync('dsshopCartList')
+							uni.removeStorageSync('dsshopOrderList')
 							getApp().showDsshopCartNumber()
 						}
 					}

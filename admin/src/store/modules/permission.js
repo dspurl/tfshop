@@ -15,7 +15,6 @@ export const componentsMap = {
   RedisServices: () => import('@/views/Tool/redisService/index'),
   RedisServicesList: () => import('@/views/Tool/redisService/list'),
   RedisPanel: () => import('@/views/Tool/redisService/panel'),
-  ProjectList: () => import('@/views/Project/list'),
   Specification: () => import('@/views/GoodsManage/specification/index'),
   SpecificationList: () => import('@/views/GoodsManage/specification/list'),
   SpecificationGroup: () => import('@/views/GoodsManage/specificationGroup/index'),
