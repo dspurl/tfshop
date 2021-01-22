@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="设备名称">
-          <el-input v-model="listQuery.name" placeholder="设备名称" clearable/>
+          <el-input v-model="listQuery.name" placeholder="设备名称" @keyup.enter.native="handleFilter" clearable/>
         </el-form-item>
         <el-form-item label="设备品类">
           <el-select v-model="listQuery.smart_device_category_id" placeholder="请选择类型" filterable clearable style="width:160px;">
