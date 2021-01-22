@@ -18,7 +18,7 @@ class ResourceController extends Controller
     {
         $q = Resource::query();
         $limit=$request->limit;
-        $q->orderBy('id','ASC');
+        $q->orderBy('id','DESC');
         if($request->name){
             $q->where('depict',$request->name);
         }
