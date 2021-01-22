@@ -44,7 +44,7 @@ class PluginController extends Controller
         if (in_array($request->identify, $getDswjcmsJson)) {
             return resReturn(0, '插件标识已存在，无法创建', Code::CODE_PARAMETER_WRONG);
         }
-
+        $autoGeneratePlugin = (new Plugin())->autoGeneratePlugin($request->name,$request->identify);
     }
 
     /**
