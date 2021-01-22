@@ -22,7 +22,7 @@ class BannerController extends Controller
         Banner::$withoutAppends = false;
         $q = Banner::query();
         if($request->name){
-            $q->where('name',$request->name);
+            $q->where('name','like','%'.$request->name.'%');
         }
         if($request->type){
             $q->where('type',$request->type);
