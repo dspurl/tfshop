@@ -36,7 +36,7 @@ class IndentController extends Controller
                 $q->whereRaw('(state=7 OR state=8)');
              }else{
                 $q->where('state',$request->activeIndex);
-            }           
+            }
         }
         if($request->title){
             $q->where(function($q1) use($request){
@@ -62,7 +62,9 @@ class IndentController extends Controller
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
         $GoodIndent=GoodIndent::with(['goodsList'=>function($q){
-            $q->with(['goodSku']);
+            $q->with(['goodSku','Good'=>function($q){
+                $q->select('id','identification','number');
+            }]);
         },'GoodLocation','Dhl','PaymentLogAll'=>function($q){
             $q->select('id','type','name','money','number','platform','state','pay_id','pay_type','created_at','transaction_id');
         }])->find($id);

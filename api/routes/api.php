@@ -182,6 +182,8 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('GoodIndentReceipt/{id}', 'GoodIndentController@receipt');    //确认收货
         Route::post('GoodIndentCancel/{id}', 'GoodIndentController@cancel');    //取消订单
         Route::post('GoodIndentDelete/{id}', 'GoodIndentController@destroy');    //删除订单
+        Route::get('GoodIndentQuantity', 'GoodIndentController@quantity');    //订单数量统计
+
 
         //收货地址
         Route::get('shipping', 'ShippingController@index');    //列表

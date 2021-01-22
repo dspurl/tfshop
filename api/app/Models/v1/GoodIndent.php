@@ -33,6 +33,8 @@ class GoodIndent extends Model
     const GOOD_INDENT_STATE_REFUND_FAILURE= 9; //状态：退款失败
     const GOOD_INDENT_REFUND_WAY_BALANCE= 0; //退款方式：退到余额
     const GOOD_INDENT_REFUND_WAY_BACK= 1; //退款方式：原路退回
+    const GOOD_INDENT_IS_DELETE_YES = 1; //是否删除：是
+    const GOOD_INDENT_IS_DELETE_NO = 0; //是否删除：否
     public static $withoutAppends = true;
     protected $appends = ['state_show'];
     /**
