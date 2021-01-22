@@ -23,7 +23,7 @@ class SpecificationGroupController extends Controller
         $limit=$request->limit;
         $q->orderBy('id','ASC');
         if($request->title){
-            $q->where('name',$request->title);
+            $q->where('name','like','%'.$request->title.'%');
         }
         $paginate=$q->paginate($limit);
         return resReturn(1,$paginate);

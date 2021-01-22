@@ -26,7 +26,7 @@ class CategoryController extends Controller
         $limit=$request->limit;
         $q->orderBy('sort','ASC')->orderBy('id','ASC');
         if($request->has('title')){
-            $q->where('name',$request->title);
+            $q->where('name','like','%'.$request->title.'%');
         }
         $pid = $request->pid;
         if($pid){

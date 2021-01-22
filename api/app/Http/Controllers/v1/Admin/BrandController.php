@@ -24,7 +24,7 @@ class BrandController extends Controller
         $limit=$request->limit;
         $q->orderBy('id','ASC');
         if($request->name){
-            $q->where('name',$request->name);
+            $q->where('name','like','%'.$request->name.'%');
         }
         $paginate=$q->with('resources')->paginate($limit);
         return resReturn(1,$paginate);

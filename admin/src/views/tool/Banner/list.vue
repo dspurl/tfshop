@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="轮播名称">
-          <el-input v-model="listQuery.name" placeholder="名称" clearable/>
+          <el-input v-model="listQuery.name" placeholder="名称" clearable @keyup.enter.native="handleFilter"/>
         </el-form-item>
         <el-form-item label="类型">
           <el-select v-model="listQuery.type" placeholder="类型" clearable>
