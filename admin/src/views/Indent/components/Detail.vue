@@ -447,11 +447,13 @@ export default {
         }
         this.list = response.data
         this.refundTemp.refund_money = this.list.total
-        //同步支付信息
-        let that = this
+        // 同步支付信息
+        const that = this
         this.list.payment_log_all.forEach(function(element) {
-          that.queryNumber(element);
-       });
+          if (element.state === 0) {
+            that.queryNumber(element)
+          }
+        })
         this.listLoading = false
       })
     },
@@ -495,8 +497,7 @@ export default {
     },
     // 查询支付订单
     queryNumber(row) {
-      query(row).then(() => {     
-      })
+      query(row).then(() => {})
     },
     // 编辑配送信息
     dhlUpdate() {
