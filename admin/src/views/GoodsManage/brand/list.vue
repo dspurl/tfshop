@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="品牌名称">
-          <el-input v-model="listQuery.name" placeholder="品牌名称" clearable/>
+          <el-input v-model="listQuery.name" placeholder="品牌名称" clearable @keyup.enter.native="handleFilter" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleFilter">搜索</el-button>
