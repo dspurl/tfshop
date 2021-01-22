@@ -39,6 +39,7 @@
     <el-card shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
         <span>商品信息</span>
+        <el-link :underline="false" type="primary" class="invoice" @click="dialogInvoiceVisible = true">送货单</el-link>
       </div>
       <el-table
         :data="list.goods_list"
@@ -46,6 +47,10 @@
         border
         show-summary
         style="width: 100%">
+        <el-table-column
+          type="index"
+          label="编号"
+          width="50"/>
         <el-table-column align="center" width="80">
           <template slot-scope="scope">
             <img :src="scope.row.img" style="width:45px;height:45px;">
@@ -208,20 +213,175 @@
         <el-button type="primary" @click="refundData()">{{ $t('usuel.confirm') }}</el-button>
       </div>
     </el-dialog>
+    <!-- 送货单-->
+    <el-dialog v-if="list.good_location" :visible.sync="dialogInvoiceVisible" :close-on-click-modal="false" center fullscreen class="delivery">
+      <div ref="print">
+        <div class="text-center title">{{ name }}</div>
+        <div class="text-center name">送货单</div>
+        <div class="message">
+          <div><span>客户姓名：</span>{{ list.good_location.name }}</div>
+          <div><span>订单号：</span>{{ list.identification }}</div>
+          <div><span>客户下单日期：</span>{{ list.created_at }}</div>
+        </div>
+        <div class="location"><span>送货地址：</span>{{ list.good_location.location }} ({{ list.good_location.address }})</div>
+        <div class="message">
+          <div><span>收货人：</span>{{ list.good_location.name }}</div>
+          <div><span>联系电话：</span>{{ list.good_location.cellphone }}</div>
+          <div><span/></div>
+        </div>
+        <div class="location"><span>备注：</span>{{ list.remark ? list.remark : '' }}</div>
+        <el-table
+          :data="list.goods_list"
+          :summary-method="getSummaries"
+          border
+          show-summary
+          style="width: 100%">
+          <el-table-column
+            type="index"
+            label="编号"
+            width="50"/>
+          <el-table-column label="商品编码" align="left">
+            <template slot-scope="scope">
+              <span>{{ scope.row.identification }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="货号" align="left">
+            <template slot-scope="scope">
+              <span>{{ scope.row.articleNumber }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="商品名称" align="left">
+            <template slot-scope="scope">
+              <span>{{ scope.row.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="规格">
+            <template slot-scope="scope">
+              <span>{{ scope.row.specification }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="单价（元）" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.price }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="数量（件）" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.number }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="金额（元）" align="center">
+            <template slot-scope="scope">
+              <span>{{ scope.row.price * scope.row.number }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div class="operation">
+        <el-button type="primary" @click="print()">打印</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
-<style>
+<style lang="scss" scoped>
+  .app-container{
+    padding-bottom: 80px;
+  }
   .right{
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding-right: 10px;
+    padding-top:10px;
+    padding-bottom: 10px;
+    width: 100%;
+    margin-bottom: 0;
+    background-color: #ffffff;
     text-align: right;
+    z-index: 999;
+    line-height: 50px;
+    border-top: 1px solid #e5e5e5;
+  }
+  .invoice{
+    float:right;
+    margin-right: 10px;
+  }
+  .delivery{
+    .title{
+      font-size: 26px;
+      font-weight: bold;
+      line-height: 50px;
+    }
+    .name{
+      font-size: 20px;
+      font-weight: bold;
+      padding-bottom: 50px;
+    }
+    .message{
+      display: flex;
+      div{
+        line-height: 30px;
+        flex:1;
+      }
+    }
+    .location{
+      line-height: 30px;
+    }
+    .operation{
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      padding-right: 10px;
+      padding-top:10px;
+      padding-bottom: 10px;
+      width: 100%;
+      margin-bottom: 0;
+      background-color: #ffffff;
+      text-align: right;
+      z-index: 999;
+      line-height: 50px;
+      border-top: 1px solid #e5e5e5;
+    }
+  }
+  @page {
+    size: A4 landscape;
+  }
+  @media print {
+    table,
+    tbody,
+    thead {
+      width: 100% !important;
+    }
+
+    colgroup {
+      position: absolute;
+      width: 100% !important;
+    }
+    .el-table thead.is-group th {
+      text-align: center
+    }
+    tbody {
+      text-align: center;
+      border: 1px solid #000;
+    }
+    th {
+      border: 1px solid #000;
+    }
+    td {
+      border: 1px solid #000;
+    }
   }
 </style>
 <script>
 import { getDetails, createSubmit, updateSubmit, query, updateDhl } from '@/api/Indent'
 import { dhlList } from '@/api/dhl'
+import printJS from 'print-js'
 export default {
   name: 'IndentListDetails',
   data() {
     return {
+      name: process.env.SITE_NAME,
+      dialogInvoiceVisible: false,
       dhlLoading: false,
       queryLoading: false,
       order_progress: 0,
@@ -281,12 +441,14 @@ export default {
               this.order_progress = 4
               break
           }
+          response.data.goods_list[k].identification = response.data.goods_list[k].good.identification
+          response.data.goods_list[k].articleNumber = response.data.goods_list[k].good.number
           if (response.data.goods_list[k].good_sku) {
             response.data.goods_list[k].good_sku.product_sku.forEach(item => {
               if (response.data.goods_list[k].specification) {
-                response.data.goods_list[k].specification += item.value + ';'
+                response.data.goods_list[k].specification += item.key + ':' + item.value + ';'
               } else {
-                response.data.goods_list[k].specification = item.value + ';'
+                response.data.goods_list[k].specification = item.key + ':' + item.value + ';'
               }
             })
             response.data.goods_list[k].specification = response.data.goods_list[k].specification.substr(0, response.data.goods_list[k].specification.length - 1)
@@ -376,7 +538,7 @@ export default {
           return
         } else if (index === 1 || index === 2 || index === 3) {
           return
-        } else if (index === 4) {
+        } else if (index === 6) {
           if (data.length > 0) {
             sums[index] = data.reduce((prev, curr) => {
               const value = Number(curr['number'])
@@ -388,7 +550,7 @@ export default {
             }, 0)
             sums[index] += ' 件'
           }
-        } else if (index === 5) {
+        } else if (index === 7) {
           if (data.length > 0) {
             sums[index] = data.reduce((prev, curr) => {
               const value = Number(curr['price'])
@@ -403,6 +565,90 @@ export default {
         }
       })
       return sums
+    },
+    // 打印
+    print() {
+      // 进行格式处理的数据
+      const list = []
+      const goods_list = JSON.parse(JSON.stringify(this.list.goods_list))
+      goods_list.push({
+        serial: '总价',
+        money: 220,
+        number: 1,
+        name: '',
+        identification: '',
+        specification: '',
+        articleNumber: '',
+        price: ''
+      })
+      let money = 0
+      let number = 0
+      goods_list.forEach((item, index) => {
+        item.serial = item.serial ? item.serial : index + 1
+        if (item.money) {
+          item.money = money
+          item.number = number
+        } else {
+          money += item.price * item.number
+          number += item.number
+          item.money = item.price * item.number
+        }
+        list.push(item)
+      })
+      printJS({
+        printable: list,
+        header: `<div style="text-align: center;font-size: 26px;font-weight: bold;line-height: 50px;">${this.name}</div>
+        <div style="text-align: center;font-size: 20px;font-weight: bold;padding-bottom: 50px;">送货单</div>
+        <div style="display: flex;">
+          <div style="line-height: 30px;flex:1;"><span>客户姓名：</span>${this.list.good_location.name}</div>
+          <div style="line-height: 30px;flex:1;"><span>订单号：</span>${this.list.identification}</div>
+          <div style="line-height: 30px;flex:1;"><span>下单日期：</span>${this.list.created_at}</div>
+        </div>
+        <div style="line-height: 30px;"><span>送货地址：</span>${this.list.good_location.location}${this.list.good_location.address}</div>
+        <div style="display: flex;">
+          <div style="line-height: 30px;flex:1;"><span>收货人：</span>${this.list.good_location.name}</div>
+          <div style="line-height: 30px;flex:1;"><span>联系电话：</span>${this.list.good_location.cellphone}</div>
+          <div style="line-height: 30px;flex:1;"></div>
+        </div>
+        <div style="line-height: 30px;"><span>备注：</span>${this.list.remark ? this.list.remark : ''}</div>`,
+        properties: [
+          {
+            field: 'serial',
+            displayName: '编号'
+          },
+          {
+            field: 'name',
+            displayName: '商品名称'
+          },
+          {
+            field: 'identification',
+            displayName: '商品编码'
+          },
+          {
+            field: 'articleNumber',
+            displayName: '货号'
+          },
+          {
+            field: 'specification',
+            displayName: '规格'
+          },
+          {
+            field: 'price',
+            displayName: '单价(元)'
+          },
+          {
+            field: 'number',
+            displayName: '数量'
+          },
+          {
+            field: 'money',
+            displayName: '金额'
+          }
+        ],
+        type: 'json',
+        gridHeaderStyle: 'border: 1px solid #000;text-align:center',
+        gridStyle: 'border: 1px solid #000;text-align:center'
+      })
     }
   }
 }

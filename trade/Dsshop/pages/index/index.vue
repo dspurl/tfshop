@@ -333,6 +333,9 @@ import Banner from '../../api/banner'
 				this.guidanceMy = true
 			}
 		},
+		onShow(){
+			getApp().showDsshopCartNumber()
+		},
 		methods: {
 			/**
 			 * 请求数据
@@ -364,7 +367,6 @@ import Banner from '../../api/banner'
 				await Good.getCategoryShow({
 					is_recommend: 1
 				},function(res){
-					console.log('res',res)
 					that.ctegory = res
 				})
 			},

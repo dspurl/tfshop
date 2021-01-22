@@ -36,10 +36,25 @@ export default {
 				}
 			});
 		},
-		
+		// 获取购物车角标
+		showDsshopCartNumber(){
+			const dsshopCartNumber = uni.getStorageSync('dsshopCartList') ? Object.keys(uni.getStorageSync('dsshopCartList')).length + '' : ''
+			if(dsshopCartNumber){
+				uni.setTabBarBadge({
+				  index: 2,
+				  text: dsshopCartNumber
+				})
+			}else{
+				uni.removeTabBarBadge({
+				  index: 2
+				})
+			}
+		}
 	},
-	onShow: function() {},
-	onHide: function() {}
+	onShow: function() {
+		this.showDsshopCartNumber()
+	},
+	onHide: function() {},
 };
 </script>
 <style>

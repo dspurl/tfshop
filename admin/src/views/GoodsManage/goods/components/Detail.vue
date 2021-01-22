@@ -163,13 +163,16 @@
           <el-input v-model="ruleForm.sort" maxlength="11" clearable style="width:80px;"/>
         </el-radio-group>
       </el-form-item>
-      <el-form-item>
+      <el-form-item class="float-button">
         <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss">
+  .createPost-container{
+    padding-bottom: 60px;
+  }
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -216,6 +219,21 @@
   }
   .progress-imgs{
     padding: 5px;
+  }
+  .float-button{
+    position: fixed;
+    bottom: 0px;
+    right: 0;
+    padding-right: 10%;
+    padding-top:10px;
+    padding-bottom: 10px;
+    width: 100%;
+    margin-bottom: 0;
+    background-color: #ffffff;
+    text-align: right;
+    z-index: 999;
+    line-height: 50px;
+    border-top: 1px solid #e5e5e5;
   }
 </style>
 <script>
