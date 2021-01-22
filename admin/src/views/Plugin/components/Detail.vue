@@ -95,7 +95,6 @@
           <p>9.编辑组件权限时，如果是新增，请不要将原先已存在的权限直接修改</p>
         </div>
       </el-form-item>
-      
       <div>
         <el-form-item label="销售属性">
           <el-table
