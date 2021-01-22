@@ -127,16 +127,7 @@
             <span>{{ scope.row.state_show }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button :loading="queryLoading" type="primary" round @click="queryNumber(scope.row)">同步</el-button>
-          </template>
-        </el-table-column>
       </el-table>
-      <el-alert
-        title="可能存在用户支付成功，但平台支付状态未改变的情况，此时，可以主动点击“同步”进行支付状态同步，如果查询失败，可过段时间再同步一次;这里不支持对支付订单退款，请通过第三方支付平台后台操作，然后再调用同步操作"
-        type="warning"
-        style="margin-top:10px;"/>
     </el-card>
     <!-- 配送 -->
     <el-card shadow="always" style="margin-top: 25px">
@@ -456,6 +447,11 @@ export default {
         }
         this.list = response.data
         this.refundTemp.refund_money = this.list.total
+        //同步支付信息
+        let that = this
+        this.list.payment_log_all.forEach(function(element) {
+          that.queryNumber(element);
+       });
         this.listLoading = false
       })
     },
@@ -499,16 +495,7 @@ export default {
     },
     // 查询支付订单
     queryNumber(row) {
-      this.queryLoading = true
-      query(row).then(() => {
-        this.$notify({
-          title: this.$t('hint.succeed'),
-          message: '同步成功',
-          type: 'success',
-          duration: 2000
-        })
-        this.getList()
-        this.queryLoading = false
+      query(row).then(() => {     
       })
     },
     // 编辑配送信息
