@@ -24,7 +24,7 @@ class SpecificationController extends Controller
         $limit=$request->limit;
         $q->orderBy('id','ASC');
         if($request->title){
-            $q->where('name',$request->title);
+            $q->where('name','like','%'.$request->title.'%');
         }
         $paginate=$q->with(['SpecificationGroup'])->paginate($limit);
         $return= [];
