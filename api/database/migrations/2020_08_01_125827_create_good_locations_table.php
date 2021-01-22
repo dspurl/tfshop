@@ -30,7 +30,7 @@ class CreateGoodLocationsTable extends Migration
             $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
-        DB::statement("ALTER TABLE `good_locations` COMMENT='订单收货地址'");
+        DB::statement("ALTER TABLE `good_locations` COMMENT='订单配送地址'");
     }
 
     /**

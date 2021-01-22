@@ -31,7 +31,7 @@ class CreateShippingsTable extends Migration
             $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
-        DB::statement("ALTER TABLE `shippings` COMMENT='配送地址'");
+        DB::statement("ALTER TABLE `shippings` COMMENT='收货人地址(和good_locations是1:N关系)'");
     }
 
     /**
