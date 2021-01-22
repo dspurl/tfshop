@@ -74,7 +74,7 @@
 </style>
 
 <script>
-import { getList, setDelete } from '@/api/resource'
+import { getList } from '@/api/resource'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -104,7 +104,7 @@ export default {
         sort: '+id',
         activeIndex: '1'
       },
-      temp: {},
+      temp: {}
     }
   },
   created() {
@@ -127,8 +127,7 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
-    },
-
+    }
   }
 }
 </script>
