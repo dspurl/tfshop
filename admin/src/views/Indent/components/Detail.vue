@@ -450,7 +450,9 @@ export default {
         //同步支付信息
         let that = this
         this.list.payment_log_all.forEach(function(element) {
-          that.queryNumber(element);
+          if(element.state==0){
+            that.queryNumber(element)
+          }
        });
         this.listLoading = false
       })
