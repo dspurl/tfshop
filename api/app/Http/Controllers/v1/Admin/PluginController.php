@@ -29,30 +29,26 @@ class PluginController extends Controller
      */
     public function install($name)
     {
-        $Plugin = new Plugin();
-        return $Plugin->autoPlugin($name);
-    }
-
-    /**
-     * 插件创建
-     * @param Request $request
-     * @return string
-     */
-    public function store(Request $request)
-    {
-        $getDswjcmsJson = collect((new Plugin())->getDswjcmsJson())->pluck('name')->all();
-        if (in_array($request->identify, $getDswjcmsJson)) {
-            return resReturn(0, '插件标识已存在，无法创建', Code::CODE_PARAMETER_WRONG);
-        }
-        $autoGeneratePlugin = (new Plugin())->autoGeneratePlugin($request->name,$request->identify);
+        return (new Plugin())->autoPlugin($name);
     }
 
     /**
      * 插件更新
+     * @param $name
      * @return string
      */
-    public function update()
+    public function update($name)
     {
+        return (new Plugin())->autoPlugin($name);
+    }
 
+    /**
+     * 插件卸载
+     * @param $name
+     * @return string
+     */
+    public function destroy($name)
+    {
+        return (new Plugin())->autoUninstall($name);
     }
 }

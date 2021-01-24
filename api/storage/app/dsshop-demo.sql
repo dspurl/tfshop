@@ -184,7 +184,8 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (156, 'PlugIn', '', 'plug-in', '插件', 0, 1, 1),
 (157, 'PlugInList', '', '', '插件列表', 156, 1, 0),
 (158, 'PlugInUpdate', '', '', '更新插件', 156, 0, 0),
-(159, 'PlugInInstall', '', '', '安装插件', 156, 0, 0);
+(159, 'PlugInInstall', '', '', '安装插件', 156, 0, 0),
+(160, 'PlugInDelete', '', '', '删除插件', 156, 0, 0);
 INSERT INTO `banners` (`id`, `type`, `name`, `url`, `sort`, `state`, `created_at`, `updated_at`) VALUES
 (4, 0, '测试', '/pages/product/product?id=21', 5, 0, '2020-07-18 20:07:15', '2020-07-30 11:49:17'),
 (5, 0, '2', NULL, 5, 0, '2020-07-18 20:10:04', '2020-07-18 20:10:04'),

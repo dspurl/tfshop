@@ -27,16 +27,9 @@ export function updateSubmit(id, data) {
   })
 }
 
-export function setDelete(name) {
+export function deleteSubmit(name) {
   return request({
     url: 'plugin/' + name,
     method: 'DELETE'
-  })
-}
-
-export function getShow(id) {
-  return request({
-    url: 'plugin/' + id,
-    method: 'GET'
   })
 }

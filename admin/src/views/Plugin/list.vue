@@ -1,24 +1,5 @@
 <template>
   <div class="app-container">
-    <div class="filter-container">
-      <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
-        <el-menu-item index="1">已安装</el-menu-item>
-        <el-menu-item index="2">插件市场</el-menu-item>
-      </el-menu>
-      <br>
-      <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="关键字">
-          <el-input v-model="listQuery.title" placeholder="商品标题/商品货号" clearable/>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="handleFilter">搜索</el-button>
-        </el-form-item>
-      </el-form>
-      <br>
-      <router-link v-permission="$store.jurisdiction.CreatePlugIn" :to="'createPlugIn'">
-        <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">创建插件</el-button>
-      </router-link>
-    </div>
     <el-table
       v-loading="listLoading"
       ref="multipleTable"
@@ -62,6 +43,7 @@
         <template slot-scope="scope">
           <el-button v-permission="$store.jurisdiction.PlugInInstall" v-if="!scope.row.locality_versions" :loading="butLoading" type="primary" size="mini" @click="handleCreate(scope.row.abbreviation)">安装</el-button>
           <el-button v-permission="$store.jurisdiction.PlugInUpdate" v-else-if="scope.row.locality_versions && scope.row.versions > scope.row.locality_versions" :loading="butLoading" type="warning" size="mini" @click="handleCreate(scope.row.abbreviation, 1)">升级</el-button>
+          <el-button v-permission="$store.jurisdiction.PlugInDelete" v-if="scope.row.locality_versions" :loading="butLoading" type="danger" size="mini" @click="handleDelete(scope.row.abbreviation)">删除插件</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -124,7 +106,7 @@
 </style>
 
 <script>
-import { getList, createSubmit } from '@/api/plugin'
+import { getList, createSubmit, deleteSubmit } from '@/api/plugin'
 
 export default {
   name: 'PlugInList',
@@ -174,6 +156,19 @@ export default {
         this.$notify({
           title: this.$t('hint.succeed'),
           message: type === 1 ? '更新成功' : '安装成功',
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+    handleDelete(name) {
+      this.butLoading = true
+      deleteSubmit(name).then(() => {
+        this.butLoading = false
+        this.getList()
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: '删除成功',
           type: 'success',
           duration: 2000
         })

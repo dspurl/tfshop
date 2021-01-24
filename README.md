@@ -3,13 +3,13 @@
 </p>
 <p align="center">
   <a href="https://github.com/laravel/framework">
-    <img src="https://img.shields.io/badge/laravel-7.22.4-brightgreen.svg" alt="laravel">
+    <img src="https://img.shields.io/badge/laravel-7.30.4-brightgreen.svg" alt="laravel">
   </a>
   <a href="https://github.com/vuejs/vue">
     <img src="https://img.shields.io/badge/vue-2.5.17-brightgreen.svg" alt="vue">
   </a>
   <a href="https://github.com/ElemeFE/element">
-    <img src="https://img.shields.io/badge/element--ui-2.9.1-brightgreen.svg" alt="element-ui">
+    <img src="https://img.shields.io/badge/element--ui-2.13.2-brightgreen.svg" alt="element-ui">
   </a>
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
 </p>
@@ -20,8 +20,8 @@
 ------------
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
 <p>因版本更新迭代比较快，文档可能存在没有涉及的面，请自行阅读源码</p>
-<p>已验证版本(经测试后可以正常安装的版本):1.4.1</p>
-<p>当前版本1.4.3</p>
+<p>已验证版本(经测试后可以正常安装的版本):1.4.2</p>
+<p>当前版本1.5</p>
 
 介绍
 ------------
