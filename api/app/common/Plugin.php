@@ -40,6 +40,7 @@ class Plugin
                 foreach ($json_dswjcms as $js) {
                     if ($js['name'] == $dswjcms['abbreviation']) {
                         $dswjcms['locality_versions'] = $js['versions'];
+                        $dswjcms['is_delete'] = $js['is_delete'];
                     }
                 }
                 $list[] = $dswjcms;
@@ -151,6 +152,7 @@ class Plugin
             foreach ($json_dswjcms as $id => $js) {
                 if ($js['name'] == $dswjcms['abbreviation']) {
                     $json_dswjcms[$id]['versions'] = $dswjcms['versions'];
+                    $json_dswjcms[$id]['is_delete'] = 0;
                     $json_dswjcms[$id]['time'] = date('Y-m-d H:i:s');
                 }
             }
@@ -158,6 +160,7 @@ class Plugin
             $json_dswjcms[] = array(
                 'name' => $name,
                 'versions' => $dswjcms['versions'],
+                'is_delete' => 0,
                 'time' => date('Y-m-d H:i:s')
             );
         }
@@ -196,7 +199,7 @@ class Plugin
      */
     public function autoUninstall($name)
     {
-        /*$routes = $this->pluginPath . '/' . $name . '/routes.json';
+        $routes = $this->pluginPath . '/' . $name . '/routes.json';
         $dswjcms = $this->pluginPath . '/' . $name . '/dswjcms.json';
         if (!file_exists($routes)) {
             return resReturn(0, '插件缺少routes.json文件', Code::CODE_WRONG);
@@ -205,6 +208,7 @@ class Plugin
             return resReturn(0, '插件缺少dswjcms.json文件', Code::CODE_WRONG);
         }
         $dswjcms = json_decode(file_get_contents($dswjcms), true);
+        $json_dswjcms = json_decode(file_get_contents($this->pluginPath . '/dswjcms.json'), true);
         //去除uni-app路由
         $targetPath = $this->path . '/trade/Dsshop/pages.json';
         $file_get_contents = file_get_contents($targetPath);
@@ -230,40 +234,47 @@ class Plugin
         $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
         file_put_contents($targetPath, $file_get_contents);
         unset($targetPath);
-        unset($file_get_contents);*/
-        $this->fileUninstall($this->path . '/admin/src/api/'.$name.'.js');
-        $this->fileUninstall($this->path . '/admin/src/views/Tool/' . ucwords($name));
-        $this->fileUninstall($this->path . '/api/config');
-        $this->fileUninstall( $this->path . '/api/app/Console/Commands');
-        $this->fileUninstall($this->path . '/api/app/Models/v'.config('dswjcms.versions'));
-        $this->fileUninstall($this->path . '/api/app/Http/Controllers/v'.config('dswjcms.versions').'/Plugin');
-        $this->fileUninstall($this->path . '/api/app/Http/Requests/v'.config('dswjcms.versions'));
-        $this->fileUninstall($this->path . '/api/database/migrations');
-        $this->fileUninstall($this->path . '/trade/Dsshop/api');
-        $this->fileUninstall($this->path . '/trade/Dsshop/components');
-        $this->fileUninstall($this->path . '/trade/Dsshop/pages');
+        unset($file_get_contents);
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/admin/api', $this->path . '/admin/src/api');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/admin/views/' . ucwords($name), $this->path . '/admin/src/views/Tool/' . ucwords($name));
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/config', $this->path . '/api/config');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/console', $this->path . '/api/app/Console/Commands');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v'.config('dswjcms.versions'));
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v'.config('dswjcms.versions').'/Plugin');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v'.config('dswjcms.versions'));
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/trade/Dsshop/api');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/trade/Dsshop/components');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/pages', $this->path . '/trade/Dsshop/pages');
+        foreach ($json_dswjcms as $id=>$json){
+            if($json['name']== $name){
+                $json_dswjcms[$id]['is_delete'] = 1;
+            }
+        }
+        file_put_contents($this->pluginPath . '/dswjcms.json', json_encode($json_dswjcms));
         return resReturn(1, '成功');
     }
 
     /**
      * 删除目录下的插件文件
      * @param string $original //原始目录
+     * @param $target
      */
-    protected function fileUninstall($original)
+    protected function fileUninstall($original, $target)
     {
-        if (is_dir($original)) {
+        if (file_exists($original)) {
             $data = scandir($original);
             foreach ($data as $value) {
                 if ($value != '.' && $value != '..') {
                     if (is_dir($original . '/' . $value)) { //如果是目录
-                        $this->fileUninstall($original . '/' . $value);
+                        $this->fileUninstall($original . '/' . $value, $target . '/' . $value);
                     } else {
-                        unlink($original . '/' . $value);
+                        if (file_exists($target . '/' . $value)) {
+                            unlink($target . '/' . $value);
+                        }
                     }
                 }
             }
-        }else{
-            unlink($original);
         }
     }
 }

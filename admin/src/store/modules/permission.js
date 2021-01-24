@@ -1,6 +1,5 @@
 import { constantRouterMap } from '@/router'
 import Layout from '@/views/layout/Layout'
-
 // 模板
 export const componentsMap = {
   Dashboard: () => import('@/views/Dashboard/index'),
@@ -56,7 +55,6 @@ export const componentsMap = {
   CreatePlugIn: () => import('@/views/Plugin/create'),
   EditPlugIn: () => import('@/views/Plugin/edit')
 }
-
 const permission = {
   state: {
     routers: constantRouterMap,
@@ -81,7 +79,6 @@ const permission = {
     }
   }
 }
-
 function generateAsyncRouter(componentsMap, serverRouterMap) {
   serverRouterMap.forEach(function(item, index) {
     if (!item.redirect) {
@@ -95,5 +92,4 @@ function generateAsyncRouter(componentsMap, serverRouterMap) {
   })
   return serverRouterMap
 }
-
 export default permission

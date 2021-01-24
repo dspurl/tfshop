@@ -1,6 +1,5 @@
 {
 	"pages": [
-
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -70,7 +69,6 @@
 				"navigationBarTitleText": "注销申请"
 			}
 		},
-
 		{
 			"path": "pages/userinfo/userinfo",
 			"style": {
