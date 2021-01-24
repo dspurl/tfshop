@@ -103,7 +103,7 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (7, 'CreateAdmin', NULL, '', '添加管理员', 6, 0, 0),
 (8, 'UpdataAdmin', NULL, '', '修改管理员', 6, 0, 0),
 (9, 'DeleteAdmin', NULL, '', '删除管理员', 6, 0, 0),
-(10, 'UsersList', NULL, '', '用户列表', 2, 1, 1),
+(10, 'MemberList', NULL, '', '用户列表', 2, 1, 1),
 (15, 'ManageList', NULL, '', '管理组管理', 2, 1, 2),
 (16, 'CreateManage', NULL, '', '添加管理组', 15, 0, 0),
 (17, 'UpdataManage', NULL, '', '修改管理组', 15, 0, 0),
