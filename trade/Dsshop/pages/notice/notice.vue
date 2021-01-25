@@ -147,7 +147,7 @@
 
 	.content {
 		width: 710upx;
-		padding: 0 24upx;
+		padding: 20upx 0 0 24upx;
 		background-color: #fff;
 		border-radius: 4upx;
 	}
