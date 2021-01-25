@@ -43,7 +43,7 @@
         <template slot-scope="scope">
           <el-button v-permission="$store.jurisdiction.PlugInInstall" v-if="!scope.row.locality_versions || scope.row.is_delete" :loading="butLoading" type="primary" size="mini" @click="handleCreate(scope.row.abbreviation)">安装</el-button>
           <el-button v-permission="$store.jurisdiction.PlugInUpdate" v-else-if="scope.row.locality_versions && scope.row.versions > scope.row.locality_versions" :loading="butLoading" type="warning" size="mini" @click="handleCreate(scope.row.abbreviation, 1)">升级</el-button>
-          <el-button v-permission="$store.jurisdiction.PlugInDelete" v-if="!scope.row.is_delete" :loading="butLoading" type="danger" size="mini" @click="handleDelete(scope.row.abbreviation)">删除插件</el-button>
+          <el-button v-permission="$store.jurisdiction.PlugInDelete" v-if="scope.row.locality_versions && !scope.row.is_delete" :loading="butLoading" type="danger" size="mini" @click="handleDelete(scope.row.abbreviation)">删除插件</el-button>
         </template>
       </el-table-column>
     </el-table>
