@@ -1,6 +1,6 @@
 <template>
 	<view class="container">
-		<view class="bg-white text-center padding">
+		<view class="bg-white logo text-center padding">
 			<image style="width: 300upx;height: 300upx;" src="/static/logo.png" lazy-load></image>
 		</view>
 		<view class="list-cell solid-top" @click="navTo('/pages/article/details?list=0&id=2')" hover-class="cell-hover" :hover-stay-time="50">
@@ -41,6 +41,10 @@
 <style lang='scss'>
 	page{
 		background: $page-color-base;
+	}
+	.logo{
+		justify-content: center;
+		display: flex;
 	}
 	.list-cell{
 		display:flex;

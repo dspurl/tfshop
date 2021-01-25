@@ -23,6 +23,7 @@ const store = new Vuex.Store({
 			uni.removeStorageSync('applyDsshopSession_key')
 			uni.removeStorageSync('applyDsshopOpenid')
 			uni.removeStorageSync('dsshopUserInfo')
+			uni.removeStorageSync('dsshopCartList')
 			state.hasLogin = false;
 			state.userInfo = {};
 		},

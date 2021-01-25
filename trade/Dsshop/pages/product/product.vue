@@ -556,21 +556,10 @@ page {
 		font-size: $font-base + 2upx;
 		color: $font-color-dark;
 		position: relative;
-
 		text {
 			padding: 0 20upx;
 			background: #fff;
 			position: relative;
-		}
-		&:after {
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			transform: translateX(-50%);
-			width: 300upx;
-			height: 0;
-			content: '';
-			border-bottom: 1px solid #ccc;
 		}
 	}
 }

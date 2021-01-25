@@ -50,12 +50,12 @@
 							that.tlist.push(item); //3级分类
 						}
 					}) 
+					setTimeout(() => {
+					  if(!that.sizeCalcState){
+					  	that.calcSize();
+					  }
+					}, 1)
 				})
-				setTimeout(() => {
-				  if(!this.sizeCalcState){
-				  	this.calcSize();
-				  }
-				}, 1000)
 			},
 			//一级分类点击
 			tabtap(item){
