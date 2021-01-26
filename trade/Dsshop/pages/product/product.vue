@@ -16,7 +16,7 @@
 
 		<view class="introduce-section">
 			<text class="title">{{ getList.name }}</text>
-			<view class="price-box">
+			<view class="price-box" v-if="inventoryFlag">
 				<text class="price-tip">¥</text>
 				<template v-if="getList.price_show">
 					<text class="price" v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</text>
@@ -105,12 +105,12 @@
 				<text class="yticon icon-shoucang"></text>
 				<text>收藏</text>
 			</view>
-			<view class="action-btn-group" v-if="getList.is_delete  || getList.is_show !== 1">
+			<view class="action-btn-group" v-if="getList.is_delete  || getList.is_show !== 1 || !inventoryFlag">
 				<button type="primary" class=" action-btn no-border buy-now-btn" disabled>立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>加入购物车</button>
 			</view>
 			<view class="action-btn-group" v-else>
-				<button :disabled="inventoryFlag == false" type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec(false)">加入购物车</button>
 			</view>
 		</view>
@@ -122,7 +122,7 @@
 		</view>
 		<!-- 已删除或还未发布-->
 		<view v-if="getList.is_delete || getList.is_show !== 1" class="sold-out padding-sm">商品已经下架了~</view>
-		<view v-if="inventoryFlag == false" class="sold-out padding-sm">商品已经无货了~</view>
+		<view v-if="inventoryFlag == false" class="sold-out padding-sm">商品已经售完了~</view>
 		<!-- 分享 -->
 		<!-- <share ref="share" :contentHeight="580" :shareList="shareList"></share> -->
 	</view>
