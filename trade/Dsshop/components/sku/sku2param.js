@@ -6,6 +6,16 @@ import {
   combInArray
 } from './utils'
 
+function objectValues(obj) {
+    var res = [];
+    for (var i in obj) {
+        if (Object.prototype.hasOwnProperty.call(obj, i)) {
+            res.push(obj[i]);
+        }
+    }
+    return res;
+}
+
 export function param2Data(product_skus_data) {
   // product_skus_data 数据结构请参考 `/src/components/mock.js`
   if (!product_skus_data || !product_skus_data.length) return
@@ -70,9 +80,9 @@ export function param2Data(product_skus_data) {
     }
   })
 	
-  const specification = Object.values(specificationObj).map(item => ({
+  const specification = objectValues(specificationObj).map(item => ({
     ...item,
-    leaf: Object.values(item.leaf)
+    leaf: objectValues(item.leaf)
   }))
   return {
     productSkus,
