@@ -24,7 +24,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         if(config('backup.switch')){    //是否开启备份功能
-            $schedule->command('backup:clean')->daily()->at('02:00');
+            $schedule->command('backup:clean')->daily()->at(config('backup.clean_time'));
             if(config('backup.db_time') || config('backup.files_time')){   //设置了数据库备份时间或文件备份时间
                 if(config('backup.db_time')){
                     $schedule->command('backup:run --only-db')->dailyAt(config('backup.db_time'));

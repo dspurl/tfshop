@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v1\Element;
+namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
 use App\Http\Requests\v1\SubmitGoodCategoryRequest;
@@ -59,8 +59,8 @@ class GoodAppController extends Controller
                 */
                 $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\''.$request->title.'\' IN NATURAL LANGUAGE MODE)')
                     ->orWhere('number',$request->title);
-            });           
-        } 
+            });
+        }
         //排序
         if($request->has('order')){
             if($request->order == 1){   //销量

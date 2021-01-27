@@ -118,12 +118,12 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         //前台插件列表
     });
     //app
-    Route::prefix('app')->namespace('Element')->group(function () {
+    Route::prefix('app')->namespace('Client')->group(function () {
         Route::any('/serve', 'WeChatController@serve');    //微信认证
         Route::any('paymentNotify', 'WeChatController@paymentNotify');    //微信支付回调
         Route::any('refundNotify', 'WeChatController@refundNotify');    //微信退款回调
     });
-    Route::prefix('app')->namespace('Element')->middleware(['appverify'])->group(function () {
+    Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
         Route::post('uploadPictures', 'WeChatController@uploadPictures');  //上传
         Route::post('register', 'WeChatController@register');    //注册
         Route::post('login', 'WeChatController@login');    //登录
@@ -141,7 +141,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('advertising', 'BannerAppController@advertising');    //单条广告
         Route::get('goodCategory', 'GoodAppController@goodCategory');    //商品分类展示
     });
-    Route::prefix('app')->namespace('Element')->middleware(['appverify','auth:web'])->group(function () {
+    Route::prefix('app')->namespace('Client')->middleware(['appverify','auth:web'])->group(function () {
         Route::get('user', 'UserController@show');    //用户详情
         Route::post('user', 'UserController@update');    //设置用户信息
         Route::post('unsubscribe', 'UserController@unsubscribe');    //注销账号
