@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\v1\Element;
+namespace App\Http\Controllers\v1\Client;
 
 use App\Http\Requests\v1\SubmitBannerRequest;
 use App\Models\v1\Banner;
