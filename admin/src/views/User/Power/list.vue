@@ -10,7 +10,8 @@
         clearable
         style="top:-4px"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
-      <el-button v-permission="$store.jurisdiction.CreatePower" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('usuel.add') }}</el-button>
+      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="refresh">刷新权限</el-button>
+      <el-button v-permission="$store.jurisdiction.PowerCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('usuel.add') }}</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -53,9 +54,15 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="300">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.CreatePower" type="success" size="mini" @click="handleCreate(scope.row)">复制</el-button>
-          <el-button v-permission="$store.jurisdiction.UpdataPower" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('usuel.amend') }}</el-button>
-          <el-button v-permission="$store.jurisdiction.DeletePower" type="danger" size="mini" @click="handleDelete(scope.row)">{{ $t('usuel.delete') }}</el-button>
+          <el-tooltip class="item" effect="dark" content="复制" placement="top-start">
+            <el-button v-permission="$store.jurisdiction.PowerCreate" type="success" icon="el-icon-document-copy" circle @click="handleCreate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button v-permission="$store.jurisdiction.PowerEdit" type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+            <el-button v-permission="$store.jurisdiction.PowerDestroy" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -109,7 +116,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -121,7 +128,7 @@
 </style>
 
 <script>
-import { powerList, createPower, updatePower, deletePower } from '@/api/user'
+import { getList, create, edit, destroy } from '@/api/power'
 import waves from '@/directive/waves' // Waves directiveimport { jurisdiction } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -144,6 +151,7 @@ export default {
       }
     }
     return {
+      formLoading: false,
       tableKey: 0,
       options: [],
       list: null,
@@ -188,7 +196,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      powerList(this.listQuery).then(response => {
+      getList(this.listQuery).then(response => {
         this.list = response.data.data
         this.options = response.data.options
         this.total = response.data.total
@@ -241,11 +249,13 @@ export default {
       })
     },
     createData() { // 添加
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createPower(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
@@ -253,15 +263,19 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     updateData() { // 更新
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updatePower(this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),
@@ -270,13 +284,14 @@ export default {
             })
             this.updateUserinfo()
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     handleUpdate(row) { // 修改
       row.password = ''
       this.temp = Object.assign({}, row) // copy obj
-      this.temp.pid = this.temp.pid
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -289,7 +304,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        deletePower(row.id).then(() => {
+        destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -305,6 +320,9 @@ export default {
     },
     updateUserinfo() {
       // this.$store.dispatch('ChangeRoles') // 此方法会导致VUE提示死循环
+      // location.reload()
+    },
+    refresh() {
       location.reload()
     }
   }

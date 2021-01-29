@@ -5,7 +5,7 @@
 <script>
 import Detail from './components/Detail'
 export default {
-  name: 'EditProduct',
+  name: 'ProductEdit',
   components: { Detail }
 }
 </script>

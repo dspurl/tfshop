@@ -5,7 +5,7 @@
 <script>
 import Detail from './components/Detail'
 export default {
-  name: 'VueTemplateUpdate',
+  name: 'FreightEdit',
   components: { Detail }
 }
 </script>

@@ -27,13 +27,13 @@ export const componentsMap = {
   // 商品管理
   Product: () => import('@/views/GoodsManage/Product/index'),
   ProductList: () => import('@/views/GoodsManage/Product/list'),
-  CreateProduct: () => import('@/views/GoodsManage/Product/create'),
-  EditProduct: () => import('@/views/GoodsManage/Product/edit'),
+  ProductCreate: () => import('@/views/GoodsManage/Product/create'),
+  ProductEdit: () => import('@/views/GoodsManage/Product/edit'),
   // 运费模板
   Freight: () => import('@/views/Freight/index'),
   FreightList: () => import('@/views/Freight/list'),
-  CreateFreight: () => import('@/views/Freight/create'),
-  EditFreight: () => import('@/views/Freight/edit'),
+  FreightCreate: () => import('@/views/Freight/create'),
+  FreightEdit: () => import('@/views/Freight/edit'),
   // 运费模板
   Dhl: () => import('@/views/Dhl/index'),
   DhlList: () => import('@/views/Dhl/list'),
@@ -52,8 +52,8 @@ export const componentsMap = {
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
   PlugInList: () => import('@/views/Plugin/list'),
-  CreatePlugIn: () => import('@/views/Plugin/create'),
-  EditPlugIn: () => import('@/views/Plugin/edit')
+  PlugInCreate: () => import('@/views/Plugin/create'),
+  PlugInEdit: () => import('@/views/Plugin/edit')
 }
 const permission = {
   state: {

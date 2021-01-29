@@ -21,22 +21,25 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('userInfo', 'LoginController@userInfo');  //用户详情
         //首页
         Route::get('index', 'IndexController@index');  //首页
-        //用户管理
-        Route::get('admin', 'UserController@index')->middleware(['permissions:AdminList']);  //管理员列表
-        Route::post('admin/create', 'UserController@createAdmin')->middleware(['permissions:CreateAdmin']);  //添加管理员
-        Route::put('admin', 'UserController@updataAdmin')->middleware(['permissions:UpdataAdmin']);  //修改管理员/密码
-        Route::delete('admin/{id}', 'UserController@destroyAdmin')->middleware(['permissions:DeleteAdmin']);  //删除管理员
-        Route::get('user', 'UserController@user')->middleware(['permissions:MemberList']);  //用户列表
-        Route::post('user', 'UserController@createUser')->middleware(['permissions:CreateUser']);  //添加用户
-        Route::put('user', 'UserController@updataUser')->middleware(['permissions:UpdataUser']);  //修改用户
-        Route::get('manage', 'UserController@manage')->middleware(['permissions:ManageList']);  //管理组管理
-        Route::post('manage/create', 'UserController@createManage')->middleware(['permissions:CreateManage']);  //添加管理组
-        Route::put('manage', 'UserController@updataManage')->middleware(['permissions:UpdataManage']);  //修改管理组
-        Route::delete('manage/{id}', 'UserController@destroyManage')->middleware(['permissions:DeleteManage']);  //删除管理组
-        Route::get('power', 'UserController@power')->middleware(['permissions:PowerList']);  //权限管理
-        Route::post('power/create', 'UserController@createPower')->middleware(['permissions:CreatePower']);  //添加权限
-        Route::put('power', 'UserController@updataPower')->middleware(['permissions:UpdataPower']);  //修改权限
-        Route::delete('power/{id}', 'UserController@destroyPower')->middleware(['permissions:DeletePower']);  //删除权限
+        //管理员管理
+        Route::get('admin', 'AdminController@list')->middleware(['permissions:AdminList']);  //管理员列表
+        Route::post('admin', 'AdminController@create')->middleware(['permissions:AdminCreate']);  //添加管理员
+        Route::post('admin/{id}', 'AdminController@edit')->middleware(['permissions:AdminEdit']);  //修改管理员/密码
+        Route::post('admin/destroy/{id}', 'AdminController@destroy')->middleware(['permissions:AdminDestroy']);  //删除管理员
+
+        Route::get('member', 'MemberController@list')->middleware(['permissions:MemberList']);  //用户列表
+        Route::post('member', 'MemberController@create')->middleware(['permissions:MemberCreate']);  //添加用户
+        Route::post('member/{id}', 'MemberController@edit')->middleware(['permissions:MemberEdit']);  //修改用户
+
+        Route::get('manage', 'ManageController@list')->middleware(['permissions:ManageList']);  //管理组管理
+        Route::post('manage', 'ManageController@create')->middleware(['permissions:ManageCreate']);  //添加管理组
+        Route::post('manage/{id}', 'ManageController@edit')->middleware(['permissions:ManageEdit']);  //修改管理组
+        Route::post('manage/destroy/{id}', 'ManageController@destroy')->middleware(['permissions:ManageDestroy']);  //删除管理组
+
+        Route::get('power', 'PowerController@list')->middleware(['permissions:PowerList']);  //权限管理
+        Route::post('power', 'PowerController@create')->middleware(['permissions:PowerCreate']);  //添加权限
+        Route::post('power/{id}', 'PowerController@edit')->middleware(['permissions:PowerEdit']);  //修改权限
+        Route::post('power/destroy/{id}', 'PowerController@destroy')->middleware(['permissions:PowerDestroy']);  //删除权限
         //工具
         //--Redis管理
         Route::get('redis', 'RedisServiceController@index')->middleware(['permissions:RedisServicesList']);    //Redis列表

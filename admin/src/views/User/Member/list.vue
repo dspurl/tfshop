@@ -2,9 +2,25 @@
   <div class="app-container">
     <div class="filter-container">
       <el-input :placeholder="$t('user.queryUserTitle')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
+      <span class="filter-item">
+        <el-date-picker
+          v-model="listQuery.timeInterval"
+          :picker-options="pickerOptions"
+          type="datetimerange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          align="right"
+          value-format="yyyy-MM-dd HH:mm:ss"/>
+      </span>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
-      <el-button v-permission="$store.jurisdiction.CreateUser" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('usuel.add') }}</el-button>
-      <!--<el-button v-permission="jurisdiction.usersListExport" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ $t('usuel.export') }}</el-button>-->
+      <el-radio-group v-model="listQuery.state" class="filter-item" @change="handleFilter">
+        <el-radio-button label="0">全部</el-radio-button>
+        <el-radio-button label="1">正常</el-radio-button>
+        <el-radio-button label="2">禁止访问</el-radio-button>
+      </el-radio-group>
+      <el-button v-permission="$store.jurisdiction.MemberCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('usuel.add') }}</el-button>
+      <!--<el-button v-permisssion="jurisdiction.usersListExport" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ $t('usuel.export') }}</el-button>-->
     </div>
     <el-table
       v-loading="listLoading"
@@ -55,6 +71,11 @@
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="最后登录时间" sortable="custom" prop="time">
+        <template slot-scope="scope">
+          <span>{{ scope.row.updated_at }}</span>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('user.state')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.state_show }}</span>
@@ -62,7 +83,9 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.UpdataUser" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
+          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button v-permission="$store.jurisdiction.MemberEdit" type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -94,12 +117,12 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('user.password')" prop="password">
-          <el-input v-model="temp.password" :placeholder="canNull" type="password" clearable/>
+          <el-input v-model="temp.password" :placeholder="canNull" show-password clearable/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -146,7 +169,7 @@
   }
 </style>
 <script>
-import { userList, createUser, updateUser } from '@/api/user'
+import { getList, create, edit } from '@/api/member'
 import waves from '@/directive/waves' // Waves directive
 import { parseTime } from '@/utils'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -167,6 +190,7 @@ export default {
       }
     }
     return {
+      formLoading: false,
       actionurl: process.env.BASE_API + 'uploadPictures',
       uploadData: {},
       pickerOptions: {
@@ -208,6 +232,7 @@ export default {
       },
       listLoading: true,
       listQuery: {
+        state: 0,
         page: 1,
         limit: 10,
         sort: '-id',
@@ -245,7 +270,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      userList(this.listQuery).then(response => {
+      getList(this.listQuery).then(response => {
         this.list = response.data.data
         this.total = response.data.total
         this.listLoading = false
@@ -320,11 +345,13 @@ export default {
       })
     },
     createData() { // 添加用户
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createUser(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
@@ -332,16 +359,20 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     updateData() { // 更新
+      this.formLoading = true
       this.adminRules.password[0].required = false
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateUser(this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),
@@ -349,6 +380,8 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
     },

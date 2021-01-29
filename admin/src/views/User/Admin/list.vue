@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-input :placeholder="$t('user.queryTitle')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
-      <el-button v-permission="$store.jurisdiction.CreateAdmin" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="$store.jurisdiction.AdminCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -46,13 +46,17 @@
       </el-table-column>
       <el-table-column :label="$t('user.time')" sortable="custom" prop="time">
         <template slot-scope="scope">
-          <span>{{ scope.row.time | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
+          <span>{{ scope.row.created_at | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.UpdataAdmin" type="primary" size="mini" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="$store.jurisdiction.DeleteAdmin" type="danger" size="mini" @click="handleDelete(scope.row)">{{ $t('usuel.delete') }}</el-button>
+          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button v-permission="$store.jurisdiction.AdminEdit" type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+            <el-button v-permission="$store.jurisdiction.AdminDestroy" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -91,13 +95,13 @@
           </el-upload>
         </el-form-item>
         <el-form-item label="密码" prop="password">
-          <el-input v-model="temp.password" type-="password" maxlength="255" clearable/>
+          <el-input v-model="temp.password" show-password maxlength="255" clearable/>
           <div slot="tip" class="el-upload__tip">需要更新密码时才填写</div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -128,7 +132,7 @@
   }
 </style>
 <script>
-import { fetchList, createAdmin, amendAdmin, deleteAdmin } from '@/api/user'
+import { getList, create, edit, destroy } from '@/api/admin'
 import { getToken } from '@/utils/auth'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
@@ -148,6 +152,7 @@ export default {
       }
     }
     return {
+      formLoading: false,
       actionurl: process.env.BASE_API + 'uploadPictures',
       imgProgress: false,
       imgProgressPercent: 0,
@@ -172,7 +177,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        sort: '-id'
+        sort: 'id'
       },
       temp: {
         password: '',
@@ -209,7 +214,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
+      getList(this.listQuery).then(response => {
         this.list = response.data.data
         this.total = response.data.total
         this.listLoading = false
@@ -271,11 +276,13 @@ export default {
       })
     },
     createSubmit() { // 添加
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createAdmin(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
@@ -283,15 +290,19 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     updateSubmit() { // 更新
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          amendAdmin(this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$store.dispatch('GetUserInfo').then(res => {}) // 更新管理员信息
             this.$notify({
               title: this.$t('hint.succeed'),
@@ -300,6 +311,8 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
@@ -337,7 +350,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        deleteAdmin(row.id).then(() => {
+        destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({

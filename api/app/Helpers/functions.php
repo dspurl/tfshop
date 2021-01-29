@@ -27,7 +27,7 @@ function resReturn($state=1,$message='',$code='',$httpcode='')
 
 /**
  * 获取无限分级
- * @param int $items 数据源
+ * @param array $items 数据源
  * @param string $pid 父类键值
  * @param string $son 子类键名
  * @return array
@@ -249,4 +249,24 @@ function convertUnderline ( $str , $ucfirst = true)
     $str = ucwords(str_replace('_', ' ', $str));
     $str = str_replace(' ','',lcfirst($str));
     return $str;
+}
+
+/**
+ * 将前端的排序转为后台排序参数
+ * @param $sortOriginal
+ * @return mixed|string
+ */
+function sortFormatConversion ($sortOriginal)
+{
+    $sort = explode("-",$sortOriginal);
+    if(count($sort) == 2){ //倒序
+        return [$sort[1],'DESC'];
+    }else{
+        $sort = explode("+",$sortOriginal);
+        if(count($sort) == 2){
+            return [$sort[1],'ASC'];
+        }else{
+            return [$sortOriginal,'ASC'];
+        }
+    }
 }

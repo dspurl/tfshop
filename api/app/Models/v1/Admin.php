@@ -9,13 +9,12 @@ use Laravel\Passport\HasApiTokens;
 
 /**
  * @property string password
- * @property mixed name
- * @property mixed email
- * @property mixed portrait
- * @property string time
+ * @property string name
+ * @property string email
+ * @property string portrait
  * @property string last_login_at
  * @property int type
- * @property mixed cellphone
+ * @property int cellphone
  */
 class Admin extends Authenticatable
 {

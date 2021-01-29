@@ -3,7 +3,7 @@
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
-class SubmitAuthGroupRequest extends Request
+class SubmitManageRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -12,15 +12,10 @@ class SubmitAuthGroupRequest extends Request
      */
     public function authorize()
     {
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
@@ -35,23 +30,23 @@ class SubmitAuthGroupRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'roles' => 'bail|required|unique:auth_groups|string|max:11',
-                    'introduction' => 'required|string|max:80',
-                    'rules' => 'required',
-                ];
-            case 'PUT': //update
-                return [
-                    'roles' => 'bail|required|string|max:11',
-                    'introduction' => 'required|string|max:80',
-                    'rules' => 'required',
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'roles' => 'bail|required|string|max:11',
+                        'introduction' => 'required|string|max:80',
+                        'rules' => 'required',
+                    ];
+                } else {
+                    return [
+                        'roles' => 'bail|required|unique:auth_groups|string|max:11',
+                        'introduction' => 'required|string|max:80',
+                        'rules' => 'required',
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return [];

@@ -1,7 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-permission="$store.jurisdiction.CreateManage" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('usuel.add') }}</el-button>
+      <el-button v-permission="$store.jurisdiction.ManageCreate" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('usuel.add') }}</el-button>
+      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="refresh">刷新权限</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -43,8 +44,12 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="200">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.UpdataManage" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('usuel.amend') }}</el-button>
-          <el-button v-permission="$store.jurisdiction.DeleteManage" type="danger" size="mini" @click="handleDelete(scope.row)">{{ $t('usuel.delete') }}</el-button>
+          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button v-permission="$store.jurisdiction.ManageEdit" type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+            <el-button v-permission="$store.jurisdiction.ManageDestroy" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -86,7 +91,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -107,7 +112,7 @@
   }
 </style>
 <script>
-import { manageGroupsList, createManageGroups, updateManageGroups, deleteManageGroups } from '@/api/user'
+import { getList, create, edit, destroy } from '@/api/manage'
 import waves from '@/directive/waves' // Waves directive
 import treeTransfer from 'el-tree-transfer'
 
@@ -125,6 +130,7 @@ export default {
       }
     }
     return {
+      formLoading: false,
       options: [],
       oldOptions: [],
       tableKey: 0,
@@ -179,7 +185,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      manageGroupsList(this.listQuery).then(response => {
+      getList(this.listQuery).then(response => {
         this.list = response.data.data
         this.options = response.data.options
         this.oldOptions = response.data.options
@@ -226,11 +232,13 @@ export default {
       })
     },
     createData() { // 添加
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createManageGroups(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = true
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
@@ -238,15 +246,19 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     updateData() { // 更新
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateManageGroups(this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = true
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),
@@ -254,6 +266,8 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
@@ -284,7 +298,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        deleteManageGroups(row.id).then(() => {
+        destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -316,6 +330,9 @@ export default {
     // 监听穿梭框组件移除
     remove(fromData, toData, obj) {
       this.temp.rules = toData
+    },
+    refresh() {
+      location.reload()
     }
   }
 }

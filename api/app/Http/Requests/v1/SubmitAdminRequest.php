@@ -5,6 +5,7 @@ namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
 use Illuminate\Support\Facades\Validator;
+
 class SubmitAdminRequest extends Request
 {
     /**
@@ -14,18 +15,13 @@ class SubmitAdminRequest extends Request
      */
     public function authorize()
     {
-        Validator::extend('mobile', function($attribute, $value, $parameters, $validator) {
-            return preg_match('/^1[34578][0-9]{9}$/', $value);
+        Validator::extend('mobile', function ($attribute, $value, $parameters, $validator) {
+            return preg_match('/^1[345678][0-9]{9}$/', $value);
         });
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
@@ -40,27 +36,26 @@ class SubmitAdminRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'required|unique:admins|string|max:30',
-                    'email' => 'required|email|max:255',
-                    'cellphone' => 'required|unique:admins|mobile|max:11',
-                    'portrait' => 'required|string|max:255',
-                    'password' => 'required|string|max:255',
-                ];
-            case 'PUT': //update
-                $request = Request::all();
-                return [
-                    'name' => 'required|unique:admins,name,'.$request['id'].'|string|max:30',
-                    'email' => 'required|email|max:255',
-                    'cellphone' => 'required|unique:admins,cellphone,'.$request['id'].'|mobile|max:11',
-                    'portrait' => 'required|string|max:255',
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name' => 'required|unique:admins,name,' . $request['id'] . '|string|max:30',
+                        'email' => 'required|email|max:255',
+                        'cellphone' => 'required|unique:admins,cellphone,' . $request['id'] . '|mobile|max:11',
+                        'portrait' => 'required|string|max:255',
+                    ];
+                } else {
+                    return [
+                        'name' => 'required|unique:admins|string|max:30',
+                        'email' => 'required|email|max:255',
+                        'cellphone' => 'required|unique:admins|mobile|max:11',
+                        'portrait' => 'required|string|max:255',
+                        'password' => 'required|string|max:255',
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return [];
