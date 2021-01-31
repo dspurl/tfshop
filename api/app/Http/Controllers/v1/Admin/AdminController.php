@@ -44,7 +44,7 @@ class AdminController extends Controller
 
     /**
      * AdminCreate
-     * 添加管理员
+     * 管理员添加
      * @param SubmitAdminRequest $request
      * @queryParam  name string 管理员账号
      * @queryParam  email string 邮箱地址
@@ -69,7 +69,7 @@ class AdminController extends Controller
 
     /**
      * AdminEdit
-     * 修改管理员/密码
+     * 管理员/密码修改
      * @param $id
      * @param SubmitAdminRequest $request
      * @queryParam  id int 管理员ID
@@ -96,7 +96,7 @@ class AdminController extends Controller
 
     /**
      * AdminDestroy
-     * 删除管理员
+     * 管理员删除
      * @param $id
      * @queryParam  id int 管理员ID
      * @return string

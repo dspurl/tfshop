@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property string timing
  * @property int freight_id
  *
+ * @method static find(int $id)
  */
 class Good extends Model
 {
@@ -173,7 +174,7 @@ class Good extends Model
      * @param $row
      * @return array
      */
-    protected function getPriceShow($row)
+    public function getPriceShow($row)
     {
         $return = [];
 
@@ -195,7 +196,7 @@ class Good extends Model
      * @param $row
      * @return array
      */
-    protected function getMarketPriceShow($row)
+    public function getMarketPriceShow($row)
     {
         $return = [];
 
@@ -217,7 +218,7 @@ class Good extends Model
      * @param $row
      * @return int
      */
-    protected function getInventoryShow($row)
+    public function getInventoryShow($row)
     {
         if(count($row->goodSku)>0){
             $return = $row->goodSku->sum('inventory');

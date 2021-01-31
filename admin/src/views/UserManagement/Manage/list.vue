@@ -44,11 +44,11 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="200">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-            <el-button v-permission="$store.jurisdiction.ManageEdit" type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          <el-tooltip v-permission="$store.jurisdiction.ManageEdit" class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-            <el-button v-permission="$store.jurisdiction.ManageDestroy" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          <el-tooltip v-permission="$store.jurisdiction.ManageDestroy" class="item" effect="dark" content="删除" placement="top-start">
+            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -238,7 +238,7 @@ export default {
           create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
-            this.formLoading = true
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
@@ -258,7 +258,7 @@ export default {
           edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
-            this.formLoading = true
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),

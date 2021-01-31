@@ -83,8 +83,8 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-            <el-button v-permission="$store.jurisdiction.MemberEdit" type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          <el-tooltip v-permission="$store.jurisdiction.MemberEdit" class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>

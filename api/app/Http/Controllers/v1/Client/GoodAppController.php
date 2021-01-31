@@ -100,8 +100,8 @@ class GoodAppController extends Controller
         }])->select('updated_at','id','name','number','market_price','sales','order_price','brand_id','price','is_show','is_recommend','is_new','is_hot','sort','time')->paginate($limit);
         if($paginate){
             foreach ($paginate as $id=>$p){
-                $paginate[$id]['price_show']=Good::getPriceShow($p);
-                $paginate[$id]['inventory_show']=Good::getInventoryShow($p);
+                $paginate[$id]['price_show']=(new Good())->getPriceShow($p);
+                $paginate[$id]['inventory_show']=(new Good())->getInventoryShow($p);
             }
         }
         return resReturn(1,$paginate);
@@ -124,9 +124,9 @@ class GoodAppController extends Controller
         $Good=Good::with(['resourcesMany','resources','goodSku'=>function($q){
             $q->where('is_delete',GoodSku::GOOD_SKU_DELETE_NO)->with('resources')->where('inventory','>',0);
         }])->find($id);
-        $Good['price_show']=Good::getPriceShow($Good);
-        $Good['market_price_show']=Good::getMarketPriceShow($Good);
-        $Good['inventory_show']=Good::getInventoryShow($Good);
+        $Good['price_show']=(new Good())->getPriceShow($Good);
+        $Good['market_price_show']=(new Good())->getMarketPriceShow($Good);
+        $Good['inventory_show']=(new Good())->getInventoryShow($Good);
         return resReturn(1,$Good);
     }
 

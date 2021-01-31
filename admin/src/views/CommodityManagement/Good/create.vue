@@ -6,7 +6,7 @@
 import Detail from './components/Detail'
 
 export default {
-  name: 'ProductCreate',
+  name: 'GoodCreate',
   components: { Detail }
 }
 </script>

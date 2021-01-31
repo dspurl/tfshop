@@ -16,7 +16,7 @@
         </el-form-item>
       </el-form>
       <br>
-      <router-link v-permission="$store.jurisdiction.CreateProduct" :to="'createProduct'">
+      <router-link v-permission="$store.jurisdiction.GoodCreate" :to="'GoodCreate'">
         <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">添加</el-button>
       </router-link>
     </div>
@@ -36,7 +36,7 @@
         type="selection"
         width="55"
         fixed="left"/>
-      <el-table-column label="编号" prop="id" fixed="left" width="80">
+      <el-table-column label="编号" sortable="custom" prop="id" fixed="left" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -72,44 +72,52 @@
           <span>{{ scope.row.inventory_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="销量">
+      <el-table-column label="销量" sortable="custom" prop="sales">
         <template slot-scope="scope">
           <span>{{ scope.row.sales }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态">
+      <el-table-column label="状态" sortable="custom" prop="is_show">
         <template slot-scope="scope">
           <span>{{ scope.row.putaway_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="减库存方式">
+      <el-table-column label="减库存方式" sortable="custom" prop="is_inventory">
         <template slot-scope="scope">
           <span>{{ scope.row.is_inventory_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否推荐">
+      <el-table-column label="是否推荐" sortable="custom" prop="is_recommend">
         <template slot-scope="scope">
           <span>{{ scope.row.is_recommend === 1 ? '是' : '否' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上架时间">
+      <el-table-column label="上架时间" sortable="custom" prop="time">
         <template slot-scope="scope">
           <span>{{ scope.row.time ? scope.row.time : '未发布' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间">
+      <el-table-column label="更新时间" sortable="custom" prop="updated_at">
         <template slot-scope="scope">
           <span>{{ scope.row.updated_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="250" fixed="right">
+      <el-table-column label="操作" class-name="small-padding fixed-width" width="148" fixed="right">
         <template slot-scope="scope">
-          <router-link v-permission="$store.jurisdiction.EditProduct" :to="{ path: 'EditProduct', query: { id: scope.row.id,page:listQuery.page,activeIndex:listQuery.activeIndex }}">
-            <el-button type="primary" size="mini">编辑</el-button>
+          <router-link v-permission="$store.jurisdiction.GoodEdit" :to="{ path: 'GoodEdit', query: { id: scope.row.id,page:listQuery.page,activeIndex:listQuery.activeIndex }}">
+            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+              <el-button type="primary" icon="el-icon-edit" circle/>
+            </el-tooltip>
           </router-link>
-          <el-button v-permission="$store.jurisdiction.EditProduct" v-if="scope.row.is_show !== 1" type="success" size="mini" @click="handleState(scope.row)">立即发布</el-button>
-          <el-button v-permission="$store.jurisdiction.EditProduct" v-else type="info" size="mini" @click="handleState(scope.row, 1)">放入库存</el-button>
-          <el-button v-permission="$store.jurisdiction.EditProduct" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-tooltip v-permission="$store.jurisdiction.GoodEdit" v-if="scope.row.is_show !== 1" class="item" effect="dark" content="立即发布" placement="top-start">
+            <el-button type="success" icon="el-icon-sell" circle @click="handleState(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.GoodEdit" v-else class="item" effect="dark" content="放入库存" placement="top-start">
+            <el-button type="info" icon="el-icon-sold-out" circle @click="handleState(scope.row, 1)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.GoodDestroy" class="item" effect="dark" content="删除" placement="top-start">
+            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -118,9 +126,9 @@
     <div class="pagination-operation">
       <div class="operation">
         <el-button size="mini" @click="handleCheckAllChange">全选/反选</el-button>
-        <el-button v-if="listQuery.activeIndex === '3'" size="mini" type="success" @click="handleAllState()">立即发布</el-button>
-        <el-button v-else-if="listQuery.activeIndex === '2'" size="mini" type="info" @click="handleAllState(1)">放入库存</el-button>
-        <el-button size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
+        <el-button v-permission="$store.jurisdiction.GoodEdit" v-if="listQuery.activeIndex === '3'" size="mini" type="success" @click="handleAllState()">立即发布</el-button>
+        <el-button v-permission="$store.jurisdiction.GoodEdit" v-else-if="listQuery.activeIndex === '2'" size="mini" type="info" @click="handleAllState(1)">放入库存</el-button>
+        <el-button v-permission="$store.jurisdiction.GoodDestroy" size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
       </div>
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
     </div>
@@ -183,12 +191,12 @@
 </style>
 
 <script>
-import { getList, setDelete, setState, createSubmit, updateSubmit } from '@/api/Good'
+import { getList, destroy, state, create, edit } from '@/api/Good'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
-  name: 'ProductList',
+  name: 'GoodList',
   components: { Pagination },
   data() {
     return {
@@ -219,7 +227,7 @@ export default {
       listQuery: {
         limit: 10,
         page: this.$route.query.page ? Number(this.$route.query.page) : 1,
-        sort: '+id',
+        sort: '-id',
         activeIndex: this.$route.query.activeIndex ? this.$route.query.activeIndex : '1'
       },
       temp: {},
@@ -261,20 +269,12 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      } else if (prop === 'time') {
-        this.sortByTIME(order)
-      }
-    },
-    sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+' + prop
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
     },
@@ -323,7 +323,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setState(row.id, row).then(() => {
+        state(row.id, row).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -344,7 +344,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(row.id, row).then(() => {
+        destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -368,7 +368,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setState(0, this.multipleSelection).then(() => {
+        state(0, this.multipleSelection).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -389,7 +389,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(0, this.multipleSelection).then(() => {
+        destroy(0, this.multipleSelection).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -405,7 +405,7 @@ export default {
     createSubmit() { // 添加
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createSubmit(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -421,7 +421,7 @@ export default {
     updateSubmit() { // 更新
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateSubmit(this.temp.id, this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({

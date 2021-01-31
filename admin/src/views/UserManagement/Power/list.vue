@@ -54,14 +54,14 @@
       </el-table-column>
       <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="300">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="复制" placement="top-start">
-            <el-button v-permission="$store.jurisdiction.PowerCreate" type="success" icon="el-icon-document-copy" circle @click="handleCreate(scope.row)"/>
+          <el-tooltip v-permission="$store.jurisdiction.PowerCreate" class="item" effect="dark" content="复制" placement="top-start">
+            <el-button type="success" icon="el-icon-document-copy" circle @click="handleCreate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
-            <el-button v-permission="$store.jurisdiction.PowerEdit" type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          <el-tooltip v-permission="$store.jurisdiction.PowerEdit" class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
-            <el-button v-permission="$store.jurisdiction.PowerDestroy" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          <el-tooltip v-permission="$store.jurisdiction.PowerDestroy" class="item" effect="dark" content="删除" placement="top-start">
+            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
