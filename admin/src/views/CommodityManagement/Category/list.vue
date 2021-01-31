@@ -10,7 +10,7 @@
         clearable
         style="top:-4px"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
-      <el-button v-permission="$store.jurisdiction.CreateCategory" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('usuel.add') }}</el-button>
+      <el-button v-permission="$store.jurisdiction.CategoryCreate" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('usuel.add') }}</el-button>
     </div>
 
     <el-table
@@ -22,7 +22,7 @@
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange">
-      <el-table-column :label="$t('usuel.id')" align="center" width="65" prop="id">
+      <el-table-column :label="$t('usuel.id')" align="center" width="65" sortable="custom" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -48,12 +48,20 @@
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="350">
+      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="220">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.CreateCategory" type="success" size="mini" @click="handleCreate(scope.row)">复制</el-button>
-          <el-button v-permission="$store.jurisdiction.CreateCategory" type="success" size="mini" @click="handleSonCreate(scope.row)">添加子类</el-button>
-          <el-button v-permission="$store.jurisdiction.EditCategory" type="primary" size="mini" @click="handleUpdate(scope.row)">{{ $t('usuel.amend') }}</el-button>
-          <el-button v-permission="$store.jurisdiction.DeleteCategory" type="danger" size="mini" @click="handleDelete(scope.row)">{{ $t('usuel.delete') }}</el-button>
+          <el-tooltip v-permission="$store.jurisdiction.CategoryCreate" class="item" effect="dark" content="复制" placement="top-start">
+            <el-button type="success" icon="el-icon-document-copy" circle @click="handleCreate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.CategoryCreate" class="item" effect="dark" content="添加子类" placement="top-start">
+            <el-button type="success" icon="el-icon-folder-add" circle @click="handleSonCreate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.CategoryEdit" class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.CategoryDestroy" class="item" effect="dark" content="删除" placement="top-start">
+            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -189,13 +197,13 @@
 </style>
 
 <script>
-import { getList, createSubmit, updateSubmit, setDelete } from '@/api/category'
-import waves from '@/directive/waves' // Waves directiveimport { jurisdiction } from '@/utils'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { getList, create, edit, destroy } from '@/api/category'
+import waves from '@/directive/waves'
+import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
 
 export default {
-  name: 'PowerList',
+  name: 'CategoryList',
   components: { Pagination },
   directives: { waves },
   data() {
@@ -244,7 +252,7 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        sort: '+id',
+        sort: '',
         pid: []
       },
       imgProgress: false,
@@ -315,20 +323,12 @@ export default {
       }
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      } else if (prop === 'time') {
-        this.sortByTIME(order)
-      }
-    },
-    sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+' + prop
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
     },
@@ -340,7 +340,8 @@ export default {
         pid: [],
         attribute: [],
         brand: [],
-        sort: 5
+        sort: 5,
+        is_recommend: 0
       }
     },
     handleCreate(row = null) {
@@ -370,7 +371,7 @@ export default {
           if (this.temp.pid.length > 0) {
             this.temp.pid = this.temp.pid.pop()
           }
-          createSubmit(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -389,7 +390,7 @@ export default {
           if (this.temp.pid.length > 0) {
             this.temp.pid = this.temp.pid.pop()
           }
-          updateSubmit(this.temp.id, this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -422,7 +423,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(row.id).then(() => {
+        destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({

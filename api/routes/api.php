@@ -43,12 +43,24 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('good/{id}', 'GoodController@details')->middleware(['permissions:GoodDetails']);    //商品详情
         Route::get('good/specification/{id}', 'GoodController@specification')->middleware(['permissions:GoodEdit']);    //商品规格列表
         Route::post('good/state/{id}', 'GoodController@state')->middleware(['permissions:GoodEdit']);    //商品状态
+        Route::get('brand', 'BrandController@list')->middleware(['permissions:BrandList']);    //品牌列表
+        Route::post('brand', 'BrandController@create')->middleware(['permissions:BrandCreate']);    //品牌添加
+        Route::post('brand/{id}', 'BrandController@edit')->middleware(['permissions:BrandEdit']);    //品牌修改
+        Route::post('brand/destroy/{id}', 'BrandController@destroy')->middleware(['permissions:BrandDestroy']);    //品牌删除
+        Route::get('specification', 'SpecificationController@list')->middleware(['permissions:SpecificationList']);    //规格列表
+        Route::post('specification', 'SpecificationController@create')->middleware(['permissions:SpecificationCreate']);    //规格添加
+        Route::post('specification/{id}', 'SpecificationController@edit')->middleware(['permissions:SpecificationEdit']);    //规格修改
+        Route::post('specification/destroy/{id}', 'SpecificationController@destroy')->middleware(['permissions:SpecificationDestroy']);    //规格删除
+        Route::get('specificationGroup', 'SpecificationGroupController@list')->middleware(['permissions:SpecificationGroupList']);    //规格组列表
+        Route::post('specificationGroup', 'SpecificationGroupController@create')->middleware(['permissions:SpecificationGroupCreate']);    //规格组添加
+        Route::post('specificationGroup/{id}', 'SpecificationGroupController@edit')->middleware(['permissions:SpecificationGroupEdit']);    //规格组编辑
+        Route::post('specificationGroup/destroy/{id}', 'SpecificationGroupController@destroy')->middleware(['permissions:SpecificationGroupDestroy']);    //规格组删除
+        Route::get('category', 'CategoryController@list')->middleware(['permissions:CategoryList']);    //分类列表
+        Route::post('category', 'CategoryController@create')->middleware(['permissions:CategoryCreate']);    //分类添加
+        Route::post('category/{id}', 'CategoryController@edit')->middleware(['permissions:CategoryEdit']);    //分类修改
+        Route::post('category/destroy/{id}', 'CategoryController@destroy')->middleware(['permissions:CategoryDestroy']);    //分类删除
 
-        //--规格
-        Route::get('specification', 'SpecificationController@index')->middleware(['permissions:SpecificationList']);    //规格列表
-        Route::post('specification', 'SpecificationController@store')->middleware(['permissions:CreateSpecification']);    //规格添加保存
-        Route::put('specification/{id}', 'SpecificationController@update')->middleware(['permissions:EditSpecification']);    //规格编辑保存
-        Route::delete('specification/{id}', 'SpecificationController@destroy')->middleware(['permissions:DeleteSpecification']);    //规格删除
+
 
 
         //工具
@@ -57,26 +69,13 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('redis/{id}', 'RedisServiceController@show')->middleware(['permissions:RedisServicesList']);    //Redis详情
         Route::delete('redis/{id}', 'RedisServiceController@destroy')->middleware(['permissions:DeleteRedisServices']);    //删除Redis
         Route::get('redisPanel', 'RedisServiceController@panel')->middleware(['permissions:RedisPanel']);    //Redis面板
-        //--品牌
-        Route::get('brand', 'BrandController@index')->middleware(['permissions:BrandList']);    //品牌列表
-        Route::post('brand', 'BrandController@store')->middleware(['permissions:CreateBrand']);    //品牌添加保存
-        Route::put('brand/{id}', 'BrandController@update')->middleware(['permissions:EditBrand']);    //品牌编辑保存
-        Route::delete('brand/{id}', 'BrandController@destroy')->middleware(['permissions:DeleteBrand']);    //品牌删除
+
         //--资源
         Route::get('resource', 'ResourceController@index')->middleware(['permissions:ResourceDataList']);    //资源列表
         Route::post('resource', 'ResourceController@store')->middleware(['permissions:CreateResourceData']);    //资源添加保存
         Route::put('resource/{id}', 'ResourceController@update')->middleware(['permissions:EditResourceData']);    //资源编辑保存
         Route::delete('resource/{id}', 'ResourceController@destroy')->middleware(['permissions:DeleteResourceData']);    //资源删除
-        //--分类
-        Route::get('category', 'CategoryController@index')->middleware(['permissions:CategoryList']);    //分类列表
-        Route::post('category', 'CategoryController@store')->middleware(['permissions:CreateCategory']);    //分类添加保存
-        Route::put('category/{id}', 'CategoryController@update')->middleware(['permissions:EditCategory']);    //分类编辑保存
-        Route::delete('category/{id}', 'CategoryController@destroy')->middleware(['permissions:DeleteCategory']);    //分类删除
-        //--规格组
-        Route::get('specificationGroup', 'SpecificationGroupController@index')->middleware(['permissions:SpecificationGroupList']);    //规格组列表
-        Route::post('specificationGroup', 'SpecificationGroupController@store')->middleware(['permissions:CreateSpecificationGroup']);    //规格组添加保存
-        Route::put('specificationGroup/{id}', 'SpecificationGroupController@update')->middleware(['permissions:EditSpecificationGroup']);    //规格组编辑保存
-        Route::delete('specificationGroup/{id}', 'SpecificationGroupController@destroy')->middleware(['permissions:DeleteSpecificationGroup']);    //规格组删除
+
         //运费模板
         Route::get('freight', 'FreightController@index')->middleware(['permissions:FreightList']);    //运费模板列表
         Route::get('freight/{id}', 'FreightController@show')->middleware(['permissions:EditFreight']);    //运费模板详情

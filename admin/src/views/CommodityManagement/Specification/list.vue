@@ -10,7 +10,7 @@
         </el-form-item>
       </el-form>
       <br>
-      <el-button v-permission="$store.jurisdiction.CreateSpecification" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="$store.jurisdiction.SpecificationCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
 
     <el-table
@@ -24,7 +24,7 @@
       style="width: 100%;"
       @sort-change="sortChange"
       @selection-change="handleSelectionChange">
-      <el-table-column label="编号" >
+      <el-table-column label="编号" sortable="custom" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -74,10 +74,14 @@
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="250" fixed="right">
+      <el-table-column label="操作" class-name="small-padding fixed-width" width="120" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.EditSpecification" type="warning" size="mini" style="width:80px" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="$store.jurisdiction.DeleteSpecification" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-tooltip v-permission="$store.jurisdiction.SpecificationEdit" class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.SpecificationDestroy" class="item" effect="dark" content="删除" placement="top-start">
+            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -145,7 +149,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -207,15 +211,16 @@
 </style>
 
 <script>
-import { getList, setDelete, createSubmit, updateSubmit } from '@/api/specification'
+import { getList, create, edit, destroy } from '@/api/specification'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'SpecificationList',
   components: { Pagination },
   data() {
     return {
+      formLoading: false,
       actionurl: process.env.BASE_API + 'uploadPictures',
       imgHeaders: {
         Authorization: getToken('token_type') + ' ' + getToken('access_token')
@@ -284,20 +289,12 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      } else if (prop === 'time') {
-        this.sortByTIME(order)
-      }
-    },
-    sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+' + prop
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
     },
@@ -348,28 +345,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(row.id, row).then(() => {
-          this.getList()
-          this.dialogFormVisible = false
-          this.$notify({
-            title: this.$t('hint.succeed'),
-            message: win,
-            type: 'success',
-            duration: 2000
-          })
-        })
-      }).catch(() => {
-      })
-    },
-    handleAllDelete() { // 批量删除
-      var title = '是否确认批量删除内容?'
-      var win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
-        type: 'warning'
-      }).then(() => {
-        setDelete(0, this.multipleSelection).then(() => {
+        destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -383,11 +359,13 @@ export default {
       })
     },
     createSubmit() { // 添加
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createSubmit(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
@@ -395,15 +373,19 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     updateSubmit() { // 更新
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateSubmit(this.temp.id, this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),
@@ -411,37 +393,10 @@ export default {
               duration: 2000
             })
           })
+        } else {
+          this.formLoading = false
         }
       })
-    },
-    // 上传成功
-    handleAvatarSuccess(res, file) {
-      this.temp.img = file.response
-      this.imgProgress = false
-      this.imgProgressPercent = 0
-    },
-    // 上传时
-    handleProgress(file, fileList) {
-      this.imgProgressPercent = file.percent
-    },
-    // 图片格式大小验证
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 < 500
-
-      if (
-        ['image/jpeg',
-          'image/gif',
-          'image/png',
-          'image/bmp'
-        ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
-        return false
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 500KB!')
-      }
-      this.imgProgress = true
-      return isLt2M
     }
   }
 }

@@ -164,7 +164,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item class="float-button">
-        <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">提交</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -267,6 +267,7 @@ export default {
       callback()
     }
     return {
+      formLoading: false,
       dialogFormVisible: false,
       // 视频播放
       playerOptions: {
@@ -409,6 +410,7 @@ export default {
       })
     },
     createSubmit() { // 添加
+      this.formLoading = true
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           this.ruleForm.good_sku = this.getSkuData()
@@ -419,12 +421,16 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.formLoading = false
             setTimeout(this.$router.back(-1), 2000)
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     updateSubmit() { // 更新
+      this.formLoading = true
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           this.ruleForm.good_sku = this.getSkuData()
@@ -435,8 +441,11 @@ export default {
               type: 'success',
               duration: 2000
             })
+            this.formLoading = false
             setTimeout(this.$router.push({ path: '/commodityManagement/good/goodList?page=' + this.$route.query.page + '&activeIndex=' + this.$route.query.activeIndex }), 2000)
           })
+        } else {
+          this.formLoading = false
         }
       })
     },

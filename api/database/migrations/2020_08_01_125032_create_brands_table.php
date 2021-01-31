@@ -18,6 +18,7 @@ class CreateBrandsTable extends Migration
             $table->id();
             $table->string('name', 30)->comment('品牌名称');
             $table->integer('sort', 0)->comment('排序');
+            $table->tinyInteger('is_delete')->default(0)->comment('是否已删除 0否 1已删除');
             $table->timestamps();
             $table->charset = 'utf8';
             $table->engine = 'InnoDB';

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\Http\Requests\v1\SubmitGoodRequest;
+use App\Models\v1\Brand;
 use App\Models\v1\Freight;
 use App\Models\v1\GoodSku;
 use App\Models\v1\GoodSpecification;
@@ -29,6 +30,10 @@ class GoodController extends Controller
      * 商品列表
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  title string 关键字
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  sort string 排序
+     * @queryParam  page string 页码
      */
     public function list(Request $request)
     {
@@ -63,9 +68,9 @@ class GoodController extends Controller
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
         }, 'goodSku' => function ($q) {
-            $q->select('good_id', 'price', 'inventory');
+            $q->where('is_delete', GoodSku::GOOD_SKU_DELETE_NO)->select('good_id', 'price', 'inventory');
         }, 'category' => function ($q) {
-            $q->select('id', 'name');
+            $q->where('is_delete', Category::CATEGORY_DELETE_NO)->select('id', 'name');
         }])->paginate($limit);
         if ($paginate) {
             foreach ($paginate as $id => $p) {
@@ -84,6 +89,24 @@ class GoodController extends Controller
      * 商品添加
      * @param SubmitGoodRequest $request
      * @return \Illuminate\Http\Response
+     * @queryParam  name string 商品名称
+     * @queryParam  number string 货号
+     * @queryParam  freight_id int    运费模板ID
+     * @queryParam  category_id int 分类ID
+     * @queryParam  brand_id int 品牌ID
+     * @queryParam  is_inventory int 减库存方式
+     * @queryParam  keywords string 关键字
+     * @queryParam  short_description string 短描述
+     * @queryParam  details string 详情
+     * @queryParam  is_show int 是否上架
+     * @queryParam  is_recommend int 是否推荐
+     * @queryParam  is_new int 是否新品
+     * @queryParam  is_hot int 是否热销
+     * @queryParam  sort int 排序
+     * @queryParam  time string 上架时间
+     * @queryParam  timing string 定时上架时间
+     * @queryParam  good_specification array 商品规格
+     * @queryParam  good_sku array 商品SKU
      */
     public function create(SubmitGoodRequest $request)
     {
@@ -221,6 +244,25 @@ class GoodController extends Controller
      * @param SubmitGoodRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 商品ID
+     * @queryParam  name string 商品名称
+     * @queryParam  number string 货号
+     * @queryParam  freight_id int    运费模板ID
+     * @queryParam  category_id int 分类ID
+     * @queryParam  brand_id int 品牌ID
+     * @queryParam  is_inventory int 减库存方式
+     * @queryParam  keywords string 关键字
+     * @queryParam  short_description string 短描述
+     * @queryParam  details string 详情
+     * @queryParam  is_show int 是否上架
+     * @queryParam  is_recommend int 是否推荐
+     * @queryParam  is_new int 是否新品
+     * @queryParam  is_hot int 是否热销
+     * @queryParam  sort int 排序
+     * @queryParam  time string 上架时间
+     * @queryParam  timing string 定时上架时间
+     * @queryParam  good_specification array 商品规格
+     * @queryParam  good_sku array 商品SKU
      */
     public function edit(SubmitGoodRequest $request, $id)
     {
@@ -386,15 +428,6 @@ class GoodController extends Controller
                 $Good->save();
                 //删除去除的SKU
                 GoodSku::where('good_id', $Good->id)->whereNotIn('id', $GoodSkuAll)->where('is_delete', GoodSku::GOOD_SKU_DELETE_NO)->update(['is_delete' => GoodSku::GOOD_SKU_DELETE_YES]);
-                /*
-                //删除去除的资源
-                $ResourceDelete=Resource::where('image_type','App\Models\v1\GoodSku')->where('depict','not like','%_zimg')->whereNotIn('id',$ResourceAll)->get();
-                if($ResourceDelete){
-                    foreach ($ResourceDelete as $r){
-                        imgPathDelete('good',$r->img);
-                    }
-                }*/
-//                Resource::where('image_type','App\Models\v1\GoodSku')->where('depict','not like','%_zimg')->whereNotIn('id',$ResourceAll)->delete();
             }
             return 1;
         }, 5);
@@ -410,6 +443,7 @@ class GoodController extends Controller
      * 商品详情
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 商品ID
      */
     public function details($id)
     {
@@ -434,7 +468,7 @@ class GoodController extends Controller
 
         }
         //展示应用所在分类下的子类目
-        $Category = Category::orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
+        $Category = Category::orderBy('sort', 'ASC')->where('is_delete', Category::CATEGORY_DELETE_NO)->orderBy('id', 'ASC')->get();
 
         foreach ($Category as $id => $c) {
             $Category[$id]->label = $c->name;
@@ -450,14 +484,15 @@ class GoodController extends Controller
      * 商品规格
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 商品ID
      */
     public function specification($id)
     {
         Specification::$withoutAppends = false;
-        $Category = Category::where('state', Category::CATEGORY_STATE_YES)->with(['SpecificationOn' => function ($q) {
+        $Category = Category::where('state', Category::CATEGORY_STATE_YES)->where('is_delete', Category::CATEGORY_DELETE_NO)->with(['SpecificationOn' => function ($q) {
             $q->orderBy('sort', 'ASC');
         }, 'BrandOn' => function ($q) {
-            $q->orderBy('sort', 'ASC');
+            $q->where('is_delete', Brand::BRAND_DELETE_NO)->orderBy('sort', 'ASC');
         }])->find($id);
         return resReturn(1, $Category);
     }
@@ -468,6 +503,7 @@ class GoodController extends Controller
      * @param  int $id
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 商品ID
      */
     public function state($id, Request $request)
     {
@@ -509,6 +545,7 @@ class GoodController extends Controller
      * @param  int $id
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 商品ID
      */
     public function destroy($id, Request $request)
     {

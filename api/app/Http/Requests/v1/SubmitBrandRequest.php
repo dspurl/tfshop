@@ -4,7 +4,7 @@ namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
 
-class SubmitBrandTemplateRequest extends Request
+class SubmitBrandRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -15,19 +15,14 @@ class SubmitBrandTemplateRequest extends Request
     {
         switch ($this->method())
         {
-            case 'POST':    //create
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
-            {
-                return false;
-            }
+                {
+                    return false;
+                }
         }
-
     }
 
     /**
@@ -37,27 +32,27 @@ class SubmitBrandTemplateRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'required|string|max:30',
-                    'logo' => 'nullable|string',
-                    'sort' => 'required|numeric|max:6'
-                ];
-            case 'PUT': //update
-                return [
-                    'name' => 'required|string|max:30',
-                    'logo' => 'nullable|string',
-                    'sort' => 'required|numeric|max:6'
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name' => 'required|unique:brands,name,' . $request['id'] . '|string|max:30',
+                        'logo' => 'nullable|string',
+                        'sort' => 'required|numeric|max:6'
+                    ];
+                } else {
+                    return [
+                        'name' => 'required|unique:brands|string|max:30',
+                        'logo' => 'nullable|string',
+                        'sort' => 'required|numeric|max:6'
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
-            {
-                return [];
-            }
+                {
+                    return [];
+                }
         }
     }
 
@@ -66,6 +61,7 @@ class SubmitBrandTemplateRequest extends Request
         return [
             'name.required' =>'品牌名称必须',
             'name.string' =>'品牌名称格式有误',
+            'name.unique' => '品牌名称已存在',
             'name.max' =>'品牌名称不能超过30个字符',
             'sort.required' =>'排序必须',
             'sort.numeric' =>'排序格式有误',

@@ -23,6 +23,8 @@ class Specification extends Model
     const SPECIFICATION_LOCATION_SPEC= 0; //显示位置：规格
     const SPECIFICATION_LOCATION_DETAILS= 1; //显示位置：详情
     const SPECIFICATION_LOCATION_ALL= 2; //显示位置：全部
+    const SPECIFICATION_DELETE_NO= 0; //删除：否
+    const SPECIFICATION_DELETE_YES= 1; //删除：是
     public static $withoutAppends = true;
     protected $appends = ['type_show','location_show'];
     /**

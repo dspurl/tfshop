@@ -15,19 +15,14 @@ class SubmitCategoryRequest extends Request
     {
         switch ($this->method())
         {
-            case 'POST':    //create
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
-            {
-                return false;
-            }
+                {
+                    return false;
+                }
         }
-
     }
 
     /**
@@ -37,29 +32,29 @@ class SubmitCategoryRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'required|string|max:30',
-                    'pid' => 'required|numeric',
-                    'sort' => 'required|numeric',
-                    'state' => 'required|numeric'
-                ];
-            case 'PUT': //update
-                return [
-                    'name' => 'required|string|max:30',
-                    'pid' => 'required|numeric',
-                    'sort' => 'required|numeric',
-                    'state' => 'required|numeric'
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name' => 'required|unique:categorys,name,' . $request['id'] . '|string|max:30',
+                        'pid' => 'required|numeric',
+                        'sort' => 'required|numeric',
+                        'state' => 'required|numeric'
+                    ];
+                } else {
+                    return [
+                        'name' => 'required|unique:categorys|string|max:30',
+                        'pid' => 'required|numeric',
+                        'sort' => 'required|numeric',
+                        'state' => 'required|numeric'
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
-            {
-                return [];
-            }
+                {
+                    return [];
+                }
         }
     }
 
@@ -68,6 +63,7 @@ class SubmitCategoryRequest extends Request
         return [
             'name.required' =>'类目名称必须',
             'name.string' =>'类目格式有误',
+            'name.unique' => '类目名称已存在',
             'name.max' =>'类目不能超过30个字符',
             'pid.required' =>'上级类目必须',
             'pid.numeric' =>'上级类目格式有误',

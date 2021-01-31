@@ -13,6 +13,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Brand extends Model
 {
+    const BRAND_DELETE_NO= 0; //删除：否
+    const BRAND_DELETE_YES= 1; //删除：是
     /**
      * Prepare a date for array / JSON serialization.
      *

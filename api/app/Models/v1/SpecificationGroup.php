@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class SpecificationGroup extends Model
 {
+    const SPECIFICATION_GROUP_DELETE_NO= 0; //删除：否
+    const SPECIFICATION_GROUP_DELETE_YES= 1; //删除：是
     /**
      * Prepare a date for array / JSON serialization.
      *

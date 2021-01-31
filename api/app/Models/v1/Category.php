@@ -16,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     public static $withoutAppends = false;
+    const CATEGORY_DELETE_NO= 0; //删除：否
+    const CATEGORY_DELETE_YES= 1; //删除：是
     const CATEGORY_STATE_YES= 0; //状态：正常
     const CATEGORY_STATE_NO= 1; //状态：隐藏
     const CATEGORY_IS_RECONMEND_NO= 0; //首页推荐：否
@@ -79,7 +81,7 @@ class Category extends Model
     /**
      * 获取所有的分类
      */
-    protected function getAllCategory(){
+    public function getAllCategory(){
         $Category=static::get();
         $options = [];
         if($Category){
