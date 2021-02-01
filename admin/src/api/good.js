@@ -43,7 +43,7 @@ export function destroy(id, data) {
   })
 }
 
-export function details(id) {
+export function detail(id) {
   return request({
     url: 'good/' + id,
     method: 'get'

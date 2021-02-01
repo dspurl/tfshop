@@ -1,12 +1,11 @@
 <template>
-  <detail :is-edit="false"/>
+  <detail :is-edit="true"/>
 </template>
 
 <script>
 import Detail from './components/Detail'
-
 export default {
-  name: 'CreateProduct',
+  name: 'IndentShipment',
   components: { Detail }
 }
 </script>

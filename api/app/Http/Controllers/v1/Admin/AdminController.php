@@ -37,7 +37,7 @@ class AdminController extends Controller
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
         $q->queryTitle($request->title);
-        $paginate = $q->with('authGroup')->paginate($limit);
+        $paginate = $q->with('AuthGroup')->paginate($limit);
         Admin::role($paginate);
         return resReturn(1, $paginate);
     }

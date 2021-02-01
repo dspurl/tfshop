@@ -439,13 +439,13 @@ class GoodController extends Controller
     }
 
     /**
-     * GoodDetails
+     * GoodDetail
      * 商品详情
      * @param  int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID
      */
-    public function details($id)
+    public function detail($id)
     {
         Good::$withoutAppends = false;
         GoodSku::$withoutAppends = false;

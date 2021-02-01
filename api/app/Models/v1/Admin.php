@@ -75,7 +75,7 @@ class Admin extends Authenticatable
         'password',
     ];
 
-    public function authGroup()
+    public function AuthGroup()
     {
         return $this->belongsToMany(AuthGroup::class);
     }

@@ -237,14 +237,14 @@
   }
 </style>
 <script>
-import { details, create, edit, specification } from '@/api/Good'
+import { detail, create, edit, specification } from '@/api/Good'
 import { getToken } from '@/utils/auth'
 import tinymce from '@/components/tinymce5'
 import Sku from '@/components/skutwo'
 import 'video.js/dist/video-js.css'
 import { videoPlayer } from 'vue-video-player'
 export default {
-  name: 'GoodDetails',
+  name: 'GoodDetail',
   components: {
     tinymce,
     Sku,
@@ -391,7 +391,7 @@ export default {
   methods: {
     getList() {
       this.loading = true
-      details(this.id ? this.id : 0, { category: getToken('applyCategory') }).then(response => {
+      detail(this.id ? this.id : 0, { category: getToken('applyCategory') }).then(response => {
         if (this.id > 0) {
           this.ruleForm = response.data.goods
           this.goodsType(true)
@@ -423,6 +423,8 @@ export default {
             })
             this.formLoading = false
             setTimeout(this.$router.back(-1), 2000)
+          }).catch(() => {
+            this.formLoading = false
           })
         } else {
           this.formLoading = false
@@ -443,6 +445,8 @@ export default {
             })
             this.formLoading = false
             setTimeout(this.$router.push({ path: '/commodityManagement/good/goodList?page=' + this.$route.query.page + '&activeIndex=' + this.$route.query.activeIndex }), 2000)
+          }).catch(() => {
+            this.formLoading = false
           })
         } else {
           this.formLoading = false

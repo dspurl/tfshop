@@ -372,6 +372,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
         } else {
           this.formLoading = false
@@ -392,6 +394,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
         } else {
           this.formLoading = false

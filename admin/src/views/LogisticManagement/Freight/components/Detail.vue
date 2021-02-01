@@ -46,8 +46,12 @@
           <el-table-column
             label="操作">
             <template slot-scope="scope">
-              <el-button type="primary" size="mini" @click="distributionArea(scope.row, scope.$index)">编辑</el-button>
-              <el-button type="danger" size="mini" @click="distributionDelete(scope.$index)">删除</el-button>
+              <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+                <el-button type="primary" icon="el-icon-edit" circle @click="distributionArea(scope.row, scope.$index)"/>
+              </el-tooltip>
+              <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+                <el-button type="danger" icon="el-icon-delete" circle @click="distributionDelete(scope.$index)"/>
+              </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
@@ -58,7 +62,7 @@
         <el-button type="warning" style="margin-top: 10px;" round @click="distributionArea()">添加可配送区域和运费</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">提交</el-button>
+        <el-button :loading="dialogLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">提交</el-button>
       </el-form-item>
     </el-form>
     <!--添加-->
@@ -94,7 +98,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="distributionStatus==='create'?distributionSubmit():distributionSubmit()">确定</el-button>
+        <el-button :loading="formLoading" type="primary" @click="distributionStatus==='create'?distributionSubmit():distributionSubmit()">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -142,9 +146,9 @@
   }
 </style>
 <script>
-import { getShow, createSubmit, updateSubmit } from '@/api/freight'
-const pcas = require('../../../assets/pcas-code')
-const provinces = require('../../../assets/provinces')
+import { detail, create, edit } from '@/api/freight'
+const pcas = require('../../../../assets/pcas-code')
+const provinces = require('../../../../assets/provinces')
 export default {
   name: 'FreightDetail',
   props: {
@@ -155,6 +159,8 @@ export default {
   },
   data() {
     return {
+      formLoading: false,
+      dialogLoading: false,
       distributionIndex: 0,
       distributionIndexOn: 0,
       copy: false,
@@ -234,7 +240,7 @@ export default {
       this.loading = true
       this.initProvinces()
       if (this.id > 0) {
-        getShow(this.id).then(response => {
+        detail(this.id).then(response => {
           this.ruleForm = response.data
           if (!this.copy) {
             this.dialogStatus = 'update'
@@ -310,6 +316,7 @@ export default {
       this.ruleForm.freight_way.splice(index, 1)
     },
     distributionSubmit() {
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           const location = []
@@ -326,7 +333,10 @@ export default {
           this.temp.location_name = locationName
           this.$set(this.ruleForm.freight_way, this.distributionIndexOn, this.temp)
           this.dialogFormVisible = false
+          this.formLoading = false
           this.initTemp()
+        } else {
+          this.formLoading = false
         }
       })
     },
@@ -345,6 +355,7 @@ export default {
       }
     },
     createSubmit() { // 添加
+      this.dialogLoading = true
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           // 获取包邮地域
@@ -354,20 +365,28 @@ export default {
               this.ruleForm.pinkage.push(this.provinces[index].value)
             }
           }
-          createSubmit(this.ruleForm).then(() => {
+          create(this.ruleForm).then(() => {
             this.dialogFormVisible = false
+            this.dialogLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
               type: 'success',
               duration: 2000
+            }).catch(() => {
+              this.formLoading = false
             })
             setTimeout(this.$router.back(-1), 2000)
+          }).catch(() => {
+            this.dialogLoading = false
           })
+        } else {
+          this.dialogLoading = false
         }
       })
     },
     updateSubmit() { // 更新
+      this.dialogLoading = true
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           // 获取包邮地域
@@ -377,8 +396,9 @@ export default {
               this.ruleForm.pinkage.push(this.provinces[index].value)
             }
           }
-          updateSubmit(this.ruleForm.id, this.ruleForm).then(() => {
+          edit(this.ruleForm).then(() => {
             this.dialogFormVisible = false
+            this.dialogLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),
@@ -386,7 +406,11 @@ export default {
               duration: 2000
             })
             setTimeout(this.$router.back(-1), 2000)
+          }).catch(() => {
+            this.dialogLoading = false
           })
+        } else {
+          this.dialogLoading = false
         }
       })
     }

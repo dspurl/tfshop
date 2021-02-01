@@ -59,7 +59,7 @@ class CategoryController extends Controller
         $return['options'] = (new Category())->getAllCategory();
         $return['brand'] = Brand::with(['resources'])->where('is_delete', Brand::BRAND_DELETE_NO)->select('id', 'name')->get();
         $return['paginate'] = $paginate;
-        $return['specification'] = Specification::orderBy('sort', 'ASC')->where('is_delete',Specification::SPECIFICATION_DELETE_NO)->orderBy('id', 'ASC')->get();
+        $return['specification'] = Specification::orderBy('sort', 'ASC')->where('is_delete', Specification::SPECIFICATION_DELETE_NO)->orderBy('id', 'ASC')->get();
         return resReturn(1, $return);
     }
 
@@ -128,8 +128,16 @@ class CategoryController extends Controller
      * CategoryEdit
      * 分类修改
      * @param SubmitCategoryRequest|Request $request
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 分类ID
+     * @queryParam  name string 分类名称
+     * @queryParam  pid int 分类上级ID
+     * @queryParam  sort int 分类排序
+     * @queryParam  is_recommend int 是否推荐
+     * @queryParam  state int 是否显示
+     * @queryParam  specification array 规格列表
+     * @queryParam  brand array 品牌列表
      */
     public function edit(SubmitCategoryRequest $request, $id)
     {
@@ -227,8 +235,9 @@ class CategoryController extends Controller
     /**
      * CategoryDestroy
      * 分类删除
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 分类ID
      */
     public function destroy($id)
     {

@@ -256,34 +256,46 @@ export default {
       })
     },
     createSubmit() { // 添加
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     updateSubmit() { // 更新
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
+        } else {
+          this.formLoading = false
         }
       })
     }

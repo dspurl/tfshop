@@ -27,7 +27,7 @@ class AuthGroup extends Model
     /**
      * 获取管理组下的管理员。
      */
-    public function admins()
+    public function Admin()
     {
         return $this->belongsToMany(Admin::class);
     }

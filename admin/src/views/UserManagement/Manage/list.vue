@@ -197,15 +197,10 @@ export default {
     },
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      }
-    },
-    sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+' + prop
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
     },
@@ -245,6 +240,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
         } else {
           this.formLoading = false
@@ -265,6 +262,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
         } else {
           this.formLoading = false

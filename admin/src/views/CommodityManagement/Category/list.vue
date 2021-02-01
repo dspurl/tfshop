@@ -156,7 +156,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -221,6 +221,7 @@ export default {
       }
     }
     return {
+      formLoading: false,
       data: [],
       dataBrand: [],
       value: [],
@@ -366,6 +367,7 @@ export default {
       })
     },
     createData() { // 添加
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           if (this.temp.pid.length > 0) {
@@ -374,17 +376,21 @@ export default {
           create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
         }
       })
     },
     updateData() { // 更新
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           if (this.temp.pid.length > 0) {
@@ -393,12 +399,15 @@ export default {
           edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
         }
       })

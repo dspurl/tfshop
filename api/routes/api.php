@@ -40,7 +40,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('good', 'GoodController@create')->middleware(['permissions:GoodCreate']);    //商品添加
         Route::post('good/{id}', 'GoodController@edit')->middleware(['permissions:GoodEdit']);    //商品修改
         Route::post('good/destroy/{id}', 'GoodController@destroy')->middleware(['permissions:GoodDestroy']);    //商品删除
-        Route::get('good/{id}', 'GoodController@details')->middleware(['permissions:GoodDetails']);    //商品详情
+        Route::get('good/{id}', 'GoodController@detail')->middleware(['permissions:GoodDetail']);    //商品详情
         Route::get('good/specification/{id}', 'GoodController@specification')->middleware(['permissions:GoodEdit']);    //商品规格列表
         Route::post('good/state/{id}', 'GoodController@state')->middleware(['permissions:GoodEdit']);    //商品状态
         Route::get('brand', 'BrandController@list')->middleware(['permissions:BrandList']);    //品牌列表
@@ -59,8 +59,21 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('category', 'CategoryController@create')->middleware(['permissions:CategoryCreate']);    //分类添加
         Route::post('category/{id}', 'CategoryController@edit')->middleware(['permissions:CategoryEdit']);    //分类修改
         Route::post('category/destroy/{id}', 'CategoryController@destroy')->middleware(['permissions:CategoryDestroy']);    //分类删除
-
-
+        Route::get('freight', 'FreightController@list')->middleware(['permissions:FreightList']);    //运费模板列表
+        Route::get('freight/{id}', 'FreightController@detail')->middleware(['permissions:FreightEdit']);    //运费模板详情
+        Route::post('freight', 'FreightController@create')->middleware(['permissions:FreightCreate']);    //运费模板添加
+        Route::post('freight/{id}', 'FreightController@edit')->middleware(['permissions:FreightEdit']);    //运费模板修改
+        Route::post('freight/destroy/{id}', 'FreightController@destroy')->middleware(['permissions:FreightDestroy']);    //运费模板删除
+        Route::get('dhl', 'DhlController@list')->middleware(['permissions:DhlList']);    //快递公司列表
+        Route::post('dhl', 'DhlController@create')->middleware(['permissions:DhlCreate']);    //快递公司添加
+        Route::post('dhl/{id}', 'DhlController@edit')->middleware(['permissions:DhlEdit']);    //快递公司修改
+        Route::post('dhl/destroy/{id}', 'DhlController@destroy')->middleware(['permissions:DhlDestroy']);    //快递公司删除
+        Route::get('indent', 'IndentController@list')->middleware(['permissions:IndentList']);    //订单列表
+        Route::get('indent/{id}', 'IndentController@detail')->middleware(['permissions:IndentDetail']);    //订单详情
+        Route::post('indent/shipment', 'IndentController@shipment')->middleware(['permissions:IndentShipment']); //发货
+        Route::post('indent/dhl', 'IndentController@dhl')->middleware(['permissions:IndentDhl']); //配送信息修改
+        Route::post('indent/refund/{id}', 'IndentController@refund')->middleware(['permissions:IndentRefund']); //退款
+        Route::get('indent/query/{id}', 'IndentController@query')->middleware(['permissions:IndentDetail']);  //查询订单状态
 
 
         //工具
@@ -76,26 +89,8 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::put('resource/{id}', 'ResourceController@update')->middleware(['permissions:EditResourceData']);    //资源编辑保存
         Route::delete('resource/{id}', 'ResourceController@destroy')->middleware(['permissions:DeleteResourceData']);    //资源删除
 
-        //运费模板
-        Route::get('freight', 'FreightController@index')->middleware(['permissions:FreightList']);    //运费模板列表
-        Route::get('freight/{id}', 'FreightController@show')->middleware(['permissions:EditFreight']);    //运费模板详情
-        Route::post('freight', 'FreightController@store')->middleware(['permissions:CreateFreight']);    //运费模板添加保存
-        Route::put('freight/{id}', 'FreightController@update')->middleware(['permissions:EditFreight']);    //运费模板编辑保存
-        Route::delete('freight/{id}', 'FreightController@destroy')->middleware(['permissions:DeleteFreight']);    //运费模板删除
-        //快递公司
-        Route::get('dhl', 'DhlController@index')->middleware(['permissions:DhlList']);    //快递公司列表
-        Route::get('dhl/{id}', 'DhlController@show')->middleware(['permissions:EditDhl']);    //快递公司详情
-        Route::post('dhl', 'DhlController@store')->middleware(['permissions:CreateDhl']);    //快递公司添加保存
-        Route::put('dhl/{id}', 'DhlController@update')->middleware(['permissions:EditDhl']);    //快递公司编辑保存
-        Route::delete('dhl/{id}', 'DhlController@destroy')->middleware(['permissions:DeleteDhl']);    //快递公司删除
-        Route::get('dhlList', 'DhlController@list')->middleware(['permissions:DhlList']);
-        //订单管理
-        Route::get('indent', 'IndentController@index')->middleware(['permissions:IndentList']);    //订单列表
-        Route::get('indent/{id}', 'IndentController@show')->middleware(['permissions:EditIndent']);    //订单详情
-        Route::post('indentShipments', 'IndentController@shipment')->middleware(['permissions:Shipment']); //发货
-        Route::post('updateDhl', 'IndentController@updateDhl')->middleware(['permissions:EditIndent']); //修改配送信息
-        Route::put('indentRefund/{id}', 'IndentController@refund')->middleware(['permissions:Refund']); //退款
-        Route::get('query', 'IndentController@query')->middleware(['permissions:EditIndent']);    //查询订单
+
+
         //轮播
         Route::get('banner', 'BannerController@index')->middleware(['permissions:BannerList']);    //轮播列表
         Route::post('banner', 'BannerController@store')->middleware(['permissions:CreateBanner']);    //轮播添加保存

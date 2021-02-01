@@ -178,7 +178,7 @@
     </el-card>
     <div class="right" style="margin-top: 20px;">
       <el-button v-if="(list.state !== 1 && !list.refund_money) || !list.state === 8" type="danger" @click="dialogFormVisible = true">退款</el-button>
-      <el-button v-if="list.state === 2" type="primary" @click="createSubmit()">发货</el-button>
+      <el-button v-if="list.state === 2" :loading="shipmentLoading" type="primary" @click="shipmentSubmit()">发货</el-button>
     </div>
     <!--退款-->
     <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false" title="退款">
@@ -364,13 +364,15 @@
   }
 </style>
 <script>
-import { getDetails, createSubmit, updateSubmit, query, updateDhl } from '@/api/Indent'
-import { dhlList } from '@/api/dhl'
+import { detail, shipment, refund, query, dhl } from '@/api/indent'
+import { getList } from '@/api/dhl'
 import printJS from 'print-js'
 export default {
   name: 'IndentListDetails',
   data() {
     return {
+      shipmentLoading: false,
+      refundLoading: false,
       name: process.env.SITE_NAME,
       dialogInvoiceVisible: false,
       dhlLoading: false,
@@ -416,7 +418,7 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      getDetails(this.id).then(response => {
+      detail(this.id).then(response => {
         for (var k in response.data.goods_list) {
           switch (response.data.state) {
             case 1:
@@ -458,16 +460,18 @@ export default {
       })
     },
     getDhl() {
-      dhlList().then(response => {
+      getList().then(response => {
         this.dhl = response.data
       })
     },
-    createSubmit() {
+    shipmentSubmit() {
+      this.shipmentLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
           this.temp.id = this.list.id
-          createSubmit(this.temp).then(() => {
+          shipment(this.temp).then(() => {
             this.dialogFormVisible = false
+            this.shipmentLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: '发货成功',
@@ -475,15 +479,21 @@ export default {
               duration: 2000
             })
             setTimeout(this.$router.back(-1), 2000)
+          }).catch(() => {
+            this.shipmentLoading = false
           })
+        } else {
+          this.shipmentLoading = false
         }
       })
     },
     refundData() { // 退款
+      this.refundLoading = true
       this.$refs['refundForm'].validate((valid) => {
         if (valid) {
-          updateSubmit(this.list.id, this.refundTemp).then(() => {
+          refund(this.list.id, this.refundTemp).then(() => {
             this.dialogFormVisible = false
+            this.refundLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: '退款成功',
@@ -491,7 +501,11 @@ export default {
               duration: 2000
             })
             setTimeout(this.$router.back(-1), 2000)
+          }).catch(() => {
+            this.refundLoading = false
           })
+        } else {
+          this.refundLoading = false
         }
       })
     },
@@ -506,7 +520,7 @@ export default {
     // 保存配送信息
     setDhlUpdate() {
       this.dhlLoading = true
-      updateDhl(this.temp).then(() => {
+      dhl(this.temp).then(() => {
         this.dhlLoading = false
         this.temp = {}
         this.$notify({

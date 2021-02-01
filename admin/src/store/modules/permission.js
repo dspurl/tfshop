@@ -17,6 +17,17 @@ export const componentsMap = {
   GoodEdit: () => import('@/views/CommodityManagement/Good/edit'),
   Brand: () => import('@/views/CommodityManagement/Brand/index'),
   BrandList: () => import('@/views/CommodityManagement/Brand/list'),
+  Freight: () => import('@/views/LogisticManagement/Freight/index'),
+  FreightList: () => import('@/views/LogisticManagement/Freight/list'),
+  FreightCreate: () => import('@/views/LogisticManagement/Freight/create'),
+  FreightEdit: () => import('@/views/LogisticManagement/Freight/edit'),
+  Dhl: () => import('@/views/LogisticManagement/Dhl/index'),
+  DhlList: () => import('@/views/LogisticManagement/Dhl/list'),
+  // 订单管理
+  Indent: () => import('@/views/IndentManagement/Indent/index'),
+  IndentList: () => import('@/views/IndentManagement/Indent/list'),
+  IndentDetail: () => import('@/views/IndentManagement/Indent/detail'),
+  IndentShipment: () => import('@/views/IndentManagement/Indent/shipment'),
   RedisServices: () => import('@/views/Tool/RedisService/index'),
   RedisServicesList: () => import('@/views/Tool/RedisService/list'),
   RedisPanel: () => import('@/views/Tool/RedisService/panel'),
@@ -28,18 +39,6 @@ export const componentsMap = {
   ResourceDataList: () => import('@/views/Tool/Resource/list'),
   Category: () => import('@/views/CommodityManagement/Category/index'),
   CategoryList: () => import('@/views/CommodityManagement/Category/list'),
-  // 运费模板
-  Freight: () => import('@/views/Freight/index'),
-  FreightList: () => import('@/views/Freight/list'),
-  FreightCreate: () => import('@/views/Freight/create'),
-  FreightEdit: () => import('@/views/Freight/edit'),
-  // 运费模板
-  Dhl: () => import('@/views/Dhl/index'),
-  DhlList: () => import('@/views/Dhl/list'),
-  // 订单管理
-  Indent: () => import('@/views/Indent/index'),
-  IndentList: () => import('@/views/Indent/list'),
-  Shipment: () => import('@/views/Indent/shipment'),
   // 轮播
   Banner: () => import('@/views/Tool/Banner/index'),
   BannerList: () => import('@/views/Tool/Banner/list'),

@@ -300,28 +300,12 @@ export default {
       }
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      } else if (prop === 'time') {
-        this.sortByTIME(order)
-      }
-    },
-    sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+' + prop
       } else {
-        this.listQuery.sort = '-id'
-      }
-      this.handleFilter()
-    },
-    sortByTIME(order) {
-      if (order === 'ascending') {
-        this.listQuery.sort = '+time'
-      } else {
-        this.listQuery.sort = '-time'
+        this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
     },
@@ -358,6 +342,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
         } else {
           this.formLoading = false
@@ -379,6 +365,8 @@ export default {
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
         } else {
           this.formLoading = false

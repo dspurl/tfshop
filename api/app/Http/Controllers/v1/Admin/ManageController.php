@@ -60,7 +60,7 @@ class ManageController extends Controller
             }
         }
         //查询管理组列表
-        $auth_groups = AuthGroup::with(['Admins' => function ($query) {
+        $auth_groups = AuthGroup::with(['Admin' => function ($query) {
             $query->select('id', 'name');
         }, 'AuthRule' => function ($query) {
             $query->select('id', 'title', 'pid');
@@ -68,7 +68,7 @@ class ManageController extends Controller
         foreach ($auth_groups as $id => $a) {
             $toData = [];
             $a['rules'] = [];
-            foreach ($a['admins'] as $groupname) {
+            foreach ($a['admin'] as $groupname) {
                 $auth_groups[$id]['groupname'][] = $groupname['name'];
                 $auth_groups[$id]['group'][] = $groupname['id'];
                 $auth_groups[$id]['oldGroupValue'][] = $groupname['id'];

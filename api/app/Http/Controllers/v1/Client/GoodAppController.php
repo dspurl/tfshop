@@ -3,18 +3,11 @@
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
-use App\Http\Requests\v1\SubmitGoodCategoryRequest;
-use App\Http\Requests\v1\SubmitGoodRequest;
-use App\Models\v1\Common;
-use App\Models\v1\GoodGoodCategory;
 use App\Models\v1\GoodSku;
-use App\Models\v1\Resource;
 use App\Models\v1\Category;
 use App\Models\v1\Good;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
 /**
  * 商城APP

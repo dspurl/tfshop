@@ -1,11 +1,12 @@
 <template>
-  <detail :is-edit="true"/>
+  <detail :is-edit="false"/>
 </template>
 
 <script>
 import Detail from './components/Detail'
+
 export default {
-  name: 'EditProduct',
+  name: 'IndentDetail',
   components: { Detail }
 }
 </script>

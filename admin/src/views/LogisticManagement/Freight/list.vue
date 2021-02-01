@@ -10,22 +10,22 @@
         </el-form-item>
       </el-form>
       <br>
-      <router-link v-permission="$store.jurisdiction.CreateFreight" :to="'CreateFreight'">
+      <router-link v-permission="$store.jurisdiction.FreightCreate" :to="'FreightCreate'">
         <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">添加</el-button>
       </router-link>
       <br>
     </div>
-    <div v-loading="listLoading" v-for="(item, index) in list" :key="index" class="zt">
-      <div>
+    <div v-loading="listLoading">
+      <div v-for="(item, index) in list" :key="index" class="zt">
         <el-card shadow="never">
           <el-row type="flex" class="row-bg" justify="space-between">
             <el-col :span="4"><b>{{ item.name }}</b></el-col>
             <el-col :span="20" style="text-align: right">
               最后编辑时间：{{ item.updated_at }}
-              <router-link v-permission="$store.jurisdiction.EditFreight" :to="{ path: 'CreateFreight', query: { id: item.id, copy: true }}">
+              <router-link v-permission="$store.jurisdiction.FreightEdit" :to="{ path: 'FreightCreate', query: { id: item.id, copy: true }}">
                 <el-button type="text">复制模板</el-button>
               </router-link>
-              <router-link v-permission="$store.jurisdiction.EditFreight" :to="{ path: 'EditFreight', query: { id: item.id }}">
+              <router-link v-permission="$store.jurisdiction.FreightEdit" :to="{ path: 'FreightEdit', query: { id: item.id }}">
                 <el-button type="text">修改</el-button>
               </router-link>
               <el-button type="text" @click="handleDelete(item)">删除</el-button>
@@ -33,7 +33,6 @@
           </el-row>
         </el-card>
         <el-table
-          v-loading="listLoading"
           ref="multipleTable"
           :key="tableKey"
           :data="item.freight_way"
@@ -138,10 +137,10 @@
 </style>
 
 <script>
-const provinces = require('../../assets/provinces')
-import { getList, setDelete, createSubmit, updateSubmit } from '@/api/freight'
+const provinces = require('../../../assets/provinces')
+import { getList, create, edit, destroy } from '@/api/freight'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'FreightList',
@@ -218,20 +217,12 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      } else if (prop === 'time') {
-        this.sortByTIME(order)
-      }
-    },
-    sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+' + prop
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
     },
@@ -277,28 +268,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(row.id, row).then(() => {
-          this.getList()
-          this.dialogFormVisible = false
-          this.$notify({
-            title: this.$t('hint.succeed'),
-            message: win,
-            type: 'success',
-            duration: 2000
-          })
-        })
-      }).catch(() => {
-      })
-    },
-    handleAllDelete() { // 批量删除
-      var title = '是否确认批量删除内容?'
-      var win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
-        type: 'warning'
-      }).then(() => {
-        setDelete(0, this.multipleSelection).then(() => {
+        destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -314,7 +284,7 @@ export default {
     createSubmit() { // 添加
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createSubmit(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -330,7 +300,7 @@ export default {
     updateSubmit() { // 更新
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateSubmit(this.temp.id, this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -342,35 +312,6 @@ export default {
           })
         }
       })
-    },
-    // 上传成功
-    handleAvatarSuccess(res, file) {
-      this.temp.img = file.response
-      this.imgProgress = false
-      this.imgProgressPercent = 0
-    },
-    // 上传时
-    handleProgress(file, fileList) {
-      this.imgProgressPercent = file.percent
-    },
-    // 图片格式大小验证
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 < 500
-
-      if (
-        ['image/jpeg',
-          'image/gif',
-          'image/png',
-          'image/bmp'
-        ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
-        return false
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 500KB!')
-      }
-      this.imgProgress = true
-      return isLt2M
     }
   }
 }
