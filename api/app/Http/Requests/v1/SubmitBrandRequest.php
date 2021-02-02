@@ -13,15 +13,14 @@ class SubmitBrandRequest extends Request
      */
     public function authorize()
     {
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'POST':
                 return true;
             case 'GET':
             default:
-                {
-                    return false;
-                }
+            {
+                return false;
+            }
         }
     }
 
@@ -50,22 +49,22 @@ class SubmitBrandRequest extends Request
                 }
             case 'GET':
             default:
-                {
-                    return [];
-                }
+            {
+                return [];
+            }
         }
     }
 
     public function messages()
     {
         return [
-            'name.required' =>'品牌名称必须',
-            'name.string' =>'品牌名称格式有误',
+            'name.required' => '品牌名称必须',
+            'name.string' => '品牌名称格式有误',
             'name.unique' => '品牌名称已存在',
-            'name.max' =>'品牌名称不能超过30个字符',
-            'sort.required' =>'排序必须',
-            'sort.numeric' =>'排序格式有误',
-            'sort.max' =>'排序不能超过6个字符',
+            'name.max' => '品牌名称不能超过30个字符',
+            'sort.required' => '排序必须',
+            'sort.numeric' => '排序格式有误',
+            'sort.max' => '排序不能超过6个字符',
         ];
     }
 }

@@ -16,7 +16,7 @@
         </el-form-item>
       </el-form>
       <br>
-      <el-button v-permission="$store.jurisdiction.CreateBanner" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="$store.jurisdiction.BannerCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
     </div>
 
     <el-table
@@ -34,7 +34,7 @@
         type="selection"
         width="55"
         fixed="left"/>
-      <el-table-column label="编号" prop="id" fixed="left">
+      <el-table-column label="编号" sortable="custom" prop="id" fixed="left">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
@@ -50,7 +50,7 @@
             v-if="scope.row.resources"
             :src="scope.row.resources.img"
             :preview-src-list="[ scope.row.resources.img ]"
-            style="width: 200px;"
+            style="width: 160px;"
             fit="contain"/>
           <span v-else>无</span>
         </template>
@@ -60,30 +60,34 @@
           <span>{{ scope.row.url }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center">
+      <el-table-column label="类型" align="center" sortable="custom" prop="type">
         <template slot-scope="scope">
           <span>{{ scope.row.type_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序" align="center">
+      <el-table-column label="排序" align="center" sortable="custom" prop="sort">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center">
+      <el-table-column label="状态" align="center" sortable="custom" prop="state">
         <template slot-scope="scope">
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时间" align="center" prop="goods_sn">
+      <el-table-column label="时间" align="center" sortable="custom" prop="created_at">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="250" fixed="right">
+      <el-table-column label="操作" class-name="small-padding fixed-width" width="120" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.EditBanner" type="warning" size="mini" style="width:80px" @click="handleUpdate(scope.row)">编辑</el-button>
-          <el-button v-permission="$store.jurisdiction.DeleteBanner" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-tooltip v-permission="$store.jurisdiction.BannerEdit" class="item" effect="dark" content="编辑" placement="top-start">
+            <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.BannerDestroy" class="item" effect="dark" content="删除" placement="top-start">
+            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -146,7 +150,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -208,15 +212,16 @@
 </style>
 
 <script>
-import { getList, setDelete, createSubmit, updateSubmit } from '@/api/Banner'
+import { getList, create, edit, destroy } from '@/api/banner'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'BannerList',
   components: { Pagination },
   data() {
     return {
+      formLoading: false,
       actionurl: process.env.BASE_API + 'uploadPictures',
       imgHeaders: {
         Authorization: 'Bearer ' + getToken('access_token')
@@ -280,20 +285,12 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      } else if (prop === 'time') {
-        this.sortByTIME(order)
-      }
-    },
-    sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+' + prop
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
     },
@@ -342,7 +339,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(row.id, row).then(() => {
+        destroy(row.id, row).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -363,7 +360,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(0, this.multipleSelection).then(() => {
+        destroy(0, this.multipleSelection).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -377,34 +374,46 @@ export default {
       })
     },
     createSubmit() { // 添加
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createSubmit(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.creatingSuccessful'),
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
     updateSubmit() { // 更新
+      this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateSubmit(this.temp.id, this.temp).then(() => {
+          edit(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
+            this.formLoading = false
             this.$notify({
               title: this.$t('hint.succeed'),
               message: this.$t('hint.updateSuccessful'),
               type: 'success',
               duration: 2000
             })
+          }).catch(() => {
+            this.formLoading = false
           })
+        } else {
+          this.formLoading = false
         }
       })
     },
@@ -432,7 +441,7 @@ export default {
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 500KB!')
+        this.$message.error('上传图片大小不能超过 500KB!')
       }
       this.imgProgress = true
       return isLt2M

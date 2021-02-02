@@ -203,7 +203,7 @@ function imgPathDelete($directory,$img){
 }
 
 /**
- * 根据给出的路径自动删除交辉
+ * 根据给出的路径自动删除
  * @param $resource  // 资源url
  * @return string
  */

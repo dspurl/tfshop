@@ -52,8 +52,12 @@
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width" width="160" fixed="right">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.RedisServicesList" type="primary" size="mini" @click="handleUpdate(scope.row)">查看</el-button>
-          <el-button v-permission="$store.jurisdiction.DeleteRedisServices" type="danger" size="mini" @click="handleDelete(scope.row)">删除</el-button>
+          <el-tooltip v-permission="$store.jurisdiction.RedisServiceList" class="item" effect="dark" content="查看" placement="top-start">
+            <el-button type="primary" icon="el-icon-mobile" circle @click="handleUpdate(scope.row)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.RedisServiceDestroy" class="item" effect="dark" content="删除" placement="top-start">
+            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -91,7 +95,7 @@
       display: inline-block;
       line-height: 0.9;
       font-size: 0.9em;
-      padding: 0px 4px 2px 4px;
+      padding: 0 4px 2px 4px;
       border-radius: 3px;
       vertical-align: 2px;
       cursor: pointer;
@@ -115,7 +119,7 @@
     .jv-code {
       .jv-toggle {
         &:before {
-          padding: 0px 2px;
+          padding: 0 2px;
           border-radius: 2px;
         }
         &:hover {
@@ -129,18 +133,13 @@
 </style>
 
 <script>
-import { getList, show, setDelete } from '@/api/redis'
-import { getToken } from '@/utils/auth'
+import { getList, detail, destroy } from '@/api/redis'
 import JsonViewer from 'vue-json-viewer'
 export default {
-  name: 'RedisServicesList',
+  name: 'RedisServiceList',
   components: { JsonViewer },
   data() {
     return {
-      actionurl: process.env.BASE_API + 'uploadPictures',
-      imgHeaders: {
-        Authorization: getToken('token_type') + ' ' + getToken('access_token')
-      },
       dialogVisible: false,
       ruleForm: [],
       checkAll: false,
@@ -152,11 +151,6 @@ export default {
         copyText: '复制',
         copiedText: '复制中'
       },
-      imgData: {
-        type: 1,
-        size: 1024 * 500
-      },
-      imgProgressPercent: 0,
       loading: false,
       listLoading: false,
       imgProgress: false,
@@ -171,17 +165,6 @@ export default {
       temp: {},
       jsonData: {
         data: {}
-      },
-      rules: {
-        name: [
-          { required: true, message: '请输入场景名称', trigger: 'blur' }
-        ],
-        type: [
-          { required: true, message: '请选择场景类型', trigger: 'change' }
-        ],
-        contents: [
-          { required: true, message: '请输入场景用例', trigger: 'blur' }
-        ]
       },
       site: [
         {
@@ -240,20 +223,12 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-
     sortChange(data) {
       const { prop, order } = data
-      if (prop === 'id') {
-        this.sortByID(order)
-      } else if (prop === 'time') {
-        this.sortByTIME(order)
-      }
-    },
-    sortByID(order) {
       if (order === 'ascending') {
-        this.listQuery.sort = '+id'
+        this.listQuery.sort = '+' + prop
       } else {
-        this.listQuery.sort = '-id'
+        this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
     },
@@ -268,20 +243,12 @@ export default {
         img: ''
       }
     },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
     handleUpdate(row) { // 查看
       this.temp = null
       this.temp = row
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
-      show(row.name, row).then(response => {
+      detail(row.name, row).then(response => {
         this.jsonData = response.data
         this.textMap = row.name
       })
@@ -300,7 +267,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(row.name, row).then(() => {
+        destroy(row.name, row).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -321,7 +288,7 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        setDelete(1, this.multipleSelection).then(() => {
+        destroy(1, this.multipleSelection).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({

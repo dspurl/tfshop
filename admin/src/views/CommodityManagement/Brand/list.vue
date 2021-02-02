@@ -163,7 +163,7 @@
 <script>
 import { getList, create, edit, destroy } from '@/api/brand'
 import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'BrandList',

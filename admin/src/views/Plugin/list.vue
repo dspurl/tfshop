@@ -41,9 +41,15 @@
       </el-table-column>
       <el-table-column label="操作" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-button v-permission="$store.jurisdiction.PlugInInstall" v-if="!scope.row.locality_versions || scope.row.is_delete" :loading="butLoading" type="primary" size="mini" @click="handleCreate(scope.row.abbreviation)">安装</el-button>
-          <el-button v-permission="$store.jurisdiction.PlugInUpdate" v-else-if="scope.row.locality_versions && scope.row.versions > scope.row.locality_versions" :loading="butLoading" type="warning" size="mini" @click="handleCreate(scope.row.abbreviation, 1)">升级</el-button>
-          <el-button v-permission="$store.jurisdiction.PlugInDelete" v-if="scope.row.locality_versions && !scope.row.is_delete" :loading="butLoading" type="danger" size="mini" @click="handleDelete(scope.row.abbreviation)">删除插件</el-button>
+          <el-tooltip v-permission="$store.jurisdiction.PlugInCreate" v-if="!scope.row.locality_versions || scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="安装" placement="top-start">
+            <el-button type="primary" icon="el-icon-share" circle @click="handleCreate(scope.row.abbreviation)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.PlugInEdit" v-else-if="scope.row.locality_versions && scope.row.versions > scope.row.locality_versions" :loading="butLoading" class="item" effect="dark" content="升级" placement="top-start">
+            <el-button type="primary" icon="el-icon-upload" circle @click="handleCreate(scope.row.abbreviation, 1)"/>
+          </el-tooltip>
+          <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" v-if="scope.row.locality_versions && !scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="删除插件" placement="top-start">
+            <el-button type="primary" icon="el-icon-delete" circle @click="handleDelete(scope.row.abbreviation)"/>
+          </el-tooltip>
         </template>
       </el-table-column>
     </el-table>
@@ -106,7 +112,7 @@
 </style>
 
 <script>
-import { getList, createSubmit, deleteSubmit } from '@/api/plugin'
+import { getList, create, destroy } from '@/api/plugin'
 
 export default {
   name: 'PlugInList',
@@ -150,7 +156,7 @@ export default {
     },
     handleCreate(name, type) {
       this.butLoading = true
-      createSubmit(name).then(() => {
+      create(name).then(() => {
         this.butLoading = false
         this.getList()
         this.$notify({
@@ -163,7 +169,7 @@ export default {
     },
     handleDelete(name) {
       this.butLoading = true
-      deleteSubmit(name).then(() => {
+      destroy(name).then(() => {
         this.butLoading = false
         this.getList()
         this.$notify({

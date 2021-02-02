@@ -5,8 +5,11 @@
         <el-card :body-style="{ padding: '0px' }" style="margin-bottom: 20px;">
           <el-image v-if="l.type === 1" :src="l.img" :preview-src-list="listImage" lazy style="height:340px;width: 100%;"/>
           <el-image v-else style="height:340px;width: 100%;"/>
-          <div style="padding: 14px;">
-            <span>{{ l.depict }}</span>
+          <div class="name">
+            <div class="title">{{ l.depict }}</div>
+            <div class="delete">
+              <el-button size="mini" type="danger" icon="el-icon-delete" circle @click="handleDelete(l)"/>
+            </div>
           </div>
         </el-card>
       </el-col>
@@ -18,6 +21,13 @@
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss">
+  .app-container .name{
+    padding:20px;
+    display: flex;
+    .title{
+      flex:1;
+    }
+  }
   .timeInterval{
     top:-4px;
   }
@@ -74,37 +84,24 @@
 </style>
 
 <script>
-import { getList } from '@/api/resource'
-import { getToken } from '@/utils/auth'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import { getList, destroy } from '@/api/resource'
+import Pagination from '@/components/Pagination'
 
 export default {
-  name: 'ResourceData',
+  name: 'ResourceList',
   components: { Pagination },
   data() {
     return {
-      imgHeaders: {
-        Authorization: getToken('token_type') + ' ' + getToken('access_token')
-      },
-      ruleForm: [],
-      checkAll: false,
-      tableKey: 0,
       list: null,
       listImage: [],
       total: 0,
-      imgData: {
-        type: 1,
-        size: 1024 * 500
-      },
-      loading: false,
       listLoading: false,
       listQuery: {
         page: 1,
         limit: 20,
         sort: '+id',
         activeIndex: '1'
-      },
-      temp: {}
+      }
     }
   },
   created() {
@@ -124,9 +121,26 @@ export default {
         this.listLoading = false
       })
     },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+    handleDelete(row) { // 删除
+      const title = '请确保资源无效后再删除！'
+      const win = '删除成功'
+      this.$confirm(title, this.$t('hint.hint'), {
+        confirmButtonText: this.$t('usuel.confirm'),
+        cancelButtonText: this.$t('usuel.cancel'),
+        type: 'warning'
+      }).then(() => {
+        destroy(row.id).then(() => {
+          this.getList()
+          this.dialogFormVisible = false
+          this.$notify({
+            title: this.$t('hint.succeed'),
+            message: win,
+            type: 'success',
+            duration: 2000
+          })
+        })
+      }).catch(() => {
+      })
     }
   }
 }

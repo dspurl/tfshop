@@ -11,37 +11,36 @@ export const componentsMap = {
   MemberList: () => import('@/views/UserManagement/Member/list'),
   Power: () => import('@/views/UserManagement/Power/index'),
   PowerList: () => import('@/views/UserManagement/Power/list'),
+  Category: () => import('@/views/CommodityManagement/Category/index'),
+  CategoryList: () => import('@/views/CommodityManagement/Category/list'),
   Good: () => import('@/views/CommodityManagement/Good/index'),
   GoodList: () => import('@/views/CommodityManagement/Good/list'),
   GoodCreate: () => import('@/views/CommodityManagement/Good/create'),
   GoodEdit: () => import('@/views/CommodityManagement/Good/edit'),
   Brand: () => import('@/views/CommodityManagement/Brand/index'),
   BrandList: () => import('@/views/CommodityManagement/Brand/list'),
+  Specification: () => import('@/views/CommodityManagement/Specification/index'),
+  SpecificationList: () => import('@/views/CommodityManagement/Specification/list'),
+  SpecificationGroup: () => import('@/views/CommodityManagement/SpecificationGroup/index'),
+  SpecificationGroupList: () => import('@/views/CommodityManagement/SpecificationGroup/list'),
   Freight: () => import('@/views/LogisticManagement/Freight/index'),
   FreightList: () => import('@/views/LogisticManagement/Freight/list'),
   FreightCreate: () => import('@/views/LogisticManagement/Freight/create'),
   FreightEdit: () => import('@/views/LogisticManagement/Freight/edit'),
   Dhl: () => import('@/views/LogisticManagement/Dhl/index'),
   DhlList: () => import('@/views/LogisticManagement/Dhl/list'),
-  // 订单管理
   Indent: () => import('@/views/IndentManagement/Indent/index'),
   IndentList: () => import('@/views/IndentManagement/Indent/list'),
   IndentDetail: () => import('@/views/IndentManagement/Indent/detail'),
   IndentShipment: () => import('@/views/IndentManagement/Indent/shipment'),
-  RedisServices: () => import('@/views/Tool/RedisService/index'),
-  RedisServicesList: () => import('@/views/Tool/RedisService/list'),
-  RedisPanel: () => import('@/views/Tool/RedisService/panel'),
-  Specification: () => import('@/views/CommodityManagement/Specification/index'),
-  SpecificationList: () => import('@/views/CommodityManagement/Specification/list'),
-  SpecificationGroup: () => import('@/views/CommodityManagement/SpecificationGroup/index'),
-  SpecificationGroupList: () => import('@/views/CommodityManagement/SpecificationGroup/list'),
-  ResourceData: () => import('@/views/Tool/Resource/index'),
-  ResourceDataList: () => import('@/views/Tool/Resource/list'),
-  Category: () => import('@/views/CommodityManagement/Category/index'),
-  CategoryList: () => import('@/views/CommodityManagement/Category/list'),
+  RedisService: () => import('@/views/ToolManagement/RedisService/index'),
+  RedisServiceList: () => import('@/views/ToolManagement/RedisService/list'),
+  RedisPanel: () => import('@/views/ToolManagement/RedisService/panel'),
+  Resource: () => import('@/views/ToolManagement/Resource/index'),
+  ResourceList: () => import('@/views/ToolManagement/Resource/list'),
   // 轮播
-  Banner: () => import('@/views/Tool/Banner/index'),
-  BannerList: () => import('@/views/Tool/Banner/list'),
+  Banner: () => import('@/views/ToolManagement/Banner/index'),
+  BannerList: () => import('@/views/ToolManagement/Banner/list'),
   // 统计
   StatisticsVisit: () => import('@/views/Statistics/visit'),
   StatisticsAgeAndSex: () => import('@/views/Statistics/user'),
@@ -49,9 +48,7 @@ export const componentsMap = {
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
-  PlugInList: () => import('@/views/Plugin/list'),
-  PlugInCreate: () => import('@/views/Plugin/create'),
-  PlugInEdit: () => import('@/views/Plugin/edit')
+  PlugInList: () => import('@/views/Plugin/list')
 }
 const permission = {
   state: {

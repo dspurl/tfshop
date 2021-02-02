@@ -19,7 +19,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
     Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {
         Route::post('uploadPictures', 'IndexController@uploadPictures');  //上传
         Route::get('userInfo', 'LoginController@userInfo');  //用户详情
-        //首页
         Route::get('index', 'IndexController@index');  //首页
         Route::get('admin', 'AdminController@list')->middleware(['permissions:AdminList']);  //管理员列表
         Route::post('admin', 'AdminController@create')->middleware(['permissions:AdminCreate']);  //管理员添加
@@ -74,39 +73,24 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('indent/dhl', 'IndentController@dhl')->middleware(['permissions:IndentDhl']); //配送信息修改
         Route::post('indent/refund/{id}', 'IndentController@refund')->middleware(['permissions:IndentRefund']); //退款
         Route::get('indent/query/{id}', 'IndentController@query')->middleware(['permissions:IndentDetail']);  //查询订单状态
-
-
-        //工具
-        //--Redis管理
-        Route::get('redis', 'RedisServiceController@index')->middleware(['permissions:RedisServicesList']);    //Redis列表
-        Route::get('redis/{id}', 'RedisServiceController@show')->middleware(['permissions:RedisServicesList']);    //Redis详情
-        Route::delete('redis/{id}', 'RedisServiceController@destroy')->middleware(['permissions:DeleteRedisServices']);    //删除Redis
+        Route::get('redis', 'RedisServiceController@list')->middleware(['permissions:RedisServiceList']);    //Redis列表
+        Route::get('redis/{name}', 'RedisServiceController@detail')->middleware(['permissions:RedisServiceDetail']);    //Redis详情
+        Route::post('redis/destroy/{id}', 'RedisServiceController@destroy')->middleware(['permissions:RedisServiceDestroy']);    //Redis删除
         Route::get('redisPanel', 'RedisServiceController@panel')->middleware(['permissions:RedisPanel']);    //Redis面板
-
-        //--资源
-        Route::get('resource', 'ResourceController@index')->middleware(['permissions:ResourceDataList']);    //资源列表
-        Route::post('resource', 'ResourceController@store')->middleware(['permissions:CreateResourceData']);    //资源添加保存
-        Route::put('resource/{id}', 'ResourceController@update')->middleware(['permissions:EditResourceData']);    //资源编辑保存
-        Route::delete('resource/{id}', 'ResourceController@destroy')->middleware(['permissions:DeleteResourceData']);    //资源删除
-
-
-
-        //轮播
-        Route::get('banner', 'BannerController@index')->middleware(['permissions:BannerList']);    //轮播列表
-        Route::post('banner', 'BannerController@store')->middleware(['permissions:CreateBanner']);    //轮播添加保存
-        Route::put('banner/{id}', 'BannerController@update')->middleware(['permissions:EditBanner']);    //轮播编辑保存
-        Route::delete('banner/{id}', 'BannerController@destroy')->middleware(['permissions:DeleteBanner']);    //轮播删除
-        //统计
+        Route::get('resource', 'ResourceController@list')->middleware(['permissions:ResourceList']);    //资源列表
+        Route::post('resource/destroy/{id}', 'ResourceController@destroy')->middleware(['permissions:ResourceDestroy']);    //资源删除
+        Route::get('banner', 'BannerController@list')->middleware(['permissions:BannerList']);    //轮播列表
+        Route::post('banner', 'BannerController@create')->middleware(['permissions:BannerCreate']);    //轮播添加
+        Route::post('banner/{id}', 'BannerController@edit')->middleware(['permissions:BannerEdit']);    //轮播修改
+        Route::post('banner/destroy/{id}', 'BannerController@destroy')->middleware(['permissions:BannerDestroy']);    //轮播删除
+        Route::get('plugin', 'PluginController@list')->middleware(['permissions:PlugInList']);    //插件列表
+        Route::get('plugin/{name}', 'PluginController@create')->middleware(['permissions:PlugInCreate']);    //插件安装
+        Route::post('plugin/destroy/{name}', 'PluginController@destroy')->middleware(['permissions:PlugInDestroy']);    //插件卸载
         Route::get('statistic/behavior', 'StatisticsController@behavior')->middleware(['permissions:StatisticsVisit']);    //使用分析
         Route::get('statistic/keep', 'StatisticsController@keep')->middleware(['permissions:StatisticsVisit']);    //留存趋势
         Route::get('statistic/source', 'StatisticsController@source')->middleware(['permissions:StatisticsVisit']);    //来源分析
         Route::get('statistic/age_and_sex', 'StatisticsController@ageAndSex')->middleware(['permissions:StatisticsAgeAndSex']);    //来源分析
         Route::get('statistic/pay', 'StatisticsController@pay')->middleware(['permissions:StatisticsPay']);    //交易分析
-        //插件管理
-        Route::get('plugin', 'PluginController@index')->middleware(['permissions:PlugInList']);    //插件列表
-        Route::post('plugin/{name}', 'PluginController@store')->middleware(['permissions:PlugInUpdate']);    //更新插件
-        Route::put('plugin/{name}', 'PluginController@update')->middleware(['permissions:PlugInInstall']);    //安装插件
-        Route::delete('plugin/{name}', 'PluginController@destroy')->middleware(['permissions:PlugInDelete']);    //删除插件
     });
     // 插件后台
     Route::prefix('admin')->namespace('Plugin')->middleware(['auth:api'])->group(function () {

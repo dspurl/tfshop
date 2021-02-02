@@ -13,8 +13,7 @@ class SubmitBrowseRequest extends Request
      */
     public function authorize()
     {
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'POST':    //create
                 return true;
             case 'PUT': //update
@@ -37,8 +36,7 @@ class SubmitBrowseRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'POST':    //create
                 return [
                     'id' => 'required|integer',
@@ -60,8 +58,8 @@ class SubmitBrowseRequest extends Request
     public function messages()
     {
         return [
-            'id.required' =>'商品ID不能为空',
-            'id.integer' =>'商品ID格式有误',
+            'id.required' => '商品ID不能为空',
+            'id.integer' => '商品ID格式有误',
         ];
     }
 }
