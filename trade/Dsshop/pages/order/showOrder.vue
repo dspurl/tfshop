@@ -91,7 +91,7 @@
 </template>
 
 <script>
-import Indents from '../../api/indents';
+import GoodIndent from '../../api/goodIndent';
 import {mapMutations} from 'vuex'
 export default {
 	data() {
@@ -122,7 +122,7 @@ export default {
 		async getList() {
 			let list = {};
 			const that = this;
-			await Indents.getDetails(this.id, function(res) {
+			await GoodIndent.detail(this.id, function(res) {
 				for (var k in res.goods_list) {
 					if (res.goods_list[k].good_sku) {
 						res.goods_list[k].good_sku.product_sku.forEach(item => {
@@ -156,7 +156,7 @@ export default {
 	    },
 		confirmReceipt(item){
 			const that = this
-			Indents.getReceipt(item.id,function(res){
+			GoodIndent.receipt(item.id,function(res){
 				that.getList()
 			})
 		},

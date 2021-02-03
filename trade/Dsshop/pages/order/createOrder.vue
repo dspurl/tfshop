@@ -118,8 +118,8 @@
 </template>
 
 <script>
-	import Address from '../../api/address'
-	import Indents from '../../api/indents'
+	import Shipping from '../../api/shipping'
+	import GoodIndent from '../../api/goodIndent'
 	import {mapMutations} from 'vuex'
 	export default {
 		data() {
@@ -218,7 +218,7 @@
 			//获取默认收货地址
 			getOne(){
 				const that = this
-				Address.getOne(this.order, function(res){
+				Shipping.defaultGet(this.order, function(res){
 					that.addressData = res.shipping ? res.shipping : ''
 					that.carriage = res.carriage ? res.carriage : 0
 					that.outPocketTotal() //实付金额
@@ -246,7 +246,7 @@
 				}
 				this.data.address = this.addressData
 				this.data.carriage = this.carriage
-				Indents.createSubmit(this.data,function(res){
+				GoodIndent.create(this.data,function(res){
 					uni.removeStorageSync('dsshopOrderList')
 					uni.removeStorageSync('dsshopCartList')
 					uni.redirectTo({

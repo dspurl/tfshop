@@ -17,7 +17,7 @@
 			<view class="text-sm" @click="agree = !agree">
 				<span class="lg padding-right-xs" :class="agree ? 'cuIcon-roundcheckfill text-red': 'text-gray cuIcon-round'"></span>
 				我已阅读并知晓了<span class="text-red" @click="navTo('/pages/article/details?list=0&id=3')">《账号注册须知》</span></view>
-			<button @click="unsubscribe()" :disabled="!agree" class="cu-btn round bg-red margin-top">确认申请</button>
+			<button @click="cancel()" :disabled="!agree" class="cu-btn round bg-red margin-top">确认申请</button>
 		</view>
 	</view>
 </template>
@@ -44,9 +44,9 @@
 				})  
 			},
 			//注销提交
-			unsubscribe(){
+			cancel(){
 				const that = this
-				User.unsubscribe({},function(res){
+				User.cancel({},function(res){
 					that.logout()
 					that.$api.msg('账号已成功注销')
 					setTimeout(()=>{

@@ -14,19 +14,14 @@ class SubmitBrowseRequest extends Request
     public function authorize()
     {
         switch ($this->method()) {
-            case 'POST':    //create
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
             }
         }
-
     }
 
     /**
@@ -37,14 +32,11 @@ class SubmitBrowseRequest extends Request
     public function rules()
     {
         switch ($this->method()) {
-            case 'POST':    //create
+            case 'POST':
                 return [
                     'id' => 'required|integer',
                 ];
-            case 'PUT': //update
-                return [
-                    'id' => 'required|integer',
-                ];
+            case 'PUT':
             case 'PATCH':
             case 'GET':
             case 'DELETE':

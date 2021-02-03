@@ -19,6 +19,7 @@ use App\Notifications\Common;
  * @property int refund_way
  * @property string pay_time
  * @property int refund_reason
+ * @property string confirm_time
  */
 class GoodIndent extends Model
 {

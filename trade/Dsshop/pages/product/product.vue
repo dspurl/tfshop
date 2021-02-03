@@ -181,12 +181,11 @@ export default {
 		this.videoContext = uni.createVideoContext('myVideo')
 	},
 	methods: {
-		...mapMutations(['loginCheck']),
 		//获取详情
 		async loadData(id) {
 			// 商品详情
 			const that = this;
-			await Good.getDetails(id, {}, function(res) {
+			await Good.detail(id, {}, function(res) {
 				if (res.resources_many.length > 0) {
 					res.resources_many.forEach((item,index)=>{
 						if(item.depict.indexOf('_video') !== -1){
@@ -209,7 +208,7 @@ export default {
 				}
 			})
 			if (that.hasLogin){
-				await Collect.getDetails(id, function(res) {
+				await Collect.detail(id, function(res) {
 					if(res === 1){
 						that.favorite = true
 					} else {
@@ -236,9 +235,7 @@ export default {
 		//访问记录
 		browse() {
 			const getList = this.getList
-			Browse.createSubmit(getList,function(res){
-				
-			})
+			Browse.create(getList)
 		},
 		// 图片预览
 		imgList() {
@@ -256,16 +253,8 @@ export default {
 				}
 			});
 		},
-		goLogin(){
-			if(!this.hasLogin){
-				uni.navigateTo({
-					url:'/pages/public/login'
-				})
-			}
-		},
 		//规格弹窗开关
 		toggleSpec(state) {
-			this.loginCheck()
 			if (!this.hasLogin && state === true){
 				this.$api.msg('请先登录')
 				return false
@@ -291,10 +280,10 @@ export default {
 			if (this.hasLogin){
 				const getList = this.getList
 				if(this.favorite){	//移除
-					Collect.deleteSubmit(getList.id,function(res){
+					Collect.destroy(getList.id,function(res){
 					})
 				}else{	//添加
-					Collect.createSubmit(getList,function(res){
+					Collect.create(getList,function(res){
 						
 					})
 				}

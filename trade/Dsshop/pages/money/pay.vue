@@ -63,7 +63,7 @@
 </template>
 
 <script>
-	import Indents from '../../api/indents'
+	import GoodIndent from '../../api/goodIndent'
 	import Pay from '../../api/pay'
 	import User from '../../api/user';
 	import {
@@ -107,13 +107,13 @@
 			...mapMutations(['loginCheck']),
 			getUser(){
 				const that = this
-				User.user(function(res){
+				User.detail(function(res){
 					that.user = res
 				})
 			},
 			getList(){
 				const that = this
-				Indents.getPay(this.id,function(res){
+				GoodIndent.pay(this.id,function(res){
 					that.orderInfo = res
 				})
 			},

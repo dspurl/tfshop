@@ -15,14 +15,14 @@
 				<button class='cu-btn bg-red shadow round getcode' :disabled="disabled" @click="getCode">{{codename + seconds + unit}}</button>
 			</view>
 			<view class=" flex flex-direction padding">
-			  <button class="cu-btn round bg-red shadow lg" @click="toVerifyEmail">提交</button>
+			  <button class="cu-btn round bg-red shadow lg" @click="verifyEmail">提交</button>
 			</view>
 		</form>
 	</view>
 </template>
 
 <script>
-	import User from '../../api/user';
+	import Login from '../../api/login';
 	import {mapMutations} from 'vuex'
 	export default {
 		data() {
@@ -66,7 +66,7 @@
 					this.$api.msg('邮箱格式有误')
 					return false;
 				}
-				User.getRegisterEmailCode(this.data,function(res){
+				Login.emailCode(this.data,function(res){
 					that.$api.msg('发送成功')
 					// 开始倒计时
 					that.seconds = 60
@@ -86,7 +86,7 @@
 					}, 1000)
 				})
 			},
-			toVerifyEmail(){
+			verifyEmail(){
 				const data = this.data
 				const that = this
 				if (!data.email) {
@@ -106,7 +106,7 @@
 				  this.$api.msg('验证码长度有误')
 				  return false
 				}
-				User.toVerifyEmail(data,function(res){
+				Login.verifyEmail(data,function(res){
 					that.$api.msg(`绑定成功`);
 					setTimeout(()=>{
 						uni.navigateBack({

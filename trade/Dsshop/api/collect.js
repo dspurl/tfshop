@@ -11,7 +11,7 @@ export default {
 		  })
 		})
     },
-	createSubmit(data,success,fail) {
+	create(data,success,fail) {
 		Network.setPostMessage('collect',data,'处理中', function (res) {
 		  success(res)
 		}, function (res) {
@@ -22,7 +22,7 @@ export default {
 		  })
 		})
 	},
-	getDetails(id,success,fail) {
+	detail(id,success,fail) {
 		Network.setGetMessage('collect/' + id,{},'加载中', function (res) {
 		  success(res)
 		}, function (res) {
@@ -33,8 +33,8 @@ export default {
 		  })
 		})
 	},
-	deleteSubmit(id,success,fail){
-		Network.setPostMessage('collectDelete/' + id,{},'处理中', function (res) {
+	destroy(id,success,fail){
+		Network.setPostMessage('collect/destroy/' + id,{},'处理中', function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({

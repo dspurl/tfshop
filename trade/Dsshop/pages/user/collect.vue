@@ -60,88 +60,14 @@
 			//删除
 			deleteCartItem(index){
 				const that = this
-				Collect.deleteSubmit(this.cartList[index].good_id,function(res){
+				Collect.destroy(this.cartList[index].good_id,function(res){
 					that.loadData()
 				})
-			},
-			//清空
-			clearCart(){
-				uni.showModal({
-					content: '清空购物车？',
-					success: (e)=>{
-						if(e.confirm){
-							this.cartList = [];
-							 uni.removeStorageSync('dsshopCartList')
-						}
-					}
-				})
-			},
-			//计算总价
-			calcTotal(){
-				let list = this.cartList;
-				if(list.length === 0){
-					this.empty = true;
-					return;
-				}
-				let total = 0;
-				let checked = true;
-				list.forEach(item=>{
-					if(item.checked === true){
-						total += item.price * item.number;
-					}else if(checked === true){
-						checked = false;
-					}
-				})
-				this.allChecked = checked;
-				this.total = Number(total.toFixed(2));
-			},
-			//重新加载数据
-			loadCart(){
-				this.loadData();
 			},
 			//访问商品
 			goProduct(res){
 				uni.navigateTo({
 					url: `/pages/product/product?id=${res.good_id}`
-				})
-			},
-			//创建订单
-			createOrder(){
-				let list = this.cartList
-				let goodsData = []
-				const that = this
-				list.forEach(item=>{
-					if(item.checked){
-						goodsData.push(item)
-					}
-				})
-				if(goodsData.length <1){
-					this.$api.msg('未选择商品')
-					return false
-				}
-				// Indents.createSubmit({
-				// 	goodsData,
-				// 	total:this.total
-				// },function(res){
-				// 	let cartList =  uni.getStorageSync('dsshopCartList') || {}
-				// 	goodsData.forEach(item=>{
-				// 		if(item.good_sku_id){
-				// 			delete cartList[item.good_sku_id]
-				// 		}else{
-				// 			delete cartList['good_'+item.good_id]
-				// 		}
-				// 	})
-				// 	uni.setStorageSync('dsshopCartList', cartList)
-				// 	uni.navigateTo({
-				// 		url: `/pages/order/createOrder?id=${res}`
-				// 	})
-				// })
-				
-				this.$api.msg('跳转下一页 sendData');
-				uni.navigateTo({
-					url: `/pages/order/createOrder?data=${JSON.stringify({
-						goodsData: goodsData
-					})}`
 				})
 			}
 		}

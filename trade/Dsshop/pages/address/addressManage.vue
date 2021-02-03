@@ -32,7 +32,7 @@
 </template>
 
 <script>
-	import Address from '../../api/address'
+	import Shipping from '../../api/shipping'
 	import {mapMutations} from 'vuex'
 	export default {
 		data() {
@@ -163,7 +163,7 @@
 				}
 				data.cellphone = Number(data.cellphone)
 				if(data.id){
-					Address.updateSubmit(data,function(res){
+					Shipping.edit(data,function(res){
 						that.$api.prePage().refreshList()
 						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
 						setTimeout(()=>{
@@ -171,7 +171,7 @@
 						}, 1000)
 					})
 				}else{
-					Address.createSubmit(data,function(res){
+					Shipping.create(data,function(res){
 						that.$api.prePage().refreshList()
 						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
 						setTimeout(()=>{

@@ -47,7 +47,7 @@
 
 <script>
 	import {mapMutations} from 'vuex'
-	import Finance from '../../api/finance'
+	import MoneyLog from '../../api/moneyLog'
 	export default {
 		components: {},
 		data() {
@@ -64,7 +64,7 @@
 			async getList(id){
 				const that = this
 				if(id > 0){
-					Finance.getDetails(id,{},function(res){
+					MoneyLog.detail(id,{},function(res){
 						that.details = res
 					})
 				}

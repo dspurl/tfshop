@@ -23,7 +23,7 @@ class SmsLog extends Model
         return $date->format('Y-m-d H:i:s');
     }
     // 日志插入
-    protected function setSmsLog($data){
+    public function setSmsLog($data){
         $SmsLog=new SmsLog();
         $SmsLog->sms_service_id = $data['sms_service_id'];
         $SmsLog->phone = $data['phone'];

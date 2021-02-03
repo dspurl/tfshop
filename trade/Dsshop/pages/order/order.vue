@@ -81,7 +81,7 @@
 	import {mapMutations} from 'vuex'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import empty from "@/components/empty";
-	import Indents from '../../api/indents'
+	import GoodIndent from '../../api/goodIndent'
 	export default {
 		components: {
 			uniLoadMore,
@@ -182,10 +182,11 @@
 				// #endif
 				var orderList = []
 				let that =this
-				await Indents.getList({
+				await GoodIndent.getList({
 					limit: 5,
 					page: this.page,
 					index: index,
+					sort: '+created_at',
 					startTime: this.details.startTime,
 					endTime: this.details.endTime,
 					search: search
@@ -250,7 +251,7 @@
 				    content: '是否确认删除订单？',
 				    success: function (res) {
 						if (res.confirm) {
-							Indents.deleteSubmit(that.navList[that.tabCurrentIndex].orderList[index].id,function(res){
+							GoodIndent.destroy(that.navList[that.tabCurrentIndex].orderList[index].id,function(res){
 								that.navList[that.tabCurrentIndex].orderList.splice(index, 1)
 								that.$api.msg(`删除成功`)
 								uni.hideLoading()
@@ -273,7 +274,7 @@
 				    content: '是否确认取消订单？',
 				    success: function (res) {
 						if (res.confirm) {
-							Indents.getCancel(item.id,function(res){
+							GoodIndent.cancel(item.id,function(res){
 								that.$api.msg(`操作成功`)
 								that.refreshOderList()
 							})
@@ -419,7 +420,7 @@
 				    content: '是否确认收货？',
 				    success: function (res) {
 						if (res.confirm) {
-							Indents.getReceipt(item.id,function(res){
+							GoodIndent.receipt(item.id,function(res){
 								that.$api.msg(`操作成功`)
 								that.refreshOderList()
 							})

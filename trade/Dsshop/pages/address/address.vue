@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Address from '../../api/address';
+import Shipping from '../../api/shipping';
 import { mapMutations } from 'vuex';
 export default {
 	data() {
@@ -58,7 +58,9 @@ export default {
 		//获取列表
 		loadData() {
 			const that = this;
-			Address.getList({}, function(res) {
+			Shipping.getList({
+				sort: '+created_at'
+			}, function(res) {
 				that.addressList = res.data;
 			});
 		},
@@ -70,7 +72,7 @@ export default {
 					content: '设为默认地址？',
 					success: confirmRes => {
 						if (confirmRes.confirm) {
-							Address.checkSubmit(item, function(res) {
+							Shipping.defaultSet(item, function(res) {
 								if (that.type === '1') {
 									that.$api.prePage().refreshAddress(item);
 									uni.navigateBack();
@@ -163,7 +165,7 @@ export default {
 							this.$api.msg('默认收货地址无法删除');
 							return false;
 						}
-						Address.deleteSubmit(item.id, function(res) {
+						Shipping.destroy(item.id, function(res) {
 							that.addressList.splice(index, 1);
 						});
 					}

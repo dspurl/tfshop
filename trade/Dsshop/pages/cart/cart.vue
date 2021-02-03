@@ -113,7 +113,7 @@
 	import {
 		mapState
 	} from 'vuex';
-	import Indents from '../../api/indents'
+	import GoodIndent from '../../api/goodIndent'
 	import uniNumberBox from '@/components/uni-number-box.vue'
 	import sku from '@/components/sku'
 	export default {
@@ -151,7 +151,7 @@
 				this.invalidGood = []
 				let cartList =  uni.getStorageSync('dsshopCartList') || {}
 				const that = this
-				Indents.getGoodCount(cartList,function(res){
+				GoodIndent.synchronizationInventory(cartList,function(res){
 					cartList = Object.values(res)
 					for(var k in cartList){
 						cartList[k].checked = true

@@ -18,15 +18,24 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
+/**
+ * GoodIndent
+ * 商品订单
+ * Class GoodIndentController
+ * @package App\Http\Controllers\v1\Client
+ */
 class GoodIndentController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * GoodIndentList
+     * 商品订单列表
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  sort string 排序
+     * @queryParam  page string 页码
      */
-    public function index(Request $request)
+    public function list(Request $request)
     {
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
@@ -39,7 +48,10 @@ class GoodIndentController extends Controller
             $q->where('created_at', '>=', date("Y-m-d 00:00:00", strtotime($request->startTime)))->where('created_at', '<=', date("Y-m-d 23:59:59", strtotime($request->endTime)));
         }
         $limit = $request->limit;
-        $q->orderBy('id', 'DESC');
+        if ($request->has('sort')) {
+            $sortFormatConversion = sortFormatConversion($request->sort);
+            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
         $paginate = $q->with(['goodsList' => function ($q) {
             $q->with(['goodSku']);
         }])->paginate($limit);
@@ -47,12 +59,16 @@ class GoodIndentController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * GoodIndentList
+     * 商品订单创建
      * @param SubmitGoodIndentRequest $request
      * @return \Illuminate\Http\Response
+     * @queryParam  carriage int 运费
+     * @queryParam  indentCommodity array 订单商品
+     * @queryParam  remark string 备注
+     * @queryParam  address array 收货地址
      */
-    public function store(SubmitGoodIndentRequest $request)
+    public function create(SubmitGoodIndentRequest $request)
     {
         $redis = new RedisService();
         $lock = RedisLock::lock($redis, 'goodIndent');
@@ -121,8 +137,13 @@ class GoodIndentController extends Controller
         }
     }
 
-    // 更新商品库存
-    public function gcount(Request $request)
+    /**
+     * SynchronizationInventory
+     * 同步线上商品库存
+     * @param Request $request
+     * @return string
+     */
+    public function synchronizationInventory(Request $request)
     {
         $return = $request->all();
         foreach ($request->all() as $id => $all) {
@@ -153,54 +174,14 @@ class GoodIndentController extends Controller
         return resReturn(1, $return);
     }
 
-    // 订单支付详情
-    public function pay($id, Request $request)
-    {
-
-        GoodIndentCommodity::$withoutAppends = false;
-        GoodIndent::$withoutAppends = false;
-        User::$withoutAppends = false;
-        $GoodIndent = GoodIndent::with(['goodsList' => function ($q) {
-            $q->select('good_id', 'good_indent_id')->with(['good' => function ($q) {
-                $q->select('name', 'id');
-            }]);
-        }, 'User' => function ($q) {
-            $q->select('id', 'money');
-        }])->select('id', 'total', 'user_id')->find($id);
-        return resReturn(1, $GoodIndent);
-    }
-
-    // 取消订单
-    public function cancel($id)
-    {
-        $GoodIndent = GoodIndent::with(['goodsList'])->find($id);
-        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_CANCEL;
-        $GoodIndent->save();
-        //库存处理
-        foreach ($GoodIndent->goodsList as $indentCommodity) {
-            $Good = Good::select('id', 'is_inventory', 'inventory')->find($indentCommodity['good_id']);
-            if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_NO) { //拍下减库存
-                if (!$indentCommodity['good_sku_id']) { //非SKU商品
-                    $Good->inventory = $Good->inventory + $indentCommodity['number'];
-                    $Good->save();
-                } else {
-                    $GoodSku = GoodSku::find($indentCommodity['good_sku_id']);
-                    $GoodSku->inventory = $GoodSku->inventory + $indentCommodity['number'];
-                    $GoodSku->save();
-                }
-            }
-        }
-        return resReturn(1, '成功');
-    }
-
     /**
-     * Display the specified resource.
-     *
+     * GoodIndentDetail
+     * 商品订单详情
      * @param int $id
-     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 订单ID
      */
-    public function show($id, Request $request)
+    public function detail($id)
     {
         GoodIndentCommodity::$withoutAppends = false;
         GoodSku::$withoutAppends = false;
@@ -216,8 +197,33 @@ class GoodIndentController extends Controller
     }
 
     /**
+     * GoodIndentPay
+     * 订单支付详情
      * @param $id
      * @return string
+     * @queryParam  id int 订单ID
+     */
+    public function pay($id)
+    {
+        GoodIndentCommodity::$withoutAppends = false;
+        GoodIndent::$withoutAppends = false;
+        User::$withoutAppends = false;
+        $GoodIndent = GoodIndent::with(['goodsList' => function ($q) {
+            $q->select('good_id', 'good_indent_id')->with(['good' => function ($q) {
+                $q->select('name', 'id');
+            }]);
+        }, 'User' => function ($q) {
+            $q->select('id', 'money');
+        }])->select('id', 'total', 'user_id')->find($id);
+        return resReturn(1, $GoodIndent);
+    }
+
+    /**
+     * GoodIndentReceipt
+     * 确认收货
+     * @param $id
+     * @return string
+     * @queryParam  id int 订单ID
      */
     public function receipt($id)
     {
@@ -260,20 +266,54 @@ class GoodIndentController extends Controller
         }
     }
 
+    /**
+     * GoodIndentCancel
+     * 取消订单
+     * @param $id
+     * @return string
+     */
+    public function cancel($id)
+    {
+        $GoodIndent = GoodIndent::with(['goodsList'])->find($id);
+        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_CANCEL;
+        $GoodIndent->save();
+        //库存处理
+        foreach ($GoodIndent->goodsList as $indentCommodity) {
+            $Good = Good::select('id', 'is_inventory', 'inventory')->find($indentCommodity['good_id']);
+            if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_NO) { //拍下减库存
+                if (!$indentCommodity['good_sku_id']) { //非SKU商品
+                    $Good->inventory = $Good->inventory + $indentCommodity['number'];
+                    $Good->save();
+                } else {
+                    $GoodSku = GoodSku::find($indentCommodity['good_sku_id']);
+                    $GoodSku->inventory = $GoodSku->inventory + $indentCommodity['number'];
+                    $GoodSku->save();
+                }
+            }
+        }
+        return resReturn(1, '成功');
+    }
+
+    /**
+     * GoodIndentDestroy
+     * 删除订单
+     * @param $id
+     * @return string
+     */
     public function destroy($id)
     {
-        GoodIndent::where('id', $id)->delete();
+        GoodIndent::where('id', $id)->update(['is_delete',GoodIndent::GOOD_INDENT_IS_DELETE_YES]);
         return resReturn(1, '删除成功');
     }
 
     /**
+     * GoodIndentQuantity
      * 订单数量统计
      * @return string
      */
     public function quantity()
     {
         $GoodIndent = GoodIndent::where('user_id', auth('web')->user()->id)->get();
-
         $return = [
             'all' => 0, //全部订单
             'obligation' => 0, //待付款

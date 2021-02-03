@@ -97,68 +97,63 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         //前台插件列表
     });
     //app
+    // 无需任何验证
     Route::prefix('app')->namespace('Client')->group(function () {
-        Route::any('/serve', 'WeChatController@serve');    //微信认证
-        Route::any('paymentNotify', 'WeChatController@paymentNotify');    //微信支付回调
-        Route::any('refundNotify', 'WeChatController@refundNotify');    //微信退款回调
+        Route::any('serve', 'AppController@serve');    //处理应用的请求消息
+        Route::any('paymentNotify', 'AppController@paymentNotify');    //支付回调
+        Route::any('refundNotify', 'AppController@refundNotify');    //退款回调
     });
+    // 需要secret验证
     Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
-        Route::post('uploadPictures', 'WeChatController@uploadPictures');  //上传
-        Route::post('register', 'WeChatController@register');    //注册
-        Route::post('login', 'WeChatController@login');    //登录
-        Route::post('miniLogin', 'WeChatController@miniLogin');    //小程序换取openid
-        Route::post('findPassword', 'WeChatController@findPassword');    //找回密码
-        Route::post('getRegisterCellphoneCode', 'WeChatController@getRegisterCellphoneCode');    //获取手机验证码
-        Route::post('getRegisterEmailCode', 'WeChatController@getRegisterEmailCode');    //获取邮箱验证码
-        Route::post('authorizedPhone', 'WeChatController@authorizedPhone');    //授权获取手机号
-        Route::post('verifyEmail', 'WeChatController@verifyEmail');    //邮箱验证
-        Route::post('userNotification', 'UserController@userNotification');    //更新接收通知状态
-        // 商品
-        Route::get('good', 'GoodAppController@index');    //商品列表
-        Route::get('good/{id}', 'GoodAppController@show');    //商品详情
-        Route::get('banner', 'BannerAppController@index');    //轮播列表
-        Route::get('advertising', 'BannerAppController@advertising');    //单条广告
-        Route::get('goodCategory', 'GoodAppController@goodCategory');    //商品分类展示
+        Route::post('uploadPictures', 'AppController@uploadPictures');  //上传
+        Route::post('cellphoneCode', 'AppController@cellphoneCode');    //获取手机验证码
+        Route::post('emailCode', 'AppController@emailCode');    //获取邮箱验证码
+        Route::post('login', 'LoginController@login');    //登录
+        Route::post('register', 'LoginController@register');    //注册
+        Route::post('findPassword', 'LoginController@findPassword');    //找回密码
+        Route::post('miniLogin', 'LoginController@miniLogin');    //小程序换取openid
+        Route::post('authorization', 'LoginController@authorization');    //授权登录
+        Route::post('verifyEmail', 'AppController@verifyEmail');    //绑定邮箱
+        Route::post('user/notification', 'UserController@notification');    //更新通知状态
+        Route::get('good', 'GoodController@list');    //商品列表
+        Route::get('good/{id}', 'GoodController@detail');    //商品详情
+        Route::get('goodCategory', 'GoodController@category');    //商品分类展示
+        Route::get('banner', 'BannerController@list');    //轮播列表
     });
+    // 需要用户登录验证
     Route::prefix('app')->namespace('Client')->middleware(['appverify', 'auth:web'])->group(function () {
-        Route::get('user', 'UserController@show');    //用户详情
-        Route::post('user', 'UserController@update');    //设置用户信息
-        Route::post('unsubscribe', 'UserController@unsubscribe');    //注销账号
-        Route::get('finance', 'MoneyLogController@index');    //收支列表
-        Route::get('finance/{id}', 'MoneyLogController@show');    //收支详情
-        Route::post('logout', 'WeChatController@logout');    //登出
-        Route::post('unifiedPayment', 'WeChatController@unifiedPayment');    //在线支付
-        Route::post('balancePay', 'WeChatController@balancePay');    //余额支付
-        //订单
-        Route::get('GoodIndent', 'GoodIndentController@index');    //列表
-        Route::get('GoodPay/{id}', 'GoodIndentController@pay');    //支付订单详情
-        Route::post('GoodCount', 'GoodIndentController@gcount');    //更新商品库存
-        Route::post('GoodIndent', 'GoodIndentController@store');    //添加保存
-        Route::get('GoodIndent/{id}', 'GoodIndentController@show');    //详情
-        Route::post('GoodIndentReceipt/{id}', 'GoodIndentController@receipt');    //确认收货
-        Route::post('GoodIndentCancel/{id}', 'GoodIndentController@cancel');    //取消订单
-        Route::post('GoodIndentDelete/{id}', 'GoodIndentController@destroy');    //删除订单
-        Route::get('GoodIndentQuantity', 'GoodIndentController@quantity');    //订单数量统计
-        //收货地址
-        Route::get('shipping', 'ShippingController@index');    //列表
-        Route::post('shippingOne', 'ShippingController@one');    //获取默认收货地址
-        Route::get('shipping/{id}', 'ShippingController@show');    //详情
-        Route::post('shipping', 'ShippingController@store');    //添加保存
-        Route::post('shipping/{id}', 'ShippingController@update');    //编辑保存
-        Route::post('shippingDelete/{id}', 'ShippingController@destroy');    //删除
-        Route::post('shippingCheck', 'ShippingController@check');    //设为默认
-        //浏览记录
-        Route::get('browse', 'BrowseController@index');    //列表
-        Route::post('browse', 'BrowseController@store');    //添加保存
-        //收藏
-        Route::get('collect', 'CollectController@index');    //列表
-        Route::get('collect/{id}', 'CollectController@show');    //详情
-        Route::post('collect', 'CollectController@store');    //添加保存
-        Route::post('collectDelete/{id}', 'CollectController@destroy');    //删除
-        //通知
-        Route::get('notice', 'NoticeController@index');    //列表
-        Route::get('noticeConut', 'NoticeController@count');    //未读数量
-        Route::post('notice/{id}', 'NoticeController@destroy');    //删除
+        Route::post('logout', 'LoginController@logout');    //登出
+        Route::get('user', 'UserController@detail');    //用户信息
+        Route::post('user', 'UserController@edit');    //用户信息修改
+        Route::post('cancel', 'UserController@cancel');    //注销账号
+        Route::get('moneyLog', 'MoneyLogController@list');    //收支列表
+        Route::get('moneyLog/{id}', 'MoneyLogController@detail');    //收支详情
+        Route::post('unifiedPayment', 'AppController@unifiedPayment');    //在线支付
+        Route::post('balancePay', 'AppController@balancePay');    //余额支付
+        Route::get('goodIndent', 'GoodIndentController@list');    //订单列表
+        Route::post('goodIndent', 'GoodIndentController@create');    //订单添加
+        Route::get('goodIndent/detail/{id}', 'GoodIndentController@detail');    //订单详情
+        Route::get('goodIndent/synchronizationInventory', 'GoodIndentController@synchronizationInventory');    //同步线上商品库存
+        Route::get('goodIndent/pay/{id}', 'GoodIndentController@pay');    //支付订单详情
+        Route::post('goodIndent/receipt/{id}', 'GoodIndentController@receipt');    //确认收货
+        Route::post('goodIndent/cancel/{id}', 'GoodIndentController@cancel');    //取消订单
+        Route::post('goodIndent/destroy/{id}', 'GoodIndentController@destroy');    //删除订单
+        Route::get('goodIndent/quantity', 'GoodIndentController@quantity');    //订单数量统计
+        Route::get('shipping', 'ShippingController@list');    //收货地址列表
+        Route::post('shipping', 'ShippingController@create');    //收货地址添加
+        Route::post('shipping/{id}', 'ShippingController@edit');    //收货地址修改
+        Route::get('shipping/default/get', 'ShippingController@defaultGet');    //获取默认收货地址
+        Route::post('shipping/destroy/{id}', 'ShippingController@destroy');    //收货地址删除
+        Route::post('shipping/default/set', 'ShippingController@defaultSet');    //设为默认
+        Route::get('browse', 'BrowseController@list');    //浏览记录列表
+        Route::post('browse', 'BrowseController@create');    //浏览记录添加
+        Route::get('collect', 'CollectController@list');   //收藏列表
+        Route::get('collect/{id}', 'CollectController@detail');   //收藏详情
+        Route::post('collect', 'CollectController@create');  //收藏添加
+        Route::post('collect/destroy/{id}', 'CollectController@destroy'); //收藏删除
+        Route::get('notification', 'NotificationController@list');    //列表
+        Route::get('notification/unread', 'NotificationController@unread');    //未读数量
+        Route::post('notification/destroy/{id}', 'NotificationController@destroy');    //删除
     });
     // 插件前台
     Route::prefix('app')->namespace('Plugin')->middleware(['appverify', 'auth:web'])->group(function () {

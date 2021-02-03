@@ -96,7 +96,7 @@
 	import listCell from '@/components/mix-list-cell';
 	import Browse from '../../api/browse';
 	import User from '../../api/user';
-	import Indents from '../../api/indents';
+	import GoodIndent from '../../api/goodIndent';
 	import Notification from '../../api/notification'
     import {  
         mapState 
@@ -159,7 +159,7 @@
         methods: {
 			getUser(){
 				const that = this
-				User.user(function(res){
+				User.detail(function(res){
 					that.user = res
 				})
 			},
@@ -173,14 +173,13 @@
 			},
 			noticeConut(){
 				const that = this
-				Notification.getCount({},function(res){
+				Notification.unread({},function(res){
 					that.noticeNumber = res ? res.toString() : null
 				})
 			},
 			getQuantity(){
 				const that = this
-				Indents.getQuantity(function(res){
-					console.log('getQuantity',res)
+				GoodIndent.quantity(function(res){
 					that.quantity = res
 				})
 			},
