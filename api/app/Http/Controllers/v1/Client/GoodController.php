@@ -136,6 +136,7 @@ class GoodController extends Controller
         } else {
             $q->orderBy('sort', 'ASC');
         }
+        $q->where('is_delete', Category::CATEGORY_DELETE_NO);
         $paginate = $q->with(['resources'])->get();
         return resReturn(1, $paginate);
     }

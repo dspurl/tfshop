@@ -52,6 +52,7 @@ class GoodIndentController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
+        $q->where('is_delete', GoodIndent::GOOD_INDENT_IS_DELETE_NO);
         $paginate = $q->with(['goodsList' => function ($q) {
             $q->with(['goodSku']);
         }])->paginate($limit);
@@ -302,7 +303,7 @@ class GoodIndentController extends Controller
      */
     public function destroy($id)
     {
-        GoodIndent::where('id', $id)->update(['is_delete',GoodIndent::GOOD_INDENT_IS_DELETE_YES]);
+        GoodIndent::where('id', $id)->update(['is_delete', GoodIndent::GOOD_INDENT_IS_DELETE_YES]);
         return resReturn(1, '删除成功');
     }
 
