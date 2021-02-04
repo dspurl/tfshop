@@ -92,10 +92,6 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('statistic/age_and_sex', 'StatisticsController@ageAndSex')->middleware(['permissions:StatisticsAgeAndSex']);    //来源分析
         Route::get('statistic/pay', 'StatisticsController@pay')->middleware(['permissions:StatisticsPay']);    //交易分析
     });
-    // 插件后台
-    Route::prefix('admin')->namespace('Plugin')->middleware(['auth:api'])->group(function () {
-        //前台插件列表
-    });
     //app
     // 无需任何验证
     Route::prefix('app')->namespace('Client')->group(function () {
@@ -155,11 +151,18 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('notification/unread', 'NotificationController@unread');    //未读数量
         Route::post('notification/destroy/{id}', 'NotificationController@destroy');    //删除
     });
-    // 插件前台
-    Route::prefix('app')->namespace('Plugin')->middleware(['appverify', 'auth:web'])->group(function () {
-        //APP验证插件列表
-    });
-    Route::prefix('app')->namespace('Plugin')->middleware(['appverify'])->group(function () {
-        //APP无需验证插件列表
+    // 插件
+    Route::namespace('Plugin')->group(function () {
+        // 插件后台
+        Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {
+            //前台插件列表
+        });
+        // 插件前台
+        Route::prefix('app')->namespace('Client')->middleware(['appverify', 'auth:web'])->group(function () {
+            //APP验证插件列表
+        });
+        Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
+            //APP无需验证插件列表
+        });
     });
 });
