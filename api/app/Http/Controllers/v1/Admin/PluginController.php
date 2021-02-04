@@ -34,7 +34,7 @@ class PluginController extends Controller
      * @return string
      * @queryParam  name string 插件简称
      */
-    public function install($name)
+    public function create($name)
     {
         return (new Plugin())->autoPlugin($name);
     }
