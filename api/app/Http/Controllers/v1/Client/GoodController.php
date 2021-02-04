@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\v1\Client;
 
-use App\Code;
 use App\Models\v1\GoodSku;
 use App\Models\v1\Category;
 use App\Models\v1\Good;
