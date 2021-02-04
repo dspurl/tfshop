@@ -35,30 +35,12 @@
 				</view>
 			</view>
 		</view>
-
-		<!-- 优惠明细 -->
-		<!-- <view class="yt-list">
-			<view class="yt-list-cell b-b" @click="toggleMask('show')">
-				<view class="cell-icon">
-					券
-				</view>
-				<text class="cell-tit clamp">优惠券</text>
-				<text class="cell-tip active">
-					选择优惠券
-				</text>
-				<text class="cell-more wanjia wanjia-gengduo-d"></text>
-			</view>
-		</view> -->
 		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">商品金额</text>
 				<text class="cell-tip">￥{{total | 1000}}</text>
 			</view>
-			<!-- <view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">优惠金额</text>
-				<text class="cell-tip red">-￥35</text>
-			</view> -->
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">
@@ -158,19 +140,6 @@
 		onLoad(option){
 			this.loginCheck()
 			this.loadData()
-			// let data = JSON.parse(option.data)
-			// console.log(data)
-			// this.goodList = data.goodsData
-			// this.order = []
-			// this.goodList.forEach(item=>{
-			// 	this.order.push({
-			// 		id: item.good_id,
-			// 		number: item.number,
-			// 		freight_id: item.good.freight_id
-			// 	})
-			// })
-			
-			// this.getFreight()
 		},
 		methods: {
 			...mapMutations(['loginCheck']),
@@ -203,11 +172,6 @@
 						cartList.splice(k,1)
 					}
 				}
-				/* for(var k in cartList){
-					if(cartList[k].invalid === true){ //失效的商品
-						cartList.splice(k,1)
-					}
-				} */
 				this.goodList = cartList
 				that.data.indentCommodity = cartList
 				that.calcTotal()  //计算总价

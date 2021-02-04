@@ -28,7 +28,6 @@
 				<text class="title clamp">{{item.name}}</text>
 				<view class="price-box">
 					<text class="price">{{item.order_price | 1000}}</text>
-					<!-- <text>已售 {{item.sales}}</text> -->
 				</view>
 			</view>
 		</view>

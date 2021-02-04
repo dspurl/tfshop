@@ -124,19 +124,7 @@
 						text: '待收货',
 						loadingType: 'more',
 						orderList: []
-					},
-					// {
-					// 	state: 4,
-					// 	text: '待评价',
-					// 	loadingType: 'more',
-					// 	orderList: []
-					// },
-					// {
-					// 	state: 5,
-					// 	text: '售后',
-					// 	loadingType: 'more',
-					// 	orderList: []
-					// }
+					}
 				],
 			};
 		},

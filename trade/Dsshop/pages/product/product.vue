@@ -26,7 +26,6 @@
 					<text class="m-price" v-if="getList.market_price_show.length > 1">¥{{ getList.market_price_show[1] }}</text>
 					<text class="m-price" v-else-if="getList.market_price_show.length === 1">¥{{ getList.market_price_show[0] }}</text>
 				</template>
-				<!-- <text class="coupon-tip">7折</text> -->
 			</view>
 			<view class="bot-row">
 				<!-- <text>销量: {{getList.sales}}</text> -->
@@ -34,21 +33,6 @@
 				<text>销量: {{ getList.sales}}</text>
 			</view>
 		</view>
-
-		<!--  分享 -->
-		<!-- <view class="share-section" @click="share">
-			<view class="share-icon">
-				<text class="yticon icon-xingxing"></text>
-				返
-			</view>
-			<text class="tit">该商品分享可领49减10红包</text>
-			<text class="yticon icon-bangzhu1"></text>
-			<view class="share-btn">
-				立即分享
-				<text class="yticon icon-you"></text>
-			</view>
-		</view> -->
-
 		<view class="c-list">
 			<block v-if="getList.is_delete || getList.is_show !== 1">
 				<view v-if="specificationDefaultDisplay" class="c-row b-b">
@@ -68,22 +52,6 @@
 					<text class="yticon icon-you"></text>
 				</view>
 			</block>
-			<!-- <view class="c-row b-b">
-				<text class="tit">促销活动</text>
-				<view class="con-list">
-					<text>新人首单送20元无门槛代金券</text>
-					<text>订单满50减10</text>
-					<text>订单满100减30</text>
-					<text>单笔购买满两件免邮费</text>
-				</view>
-			</view>
-			<view class="c-row b-b">
-				<text class="tit">服务</text>
-				<view class="bz-list con">
-					<text>7天无理由退换货 ·</text>
-					<text>假一赔十 ·</text>
-				</view>
-			</view> -->
 		</view>
 
 		<view class="detail-desc">
@@ -123,8 +91,6 @@
 		<!-- 已删除或还未发布-->
 		<view v-if="getList.is_delete || getList.is_show !== 1" class="sold-out padding-sm">商品已经下架了~</view>
 		<view v-if="inventoryFlag == false" class="sold-out padding-sm">商品已经售完了~</view>
-		<!-- 分享 -->
-		<!-- <share ref="share" :contentHeight="580" :shareList="shareList"></share> -->
 	</view>
 </template>
 

@@ -20,11 +20,6 @@
 			<text class="cell-tit">注销服务</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<!-- <view class="list-cell" @click="testVersion()">
-			<text class="cell-tit">检查更新</text>
-			<text class="cell-tip">当前版本 1.0.0</text>
-			<text class="cell-more yticon icon-you"></text>
-		</view> -->
 		<view class="list-cell log-out-btn" @click="toLogout">
 			<text class="cell-tit">退出登录</text>
 		</view>

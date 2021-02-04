@@ -22,11 +22,6 @@
 			<text class="tit">门牌号</text>
 			<input class="input" type="text" v-model="addressData.house" placeholder="楼号、门牌" placeholder-class="placeholder" />
 		</view>
-		
-		<!-- <view class="row default-row">
-			<text class="tit">设为默认</text>
-			<switch :checked="addressData.defaule" color="#fa436a" @change="switchChange" />
-		</view> -->
 		<button class="add-btn" @click="confirm">提交</button>
 	</view>
 </template>
