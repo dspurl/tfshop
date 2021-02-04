@@ -67,7 +67,7 @@ class Plugin
         $dswjcms = json_decode(file_get_contents($dswjcms), true);
         // 文件自动部署
         $this->fileDeployment($this->pluginPath . '/' . $name . '/admin/api', $this->path . '/admin/src/api');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/admin/views/' . ucwords($name), $this->path . '/admin/src/views/Tool/' . ucwords($name));
+        $this->fileDeployment($this->pluginPath . '/' . $name . '/admin/views/' . ucwords($name), $this->path . '/admin/src/views/ToolManagement/' . ucwords($name));
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/config', $this->path . '/api/config');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/console', $this->path . '/api/app/Console/Commands');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v'.config('dswjcms.versions'));
@@ -236,7 +236,7 @@ class Plugin
         unset($targetPath);
         unset($file_get_contents);
         $this->fileUninstall($this->pluginPath . '/' . $name . '/admin/api', $this->path . '/admin/src/api');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/admin/views/' . ucwords($name), $this->path . '/admin/src/views/Tool/' . ucwords($name));
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/admin/views/' . ucwords($name), $this->path . '/admin/src/views/ToolManagement/' . ucwords($name));
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/config', $this->path . '/api/config');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/console', $this->path . '/api/app/Console/Commands');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v'.config('dswjcms.versions'));
