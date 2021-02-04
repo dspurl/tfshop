@@ -9,7 +9,7 @@ export function getList() {
 export function create(name) {
   return request({
     url: 'plugin/' + name,
-    method: 'post'
+    method: 'get'
   })
 }
 
