@@ -215,7 +215,7 @@ class GoodIndentController extends Controller
             }]);
         }, 'User' => function ($q) {
             $q->select('id', 'money');
-        }])->select('id', 'total', 'user_id')->find($id);
+        }])->select('id', 'total', 'user_id','state')->find($id);
         return resReturn(1, $GoodIndent);
     }
 

@@ -98,11 +98,12 @@
 				return false
 			}
 			this.id = options.id
+		},
+		onShow(){
 			this.loginCheck()
 			this.getList()
 			this.getUser()
 		},
-
 		methods: {
 			...mapMutations(['loginCheck']),
 			getUser(){
@@ -115,6 +116,11 @@
 				const that = this
 				GoodIndent.pay(this.id,function(res){
 					that.orderInfo = res
+					if(res.state !== 1){
+						uni.redirectTo({
+							url: '/pages/money/paySuccess'
+						})
+					}
 				})
 			},
 			//选择支付方式

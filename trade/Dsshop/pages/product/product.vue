@@ -201,7 +201,7 @@ export default {
 		//访问记录
 		browse() {
 			const getList = this.getList
-			Browse.create(getList)
+			Browse.create(getList, function(res) {})
 		},
 		// 图片预览
 		imgList() {
