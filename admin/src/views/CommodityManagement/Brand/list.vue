@@ -56,7 +56,7 @@
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
           <el-tooltip v-permission="$store.jurisdiction.BrandDestroy" class="item" effect="dark" content="删除" placement="top-start">
-            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+            <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -98,7 +98,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
+        <el-button :loading="formLoading" @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
         <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
       </div>
     </el-dialog>
@@ -275,22 +275,26 @@ export default {
       this.multipleSelection = val
     },
     handleDelete(row) { // 删除
-      var title = '是否确认删除该内容?'
-      var win = '删除成功'
+      const title = '是否确认删除该内容?'
+      const win = '删除成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: win,
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })

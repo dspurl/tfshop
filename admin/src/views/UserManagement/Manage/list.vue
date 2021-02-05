@@ -48,7 +48,7 @@
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
           <el-tooltip v-permission="$store.jurisdiction.ManageDestroy" class="item" effect="dark" content="删除" placement="top-start">
-            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+            <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -297,15 +297,19 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: this.$t('hint.deletedSuccessful'),
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })

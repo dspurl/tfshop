@@ -86,7 +86,7 @@
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
           <el-tooltip v-permission="$store.jurisdiction.BannerDestroy" class="item" effect="dark" content="删除" placement="top-start">
-            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+            <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -332,14 +332,14 @@ export default {
       this.multipleSelection = val
     },
     handleDelete(row) { // 删除
-      var title = '是否确认删除该内容?'
-      var win = '删除成功'
+      const title = '是否确认删除该内容?'
+      const win = '删除成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
-        destroy(row.id, row).then(() => {
+        destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
@@ -353,22 +353,26 @@ export default {
       })
     },
     handleAllDelete() { // 批量删除
-      var title = '是否确认批量删除内容?'
-      var win = '删除成功'
+      const title = '是否确认批量删除内容?'
+      const win = '删除成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         destroy(0, this.multipleSelection).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: win,
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })

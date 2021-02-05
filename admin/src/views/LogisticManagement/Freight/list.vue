@@ -28,7 +28,7 @@
               <router-link v-permission="$store.jurisdiction.FreightEdit" :to="{ path: 'FreightEdit', query: { id: item.id }}">
                 <el-button type="text">修改</el-button>
               </router-link>
-              <el-button type="text" @click="handleDelete(item)">删除</el-button>
+              <el-button :loading="formLoading" type="text" @click="handleDelete(item)">删除</el-button>
             </el-col>
           </el-row>
         </el-card>
@@ -138,7 +138,7 @@
 
 <script>
 const provinces = require('../../../assets/provinces')
-import { getList, create, edit, destroy } from '@/api/freight'
+import { getList, destroy } from '@/api/freight'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 
@@ -147,6 +147,7 @@ export default {
   components: { Pagination },
   data() {
     return {
+      formLoading: false,
       actionurl: process.env.BASE_API + 'uploadPictures',
       imgHeaders: {
         Authorization: 'Bearer ' + getToken('access_token')
@@ -237,23 +238,6 @@ export default {
         img: ''
       }
     },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    handleUpdate(row) { // 编辑
-      this.temp = null
-      this.temp = row
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
     handleCheckAllChange() {
       this.$refs.multipleTable.toggleAllSelection()
     },
@@ -261,56 +245,28 @@ export default {
       this.multipleSelection = val
     },
     handleDelete(row) { // 删除
-      var title = '是否确认删除该内容?'
-      var win = '删除成功'
+      const title = '是否确认删除该内容?'
+      const win = '删除成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: win,
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
-      })
-    },
-    createSubmit() { // 添加
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          create(this.temp).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
-            this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    updateSubmit() { // 更新
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          edit(this.temp).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
-            this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
       })
     }
   }

@@ -9,10 +9,7 @@ export function getList(query) {
 }
 
 export function create(data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: 'specificationGroup',
     method: 'post',
@@ -21,10 +18,7 @@ export function create(data) {
 }
 
 export function edit(data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: 'specificationGroup/' + data.id,
     method: 'post',

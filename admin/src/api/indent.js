@@ -16,10 +16,7 @@ export function detail(id) {
 }
 
 export function shipment(data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: 'indent/shipment',
     method: 'post',
@@ -28,10 +25,7 @@ export function shipment(data) {
 }
 
 export function dhl(data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: 'indent/dhl',
     method: 'post',
@@ -47,11 +41,9 @@ export function query(id) {
 }
 
 export function refund(id, data) {
-  data = Qs.parse({
-    data
-  })
+  data = Qs.parse(data)
   return request({
-    url: 'freight/refund/' + id,
+    url: 'indent/refund/' + id,
     method: 'post',
     data
   })

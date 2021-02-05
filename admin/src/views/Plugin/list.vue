@@ -42,13 +42,13 @@
       <el-table-column label="操作" class-name="small-padding fixed-width">
         <template slot-scope="scope">
           <el-tooltip v-permission="$store.jurisdiction.PlugInCreate" v-if="!scope.row.locality_versions || scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="安装" placement="top-start">
-            <el-button type="primary" icon="el-icon-share" circle @click="handleCreate(scope.row.abbreviation)"/>
+            <el-button :loading="formLoading" type="primary" icon="el-icon-share" circle @click="handleCreate(scope.row.abbreviation)"/>
           </el-tooltip>
           <el-tooltip v-permission="$store.jurisdiction.PlugInEdit" v-else-if="scope.row.locality_versions && scope.row.versions > scope.row.locality_versions" :loading="butLoading" class="item" effect="dark" content="升级" placement="top-start">
-            <el-button type="primary" icon="el-icon-upload" circle @click="handleCreate(scope.row.abbreviation, 1)"/>
+            <el-button :loading="formLoading" type="primary" icon="el-icon-upload" circle @click="handleCreate(scope.row.abbreviation, 1)"/>
           </el-tooltip>
           <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" v-if="scope.row.locality_versions && !scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="删除插件" placement="top-start">
-            <el-button type="primary" icon="el-icon-delete" circle @click="handleDelete(scope.row.abbreviation)"/>
+            <el-button :loading="formLoading" type="primary" icon="el-icon-delete" circle @click="handleDelete(scope.row.abbreviation)"/>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -118,6 +118,7 @@ export default {
   name: 'PlugInList',
   data() {
     return {
+      formLoading: false,
       dialogVisible: false,
       ruleForm: [],
       checkAll: false,
@@ -156,8 +157,10 @@ export default {
     },
     handleCreate(name, type) {
       this.butLoading = true
+      this.formLoading = true
       create(name).then(() => {
         this.butLoading = false
+        this.formLoading = false
         this.getList()
         this.$notify({
           title: this.$t('hint.succeed'),
@@ -165,12 +168,17 @@ export default {
           type: 'success',
           duration: 2000
         })
+      }).catch(() => {
+        this.butLoading = false
+        this.formLoading = false
       })
     },
     handleDelete(name) {
       this.butLoading = true
+      this.formLoading = true
       destroy(name).then(() => {
         this.butLoading = false
+        this.formLoading = false
         this.getList()
         this.$notify({
           title: this.$t('hint.succeed'),
@@ -178,6 +186,9 @@ export default {
           type: 'success',
           duration: 2000
         })
+      }).catch(() => {
+        this.butLoading = false
+        this.formLoading = false
       })
     }
   }

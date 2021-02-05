@@ -9,10 +9,7 @@ export function getList(query) {
 }
 
 export function create(data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: 'good',
     method: 'post',
@@ -21,10 +18,7 @@ export function create(data) {
 }
 
 export function edit(data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: 'good/' + data.id,
     method: 'post',
@@ -33,9 +27,7 @@ export function edit(data) {
 }
 
 export function destroy(id, data) {
-  data = Qs.parse({
-    data
-  })
+  data = Qs.parse(data)
   return request({
     url: 'good/destroy/' + id,
     method: 'post',
@@ -51,10 +43,7 @@ export function detail(id) {
 }
 
 export function state(id, data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: 'good/state/' + id,
     method: 'post',

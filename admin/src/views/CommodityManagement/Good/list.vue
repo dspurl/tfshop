@@ -110,13 +110,13 @@
             </el-tooltip>
           </router-link>
           <el-tooltip v-permission="$store.jurisdiction.GoodEdit" v-if="scope.row.is_show !== 1" class="item" effect="dark" content="立即发布" placement="top-start">
-            <el-button type="success" icon="el-icon-sell" circle @click="handleState(scope.row)"/>
+            <el-button :loading="formLoading" type="success" icon="el-icon-sell" circle @click="handleState(scope.row)"/>
           </el-tooltip>
           <el-tooltip v-permission="$store.jurisdiction.GoodEdit" v-else class="item" effect="dark" content="放入库存" placement="top-start">
-            <el-button type="info" icon="el-icon-sold-out" circle @click="handleState(scope.row, 1)"/>
+            <el-button :loading="formLoading" type="info" icon="el-icon-sold-out" circle @click="handleState(scope.row, 1)"/>
           </el-tooltip>
           <el-tooltip v-permission="$store.jurisdiction.GoodDestroy" class="item" effect="dark" content="删除" placement="top-start">
-            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+            <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -126,9 +126,9 @@
     <div class="pagination-operation">
       <div class="operation">
         <el-button size="mini" @click="handleCheckAllChange">全选/反选</el-button>
-        <el-button v-permission="$store.jurisdiction.GoodEdit" v-if="listQuery.activeIndex === '3'" size="mini" type="success" @click="handleAllState()">立即发布</el-button>
-        <el-button v-permission="$store.jurisdiction.GoodEdit" v-else-if="listQuery.activeIndex === '2'" size="mini" type="info" @click="handleAllState(1)">放入库存</el-button>
-        <el-button v-permission="$store.jurisdiction.GoodDestroy" size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
+        <el-button v-permission="$store.jurisdiction.GoodEdit" v-if="listQuery.activeIndex === '3'" :loading="formLoading" size="mini" type="success" @click="handleAllState()">立即发布</el-button>
+        <el-button v-permission="$store.jurisdiction.GoodEdit" v-else-if="listQuery.activeIndex === '2'" :loading="formLoading" size="mini" type="info" @click="handleAllState(1)">放入库存</el-button>
+        <el-button v-permission="$store.jurisdiction.GoodDestroy" :loading="formLoading" size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
       </div>
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
     </div>
@@ -191,7 +191,7 @@
 </style>
 
 <script>
-import { getList, destroy, state, create, edit } from '@/api/Good'
+import { getList, destroy, state } from '@/api/Good'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 
@@ -200,6 +200,7 @@ export default {
   components: { Pagination },
   data() {
     return {
+      formLoading: false,
       actionurl: process.env.BASE_API + 'uploadPictures',
       imgHeaders: {
         Authorization: getToken('token_type') + ' ' + getToken('access_token')
@@ -282,30 +283,6 @@ export default {
       this.listQuery.activeIndex = key
       this.handleFilter()
     },
-    resetTemp() {
-      this.temp = {
-        state: 0,
-        sort: '5',
-        img: ''
-      }
-    },
-    handleCreate() {
-      this.resetTemp()
-      this.dialogStatus = 'create'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
-    handleUpdate(row) { // 编辑
-      this.temp = null
-      this.temp = row
-      this.dialogStatus = 'update'
-      this.dialogFormVisible = true
-      this.$nextTick(() => {
-        this.$refs['dataForm'].clearValidate()
-      })
-    },
     handleCheckAllChange() {
       this.$refs.multipleTable.toggleAllSelection()
     },
@@ -313,155 +290,110 @@ export default {
       this.multipleSelection = val
     },
     handleState(row, type) { // 变更状态
-      var title = '是否确认立即上架商品?'
+      let title = '是否确认立即上架商品?'
       if (type === 1) {
         title = '是否确认将商品加入仓库？'
       }
-      var win = '操作成功'
+      const win = '操作成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         state(row.id, row).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: win,
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })
     },
     handleDelete(row) { // 删除
-      var title = '是否确认删除该商品?'
-      var win = '删除成功'
+      const title = '是否确认删除该商品?'
+      const win = '删除成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: win,
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })
     },
     handleAllState(type) { // 批量变更状态
-      var title = '是否确认批量立即上架商品?'
+      let title = '是否确认批量立即上架商品?'
       if (type === 1) {
         title = '是否确认批量将商品加入仓库？'
       }
-      var win = '操作成功'
+      const win = '操作成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         state(0, this.multipleSelection).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: win,
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })
     },
     handleAllDelete() { // 批量删除
-      var title = '是否确认批量删除内容?'
-      var win = '删除成功'
+      const title = '是否确认批量删除内容?'
+      const win = '删除成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         destroy(0, this.multipleSelection).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: win,
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })
-    },
-    createSubmit() { // 添加
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          create(this.temp).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
-            this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    updateSubmit() { // 更新
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          edit(this.temp).then(() => {
-            this.getList()
-            this.dialogFormVisible = false
-            this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
-              type: 'success',
-              duration: 2000
-            })
-          })
-        }
-      })
-    },
-    // 上传成功
-    handleAvatarSuccess(res, file) {
-      this.temp.img = file.response
-      this.imgProgress = false
-      this.imgProgressPercent = 0
-    },
-    // 上传时
-    handleProgress(file, fileList) {
-      this.imgProgressPercent = file.percent
-    },
-    // 图片格式大小验证
-    beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 < 500
-
-      if (
-        ['image/jpeg',
-          'image/gif',
-          'image/png',
-          'image/bmp'
-        ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
-        return false
-      }
-      if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 500KB!')
-      }
-      this.imgProgress = true
-      return isLt2M
     }
   }
 }

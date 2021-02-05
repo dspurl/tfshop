@@ -160,7 +160,7 @@ class BannerController extends Controller
                 Banner::where('id', $Banner->id)->delete();
                 imgPathDelete('banner', $Resource->img);
             } else {
-                foreach ($request->data as $data) {
+                foreach ($request as $data) {
                     $Banner = Banner::find($data['id']);
                     $Resource = Resource::where('image_type', 'App\Models\v1\Banner')->where('image_id', $Banner->id)->first();
                     Resource::where('image_type', 'App\Models\v1\Banner')->where('image_id', $Banner->id)->delete();

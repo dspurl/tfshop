@@ -80,7 +80,7 @@
         <el-card id="inventory" shadow="hover">
           <h3>低库存</h3>
           <div v-for="(item) in options.inventoryList" :key="item.id" class="ll">
-            <router-link :to="{ path: '/goodsManage/product/EditProduct', query: { id:item.id }}" :title="item.name" class="inventory_link">
+            <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id:item.id }}" :title="item.name" class="inventory_link">
               {{ item.name }} - {{ item.inventory }}
             </router-link>
           </div>
@@ -90,7 +90,7 @@
         <el-card shadow="hover">
           <h3>商品访问榜</h3>
           <div v-for="(item) in options.accessList" :key="item.id" class="ll">
-            <router-link :to="{ path: '/goodsManage/product/EditProduct', query: { id: item.id }}" :title="item.name">
+            <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id: item.id }}" :title="item.name">
               {{ item.name }}
             </router-link>
           </div>
@@ -100,7 +100,7 @@
         <el-card shadow="hover">
           <h3>商品收藏榜</h3>
           <div v-for="(item) in options.collectList" :key="item.id" class="ll">
-            <router-link :to="{ path: '/goodsManage/product/EditProduct', query: { id: item.id }}" :title="item.name">
+            <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id: item.id }}" :title="item.name">
               {{ item.name }}
             </router-link>
           </div>
@@ -110,7 +110,7 @@
         <el-card shadow="hover">
           <h3>商品销量榜</h3>
           <div v-for="(item) in options.salesList" :key="item.id" class="ll">
-            <router-link :to="{ path: '/goodsManage/product/EditProduct', query: { id: item.id }}" :title="item.name">
+            <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id: item.id }}" :title="item.name">
               {{ item.name }}
             </router-link>
           </div>
@@ -154,7 +154,7 @@ export default {
       })
     },
     goGood() {
-      this.$router.push({ path: '/indent/indentList' })
+      this.$router.push({ path: '/indentManagement/indentList' })
     }
   }
 }

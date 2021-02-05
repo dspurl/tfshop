@@ -60,7 +60,7 @@
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
           <el-tooltip v-permission="$store.jurisdiction.CategoryDestroy" class="item" effect="dark" content="删除" placement="top-start">
-            <el-button type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
+            <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
@@ -155,7 +155,7 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
+        <el-button :loading="formLoading" @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
         <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
       </div>
     </el-dialog>
@@ -207,19 +207,6 @@ export default {
   components: { Pagination },
   directives: { waves },
   data() {
-    var validateApi = (rule, value, callback) => {
-      if (value === '') {
-        if (this.temp.pid === '') {
-          callback(new Error(this.$t('user.apiAndGroupAtLeastOneItemToFillIn')))
-        } else if (this.temp.pid > 0) {
-          callback(new Error(this.$t('user.apiCannotBeEmpty')))
-        } else {
-          callback()
-        }
-      } else {
-        callback()
-      }
-    }
     return {
       formLoading: false,
       data: [],
@@ -227,9 +214,6 @@ export default {
       value: [],
       filterMethod(query, item) {
         return item.label.indexOf(query) > -1
-      },
-      filterBrandMethod(query, item) {
-        return item.name.indexOf(query) > -1
       },
       tableKey: 0,
       options: [],
@@ -270,12 +254,6 @@ export default {
       dialogFormVisible: false,
       dialogStatus: '',
       adminRules: {
-        api: [
-          { validator: validateApi, trigger: 'blur' }
-        ],
-        pid: [
-          { required: true, message: this.$t('user.thePermissionNameCannotBeEmpty'), trigger: 'change' }
-        ],
         name: [
           { required: true, message: '类目名称必须填写', trigger: 'blur' }
         ],
@@ -432,15 +410,19 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: this.$t('hint.deletedSuccessful'),
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })

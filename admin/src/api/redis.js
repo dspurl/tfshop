@@ -9,10 +9,7 @@ export function getList(query) {
 }
 
 export function destroy(id, data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: 'redis/destroy/' + id,
     method: 'post',
