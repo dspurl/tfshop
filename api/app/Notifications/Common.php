@@ -180,8 +180,10 @@ class Common
             $account = explode(',', config('notification.account'));
             foreach ($account as $uid) {
                 $user = User::find($uid);
-                $invoice['parameter']['user_id'] = $uid;
-                $user->notify(new InvoicePaid($invoice)); // 发送通知
+                if ($user) {
+                    $invoice['parameter']['user_id'] = $uid;
+                    $user->notify(new InvoicePaid($invoice)); // 发送通知
+                }
             }
         }
         return $return;

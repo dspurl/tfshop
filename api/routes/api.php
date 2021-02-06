@@ -129,7 +129,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('goodIndent', 'GoodIndentController@list');    //订单列表
         Route::post('goodIndent', 'GoodIndentController@create');    //订单添加
         Route::get('goodIndent/detail/{id}', 'GoodIndentController@detail');    //订单详情
-        Route::get('goodIndent/synchronizationInventory', 'GoodIndentController@synchronizationInventory');    //同步线上商品库存
+        Route::post('goodIndent/synchronizationInventory', 'GoodIndentController@synchronizationInventory');    //同步线上商品库存
         Route::get('goodIndent/pay/{id}', 'GoodIndentController@pay');    //支付订单详情
         Route::post('goodIndent/receipt/{id}', 'GoodIndentController@receipt');    //确认收货
         Route::post('goodIndent/cancel/{id}', 'GoodIndentController@cancel');    //取消订单

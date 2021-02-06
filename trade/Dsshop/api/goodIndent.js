@@ -34,7 +34,7 @@ export default {
 		})
 	},
 	synchronizationInventory(data, success,fail) {
-		Network.setGetMessage('goodIndent/synchronizationInventory',data,'加载中', function (res) {
+		Network.setPostMessage('goodIndent/synchronizationInventory',data,'加载中', function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
