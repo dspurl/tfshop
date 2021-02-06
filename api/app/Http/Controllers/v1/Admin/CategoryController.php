@@ -46,20 +46,19 @@ class CategoryController extends Controller
             $q->where('name', 'like', '%' . $request->title . '%');
         }
         if ($request->has('pid')) {
-            $q->where('pid', end($request->pid));
+            $q->where('pid', $request->pid[count($request->pid)-1]);
         } else {
             $q->where('pid', 0);
         }
-        $q->where('is_delete', Category::CATEGORY_DELETE_NO);
         $paginate = $q->with(['resources', 'SpecificationOn', 'BrandOn'])->paginate($limit);
         foreach ($paginate as $id => $p) {
             $paginate[$id]['specification'] = $p->SpecificationOn->pluck('id');
             $paginate[$id]['brand'] = $p->BrandOn->pluck('id');
         }
         $return['options'] = (new Category())->getAllCategory();
-        $return['brand'] = Brand::with(['resources'])->where('is_delete', Brand::BRAND_DELETE_NO)->select('id', 'name')->get();
+        $return['brand'] = Brand::with(['resources'])->select('id', 'name')->get();
         $return['paginate'] = $paginate;
-        $return['specification'] = Specification::orderBy('sort', 'ASC')->where('is_delete', Specification::SPECIFICATION_DELETE_NO)->orderBy('id', 'ASC')->get();
+        $return['specification'] = Specification::orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
         return resReturn(1, $return);
     }
 
@@ -241,7 +240,7 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        Category::where('id', $id)->update(['is_delete' => Category::CATEGORY_DELETE_YES]);
+        Category::destroy($id);
         return resReturn(1, '删除成功');
     }
 }

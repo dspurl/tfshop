@@ -36,7 +36,6 @@ class SpecificationGroupController extends Controller
         if ($request->title) {
             $q->where('name', 'like', '%' . $request->title . '%');
         }
-        $q->where('is_delete', SpecificationGroup::SPECIFICATION_GROUP_DELETE_NO);
         $paginate = $q->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -82,7 +81,7 @@ class SpecificationGroupController extends Controller
      */
     public function destroy($id)
     {
-        SpecificationGroup::where('id', $id)->update(['is_delete' => SpecificationGroup::SPECIFICATION_GROUP_DELETE_YES]);
+        SpecificationGroup::destroy($id);
         return resReturn(1, '删除成功');
     }
 }

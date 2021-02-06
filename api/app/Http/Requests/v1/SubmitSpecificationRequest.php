@@ -32,12 +32,11 @@ class SubmitSpecificationRequest extends Request
      */
     public function rules()
     {
-        $request = Request::all();
         switch ($this->method()) {
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'name' => 'required|unique:specifications,name,' . $request['id'] . '|string|max:30',
+                        'name' => 'required|string|max:30',
                         'type' => 'required|numeric',
                         'is_search' => 'required|numeric',
                         'specification_group_id' => 'nullable|numeric',
@@ -47,7 +46,7 @@ class SubmitSpecificationRequest extends Request
                     ];
                 } else {
                     return [
-                        'name' => 'required|unique:specifications|string|max:30',
+                        'name' => 'required|string|max:30',
                         'type' => 'required|numeric',
                         'is_search' => 'required|numeric',
                         'specification_group_id' => 'nullable|numeric',
@@ -69,7 +68,6 @@ class SubmitSpecificationRequest extends Request
         return [
             'name.required' =>'规格名称必须',
             'name.string' =>'规格格式有误',
-            'name.unique' => '规格名称已存在',
             'name.max' =>'规格名不能超过30个字符',
             'type.required' =>'规格类型必须',
             'type.numeric' =>'规格类型格式有误',

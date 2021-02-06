@@ -4,6 +4,7 @@ namespace App\Models\v1;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property string name
@@ -17,14 +18,13 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Specification extends Model
 {
+    use SoftDeletes;
     const SPECIFICATION_TYPE_TEXT= 1; //规格类型：文本
     const SPECIFICATION_TYPE_RADIO= 2; //规格类型：单选
     const SPECIFICATION_TYPE_CHECK= 3; //规格类型：多选
     const SPECIFICATION_LOCATION_SPEC= 0; //显示位置：规格
     const SPECIFICATION_LOCATION_DETAILS= 1; //显示位置：详情
     const SPECIFICATION_LOCATION_ALL= 2; //显示位置：全部
-    const SPECIFICATION_DELETE_NO= 0; //删除：否
-    const SPECIFICATION_DELETE_YES= 1; //删除：是
     public static $withoutAppends = true;
     protected $appends = ['type_show','location_show'];
     /**

@@ -20,7 +20,7 @@ class CreateDhlsTable extends Migration
             $table->string('abbreviation', 80)->comment('快递公司英文缩写');
             $table->tinyInteger('state')->default(0)->comment('状态0显示1隐藏');
             $table->integer('sort')->default(5)->comment('排序');
-            $table->tinyInteger('is_delete')->default(0)->comment('是否已删除 0否 1已删除');
+            $table->softDeletes();
             $table->timestamps();
             $table->charset = 'utf8';
             $table->engine = 'InnoDB';

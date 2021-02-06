@@ -36,7 +36,7 @@ class GoodController extends Controller
         if ($request->has('is_recommend')) {
             $q->where('is_recommend', $request->is_recommend);
         }
-        $q->where('is_show', Good::GOOD_SHOW_PUTAWAY)->where('is_delete', Good::GOOD_DELETE_NO);
+        $q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
         //全文搜索
         if ($request->title) {
             $q->where(function ($q1) use ($request) {
@@ -101,7 +101,7 @@ class GoodController extends Controller
         Good::$withoutAppends = false;
         GoodSku::$withoutAppends = false;
         $Good = Good::with(['resourcesMany', 'resources', 'goodSku' => function ($q) {
-            $q->where('is_delete', GoodSku::GOOD_SKU_DELETE_NO)->with('resources')->where('inventory', '>', 0);
+            $q->with('resources')->where('inventory', '>', 0);
         }])->find($id);
         $Good['price_show'] = (new Good())->getPriceShow($Good);
         $Good['market_price_show'] = (new Good())->getMarketPriceShow($Good);
@@ -135,7 +135,6 @@ class GoodController extends Controller
         } else {
             $q->orderBy('sort', 'ASC');
         }
-        $q->where('is_delete', Category::CATEGORY_DELETE_NO);
         $paginate = $q->with(['resources'])->get();
         return resReturn(1, $paginate);
     }

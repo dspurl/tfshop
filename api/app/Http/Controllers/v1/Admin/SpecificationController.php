@@ -39,11 +39,10 @@ class SpecificationController extends Controller
         if ($request->title) {
             $q->where('name', 'like', '%' . $request->title . '%');
         }
-        $q->where('is_delete', Specification::SPECIFICATION_DELETE_NO);
         $paginate = $q->with(['SpecificationGroup'])->paginate($limit);
         $return = [];
         $return['paginate'] = $paginate;
-        $return['SpecificationGroup'] = SpecificationGroup::select('id', 'name')->where('is_delete',SpecificationGroup::SPECIFICATION_GROUP_DELETE_NO)->get();
+        $return['SpecificationGroup'] = SpecificationGroup::select('id', 'name')->get();
         return resReturn(1, $return);
     }
 
@@ -69,7 +68,7 @@ class SpecificationController extends Controller
         $Specification->type = $request->type;
         $Specification->is_search = $request->is_search;
         $Specification->location = $request->location;
-        $Specification->specification_group_id = $request->specification_group_id;
+        $Specification->specification_group_id = $request->specification_group_id ?? 0;
         $Specification->value = $request->value;
         $Specification->sort = $request->sort;
         $Specification->save();
@@ -100,7 +99,7 @@ class SpecificationController extends Controller
         $Specification->type = $request->type;
         $Specification->is_search = $request->is_search;
         $Specification->location = $request->location;
-        $Specification->specification_group_id = $request->specification_group_id;
+        $Specification->specification_group_id = $request->specification_group_id ?? 0;
         $Specification->value = $request->value;
         $Specification->sort = $request->sort;
         $Specification->save();
@@ -116,7 +115,7 @@ class SpecificationController extends Controller
      */
     public function destroy($id)
     {
-        Specification::where('id', $id)->update(['is_delete' => Specification::SPECIFICATION_DELETE_YES]);
+        Specification::destroy($id);
         return resReturn(1, '删除成功');
     }
 }

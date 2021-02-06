@@ -52,7 +52,6 @@ class GoodIndentController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
-        $q->where('is_delete', GoodIndent::GOOD_INDENT_IS_DELETE_NO);
         $paginate = $q->with(['goodsList' => function ($q) {
             $q->with(['goodSku']);
         }])->paginate($limit);
@@ -150,7 +149,7 @@ class GoodIndentController extends Controller
         foreach ($request->all() as $id => $all) {
             if ($all['good_sku_id']) { //sku商品
                 $GoodSku = GoodSku::find($all['good_sku_id']);
-                if ($GoodSku->is_delete == GoodSku::GOOD_SKU_DELETE_YES) {
+                if ($GoodSku->deleted_at) {
                     $return[$id]['invalid'] = true;  //标记为失效
                 } else {
                     if ($GoodSku->inventory < $all['number']) { //库存不足时
@@ -161,7 +160,7 @@ class GoodIndentController extends Controller
                 }
             } else {
                 $Good = Good::find($all['good_id']);
-                if ($Good->is_delete == Good::GOOD_DELETE_YES) {
+                if ($Good->deleted_at) {
                     $return[$id]['invalid'] = true;  //标记为失效
                 } else {
                     if ($Good->inventory < $all['number']) {
@@ -215,7 +214,7 @@ class GoodIndentController extends Controller
             }]);
         }, 'User' => function ($q) {
             $q->select('id', 'money');
-        }])->select('id', 'total', 'user_id','state')->find($id);
+        }])->select('id', 'total', 'user_id', 'state')->find($id);
         return resReturn(1, $GoodIndent);
     }
 
@@ -303,7 +302,7 @@ class GoodIndentController extends Controller
      */
     public function destroy($id)
     {
-        GoodIndent::where('id', $id)->update(['is_delete', GoodIndent::GOOD_INDENT_IS_DELETE_YES]);
+        GoodIndent::destroy($id);
         return resReturn(1, '删除成功');
     }
 
@@ -323,7 +322,7 @@ class GoodIndentController extends Controller
         ];
         if ($GoodIndent) {
             foreach ($GoodIndent as $indent) {
-                if ($indent->is_delete != GoodIndent::GOOD_INDENT_IS_DELETE_YES) {
+                if ($indent->deleted_at == null) {
                     $return['all'] += 1;
                     if ($indent->state == GoodIndent::GOOD_INDENT_STATE_PAY) {
                         $return['obligation'] += 1;

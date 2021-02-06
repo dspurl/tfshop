@@ -5,6 +5,8 @@ use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use App\Notifications\Common;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
 /**
  * @property int user_id
  * @property int identification
@@ -23,6 +25,7 @@ use App\Notifications\Common;
  */
 class GoodIndent extends Model
 {
+    use SoftDeletes;
     const GOOD_INDENT_STATE_PAY= 1; //状态：待付款
     const GOOD_INDENT_STATE_DELIVER= 2; //状态：待发货
     const GOOD_INDENT_STATE_TAKE= 3; //状态：待收货
@@ -34,8 +37,6 @@ class GoodIndent extends Model
     const GOOD_INDENT_STATE_REFUND_FAILURE= 9; //状态：退款失败
     const GOOD_INDENT_REFUND_WAY_BALANCE= 0; //退款方式：退到余额
     const GOOD_INDENT_REFUND_WAY_BACK= 1; //退款方式：原路退回
-    const GOOD_INDENT_IS_DELETE_YES = 1; //是否删除：是
-    const GOOD_INDENT_IS_DELETE_NO = 0; //是否删除：否
     public static $withoutAppends = true;
     protected $appends = ['state_show'];
     /**

@@ -36,7 +36,6 @@ class BrandController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
-        $q->where('is_delete', Brand::BRAND_DELETE_NO);
         if ($request->name) {
             $q->where('name', 'like', '%' . $request->name . '%');
         }
@@ -129,7 +128,7 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
-        Brand::where('id', $id)->update(['is_delete' => Brand::BRAND_DELETE_YES]);
+        Brand::destroy($id);
         return resReturn(1, '删除成功');
     }
 }

@@ -4,6 +4,7 @@ namespace App\Models\v1;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property string name
@@ -13,8 +14,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Brand extends Model
 {
-    const BRAND_DELETE_NO= 0; //删除：否
-    const BRAND_DELETE_YES= 1; //删除：是
+    use SoftDeletes;
     /**
      * Prepare a date for array / JSON serialization.
      *

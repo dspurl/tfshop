@@ -51,12 +51,12 @@ class IndexController extends Controller
         $return['inventoryLess'] = GoodSku::select('goods.id')
             ->leftJoin('goods', 'good_skus.good_id', '=', 'goods.id')
             ->where('good_skus.inventory', '<', $inventoryVal)
-            ->where('goods.is_delete', Good::GOOD_DELETE_NO)
+            ->where('goods.deleted_at', null)
             ->count();
         $return['inventoryList'] = GoodSku::select('goods.id', 'goods.name')
             ->leftJoin('goods', 'good_skus.good_id', '=', 'goods.id')
             ->where('good_skus.inventory', '<', $inventoryVal)
-            ->where('goods.is_delete', Good::GOOD_DELETE_NO)
+            ->where('goods.deleted_at', null)
             ->get()->sortByDesc('inventory')->values()->take(20);
         $return['chart'] = array_values($return['chart']);
         return resReturn(1, $return);

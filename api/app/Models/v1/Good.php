@@ -4,6 +4,7 @@ namespace App\Models\v1;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property int id
@@ -37,6 +38,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Good extends Model
 {
+    use SoftDeletes;
     public static $withoutAppends = true;
     const GOOD_SHOW_ENTREPOT= 0; //状态：仓库
     const GOOD_SHOW_PUTAWAY= 1; //状态：上架
@@ -47,8 +49,6 @@ class Good extends Model
     const GOOD_NEW_YES= 1; //推荐：是
     const GOOD_HOT_NO= 0; //热销：否
     const GOOD_HOT_YES= 1; //热销：是
-    const GOOD_DELETE_NO= 0; //删除：否
-    const GOOD_DELETE_YES= 1; //删除：是
     const GOOD_IS_INVENTORY_NO= 0; //减库存方式：拍下减库存
     const GOOD_IS_INVENTORY_FILM= 1; //减库存方式：付款减库存
 

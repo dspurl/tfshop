@@ -46,7 +46,6 @@ class GoodController extends Controller
         } else if ($request->activeIndex == 3) {
             $q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
         }
-        $q->where('is_delete', Good::GOOD_DELETE_NO);
         if ($request->title) {
             /*
             MySQL<5.7并且商品不多时可用模糊搜索方式
@@ -68,10 +67,8 @@ class GoodController extends Controller
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
         }, 'goodSku' => function ($q) {
-            $q->where('is_delete', GoodSku::GOOD_SKU_DELETE_NO)->select('good_id', 'price', 'inventory');
-        }, 'category' => function ($q) {
-            $q->where('is_delete', Category::CATEGORY_DELETE_NO)->select('id', 'name');
-        }])->paginate($limit);
+            $q->select('good_id', 'price', 'inventory');
+        }, 'category'])->paginate($limit);
         if ($paginate) {
             foreach ($paginate as $id => $p) {
                 $paginate[$id]['price_show'] = (new Good())->getPriceShow($p);
@@ -427,7 +424,7 @@ class GoodController extends Controller
                 $Good->order_price = $order_price;
                 $Good->save();
                 //删除去除的SKU
-                GoodSku::where('good_id', $Good->id)->whereNotIn('id', $GoodSkuAll)->where('is_delete', GoodSku::GOOD_SKU_DELETE_NO)->update(['is_delete' => GoodSku::GOOD_SKU_DELETE_YES]);
+                GoodSku::where('good_id', $Good->id)->whereNotIn('id', $GoodSkuAll)->update(['deleted_at' =>Carbon::now()->toDateTimeString()]);
             }
             return 1;
         }, 5);
@@ -454,7 +451,7 @@ class GoodController extends Controller
         $return['goods'] = [];
         if ($id) {
             $Good = Good::with(['resourcesMany', 'goodSpecificationOld', 'brand', 'goodSku' => function ($q) {
-                $q->where('is_delete', GoodSku::GOOD_SKU_DELETE_NO)->with('resources');
+                $q->with('resources');
             }])->find($id);
             if ($Good->goodSku) {
                 foreach ($Good->goodSku as $id => $goodSku) {
@@ -468,7 +465,7 @@ class GoodController extends Controller
 
         }
         //展示应用所在分类下的子类目
-        $Category = Category::orderBy('sort', 'ASC')->where('is_delete', Category::CATEGORY_DELETE_NO)->orderBy('id', 'ASC')->get();
+        $Category = Category::orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
 
         foreach ($Category as $id => $c) {
             $Category[$id]->label = $c->name;
@@ -489,10 +486,10 @@ class GoodController extends Controller
     public function specification($id)
     {
         Specification::$withoutAppends = false;
-        $Category = Category::where('state', Category::CATEGORY_STATE_YES)->where('is_delete', Category::CATEGORY_DELETE_NO)->with(['SpecificationOn' => function ($q) {
+        $Category = Category::where('state', Category::CATEGORY_STATE_YES)->with(['SpecificationOn' => function ($q) {
             $q->orderBy('sort', 'ASC');
         }, 'BrandOn' => function ($q) {
-            $q->where('is_delete', Brand::BRAND_DELETE_NO)->orderBy('sort', 'ASC');
+            $q->orderBy('sort', 'ASC');
         }])->find($id);
         return resReturn(1, $Category);
     }
@@ -551,13 +548,13 @@ class GoodController extends Controller
     {
         $return = DB::transaction(function () use ($request, $id) {
             if ($id > 0) {
-                Good::where('id', $id)->update(['is_delete' => Good::GOOD_DELETE_YES]);
+                Good::destroy($id);
             } else {
                 if (!$request->all()) {
                     return resReturn(0, '请选择内容', Code::CODE_WRONG);
                 }
                 $idData = collect($request->all())->pluck('id');
-                Good::whereIn('id', $idData)->update(['is_delete' => Good::GOOD_DELETE_YES]);
+                Good::whereIn('id', $idData)->update(['deleted_at' =>Carbon::now()->toDateTimeString()]);
             }
             return 1;
         }, 5);

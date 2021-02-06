@@ -38,11 +38,10 @@ class DhlController extends Controller
             if ($request->title) {
                 $q->where('name', 'like', '%' . $request->title . '%');
             }
-            $q->where('is_delete',Dhl::DHL_DELETE_NO);
             $limit=$request->limit;
             $paginate=$q->paginate($limit);
         }else{
-            $paginate=Dhl::where('is_delete',Dhl::DHL_DELETE_NO)->get();
+            $paginate=Dhl::get();
         }
         return resReturn(1,$paginate);
     }
@@ -99,7 +98,7 @@ class DhlController extends Controller
      */
     public function destroy($id)
     {
-        Dhl::where('id',$id)->update(['is_delete' => Dhl::DHL_DELETE_YES]);
+        Dhl::destroy($id);
         return resReturn(1,'删除成功');
     }
 }

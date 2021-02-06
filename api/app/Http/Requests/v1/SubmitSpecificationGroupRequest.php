@@ -37,11 +37,11 @@ class SubmitSpecificationGroupRequest extends Request
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'name' => 'required|unique:specification_groups,name,' . $request['id'] . '|string|max:30',
+                        'name' => 'required|string|max:30',
                     ];
                 } else {
                     return [
-                        'name' => 'required|unique:specification_groups|string|max:30',
+                        'name' => 'required|string|max:30',
                     ];
                 }
             case 'GET':
@@ -56,7 +56,6 @@ class SubmitSpecificationGroupRequest extends Request
     {
         return [
             'name.required' =>'规格组名称必须',
-            'name.unique' => '规格组名称已存在',
             'name.string' =>'规格组格式有误',
             'name.max' =>'规格组不能超过30个字符',
         ];
