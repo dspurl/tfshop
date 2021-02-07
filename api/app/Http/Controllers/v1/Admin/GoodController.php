@@ -83,7 +83,7 @@ class GoodController extends Controller
 
     /**
      * GoodCreate
-     * 商品添加
+     * 创建商品
      * @param SubmitGoodRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  name string 商品名称
@@ -237,7 +237,7 @@ class GoodController extends Controller
 
     /**
      * GoodEdit
-     * 商品修改
+     * 保存商品
      * @param SubmitGoodRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -538,7 +538,7 @@ class GoodController extends Controller
 
     /**
      * GoodDestroy
-     * 商品删除
+     * 删除商品
      * @param  int $id
      * @param Request $request
      * @return \Illuminate\Http\Response

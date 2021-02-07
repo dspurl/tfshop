@@ -45,7 +45,7 @@ class ShippingController extends Controller
 
     /**
      * ShippingCreate
-     * 收货地址添加
+     * 创建收货地址
      * @param SubmitShippingRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  cellphone int 手机号
@@ -90,7 +90,7 @@ class ShippingController extends Controller
 
     /**
      * ShippingEdit
-     * 收货地址修改
+     * 保存收货地址
      * @param SubmitShippingRequest $request
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -134,7 +134,7 @@ class ShippingController extends Controller
 
     /**
      * ShippingDestroy
-     * 收货地址删除
+     * 删除收货地址
      * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 收货地址ID

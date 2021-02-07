@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\DB;
  * 轮播管理
  * Class BannerController
  * @package App\Http\Controllers\v1\Admin
- * @queryParam  name string 轮播名称
- * @queryParam  limit int 每页显示条数
- * @queryParam  type int 轮播类型
- * @queryParam  sort string 排序
- * @queryParam  page string 页码
  */
 class BannerController extends Controller
 {
@@ -27,6 +22,11 @@ class BannerController extends Controller
      * 轮播列表
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  name string 轮播名称
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  type int 轮播类型
+     * @queryParam  sort string 排序
+     * @queryParam  page string 页码
      */
     public function list(Request $request)
     {
@@ -50,7 +50,7 @@ class BannerController extends Controller
 
     /**
      * BannerCreate
-     * 轮播添加
+     * 创建轮播
      * @param SubmitBannerRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  name string 轮播名称
@@ -90,7 +90,7 @@ class BannerController extends Controller
 
     /**
      * BannerEdit
-     * 轮播修改
+     * 保存轮播
      * @param SubmitBannerRequest $request
      * @param $id
      * @return string
@@ -144,7 +144,7 @@ class BannerController extends Controller
 
     /**
      * BannerDestroy
-     * 轮播删除
+     * 删除轮播
      * @param int $id
      * @param Request $request
      * @return \Illuminate\Http\Response

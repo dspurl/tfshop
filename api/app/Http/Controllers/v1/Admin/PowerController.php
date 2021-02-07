@@ -70,7 +70,7 @@ class PowerController extends Controller
 
     /**
      * PowerCreate
-     * 权限添加
+     * 创建权限
      * @param SubmitPowerRequest $request
      * @queryParam  title string 权限名称
      * @queryParam  url string 外链
@@ -98,7 +98,7 @@ class PowerController extends Controller
 
     /**
      * PowerEdit
-     * 权限修改
+     * 保存权限
      * @param $id
      * @param SubmitPowerRequest $request
      * @return string
@@ -128,7 +128,7 @@ class PowerController extends Controller
 
     /**
      * PowerDestroy
-     * 权限删除
+     * 删除权限
      * @param $id
      * @return string
      */

@@ -47,7 +47,7 @@ class CollectController extends Controller
 
     /**
      * CollectCreate
-     * 收藏添加
+     * 创建收藏
      * @param SubmitCollectRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  good_id int 商品ID
@@ -90,7 +90,7 @@ class CollectController extends Controller
 
     /**
      * CollectDestroy
-     * 收藏删除
+     * 删除收藏
      * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID

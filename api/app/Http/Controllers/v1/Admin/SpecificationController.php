@@ -48,7 +48,7 @@ class SpecificationController extends Controller
 
     /**
      * SpecificationCreate
-     * 规格添加
+     * 创建规格
      * @param SubmitSpecificationRequest $request
      * @return \Illuminate\Http\JsonResponse
      * @queryParam  name string 规格名称
@@ -77,7 +77,7 @@ class SpecificationController extends Controller
 
     /**
      * SpecificationEdit
-     * 规格修改
+     * 保存规格
      * @param SubmitSpecificationRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -108,7 +108,7 @@ class SpecificationController extends Controller
 
     /**
      * SpecificationDestroy
-     * 规格删除
+     * 删除规格
      * @param  int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 规格ID

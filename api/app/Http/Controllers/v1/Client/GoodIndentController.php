@@ -60,7 +60,7 @@ class GoodIndentController extends Controller
 
     /**
      * GoodIndentList
-     * 商品订单创建
+     * 创建商品订单
      * @param SubmitGoodIndentRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  carriage int 运费

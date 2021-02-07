@@ -46,7 +46,7 @@ class FreightController extends Controller
 
     /**
      * FreightCreate
-     * 运费模板添加
+     * 创建运费模板
      * @param SubmitFreightRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  name string 模板名称
@@ -107,7 +107,7 @@ class FreightController extends Controller
 
     /**
      * FreightEdit
-     * 运费模板修改
+     * 保存运费模板
      * @param SubmitFreightRequest $request
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -162,7 +162,7 @@ class FreightController extends Controller
 
     /**
      * FreightDestroy
-     * 运费模板删除
+     * 删除运费模板
      * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 模板ID

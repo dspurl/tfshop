@@ -196,7 +196,7 @@ class RedisServiceController extends Controller
 
     /**
      * RedisServiceDestroy
-     * Redis删除
+     * 删除Redis
      * @param $name
      * @param Request $request
      * @return Response

@@ -48,7 +48,7 @@ class DhlController extends Controller
 
     /**
      * DhlCreate
-     * 快递公司添加
+     * 创建快递公司
      * @param SubmitDhlRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  name string 快递公司名称
@@ -69,7 +69,7 @@ class DhlController extends Controller
 
     /**
      * DhlEdit
-     * 快递公司修改
+     * 保存快递公司
      * @param SubmitDhlRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -91,7 +91,7 @@ class DhlController extends Controller
 
     /**
      * DhlDestroy
-     * 快递公司删除
+     * 删除快递公司
      * @param  int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 快递公司ID

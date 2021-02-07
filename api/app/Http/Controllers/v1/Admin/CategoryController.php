@@ -64,7 +64,7 @@ class CategoryController extends Controller
 
     /**
      * CategoryCreate
-     * 分类添加
+     * 创建分类
      * @param SubmitCategoryRequest $request
      * @return \Illuminate\Http\JsonResponse
      * @queryParam  name string 分类名称
@@ -125,7 +125,7 @@ class CategoryController extends Controller
 
     /**
      * CategoryEdit
-     * 分类修改
+     * 保存分类
      * @param SubmitCategoryRequest|Request $request
      * @param int $id
      * @return \Illuminate\Http\Response
@@ -233,7 +233,7 @@ class CategoryController extends Controller
 
     /**
      * CategoryDestroy
-     * 分类删除
+     * 删除分类
      * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 分类ID

@@ -41,7 +41,7 @@ class ResourceController extends Controller
 
     /**
      * ResourceDestroy
-     * 资源删除
+     * 删除资源
      * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 资源ID

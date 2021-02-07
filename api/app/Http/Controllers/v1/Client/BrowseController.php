@@ -48,7 +48,7 @@ class BrowseController extends Controller
 
     /**
      * BrowseCreate
-     * 浏览记录添加
+     * 创建浏览记录
      * @param SubmitBrowseRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID

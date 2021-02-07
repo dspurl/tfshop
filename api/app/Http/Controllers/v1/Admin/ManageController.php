@@ -117,7 +117,7 @@ class ManageController extends Controller
 
     /**
      * ManageCreate
-     * 管理组添加
+     * 创建管理组
      * @param SubmitManageRequest $request
      * @queryParam  roles array 权限
      * @queryParam  introduction string 角色名称
@@ -161,7 +161,7 @@ class ManageController extends Controller
 
     /**
      * ManageEdit
-     * 管理组修改
+     * 保存管理组
      * @param SubmitManageRequest $request
      * @queryParam  id int 管理组ID
      * @queryParam  roles array 权限
@@ -212,7 +212,7 @@ class ManageController extends Controller
 
     /**
      * ManageDestroy
-     * 管理组删除
+     * 删除管理组
      * @param $id
      * @queryParam  id int 管理组ID
      * @return string

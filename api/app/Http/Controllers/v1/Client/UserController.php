@@ -49,7 +49,7 @@ class UserController extends Controller
 
     /**
      * UserEdit
-     * 用户信息更新
+     * 保存用户信息
      * @param Request $request
      * @return \Illuminate\Http\Response
      * @queryParam  portrait string 头像

@@ -171,7 +171,7 @@ class IndentController extends Controller
 
     /**
      * IndentDhl
-     * 配送信息修改
+     * 保存配送信息
      * @param Request $request
      * @return string
      */

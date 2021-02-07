@@ -42,7 +42,7 @@ class SpecificationGroupController extends Controller
 
     /**
      * SpecificationGroupCreate
-     * 规格组添加
+     * 创建规格组
      * @param SubmitSpecificationGroupRequest $request
      * @return \Illuminate\Http\JsonResponse
      * @queryParam  name string 规格组名称
@@ -57,7 +57,7 @@ class SpecificationGroupController extends Controller
 
     /**
      * SpecificationGroupEdit
-     * 规格组编辑
+     * 保存规格组
      * @param SubmitSpecificationGroupRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -74,7 +74,7 @@ class SpecificationGroupController extends Controller
 
     /**
      * SpecificationGroupDestroy
-     * 规格组删除
+     * 删除规格组
      * @param  int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 规格组ID

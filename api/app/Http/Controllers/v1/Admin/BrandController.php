@@ -45,7 +45,7 @@ class BrandController extends Controller
 
     /**
      * BrandCreate
-     * 品牌添加
+     * 创建品牌
      * @param SubmitBrandRequest $request
      * @return \Illuminate\Http\JsonResponse
      * @queryParam  name string 品牌名称
@@ -78,7 +78,7 @@ class BrandController extends Controller
 
     /**
      * BrandEdit
-     * 品牌修改
+     * 保存品牌
      * @param SubmitBrandRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
@@ -121,7 +121,7 @@ class BrandController extends Controller
 
     /**
      * BrandDestroy
-     * 品牌删除
+     * 删除品牌
      * @param  int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 品牌ID

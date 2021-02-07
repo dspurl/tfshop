@@ -54,7 +54,7 @@ class MemberController extends Controller
 
     /**
      * MemberCreate
-     * 会员添加
+     * 创建会员
      * @param SubmitUserRequest $request
      * @queryParam  name string 用户名
      * @queryParam  cellphone string 手机号
@@ -79,7 +79,7 @@ class MemberController extends Controller
 
     /**
      * MemberEdit
-     * 会员修改
+     * 保存会员
      * @param $id
      * @param SubmitUserRequest $request
      * @queryParam  name string 用户名

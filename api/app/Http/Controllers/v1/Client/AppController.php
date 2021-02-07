@@ -221,6 +221,7 @@ class AppController extends Controller
     }
 
     /**
+     * BindEmailAddress
      * 绑定邮箱
      * @param Request $request
      * @return string
