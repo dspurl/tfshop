@@ -6,7 +6,7 @@ namespace App;
 //自定义状态码
 class Code
 {
-    const CODE_SYSTEM_BUSY= -1; //系统繁忙，请稍后再试
+    const CODE_SYSTEM_BUSY = -1; //系统繁忙，请稍后再试
     const CODE_INEXISTENCE = 50000; //不存在
     const CODE_WRONG = 50001;  //不正确
     const CODE_NO_ACCESS = 50002;  //无权限

@@ -30,11 +30,11 @@ class Handler extends ExceptionHandler
     /**
      * Report or log an exception.
      *
-     * @param  \Throwable $exception
+     * @param \Throwable $exception
      * @return void
      * @throws Exception
      */
-    public function report(Throwable  $exception)
+    public function report(Throwable $exception)
     {
         parent::report($exception);
     }
@@ -42,17 +42,17 @@ class Handler extends ExceptionHandler
     /**
      * Render an exception into an HTTP response.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
      * @param Throwable $exception
      * @return \Illuminate\Http\Response
      * @throws Throwable
      */
     public function render($request, Throwable $exception)
     {
-        if(config('app.debug')){    //自定义错误提示
+        if (config('app.debug')) {    //自定义错误提示
             return parent::render($request, $exception);
-        }else{
-            return response()->json($exception,500);
+        } else {
+            return response()->json($exception, 500);
         }
 
     }

@@ -70,9 +70,9 @@ class Plugin
         $this->fileDeployment($this->pluginPath . '/' . $name . '/admin/views/' . ucwords($name), $this->path . '/admin/src/views/ToolManagement/' . ucwords($name));
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/config', $this->path . '/api/config');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/console', $this->path . '/api/app/Console/Commands');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v'.config('dswjcms.versions'));
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v'.config('dswjcms.versions').'/Plugin');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v'.config('dswjcms.versions'));
+        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v' . config('dswjcms.versions'));
+        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v' . config('dswjcms.versions') . '/Plugin');
+        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dswjcms.versions'));
         $this->fileDeployment($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/trade/Dsshop/api');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/trade/Dsshop/components');
@@ -239,15 +239,15 @@ class Plugin
         $this->fileUninstall($this->pluginPath . '/' . $name . '/admin/views/' . ucwords($name), $this->path . '/admin/src/views/ToolManagement/' . ucwords($name));
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/config', $this->path . '/api/config');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/console', $this->path . '/api/app/Console/Commands');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v'.config('dswjcms.versions'));
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v'.config('dswjcms.versions').'/Plugin');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v'.config('dswjcms.versions'));
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v' . config('dswjcms.versions'));
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v' . config('dswjcms.versions') . '/Plugin');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dswjcms.versions'));
         $this->fileUninstall($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/trade/Dsshop/api');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/trade/Dsshop/components');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/pages', $this->path . '/trade/Dsshop/pages');
-        foreach ($json_dswjcms as $id=>$json){
-            if($json['name']== $name){
+        foreach ($json_dswjcms as $id => $json) {
+            if ($json['name'] == $name) {
                 $json_dswjcms[$id]['is_delete'] = 1;
             }
         }

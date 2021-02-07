@@ -21,47 +21,52 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PaymentLog extends Model
 {
-    const PAYMENT_LOG_STATE_CREATE= 0; //状态:生成
-    const PAYMENT_LOG_STATE_COMPLETE= 1; //状态:完成
-    const PAYMENT_LOG_STATE_FAILURE= 2; //状态:失败
-    const PAYMENT_LOG_TYPE_GOODS_INDENT= 'goodsIndent'; //支付类型:商品订单支付
-    const PAYMENT_LOG_TYPE_REFUND= 'refund'; //支付类型:退款
-    const PAYMENT_LOG_PLATFORM_WEIXIN= 'weixin'; //支付平台:微信
-    protected $appends = ['state_show','money_show','platform_show','type_show'];
+    const PAYMENT_LOG_STATE_CREATE = 0; //状态:生成
+    const PAYMENT_LOG_STATE_COMPLETE = 1; //状态:完成
+    const PAYMENT_LOG_STATE_FAILURE = 2; //状态:失败
+    const PAYMENT_LOG_TYPE_GOODS_INDENT = 'goodsIndent'; //支付类型:商品订单支付
+    const PAYMENT_LOG_TYPE_REFUND = 'refund'; //支付类型:退款
+    const PAYMENT_LOG_PLATFORM_WEIXIN = 'weixin'; //支付平台:微信
+    protected $appends = ['state_show', 'money_show', 'platform_show', 'type_show'];
+
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
-    public function getStateShowAttribute(){
-        if(isset($this->attributes['state'])){
-            $name='';
-            switch ($this->attributes['state']){
+
+    public function getStateShowAttribute()
+    {
+        if (isset($this->attributes['state'])) {
+            $name = '';
+            switch ($this->attributes['state']) {
                 case static::PAYMENT_LOG_STATE_CREATE:
-                    $name= '未处理';
+                    $name = '未处理';
                     break;
                 case static::PAYMENT_LOG_STATE_COMPLETE:
-                    $name= '已完成';
+                    $name = '已完成';
                     break;
             }
             return $name;
         }
     }
 
-    public function getMoneyShowAttribute(){
-        if(isset($this->attributes['money'])){
-            return $this->attributes['money']/100;
+    public function getMoneyShowAttribute()
+    {
+        if (isset($this->attributes['money'])) {
+            return $this->attributes['money'] / 100;
         }
     }
 
-    public function getPlatformShowAttribute(){
-        if(isset($this->attributes['platform'])){
-            switch ($this->attributes['platform']){
+    public function getPlatformShowAttribute()
+    {
+        if (isset($this->attributes['platform'])) {
+            switch ($this->attributes['platform']) {
                 case static::PAYMENT_LOG_PLATFORM_WEIXIN:
                     return '微信支付';
                     break;
@@ -69,9 +74,10 @@ class PaymentLog extends Model
         }
     }
 
-    public function getTypeShowAttribute(){
-        if(isset($this->attributes['type'])){
-            switch ($this->attributes['type']){
+    public function getTypeShowAttribute()
+    {
+        if (isset($this->attributes['type'])) {
+            switch ($this->attributes['type']) {
                 case static::PAYMENT_LOG_TYPE_GOODS_INDENT:
                     return '订单支付';
                     break;

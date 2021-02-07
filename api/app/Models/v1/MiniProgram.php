@@ -4,6 +4,7 @@ namespace App\Models\v1;
 
 use Illuminate\Database\Eloquent\Model;
 use EasyWeChat\Factory;
+
 class MiniProgram extends Model
 {
     /**
@@ -12,7 +13,7 @@ class MiniProgram extends Model
      * @param $code
      * @return mixed
      */
-    public function mini($platform,$code)
+    public function mini($platform, $code)
     {
         return $this->$platform($code);
     }
@@ -25,9 +26,10 @@ class MiniProgram extends Model
      * @param $encryptedData
      * @return mixed
      */
-    public function miniPhoneNumber($platform,$session_key,$iv,$encryptedData){
-        $platform =$platform.'PhoneNumber';
-        return $this->$platform($session_key,$iv,$encryptedData);
+    public function miniPhoneNumber($platform, $session_key, $iv, $encryptedData)
+    {
+        $platform = $platform . 'PhoneNumber';
+        return $this->$platform($session_key, $iv, $encryptedData);
     }
 
     /**
@@ -39,9 +41,10 @@ class MiniProgram extends Model
      * @param $trade_type
      * @return mixed
      */
-    public function payment($platform,$body,$fee,$openid,$trade_type){
-        $platform =$platform.'Payment';
-        return $this->$platform($body,$fee,$openid,$trade_type);
+    public function payment($platform, $body, $fee, $openid, $trade_type)
+    {
+        $platform = $platform . 'Payment';
+        return $this->$platform($body, $fee, $openid, $trade_type);
     }
 
     /**
@@ -50,12 +53,13 @@ class MiniProgram extends Model
      * @param $number //商户订单号
      * @param $totalFee //订单金额
      * @param $refundFee //退款金额
-     * @param $why  //退款原因
+     * @param $why //退款原因
      * @return mixed
      */
-    public function refund($platform,$number,$totalFee,$refundFee,$why){
-        $platform =$platform.'Refund';
-        return $this->$platform($number,$totalFee,$refundFee,$why);
+    public function refund($platform, $number, $totalFee, $refundFee, $why)
+    {
+        $platform = $platform . 'Refund';
+        return $this->$platform($number, $totalFee, $refundFee, $why);
     }
 
     /**
@@ -65,9 +69,10 @@ class MiniProgram extends Model
      * @param $type //订单类型
      * @return mixed
      */
-    public function queryNumber($platform,$number,$type){
-        $platform =$platform.'Query';
-        return $this->$platform($number,$type);
+    public function queryNumber($platform, $number, $type)
+    {
+        $platform = $platform . 'Query';
+        return $this->$platform($number, $type);
     }
 
     /**
@@ -76,32 +81,33 @@ class MiniProgram extends Model
      * @return array
      * @throws \Exception
      */
-    public function miniAlipay($code){
-        $mini_program_alipay=config('miniprogram.alipay');
+    public function miniAlipay($code)
+    {
+        $mini_program_alipay = config('miniprogram.alipay');
         $aop = new \AopClient();
         $aop->gatewayUrl = $mini_program_alipay['gatewayUrl'];
         $aop->appId = $mini_program_alipay['app_id'];
         $aop->rsaPrivateKey = $mini_program_alipay['rsaPrivateKey'];
-        $aop->alipayrsaPublicKey=$mini_program_alipay['rsaPublicKey'];
+        $aop->alipayrsaPublicKey = $mini_program_alipay['rsaPublicKey'];
         $aop->apiVersion = '1.0';
         $aop->signType = 'RSA2';
-        $aop->postCharset='UTF-8';
-        $aop->format='json';
+        $aop->postCharset = 'UTF-8';
+        $aop->format = 'json';
         $request = new \AlipaySystemOauthTokenRequest();
         $request->setGrantType("authorization_code");
         $request->setCode($code);
-        $result = json_decode(json_encode($aop->execute ( $request)),true);
-        if(array_key_exists('error_response', $result)){
-            $return =[
-                'result'=>'error',
-                'code'=>$result['error_response']['code'],
-                'msg'=>$result['error_response']['sub_msg']
+        $result = json_decode(json_encode($aop->execute($request)), true);
+        if (array_key_exists('error_response', $result)) {
+            $return = [
+                'result' => 'error',
+                'code' => $result['error_response']['code'],
+                'msg' => $result['error_response']['sub_msg']
             ];
-        }else{
-            $return =[
-                'result'=>'ok',
-                'openid'=>$result['alipay_system_oauth_token_response']['user_id'],
-                'session_key'=>$result['alipay_system_oauth_token_response']['access_token']
+        } else {
+            $return = [
+                'result' => 'ok',
+                'openid' => $result['alipay_system_oauth_token_response']['user_id'],
+                'session_key' => $result['alipay_system_oauth_token_response']['access_token']
             ];
         }
         return $return;
@@ -113,21 +119,22 @@ class MiniProgram extends Model
      * @return array
      * @throws \Exception
      */
-    public function miniWeixin($code){
+    public function miniWeixin($code)
+    {
         $config = config('wechat.mini_program.default');
         $miniProgram = Factory::miniProgram($config); // 小程序
-        $result=$miniProgram->auth->session((string) $code);
-        if(array_key_exists('errcode', $result)){
-            $return =[
-                'result'=>'error',
-                'code'=>$result['errcode'],
-                'msg'=>$result['errmsg']
+        $result = $miniProgram->auth->session((string)$code);
+        if (array_key_exists('errcode', $result)) {
+            $return = [
+                'result' => 'error',
+                'code' => $result['errcode'],
+                'msg' => $result['errmsg']
             ];
-        }else{
-            $return =[
-                'result'=>'ok',
-                'openid'=>$result['openid'],
-                'session_key'=>$result['session_key']
+        } else {
+            $return = [
+                'result' => 'ok',
+                'openid' => $result['openid'],
+                'session_key' => $result['session_key']
             ];
         }
         return $return;
@@ -139,8 +146,9 @@ class MiniProgram extends Model
      * @return array
      * @throws \Exception
      */
-    public function miniToutiao($code){
-        $mini_program_toutiao=config('miniprogram.toutiao');
+    public function miniToutiao($code)
+    {
+        $mini_program_toutiao = config('miniprogram.toutiao');
         $factory = new \Qbhy\TtMicroApp\Factory($factoryConfig = [
             'debug' => true,
             'default' => 'default',
@@ -156,18 +164,18 @@ class MiniProgram extends Model
             ],
         ]);
         $app = $factory->make('default');
-        $result=$app->auth->session($code);
-        if(array_key_exists('openid', $result)){
-            $return =[
-                'result'=>'ok',
-                'openid'=>$result['openid'],
-                'session_key'=>$result['session_key']
+        $result = $app->auth->session($code);
+        if (array_key_exists('openid', $result)) {
+            $return = [
+                'result' => 'ok',
+                'openid' => $result['openid'],
+                'session_key' => $result['session_key']
             ];
-        }else{
-            $return =[
-                'result'=>'error',
-                'code'=>$result['errcode'],
-                'msg'=>$result['errmsg']
+        } else {
+            $return = [
+                'result' => 'error',
+                'code' => $result['errcode'],
+                'msg' => $result['errmsg']
             ];
         }
         return $return;
@@ -181,19 +189,20 @@ class MiniProgram extends Model
      * @return array
      * @throws \EasyWeChat\Kernel\Exceptions\DecryptException
      */
-    public function miniWeixinPhoneNumber($session_key,$iv,$encryptedData){
+    public function miniWeixinPhoneNumber($session_key, $iv, $encryptedData)
+    {
         $config = config('wechat.mini_program.default');
         $miniProgram = Factory::miniProgram($config); // 小程序
-        $result=$miniProgram->encryptor->decryptData($session_key, $iv, $encryptedData);
-        if(array_key_exists('purePhoneNumber', $result)){
-            $return =[
-                'result'=>'ok',
-                'purePhoneNumber'=>$result['purePhoneNumber']
+        $result = $miniProgram->encryptor->decryptData($session_key, $iv, $encryptedData);
+        if (array_key_exists('purePhoneNumber', $result)) {
+            $return = [
+                'result' => 'ok',
+                'purePhoneNumber' => $result['purePhoneNumber']
             ];
-        }else{
-            $return =[
-                'result'=>'error',
-                'msg'=>'获取手机号失败'
+        } else {
+            $return = [
+                'result' => 'error',
+                'msg' => '获取手机号失败'
             ];
         }
         return $return;
@@ -208,8 +217,9 @@ class MiniProgram extends Model
      * @throws \Qbhy\TtMicroApp\Support\DecryptException
      * @throws \Qbhy\TtMicroApp\TtMicroAppException
      */
-    public function miniToutiaoPhoneNumber($session_key,$iv,$encryptedData){
-        $mini_program_toutiao=config('miniprogram.toutiao');
+    public function miniToutiaoPhoneNumber($session_key, $iv, $encryptedData)
+    {
+        $mini_program_toutiao = config('miniprogram.toutiao');
         $factory = new \Qbhy\TtMicroApp\Factory($factoryConfig = [
             'debug' => true,
             'default' => 'default',
@@ -225,16 +235,16 @@ class MiniProgram extends Model
             ],
         ]);
         $app = $factory->make('default');
-        $result=$app->decrypt->decrypt($encryptedData, $session_key, $iv);
-        if(array_key_exists('purePhoneNumber', $result)){
-            $return =[
-                'result'=>'ok',
-                'purePhoneNumber'=>$result['purePhoneNumber']
+        $result = $app->decrypt->decrypt($encryptedData, $session_key, $iv);
+        if (array_key_exists('purePhoneNumber', $result)) {
+            $return = [
+                'result' => 'ok',
+                'purePhoneNumber' => $result['purePhoneNumber']
             ];
-        }else{
-            $return =[
-                'result'=>'error',
-                'msg'=>'获取手机号失败'
+        } else {
+            $return = [
+                'result' => 'error',
+                'msg' => '获取手机号失败'
             ];
         }
         return $return;
@@ -251,12 +261,13 @@ class MiniProgram extends Model
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public function weixinPayment($body,$fee,$openid,$trade_type='JSAPI'){
-        $number= orderNumber();
+    public function weixinPayment($body, $fee, $openid, $trade_type = 'JSAPI')
+    {
+        $number = orderNumber();
         $config = config('wechat.payment.default');
-        $config['notify_url'] = request()->root().'/api/v1/app/paymentNotify';
+        $config['notify_url'] = request()->root() . '/api/v1/app/paymentNotify';
         $app = Factory::payment($config);
-        if($config['sandbox'] == true){
+        if ($config['sandbox'] == true) {
             $fee = '101';
         }
         $result = $app->order->unify([
@@ -266,24 +277,24 @@ class MiniProgram extends Model
             'trade_type' => $trade_type,
             'openid' => $openid,
         ]);
-        $return =[
-            'result'=>'error',
-            'msg'=>'支付异常，请联系管理员'
+        $return = [
+            'result' => 'error',
+            'msg' => '支付异常，请联系管理员'
         ];
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
             $prepayId = $result['prepay_id'];
             $config = $app->jssdk->sdkConfig($prepayId);
-            $return =[
-                'result'=>'ok',
-                'msg'=>$config,
-                'number'=>$number,
-                'mweb_url'=>array_key_exists('mweb_url', $result) ? $result['mweb_url'] : ''
+            $return = [
+                'result' => 'ok',
+                'msg' => $config,
+                'number' => $number,
+                'mweb_url' => array_key_exists('mweb_url', $result) ? $result['mweb_url'] : ''
             ];
         }
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
-            $return =[
-                'result'=>'error',
-                'msg'=>$result['return_msg']
+            $return = [
+                'result' => 'error',
+                'msg' => $result['return_msg']
             ];
         }
         return $return;
@@ -298,38 +309,39 @@ class MiniProgram extends Model
      * @return array
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function weixinRefund($number,$totalFee,$refundFee,$why=''){
-        $return =[
-            'result'=>'error',
-            'msg'=>'退款异常，请联系管理员'
+    public function weixinRefund($number, $totalFee, $refundFee, $why = '')
+    {
+        $return = [
+            'result' => 'error',
+            'msg' => '退款异常，请联系管理员'
         ];
-        $refundNumber=orderNumber();
+        $refundNumber = orderNumber();
         $config = config('wechat.payment.default');
-        $config['notify_url'] = request()->root().'/api/v1/app/refundNotify';
+        $config['notify_url'] = request()->root() . '/api/v1/app/refundNotify';
         $app = Factory::payment($config);
         $result = $app->refund->byOutTradeNumber($number, $refundNumber, $totalFee, $refundFee, [
             // 可在此处传入其他参数，详细参数见微信支付文档
             'refund_desc' => $why,
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $return =[
-                'result'=>'ok',
-                'msg'=>$config,
-                'number'=>$refundNumber
+            $return = [
+                'result' => 'ok',
+                'msg' => $config,
+                'number' => $refundNumber
             ];
         }
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
-            $return =[
-                'result'=>'error',
-                'msg'=>$result['return_msg']
+            $return = [
+                'result' => 'error',
+                'msg' => $result['return_msg']
             ];
         }
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'FAIL' && isset($result['err_code_des'])) {
-            $return =[
-                'result'=>'error',
-                'msg'=>$result['err_code_des']
+            $return = [
+                'result' => 'error',
+                'msg' => $result['err_code_des']
             ];
-        }       
+        }
         return $return;
     }
 
@@ -341,32 +353,33 @@ class MiniProgram extends Model
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidArgumentException
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      */
-    public function weixinQuery($number,$type){
-        $return =[
-            'result'=>'error',
-            'msg'=>'查询异常，请联系管理员'
+    public function weixinQuery($number, $type)
+    {
+        $return = [
+            'result' => 'error',
+            'msg' => '查询异常，请联系管理员'
         ];
         $config = config('wechat.payment.default');
         $app = Factory::payment($config);
 
-        if($type == PaymentLog::PAYMENT_LOG_TYPE_REFUND){   //退款
-            $result=$app->refund->queryByOutRefundNumber($number);
+        if ($type == PaymentLog::PAYMENT_LOG_TYPE_REFUND) {   //退款
+            $result = $app->refund->queryByOutRefundNumber($number);
             $transaction_id = $result['refund_id_0'];
-        }else{  //其它
-            $result=$app->order->queryByOutTradeNumber($number);
+        } else {  //其它
+            $result = $app->order->queryByOutTradeNumber($number);
             $transaction_id = isset($result['transaction_id']) ? $result['transaction_id'] : '';
         }
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $return =[
-                'result'=>'ok',
-                'transaction_id'=>$transaction_id,
-                'msg'=>'需要同步'
+            $return = [
+                'result' => 'ok',
+                'transaction_id' => $transaction_id,
+                'msg' => '需要同步'
             ];
         }
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
-            $return =[
-                'result'=>'error',
-                'msg'=>$result['return_msg']
+            $return = [
+                'result' => 'error',
+                'msg' => $result['return_msg']
             ];
         }
         return $return;

@@ -339,15 +339,19 @@ export default {
         cancelButtonText: this.$t('usuel.cancel'),
         type: 'warning'
       }).then(() => {
+        this.formLoading = true
         destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
+          this.formLoading = false
           this.$notify({
             title: this.$t('hint.succeed'),
             message: win,
             type: 'success',
             duration: 2000
           })
+        }).catch(() => {
+          this.formLoading = false
         })
       }).catch(() => {
       })

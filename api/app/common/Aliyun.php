@@ -1,4 +1,5 @@
 <?php
+
 namespace App\common;
 
 /**
@@ -6,23 +7,27 @@ namespace App\common;
  * 阿里云短信
  *
  */
+
 use AlibabaCloud\Client\AlibabaCloud;
 use AlibabaCloud\Client\Exception\ClientException;
 use AlibabaCloud\Client\Exception\ServerException;
+
 class Aliyun
 {
     public $config;
+
     public function __construct()
     {
         $aliyunConfig = config('sms.aliyun');
-        $config=[
-            'accessKeyId'=>$aliyunConfig['access_id'],
-            'accessSecret'=>$aliyunConfig['secret'],
-            'SignName'=>$aliyunConfig['signature'],
-            'TemplateCode'=>$aliyunConfig['verification_code'],
+        $config = [
+            'accessKeyId' => $aliyunConfig['access_id'],
+            'accessSecret' => $aliyunConfig['secret'],
+            'SignName' => $aliyunConfig['signature'],
+            'TemplateCode' => $aliyunConfig['verification_code'],
         ];
         $this->config = $config;
     }
+
     /**
      * 发送短信
      * @param $query
@@ -62,14 +67,15 @@ class Aliyun
      * @return \AlibabaCloud\Client\Result\Result|string
      * @throws ClientException
      */
-    public function sendCode($phone,$code){
-        $query=[
+    public function sendCode($phone, $code)
+    {
+        $query = [
             'RegionId' => "cn-hangzhou",
             'PhoneNumbers' => $phone,
             'SignName' => $this->config['SignName'],
             'TemplateCode' => $this->config['TemplateCode'],
-            'TemplateParam' => '{"code":"'.$code.'"}',
+            'TemplateParam' => '{"code":"' . $code . '"}',
         ];
-       return $this->sendNote($query);
+        return $this->sendNote($query);
     }
 }

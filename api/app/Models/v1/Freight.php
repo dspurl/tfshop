@@ -14,48 +14,53 @@ use Illuminate\Database\Eloquent\Model;
 class Freight extends Model
 {
     public static $withoutAppends = true;
+
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
+
     /**
      * 运送方式
      */
-    public function FreightWay(){
+    public function FreightWay()
+    {
         return $this->hasMany(FreightWay::class);
     }
+
     /**
      * 宝贝地址
      * @return void
      */
     public function getLocationAttribute()
     {
-        if(!self::$withoutAppends){
-            if(isset($this->attributes['location'])){
-                return json_decode($this->attributes['location'],true);
+        if (!self::$withoutAppends) {
+            if (isset($this->attributes['location'])) {
+                return json_decode($this->attributes['location'], true);
             }
-        }else {
+        } else {
             return $this->attributes['location'];
         }
 
     }
+
     /**
      * 包邮地区
      * @return void
      */
     public function getPinkageAttribute()
     {
-        if(!self::$withoutAppends){
-            if(isset($this->attributes['pinkage'])){
-                return json_decode($this->attributes['pinkage'],true);
+        if (!self::$withoutAppends) {
+            if (isset($this->attributes['pinkage'])) {
+                return json_decode($this->attributes['pinkage'], true);
             }
-        }else {
+        } else {
             return $this->attributes['pinkage'];
         }
 
@@ -64,7 +69,7 @@ class Freight extends Model
     /**
      * 宝贝地址
      *
-     * @param  string  $value
+     * @param string $value
      * @return void
      */
     public function setLocationAttribute($value)
@@ -75,7 +80,7 @@ class Freight extends Model
     /**
      * 包邮地区
      *
-     * @param  string  $value
+     * @param string $value
      * @return void
      */
     public function setPinkageAttribute($value)

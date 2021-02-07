@@ -33,11 +33,12 @@ class Entrance
     /**
      * @return mixed
      */
-    public function informationDistribution(){
-        $client=$this->client;
-        if(method_exists(static::class,$client)){
+    public function informationDistribution()
+    {
+        $client = $this->client;
+        if (method_exists(static::class, $client)) {
             return $this->$client();
-        }else{
+        } else {
             exit('未配置客户端');
         }
     }
@@ -50,9 +51,10 @@ class Entrance
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \ReflectionException
      */
-    public function wechat(){
+    public function wechat()
+    {
         $config = config('wechat.official_account.default');
-        if(!$config['token']){
+        if (!$config['token']) {
             exit('未配置微信公众账号');
         }
         $app = Factory::officialAccount($config);
@@ -90,7 +92,7 @@ class Entrance
         ];
         $app->menu->create($buttons);*/
         $app->server->push(SubscribeHandler::class, Message::EVENT); // 事件消息
-        $app->server->push(OtherMessageHandler::class,  Message::TEXT|Message::IMAGE|Message::VOICE|Message::VIDEO|Message::SHORT_VIDEO); // 其它消息
+        $app->server->push(OtherMessageHandler::class, Message::TEXT | Message::IMAGE | Message::VOICE | Message::VIDEO | Message::SHORT_VIDEO); // 其它消息
         return $app->server->serve();
     }
 
@@ -102,21 +104,22 @@ class Entrance
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \ReflectionException
      */
-    public function miniweixin(){
+    public function miniweixin()
+    {
         $config = config('wechat.mini_program.default');
         $officialConfig = config('wechat.official_account.default');
-        if(!$config['token']){
+        if (!$config['token']) {
             exit('未配置微信小程序账号');
         }
-        if(!$officialConfig['token']){
+        if (!$officialConfig['token']) {
             exit('未配置微信公众账号');
         }
         $app = Factory::miniProgram($config);
-        $app->server->push(function($message) use ($app,$officialConfig) {
+        $app->server->push(function ($message) use ($app, $officialConfig) {
 //            Log::info('$message:'.json_encode($message));
-            if($message['MsgType']== 'miniprogrampage' && $message['PagePath']=='pages/public/subscribe'){    //用户发送消息卡片，并且是开启微信提醒服务时才触发
-                $User=User::where('miniweixin',$message['FromUserName'])->first();
-                if(!$User){
+            if ($message['MsgType'] == 'miniprogrampage' && $message['PagePath'] == 'pages/public/subscribe') {    //用户发送消息卡片，并且是开启微信提醒服务时才触发
+                $User = User::where('miniweixin', $message['FromUserName'])->first();
+                if (!$User) {
                     $app->customer_service->message('请先登录后再开启微信提醒服务')->to($message['FromUserName'])->send();
                 }
                 $official = Factory::officialAccount($officialConfig);
@@ -125,11 +128,11 @@ class Entrance
                 $url = $official->qrcode->url($result['ticket']);
                 $content = file_get_contents($url); //获取二维码二进制
                 file_put_contents('storage/temporary/code.jpg', $content);  //上传到本地
-                $uploadImage=$app->media->uploadImage('storage/temporary/code.jpg');    //获取media_id
+                $uploadImage = $app->media->uploadImage('storage/temporary/code.jpg');    //获取media_id
 //            Log::info('media_id:'.json_encode($uploadImage));
                 $image = new Image($uploadImage['media_id']);
                 $app->customer_service->message($image)->to($message['FromUserName'])->send();
-            }else{  //其它将进行客服转发
+            } else {  //其它将进行客服转发
                 return new Transfer();
             }
 

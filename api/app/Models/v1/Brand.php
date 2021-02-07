@@ -15,20 +15,23 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Brand extends Model
 {
     use SoftDeletes;
+
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
+
     /**
      * 获取品牌LOGO
      */
-    public function resources(){
+    public function resources()
+    {
         return $this->morphOne('App\Models\v1\Resource', 'image');
     }
 }

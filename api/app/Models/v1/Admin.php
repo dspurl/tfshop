@@ -18,14 +18,14 @@ use Laravel\Passport\HasApiTokens;
  */
 class Admin extends Authenticatable
 {
-    use HasApiTokens,Notifiable;
-    const ADMIN_STATA_NORMAL= 1; //正常
-    const ADMIN_STATA_FORBID= 2; //禁止访问
+    use HasApiTokens, Notifiable;
+    const ADMIN_STATA_NORMAL = 1; //正常
+    const ADMIN_STATA_FORBID = 2; //禁止访问
 
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
@@ -33,23 +33,23 @@ class Admin extends Authenticatable
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function scopeQueryTitle($query,$title)
+    public function scopeQueryTitle($query, $title)
     {
-        if($title){
-            return $query->where('id',$title)->orWhere('name','like','%'.$title.'%');
+        if ($title) {
+            return $query->where('id', $title)->orWhere('name', 'like', '%' . $title . '%');
         }
     }
 
     // 角色
     protected function role($db)
     {
-        foreach($db as $id=>$data){
-            if($data->authGroup->count()>0){
-                foreach($data->authGroup as $auth_group){
-                    $data->group=$auth_group['introduction'].' ';
+        foreach ($db as $id => $data) {
+            if ($data->authGroup->count() > 0) {
+                foreach ($data->authGroup as $auth_group) {
+                    $data->group = $auth_group['introduction'] . ' ';
                 }
-            }else{
-                $data->group='未分配';
+            } else {
+                $data->group = '未分配';
             }
         }
     }
@@ -58,7 +58,7 @@ class Admin extends Authenticatable
     /**
      * 通过用户名找到对应的用户信息
      *
-     * @param  string  $username
+     * @param string $username
      * @return \App\User
      */
     public function findForPassport($username)

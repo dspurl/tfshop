@@ -1,4 +1,5 @@
 <?php
+
 namespace App\common;
 
 /**
@@ -24,7 +25,7 @@ class RedisLock
      * @param string $expire_time 60000
      * @return bool
      */
-    public static function lock($redis, $key, $expire_time='')
+    public static function lock($redis, $key, $expire_time = '')
     {
         if (empty($expire_time)) {
             $expire_time = self::EXPIRE_TIME;
@@ -42,13 +43,13 @@ class RedisLock
      */
     public static function unlock($redis, $key)
     {
-        $lua =<<<EOT
+        $lua = <<<EOT
 if redis.call("get",KEYS[1]) == ARGV[1] then
     return redis.call("del",KEYS[1])
 else
     return 0
 end
 EOT;
-        return $redis->eval($lua,[$key],1);
+        return $redis->eval($lua, [$key], 1);
     }
 }

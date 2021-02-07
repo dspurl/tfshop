@@ -16,10 +16,11 @@ use Illuminate\Database\Eloquent\Model;
 class Notification extends Model
 {
     public static $withoutAppends = true;
+
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
@@ -29,11 +30,11 @@ class Notification extends Model
 
     public function getDataAttribute()
     {
-        if(isset($this->attributes['data'])){
+        if (isset($this->attributes['data'])) {
             $return = $this->attributes['data'];
-            if(self::$withoutAppends){
-            }else{
-                $return= json_decode($this->attributes['data']);
+            if (self::$withoutAppends) {
+            } else {
+                $return = json_decode($this->attributes['data']);
 
             }
             return $return;

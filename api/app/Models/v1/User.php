@@ -118,9 +118,4 @@ class User extends Authenticatable implements HasLocalePreference
             return $return>0 ? $return : 0;
         }
     }
-    //应用
-    public function Apply()
-    {
-        return $this->hasMany(Common::class);
-    }
 }

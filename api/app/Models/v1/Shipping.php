@@ -17,15 +17,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property string longitude
  * @property string house
  */
-
 class Shipping extends Model
 {
-    const SHIPPING_DEFAULTS_YES= 1; //默认：是
-    const SHIPPING_DEFAULTS_NO= 0; //默认：否
+    const SHIPPING_DEFAULTS_YES = 1; //默认：是
+    const SHIPPING_DEFAULTS_NO = 0; //默认：否
+
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)

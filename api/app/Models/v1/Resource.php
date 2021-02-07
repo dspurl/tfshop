@@ -14,22 +14,25 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Resource extends Model
 {
-    const RESOURCE_TYPE_IMG= 1; //类型：图片
-    const RESOURCE_TYPE_VIDEO= 2; //类型：视频
+    const RESOURCE_TYPE_IMG = 1; //类型：图片
+    const RESOURCE_TYPE_VIDEO = 2; //类型：视频
+
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
+
     /**
      * 获取所有佣有image模型
      */
-    public function image(){
+    public function image()
+    {
         return $this->morphTo();
     }
 }
