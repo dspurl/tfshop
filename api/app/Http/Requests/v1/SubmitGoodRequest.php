@@ -3,6 +3,7 @@
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
 class SubmitGoodRequest extends Request
 {
@@ -38,8 +39,23 @@ class SubmitGoodRequest extends Request
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'name' => 'bail|required|string|max:60',
-                        'number' => 'required|string|max:50',
+                        'name'=> [
+                            'required',
+                            Rule::unique('goods')->where(function ($query) use($request) {
+                                $query->where('deleted_at', null)->where('id','!=',$request['id']);
+                            }),
+                            'bail',
+                            'string',
+                            'max:60',
+                        ],
+                        'number'=> [
+                            'required',
+                            Rule::unique('goods')->where(function ($query) use($request) {
+                                $query->where('deleted_at', null)->where('id','!=',$request['id']);
+                            }),
+                            'string',
+                            'max:50',
+                        ],
                         'freight_id' => 'required|integer',
                         'brand_id' => 'nullable|integer',
                         'inventory' => 'nullable|integer',
@@ -66,8 +82,23 @@ class SubmitGoodRequest extends Request
                     ];
                 } else {
                     return [
-                        'name' => 'bail|required|string|max:60',
-                        'number' => 'required|string|max:50',
+                        'name'=> [
+                            'required',
+                            Rule::unique('goods')->where(function ($query) {
+                                $query->where('deleted_at', null);
+                            }),
+                            'bail',
+                            'string',
+                            'max:60',
+                        ],
+                        'number'=> [
+                            'required',
+                            Rule::unique('goods')->where(function ($query) {
+                                $query->where('deleted_at', null);
+                            }),
+                            'string',
+                            'max:50',
+                        ],
                         'freight_id' => 'required|integer',
                         'brand_id' => 'nullable|integer',
                         'inventory' => 'nullable|integer',
@@ -106,9 +137,11 @@ class SubmitGoodRequest extends Request
         return [
             'name.required' =>'商品名称必须',
             'name.string' =>'商品名称格式有误',
+            'name.unique' => '商品名称已存在',
             'name.max' =>'商品名称不能超过60个字符',
             'number.required' =>'货号必须',
             'number.string' =>'货号格式有误',
+            'number.unique' => '货号已存在',
             'number.max' =>'货号不能超过50个字符',
             'freight_id.required' =>'运费模板必须',
             'freight_id.integer' =>'运费模板格式有误',

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
 class SubmitCategoryRequest extends Request
 {
@@ -37,14 +38,28 @@ class SubmitCategoryRequest extends Request
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'name' => 'required|string|max:30',
+                        'name'=> [
+                            'required',
+                            Rule::unique('categorys')->where(function ($query) use($request) {
+                                $query->where('deleted_at', null)->where('id','!=',$request['id']);
+                            }),
+                            'string',
+                            'max:30',
+                        ],
                         'pid' => 'required|numeric',
                         'sort' => 'required|numeric',
                         'state' => 'required|numeric'
                     ];
                 } else {
                     return [
-                        'name' => 'required|string|max:30',
+                        'name'=> [
+                            'required',
+                            Rule::unique('categorys')->where(function ($query) {
+                                $query->where('deleted_at', null);
+                            }),
+                            'string',
+                            'max:30',
+                        ],
                         'pid' => 'required|numeric',
                         'sort' => 'required|numeric',
                         'state' => 'required|numeric'
@@ -63,6 +78,7 @@ class SubmitCategoryRequest extends Request
         return [
             'name.required' =>'类目名称必须',
             'name.string' =>'类目格式有误',
+            'name.unique' => '类目名称已存在',
             'name.max' =>'类目不能超过30个字符',
             'pid.required' =>'上级类目必须',
             'pid.numeric' =>'上级类目格式有误',

@@ -3,6 +3,7 @@
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
 class SubmitDhlRequest extends Request
 {
@@ -36,14 +37,28 @@ class SubmitDhlRequest extends Request
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'name' => 'required|string|max:30',
+                        'name'=> [
+                            'required',
+                            Rule::unique('dhls')->where(function ($query) use($request) {
+                                $query->where('deleted_at', null)->where('id','!=',$request['id']);
+                            }),
+                            'string',
+                            'max:30',
+                        ],
                         'abbreviation' => 'required|string|max:80',
                         'sort' => 'required|integer',
                         'state' => 'required|integer',
                     ];
                 } else {
                     return [
-                        'name' => 'required|string|max:30',
+                        'name'=> [
+                            'required',
+                            Rule::unique('dhls')->where(function ($query) {
+                                $query->where('deleted_at', null);
+                            }),
+                            'string',
+                            'max:30',
+                        ],
                         'abbreviation' => 'required|string|max:80',
                         'sort' => 'required|integer',
                         'state' => 'required|integer',
@@ -62,6 +77,7 @@ class SubmitDhlRequest extends Request
         return [
             'name.required' =>'快递公司名称必须',
             'name.string' =>'快递公司名称格式有误',
+            'name.unique' => '快递公司名称已存在',
             'name.max' =>'快递公司名称不能超过30个字符',
             'abbreviation.required' =>'快递公司缩写必须',
             'abbreviation.string' =>'快递公司缩写格式有误',

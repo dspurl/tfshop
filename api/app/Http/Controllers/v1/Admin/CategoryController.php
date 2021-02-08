@@ -148,7 +148,7 @@ class CategoryController extends Controller
             $Category->state = $request->state;
             $Category->is_recommend = $request->is_recommend;
             $Category->save();
-            if ($request->resources['id'] && $request->logo) {
+            if ($request->resources && $request->logo) {
                 $Resource = Resource::find($request->resources['id']);
                 if ($request->logo != $Resource->img) {
                     resourceAutoDelete($Resource->img);
