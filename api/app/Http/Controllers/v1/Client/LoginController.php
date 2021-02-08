@@ -104,6 +104,7 @@ class LoginController extends Controller
                     $user->password = bcrypt($password);
                     $user[strtolower($request->platform)] = $openid;
                     $user->api_token = hash('sha256', Str::random(60));
+                    $user->uuid = (string)Uuid::generate();
                     $user->save();
                     $input = $request->all();
                     $log = new UserLog();
