@@ -10,10 +10,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-//class InvoicePaid extends Notification implements ShouldQueue
-class InvoicePaid extends Notification
+class InvoicePaid extends Notification implements ShouldQueue
+//class InvoicePaid extends Notification
 {
-//    use Queueable;
+    use Queueable;
     public $invoice;
     const NOTIFICATION_TYPE_SYSTEM_MESSAGES = 1; //通知类型:系统消息
     const NOTIFICATION_TYPE_DEAL = 2; //通知类型:交易
