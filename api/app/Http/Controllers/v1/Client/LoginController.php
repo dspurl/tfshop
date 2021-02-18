@@ -6,7 +6,6 @@ use App\Code;
 use App\common\RedisService;
 use App\Models\v1\MiniProgram;
 use App\Models\v1\User;
-use App\Models\v1\UserLog;
 use App\Notifications\Common;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -59,14 +58,6 @@ class LoginController extends Controller
         }
         $user->updated_at = Carbon::now()->toDateTimeString();
         $user->save();
-        $input = $request->all();
-        $log = new UserLog();
-        $log->user_id = $user->id;
-        $log->path = $request->path();
-        $log->method = $request->method();
-        $log->ip = $request->ip();
-        $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
-        $log->save();   # 记录日志
         return resReturn(1, [
             'nickname' => $user->nickname,
             'cellphone' => $user->cellphone,
@@ -106,15 +97,9 @@ class LoginController extends Controller
                     $user->api_token = hash('sha256', Str::random(60));
                     $user->uuid = (string)Uuid::generate();
                     $user->save();
-                    $input = $request->all();
-                    $log = new UserLog();
-                    $log->user_id = $user->id;
-                    $log->path = $request->path();
-                    $log->method = $request->method();
-                    $log->ip = $request->ip();
-                    $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
-                    $log->save();   # 记录日志
-                    $Common = (new Common)->register([
+                    $redis = new RedisService();
+                    $redis->setex('password.register.' . $user->id, 30, $password);
+                    /*$Common = (new Common)->register([
                         'phoneNumber' => $miniPhoneNumber['purePhoneNumber'],  //手机号
                         'password' => $password,  //密码
                         'template' => 'registered_success',   //通知模板标识
@@ -126,7 +111,7 @@ class LoginController extends Controller
                             'msg' => $Common['msg'],
                             'code' => Code::CODE_PARAMETER_WRONG
                         ];
-                    }
+                    }*/
                     return [
                         'state' => 1,
                         'data' => $user
@@ -153,14 +138,6 @@ class LoginController extends Controller
                         $User[strtolower($request->platform)] = $openid;
                     }
                     $User->save();
-                    $input = $request->all();
-                    $log = new UserLog();
-                    $log->user_id = $User->id;
-                    $log->path = $request->path();
-                    $log->method = $request->method();
-                    $log->ip = $request->ip();
-                    $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
-                    $log->save();   # 记录日志
                     return [
                         'state' => 1,
                         'data' => $User
@@ -189,14 +166,9 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $input = $request->all();
-        $log = new UserLog();
-        $log->user_id = auth('web')->user()->id;
-        $log->path = $request->path();
-        $log->method = $request->method();
-        $log->ip = $request->ip();
-        $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
-        $log->save();   # 记录日志
+        $user = User::find(auth('web')->user()->id);
+        $user->updated_at = Carbon::now()->toDateTimeString();
+        $user->save();
         return resReturn(1, '退出成功');
     }
 
