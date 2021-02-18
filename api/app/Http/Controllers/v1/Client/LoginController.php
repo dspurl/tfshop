@@ -89,6 +89,8 @@ class LoginController extends Controller
             if (!$User) {
                 $return = DB::transaction(function () use ($request, $miniPhoneNumber, $openid) {
                     $password = substr(MD5(time()), 5, 6);  //随机生成密码
+                    $redis = new RedisService();
+                    $redis->setex('password.register.' . $miniPhoneNumber['purePhoneNumber'], 30, $password);
                     $user = new User();
                     $user->name = $miniPhoneNumber['purePhoneNumber'];
                     $user->cellphone = $miniPhoneNumber['purePhoneNumber'];
@@ -97,8 +99,6 @@ class LoginController extends Controller
                     $user->api_token = hash('sha256', Str::random(60));
                     $user->uuid = (string)Uuid::generate();
                     $user->save();
-                    $redis = new RedisService();
-                    $redis->setex('password.register.' . $user->id, 30, $password);
                     /*$Common = (new Common)->register([
                         'phoneNumber' => $miniPhoneNumber['purePhoneNumber'],  //手机号
                         'password' => $password,  //密码

@@ -17,7 +17,7 @@ class UserRegisterNotificationObserver
     public function created(User $user)
     {
         $redis = new RedisService();
-        $password = $redis->get('password.register.' . $user->id);
+        $password = $redis->get('password.register.' . $user->cellphone);
         if ($password) {  //授权登录时才会生成密码
             (new Common)->register([
                 'phoneNumber' => $user->cellphone,  //手机号

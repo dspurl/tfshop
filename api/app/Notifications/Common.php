@@ -7,7 +7,6 @@
 namespace App\Notifications;
 
 use App\Models\v1\User;
-use Carbon\Carbon;
 
 class Common
 {
