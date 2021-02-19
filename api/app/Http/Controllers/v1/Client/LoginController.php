@@ -6,7 +6,6 @@ use App\Code;
 use App\common\RedisService;
 use App\Models\v1\MiniProgram;
 use App\Models\v1\User;
-use App\Notifications\Common;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -99,19 +98,6 @@ class LoginController extends Controller
                     $user->api_token = hash('sha256', Str::random(60));
                     $user->uuid = (string)Uuid::generate();
                     $user->save();
-                    /*$Common = (new Common)->register([
-                        'phoneNumber' => $miniPhoneNumber['purePhoneNumber'],  //手机号
-                        'password' => $password,  //密码
-                        'template' => 'registered_success',   //通知模板标识
-                        'user_id' => $user->id   //用户ID
-                    ]);
-                    if ($Common['result'] == 'error') {
-                        return [
-                            'state' => 0,
-                            'msg' => $Common['msg'],
-                            'code' => Code::CODE_PARAMETER_WRONG
-                        ];
-                    }*/
                     return [
                         'state' => 1,
                         'data' => $user

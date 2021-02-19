@@ -6,7 +6,6 @@ use App\common\RedisService;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
-use App\Notifications\Common;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
