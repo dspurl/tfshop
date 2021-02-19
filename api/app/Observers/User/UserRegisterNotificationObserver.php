@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Observers;
+namespace App\Observers\User;
 
 use App\common\RedisService;
 use App\Models\v1\User;
@@ -10,7 +10,7 @@ use App\Notifications\Common;
  * user register notification
  * 用户注册通知
  * Class UserRegisterNotificationObserver
- * @package App\Observers
+ * @package App\Observers\User
  */
 class UserRegisterNotificationObserver
 {

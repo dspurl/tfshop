@@ -2,6 +2,7 @@
 
 namespace App\Models\v1;
 
+use App\common\RedisService;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string shipping_time
  * @property string created_at
  * @property string confirm_time
+ * @property string refund_time
  */
 class GoodIndent extends Model
 {
@@ -119,34 +121,11 @@ class GoodIndent extends Model
     public function goodIndentNotify($id)
     {
         $GoodIndent = GoodIndent::with(['goodsList', 'User'])->find($id);
+        $redis = new RedisService();
+        $redis->setex('goodIndent.pay.type.' . $GoodIndent->id, 5, '微信支付');
         $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
         $GoodIndent->pay_time = Carbon::now()->toDateTimeString();
         $GoodIndent->save();
-        $Money = new MoneyLog();
-        $Money->user_id = $GoodIndent->user_id;
-        $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;
-        $Money->money = $GoodIndent->total;
-        $Money->remark = '对订单：' . $GoodIndent->identification . '的付款';
-        $Money->save();
-        (new Common)->finishPayment([
-            'id' => $GoodIndent->id,  //订单ID
-            'identification' => $GoodIndent->identification,  //订单号
-            'name' => $GoodIndent->goodsList[0]->name . (count($GoodIndent->goodsList) > 1 ? '等多件' : ''),    //商品名称
-            'total' => $GoodIndent->total,    //订单金额
-            'type' => '微信支付',
-            'template' => 'finish_payment',   //通知模板标识
-            'time' => $GoodIndent->pay_time,  //下单时间(付款时间)
-            'user_id' => $GoodIndent->user_id    //用户ID
-        ]);
-        (new Common)->adminOrderSendGood([
-            'id' => $GoodIndent->id,  //订单ID
-            'identification' => $GoodIndent->identification,  //订单号
-            'cellphone' => $GoodIndent->User->cellphone,    //用户手机
-            'total' => $GoodIndent->total,    //订单金额
-            'type' => '微信支付',
-            'template' => 'admin_order_send_good',   //通知模板标识
-            'time' => $GoodIndent->pay_time,  //下单时间(付款时间)
-        ]);
     }
 
     /**
@@ -159,21 +138,6 @@ class GoodIndent extends Model
         $GoodIndent = GoodIndent::find($id);
         $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_REFUND;
         $GoodIndent->save();
-        $Money = new MoneyLog();
-        $Money->user_id = $GoodIndent->user_id;
-        $Money->type = MoneyLog::MONEY_LOG_TYPE_INCOME;
-        $Money->money = $GoodIndent->refund_money;
-        $Money->remark = '订单：' . $GoodIndent->identification . '的退款，已退回到您的充值账号中';
-        $Money->save();
-        (new Common)->refund([
-            'money_id' => $Money->id,  //资金记录ID
-            'identification' => $GoodIndent->identification,  //订单号
-            'total' => $GoodIndent->refund_money,    //退款金额
-            'refund_reason' => $GoodIndent->refund_reason,    //退款理由
-            'type' => '原路退还', //退款方式
-            'template' => 'refund_success',   //通知模板标识
-            'user_id' => $GoodIndent->user_id   //用户ID
-        ]);
     }
 
     /**

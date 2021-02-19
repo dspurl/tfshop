@@ -59,7 +59,8 @@
 				const that = this
 				Notification.getList({
 					limit: 8,
-					page: this.page
+					page: this.page,
+					sort: '-created_at'
 				},function(res){
 					that.data = that.data.concat(res.data)
 					if (res.last_page > that.page){

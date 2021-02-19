@@ -6,13 +6,11 @@ use App\Code;
 use App\common\RedisService;
 use App\Http\Requests\v1\SubmitGoodIndentRequest;
 use App\Models\v1\Good;
-use App\Models\v1\GoodLocation;
 use App\Models\v1\User;
 use App\common\RedisLock;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodIndentCommodity;
 use App\Models\v1\GoodSku;
-use App\Notifications\Common;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -103,27 +101,6 @@ class GoodIndentController extends Controller
                 $GoodIndent->total = $total + $request->carriage;
                 $GoodIndent->remark = $request->remark;
                 $GoodIndent->save();
-                foreach ($request->indentCommodity as $id => $indentCommodity) {
-                    $GoodIndentCommodity = new GoodIndentCommodity();
-                    $GoodIndentCommodity->good_indent_id = $GoodIndent->id;
-                    $GoodIndentCommodity->good_id = $indentCommodity['good_id'];
-                    $GoodIndentCommodity->good_sku_id = $indentCommodity['good_sku_id'];
-                    $GoodIndentCommodity->img = $indentCommodity['img'];
-                    $GoodIndentCommodity->name = $indentCommodity['name'];
-                    $GoodIndentCommodity->price = $indentCommodity['price'];
-                    $GoodIndentCommodity->number = $indentCommodity['number'];
-                    $GoodIndentCommodity->save();
-                }
-                $GoodLocation = new GoodLocation();
-                $GoodLocation->good_indent_id = $GoodIndent->id;
-                $GoodLocation->cellphone = $request->address['cellphone'];
-                $GoodLocation->name = $request->address['name'];
-                $GoodLocation->location = $request->address['location'];
-                $GoodLocation->address = $request->address['address'];
-                $GoodLocation->latitude = $request->address['latitude'];
-                $GoodLocation->longitude = $request->address['longitude'];
-                $GoodLocation->house = $request->address['house'];
-                $GoodLocation->save();
                 return array(1, $GoodIndent->id);
             }, 5);
             RedisLock::unlock($redis, 'goodIndent');
@@ -232,32 +209,6 @@ class GoodIndentController extends Controller
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_ACCOMPLISH;
             $GoodIndent->confirm_time = Carbon::now()->toDateTimeString();
             $GoodIndent->save();
-            /*$Common = (new Common)->orderConfirmReceipt([
-                'id' => $GoodIndent->id,  //订单ID
-                'identification' => $GoodIndent->identification,  //订单号
-                'name' => $GoodIndent->goodsList[0]->name . (count($GoodIndent->goodsList) > 1 ? '等多件' : ''),    //商品名称
-                'created_at' => $GoodIndent->created_at,   // 下单时间
-                'shipping_time' => $GoodIndent->shipping_time,    //发货时间
-                'confirm_time' => $GoodIndent->confirm_time,    //确认收货时间
-                'template' => 'order_confirm_receipt',   //通知模板标识
-                'user_id' => $GoodIndent->User->id    //用户ID
-            ]);
-            if ($Common['result'] == 'ok') {
-                $AdminCommon = (new Common)->adminOrderCompletion([
-                    'id' => $GoodIndent->id,  //订单ID
-                    'identification' => $GoodIndent->identification,  //订单号
-                    'name' => $GoodIndent->goodsList[0]->name . (count($GoodIndent->goodsList) > 1 ? '等多件' : ''),    //商品名称
-                    'confirm_time' => $GoodIndent->confirm_time,    //确认收货时间
-                    'template' => 'admin_order_completion',   //通知模板标识
-                ]);
-                if ($AdminCommon['result'] == 'ok') {
-                    return array(1, '收货成功');
-                } else {
-                    return array($AdminCommon['msg'], Code::CODE_PARAMETER_WRONG);
-                }
-            } else {
-                return array($Common['msg'], Code::CODE_PARAMETER_WRONG);
-            }*/
             return array(1, '收货成功');
         });
         if ($return[0] == 1) {
@@ -278,20 +229,6 @@ class GoodIndentController extends Controller
         $GoodIndent = GoodIndent::with(['goodsList'])->find($id);
         $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_CANCEL;
         $GoodIndent->save();
-        //库存处理
-        foreach ($GoodIndent->goodsList as $indentCommodity) {
-            $Good = Good::select('id', 'is_inventory', 'inventory')->find($indentCommodity['good_id']);
-            if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_NO) { //拍下减库存
-                if (!$indentCommodity['good_sku_id']) { //非SKU商品
-                    $Good->inventory = $Good->inventory + $indentCommodity['number'];
-                    $Good->save();
-                } else {
-                    $GoodSku = GoodSku::find($indentCommodity['good_sku_id']);
-                    $GoodSku->inventory = $GoodSku->inventory + $indentCommodity['number'];
-                    $GoodSku->save();
-                }
-            }
-        }
         return resReturn(1, '成功');
     }
 

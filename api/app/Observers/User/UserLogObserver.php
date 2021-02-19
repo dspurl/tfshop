@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Observers;
+namespace App\Observers\User;
 
 
 use App\Models\v1\User;
@@ -12,7 +12,7 @@ use Illuminate\Http\Request;
  * user log
  * 用户日志
  * Class UserLogObserver
- * @package App\Observers
+ * @package App\Observers\User
  */
 class UserLogObserver
 {

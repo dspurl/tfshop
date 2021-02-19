@@ -330,43 +330,12 @@ class AppController extends Controller
         }
         $return = DB::transaction(function () use ($request, $GoodIndent) {
             User::where('id', auth('web')->user()->id)->decrement('money', $GoodIndent->total);
+            $redis = new RedisService();
+            $redis->setex('goodIndent.pay.type.' . $GoodIndent->id, 5, '余额支付');
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
             $GoodIndent->pay_time = Carbon::now()->toDateTimeString();
             $GoodIndent->save();
-            $Money = new MoneyLog();
-            $Money->user_id = auth('web')->user()->id;
-            $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;
-            $Money->money = $GoodIndent->total;
-            $Money->remark = '对订单：' . $GoodIndent->identification . '的付款';
-            $Money->save();
-            $Common = (new Common)->finishPayment([
-                'id' => $GoodIndent->id,  //订单ID
-                'identification' => $GoodIndent->identification,  //订单号
-                'name' => $GoodIndent->goodsList[0]->name . (count($GoodIndent->goodsList) > 1 ? '等多件' : ''),    //商品名称
-                'total' => $GoodIndent->total,    //订单金额
-                'type' => '余额支付',
-                'template' => 'finish_payment',   //通知模板标识
-                'time' => $GoodIndent->pay_time,  //下单时间(付款时间)
-                'user_id' => auth('web')->user()->id    //用户ID
-            ]);
-            if ($Common['result'] == 'ok') {
-                $AdminCommon = (new Common)->adminOrderSendGood([
-                    'id' => $GoodIndent->id,  //订单ID
-                    'identification' => $GoodIndent->identification,  //订单号
-                    'cellphone' => auth('web')->user()->cellphone,    //用户手机
-                    'total' => $GoodIndent->total,    //订单金额
-                    'type' => '余额支付',
-                    'template' => 'admin_order_send_good',   //通知模板标识
-                    'time' => $GoodIndent->pay_time,  //下单时间(付款时间)
-                ]);
-                if ($AdminCommon['result'] == 'ok') {
-                    return array(1, '支付成功');
-                } else {
-                    return array($AdminCommon['msg'], Code::CODE_PARAMETER_WRONG);
-                }
-            } else {
-                return array($Common['msg'], Code::CODE_PARAMETER_WRONG);
-            }
+            return array(1, '支付成功');
         });
         if ($return[0] == 1) {
             return resReturn(1, $return[1]);

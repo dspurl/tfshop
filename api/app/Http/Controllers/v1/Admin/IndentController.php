@@ -144,23 +144,7 @@ class IndentController extends Controller
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_TAKE;
             $GoodIndent->shipping_time = Carbon::now()->toDateTimeString();
             $GoodIndent->save();
-            $Dhl = Dhl::find($request->dhl_id);
-            $Common = (new Common)->deliveryRelease([
-                'id' => $GoodIndent->id,  //订单ID
-                'identification' => $GoodIndent->identification,  //订单号
-                'dhl' => $Dhl->name,  //快递公司
-                'odd' => $request->odd,   // 快递单号
-                'total' => $GoodIndent->total,    //订单金额
-                'shipping_time' => $GoodIndent->shipping_time,    //发货时间
-                'location' => $GoodIndent->GoodLocation,    //收货地址
-                'template' => 'delivery_release',   //通知模板标识
-                'user_id' => $GoodIndent->User->id    //用户ID
-            ]);
-            if ($Common['result'] == 'ok') {
-                return array(1, '发货成功');
-            } else {
-                return array($Common['msg'], Code::CODE_PARAMETER_WRONG);
-            }
+            return array(1, '发货成功');
         });
         if ($return[0] == 1) {
             return resReturn(1, $return[1]);
@@ -220,21 +204,6 @@ class IndentController extends Controller
                     $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_REFUND;
                     $GoodIndent->save();
                     User::where('id', $GoodIndent->user_id)->increment('money', $request->refund_money * 100);
-                    $Money = new MoneyLog();
-                    $Money->user_id = $GoodIndent->user_id;
-                    $Money->type = MoneyLog::MONEY_LOG_TYPE_INCOME;
-                    $Money->money = $request->refund_money * 100;
-                    $Money->remark = '订单：' . $GoodIndent->identification . '的退款';
-                    $Money->save();
-                    return (new Common)->refund([
-                        'money_id' => $Money->id,  //资金记录ID
-                        'identification' => $GoodIndent->identification,  //订单号
-                        'total' => $request->refund_money * 100,    //退款金额
-                        'type' => '退到余额', //退款方式
-                        'refund_reason' => $GoodIndent->refund_reason,    //退款理由
-                        'template' => 'refund_success',   //通知模板标识
-                        'user_id' => $GoodIndent->user_id   //用户ID
-                    ]);
                 } else if ($request->refund_way == GoodIndent::GOOD_INDENT_REFUND_WAY_BACK) {
                     $GoodIndent->refund_money = $request->refund_money;
                     $GoodIndent->refund_way = $request->refund_way;
@@ -242,28 +211,12 @@ class IndentController extends Controller
                     $GoodIndent->refund_time = Carbon::now()->toDateTimeString();
                     $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_REFUND_PROCESSING;
                     $GoodIndent->save();
-                    //第三方支付统一退款入口
-                    $MiniProgram = new MiniProgram();
-                    $refund = $MiniProgram->refund($GoodIndent->PaymentLog->platform, $GoodIndent->PaymentLog->number, $GoodIndent->PaymentLog->money, $request->refund_money * 100, $request->refund_reason);
-                    if ($refund['result'] == 'error') {
-                        return $refund;
-                    }
-                    $PaymentLog = new PaymentLog();
-                    $PaymentLog->name = '对订单：' . $GoodIndent->identification . '的退款';
-                    $PaymentLog->number = $refund['number'];
-                    $PaymentLog->money = $request->refund_money * 100;
-                    $PaymentLog->pay_id = $GoodIndent->id; //订单ID
-                    $PaymentLog->type = PaymentLog::PAYMENT_LOG_TYPE_REFUND;
-                    $PaymentLog->platform = $GoodIndent->PaymentLog->platform;
-                    $PaymentLog->pay_type = 'App\Models\v1\GoodIndent';
-                    $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;
-                    $PaymentLog->save();
-                    return $refund;
                 }
+                return array('result' => 'ok');
             });
             RedisLock::unlock($redis, 'goodRefund');
             if ($return['result'] == 'ok') {
-                return resReturn(1, '退款成功');
+                return resReturn(1, '退款操作成功');
             } else {
                 return resReturn(0, $return['msg'], Code::CODE_PARAMETER_WRONG);
             }
