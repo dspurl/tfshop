@@ -80,4 +80,5 @@ class MiNiWeiXinChannel
         $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK: NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
         $NotificationLog->save();
     }
+    // 插件
 }

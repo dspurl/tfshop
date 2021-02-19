@@ -50,5 +50,7 @@ class AppServiceProvider extends ServiceProvider
         GoodIndent::observe(ShipmentNotificationObserver::class);
         GoodIndent::observe(RefundNotificationObserver::class);
         GoodIndent::observe(EscrowRefundObserver::class);
+        // 插件
+
     }
 }
