@@ -73,6 +73,7 @@ class Plugin
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v' . config('dswjcms.versions'));
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v' . config('dswjcms.versions') . '/Plugin');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dswjcms.versions'));
+        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/observers', $this->path . '/api/app/Observers');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/trade/Dsshop/api');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/trade/Dsshop/components');
@@ -124,7 +125,7 @@ class Plugin
   " . $routes['permission'] . "
   // " . $dswjcms['name'] . "_e
   // 插件列表", $file_get_contents);
-            $file_put_contents = file_put_contents($targetPath, $metadata);
+            file_put_contents($targetPath, $metadata);
             unset($targetPath);
             unset($file_get_contents);
             unset($metadata);
@@ -141,10 +142,26 @@ class Plugin
 		" . $routes['uniApp'] . "
 		// " . $dswjcms['name'] . "_e
 		// 插件列表", $file_get_contents);
-            $file_put_contents = file_put_contents($targetPath, $metadata);
+            file_put_contents($targetPath, $metadata);
             unset($targetPath);
             unset($file_get_contents);
             unset($metadata);
+        }
+        // observers
+        if (array_key_exists('observers', $routes)) {
+            $targetPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
+            $file_get_contents = file_get_contents($targetPath);
+            //去除已存在的插件代码
+            $file_get_contents = preg_replace('/\/\/ ' . $dswjcms['name'] . '_s(.*?)\/\/ ' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
+            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+            // 添加新的插件代码
+            $file_get_contents = str_replace("插件", $dswjcms['name'] . "_s
+        " . $routes['observers'] . "
+        // " . $dswjcms['name'] . "_e
+        // 插件", $file_get_contents);
+            file_put_contents($targetPath, $file_get_contents);
+            unset($targetPath);
+            unset($file_get_contents);
         }
         //写入本地插件列表
         $json_dswjcms = json_decode(file_get_contents($this->pluginPath . '/dswjcms.json'), true);
@@ -226,6 +243,15 @@ class Plugin
         file_put_contents($targetPath, $file_get_contents);
         unset($targetPath);
         unset($file_get_contents);
+        //去除observers注册代码
+        $targetPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
+        $file_get_contents = file_get_contents($targetPath);
+        //去除已存在的插件代码
+        $file_get_contents = preg_replace('/\/\/ ' . $dswjcms['name'] . '_s(.*?)\/\/ ' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+        file_put_contents($targetPath, $file_get_contents);
+        unset($targetPath);
+        unset($file_get_contents);
         //去除后台路由
         $targetPath = $this->path . '/admin/src/store/modules/permission.js';
         $file_get_contents = file_get_contents($targetPath);
@@ -242,6 +268,7 @@ class Plugin
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v' . config('dswjcms.versions'));
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v' . config('dswjcms.versions') . '/Plugin');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dswjcms.versions'));
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/observers', $this->path . '/api/app/Observers');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/trade/Dsshop/api');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/trade/Dsshop/components');

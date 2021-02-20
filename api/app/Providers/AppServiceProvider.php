@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Providers;
-
 use App\Models\v1\GoodIndent;
 use App\Models\v1\User;
 use App\Observers\GoodIndent\CreateIndentCommodityObserver;
@@ -17,7 +15,6 @@ use App\Observers\User\UserLogObserver;
 use App\Observers\User\UserRegisterNotificationObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,7 +26,6 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
-
     /**
      * Bootstrap any application services.
      *
@@ -37,7 +33,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         Schema::defaultStringLength(191);
         User::observe(UserLogObserver::class);
         User::observe(UserRegisterNotificationObserver::class);
@@ -51,6 +46,5 @@ class AppServiceProvider extends ServiceProvider
         GoodIndent::observe(RefundNotificationObserver::class);
         GoodIndent::observe(EscrowRefundObserver::class);
         // 插件
-
     }
 }
