@@ -2,21 +2,17 @@
 /**
  * 微信公众号模板消息
  */
-
 namespace App\Channels;
-
 use App\Models\v1\NotificationLog;
 use Carbon\Carbon;
 use EasyWeChat\Factory;
 use Illuminate\Notifications\Notification;
-
 class WechatChannel
 {
     private $config;
     private $app;
     private $information;
     private $miniweixin;
-
     public function __construct()
     {
         // 当配置过了微信小程序，通知一律跳转到小程序，否则跳H5
@@ -25,7 +21,6 @@ class WechatChannel
         $this->app = Factory::officialAccount($this->config);
         $this->information = config('notification.wechat');
     }
-
     /**
      * 发送指定的通知.
      *
@@ -44,7 +39,6 @@ class WechatChannel
             }
         }
     }
-
     /**
      *  发货通知
      * @param $notifiable
@@ -86,7 +80,6 @@ class WechatChannel
         $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK : NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
         $NotificationLog->save();
     }
-
     /**
      *  订单支付成功
      * @param $notifiable
@@ -128,7 +121,6 @@ class WechatChannel
         $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK : NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
         $NotificationLog->save();
     }
-
     /**
      * 订单待发货提醒
      * @param $notifiable
@@ -162,7 +154,6 @@ class WechatChannel
         $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK : NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
         $NotificationLog->save();
     }
-
     /**
      *  订单确认收货通知
      * @param $notifiable
@@ -204,7 +195,6 @@ class WechatChannel
         $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK : NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
         $NotificationLog->save();
     }
-
     /**
      * 订单完成通知
      * @param $notifiable
@@ -237,7 +227,6 @@ class WechatChannel
         $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK : NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
         $NotificationLog->save();
     }
-
     /**
      *  退款成功通知
      * @param $notifiable
@@ -276,7 +265,6 @@ class WechatChannel
         $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK : NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
         $NotificationLog->save();
     }
-
     /**
      *  注册成功通知
      * @param $notifiable
