@@ -163,6 +163,22 @@ class Plugin
             unset($targetPath);
             unset($file_get_contents);
         }
+        // 微信公众号模板消息
+        if (array_key_exists('wechatChannel', $routes)) {
+            $targetPath = $this->path . '/api/app/Channels/WechatChannel.php';
+            $file_get_contents = file_get_contents($targetPath);
+            //去除已存在的插件代码
+            $file_get_contents = preg_replace('/\/\/ ' . $dswjcms['name'] . '_s(.*?)\/\/ ' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
+            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+            // 添加新的插件代码
+            $file_get_contents = str_replace("插件", $dswjcms['name'] . "_s
+        " . $routes['wechatChannel'] . "
+        // " . $dswjcms['name'] . "_e
+        // 插件", $file_get_contents);
+            file_put_contents($targetPath, $file_get_contents);
+            unset($targetPath);
+            unset($file_get_contents);
+        }
         //写入本地插件列表
         $json_dswjcms = json_decode(file_get_contents($this->pluginPath . '/dswjcms.json'), true);
         if (collect($json_dswjcms)->firstWhere('name', $name)) {
@@ -245,6 +261,15 @@ class Plugin
         unset($file_get_contents);
         //去除observers注册代码
         $targetPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
+        $file_get_contents = file_get_contents($targetPath);
+        //去除已存在的插件代码
+        $file_get_contents = preg_replace('/\/\/ ' . $dswjcms['name'] . '_s(.*?)\/\/ ' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+        file_put_contents($targetPath, $file_get_contents);
+        unset($targetPath);
+        unset($file_get_contents);
+        // 去除微信公众号模板消息
+        $targetPath = $this->path . '/api/app/Channels/WechatChannel.php';
         $file_get_contents = file_get_contents($targetPath);
         //去除已存在的插件代码
         $file_get_contents = preg_replace('/\/\/ ' . $dswjcms['name'] . '_s(.*?)\/\/ ' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
