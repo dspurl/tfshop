@@ -89,7 +89,7 @@ class LoginController extends Controller
                 $return = DB::transaction(function () use ($request, $miniPhoneNumber, $openid) {
                     $password = substr(MD5(time()), 5, 6);  //随机生成密码
                     $redis = new RedisService();
-                    $redis->setex('password.register.' . $miniPhoneNumber['purePhoneNumber'], 30, $password);
+                    $redis->setex('password.register.' . $miniPhoneNumber['purePhoneNumber'], 5, $password);
                     $user = new User();
                     $user->name = $miniPhoneNumber['purePhoneNumber'];
                     $user->cellphone = $miniPhoneNumber['purePhoneNumber'];

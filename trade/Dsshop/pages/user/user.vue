@@ -97,7 +97,12 @@
 				browseList: [],
 				user: {},
 				noticeNumber: null,
-				quantity: {}
+				quantity: {
+					all: 0,
+					obligation: 0,
+					waitdeliver: 0,
+					waitforreceiving: 0
+				}
 			}
 		},
 		onLoad(){
@@ -113,6 +118,12 @@
 				this.browseList = []
 				this.user = {}
 				this.noticeNumber = null
+				this.quantity = {
+					all: 0,
+					obligation: 0,
+					waitdeliver: 0,
+					waitforreceiving: 0
+				}
 			}
 			
 		},
