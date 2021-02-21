@@ -160,7 +160,8 @@
 			browse(){
 				const that = this
 				Browse.getList({
-					limit: 10
+					limit: 10,
+					sort: '-updated_at'
 				},function(res){
 					that.browseList = res.data
 				})
