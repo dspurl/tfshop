@@ -13,12 +13,12 @@
 		<view class="cu-modal" :class="modalName=='guidanceMy'?'show':''">
 			<view class="guidance-modal">
 				<view class="triangle-top"></view>
-				<view class="title bg-red text-xl padding">点<image style="height: 60upx;position: relative;top:20upx;" mode="heightFix" src="../../static/guidance-white.png"></image>添加小程序</view>
+				<view class="title bg-red text-xl padding">点<image style="height: 60upx;position: relative;top:0;margin: 0 auto;" mode="heightFix" src="../../static/guidance-white.png"></image>添加小程序</view>
 				<view class="list">
 					<view class="padding text-left min-title">
 						<span class="text-red">1、</span>
 						点右上
-						<image style="height: 60upx;position: relative;top:20upx;" mode="heightFix" src="../../static/guidance.png"></image>
+						<image style="height: 60upx;position: relative;top:0;" mode="heightFix" src="../../static/guidance.png"></image>
 						添加到“我的小程序”
 					</view>
 					<view>

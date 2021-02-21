@@ -6,7 +6,6 @@ use App\Models\v1\Dhl;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\User;
 use App\Notifications\InvoicePaid;
-use Illuminate\Http\Request;
 
 /**
  * finish payment
@@ -16,23 +15,16 @@ use Illuminate\Http\Request;
  */
 class ShipmentNotificationObserver
 {
-    protected $request;
-
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
-
     public function updated(GoodIndent $goodIndent)
     {
         // 当状态为待收货时触发
         if ($goodIndent->state == GoodIndent::GOOD_INDENT_STATE_TAKE) {
-            $Dhl = Dhl::find($this->request->dhl_id);
+            $Dhl = Dhl::find($goodIndent->dhl_id);
             $parameter = [
                 'id' => $goodIndent->id,  //订单ID
                 'identification' => $goodIndent->identification,  //订单号
                 'dhl' => $Dhl->name,  //快递公司
-                'odd' => $this->request->odd,   // 快递单号
+                'odd' => $goodIndent->odd,   // 快递单号
                 'total' => $goodIndent->total,    //订单金额
                 'shipping_time' => $goodIndent->shipping_time,    //发货时间
                 'location' => $goodIndent->GoodLocation,    //收货地址
