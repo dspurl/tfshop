@@ -120,7 +120,7 @@
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="200">
+      <el-table-column label="操作" class-name="small-padding fixed-width" width="120">
         <template slot-scope="scope">
           <router-link v-permission="$store.jurisdiction.IndentDetail" :to="{ path: 'indentDetail', query: { id: scope.row.id }}">
             <el-tooltip class="item" effect="dark" content="订单详情" placement="top-start">
