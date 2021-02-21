@@ -138,7 +138,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::get('shipping', 'ShippingController@list');    //收货地址列表
         Route::post('shipping', 'ShippingController@create');    //创建收货地址
         Route::post('shipping/{id}', 'ShippingController@edit');    //保存收货地址
-        Route::get('shipping/default/get', 'ShippingController@defaultGet');    //获取默认收货地址
+        Route::post('shipping/default/get', 'ShippingController@defaultGet');    //获取默认收货地址
         Route::post('shipping/destroy/{id}', 'ShippingController@destroy');    //删除收货地址
         Route::post('shipping/default/set', 'ShippingController@defaultSet');    //设为默认
         Route::get('browse', 'BrowseController@list');    //浏览记录列表

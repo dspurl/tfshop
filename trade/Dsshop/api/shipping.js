@@ -45,7 +45,7 @@ export default {
 		})
 	},
 	defaultGet(data,success,fail) {
-		Network.setGetMessage('shipping/default/get',data,'加载中', function (res) {
+		Network.setPostMessage('shipping/default/get',data,'加载中', function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
