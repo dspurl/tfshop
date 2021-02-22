@@ -128,6 +128,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('balancePay', 'AppController@balancePay');    //余额支付
         Route::get('goodIndent', 'GoodIndentController@list');    //订单列表
         Route::post('goodIndent', 'GoodIndentController@create');    //创建订单
+        Route::post('goodIndent/addShoppingCart', 'GoodIndentController@addShoppingCart');    //添加到购物车
         Route::get('goodIndent/detail/{id}', 'GoodIndentController@detail');    //订单详情
         Route::post('goodIndent/synchronizationInventory', 'GoodIndentController@synchronizationInventory');    //同步线上商品库存
         Route::get('goodIndent/pay/{id}', 'GoodIndentController@pay');    //支付订单详情

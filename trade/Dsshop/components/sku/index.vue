@@ -64,6 +64,7 @@
 <script>
 import uniNumberBox from '@/components/uni-number-box.vue'
 import { param2Data } from '@/components/sku/sku2param'
+import GoodIndent from '@/api/goodIndent'
 export default{
 	name: 'sku',
 	components: {
@@ -476,7 +477,9 @@ export default{
 							cartList[this.shoppingAttributes.id].price = this.cartGood.price
 							cartList[this.shoppingAttributes.id].name = this.getLists.name
 							cartList[this.shoppingAttributes.id].good_id = this.getLists.id
-							cartList[this.shoppingAttributes.id].good = this.getLists
+							const good = JSON.parse(JSON.stringify(this.getLists))
+							delete good.details
+							cartList[this.shoppingAttributes.id].good = good
 							cartList[this.shoppingAttributes.id].good_sku_id = this.shoppingAttributes.id
 							cartList[this.shoppingAttributes.id].good_sku = this.shoppingAttributes
 							cartList[this.shoppingAttributes.id].img = img
@@ -525,6 +528,8 @@ export default{
 					if(this.buyState){	//直接购买
 						uni.setStorageSync('dsshopOrderList', cartList)
 					}else{
+						// 发送给后台
+						GoodIndent.addShoppingCart(cartList,function(res){})
 						uni.setStorageSync('dsshopCartList', cartList)
 					}
 					

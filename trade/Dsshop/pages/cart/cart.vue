@@ -151,7 +151,7 @@
 				this.invalidGood = []
 				let cartList =  uni.getStorageSync('dsshopCartList') || {}
 				const that = this
-				GoodIndent.synchronizationInventory(cartList,function(res){
+				GoodIndent.synchronizationInventory({},function(res){
 					cartList = Object.values(res)
 					for(var k in cartList){
 						cartList[k].checked = true
