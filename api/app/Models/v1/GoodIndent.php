@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string created_at
  * @property string confirm_time
  * @property string refund_time
+ * @property string overtime
  */
 class GoodIndent extends Model
 {
@@ -33,7 +34,7 @@ class GoodIndent extends Model
     const GOOD_INDENT_STATE_PAY = 1; //状态：待付款
     const GOOD_INDENT_STATE_DELIVER = 2; //状态：待发货
     const GOOD_INDENT_STATE_TAKE = 3; //状态：待收货
-    const GOOD_INDENT_STATE_EVALUATE = 4; //状态：待评价
+    const GOOD_INDENT_STATE_FAILURE = 4; //状态：已失效
     const GOOD_INDENT_STATE_ACCOMPLISH = 5; //状态：已完成
     const GOOD_INDENT_STATE_CANCEL = 6; //状态：已取消
     const GOOD_INDENT_STATE_REFUND = 7; //状态：已退款
@@ -192,8 +193,8 @@ class GoodIndent extends Model
                     case static::GOOD_INDENT_STATE_TAKE:
                         $return = '待收货';
                         break;
-                    case static::GOOD_INDENT_STATE_EVALUATE:
-                        $return = '待评价';
+                    case static::GOOD_INDENT_STATE_FAILURE:
+                        $return = '已失效';
                         break;
                     case static::GOOD_INDENT_STATE_ACCOMPLISH:
                         $return = '已完成';

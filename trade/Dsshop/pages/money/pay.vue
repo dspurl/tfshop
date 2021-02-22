@@ -1,61 +1,70 @@
 <template>
 	<view class="app">
-		<view class="price-box">
-			<text>支付金额</text>
-			<text class="price">{{orderInfo.total | 1000}}</text>
-		</view>
-
-		<view class="pay-type-list">
-
-			<view class="type-item b-b" @click="changePayType('weixin')">
-				<text class="icon yticon icon-weixinzhifu"></text>
-				<view class="con">
-					<text class="tit">微信支付</text>
-					<text>推荐使用微信支付</text>
-				</view>
-				<label class="radio">
-					<radio value="" color="#fa436a" :checked="payType == 'weixin'"/>
-					</radio>
-				</label>
-			</view>
-			<!-- <view class="type-item b-b" @click="changePayType('alipay')">
-				<text class="icon yticon icon-alipay"></text>
-				<view class="con">
-					<text class="tit">支付宝支付</text>
-				</view>
-				<label class="radio">
-					<radio value="" color="#fa436a" :checked="payType == 'alipay'" />
-					</radio>
-				</label>
-			</view> -->
-			<view class="type-item" @click="changePayType(1)">
-				<text class="icon yticon icon-erjiye-yucunkuan"></text>
-				<view class="con">
-					<text class="tit">预存款支付</text>
-					<text>可用余额 ¥{{orderInfo.user.money | 1000}}</text>
-				</view>
-				<label class="radio">
-					<radio value="" color="#fa436a" :checked="payType == 1" />
-					</radio>
-				</label>
+		<view v-if="orderInfo.state === 4">
+			<view class="price-box">
+				<text>订单已失效</text>
 			</view>
 		</view>
-		
-		<text class="mix-btn" @click="confirm">确认支付</text>
-		<view class="cu-modal" :class="modalName=='payHint'?'show':''">
-			<view class="cu-dialog">
-				<view class="cu-bar bg-white justify-end">
-					<view class="content">提醒</view>
-					<view class="action" @tap="hideModal">
-						<text class="cuIcon-close text-red"></text>
+		<view v-else>
+			<view class="price-box">
+				<text>支付金额</text>
+				<text class="price">{{orderInfo.total | 1000}}</text>
+				<text class="padding-top">订单失效时间</text>
+				<uni-countdown color="#fa436a" splitorColor="#fa436a" :show-day="orderInfo.day" :showColon="false" :day="orderInfo.day" :hour="orderInfo.hour" :minute="orderInfo.minute" :second="orderInfo.second"></uni-countdown>
+			</view>
+			
+			<view class="pay-type-list">
+			
+				<view class="type-item b-b" @click="changePayType('weixin')">
+					<text class="icon yticon icon-weixinzhifu"></text>
+					<view class="con">
+						<text class="tit">微信支付</text>
+						<text>推荐使用微信支付</text>
 					</view>
+					<label class="radio">
+						<radio value="" color="#fa436a" :checked="payType == 'weixin'"/>
+						</radio>
+					</label>
 				</view>
-				<view class="padding-xl">
-					是否已完成支付
+				<!-- <view class="type-item b-b" @click="changePayType('alipay')">
+					<text class="icon yticon icon-alipay"></text>
+					<view class="con">
+						<text class="tit">支付宝支付</text>
+					</view>
+					<label class="radio">
+						<radio value="" color="#fa436a" :checked="payType == 'alipay'" />
+						</radio>
+					</label>
+				</view> -->
+				<view class="type-item" @click="changePayType(1)">
+					<text class="icon yticon icon-erjiye-yucunkuan"></text>
+					<view class="con">
+						<text class="tit">预存款支付</text>
+						<text>可用余额 ¥{{orderInfo.user.money | 1000}}</text>
+					</view>
+					<label class="radio">
+						<radio value="" color="#fa436a" :checked="payType == 1" />
+						</radio>
+					</label>
 				</view>
-				<view class="flex cu-bar bg-white justify-between">
-					<button class="margin-left cu-btn line-green text-green" @tap="hideModal">取消</button>
-					<button class="margin-right cu-btn bg-green margin-left" @tap="goBack">已完成</button>
+			</view>
+			
+			<text class="mix-btn" @click="confirm">确认支付</text>
+			<view class="cu-modal" :class="modalName=='payHint'?'show':''">
+				<view class="cu-dialog">
+					<view class="cu-bar bg-white justify-end">
+						<view class="content">提醒</view>
+						<view class="action" @tap="hideModal">
+							<text class="cuIcon-close text-red"></text>
+						</view>
+					</view>
+					<view class="padding-xl">
+						是否已完成支付
+					</view>
+					<view class="flex cu-bar bg-white justify-between">
+						<button class="margin-left cu-btn line-green text-green" @tap="hideModal">取消</button>
+						<button class="margin-right cu-btn bg-green margin-left" @tap="goBack">已完成</button>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -116,7 +125,7 @@
 				const that = this
 				GoodIndent.pay(this.id,function(res){
 					that.orderInfo = res
-					if(res.state !== 1){
+					if(res.state !== 1 && res.state !== 4){
 						uni.redirectTo({
 							url: '/pages/money/paySuccess'
 						})

@@ -100,6 +100,7 @@ class GoodIndentController extends Controller
                 $GoodIndent->identification = orderNumber();
                 $GoodIndent->total = $total + $request->carriage;
                 $GoodIndent->remark = $request->remark;
+                $GoodIndent->overtime = date('Y-m-d H:i:s', time() + config('dswjcms.orderOvertime') * 60);
                 $GoodIndent->save();
                 return array(1, $GoodIndent->id);
             }, 5);
@@ -209,7 +210,12 @@ class GoodIndentController extends Controller
             }]);
         }, 'User' => function ($q) {
             $q->select('id', 'money');
-        }])->select('id', 'total', 'user_id', 'state')->find($id);
+        }])->select('id', 'total', 'user_id', 'state', 'overtime')->find($id);
+        $time_diff = time_diff($GoodIndent->overtime);
+        $GoodIndent->day = $time_diff['day'];
+        $GoodIndent->hour = $time_diff['hour'];
+        $GoodIndent->minute = $time_diff['minute'];
+        $GoodIndent->second = $time_diff['second'];
         return resReturn(1, $GoodIndent);
     }
 
