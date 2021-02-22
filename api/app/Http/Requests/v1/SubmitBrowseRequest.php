@@ -13,21 +13,15 @@ class SubmitBrowseRequest extends Request
      */
     public function authorize()
     {
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
             }
         }
-
     }
 
     /**
@@ -37,16 +31,12 @@ class SubmitBrowseRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return [
                     'id' => 'required|integer',
                 ];
-            case 'PUT': //update
-                return [
-                    'id' => 'required|integer',
-                ];
+            case 'PUT':
             case 'PATCH':
             case 'GET':
             case 'DELETE':
@@ -60,8 +50,8 @@ class SubmitBrowseRequest extends Request
     public function messages()
     {
         return [
-            'id.required' =>'商品ID不能为空',
-            'id.integer' =>'商品ID格式有误',
+            'id.required' => '商品ID不能为空',
+            'id.integer' => '商品ID格式有误',
         ];
     }
 }

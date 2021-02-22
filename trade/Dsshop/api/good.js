@@ -11,51 +11,7 @@ export default {
 		  })
 		})
     },
-	createSubmit(data,success,fail) {
-		Network.setPostMessage('Good',data,'处理中', function (res) {
-		  success(res)
-		}, function (res) {
-		  uni.showToast({
-			title: res.message,
-			icon: 'none',
-			duration: 2000
-		  })
-		})
-	},
-	updateSubmit(data,success,fail) {
-		Network.setPostMessage('Good/' + data.id,data,'处理中', function (res) {
-		  success(res)
-		}, function (res) {
-		  uni.showToast({
-			title: res.message,
-			icon: 'none',
-			duration: 2000
-		  })
-		})
-	},
-	deleteSubmit(id,success,fail){
-		Network.setPostMessage('GoodDelete/' + id,{},'处理中', function (res) {
-		  success(res)
-		}, function (res) {
-		  uni.showToast({
-			title: res.message,
-			icon: 'none',
-			duration: 2000
-		  })
-		})
-	},
-	detailsSubmit(id, data,success,fail) {
-		Network.setGetMessage('GoodDetails/' + id,data,'加载中', function (res) {
-		  success(res)
-		}, function (res) {
-		  uni.showToast({
-			title: res.message,
-			icon: 'none',
-			duration: 2000
-		  })
-		})
-	},
-	getDetails(id, data,success,fail) {
+	detail(id, data,success,fail) {
 		Network.setGetMessage('good/' + id,data,'加载中', function (res) {
 		  success(res)
 		}, function (res) {
@@ -66,7 +22,7 @@ export default {
 		  })
 		})
 	},
-	getCategoryShow(data,success,fail) {
+	goodCategory(data,success,fail) {
 		Network.setGetMessage('goodCategory',data,'加载中', function (res) {
 		  success(res)
 		}, function (res) {

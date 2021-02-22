@@ -7,15 +7,20 @@ use App\common\Plugin;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+/**
+ *  plugin
+ * 插件管理
+ * Class PluginController
+ * @package App\Http\Controllers\v1\Admin
+ */
 class PluginController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @param Request $request
+     * PlugInList
+     * 插件列表
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function list()
     {
         $Plugin = new Plugin();
         $Json = $Plugin->getLocalPlugin();
@@ -23,29 +28,23 @@ class PluginController extends Controller
     }
 
     /**
-     * 插件安装
+     * PlugInInstall
+     * 插件安装/更新
      * @param $name
      * @return string
+     * @queryParam  name string 插件简称
      */
-    public function install($name)
+    public function create($name)
     {
         return (new Plugin())->autoPlugin($name);
     }
 
     /**
-     * 插件更新
-     * @param $name
-     * @return string
-     */
-    public function update($name)
-    {
-        return (new Plugin())->autoPlugin($name);
-    }
-
-    /**
+     * PlugInDelete
      * 插件卸载
      * @param $name
      * @return string
+     * @queryParam  name string 插件简称
      */
     public function destroy($name)
     {

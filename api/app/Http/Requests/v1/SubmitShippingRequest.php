@@ -13,21 +13,15 @@ class SubmitShippingRequest extends Request
      */
     public function authorize()
     {
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
             }
         }
-
     }
 
     /**
@@ -37,8 +31,7 @@ class SubmitShippingRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'POST':    //create
                 return [
                     'cellphone' => 'required|numeric',
@@ -49,16 +42,7 @@ class SubmitShippingRequest extends Request
                     'longitude' => 'required|numeric',
                     'house' => 'required|string|max:255',
                 ];
-            case 'PUT': //update
-                return [
-                    'cellphone' => 'required|numeric',
-                    'name' => 'required|string|max:30',
-                    'location' => 'required|string|max:255',
-                    'address' => 'nullable|string|max:255',
-                    'latitude' => 'required|numeric',
-                    'longitude' => 'required|numeric',
-                    'house' => 'required|string|max:255',
-                ];
+            case 'PUT':
             case 'PATCH':
             case 'GET':
             case 'DELETE':
@@ -72,12 +56,12 @@ class SubmitShippingRequest extends Request
     public function messages()
     {
         return [
-            'cellphone.required' =>'手机号必须',
-            'name.required' =>'联系人必须',
-            'location.required' =>'地址必须',
-            'latitude.required' =>'纬度必须',
-            'longitude.required' =>'经度必须',
-            'house.required' =>'门牌号必须',
+            'cellphone.required' => '手机号必须',
+            'name.required' => '联系人必须',
+            'location.required' => '地址必须',
+            'latitude.required' => '纬度必须',
+            'longitude.required' => '经度必须',
+            'house.required' => '门牌号必须',
         ];
     }
 }

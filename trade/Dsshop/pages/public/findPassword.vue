@@ -58,7 +58,7 @@
 </template>
 
 <script>
-	import User from '../../api/user'
+	import Login from '../../api/login'
 	import {  
         mapMutations  
     } from 'vuex';
@@ -134,7 +134,7 @@
 					  return false
 					}
 				}
-				User.findPassword(ruleForm,function(res){
+				Login.findPassword(ruleForm,function(res){
 					that.$api.msg(`密码重置成功`);
 					uni.redirectTo({
 						url: `/pages/public/login`
@@ -185,7 +185,7 @@
 				  this.$api.msg('手机号有误')
 			      return false;
 			    }
-				User.getRegisterCellphoneCode(this.ruleForm,function(res){
+				Login.cellphoneCode(this.ruleForm,function(res){
 					// 开始倒计时
 					that.seconds = 60
 					that.codename = ''

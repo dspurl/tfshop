@@ -2,93 +2,86 @@
 
 namespace App\Http\Controllers\v1\Admin;
 
-use App\Code;
 use App\Http\Requests\v1\SubmitSpecificationGroupRequest;
 use App\Models\v1\SpecificationGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
+/**
+ * @group specificationGroup
+ * 规格组管理
+ * Class SpecificationGroupController
+ * @package App\Http\Controllers\v1\Admin
+ */
 class SpecificationGroupController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * SpecificationGroupList
+     * 规格组列表
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  name string 规格组名称
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  sort string 排序
+     * @queryParam  page string 页码
      */
-    public function index(Request $request)
+    public function list(Request $request)
     {
         $q = SpecificationGroup::query();
-        $limit=$request->limit;
-        $q->orderBy('id','ASC');
-        if($request->title){
-            $q->where('name','like','%'.$request->title.'%');
+        $limit = $request->limit;
+        if ($request->has('sort')) {
+            $sortFormatConversion = sortFormatConversion($request->sort);
+            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
-        $paginate=$q->paginate($limit);
-        return resReturn(1,$paginate);
+        if ($request->title) {
+            $q->where('name', 'like', '%' . $request->title . '%');
+        }
+        $paginate = $q->paginate($limit);
+        return resReturn(1, $paginate);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * SpecificationGroupCreate
+     * 创建规格组
      * @param SubmitSpecificationGroupRequest $request
      * @return \Illuminate\Http\JsonResponse
+     * @queryParam  name string 规格组名称
      */
-    public function store(SubmitSpecificationGroupRequest $request)
+    public function create(SubmitSpecificationGroupRequest $request)
     {
-        $return=DB::transaction(function ()use($request){
-            $Specification=new SpecificationGroup();
-            $Specification->name=$request->name;
-            $Specification->save();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'成功');
-        }else{
-            return resReturn(0,'添加失败',Code::CODE_PARAMETER_WRONG);
-        }
+        $Specification = new SpecificationGroup();
+        $Specification->name = $request->name;
+        $Specification->save();
+        return resReturn(1, '成功');
     }
 
     /**
-     * Update the specified resource in storage.
-     *
+     * SpecificationGroupEdit
+     * 保存规格组
      * @param SubmitSpecificationGroupRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 规格组ID
+     * @queryParam  name string 规格组名称
      */
-    public function update(SubmitSpecificationGroupRequest $request, $id)
+    public function edit(SubmitSpecificationGroupRequest $request, $id)
     {
-        $return=DB::transaction(function ()use($request,$id){
-            $Specification=SpecificationGroup::find($id);
-            $Specification->name=$request->name;
-            $Specification->save();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'更新成功');
-        }else{
-            return resReturn(0,'更新失败',Code::CODE_PARAMETER_WRONG);
-        }
+        $Specification = SpecificationGroup::find($id);
+        $Specification->name = $request->name;
+        $Specification->save();
+        return resReturn(1, '更新成功');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
+     * SpecificationGroupDestroy
+     * 删除规格组
      * @param  int $id
-     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 规格组ID
      */
-    public function destroy($id, Request $request)
+    public function destroy($id)
     {
-        $return=DB::transaction(function ()use($request,$id){
-            SpecificationGroup::where('id',$id)->delete();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'删除成功');
-        }else{
-            return resReturn(0,'删除失败',Code::CODE_PARAMETER_WRONG);
-        }
+        SpecificationGroup::destroy($id);
+        return resReturn(1, '删除成功');
     }
 }

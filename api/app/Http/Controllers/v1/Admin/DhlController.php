@@ -8,95 +8,97 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @group dhl
+ * 快递公司管理
+ * Class DhlController
+ * @package App\Http\Controllers\v1\Admin
+ */
 class DhlController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * DhlList
+     * 快递公司列表
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  title string 公司名称
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  sort string 排序
+     * @queryParam  page string 页码
      */
-    public function index(Request $request)
+    public function list(Request $request)
     {
-        Dhl::$withoutAppends = false;
-        $q = Dhl::query();
-        $limit=$request->limit;
-        $paginate=$q->paginate($limit);
+        if($request->has('page')){
+            Dhl::$withoutAppends = false;
+            $q = Dhl::query();
+            if ($request->has('sort')) {
+                $sortFormatConversion = sortFormatConversion($request->sort);
+                $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+            }
+            if ($request->title) {
+                $q->where('name', 'like', '%' . $request->title . '%');
+            }
+            $limit=$request->limit;
+            $paginate=$q->paginate($limit);
+        }else{
+            $paginate=Dhl::get();
+        }
         return resReturn(1,$paginate);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * DhlCreate
+     * 创建快递公司
      * @param SubmitDhlRequest $request
      * @return \Illuminate\Http\Response
+     * @queryParam  name string 快递公司名称
+     * @queryParam  abbreviation string 快递公司英文缩写
+     * @queryParam  state string 状态
+     * @queryParam  sort string 排序
      */
-    public function store(SubmitDhlRequest $request)
+    public function create(SubmitDhlRequest $request)
     {
-        $return=DB::transaction(function ()use($request){
-            $Dhl=new Dhl();
-            $Dhl->name = $request->name;
-            $Dhl->abbreviation = $request->abbreviation;
-            $Dhl->state = $request->state;
-            $Dhl->sort = $request->sort;
-            $Dhl->save();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'添加成功');
-        }else{
-            return resReturn(0,$return[0],$return[1]);
-        }
+        $Dhl=new Dhl();
+        $Dhl->name = $request->name;
+        $Dhl->abbreviation = $request->abbreviation;
+        $Dhl->state = $request->state;
+        $Dhl->sort = $request->sort;
+        $Dhl->save();
+        return resReturn(1,'添加成功');
     }
 
     /**
-     * Update the specified resource in storage.
-     *
+     * DhlEdit
+     * 保存快递公司
      * @param SubmitDhlRequest $request
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @queryParam  name string 快递公司名称
+     * @queryParam  abbreviation string 快递公司英文缩写
+     * @queryParam  state string 状态
+     * @queryParam  sort string 排序
      */
-    public function update(SubmitDhlRequest $request, $id)
+    public function edit(SubmitDhlRequest $request, $id)
     {
-        $return=DB::transaction(function ()use($request,$id){
-            $Dhl = Dhl::find($id);
-            $Dhl->name = $request->name;
-            $Dhl->abbreviation = $request->abbreviation;
-            $Dhl->state = $request->state;
-            $Dhl->sort = $request->sort;
-            $Dhl->save();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'更新成功');
-        }else{
-            return resReturn(0,$return[0],$return[1]);
-        }
+        $Dhl = Dhl::find($id);
+        $Dhl->name = $request->name;
+        $Dhl->abbreviation = $request->abbreviation;
+        $Dhl->state = $request->state;
+        $Dhl->sort = $request->sort;
+        $Dhl->save();
+        return resReturn(1,'更新成功');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
+     * DhlDestroy
+     * 删除快递公司
      * @param  int $id
-     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 快递公司ID
      */
-    public function destroy($id, Request $request)
+    public function destroy($id)
     {
-        $return=DB::transaction(function ()use($request,$id){
-            Dhl::where('id',$id)->delete();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'删除成功');
-        }else{
-            return resReturn(0,$return[0],$return[1]);
-        }
-    }
-
-    public function list()
-    {
-        $Dhl=Dhl::get();
-        return resReturn(1,$Dhl);
+        Dhl::destroy($id);
+        return resReturn(1,'删除成功');
     }
 }

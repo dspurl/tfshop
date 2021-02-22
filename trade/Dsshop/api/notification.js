@@ -1,7 +1,7 @@
 import Network from '../utils/network.js'
 export default {
 	getList(data,success,fail) {
-		Network.setGetMessage('notice',data,'加载中', function (res) {
+		Network.setGetMessage('notification',data,'加载中', function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -11,8 +11,8 @@ export default {
 		  })
 		})
 	},
-	getCount(data,success,fail) {
-		Network.setGetMessage('noticeConut',data,'加载中', function (res) {
+	unread(data,success,fail) {
+		Network.setGetMessage('notification/unread',data,'加载中', function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -22,8 +22,8 @@ export default {
 		  })
 		})
 	},
-	deleteSubmit(id,success,fail){
-		Network.setPostMessage('notice/' + id,{},'处理中', function (res) {
+	destroy(id,success,fail){
+		Network.setPostMessage('notification/destroy/' + id,{},'处理中', function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({

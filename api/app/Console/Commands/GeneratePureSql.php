@@ -42,8 +42,8 @@ class GeneratePureSql extends Command
         $sqls = Storage::get('./dsshop-pure.sql');
         $sqls = str_replace("\r", "\n", $sqls);
         $sqls = explode(";\n", $sqls);
-        $sqls=array_filter($sqls);
-        foreach($sqls as $sql){
+        $sqls = array_filter($sqls);
+        foreach ($sqls as $sql) {
             $value = trim($sql);
             DB::insert($value);
         }

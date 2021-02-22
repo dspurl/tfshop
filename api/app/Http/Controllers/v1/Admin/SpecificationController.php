@@ -10,103 +10,112 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @group specification
+ * 规格管理
+ * Class SpecificationController
+ * @package App\Http\Controllers\v1\Admin
+ */
 class SpecificationController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
+     * SpecificationList
+     * 规格列表
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  title string 规格名称
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  sort string 排序
+     * @queryParam  page string 页码
      */
-    public function index(Request $request)
+    public function list(Request $request)
     {
         $q = Specification::query();
-        $limit=$request->limit;
-        $q->orderBy('id','ASC');
-        if($request->title){
-            $q->where('name','like','%'.$request->title.'%');
+        $limit = $request->limit;
+        if ($request->has('sort')) {
+            $sortFormatConversion = sortFormatConversion($request->sort);
+            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
-        $paginate=$q->with(['SpecificationGroup'])->paginate($limit);
-        $return= [];
+        if ($request->title) {
+            $q->where('name', 'like', '%' . $request->title . '%');
+        }
+        $paginate = $q->with(['SpecificationGroup'])->paginate($limit);
+        $return = [];
         $return['paginate'] = $paginate;
-        $return['SpecificationGroup'] = SpecificationGroup::select('id','name')->get();
-        return resReturn(1,$return);
+        $return['SpecificationGroup'] = SpecificationGroup::select('id', 'name')->get();
+        return resReturn(1, $return);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * SpecificationCreate
+     * 创建规格
      * @param SubmitSpecificationRequest $request
      * @return \Illuminate\Http\JsonResponse
+     * @queryParam  name string 规格名称
+     * @queryParam  label string 规格标注名称
+     * @queryParam  type int 规格类型
+     * @queryParam  is_search string 是否可搜索
+     * @queryParam  location string 显示位置
+     * @queryParam  specification_group_id int 规格组ID
+     * @queryParam  value string 规格值
+     * @queryParam  sort string 排序
      */
-    public function store(SubmitSpecificationRequest $request)
+    public function create(SubmitSpecificationRequest $request)
     {
-        $return=DB::transaction(function ()use($request){
-            $Specification=new Specification();
-            $Specification->name=$request->name;
-            $Specification->label=$request->label ? $request->label : $request->name;
-            $Specification->type=$request->type;
-            $Specification->is_search=$request->is_search;
-            $Specification->location=$request->location;
-            $Specification->specification_group_id=$request->specification_group_id;
-            $Specification->value=$request->value;
-            $Specification->sort=$request->sort;
-            $Specification->save();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'成功');
-        }else{
-            return resReturn(0,'添加失败',Code::CODE_PARAMETER_WRONG);
-        }
+        $Specification = new Specification();
+        $Specification->name = $request->name;
+        $Specification->label = $request->label ? $request->label : $request->name;
+        $Specification->type = $request->type;
+        $Specification->is_search = $request->is_search;
+        $Specification->location = $request->location;
+        $Specification->specification_group_id = $request->specification_group_id ?? 0;
+        $Specification->value = $request->value;
+        $Specification->sort = $request->sort;
+        $Specification->save();
+        return resReturn(1, '成功');
     }
 
     /**
-     * Update the specified resource in storage.
-     *
+     * SpecificationEdit
+     * 保存规格
      * @param SubmitSpecificationRequest|Request $request
      * @param  int $id
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 规格ID
+     * @queryParam  name string 规格名称
+     * @queryParam  label string 规格标注名称
+     * @queryParam  type int 规格类型
+     * @queryParam  is_search string 是否可搜索
+     * @queryParam  location string 显示位置
+     * @queryParam  specification_group_id int 规格组ID
+     * @queryParam  value string 规格值
+     * @queryParam  sort string 排序
      */
-    public function update(SubmitSpecificationRequest $request, $id)
+    public function edit(SubmitSpecificationRequest $request, $id)
     {
-        $return=DB::transaction(function ()use($request,$id){
-            $Specification=Specification::find($id);
-            $Specification->name=$request->name;
-            $Specification->label=$request->label ? $request->label : $request->name;
-            $Specification->type=$request->type;
-            $Specification->is_search=$request->is_search;
-            $Specification->location=$request->location;
-            $Specification->specification_group_id=$request->specification_group_id;
-            $Specification->value=$request->value;
-            $Specification->sort=$request->sort;
-            $Specification->save();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'更新成功');
-        }else{
-            return resReturn(0,'更新失败',Code::CODE_PARAMETER_WRONG);
-        }
+        $Specification = Specification::find($id);
+        $Specification->name = $request->name;
+        $Specification->label = $request->label ? $request->label : $request->name;
+        $Specification->type = $request->type;
+        $Specification->is_search = $request->is_search;
+        $Specification->location = $request->location;
+        $Specification->specification_group_id = $request->specification_group_id ?? 0;
+        $Specification->value = $request->value;
+        $Specification->sort = $request->sort;
+        $Specification->save();
+        return resReturn(1, '更新成功');
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
+     * SpecificationDestroy
+     * 删除规格
      * @param  int $id
-     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  id int 规格ID
      */
-    public function destroy($id, Request $request)
+    public function destroy($id)
     {
-        $return=DB::transaction(function ()use($request,$id){
-            Specification::where('id',$id)->delete();
-            return 1;
-        }, 5);
-        if($return == 1){
-            return resReturn(1,'删除成功');
-        }else{
-            return resReturn(0,'删除失败',Code::CODE_PARAMETER_WRONG);
-        }
+        Specification::destroy($id);
+        return resReturn(1, '删除成功');
     }
 }

@@ -22,10 +22,11 @@ class NotificationLog extends Model
     const NOTIFICATION_LOG_TYPE_ANDROID = 'android'; //类型：安卓
     const NOTIFICATION_LOG_TYPE_IOS = 'ios'; //类型：IOS
     public static $withoutAppends = true;
+
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)

@@ -1,35 +1,21 @@
 import request from '@/utils/request'
-import Qs from 'qs'
-export function getList(query) {
+export function getList() {
   return request({
     url: 'plugin',
-    method: 'get',
-    params: query
+    method: 'get'
   })
 }
 
-export function createSubmit(name) {
+export function create(name) {
   return request({
     url: 'plugin/' + name,
-    method: 'PUT'
+    method: 'get'
   })
 }
 
-export function updateSubmit(id, data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+export function destroy(name) {
   return request({
-    url: 'plugin/' + id,
-    method: 'POST',
-    data
-  })
-}
-
-export function deleteSubmit(name) {
-  return request({
-    url: 'plugin/' + name,
-    method: 'DELETE'
+    url: 'plugin/destroy/' + name,
+    method: 'post'
   })
 }

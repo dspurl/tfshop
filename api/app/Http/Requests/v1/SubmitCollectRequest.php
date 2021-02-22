@@ -13,21 +13,15 @@ class SubmitCollectRequest extends Request
      */
     public function authorize()
     {
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
             }
         }
-
     }
 
     /**
@@ -39,14 +33,11 @@ class SubmitCollectRequest extends Request
     {
         switch ($this->method())
         {
-            case 'POST':    //create
+            case 'POST':
                 return [
                     'id' => 'required|integer',
                 ];
-            case 'PUT': //update
-                return [
-                    'id' => 'required|integer',
-                ];
+            case 'PUT':
             case 'PATCH':
             case 'GET':
             case 'DELETE':

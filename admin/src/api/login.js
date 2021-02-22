@@ -5,10 +5,7 @@ export function loginByUsername(data) {
   if (!data.type) {
     url = 'gologin'
   }
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+  data = Qs.parse(data)
   return request({
     url: url,
     method: 'post',

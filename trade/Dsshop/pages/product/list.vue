@@ -1,17 +1,17 @@
 <template>
 	<view class="content">
 		<view class="navbar" :style="{position:headerPosition,top:headerTop}">
-			<view class="nav-item" :class="{current: filterIndex === 0}" @click="tabClick(0)">
+			<view class="nav-item" :class="{current: !filterIndex}" @click="tabClick()">
 				综合排序
 			</view>
-			<view class="nav-item" :class="{current: filterIndex === 1}" @click="tabClick(1)">
+			<view class="nav-item" :class="{current: filterIndex === '-sales'}" @click="tabClick('sales')">
 				销量优先
 			</view>
-			<view class="nav-item" :class="{current: filterIndex === 2}" @click="tabClick(2)">
+			<view class="nav-item" :class="{current: filterIndex === '-order_price' || filterIndex === '+order_price'}" @click="tabClick('order_price')">
 				<text>价格</text>
 				<view class="p-box">
-					<text :class="{active: priceOrder === 1 && filterIndex === 2}" class="yticon icon-shang"></text>
-					<text :class="{active: priceOrder === 2 && filterIndex === 2}" class="yticon icon-shang xia"></text>
+					<text :class="{active: filterIndex === '+order_price'}" class="yticon icon-shang"></text>
+					<text :class="{active: filterIndex === '-order_price'}" class="yticon icon-shang xia"></text>
 				</view>
 			</view>
 			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
@@ -28,7 +28,6 @@
 				<text class="title clamp">{{item.name}}</text>
 				<view class="price-box">
 					<text class="price">{{item.order_price | 1000}}</text>
-					<!-- <text>已售 {{item.sales}}</text> -->
 				</view>
 			</view>
 		</view>
@@ -67,9 +66,8 @@
 				headerPosition:"fixed",
 				headerTop:"0px",
 				loadingType: 'more', //加载更多状态
-				filterIndex: 0, 
+				filterIndex: '', 
 				cateId: 0, //已选三级分类id
-				priceOrder: 0, //1 价格从低到高 2价格从高到低
 				cateList: [],
 				goodsList: [],
 				page:1,
@@ -105,7 +103,7 @@
 			async loadCateList(fid, sid){
 				const that = this
 				// 分类
-				await Good.getCategoryShow({},function(res){
+				await Good.goodCategory({},function(res){
 					let cateList = res.filter(item=>item.pid == fid)
 					cateList.forEach(item=>{
 						let tempList = res.filter(val=>val.pid == item.id)
@@ -138,8 +136,7 @@
 					limit: 6,
 					pid: this.cateId,
 					page: this.page,
-					order: this.filterIndex,
-					priceOrder: this.priceOrder
+					sort: this.filterIndex
 				},function(res){
 					that.goodsList = that.goodsList.concat(res.data)
 					if (res.last_page > that.page){
@@ -163,14 +160,18 @@
 			},
 			//筛选点击
 			tabClick(index){
-				if(this.filterIndex === index && index !== 2){
-					return;
-				}
-				this.filterIndex = index;
-				if(index === 2){
-					this.priceOrder = this.priceOrder === 1 ? 2: 1;
+				if(index){
+					if(index === 'sales'){
+						this.filterIndex = '-sales'
+					}else{
+						if(this.filterIndex !== '+order_price'){
+							this.filterIndex = '+order_price'
+						}else{
+							this.filterIndex = '-order_price'
+						}
+					}
 				}else{
-					this.priceOrder = 0;
+					this.filterIndex = ''
 				}
 				uni.pageScrollTo({
 					duration: 300,

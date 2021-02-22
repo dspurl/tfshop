@@ -22,17 +22,12 @@
 			<text class="tit">门牌号</text>
 			<input class="input" type="text" v-model="addressData.house" placeholder="楼号、门牌" placeholder-class="placeholder" />
 		</view>
-		
-		<!-- <view class="row default-row">
-			<text class="tit">设为默认</text>
-			<switch :checked="addressData.defaule" color="#fa436a" @change="switchChange" />
-		</view> -->
 		<button class="add-btn" @click="confirm">提交</button>
 	</view>
 </template>
 
 <script>
-	import Address from '../../api/address'
+	import Shipping from '../../api/shipping'
 	import {mapMutations} from 'vuex'
 	export default {
 		data() {
@@ -163,7 +158,7 @@
 				}
 				data.cellphone = Number(data.cellphone)
 				if(data.id){
-					Address.updateSubmit(data,function(res){
+					Shipping.edit(data,function(res){
 						that.$api.prePage().refreshList()
 						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
 						setTimeout(()=>{
@@ -171,7 +166,7 @@
 						}, 1000)
 					})
 				}else{
-					Address.createSubmit(data,function(res){
+					Shipping.create(data,function(res){
 						that.$api.prePage().refreshList()
 						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
 						setTimeout(()=>{

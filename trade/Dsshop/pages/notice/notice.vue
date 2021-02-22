@@ -26,23 +26,6 @@
 			</view>
 			<uni-load-more :status="loadingType"></uni-load-more>
 		</block>
-		
-		<!-- <view class="notice-item">
-			<text class="time">昨天 12:30</text>
-			<view class="content">
-				<text class="title">新品上市，全场满199减50</text>
-				<view class="img-wrapper">
-					<image class="pic" src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3761064275,227090144&fm=26&gp=0.jpg"></image>
-					<view class="cover">
-						活动结束
-					</view>
-				</view>
-				<view class="bot b-t">
-					<text>查看详情</text>
-					<text class="more-icon yticon icon-you"></text>
-				</view>
-			</view>
-		</view> -->
 	</view>
 </template>
 
@@ -76,7 +59,8 @@
 				const that = this
 				Notification.getList({
 					limit: 8,
-					page: this.page
+					page: this.page,
+					sort: '-created_at'
 				},function(res){
 					that.data = that.data.concat(res.data)
 					if (res.last_page > that.page){

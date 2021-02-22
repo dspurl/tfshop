@@ -15,21 +15,16 @@ class SubmitUserRequest extends Request
     public function authorize()
     {
         Validator::extend('mobile', function($attribute, $value, $parameters, $validator) {
-            return preg_match('/^1[34578][0-9]{9}$/', $value);
+            return preg_match('/^1[345678][0-9]{9}$/', $value);
         });
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
-                {
-                    return false;
-                }
+            {
+                return false;
+            }
         }
     }
 
@@ -40,31 +35,30 @@ class SubmitUserRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'required|unique:users|string|max:16',
-                    'cellphone' => 'required|unique:users|mobile|max:11',
-                    'portrait' => 'nullable|string|max:255',
-                    'gender' => 'required|numeric',
-                    'password' => 'required|string|max:255',
-                ];
-            case 'PUT': //update
-                $request = Request::all();
-                return [
-                    'name' => 'required|unique:users,name,'.$request['id'].'|string|max:30',
-                    'cellphone' => 'required|unique:users,cellphone,'.$request['id'].'|mobile|max:11',
-                    'portrait' => 'nullable|string|max:255',
-                    'gender' => 'required|numeric',
-                ];
-            case 'PATCH':
-            case 'GET':
-            case 'DELETE':
-            default:
-                {
-                    return [];
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name' => 'required|unique:users,name,'.$request['id'].'|string|max:30',
+                        'cellphone' => 'required|unique:users,cellphone,'.$request['id'].'|mobile|max:11',
+                        'portrait' => 'nullable|string|max:255',
+                        'gender' => 'required|numeric',
+                    ];
+                } else {
+                    return [
+                        'name' => 'required|unique:users|string|max:16',
+                        'cellphone' => 'required|unique:users|mobile|max:11',
+                        'portrait' => 'nullable|string|max:255',
+                        'gender' => 'required|numeric',
+                        'password' => 'required|string|max:255',
+                    ];
                 }
+            case 'GET':
+            default:
+            {
+                return [];
+            }
         }
     }
 

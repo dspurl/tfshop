@@ -67,7 +67,7 @@
 </template>
 
 <script>
-	import User from '../../api/user'
+	import Login from '../../api/login'
 	import { getPlatform,getLogin } from '../../utils'
 	import {  
         mapMutations  
@@ -174,8 +174,7 @@
 				  return false
 				}
 				this.logining = true
-				User.goLogin(ruleForm,function(res){
-					// applytoken
+				Login.login(ruleForm,function(res){
 					uni.setStorageSync('dsshopApplytoken', res.api_token)
 					that.login(res)
 					that.logining = false
@@ -237,7 +236,7 @@
 				  this.modalName = ''
 				  const that = this
 				  if(e.detail.iv){
-					  User.authorizedPhone({
+					  Login.authorization({
 						iv: e.detail.iv,
 						encryptedData: e.detail.encryptedData,
 						session_key: uni.getStorageSync('applyDsshopSession_key'),

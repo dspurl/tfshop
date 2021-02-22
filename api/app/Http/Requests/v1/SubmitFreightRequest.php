@@ -13,21 +13,15 @@ class SubmitFreightRequest extends Request
      */
     public function authorize()
     {
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
             }
         }
-
     }
 
     /**
@@ -37,37 +31,37 @@ class SubmitFreightRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'required|string|max:60',
-                    'location' => 'required|array',
-                    'pinkage' => 'nullable|array',
-                    'valuation' => 'required|integer',
-                    'freight_way'=> 'nullable|array',
-                    'freight_way.*.add_cost'=> 'required|numeric',
-                    'freight_way.*.add_piece'=> 'required|numeric',
-                    'freight_way.*.first_cost'=> 'required|numeric',
-                    'freight_way.*.first_piece'=> 'required|numeric',
-                    'freight_way.*.location'=> 'required|array',
-                ];
-            case 'PUT': //update
-                return [
-                    'name' => 'required|string|max:60',
-                    'location' => 'required|array',
-                    'pinkage' => 'nullable|array',
-                    'valuation' => 'required|integer',
-                    'freight_way'=> 'nullable|array',
-                    'freight_way.*.add_cost'=> 'required|numeric',
-                    'freight_way.*.add_piece'=> 'required|numeric',
-                    'freight_way.*.first_cost'=> 'required|numeric',
-                    'freight_way.*.first_piece'=> 'required|numeric',
-                    'freight_way.*.location'=> 'required|array',
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name' => 'required|unique:freights,name,' . $request['id'] . '|string|max:60',
+                        'location' => 'required|array',
+                        'pinkage' => 'nullable|array',
+                        'valuation' => 'required|integer',
+                        'freight_way'=> 'nullable|array',
+                        'freight_way.*.add_cost'=> 'required|numeric',
+                        'freight_way.*.add_piece'=> 'required|numeric',
+                        'freight_way.*.first_cost'=> 'required|numeric',
+                        'freight_way.*.first_piece'=> 'required|numeric',
+                        'freight_way.*.location'=> 'required|array',
+                    ];
+                } else {
+                    return [
+                        'name' => 'required|unique:freights|string|max:60',
+                        'location' => 'required|array',
+                        'pinkage' => 'nullable|array',
+                        'valuation' => 'required|integer',
+                        'freight_way'=> 'nullable|array',
+                        'freight_way.*.add_cost'=> 'required|numeric',
+                        'freight_way.*.add_piece'=> 'required|numeric',
+                        'freight_way.*.first_cost'=> 'required|numeric',
+                        'freight_way.*.first_piece'=> 'required|numeric',
+                        'freight_way.*.location'=> 'required|array',
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return [];
@@ -80,6 +74,7 @@ class SubmitFreightRequest extends Request
         return [
             'name.required' =>'模板名称必须',
             'name.string' =>'模板名称格式有误',
+            'name.unique' =>'模板名称已存在',
             'name.max' =>'模板名称不能超过60个字符',
             'location.required' =>'宝贝地址必须',
             'location.array' =>'宝贝地址必须是数组',

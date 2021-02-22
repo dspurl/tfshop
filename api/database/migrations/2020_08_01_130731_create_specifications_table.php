@@ -24,6 +24,7 @@ class CreateSpecificationsTable extends Migration
             $table->text('value')->nullable()->comment('规格值');
             $table->string('label',20)->nullable()->comment('规格标注名称');
             $table->integer('sort')->default(0)->comment('排序');
+            $table->softDeletes();
             $table->timestamps();
             $table->charset = 'utf8';
             $table->engine = 'InnoDB';

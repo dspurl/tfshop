@@ -36,7 +36,7 @@ class CreateGoodsTable extends Migration
             $table->tinyInteger('is_new')->default(0)->comment('是否新品0否1是');
             $table->tinyInteger('is_hot')->default(0)->comment('是否热销0否1是');
             $table->tinyInteger('is_inventory')->default(0)->comment('减库存方式：0拍下减库存1付款减库存');
-            $table->tinyInteger('is_delete')->default(0)->comment('是否删除0否1是');
+            $table->softDeletes();
             $table->integer('sort')->default(0)->comment('排序');
             $table->timestamp('time')->nullable()->comment('上架时间');
             $table->timestamp('timing')->nullable()->comment('定时上架时间');

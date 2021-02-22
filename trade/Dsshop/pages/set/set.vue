@@ -16,15 +16,10 @@
 			<text class="cell-tit">关于我们</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<view class="list-cell" @click="navTo('/pages/set/unsubscribe')" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell" @click="navTo('/pages/set/cancel')" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">注销服务</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<!-- <view class="list-cell" @click="testVersion()">
-			<text class="cell-tit">检查更新</text>
-			<text class="cell-tip">当前版本 1.0.0</text>
-			<text class="cell-more yticon icon-you"></text>
-		</view> -->
 		<view class="list-cell log-out-btn" @click="toLogout">
 			<text class="cell-tit">退出登录</text>
 		</view>
@@ -32,7 +27,7 @@
 </template>
 
 <script>
-	import User from '../../api/user'
+	import Login from '../../api/login'
 	import {  
 	    mapMutations  
 	} from 'vuex';
@@ -72,7 +67,7 @@
 				    content: '确定要退出登录么',
 				    success: (e)=>{
 				    	if(e.confirm){
-							User.logout({},function(res){
+							Login.logout({},function(res){
 								that.logout()
 								setTimeout(()=>{
 									uni.navigateBack()

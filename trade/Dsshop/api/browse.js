@@ -11,7 +11,7 @@ export default {
 		  })
 		})
     },
-	createSubmit(data,success,fail) {
+	create(data,success,fail) {
 		Network.setPostMessage('browse',data,'处理中', function (res) {
 		  success(res)
 		}, function (res) {

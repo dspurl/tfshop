@@ -3,6 +3,7 @@
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
 class SubmitGoodRequest extends Request
 {
@@ -15,13 +16,9 @@ class SubmitGoodRequest extends Request
     {
         switch ($this->method())
         {
-            case 'POST':    //create
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
@@ -37,67 +34,97 @@ class SubmitGoodRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'bail|required|string|max:60',
-                    'number' => 'required|string|max:50',
-                    'freight_id' => 'required|integer',
-                    'brand_id' => 'nullable|integer',
-                    'inventory' => 'nullable|integer',
-                    'market_price' => 'nullable|numeric',
-                    'cost_price' => 'nullable|numeric',
-                    'price' => 'nullable|numeric',
-                    'keywords' => 'nullable|string|max:255',
-                    'short_description' => 'nullable|string|max:160',
-                    'category_id' => 'required',
-                    'details' => 'nullable|string',
-                    'img' => 'nullable|url|max:255',
-                    'good_sku' => 'nullable|array',
-                    'good_sku.*.img' => 'nullable|url',
-                    'good_sku.*.market_price' => 'required|numeric',
-                    'good_sku.*.cost_price' => 'required|numeric',
-                    'good_sku.*.price' => 'required|numeric',
-                    'good_sku.*.inventory' => 'required|integer',
-                    'is_show' => 'required|numeric',
-                    'is_recommend' => 'nullable|boolean',
-                    'is_new' => 'nullable|boolean',
-                    'is_hot' => 'nullable|boolean',
-                    'timing' => 'nullable|date',
-                    'sort' => 'required|integer',
-                ];
-            case 'PUT': //update
-                return [
-                    'name' => 'bail|required|string|max:60',
-                    'number' => 'required|string|max:50',
-                    'freight_id' => 'required|integer',
-                    'brand_id' => 'nullable|integer',
-                    'inventory' => 'nullable|integer',
-                    'market_price' => 'nullable|numeric',
-                    'cost_price' => 'nullable|numeric',
-                    'price' => 'nullable|numeric',
-                    'keywords' => 'nullable|string|max:255',
-                    'short_description' => 'nullable|string|max:160',
-                    'category_id' => 'required',
-                    'details' => 'nullable|string',
-                    'img' => 'nullable|url|max:255',
-                    'good_sku' => 'nullable|array',
-                    'good_sku.*.img' => 'nullable|url',
-                    'good_sku.*.market_price' => 'required|numeric',
-                    'good_sku.*.cost_price' => 'required|numeric',
-                    'good_sku.*.price' => 'required|numeric',
-                    'good_sku.*.inventory' => 'required|integer',
-                    'is_show' => 'required|numeric',
-                    'is_recommend' => 'nullable|boolean',
-                    'is_new' => 'nullable|boolean',
-                    'is_hot' => 'nullable|boolean',
-                    'timing' => 'nullable|date',
-                    'sort' => 'required|integer',
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name'=> [
+                            'required',
+                            Rule::unique('goods')->where(function ($query) use($request) {
+                                $query->where('deleted_at', null)->where('id','!=',$request['id']);
+                            }),
+                            'bail',
+                            'string',
+                            'max:60',
+                        ],
+                        'number'=> [
+                            'required',
+                            Rule::unique('goods')->where(function ($query) use($request) {
+                                $query->where('deleted_at', null)->where('id','!=',$request['id']);
+                            }),
+                            'string',
+                            'max:50',
+                        ],
+                        'freight_id' => 'required|integer',
+                        'brand_id' => 'nullable|integer',
+                        'inventory' => 'nullable|integer',
+                        'market_price' => 'nullable|numeric',
+                        'cost_price' => 'nullable|numeric',
+                        'price' => 'nullable|numeric',
+                        'keywords' => 'nullable|string|max:255',
+                        'short_description' => 'nullable|string|max:160',
+                        'category_id' => 'required',
+                        'details' => 'nullable|string',
+                        'img' => 'nullable|url|max:255',
+                        'good_sku' => 'nullable|array',
+                        'good_sku.*.img' => 'nullable|url',
+                        'good_sku.*.market_price' => 'required|numeric',
+                        'good_sku.*.cost_price' => 'required|numeric',
+                        'good_sku.*.price' => 'required|numeric',
+                        'good_sku.*.inventory' => 'required|integer',
+                        'is_show' => 'required|numeric',
+                        'is_recommend' => 'nullable|boolean',
+                        'is_new' => 'nullable|boolean',
+                        'is_hot' => 'nullable|boolean',
+                        'timing' => 'nullable|date',
+                        'sort' => 'required|integer',
+                    ];
+                } else {
+                    return [
+                        'name'=> [
+                            'required',
+                            Rule::unique('goods')->where(function ($query) {
+                                $query->where('deleted_at', null);
+                            }),
+                            'bail',
+                            'string',
+                            'max:60',
+                        ],
+                        'number'=> [
+                            'required',
+                            Rule::unique('goods')->where(function ($query) {
+                                $query->where('deleted_at', null);
+                            }),
+                            'string',
+                            'max:50',
+                        ],
+                        'freight_id' => 'required|integer',
+                        'brand_id' => 'nullable|integer',
+                        'inventory' => 'nullable|integer',
+                        'market_price' => 'nullable|numeric',
+                        'cost_price' => 'nullable|numeric',
+                        'price' => 'nullable|numeric',
+                        'keywords' => 'nullable|string|max:255',
+                        'short_description' => 'nullable|string|max:160',
+                        'category_id' => 'required',
+                        'details' => 'nullable|string',
+                        'img' => 'nullable|url|max:255',
+                        'good_sku' => 'nullable|array',
+                        'good_sku.*.img' => 'nullable|url',
+                        'good_sku.*.market_price' => 'required|numeric',
+                        'good_sku.*.cost_price' => 'required|numeric',
+                        'good_sku.*.price' => 'required|numeric',
+                        'good_sku.*.inventory' => 'required|integer',
+                        'is_show' => 'required|numeric',
+                        'is_recommend' => 'nullable|boolean',
+                        'is_new' => 'nullable|boolean',
+                        'is_hot' => 'nullable|boolean',
+                        'timing' => 'nullable|date',
+                        'sort' => 'required|integer',
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
                 {
                     return [];
@@ -110,9 +137,11 @@ class SubmitGoodRequest extends Request
         return [
             'name.required' =>'商品名称必须',
             'name.string' =>'商品名称格式有误',
+            'name.unique' => '商品名称已存在',
             'name.max' =>'商品名称不能超过60个字符',
             'number.required' =>'货号必须',
             'number.string' =>'货号格式有误',
+            'number.unique' => '货号已存在',
             'number.max' =>'货号不能超过50个字符',
             'freight_id.required' =>'运费模板必须',
             'freight_id.integer' =>'运费模板格式有误',

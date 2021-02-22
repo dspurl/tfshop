@@ -56,7 +56,7 @@
 
 <script>
 	import {mapMutations} from 'vuex'
-	import Finance from '../../api/finance'
+	import MoneyLog from '../../api/moneyLog'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue'
 	export default {
 		components: {
@@ -95,9 +95,10 @@
 				}
 				let that =this
 				let getList = []
-				await Finance.getList({
+				await MoneyLog.getList({
 					limit: 10,
 					page: this.page,
+					sort: '-created_at',
 					month: this.date ? this.date : this.getDate()
 				},function(res){
 					that.getList = that.getList.concat(res.paginate.data)

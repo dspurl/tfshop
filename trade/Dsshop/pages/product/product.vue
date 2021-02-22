@@ -16,7 +16,7 @@
 
 		<view class="introduce-section">
 			<text class="title">{{ getList.name }}</text>
-			<view class="price-box">
+			<view class="price-box" v-if="inventoryFlag">
 				<text class="price-tip">¥</text>
 				<template v-if="getList.price_show">
 					<text class="price" v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</text>
@@ -26,7 +26,6 @@
 					<text class="m-price" v-if="getList.market_price_show.length > 1">¥{{ getList.market_price_show[1] }}</text>
 					<text class="m-price" v-else-if="getList.market_price_show.length === 1">¥{{ getList.market_price_show[0] }}</text>
 				</template>
-				<!-- <text class="coupon-tip">7折</text> -->
 			</view>
 			<view class="bot-row">
 				<!-- <text>销量: {{getList.sales}}</text> -->
@@ -34,21 +33,6 @@
 				<text>销量: {{ getList.sales}}</text>
 			</view>
 		</view>
-
-		<!--  分享 -->
-		<!-- <view class="share-section" @click="share">
-			<view class="share-icon">
-				<text class="yticon icon-xingxing"></text>
-				返
-			</view>
-			<text class="tit">该商品分享可领49减10红包</text>
-			<text class="yticon icon-bangzhu1"></text>
-			<view class="share-btn">
-				立即分享
-				<text class="yticon icon-you"></text>
-			</view>
-		</view> -->
-
 		<view class="c-list">
 			<block v-if="getList.is_delete || getList.is_show !== 1">
 				<view v-if="specificationDefaultDisplay" class="c-row b-b">
@@ -68,22 +52,6 @@
 					<text class="yticon icon-you"></text>
 				</view>
 			</block>
-			<!-- <view class="c-row b-b">
-				<text class="tit">促销活动</text>
-				<view class="con-list">
-					<text>新人首单送20元无门槛代金券</text>
-					<text>订单满50减10</text>
-					<text>订单满100减30</text>
-					<text>单笔购买满两件免邮费</text>
-				</view>
-			</view>
-			<view class="c-row b-b">
-				<text class="tit">服务</text>
-				<view class="bz-list con">
-					<text>7天无理由退换货 ·</text>
-					<text>假一赔十 ·</text>
-				</view>
-			</view> -->
 		</view>
 
 		<view class="detail-desc">
@@ -105,12 +73,12 @@
 				<text class="yticon icon-shoucang"></text>
 				<text>收藏</text>
 			</view>
-			<view class="action-btn-group" v-if="getList.is_delete  || getList.is_show !== 1">
+			<view class="action-btn-group" v-if="getList.is_delete  || getList.is_show !== 1 || !inventoryFlag">
 				<button type="primary" class=" action-btn no-border buy-now-btn" disabled>立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>加入购物车</button>
 			</view>
 			<view class="action-btn-group" v-else>
-				<button :disabled="inventoryFlag == false" type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec(false)">加入购物车</button>
 			</view>
 		</view>
@@ -122,9 +90,7 @@
 		</view>
 		<!-- 已删除或还未发布-->
 		<view v-if="getList.is_delete || getList.is_show !== 1" class="sold-out padding-sm">商品已经下架了~</view>
-		<view v-if="inventoryFlag == false" class="sold-out padding-sm">商品已经无货了~</view>
-		<!-- 分享 -->
-		<!-- <share ref="share" :contentHeight="580" :shareList="shareList"></share> -->
+		<view v-if="inventoryFlag == false" class="sold-out padding-sm">商品已经售完了~</view>
 	</view>
 </template>
 
@@ -181,12 +147,11 @@ export default {
 		this.videoContext = uni.createVideoContext('myVideo')
 	},
 	methods: {
-		...mapMutations(['loginCheck']),
 		//获取详情
 		async loadData(id) {
 			// 商品详情
 			const that = this;
-			await Good.getDetails(id, {}, function(res) {
+			await Good.detail(id, {}, function(res) {
 				if (res.resources_many.length > 0) {
 					res.resources_many.forEach((item,index)=>{
 						if(item.depict.indexOf('_video') !== -1){
@@ -209,7 +174,7 @@ export default {
 				}
 			})
 			if (that.hasLogin){
-				await Collect.getDetails(id, function(res) {
+				await Collect.detail(id, function(res) {
 					if(res === 1){
 						that.favorite = true
 					} else {
@@ -236,9 +201,7 @@ export default {
 		//访问记录
 		browse() {
 			const getList = this.getList
-			Browse.createSubmit(getList,function(res){
-				
-			})
+			Browse.create(getList, function(res) {})
 		},
 		// 图片预览
 		imgList() {
@@ -256,16 +219,8 @@ export default {
 				}
 			});
 		},
-		goLogin(){
-			if(!this.hasLogin){
-				uni.navigateTo({
-					url:'/pages/public/login'
-				})
-			}
-		},
 		//规格弹窗开关
 		toggleSpec(state) {
-			this.loginCheck()
 			if (!this.hasLogin && state === true){
 				this.$api.msg('请先登录')
 				return false
@@ -291,10 +246,10 @@ export default {
 			if (this.hasLogin){
 				const getList = this.getList
 				if(this.favorite){	//移除
-					Collect.deleteSubmit(getList.id,function(res){
+					Collect.destroy(getList.id,function(res){
 					})
 				}else{	//添加
-					Collect.createSubmit(getList,function(res){
+					Collect.create(getList,function(res){
 						
 					})
 				}

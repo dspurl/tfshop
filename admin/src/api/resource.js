@@ -1,5 +1,4 @@
 import request from '@/utils/request'
-import Qs from 'qs'
 export function getList(query) {
   return request({
     url: 'resource',
@@ -8,15 +7,10 @@ export function getList(query) {
   })
 }
 
-export function setDelete(id, data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+export function destroy(id) {
   return request({
-    url: 'resource/' + id,
-    method: 'DELETE',
-    data
+    url: 'resource/destroy/' + id,
+    method: 'post'
   })
 }
 

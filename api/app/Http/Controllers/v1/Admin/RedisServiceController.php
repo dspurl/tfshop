@@ -9,16 +9,22 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Redis;
 
+/**
+ * @group redis
+ * Redis管理
+ * Class RedisServiceController
+ * @package App\Http\Controllers\v1\Admin
+ */
 class RedisServiceController extends Controller
 {
 
     /**
-     * Display a listing of the resource.
-     *
+     * RedisServiceList
+     * Redis列表
      * @param Request $request
      * @return Response
      */
-    public function index(Request $request)
+    public function list(Request $request)
     {
         $default = null;
         $cache = null;
@@ -122,9 +128,16 @@ class RedisServiceController extends Controller
 
     }
 
-    //获取Redis详情
-    public function show($name, Request $request)
+    /**
+     * RedisServiceDetail
+     * 获取Redis详情
+     * @param $name
+     * @param Request $request
+     * @return string
+     */
+    public function detail($name, Request $request)
     {
+
         if (!$request->has('type') || !$name) {
             return resReturn(0, '参数有误', Code::CODE_PARAMETER_WRONG);
         }
@@ -162,7 +175,11 @@ class RedisServiceController extends Controller
         return resReturn(1, $return);
     }
 
-    //redis面板
+    /**
+     * RedisPanel
+     * redis面板
+     * @return string
+     */
     public function panel()
     {
         $default = new RedisService('default');
@@ -178,8 +195,8 @@ class RedisServiceController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
+     * RedisServiceDestroy
+     * 删除Redis
      * @param $name
      * @param Request $request
      * @return Response

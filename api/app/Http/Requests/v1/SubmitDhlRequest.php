@@ -3,6 +3,7 @@
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
+use Illuminate\Validation\Rule;
 
 class SubmitDhlRequest extends Request
 {
@@ -13,21 +14,15 @@ class SubmitDhlRequest extends Request
      */
     public function authorize()
     {
-        switch ($this->method())
-        {
-            case 'POST':    //create
+        switch ($this->method()) {
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return false;
             }
         }
-
     }
 
     /**
@@ -37,25 +32,39 @@ class SubmitDhlRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'required|string|max:30',
-                    'abbreviation' => 'required|string|max:80',
-                    'sort' => 'required|integer',
-                    'state' => 'required|integer',
-                ];
-            case 'PUT': //update
-                return [
-                    'name' => 'required|string|max:30',
-                    'abbreviation' => 'required|string|max:80',
-                    'sort' => 'required|integer',
-                    'state' => 'required|integer',
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name'=> [
+                            'required',
+                            Rule::unique('dhls')->where(function ($query) use($request) {
+                                $query->where('deleted_at', null)->where('id','!=',$request['id']);
+                            }),
+                            'string',
+                            'max:30',
+                        ],
+                        'abbreviation' => 'required|string|max:80',
+                        'sort' => 'required|integer',
+                        'state' => 'required|integer',
+                    ];
+                } else {
+                    return [
+                        'name'=> [
+                            'required',
+                            Rule::unique('dhls')->where(function ($query) {
+                                $query->where('deleted_at', null);
+                            }),
+                            'string',
+                            'max:30',
+                        ],
+                        'abbreviation' => 'required|string|max:80',
+                        'sort' => 'required|integer',
+                        'state' => 'required|integer',
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
             {
                 return [];
@@ -68,6 +77,7 @@ class SubmitDhlRequest extends Request
         return [
             'name.required' =>'快递公司名称必须',
             'name.string' =>'快递公司名称格式有误',
+            'name.unique' => '快递公司名称已存在',
             'name.max' =>'快递公司名称不能超过30个字符',
             'abbreviation.required' =>'快递公司缩写必须',
             'abbreviation.string' =>'快递公司缩写格式有误',

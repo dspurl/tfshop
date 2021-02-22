@@ -15,16 +15,18 @@ class SmsLog extends Model
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
     }
+
     // 日志插入
-    protected function setSmsLog($data){
-        $SmsLog=new SmsLog();
+    public function setSmsLog($data)
+    {
+        $SmsLog = new SmsLog();
         $SmsLog->sms_service_id = $data['sms_service_id'];
         $SmsLog->phone = $data['phone'];
         $SmsLog->data = json_encode($data['data']);

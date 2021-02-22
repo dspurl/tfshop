@@ -15,19 +15,14 @@ class SubmitSpecificationRequest extends Request
     {
         switch ($this->method())
         {
-            case 'POST':    //create
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
-            {
-                return false;
-            }
+                {
+                    return false;
+                }
         }
-
     }
 
     /**
@@ -37,46 +32,45 @@ class SubmitSpecificationRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'required|string|max:30',
-                    'type' => 'required|numeric',
-                    'is_search' => 'required|numeric',
-                    'specification_group_id' => 'nullable|numeric',
-                    'location' => 'required|numeric',
-                    'value' => 'nullable|string',
-                    'sort' => 'required|numeric|max:11'
-                ];
-            case 'PUT': //update
-                return [
-                    'name' => 'required|string|max:30',
-                    'type' => 'required|numeric',
-                    'is_search' => 'required|numeric',
-                    'specification_group_id' => 'nullable|numeric',
-                    'location' => 'required|numeric',
-                    'value' => 'nullable|string',
-                    'sort' => 'required|numeric|max:11'
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name' => 'required|string|max:30',
+                        'type' => 'required|numeric',
+                        'is_search' => 'required|numeric',
+                        'specification_group_id' => 'nullable|numeric',
+                        'location' => 'required|numeric',
+                        'value' => 'nullable|string',
+                        'sort' => 'required|numeric|max:11'
+                    ];
+                } else {
+                    return [
+                        'name' => 'required|string|max:30',
+                        'type' => 'required|numeric',
+                        'is_search' => 'required|numeric',
+                        'specification_group_id' => 'nullable|numeric',
+                        'location' => 'required|numeric',
+                        'value' => 'nullable|string',
+                        'sort' => 'required|numeric|max:11'
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
-            {
-                return [];
-            }
+                {
+                    return [];
+                }
         }
     }
 
     public function messages()
     {
         return [
-            'name.required' =>'类目名称必须',
-            'name.string' =>'类目格式有误',
-            'name.max' =>'类目不能超过30个字符',
-            'type.required' =>'属性类型必须',
-            'type.numeric' =>'属性类型格式有误',
+            'name.required' =>'规格名称必须',
+            'name.string' =>'规格格式有误',
+            'name.max' =>'规格名不能超过30个字符',
+            'type.required' =>'规格类型必须',
+            'type.numeric' =>'规格类型格式有误',
             'is_search.required' =>'是否可搜索必须',
             'is_search.numeric' =>'是否可搜索格式有误',
             'specification_group_id.required' =>'规格组必须',

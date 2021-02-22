@@ -15,19 +15,14 @@ class SubmitSpecificationGroupRequest extends Request
     {
         switch ($this->method())
         {
-            case 'POST':    //create
+            case 'POST':
                 return true;
-            case 'PUT': //update
-                return true;
-            case 'PATCH':
             case 'GET':
-            case 'DELETE':
             default:
-            {
-                return false;
-            }
+                {
+                    return false;
+                }
         }
-
     }
 
     /**
@@ -37,32 +32,32 @@ class SubmitSpecificationGroupRequest extends Request
      */
     public function rules()
     {
-        switch ($this->method())
-        {
+        $request = Request::all();
+        switch ($this->method()) {
             case 'POST':    //create
-                return [
-                    'name' => 'required|string|max:30',
-                ];
-            case 'PUT': //update
-                return [
-                    'name' => 'required|string|max:30',
-                ];
-            case 'PATCH':
+                if (Request::has('id')) {   //更新
+                    return [
+                        'name' => 'required|string|max:30',
+                    ];
+                } else {
+                    return [
+                        'name' => 'required|string|max:30',
+                    ];
+                }
             case 'GET':
-            case 'DELETE':
             default:
-            {
-                return [];
-            }
+                {
+                    return [];
+                }
         }
     }
 
     public function messages()
     {
         return [
-            'name.required' =>'类目名称必须',
-            'name.string' =>'类目格式有误',
-            'name.max' =>'类目不能超过30个字符',
+            'name.required' =>'规格组名称必须',
+            'name.string' =>'规格组格式有误',
+            'name.max' =>'规格组不能超过30个字符',
         ];
     }
 }

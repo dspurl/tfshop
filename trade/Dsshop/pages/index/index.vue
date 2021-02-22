@@ -13,12 +13,12 @@
 		<view class="cu-modal" :class="modalName=='guidanceMy'?'show':''">
 			<view class="guidance-modal">
 				<view class="triangle-top"></view>
-				<view class="title bg-red text-xl padding">点<image style="height: 60upx;position: relative;top:20upx;" mode="heightFix" src="../../static/guidance-white.png"></image>添加小程序</view>
+				<view class="title bg-red text-xl padding">点<image style="height: 60upx;position: relative;top:0;margin: 0 auto;" mode="heightFix" src="../../static/guidance-white.png"></image>添加小程序</view>
 				<view class="list">
 					<view class="padding text-left min-title">
 						<span class="text-red">1、</span>
 						点右上
-						<image style="height: 60upx;position: relative;top:20upx;" mode="heightFix" src="../../static/guidance.png"></image>
+						<image style="height: 60upx;position: relative;top:0;" mode="heightFix" src="../../static/guidance.png"></image>
 						添加到“我的小程序”
 					</view>
 					<view>
@@ -76,166 +76,6 @@
 		<view class="ad-1">
 			<image v-if="adData.resources" :src="adData.resources.img" mode="scaleToFill" lazy-load  @click="navTo(adData.url)"></image>
 		</view>
-		
-		<!-- 秒杀楼层 -->
-		<!-- <view class="seckill-section m-t">
-			<view class="s-header">
-				<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
-				<text class="tip">8点场</text>
-				<text class="hour timer">07</text>
-				<text class="minute timer">13</text>
-				<text class="second timer">55</text>
-				<text class="yticon icon-you"></text>
-			</view>
-			<scroll-view class="floor-list" scroll-x>
-				<view class="scoll-wrapper">
-					<view 
-						v-for="(item, index) in goodsList" :key="index"
-						class="floor-item"
-						@click="navToDetailPage(item)"
-					>
-						<image :src="item.image" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
-						<text class="price">￥{{item.price}}</text>
-					</view>
-				</view>
-			</scroll-view>
-		</view> -->
-		
-		<!-- 团购楼层 -->
-		<!-- <view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
-			<view class="tit-box">
-				<text class="tit">精品团购</text>
-				<text class="tit2">Boutique Group Buying</text>
-			</view>
-			<text class="yticon icon-you"></text>
-		</view>
-		<view class="group-section">
-			<swiper class="g-swiper" :duration="500">
-				<swiper-item
-					class="g-swiper-item"
-					v-for="(item, index) in goodsList" :key="index"
-					v-if="index%2 === 0"
-					@click="navToDetailPage(item)"
-				>
-					<view class="g-item left">
-						<image :src="item.image" mode="aspectFill"></image>
-						<view class="t-box">
-							<text class="title clamp">{{item.title}}</text>
-							<view class="price-box">
-								<text class="price">￥{{item.price}}</text> 
-								<text class="m-price">￥188</text> 
-							</view>
-							
-							<view class="pro-box">
-							  	<view class="progress-box">
-							  		<progress percent="72" activeColor="#fa436a" active stroke-width="6" />
-							  	</view>
-								<text>6人成团</text>
-							</view>
-						</view>
-						            
-					</view>
-					<view class="g-item right">
-						<image :src="goodsList[index+1].image" mode="aspectFill"></image>
-						<view class="t-box">
-							<text class="title clamp">{{goodsList[index+1].title}}</text>
-							<view class="price-box">
-								<text class="price">￥{{goodsList[index+1].price}}</text> 
-								<text class="m-price">￥188</text> 
-							</view>
-							<view class="pro-box">
-							  	<view class="progress-box">
-							  		<progress percent="72" activeColor="#fa436a" active stroke-width="6" />
-							  	</view>
-								<text>10人成团</text>
-							</view>
-						</view>
-					</view>
-				</swiper-item>
-
-			</swiper>
-		</view> -->
-		
-		
-		
-		<!-- 分类推荐楼层 -->
-		<!-- <view class="f-header m-t">
-			<image src="/static/temp/h1.png"></image>
-			<view class="tit-box">
-				<text class="tit">分类精选</text>
-				<text class="tit2">Competitive Products For You</text>
-			</view>
-			<text class="yticon icon-you"></text>
-		</view>
-		<view class="hot-floor">
-			<view class="floor-img-box">
-				<image class="floor-img" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553409398864&di=4a12763adccf229133fb85193b7cc08f&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201703%2F19%2F20170319150032_MNwmn.jpeg" mode="scaleToFill"></image>
-			</view>
-			<scroll-view class="floor-list" scroll-x>
-				<view class="scoll-wrapper">
-					<view 
-						v-for="(item, index) in goodsList" :key="index"
-						class="floor-item"
-						@click="navToDetailPage(item)"
-					>
-						<image :src="item.image" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
-						<text class="price">￥{{item.price}}</text>
-					</view>
-					<view class="more">
-						<text>查看全部</text>
-						<text>More+</text>
-					</view>
-				</view>
-			</scroll-view>
-		</view>
-		<view class="hot-floor">
-			<view class="floor-img-box">
-				<image class="floor-img" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553409984228&di=dee176242038c2d545b7690b303d65ea&imgtype=0&src=http%3A%2F%2Fhbimg.b0.upaiyun.com%2F5ef4da9f17faaf4612f0d5046f4161e556e9bbcfdb5b-rHjf00_fw658" mode="scaleToFill"></image>
-			</view>
-			<scroll-view class="floor-list" scroll-x>
-				<view class="scoll-wrapper">
-					<view 
-						v-for="(item, index) in goodsList" :key="index"
-						class="floor-item"
-						@click="navToDetailPage(item)"
-					>
-						<image :src="item.image3" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
-						<text class="price">￥{{item.price}}</text>
-					</view>
-					<view class="more">
-						<text>查看全部</text>
-						<text>More+</text>
-					</view>
-				</view>
-			</scroll-view>
-		</view>
-		<view class="hot-floor">
-			<view class="floor-img-box">
-				<image class="floor-img" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1553409794730&di=12b840ec4f5748ef06880b85ff63e34e&imgtype=0&src=http%3A%2F%2Fimg.zcool.cn%2Fcommunity%2F01dc03589ed568a8012060c82ac03c.jpg%40900w_1l_2o_100sh.jpg" mode="scaleToFill"></image>
-			</view>
-			<scroll-view class="floor-list" scroll-x>
-				<view class="scoll-wrapper">
-					<view 
-						v-for="(item, index) in goodsList" :key="index"
-						class="floor-item"
-						@click="navToDetailPage(item)"
-					>
-						<image :src="item.image2" mode="aspectFill"></image>
-						<text class="title clamp">{{item.title}}</text>
-						<text class="price">￥{{item.price}}</text>
-					</view>
-					<view class="more">
-						<text>查看全部</text>
-						<text>More+</text>
-					</view>
-				</view>
-			</scroll-view>
-		</view> -->
-
 		<!-- 为你推荐 -->
 		<view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
@@ -279,48 +119,7 @@ import Banner from '../../api/banner'
 				carouselList: [],
 				goodsList: [],
 				adData: {},
-				ctegory:[
-					{
-						id:1,
-						fid: 1,
-						sid: 3,
-						tid: 20,
-						image: this.configURL.DomainName + '/storage/image/category/nQNqh1606374465_80.png',
-						name: '男士T恤'
-					},
-					{
-						id:2,
-						fid: 49,
-						sid: 51,
-						tid: 60,
-						image: this.configURL.DomainName + '/storage/image/category/gSh0W1606375215_80.png',
-						name: '女士T恤'
-					},
-					{
-						id:3,
-						fid: 49,
-						sid: 69,
-						tid: 73,
-						image: this.configURL.DomainName + '/storage/image/category/h6OZV1606375632_80.png',
-						name: '高根鞋'
-					},
-					{
-						id:4,
-						fid: 49,
-						sid: 50,
-						tid: 53,
-						image: this.configURL.DomainName + '/storage/image/category/Ncdvt1606375053_80.png',
-						name: '半身裙'
-					},
-					{
-						id:5,
-						fid: 49,
-						sid: 50,
-						tid: 65,
-						image: this.configURL.DomainName + '/storage/image/category/rpuxK1606375087_80.png',
-						name: '打底裙'
-					}
-				]
+				ctegory:[]
 			};
 		},
 
@@ -344,27 +143,30 @@ import Banner from '../../api/banner'
 				const that = this
 				// 轮播
 				await Banner.getList({
-					limit: 10,
+					limit: 5,
 					type: 0,
+					sort: '+sort'
 				},function(res){
 					that.carouselList = res.data
 					that.swiperLength = res.data.length
 				})
-				// 首页轮播
-				await Banner.getAdvertising({
+				// 首页广告
+				await Banner.getList({
 					type: 1,
+					limit: 1,
+					sort: '+sort'
 				},function(res){
-					that.adData = res
+					that.adData = res.data[0]
 				})
 				// 推荐商品
 				await Good.getList({
 					limit: 10,
-					is_recommend: 1
+					is_recommend: 1,
 				},function(res){
 					that.goodsList = res.data
 				})
 				// 推荐分类
-				await Good.getCategoryShow({
+				await Good.goodCategory({
 					is_recommend: 1
 				},function(res){
 					that.ctegory = res

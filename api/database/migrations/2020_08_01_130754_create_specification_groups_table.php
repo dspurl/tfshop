@@ -17,6 +17,7 @@ class CreateSpecificationGroupsTable extends Migration
         Schema::create('specification_groups', function (Blueprint $table) {
             $table->id();
             $table->string('name',30)->comment('规格组名称');
+            $table->softDeletes();
             $table->timestamps();
             $table->charset = 'utf8';
             $table->engine = 'InnoDB';

@@ -63,8 +63,9 @@
 </template>
 
 <script>
-	import Indents from '../../api/indents'
+	import GoodIndent from '../../api/goodIndent'
 	import Pay from '../../api/pay'
+	import User from '../../api/user';
 	import {
 	  authMsg
 	} from '../../utils'
@@ -85,6 +86,7 @@
 				index:0,
 				jweixin:null,
 				modalName: null,
+				user: {}
 			};
 		},
 		computed: {
@@ -96,16 +98,29 @@
 				return false
 			}
 			this.id = options.id
+		},
+		onShow(){
 			this.loginCheck()
 			this.getList()
+			this.getUser()
 		},
-
 		methods: {
 			...mapMutations(['loginCheck']),
+			getUser(){
+				const that = this
+				User.detail(function(res){
+					that.user = res
+				})
+			},
 			getList(){
 				const that = this
-				Indents.getPay(this.id,function(res){
+				GoodIndent.pay(this.id,function(res){
 					that.orderInfo = res
+					if(res.state !== 1){
+						uni.redirectTo({
+							url: '/pages/money/paySuccess'
+						})
+					}
 				})
 			},
 			//选择支付方式
@@ -132,9 +147,27 @@
 						id: this.id
 					},function(res){
 						authMsg(['4iOC-HyjJeKK5HiYORcOtrKHvu2Ho1ScVF0aqP3KkzQ'])
-						uni.redirectTo({
-							url: '/pages/money/paySuccess'
-						})
+						if(!that.user.email && !that.user.wechat){
+							uni.showModal({
+							  title: '提示',
+							  content: '您未打开通知功能，无法及时接收重要通知哦，是否现在去开启？',
+							  success (res) {
+								if (res.confirm) {
+								  uni.redirectTo({
+									url: '/pages/set/message'
+								  })
+								} else if (res.cancel) {
+								  uni.redirectTo({
+									url: '/pages/money/paySuccess'
+								  })
+								}
+							  }
+							})
+						}else{
+							uni.redirectTo({
+								url: '/pages/money/paySuccess'
+							})
+						}
 					})
 				} else {
 					// #ifdef H5
@@ -165,9 +198,27 @@
 							  // console.log(res)
 							  // 订阅消息
 							  authMsg(['4iOC-HyjJeKK5HiYORcOtrKHvu2Ho1ScVF0aqP3KkzQ'])
-							  uni.redirectTo({
-							  	url: '/pages/money/paySuccess'
-							  })
+							  if(!that.user.email && !that.user.wechat){
+							  	uni.showModal({
+							  	  title: '提示',
+							  	  content: '您未打开通知功能，无法及时接收重要通知哦，是否现在去开启？',
+							  	  success (res) {
+							  	    if (res.confirm) {
+							  	      uni.redirectTo({
+							  	      	url: '/pages/set/message'
+							  	      })
+							  	    } else if (res.cancel) {
+							  	      uni.redirectTo({
+							  	      	url: '/pages/money/paySuccess'
+							  	      })
+							  	    }
+							  	  }
+							  	})
+							  }else{
+							  	uni.redirectTo({
+							  		url: '/pages/money/paySuccess'
+							  	})
+							  }
 							},
 							fail(res) {
 								that.$api.msg('支付失败，请重新支付')

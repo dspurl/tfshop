@@ -21,10 +21,11 @@ class AuthRule extends Model
     const AUTH_RULE_STATE_ON = 1;
     const AUTH_RULE_STATE_OFF = 0;
     protected $appends = ['state_show'];
+
     /**
      * Prepare a date for array / JSON serialization.
      *
-     * @param  \DateTimeInterface  $date
+     * @param \DateTimeInterface $date
      * @return string
      */
     protected function serializeDate(DateTimeInterface $date)
@@ -41,22 +42,22 @@ class AuthRule extends Model
     /**
      * 数组中的属性会被隐藏。
      *
-     * @var array
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @var array
      */
 //    protected $hidden = ['password'];
     public function AuthGroup()
     {
-        return $this->belongsToMany(AuthGroup::class,'auth_group_auth_rules');
+        return $this->belongsToMany(AuthGroup::class, 'auth_group_auth_rules');
     }
 
     //是否显示在菜单栏state_show
     public function getStateShowAttribute()
     {
-        if(isset($this->attributes['state'])){
-            if($this->attributes['state'] == AuthRule::AUTH_RULE_STATE_ON){
+        if (isset($this->attributes['state'])) {
+            if ($this->attributes['state'] == AuthRule::AUTH_RULE_STATE_ON) {
                 return '显示';
-            }else{
+            } else {
                 return '隐藏';
             }
         }

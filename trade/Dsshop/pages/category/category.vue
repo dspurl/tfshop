@@ -40,7 +40,7 @@
 			async loadData(){
 				const that = this
 				// 分类
-				await Good.getCategoryShow({},function(res){
+				await Good.goodCategory({},function(res){
 					res.forEach(item=>{
 						if(!item.pid){
 							that.flist.push(item);  //pid为父级id, 没有pid或者pid=0是一级分类

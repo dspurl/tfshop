@@ -8,39 +8,27 @@ export function getList(query) {
   })
 }
 
-export function createSubmit(data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+export function create(data) {
+  data = Qs.parse(data)
   return request({
     url: 'category',
-    method: 'POST',
+    method: 'post',
     data
   })
 }
 
-export function updateSubmit(id, data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+export function edit(data) {
+  data = Qs.parse(data)
   return request({
-    url: 'category/' + id,
-    method: 'PUT',
+    url: 'category/' + data.id,
+    method: 'post',
     data
   })
 }
 
-export function setDelete(id, data) {
-  data = Qs.parse({
-    data
-  })
-  data = data.data
+export function destroy(id) {
   return request({
-    url: 'category/' + id,
-    method: 'DELETE',
-    data
+    url: 'category/destroy/' + id,
+    method: 'post'
   })
 }
-

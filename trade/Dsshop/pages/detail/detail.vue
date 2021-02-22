@@ -102,14 +102,7 @@
 			};
 		},
 		async onLoad(){
-			let detailData = await this.$api.json('detailData');
-			let shareList = await this.$api.json('shareList');
-			this.loaded = true;
-			this.data = detailData;
-			this.shareList = shareList;
-			uni.setNavigationBarTitle({
-				title: detailData.title
-			})
+			
 		},
 		methods:{
 			imageOnLoad(key,index){

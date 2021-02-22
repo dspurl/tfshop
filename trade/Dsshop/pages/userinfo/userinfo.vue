@@ -68,7 +68,7 @@
 			...mapMutations(['loginCheck']),
 			getUser(){
 				const that = this
-				User.user(function(res){
+				User.detail(function(res){
 					that.user = res
 				})
 			},
@@ -95,7 +95,7 @@
 							size: 1024 * 500
 						  },
 						  success(res) {
-							User.setUser({portrait:res.data},function(r){
+							User.edit({portrait:res.data},function(r){
 								that.user.portrait = r
 							})
 						  },
@@ -120,7 +120,7 @@
 						nickname: this.user.nickname
 					}
 				}
-				User.setUser(data,function(res){
+				User.edit(data,function(res){
 					that.hideModal()
 				})
 			},

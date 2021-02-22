@@ -48,7 +48,7 @@
 			...mapMutations(['loginCheck']),
 			getUser(){
 				const that = this
-				User.user(function(res){
+				User.detail(function(res){
 					that.user = res
 				})
 			},
@@ -78,7 +78,7 @@
 				}
 				this.user.notification[type] = e.detail.value
 				// 更新通知状态
-				User.setNotification(this.user,function(res){})
+				User.notification(this.user,function(res){})
 			}
 		}
 	}
