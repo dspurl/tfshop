@@ -3,7 +3,7 @@ import Qs from 'qs'
 export function getList(query) {
   return request({
     url: 'category',
-    method: 'get',
+    method: 'GET',
     params: query
   })
 }
@@ -12,7 +12,7 @@ export function create(data) {
   data = Qs.parse(data)
   return request({
     url: 'category',
-    method: 'post',
+    method: 'POST',
     data
   })
 }
@@ -21,7 +21,7 @@ export function edit(data) {
   data = Qs.parse(data)
   return request({
     url: 'category/' + data.id,
-    method: 'post',
+    method: 'POST',
     data
   })
 }
@@ -29,6 +29,6 @@ export function edit(data) {
 export function destroy(id) {
   return request({
     url: 'category/destroy/' + id,
-    method: 'post'
+    method: 'POST'
   })
 }

@@ -127,7 +127,7 @@ export default {
     edit: 'Edit',
     publish: 'Publish',
     draft: 'Draft',
-    delete: 'Delete',
+    delete: 'DELETE',
     cancel: 'Cancel',
     confirm: 'Confirm'
   },
