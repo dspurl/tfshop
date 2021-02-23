@@ -135,7 +135,7 @@
 import { getList, create, edit, destroy } from '@/api/admin'
 import { getToken } from '@/utils/auth'
 import waves from '@/directive/waves' // Waves directive
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 export default {
   name: 'AdminList',
   components: { Pagination },
