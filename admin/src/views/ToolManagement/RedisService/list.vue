@@ -65,7 +65,7 @@
     <div class="pagination-operation">
       <div class="operation">
         <el-button size="mini" @click="handleCheckAllChange">全选/反选</el-button>
-        <el-button v-permission="$store.jurisdiction.DeleteRedisServices" :loading="formLoading" size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
+        <el-button v-permission="$store.jurisdiction.RedisServiceDestroy" :loading="formLoading" size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
       </div>
     </div>
 
