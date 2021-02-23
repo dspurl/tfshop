@@ -22,4 +22,6 @@ return [
     'versions' => env('API_VERSIONS', 1),   //当前版本
     'applySecret' => env('PROJECT_KEY', 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='), //API密钥串
     'orderOvertime' => env('ORDER_OVERTIME', 10),  // 订单超时时间(分钟)
+    'automaticReceivingState' => env('AUTOMATIC_RECEIVING_STATE', true),  // 是否开启自动收货
+    'automaticReceiving' => env('AUTOMATIC_RECEIVING', 7),  // 多少天后自动收货(天)
 ];
