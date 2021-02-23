@@ -34,6 +34,7 @@ class CreateGoodIndentsTable extends Migration
             $table->timestamp('shipping_time')->nullable()->comment('发货时间');
             $table->timestamp('confirm_time')->nullable()->comment('订单完成时间');
             $table->timestamp('refund_time')->nullable()->comment('退款时间');
+            $table->tinyInteger('is_automatic_receiving')->default(0)->comment('自动确认收货1是0否');
             $table->timestamps();
             $table->charset = 'utf8';
             $table->engine = 'InnoDB';

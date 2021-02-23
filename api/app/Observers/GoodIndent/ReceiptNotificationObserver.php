@@ -28,9 +28,10 @@ class ReceiptNotificationObserver
                 'template' => 'order_confirm_receipt',   //通知模板标识
                 'user_id' => $goodIndent->user_id    //用户ID
             ];
+            $name = $goodIndent->is_automatic_receiving == GoodIndent::GOOD_INDENT_IS_AUTOMATIC_RECEIVING_YES ? '自动' : '';
             $invoice = [
                 'type' => InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
-                'title' => '亲：您在我们商城买的宝贝已经确认收货。',
+                'title' => '亲：您在我们商城买的宝贝已经'.$name.'确认收货。',
                 'list' => [
                     [
                         'keyword' => '订单编号',
@@ -85,7 +86,7 @@ class ReceiptNotificationObserver
                         'data' => $parameter['confirm_time']
                     ]
                 ],
-                'remark' => '客户已确认收货，订单已完成',
+                'remark' => '客户已'.$name.'确认收货，订单已完成',
                 'url' => '/Indent/shipment?id=' . $parameter['id'],
                 'parameter' => $parameter,
                 'admin' => true,
