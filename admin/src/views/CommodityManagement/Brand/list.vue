@@ -99,7 +99,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :loading="formLoading" @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -299,7 +299,7 @@ export default {
       }).catch(() => {
       })
     },
-    createSubmit() { // 添加
+    create() { // 添加
       this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -321,7 +321,7 @@ export default {
         }
       })
     },
-    updateSubmit() { // 更新
+    edit() { // 更新
       this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {

@@ -2,7 +2,7 @@ import request from '@/utils/request'
 export function getList(query) {
   return request({
     url: 'resource',
-    method: 'get',
+    method: 'GET',
     params: query
   })
 }
@@ -10,7 +10,7 @@ export function getList(query) {
 export function destroy(id) {
   return request({
     url: 'resource/destroy/' + id,
-    method: 'post'
+    method: 'POST'
   })
 }
 
