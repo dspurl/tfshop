@@ -130,7 +130,7 @@
 <script>
 import { getList, create, edit, destroy } from '@/api/power'
 import waves from '@/directive/waves' // Waves directiveimport { jurisdiction } from '@/utils'
-import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'PowerList',
