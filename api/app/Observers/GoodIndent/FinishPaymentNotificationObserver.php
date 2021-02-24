@@ -43,9 +43,6 @@ class FinishPaymentNotificationObserver
 
     public function updated(GoodIndent $goodIndent)
     {
-        if($goodIndent->state == GoodIndent::GOOD_INDENT_STATE_DELIVER){
-            Log::info($this->request->path());
-        }
         // 当状态为待发货时触发
         if(($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_DELIVER){
             $redis = new RedisService();
