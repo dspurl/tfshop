@@ -373,8 +373,6 @@ export default {
               message: this.$t('hint.creatingSuccessful'),
               type: 'success',
               duration: 2000
-            }).catch(() => {
-              this.formLoading = false
             })
             setTimeout(this.$router.back(-1), 2000)
           }).catch(() => {

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
+use Artisan;
 
 class LoginController extends Controller
 {
@@ -28,7 +29,8 @@ class LoginController extends Controller
         $admin->last_login_at = Carbon::now()->toDateTimeString();
         $admin->save();
         $access_token = '';
-
+	Artisan::call('cache:clear');
+	
         if ($request->type == 1) {  //首次登录获取token
             $client = new Client();
             $url = request()->root() . '/oauth/token';

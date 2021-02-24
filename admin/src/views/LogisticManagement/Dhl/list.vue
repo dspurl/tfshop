@@ -146,7 +146,7 @@ import { getList, create, edit, destroy } from '@/api/dhl'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 export default {
-  name: 'VueTemplateList',
+  name: 'DhlList',
   components: { Pagination },
   data() {
     return {
