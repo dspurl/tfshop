@@ -376,6 +376,12 @@ class MiniProgram extends Model
                 'msg' => '需要同步'
             ];
         }
+        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'FAIL') {
+            $return = [
+                'result' => 'error',
+                'msg' => $result['err_code_des']
+            ];
+        }
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
             $return = [
                 'result' => 'error',

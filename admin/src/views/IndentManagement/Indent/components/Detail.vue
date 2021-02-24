@@ -543,7 +543,7 @@ export default {
     },
     // 查询支付订单
     queryNumber(row) {
-      query(row).then(() => {})
+      query(row.id).then(() => {})
     },
     // 编辑配送信息
     dhlUpdate() {

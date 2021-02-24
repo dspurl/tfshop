@@ -82,7 +82,7 @@ class Plugin
         $routes = json_decode(file_get_contents($routes), true);
         // api
         if (array_key_exists('admin', $routes) || array_key_exists('app', $routes) || array_key_exists('notValidatedApp', $routes)) {
-            $targetPath = $this->path . '/api/routes/api.php';
+            $targetPath = $this->path . '/api/routes/plugin.php';
             $file_get_contents = file_get_contents($targetPath);
             //去除已存在的插件代码
             $file_get_contents = preg_replace('/\/\/' . $dswjcms['name'] . '_s(.*?)\/\/' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
@@ -251,7 +251,7 @@ class Plugin
         unset($targetPath);
         unset($file_get_contents);
         //去除API路由
-        $targetPath = $this->path . '/api/routes/api.php';
+        $targetPath = $this->path . '/api/routes/plugin.php';
         $file_get_contents = file_get_contents($targetPath);
         //去除已存在的插件代码
         $file_get_contents = preg_replace('/\/\/' . $dswjcms['name'] . '_s(.*?)\/\/' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
