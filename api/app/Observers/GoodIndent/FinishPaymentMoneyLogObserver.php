@@ -6,6 +6,7 @@ namespace App\Observers\GoodIndent;
 
 use App\Models\v1\GoodIndent;
 use App\Models\v1\MoneyLog;
+use Illuminate\Http\Request;
 
 /**
  * finish payment money log
@@ -16,10 +17,35 @@ use App\Models\v1\MoneyLog;
 class FinishPaymentMoneyLogObserver
 {
 
+    protected $request;
+    protected $route = [
+        'app/balancePay',
+        'admin/indent/query',
+        'app/refundNotify'
+    ];
+    protected $execute = false;
+
+    public function __construct(Request $request)
+    {
+        if (!app()->runningInConsole()) {
+            $this->request = $request;
+            $path = explode("admin", $request->path());
+            if (count($path) == 2) {
+                $name = 'admin' . $path[1];
+            } else {
+                $path = explode("app", $request->path());
+                $name = 'app' . $path[1];
+            }
+            if (collect($this->route)->contains($name)) {
+                $this->execute = true;
+            }
+        }
+    }
+
     public function updated(GoodIndent $goodIndent)
     {
         // 当状态为待发货时触发
-        if ($goodIndent->state == GoodIndent::GOOD_INDENT_STATE_DELIVER) {
+        if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_DELIVER) {
             $Money = new MoneyLog();
             $Money->user_id = $goodIndent->user_id;
             $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;

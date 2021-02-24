@@ -7,7 +7,7 @@ namespace App\Observers\GoodIndent;
 use App\Models\v1\Good;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodSku;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 
 /**
  * indent failure stock processing
@@ -17,11 +17,31 @@ use Illuminate\Support\Facades\Log;
  */
 class IndentFailureStockProcessingObserver
 {
+    protected $request;
+    protected $route = [];
+    protected $execute = false;
+
+    public function __construct(Request $request)
+    {
+        if (!app()->runningInConsole()) {
+            $this->request = $request;
+            $path = explode("admin", $request->path());
+            if (count($path) == 2) {
+                $name = 'admin' . $path[1];
+            } else {
+                $path = explode("app", $request->path());
+                $name = 'app' . $path[1];
+            }
+            if (collect($this->route)->contains($name)) {
+                $this->execute = true;
+            }
+        }
+    }
 
     public function updated(GoodIndent $goodIndent)
     {
         // 当状态为失效时触发
-        if ($goodIndent->state == GoodIndent::GOOD_INDENT_STATE_FAILURE) {
+        if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_FAILURE) {
             foreach ($goodIndent->goodsList as $indentCommodity) {
                 $Good = Good::select('id', 'is_inventory', 'inventory')->find($indentCommodity['good_id']);
                 if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_NO) { //拍下减库存

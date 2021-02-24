@@ -90,6 +90,7 @@ class IndentController extends Controller
         }, 'GoodLocation', 'Dhl', 'PaymentLogAll' => function ($q) {
             $q->select('id', 'type', 'name', 'money', 'number', 'platform', 'state', 'pay_id', 'pay_type', 'created_at', 'transaction_id');
         }])->find($id);
+        $GoodIndent->automaticReceivingState = config('dswjcms.automaticReceivingState');
         return resReturn(1, $GoodIndent);
     }
 
@@ -140,6 +141,10 @@ class IndentController extends Controller
             $GoodIndent->odd = $request->odd;
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_TAKE;
             $GoodIndent->shipping_time = Carbon::now()->toDateTimeString();
+            if (config('dswjcms.automaticReceivingState')) {
+                $automaticReceiving = config('dswjcms.automaticReceiving');
+                $GoodIndent->receiving_time = date('Y-m-d H:i:s', strtotime("+$automaticReceiving day"));
+            }
             $GoodIndent->save();
             return array(1, '发货成功');
         });
@@ -161,6 +166,20 @@ class IndentController extends Controller
         $GoodIndent = GoodIndent::find($request->id);
         $GoodIndent->dhl_id = $request->dhl_id;
         $GoodIndent->odd = $request->odd;
+        $GoodIndent->save();
+        return resReturn(1, '修改成功');
+    }
+
+    /**
+     * IndentReceiving
+     * 延长收货时间
+     * @param Request $request
+     * @return string
+     */
+    public function receiving(Request $request)
+    {
+        $GoodIndent = GoodIndent::find($request->id);
+        $GoodIndent->receiving_time = $request->new_receiving_time;
         $GoodIndent->save();
         return resReturn(1, '修改成功');
     }

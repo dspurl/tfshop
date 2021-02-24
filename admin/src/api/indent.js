@@ -48,3 +48,12 @@ export function refund(id, data) {
     data
   })
 }
+
+export function receiving(data) {
+  data = Qs.parse(data)
+  return request({
+    url: 'indent/receiving',
+    method: 'POST',
+    data
+  })
+}

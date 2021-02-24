@@ -161,6 +161,29 @@
         </el-form>
       </div>
     </el-card>
+    <!-- 延长收货时间 -->
+    <el-card v-if="list.state === 3 && list.automaticReceivingState" shadow="always" style="margin-top: 25px">
+      <div slot="header" class="clearfix">
+        <span>延长收货时间</span>
+      </div>
+      <div>
+        <el-form ref="receivingForm" :rules="receivingRules" :model="receivingTemp" label-width="120px" style="width: 400px; margin-left:50px;">
+          <el-form-item label="自动收货时间">
+            <span>{{ list.receiving_time }}</span>
+          </el-form-item>
+          <el-form-item label="设置收货时间" prop="new_receiving_time">
+            <el-date-picker
+              v-model="receivingTemp.new_receiving_time"
+              type="datetime"
+              placeholder="选择收货时间"
+              value-format="yyyy-MM-dd HH:mm:ss"/>
+          </el-form-item>
+          <el-form-item>
+            <el-button :loading="shipmentLoading" type="primary" @click="receivingEdit">保存</el-button>
+          </el-form-item>
+        </el-form>
+      </div>
+    </el-card>
     <!-- 退款记录 -->
     <el-card v-if="list.refund_money" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
@@ -364,7 +387,7 @@
   }
 </style>
 <script>
-import { detail, shipment, refund, query, dhl } from '@/api/indent'
+import { detail, shipment, refund, query, dhl, receiving } from '@/api/indent'
 import { getList } from '@/api/dhl'
 import printJS from 'print-js'
 export default {
@@ -382,6 +405,15 @@ export default {
       listLoading: true,
       id: this.$route.query.id,
       temp: {},
+      receivingTemp: {
+        id: 0,
+        new_receiving_time: ''
+      },
+      receivingRules: {
+        new_receiving_time: [
+          { required: true, message: '请设置新的自动收货时间', trigger: 'change' }
+        ]
+      },
       rules: {
         dhl_id: [
           { required: true, message: '请选择物流公司', trigger: 'change' }
@@ -445,6 +477,8 @@ export default {
             response.data.goods_list[k].specification = response.data.goods_list[k].specification.substr(0, response.data.goods_list[k].specification.length - 1)
           }
         }
+        this.receivingTemp.new_receiving_time = response.data.receiving_time
+        this.receivingTemp.id = response.data.id
         this.list = response.data
         this.refundTemp.refund_money = this.list.total
         // 同步支付信息
@@ -521,9 +555,26 @@ export default {
       dhl(this.temp).then(() => {
         this.shipmentLoading = false
         this.temp = {}
+        this.getList()
         this.$notify({
           title: this.$t('hint.succeed'),
           message: '保存成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(() => {
+        this.shipmentLoading = false
+      })
+    },
+    // 延长收货时间
+    receivingEdit() {
+      this.shipmentLoading = true
+      receiving(this.receivingTemp).then(() => {
+        this.shipmentLoading = false
+        this.getList()
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: '修改成功',
           type: 'success',
           duration: 2000
         })

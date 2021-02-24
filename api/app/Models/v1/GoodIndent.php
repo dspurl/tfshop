@@ -24,6 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int refund_reason
  * @property int is_automatic_receiving
  * @property string shipping_time
+ * @property string receiving_time
  * @property string created_at
  * @property string confirm_time
  * @property string refund_time

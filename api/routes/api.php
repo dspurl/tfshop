@@ -73,6 +73,7 @@ Route::prefix('v1')->namespace('v1')->group(function () {
         Route::post('indent/dhl', 'IndentController@dhl')->middleware(['permissions:IndentDhl']); //保存配送信息
         Route::post('indent/refund/{id}', 'IndentController@refund')->middleware(['permissions:IndentRefund']); //退款
         Route::get('indent/query/{id}', 'IndentController@query')->middleware(['permissions:IndentDetail']);  //查询订单状态
+        Route::post('indent/receiving', 'IndentController@receiving')->middleware(['permissions:IndentShipment']); //延长收货时间
         Route::get('redis', 'RedisServiceController@list')->middleware(['permissions:RedisServiceList']);    //Redis列表
         Route::get('redis/{name}', 'RedisServiceController@detail')->middleware(['permissions:RedisServiceDetail']);    //Redis详情
         Route::post('redis/destroy/{id}', 'RedisServiceController@destroy')->middleware(['permissions:RedisServiceDestroy']);    //删除Redis

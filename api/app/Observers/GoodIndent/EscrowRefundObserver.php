@@ -16,16 +16,32 @@ use Illuminate\Http\Request;
 class EscrowRefundObserver
 {
     protected $request;
+    protected $route = [
+        'admin/indent/refund',
+    ];
+    protected $execute = false;
 
     public function __construct(Request $request)
     {
-        $this->request = $request;
+        if (!app()->runningInConsole()) {
+            $this->request = $request;
+            $path = explode("admin", $request->path());
+            if (count($path) == 2) {
+                $name = 'admin' . preg_replace("/\/\\d+/", '', $path[1]);
+            } else {
+                $path = explode("app", $request->path());
+                $name = 'app' . preg_replace("/\/\\d+/", '', $path[1]);
+            }
+            if (collect($this->route)->contains($name)) {
+                $this->execute = true;
+            }
+        }
     }
 
     public function updated(GoodIndent $goodIndent)
     {
         // 当状态为退款处理中触发
-        if ($goodIndent->state == GoodIndent::GOOD_INDENT_STATE_REFUND_PROCESSING) {
+        if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_REFUND_PROCESSING) {
             //第三方支付统一退款入口
             $MiniProgram = new MiniProgram();
             $refund = $MiniProgram->refund($goodIndent->PaymentLog->platform, $goodIndent->PaymentLog->number, $goodIndent->PaymentLog->money, $this->request->refund_money * 100, $this->request->refund_reason);

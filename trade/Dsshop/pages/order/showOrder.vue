@@ -50,7 +50,7 @@
 			</navigator>
 		</view>
 		<!-- 金额明细 -->
-		<view class="yt-list">
+		<view class="yt-list margin-bottom">
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">备注</text>
 				<text class="cell-tip">{{ indentList.remark ? indentList.remark : '' }}</text>
@@ -79,6 +79,10 @@
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">订单状态</text>
 				<text class="cell-tip">{{ indentList.state_show }}</text>
+			</view>
+			<view class="yt-list-cell b-b">
+				<text class="cell-tit clamp" style="color: #fa436a;">7天后将自动确认收货</text>
+				<button class="cu-btn round bg-red">延长收货时间</button>
 			</view>
 		</view>
 		<!-- 底部 -->
