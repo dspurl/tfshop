@@ -11,11 +11,11 @@ use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
-use Artisan;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
 class LoginController extends Controller
 {
-
+    use AuthenticatesUsers;
     public function index(Request $request)
     {
 
@@ -29,8 +29,13 @@ class LoginController extends Controller
         $admin->last_login_at = Carbon::now()->toDateTimeString();
         $admin->save();
         $access_token = '';
-	Artisan::call('cache:clear');
-	
+        
+        if ($this->hasTooManyLoginAttempts($request)) {
+            $this->limiter()->clear($this->throttleKey($request));
+            $this->fireLockoutEvent($request);
+            return $this->sendLockoutResponse($request);
+        }
+        
         if ($request->type == 1) {  //首次登录获取token
             $client = new Client();
             $url = request()->root() . '/oauth/token';
@@ -49,6 +54,7 @@ class LoginController extends Controller
             $respond = $client->post($url, ['form_params' => $params]);
             $access_token = json_decode($respond->getBody()->getContents(), true);
         }
+        $this->incrementLoginAttempts($request);
         //日志记录
         $input = $request->all();
         $log = new AdminLog();
