@@ -37,9 +37,7 @@ class AutomaticReceiving extends Command
      */
     public function handle()
     {
-        $automaticReceiving = config('dswjcms.automaticReceiving');
-        $automaticReceiving = date('Y-m-d H:i:s', strtotime("-$automaticReceiving day"));
-        $GoodIndentAll = GoodIndent::where('state', GoodIndent::GOOD_INDENT_STATE_TAKE)->where('shipping_time', '<=', $automaticReceiving)->get();
+        $GoodIndentAll = GoodIndent::where('state', GoodIndent::GOOD_INDENT_STATE_TAKE)->where('receiving_time', '<=', date('Y-m-d H:i:s'))->get();
         if ($GoodIndentAll) {
             foreach ($GoodIndentAll as $g) {
                 $GoodIndent = GoodIndent::with(['goodsList'])->find($g->id);

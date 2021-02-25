@@ -80,9 +80,9 @@
 				<text class="cell-tit clamp">订单状态</text>
 				<text class="cell-tip">{{ indentList.state_show }}</text>
 			</view>
-			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp" style="color: #fa436a;">7天后将自动确认收货</text>
-				<button class="cu-btn round bg-red">延长收货时间</button>
+			<view class="yt-list-cell b-b" v-if="indentList.receiving_time">
+				<text class="cell-tit clamp">订单自动收货时间</text>
+				<text class="cell-tip" style="color: #fa436a;">{{ indentList.receiving_time }}</text>
 			</view>
 		</view>
 		<!-- 底部 -->
