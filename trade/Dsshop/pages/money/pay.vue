@@ -136,7 +136,7 @@
 			goBack(){
 				this.hideModal()
 				uni.redirectTo({
-					url: '/pages/order/order?state=2'
+					url: '/pages/indent/list?state=2'
 				})
 			},
 			//确认支付

@@ -10,7 +10,7 @@ use App\Http\Controllers\Controller;
 /**
  * notification
  * 通知
- * Class NoticeController
+ * Class NotificationController
  * @package App\Http\Controllers\v1\Client
  */
 class NotificationController extends Controller

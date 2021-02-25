@@ -4,7 +4,7 @@
 		<text class="tit">支付成功</text>
 		
 		<view class="btn-group">
-			<navigator url="/pages/order/order?state=2" open-type="redirect" class="mix-btn">查看订单</navigator>
+			<navigator url="/pages/indent/list?state=2" open-type="redirect" class="mix-btn">查看订单</navigator>
 			<navigator url="/pages/index/index" open-type="switchTab" class="mix-btn hollow">返回首页</navigator>
 		</view>
 	</view>

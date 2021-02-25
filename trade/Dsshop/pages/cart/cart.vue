@@ -96,7 +96,7 @@
 						不包含配送费
 					</text>
 				</view>
-				<button type="primary" class="no-border confirm-btn" @click="createOrder">去结算</button>
+				<button type="primary" class="no-border confirm-btn" @click="create">去结算</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -329,7 +329,7 @@
 				})
 			},
 			//创建订单
-			createOrder(){
+			create(){
 				let list = this.cartList
 				let goodsData = []
 				const that = this
@@ -343,7 +343,7 @@
 					return false
 				}
 				uni.navigateTo({
-					url: `/pages/order/createOrder`
+					url: `/pages/indent/create`
 				})
 			}
 		}

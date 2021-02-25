@@ -535,7 +535,7 @@ export default{
 				}else{
 					if(this.buyState){	//直接购买
 						uni.navigateTo({
-							url: `/pages/order/createOrder`
+							url: `/pages/indent/create`
 						})
 					}else{
 						uni.showToast({

@@ -164,7 +164,7 @@
 				}
 			}
 		}, {
-			"path": "pages/order/order",
+			"path": "pages/indent/list",
 			"style": {
 				"navigationBarTitleText": "我的订单",
 				"app-plus": {
@@ -175,12 +175,12 @@
 			"path": "pages/money/money",
 			"style": {}
 		}, {
-			"path": "pages/order/createOrder",
+			"path": "pages/indent/create",
 			"style": {
 				"navigationBarTitleText": "创建订单"
 			}
 		}, {
-			"path": "pages/order/showOrder",
+			"path": "pages/indent/detail",
 			"style": {
 				"navigationBarTitleText": "订单详情"
 			}
