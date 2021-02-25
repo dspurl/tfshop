@@ -62,7 +62,7 @@
 						是否已完成支付
 					</view>
 					<view class="flex cu-bar bg-white justify-between">
-						<button class="margin-left cu-btn line-green text-green" @tap="hideModal">取消</button>
+						<button class="margin-left cu-btn line-green text-green" @tap="goBack">取消</button>
 						<button class="margin-right cu-btn bg-green margin-left" @tap="goBack">已完成</button>
 					</view>
 				</view>
@@ -144,9 +144,10 @@
 			},
 			goBack(){
 				this.hideModal()
-				uni.redirectTo({
+				this.getList()
+				/* uni.redirectTo({
 					url: '/pages/order/order?state=2'
-				})
+				}) */
 			},
 			//确认支付
 			confirm: async function() {
