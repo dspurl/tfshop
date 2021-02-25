@@ -343,7 +343,7 @@ export default {
       })
     },
     handleAllState(type) { // 批量变更状态
-      const title = '是否确认批量立即上架商品?'
+      let title = '是否确认批量立即上架商品?'
       if (type === 1) {
         title = '是否确认批量将商品加入仓库？'
       }
