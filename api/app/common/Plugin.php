@@ -75,9 +75,9 @@ class Plugin
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dswjcms.versions'));
         $this->fileDeployment($this->pluginPath . '/' . $name . '/api/observers', $this->path . '/api/app/Observers');
         $this->fileDeployment($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/trade/Dsshop/api');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/trade/Dsshop/components');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/pages', $this->path . '/trade/Dsshop/pages');
+        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/client/Dsshop/api');
+        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/client/Dsshop/components');
+        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/pages', $this->path . '/client/Dsshop/pages');
         // 路由自动部署
         $routes = json_decode(file_get_contents($routes), true);
         // api
@@ -132,7 +132,7 @@ class Plugin
         }
         // uni-app
         if (array_key_exists('uniApp', $routes)) {
-            $targetPath = $this->path . '/trade/Dsshop/pages.json';
+            $targetPath = $this->path . '/client/Dsshop/pages.json';
             $file_get_contents = file_get_contents($targetPath);
             //去除已存在的插件代码
             $file_get_contents = preg_replace('/\/\/ ' . $dswjcms['name'] . '_s(.*?)\/\/ ' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
@@ -243,7 +243,7 @@ class Plugin
         $dswjcms = json_decode(file_get_contents($dswjcms), true);
         $json_dswjcms = json_decode(file_get_contents($this->pluginPath . '/dswjcms.json'), true);
         //去除uni-app路由
-        $targetPath = $this->path . '/trade/Dsshop/pages.json';
+        $targetPath = $this->path . '/client/Dsshop/pages.json';
         $file_get_contents = file_get_contents($targetPath);
         $file_get_contents = preg_replace('/\/\/ ' . $dswjcms['name'] . '_s(.*?)\/\/ ' . $dswjcms['name'] . '_e/is', '', $file_get_contents);
         $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
@@ -295,9 +295,9 @@ class Plugin
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dswjcms.versions'));
         $this->fileUninstall($this->pluginPath . '/' . $name . '/api/observers', $this->path . '/api/app/Observers');
         $this->fileUninstall($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/trade/Dsshop/api');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/trade/Dsshop/components');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/pages', $this->path . '/trade/Dsshop/pages');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/client/Dsshop/api');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/client/Dsshop/components');
+        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/pages', $this->path . '/client/Dsshop/pages');
         foreach ($json_dswjcms as $id => $json) {
             if ($json['name'] == $name) {
                 $json_dswjcms[$id]['is_delete'] = 1;
