@@ -232,6 +232,7 @@ class GoodIndentController extends Controller
             $GoodIndent = GoodIndent::with(['goodsList'])->find($id);
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_ACCOMPLISH;
             $GoodIndent->confirm_time = Carbon::now()->toDateTimeString();
+            $GoodIndent->receiving_time = Carbon::now()->toDateTimeString();
             $GoodIndent->save();
             return array(1, '收货成功');
         });
