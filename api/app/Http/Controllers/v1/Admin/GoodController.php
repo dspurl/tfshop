@@ -161,7 +161,7 @@ class GoodController extends Controller
                 $Resource->type = Resource::RESOURCE_TYPE_IMG;
                 $Resource->depict = 'goods_' . $Good->id . '_zimg';
                 $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
+                $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\Good';
                 $Resource->img = imgPathShift('good', $request->img);
                 $Resource->save();
             }
@@ -171,7 +171,7 @@ class GoodController extends Controller
                 $Resource->type = Resource::RESOURCE_TYPE_VIDEO;
                 $Resource->depict = 'goods_' . $Good->id . '_video';
                 $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
+                $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\Good';
                 $Resource->img = $request->video;
                 $Resource->save();
             }
@@ -181,7 +181,7 @@ class GoodController extends Controller
                 $Resource->type = Resource::RESOURCE_TYPE_IMG;
                 $Resource->depict = 'goods_' . $Good->id . '_poster';
                 $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
+                $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\Good';
                 $Resource->img = $request->poster;
                 $Resource->save();
             }
@@ -192,7 +192,7 @@ class GoodController extends Controller
                     $Resource->type = Resource::RESOURCE_TYPE_IMG;
                     $Resource->depict = 'goods_' . $Good->id;
                     $Resource->image_id = $Good->id;
-                    $Resource->image_type = 'App\Models\v1\Good';
+                    $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\Good';
                     $Resource->img = imgPathShift('good', $imgList['response']);
                     $Resource->save();
                 }
@@ -218,7 +218,7 @@ class GoodController extends Controller
                         $Resource->type = Resource::RESOURCE_TYPE_IMG;
                         $Resource->depict = 'product_sku_' . $GoodSku->id;
                         $Resource->image_id = $GoodSku->id;
-                        $Resource->image_type = 'App\Models\v1\GoodSku';
+                        $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\GoodSku';
                         $Resource->img = imgPathShift('product_sku', $good_sku['img']);
                         $Resource->save();
                     }
@@ -333,7 +333,7 @@ class GoodController extends Controller
                 $Resource->type = Resource::RESOURCE_TYPE_VIDEO;
                 $Resource->depict = 'goods_' . $Good->id . '_video';
                 $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
+                $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\Good';
                 $Resource->img = $request->video;
                 $Resource->save();
             }
@@ -347,7 +347,7 @@ class GoodController extends Controller
                 $Resource->type = Resource::RESOURCE_TYPE_IMG;
                 $Resource->depict = 'goods_' . $Good->id . '_poster';
                 $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
+                $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\Good';
                 $Resource->img = $request->poster;
                 $Resource->save();
             }
@@ -365,20 +365,20 @@ class GoodController extends Controller
                         $Resource->type = Resource::RESOURCE_TYPE_IMG;
                         $Resource->depict = 'goods_' . $Good->id;
                         $Resource->image_id = $Good->id;
-                        $Resource->image_type = 'App\Models\v1\Good';
+                        $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\Good';
                     }
                     $Resource->img = imgPathShift('good', $imgList['response']);
                     $Resource->save();
                     $ResourceAll[] = $Resource->id;
                 }
                 //删除去除的资源
-                $ResourceDelete = Resource::where('image_id', $Good->id)->where('image_type', 'App\Models\v1\Good')->where('depict', 'not like', '%_zimg')->where('depict', 'not like', '%_video')->where('depict', 'not like', '%_poster')->whereNotIn('id', $ResourceAll)->get();
+                $ResourceDelete = Resource::where('image_id', $Good->id)->where('image_type', 'App\Models\v'.config('dswjcms.versions').'\Good')->where('depict', 'not like', '%_zimg')->where('depict', 'not like', '%_video')->where('depict', 'not like', '%_poster')->whereNotIn('id', $ResourceAll)->get();
                 if ($ResourceDelete) {
                     foreach ($ResourceDelete as $r) {
                         imgPathDelete('good', $r->img);
                     }
                 }
-                Resource::where('image_id', $Good->id)->where('image_type', 'App\Models\v1\Good')->where('depict', 'not like', '%_zimg')->where('depict', 'not like', '%_video')->where('depict', 'not like', '%_poster')->whereNotIn('id', $ResourceAll)->delete();
+                Resource::where('image_id', $Good->id)->where('image_type', 'App\Models\v'.config('dswjcms.versions').'\Good')->where('depict', 'not like', '%_zimg')->where('depict', 'not like', '%_video')->where('depict', 'not like', '%_poster')->whereNotIn('id', $ResourceAll)->delete();
             }
             // sku处理
             if (count($request->good_sku) > 0) {
@@ -414,7 +414,7 @@ class GoodController extends Controller
                             $Resource->type = Resource::RESOURCE_TYPE_IMG;
                             $Resource->depict = 'product_sku_' . $GoodSku->id;
                             $Resource->image_id = $GoodSku->id;
-                            $Resource->image_type = 'App\Models\v1\GoodSku';
+                            $Resource->image_type = 'App\Models\v'.config('dswjcms.versions').'\GoodSku';
                         }
                         $Resource->img = imgPathShift('product_sku', $good_sku['img']);
                         $Resource->save();
