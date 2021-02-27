@@ -89,9 +89,9 @@ class InvoicePaid extends Notification
         $this->invoice['appName'] = config('app.name');
         $this->invoice['type'] = array_key_exists("type", $this->invoice) ? $this->invoice['type'] : static::NOTIFICATION_TYPE_SYSTEM_MESSAGES;    //通知类型：1系统消息（默认）2交易3活动
         if (array_key_exists("admin", $this->invoice)) {
-            $this->invoice['url'] = array_key_exists("url", $this->invoice) ? request()->root() . '/admin/#' . $this->invoice['url'] : '';   //后台跳转地址
+            $this->invoice['url'] = array_key_exists("url", $this->invoice) ? config('app.url') . '/admin/#' . $this->invoice['url'] : '';   //后台跳转地址
         } else {
-            $this->invoice['url'] = array_key_exists("url", $this->invoice) ? request()->root() . '/h5/#' . $this->invoice['url'] : '';   //跳转地址
+            $this->invoice['url'] = array_key_exists("url", $this->invoice) ? config('app.url') . '/h5/#' . $this->invoice['url'] : '';   //跳转地址
         }
         $this->invoice['image'] = array_key_exists("image", $this->invoice) ? $this->invoice['image'] : '';   //带图
         $this->invoice['price'] = array_key_exists("price", $this->invoice) ? sprintf("%01.2f", $this->invoice['price'] / 100) : '';   //金额
