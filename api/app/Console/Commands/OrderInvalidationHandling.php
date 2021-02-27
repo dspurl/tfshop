@@ -37,7 +37,9 @@ class OrderInvalidationHandling extends Command
      */
     public function handle()
     {
-        $GoodIndentAll=GoodIndent::where('state', GoodIndent::GOOD_INDENT_STATE_PAY)->where('overtime', '<=', date('Y-m-d H:i:s'))->get();
+        $overTime = config('dswjcms.indentOvertime');
+        $GoodIndentAll=GoodIndent::where('state', GoodIndent::GOOD_INDENT_STATE_PAY)
+            ->whereRaw('TIMESTAMPDIFF(MINUTE,created_at,now())>'.$overTime)->get();
         if($GoodIndentAll){
             foreach ($GoodIndentAll as $g){
                 $GoodIndent = GoodIndent::with(['goodsList'])->find($g->id);

@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!item.hidden&&item.children && !lowResolutionHide" class="menu-wrapper">
+  <div v-if="!item.hidden&&item.children" class="menu-wrapper">
 
     <template v-if="hasOneShowingChild(item.children,item) && (!onlyOneChild.children||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
       <app-link :to="resolvePath(onlyOneChild.path)">
@@ -64,18 +64,11 @@ export default {
   },
   data() {
     return {
-      onlyOneChild: null,
-      lowResolutionHide: false
+      onlyOneChild: null
     }
   },
   methods: {
     hasOneShowingChild(children, parent) {
-      const sidebarStatus = getToken('sidebarStatus')
-      const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
-      if(Number(sidebarStatus) == 0 && vw < 1000){
-        this.lowResolutionHide = true
-        console.log(sidebarStatus)
-      }
       const showingChildren = children.filter(item => {
         if (item.hidden) {
           return false

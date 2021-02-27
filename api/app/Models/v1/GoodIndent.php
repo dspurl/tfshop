@@ -28,7 +28,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string created_at
  * @property string confirm_time
  * @property string refund_time
- * @property string overtime
  */
 class GoodIndent extends Model
 {
