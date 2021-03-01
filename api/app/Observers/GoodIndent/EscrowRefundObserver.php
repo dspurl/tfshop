@@ -8,8 +8,8 @@ use App\Models\v1\PaymentLog;
 use Illuminate\Http\Request;
 
 /**
- * escrow refund
- * 第三方支付退款
+ * good indent escrow refund
+ * 商品订单第三方支付退款
  * Class RefundNotificationObserver
  * @package App\Observers\GoodIndent
  */
@@ -51,7 +51,7 @@ class EscrowRefundObserver
                 $PaymentLog->number = $refund['number'];
                 $PaymentLog->money = $this->request->refund_money * 100;
                 $PaymentLog->pay_id = $goodIndent->id; //订单ID
-                $PaymentLog->type = PaymentLog::PAYMENT_LOG_TYPE_REFUND;
+                $PaymentLog->type = PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT_REFUND;
                 $PaymentLog->platform = $goodIndent->PaymentLog->platform;
                 $PaymentLog->pay_type = 'App\Models\v'.config('dswjcms.versions').'\GoodIndent';
                 $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;

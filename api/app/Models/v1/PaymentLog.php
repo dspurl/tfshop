@@ -25,6 +25,7 @@ class PaymentLog extends Model
     const PAYMENT_LOG_STATE_COMPLETE = 1; //状态:完成
     const PAYMENT_LOG_STATE_FAILURE = 2; //状态:失败
     const PAYMENT_LOG_TYPE_GOODS_INDENT = 'goodsIndent'; //支付类型:商品订单支付
+    const PAYMENT_LOG_TYPE_GOODS_INDENT_REFUND = 'goodsIndentRefund'; //支付类型:商品订单退款
     const PAYMENT_LOG_TYPE_REFUND = 'refund'; //支付类型:退款
     const PAYMENT_LOG_PLATFORM_WEIXIN = 'weixin'; //支付平台:微信
     protected $appends = ['state_show', 'money_show', 'platform_show', 'type_show'];

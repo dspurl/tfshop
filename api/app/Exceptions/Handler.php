@@ -49,11 +49,19 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if (config('app.debug')) {    //自定义错误提示
-            return parent::render($request, $exception);
-        } else {
-            return response()->json($exception, 500);
-        }
+        $error = $this->convertExceptionToResponse($exception);
+        $response['status_code'] = $error->getStatusCode();
+        $response['code'] = $exception->getCode();
+        $response['message'] = empty($exception->getMessage()) ? 'something error' : $exception->getMessage();
+        if(config('app.debug')) {
+            if($error->getStatusCode() >= 500) {
+                if(config('app.debug')) {
+                    $response['trace'] = $exception->getTraceAsString();
 
+                }
+            }
+        }
+        $response['result'] = 'error';
+        return response()->json($response, $error->getStatusCode());
     }
 }
