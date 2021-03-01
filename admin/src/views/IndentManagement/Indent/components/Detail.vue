@@ -174,7 +174,7 @@
           <el-form-item label="设置收货时间" prop="new_receiving_time">
             <el-date-picker
               v-model="receivingTemp.new_receiving_time"
-              type="datetime"
+              type="date"
               placeholder="选择收货时间"
               value-format="yyyy-MM-dd HH:mm:ss"/>
           </el-form-item>

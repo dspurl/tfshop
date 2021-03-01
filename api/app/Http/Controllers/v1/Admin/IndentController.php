@@ -143,7 +143,7 @@ class IndentController extends Controller
             $GoodIndent->shipping_time = Carbon::now()->toDateTimeString();
             if (config('dswjcms.automaticReceivingState')) {
                 $automaticReceiving = config('dswjcms.automaticReceiving');
-                $GoodIndent->receiving_time = date('Y-m-d H:i:s', strtotime("+$automaticReceiving day"));
+                $GoodIndent->receiving_time = date('Y-m-d 00:00:00', strtotime("+$automaticReceiving day"));
             }
             $GoodIndent->save();
             return array(1, '发货成功');

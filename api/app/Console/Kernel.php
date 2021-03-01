@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
             }
         }
         if (config('dswjcms.automaticReceivingState')) {    //是否开启自动收货
-            $schedule->command('automatic:receiving')->everyMinute();
+            $schedule->command('automatic:receiving')->dailyAt('00:20');
         }
         //订单失效处理
         $schedule->command('order:invalidation')->everyMinute();
