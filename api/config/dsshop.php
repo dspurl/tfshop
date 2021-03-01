@@ -4,7 +4,7 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | DSWJCMS个性化配置
+    | dsshop个性化配置
     |--------------------------------------------------------------------------
     */
 
@@ -18,7 +18,7 @@ return [
     */
 
     'homestead' => env('HOMESTEAD_WINDOWS', false),
-    'failuretime' => env('DSWJCMS_FAILURE_TIME', 60), // 失效时间秒，默认60秒
+    'failuretime' => env('dsshop_FAILURE_TIME', 60), // 失效时间秒，默认60秒
     'versions' => env('API_VERSIONS', 1),   //当前版本
     'applySecret' => env('PROJECT_KEY', 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='), //API密钥串
     'orderOvertime' => env('ORDER_OVERTIME', 1440),  // 订单超时时间(分钟)

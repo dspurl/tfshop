@@ -53,7 +53,7 @@ class EscrowRefundObserver
                 $PaymentLog->pay_id = $goodIndent->id; //订单ID
                 $PaymentLog->type = PaymentLog::PAYMENT_LOG_TYPE_REFUND;
                 $PaymentLog->platform = $goodIndent->PaymentLog->platform;
-                $PaymentLog->pay_type = 'App\Models\v'.config('dswjcms.versions').'\GoodIndent';
+                $PaymentLog->pay_type = 'App\Models\v'.config('dsshop.versions').'\GoodIndent';
                 $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;
                 $PaymentLog->save();
             }

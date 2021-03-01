@@ -162,7 +162,7 @@ class AppController extends Controller
             return resReturn(0, '您的验证码还没有失效，请不要重复获取', Code::CODE_WRONG);
         }
         $code = rand(10000, 99999);
-        $redis->setex('code.register.' . $request->cellphone, config('dswjcms.failuretime'), $code);
+        $redis->setex('code.register.' . $request->cellphone, config('dsshop.failuretime'), $code);
         $Config = config('sms');
         if (!$Config[$Config['service']]['access_id']) {    //没有配置短信账号，直接返回验证码
             return resReturn(1, ['code' => $code]);
@@ -213,7 +213,7 @@ class AppController extends Controller
             return resReturn(0, '您的验证码还没有失效，请不要重复获取', Code::CODE_WRONG);
         }
         $code = rand(10000, 99999);
-        $redis->setex('code.register.' . $request->email, config('dswjcms.failuretime'), $code);
+        $redis->setex('code.register.' . $request->email, config('dsshop.failuretime'), $code);
         Mail::to($request->email)->send(new VerificationCode($code));
         return resReturn(1, '发送成功');
     }

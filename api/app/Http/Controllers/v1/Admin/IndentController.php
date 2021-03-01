@@ -90,7 +90,7 @@ class IndentController extends Controller
         }, 'GoodLocation', 'Dhl', 'PaymentLogAll' => function ($q) {
             $q->select('id', 'type', 'name', 'money', 'number', 'platform', 'state', 'pay_id', 'pay_type', 'created_at', 'transaction_id');
         }])->find($id);
-        $GoodIndent->automaticReceivingState = config('dswjcms.automaticReceivingState');
+        $GoodIndent->automaticReceivingState = config('dsshop.automaticReceivingState');
         return resReturn(1, $GoodIndent);
     }
 
@@ -141,8 +141,8 @@ class IndentController extends Controller
             $GoodIndent->odd = $request->odd;
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_TAKE;
             $GoodIndent->shipping_time = Carbon::now()->toDateTimeString();
-            if (config('dswjcms.automaticReceivingState')) {
-                $automaticReceiving = config('dswjcms.automaticReceiving');
+            if (config('dsshop.automaticReceivingState')) {
+                $automaticReceiving = config('dsshop.automaticReceiving');
                 $GoodIndent->receiving_time = date('Y-m-d 00:00:00', strtotime("+$automaticReceiving day"));
             }
             $GoodIndent->save();
