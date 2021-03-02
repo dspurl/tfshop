@@ -100,7 +100,7 @@ class GoodIndentController extends Controller
                 $GoodIndent->identification = orderNumber();
                 $GoodIndent->total = $total + $request->carriage;
                 $GoodIndent->remark = $request->remark;
-                $GoodIndent->overtime = date('Y-m-d H:i:s', time() + config('dswjcms.orderOvertime') * 60);
+                $GoodIndent->overtime = date('Y-m-d H:i:s', time() + config('dsshop.orderOvertime') * 60);
                 $GoodIndent->save();
                 return array(1, $GoodIndent->id);
             }, 5);

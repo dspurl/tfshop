@@ -19,7 +19,7 @@ class AppVerify
         if (!$request->header('apply-secret')) {
             return resReturn(0, '非法apply-secret', Code::CODE_INEXISTENCE);
         }
-        if (config('dswjcms.applySecret') != $request->header('apply-secret')) {
+        if (config('dsshop.applySecret') != $request->header('apply-secret')) {
             return resReturn(0, 'API密钥有误', Code::CODE_INEXISTENCE);
         }
         return $next($request);

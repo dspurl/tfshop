@@ -138,7 +138,7 @@ function orderNumber()
  */
 function imgPathShift($new, $img)
 {
-    if (config('dswjcms.homestead')) {
+    if (config('dsshop.homestead')) {
         $path = request()->root() . '/storage/temporary/';
         $img = explode($path, $img);
         if (count($img) == 2) {   //上传过的图片才进行处理
