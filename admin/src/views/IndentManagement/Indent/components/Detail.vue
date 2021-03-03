@@ -494,6 +494,13 @@ export default {
     getDhl() {
       getList().then(response => {
         this.dhl = response.data
+        let that = this
+        this.dhl.forEach(function(element) {
+          if(element.is_default === 1){
+              that.temp.dhl_id = element.id
+          }        
+        });
+
       })
     },
     shipmentSubmit() {

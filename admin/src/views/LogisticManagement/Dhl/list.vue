@@ -38,6 +38,11 @@
           <span>{{ scope.row.abbreviation }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="是否默认" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.is_default == 1 ? '默认' : '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="时间" align="center" sortable="custom" prop="created_at">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
@@ -66,6 +71,12 @@
         </el-form-item>
         <el-form-item label="简称" prop="abbreviation">
           <el-input v-model="temp.abbreviation" maxlength="80" clearable/>
+        </el-form-item>
+        <el-form-item label="是否默认" prop="is_default">
+          <el-radio-group v-model="temp.is_default">
+            <el-radio :label="0">普通</el-radio>
+            <el-radio :label="1">默认</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="是否显示" prop="state">
           <el-radio-group v-model="temp.state">

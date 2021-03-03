@@ -62,6 +62,7 @@ class DhlController extends Controller
         $Dhl->name = $request->name;
         $Dhl->abbreviation = $request->abbreviation;
         $Dhl->state = $request->state;
+        $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
         $Dhl->save();
         return resReturn(1,'添加成功');
@@ -84,6 +85,7 @@ class DhlController extends Controller
         $Dhl->name = $request->name;
         $Dhl->abbreviation = $request->abbreviation;
         $Dhl->state = $request->state;
+        $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
         $Dhl->save();
         return resReturn(1,'更新成功');
