@@ -18,15 +18,6 @@ class Plugin
     }
 
     /**
-     * 获取dsshop.json
-     */
-    public function getdsshopJson()
-    {
-        $json_dsshop = file_get_contents($this->pluginPath . '/dsshop.json');
-        return json_decode($json_dsshop, true);
-    }
-
-    /**
      * 获取本地插件列表
      */
     public function getLocalPlugin()

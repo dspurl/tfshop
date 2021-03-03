@@ -1,7 +1,7 @@
 .idea/
 需完善的功能.text
-/trade/Dsshop/node_modules/
+/client/Dsshop/node_modules/
 admin/config/dev.env.js
-trade/Dsshop/App.vue
-trade/Dsshop/unpackage/
+client/Dsshop/App.vue
+client/Dsshop/unpackage/
 version
