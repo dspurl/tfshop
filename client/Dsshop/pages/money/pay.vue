@@ -10,7 +10,7 @@
 				<text>支付金额</text>
 				<text class="price">{{orderInfo.total | 1000}}</text>
 				<text class="padding-top">订单失效时间</text>
-				<uni-countdown color="#fa436a" splitorColor="#fa436a" :show-day="orderInfo.day" :showColon="false" :day="orderInfo.day" :hour="orderInfo.hour" :minute="orderInfo.minute" :second="orderInfo.second"></uni-countdown>
+				<uni-countdown color="#fa436a" splitorColor="#fa436a" :show-day="orderInfo.day ? true : false" :showColon="false" :day="orderInfo.day" :hour="orderInfo.hour" :minute="orderInfo.minute" :second="orderInfo.second"></uni-countdown>
 			</view>
 			
 			<view class="pay-type-list">
