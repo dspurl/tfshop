@@ -404,7 +404,9 @@ export default {
       dialogFormVisible: false,
       listLoading: true,
       id: this.$route.query.id,
-      temp: {},
+      temp: {
+        dhl_id: null
+      },
       receivingTemp: {
         id: 0,
         new_receiving_time: ''
@@ -494,13 +496,12 @@ export default {
     getDhl() {
       getList().then(response => {
         this.dhl = response.data
-        let that = this
-        this.dhl.forEach(function(element) {
-          if(element.is_default === 1){
-              that.temp.dhl_id = element.id
-          }        
-        });
-
+        for (const item of this.dhl) {
+          if (item.is_default === 1) {
+            this.temp.dhl_id = item.id
+            break
+          }
+        }
       })
     },
     shipmentSubmit() {
