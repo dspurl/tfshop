@@ -72,6 +72,7 @@ class GoodIndentPaymentCreateObserver
                 $openid = $this->request->header('openid');
                 $body = '对订单：' . $GoodIndent->identification . '的付款';
                 $payment = (new MiniProgram())->payment($this->request->platform, $body, $fee, $openid, $this->request->trade_type);
+                $paymentLog->user_id = auth('web')->user()->id;
                 $paymentLog->number = $payment['number'];
                 $paymentLog->money = $fee;
                 $paymentLog->name = $body;
