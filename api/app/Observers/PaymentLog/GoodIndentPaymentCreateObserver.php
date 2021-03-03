@@ -54,14 +54,14 @@ class GoodIndentPaymentCreateObserver
                     if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_FILM) { //付款减库存
                         if (!$indentCommodity['good_sku_id']) { //非SKU商品
                             if ($Good->inventory - $indentCommodity['number'] < 0) {
-                                throw new \Exception('存在库存不足的商品，请重新购买',Code::CODE_WRONG);
+                                throw new \Exception('存在库存不足的商品，请重新购买', Code::CODE_WRONG);
                             }
                             $Good->inventory = $Good->inventory - $indentCommodity['number'];
                             $Good->save();
                         } else {
                             $GoodSku = GoodSku::find($indentCommodity['good_sku_id']);
                             if ($GoodSku->inventory - $indentCommodity['number'] < 0) {
-                                throw new \Exception('存在库存不足的SKU商品，请重新购买',Code::CODE_WRONG);
+                                throw new \Exception('存在库存不足的SKU商品，请重新购买', Code::CODE_WRONG);
                             }
                             $GoodSku->inventory = $GoodSku->inventory - $indentCommodity['number'];
                             $GoodSku->save();
@@ -78,6 +78,7 @@ class GoodIndentPaymentCreateObserver
                 $paymentLog->type = 'goodsIndent';
                 $paymentLog->pay_type = 'App\Models\v1\GoodIndent';
                 $paymentLog->pay_id = $this->request->id;
+                $paymentLog->data = json_encode($payment);
             }
         }
     }

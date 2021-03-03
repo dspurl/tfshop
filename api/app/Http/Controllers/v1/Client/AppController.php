@@ -346,6 +346,6 @@ class AppController extends Controller
         $PaymentLog->platform = $request->platform;
         $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;
         $PaymentLog->save();
-        return resReturn(1, '成功');
+        return resReturn(1, json_decode($PaymentLog->data, true));
     }
 }
