@@ -18,6 +18,7 @@ class CreateDhlsTable extends Migration
             $table->id();
             $table->string('name', 30)->comment('快递公司名称');
             $table->string('abbreviation', 80)->comment('快递公司英文缩写');
+            $table->tinyInteger('is_default')->default(0)->comment('是否默认 0 普通 1默认');
             $table->tinyInteger('state')->default(0)->comment('状态0显示1隐藏');
             $table->integer('sort')->default(5)->comment('排序');
             $table->softDeletes();
