@@ -49,7 +49,7 @@
 				</view>
 			</view>
 			
-			<text class="mix-btn" @click="confirm">确认支付</text>
+			<button class="mix-btn" :disabled="confirmDisabled" @click="confirm">确认支付</button>
 			<view class="cu-modal" :class="modalName=='payHint'?'show':''">
 				<view class="cu-dialog">
 					<view class="cu-bar bg-white justify-end">
@@ -84,6 +84,7 @@
 	export default {
 		data() {
 			return {
+				confirmDisabled: false,
 				id: '',
 				payType: 'weixin',
 				orderInfo: {
@@ -152,11 +153,13 @@
 			//确认支付
 			confirm: async function() {
 				const that = this
+				this.confirmDisabled = true
 				if(this.payType === 1) {
 					Pay.balancePay({
 						id: this.id
 					},function(res){
 						authMsg(['4iOC-HyjJeKK5HiYORcOtrKHvu2Ho1ScVF0aqP3KkzQ'])
+						that.confirmDisabled = false
 						if(!that.user.email && !that.user.wechat){
 							uni.showModal({
 							  title: '提示',
@@ -187,6 +190,7 @@
 						trade_type: 'MWEB',
 						id: this.id,
 					},function(res){
+						that.confirmDisabled = false
 						that.showModal('payHint')
 						window.location.href = res.mweb_url
 					})
@@ -198,6 +202,7 @@
 						trade_type: 'JSAPI',
 						type: 'goodsIndent'
 					},function(res){
+						that.confirmDisabled = false
 						uni.requestPayment({
 							timeStamp: res.msg.timestamp,
 							nonceStr: res.msg.nonceStr,
