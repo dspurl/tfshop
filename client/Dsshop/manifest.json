@@ -52,9 +52,6 @@
             "sdkConfigs" : {
                 "push" : {}
             }
-        },
-        "uniStatistics" : {
-            "enable" : true
         }
     },
     /* SDK配置 */
@@ -73,9 +70,6 @@
             "scope.userLocation" : {
                 "desc" : "你的位置信息将用于位置接口的效果展示"
             }
-        },
-        "uniStatistics" : {
-            "enable" : true
         }
     },
     "h5" : {
@@ -96,32 +90,6 @@
                     "key" : ""
                 }
             }
-        },
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "uniStatistics" : {
-        "enable" : true
-    },
-    "mp-alipay" : {
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-baidu" : {
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-qq" : {
-        "uniStatistics" : {
-            "enable" : true
-        }
-    },
-    "mp-toutiao" : {
-        "uniStatistics" : {
-            "enable" : true
         }
     }
 }
