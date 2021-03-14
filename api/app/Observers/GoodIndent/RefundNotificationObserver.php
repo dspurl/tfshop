@@ -6,6 +6,7 @@ use App\Models\v1\GoodIndent;
 use App\Models\v1\MoneyLog;
 use App\Models\v1\User;
 use App\Notifications\InvoicePaid;
+use Illuminate\Http\Request;
 
 /**
  * finish payment
@@ -15,10 +16,35 @@ use App\Notifications\InvoicePaid;
  */
 class RefundNotificationObserver
 {
+    protected $request;
+    protected $route = [
+        'admin/indent/refund',
+        'admin/indent/query',
+        'app/refundNotify'
+    ];
+    protected $execute = false;
+
+    public function __construct(Request $request)
+    {
+        if (!app()->runningInConsole()) {
+            $this->request = $request;
+            $path = explode("admin", $request->path());
+            if (count($path) == 2) {
+                $name = 'admin' . $path[1];
+            } else {
+                $path = explode("app", $request->path());
+                $name = 'app' . $path[1];
+            }
+            if (collect($this->route)->contains($name)) {
+                $this->execute = true;
+            }
+        }
+    }
+
     public function updated(GoodIndent $goodIndent)
     {
         // 当状态为已退款时触发
-        if ($goodIndent->state == GoodIndent::GOOD_INDENT_STATE_REFUND) {
+        if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_REFUND) {
             $Money = new MoneyLog();
             $Money->user_id = $goodIndent->user_id;
             $Money->type = MoneyLog::MONEY_LOG_TYPE_INCOME;

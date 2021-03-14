@@ -16,6 +16,7 @@ class CreatePaymentLogsTable extends Migration
     {
         Schema::create('payment_logs', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('user_id')->index()->comment('用户ID');
             $table->string('name',128)->nullable()->comment('订单描述');
             $table->string('number',50)->comment('商户订单号(注意, 这不是商品订单号,不要用这个查询订单,请用pay_id)');
             $table->string('transaction_id',50)->nullable()->comment('支付订单号');

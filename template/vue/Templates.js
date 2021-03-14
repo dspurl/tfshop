@@ -8,7 +8,7 @@ export function getList(query) {
   })
 }
 
-export function createSubmit(data) {
+export function create(data) {
   data = Qs.parse({
     data
   })
@@ -20,7 +20,7 @@ export function createSubmit(data) {
   })
 }
 
-export function updateSubmit(id, data) {
+export function edit(id, data) {
   data = Qs.parse({
     data
   })

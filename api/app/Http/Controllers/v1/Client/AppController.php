@@ -69,11 +69,6 @@ class AppController extends Controller
                     $order->transaction_id = $message['transaction_id'];
                     $order->data = json_encode($message);
                     $order->save();
-                    switch ($order->type) {
-                        case PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT:  //商品订单支付
-                            (new GoodIndent())->goodIndentNotify($order['pay_id']);
-                            break;
-                    }
                     // 用户支付失败
                 } elseif ($message['result_code'] === 'FAIL') {
                     $order->state = PaymentLog::PAYMENT_LOG_STATE_FAILURE;
@@ -113,11 +108,6 @@ class AppController extends Controller
                     $PaymentLog->transaction_id = $reqInfo['transaction_id'];
                     $PaymentLog->data = json_encode($reqInfo);
                     $PaymentLog->save();
-                    switch ($PaymentLog->type) {
-                        case PaymentLog::PAYMENT_LOG_TYPE_REFUND:
-                            (new GoodIndent())->goodIndentRefundNotify($PaymentLog['pay_id']);
-                            break;
-                    }
                     // 用户支付失败
                 } elseif ($message['result_code'] === 'FAIL') {
                     $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_FAILURE;
@@ -162,7 +152,7 @@ class AppController extends Controller
             return resReturn(0, '您的验证码还没有失效，请不要重复获取', Code::CODE_WRONG);
         }
         $code = rand(10000, 99999);
-        $redis->setex('code.register.' . $request->cellphone, config('dswjcms.failuretime'), $code);
+        $redis->setex('code.register.' . $request->cellphone, config('dsshop.failuretime'), $code);
         $Config = config('sms');
         if (!$Config[$Config['service']]['access_id']) {    //没有配置短信账号，直接返回验证码
             return resReturn(1, ['code' => $code]);
@@ -213,7 +203,7 @@ class AppController extends Controller
             return resReturn(0, '您的验证码还没有失效，请不要重复获取', Code::CODE_WRONG);
         }
         $code = rand(10000, 99999);
-        $redis->setex('code.register.' . $request->email, config('dswjcms.failuretime'), $code);
+        $redis->setex('code.register.' . $request->email, config('dsshop.failuretime'), $code);
         Mail::to($request->email)->send(new VerificationCode($code));
         return resReturn(1, '发送成功');
     }
@@ -352,16 +342,10 @@ class AppController extends Controller
      */
     public function unifiedPayment(Request $request)
     {
-        $reutn = [];
-        switch ($request->type) {
-            case PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT:  //商品订单支付
-                $reutn = (new GoodIndent())->payment($request);
-                break;
-        }
-        if ($reutn['result'] == 'ok') {
-            return resReturn(1, $reutn);
-        } else {
-            return resReturn(0, $reutn['msg'], Code::CODE_WRONG);
-        }
+        $PaymentLog = new PaymentLog();
+        $PaymentLog->platform = $request->platform;
+        $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;
+        $PaymentLog->save();
+        return resReturn(1, json_decode($PaymentLog->data, true));
     }
 }

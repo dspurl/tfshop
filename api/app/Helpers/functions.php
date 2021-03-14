@@ -138,7 +138,7 @@ function orderNumber()
  */
 function imgPathShift($new, $img)
 {
-    if (config('dswjcms.homestead')) {
+    if (config('dsshop.homestead')) {
         $path = request()->root() . '/storage/temporary/';
         $img = explode($path, $img);
         if (count($img) == 2) {   //上传过的图片才进行处理
@@ -279,4 +279,24 @@ function sortFormatConversion($sortOriginal)
             return [$sortOriginal, 'ASC'];
         }
     }
+}
+
+/**
+ * 计算时间差
+ * @param $date
+ * @return array
+ */
+function time_diff($date)
+{
+    $t = strtotime($date) - time();//单位"秒"
+    $arr = [];
+    $day = intval($t / 86400);//天
+    $arr['day'] = $day;
+    $hour = intval((($t / 86400) - $day) * 24);//小时
+    $arr['hour'] = $hour;
+    $minute = intval((((($t / 86400) - $day) * 24) - $hour) * 60);//分钟
+    $arr['minute'] = $minute;
+    $second = intval(((((((($t / 86400) - $day) * 24) - $hour) * 60) - $minute) * 60));//秒
+    $arr['second'] = $second;
+    return $arr;
 }

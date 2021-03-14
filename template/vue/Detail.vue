@@ -48,7 +48,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">提交</el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?create():edit()">提交</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -82,7 +82,7 @@
   }
 </style>
 <script>
-import { getShow, createSubmit, updateSubmit } from '@/api/VueTemplate'
+import { getShow, create, edit } from '@/api/VueTemplate'
 import { getToken } from '@/utils/auth'
 export default {
   name: 'VueTemplateDetail',
@@ -154,10 +154,10 @@ export default {
         this.loading = false
       }
     },
-    createSubmit() { // 添加
+    create() { // 添加
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          createSubmit(this.ruleForm).then(() => {
+          create(this.ruleForm).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: this.$t('hint.succeed'),
@@ -170,10 +170,10 @@ export default {
         }
       })
     },
-    updateSubmit() { // 更新
+    edit() { // 更新
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          updateSubmit(this.ruleForm.id, this.ruleForm).then(() => {
+          edit(this.ruleForm.id, this.ruleForm).then(() => {
             this.dialogFormVisible = false
             this.$notify({
               title: this.$t('hint.succeed'),

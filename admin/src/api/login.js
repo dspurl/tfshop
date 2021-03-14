@@ -8,7 +8,7 @@ export function loginByUsername(data) {
   data = Qs.parse(data)
   return request({
     url: url,
-    method: 'post',
+    method: 'POST',
     data
   })
 }
@@ -16,7 +16,7 @@ export function loginByUsername(data) {
 export function getUserInfo() {
   return request({
     url: '/userInfo',
-    method: 'get'
+    method: 'GET'
   })
 }
 

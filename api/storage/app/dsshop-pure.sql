@@ -1,5 +1,5 @@
 INSERT INTO `admins` (`id`, `state`, `name`, `email`, `cellphone`, `password`, `portrait`, `time`, `created_at`, `updated_at`, `last_login_at`) VALUES
-(1, 1, 'admin', 'admin@gmail.com', '13333333333', '$2y$10$nxcmBpwq2/0d4QKom9ZevuxmJlZ4dBi12Uyn2V65e2rBtnXYq49.q', 'https://dssaas.dswjcms.com/storage/image/portrait/IC3io1562981785.jpg', '2020-08-01 08:00:00', '2020-08-01 20:56:32', '2020-08-01 23:41:30', '2020-08-01 23:41:30');
+(1, 1, 'admin', 'admin@gmail.com', '13333333333', '$2y$10$nxcmBpwq2/0d4QKom9ZevuxmJlZ4dBi12Uyn2V65e2rBtnXYq49.q', 'https://dsshop.dswjcms.com/storage/image/portrait/4dq8h1607946382.png', '2020-08-01 08:00:00', '2020-08-01 20:56:32', '2020-08-01 23:41:30', '2020-08-01 23:41:30');
 INSERT INTO `admin_auth_group` (`admin_id`, `auth_group_id`) VALUES
 (1, 1);
 INSERT INTO `auth_groups` (`id`, `roles`, `introduction`, `created_at`, `updated_at`) VALUES

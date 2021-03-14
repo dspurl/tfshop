@@ -3,7 +3,7 @@ import Qs from 'qs'
 export function getList(query) {
   return request({
     url: 'indent',
-    method: 'get',
+    method: 'GET',
     params: query
   })
 }
@@ -11,7 +11,7 @@ export function getList(query) {
 export function detail(id) {
   return request({
     url: 'indent/' + id,
-    method: 'get'
+    method: 'GET'
   })
 }
 
@@ -19,7 +19,7 @@ export function shipment(data) {
   data = Qs.parse(data)
   return request({
     url: 'indent/shipment',
-    method: 'post',
+    method: 'POST',
     data
   })
 }
@@ -28,7 +28,7 @@ export function dhl(data) {
   data = Qs.parse(data)
   return request({
     url: 'indent/dhl',
-    method: 'post',
+    method: 'POST',
     data
   })
 }
@@ -36,7 +36,7 @@ export function dhl(data) {
 export function query(id) {
   return request({
     url: 'indent/query/' + id,
-    method: 'get'
+    method: 'GET'
   })
 }
 
@@ -44,7 +44,16 @@ export function refund(id, data) {
   data = Qs.parse(data)
   return request({
     url: 'indent/refund/' + id,
-    method: 'post',
+    method: 'POST',
+    data
+  })
+}
+
+export function receiving(data) {
+  data = Qs.parse(data)
+  return request({
+    url: 'indent/receiving',
+    method: 'POST',
     data
   })
 }

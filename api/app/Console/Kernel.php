@@ -2,6 +2,8 @@
 
 namespace App\Console;
 
+use App\Console\Commands\AutomaticReceiving;
+use App\Console\Commands\OrderInvalidationHandling;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
@@ -13,6 +15,8 @@ class Kernel extends ConsoleKernel
      * @var array
      */
     protected $commands = [
+        OrderInvalidationHandling::class,
+        AutomaticReceiving::class,
     ];
 
     /**
@@ -36,6 +40,11 @@ class Kernel extends ConsoleKernel
                 $schedule->command('backup:run')->dailyAt(config('backup.time'));
             }
         }
+        if (config('dsshop.automaticReceivingState')) {    //是否开启自动收货
+            $schedule->command('automatic:receiving')->dailyAt('00:20');
+        }
+        //订单失效处理
+        $schedule->command('order:invalidation')->everyMinute();
     }
 
     /**

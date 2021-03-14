@@ -28,7 +28,7 @@ class DhlController extends Controller
      */
     public function list(Request $request)
     {
-        if($request->has('page')){
+        if ($request->has('page')) {
             Dhl::$withoutAppends = false;
             $q = Dhl::query();
             if ($request->has('sort')) {
@@ -38,12 +38,12 @@ class DhlController extends Controller
             if ($request->title) {
                 $q->where('name', 'like', '%' . $request->title . '%');
             }
-            $limit=$request->limit;
-            $paginate=$q->paginate($limit);
-        }else{
-            $paginate=Dhl::get();
+            $limit = $request->limit;
+            $paginate = $q->paginate($limit);
+        } else {
+            $paginate = Dhl::get();
         }
-        return resReturn(1,$paginate);
+        return resReturn(1, $paginate);
     }
 
     /**
@@ -58,20 +58,24 @@ class DhlController extends Controller
      */
     public function create(SubmitDhlRequest $request)
     {
-        $Dhl=new Dhl();
+        if ($request->is_default) {
+            Dhl::where('is_default', Dhl::DHL_IS_DEFAULT_YES)->update(['is_default' => Dhl::DHL_IS_DEFAULT_NO]);
+        }
+        $Dhl = new Dhl();
         $Dhl->name = $request->name;
         $Dhl->abbreviation = $request->abbreviation;
         $Dhl->state = $request->state;
+        $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
         $Dhl->save();
-        return resReturn(1,'添加成功');
+        return resReturn(1, '添加成功');
     }
 
     /**
      * DhlEdit
      * 保存快递公司
      * @param SubmitDhlRequest $request
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  name string 快递公司名称
      * @queryParam  abbreviation string 快递公司英文缩写
@@ -80,25 +84,29 @@ class DhlController extends Controller
      */
     public function edit(SubmitDhlRequest $request, $id)
     {
+        if ($request->is_default) {
+            Dhl::where('is_default', Dhl::DHL_IS_DEFAULT_YES)->update(['is_default' => Dhl::DHL_IS_DEFAULT_NO]);
+        }
         $Dhl = Dhl::find($id);
         $Dhl->name = $request->name;
         $Dhl->abbreviation = $request->abbreviation;
         $Dhl->state = $request->state;
+        $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
         $Dhl->save();
-        return resReturn(1,'更新成功');
+        return resReturn(1, '更新成功');
     }
 
     /**
      * DhlDestroy
      * 删除快递公司
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 快递公司ID
      */
     public function destroy($id)
     {
         Dhl::destroy($id);
-        return resReturn(1,'删除成功');
+        return resReturn(1, '删除成功');
     }
 }

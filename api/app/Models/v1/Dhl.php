@@ -11,11 +11,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string abbreviation
  * @property integer sort
  * @property integer state
+ * @property integer is_default
  */
 class Dhl extends Model
 {
     use SoftDeletes;
-
+    const DHL_IS_DEFAULT_NO = 0; //是否默认：否
+    const DHL_IS_DEFAULT_YES = 1; //是否默认：是
     public static $withoutAppends = true;
 
     /**

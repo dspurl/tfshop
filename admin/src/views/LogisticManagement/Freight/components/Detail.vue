@@ -62,7 +62,7 @@
         <el-button type="warning" style="margin-top: 10px;" round @click="distributionArea()">添加可配送区域和运费</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="dialogLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">提交</el-button>
+        <el-button :loading="dialogLoading" type="primary" @click="dialogStatus==='create'?create():edit()">提交</el-button>
       </el-form-item>
     </el-form>
     <!--添加-->
@@ -354,7 +354,7 @@ export default {
         add_cost: ''
       }
     },
-    createSubmit() { // 添加
+    create() { // 添加
       this.dialogLoading = true
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
@@ -373,8 +373,6 @@ export default {
               message: this.$t('hint.creatingSuccessful'),
               type: 'success',
               duration: 2000
-            }).catch(() => {
-              this.formLoading = false
             })
             setTimeout(this.$router.back(-1), 2000)
           }).catch(() => {
@@ -385,7 +383,7 @@ export default {
         }
       })
     },
-    updateSubmit() { // 更新
+    edit() { // 更新
       this.dialogLoading = true
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {

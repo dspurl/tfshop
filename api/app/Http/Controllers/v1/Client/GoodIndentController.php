@@ -100,6 +100,7 @@ class GoodIndentController extends Controller
                 $GoodIndent->identification = orderNumber();
                 $GoodIndent->total = $total + $request->carriage;
                 $GoodIndent->remark = $request->remark;
+                $GoodIndent->overtime = date('Y-m-d H:i:s', time() + config('dsshop.orderOvertime') * 60);
                 $GoodIndent->save();
                 return array(1, $GoodIndent->id);
             }, 5);
@@ -115,6 +116,19 @@ class GoodIndentController extends Controller
     }
 
     /**
+     * 添加商品到购物车
+     * @param Request $request
+     */
+    public function addShoppingCart(Request $request)
+    {
+        $redis = new RedisService();
+        $return = $request->all();
+        if (count($return) > 0) {
+            $redis->set('shoppingCart' . auth('web')->user()->id, json_encode($return));
+        }
+    }
+
+    /**
      * SynchronizationInventory
      * 同步线上商品库存
      * @param Request $request
@@ -122,33 +136,38 @@ class GoodIndentController extends Controller
      */
     public function synchronizationInventory(Request $request)
     {
-        $return = $request->all();
-        foreach ($request->all() as $id => $all) {
-            if ($all['good_sku_id']) { //sku商品
-                $GoodSku = GoodSku::find($all['good_sku_id']);
-                if ($GoodSku->deleted_at) {
-                    $return[$id]['invalid'] = true;  //标记为失效
-                } else {
-                    if ($GoodSku->inventory < $all['number']) { //库存不足时
-                        $return[$id]['invalid'] = true;  //标记为失效
+        $redis = new RedisService();
+        $shoppingCart = $redis->get('shoppingCart' . auth('web')->user()->id);
+        $redisData = $shoppingCart ? json_decode($shoppingCart, true) : [];
+        if (count($redisData) > 0) {
+            foreach ($redisData as $id => $all) {
+                if ($all['good_sku_id']) { //sku商品
+                    $GoodSku = GoodSku::find($all['good_sku_id']);
+                    if ($GoodSku->deleted_at) {
+                        $redisData[$id]['invalid'] = true;  //标记为失效
                     } else {
-                        $return[$id]['invalid'] = false;
+                        if ($GoodSku->inventory < $all['number']) { //库存不足时
+                            $redisData[$id]['invalid'] = true;  //标记为失效
+                        } else {
+                            $redisData[$id]['invalid'] = false;
+                        }
                     }
-                }
-            } else {
-                $Good = Good::find($all['good_id']);
-                if ($Good->deleted_at) {
-                    $return[$id]['invalid'] = true;  //标记为失效
                 } else {
-                    if ($Good->inventory < $all['number']) {
-                        $return[$id]['invalid'] = true;  //标记为失效
+                    $Good = Good::find($all['good_id']);
+                    if ($Good->deleted_at) {
+                        $redisData[$id]['invalid'] = true;  //标记为失效
                     } else {
-                        $return[$id]['invalid'] = false;
+                        if ($Good->inventory < $all['number']) {
+                            $redisData[$id]['invalid'] = true;  //标记为失效
+                        } else {
+                            $redisData[$id]['invalid'] = false;
+                        }
                     }
                 }
             }
+            $redis->set('shoppingCart' . auth('web')->user()->id, json_encode($redisData));
         }
-        return resReturn(1, $return);
+        return resReturn(1, $redisData);
     }
 
     /**
@@ -191,7 +210,12 @@ class GoodIndentController extends Controller
             }]);
         }, 'User' => function ($q) {
             $q->select('id', 'money');
-        }])->select('id', 'total', 'user_id', 'state')->find($id);
+        }])->select('id', 'total', 'user_id', 'state', 'overtime')->find($id);
+        $time_diff = time_diff($GoodIndent->overtime);
+        $GoodIndent->day = $time_diff['day'];
+        $GoodIndent->hour = $time_diff['hour'];
+        $GoodIndent->minute = $time_diff['minute'];
+        $GoodIndent->second = $time_diff['second'];
         return resReturn(1, $GoodIndent);
     }
 
@@ -208,6 +232,7 @@ class GoodIndentController extends Controller
             $GoodIndent = GoodIndent::with(['goodsList'])->find($id);
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_ACCOMPLISH;
             $GoodIndent->confirm_time = Carbon::now()->toDateTimeString();
+            $GoodIndent->receiving_time = Carbon::now()->toDateTimeString();
             $GoodIndent->save();
             return array(1, '收货成功');
         });

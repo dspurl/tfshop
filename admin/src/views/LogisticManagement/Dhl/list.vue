@@ -38,6 +38,11 @@
           <span>{{ scope.row.abbreviation }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="是否默认" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.is_default == 1 ? '默认' : '' }}</span>
+        </template>
+      </el-table-column>
       <el-table-column label="时间" align="center" sortable="custom" prop="created_at">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
@@ -67,6 +72,12 @@
         <el-form-item label="简称" prop="abbreviation">
           <el-input v-model="temp.abbreviation" maxlength="80" clearable/>
         </el-form-item>
+        <el-form-item label="是否默认" prop="is_default">
+          <el-radio-group v-model="temp.is_default">
+            <el-radio :label="0">普通</el-radio>
+            <el-radio :label="1">默认</el-radio>
+          </el-radio-group>
+        </el-form-item>
         <el-form-item label="是否显示" prop="state">
           <el-radio-group v-model="temp.state">
             <el-radio :label="0">显示</el-radio>
@@ -81,7 +92,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -146,7 +157,7 @@ import { getList, create, edit, destroy } from '@/api/dhl'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 export default {
-  name: 'VueTemplateList',
+  name: 'DhlList',
   components: { Pagination },
   data() {
     return {
@@ -282,7 +293,7 @@ export default {
       }).catch(() => {
       })
     },
-    createSubmit() { // 添加
+    create() { // 添加
       this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
@@ -304,7 +315,7 @@ export default {
         }
       })
     },
-    updateSubmit() { // 更新
+    edit() { // 更新
       this.formLoading = true
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {

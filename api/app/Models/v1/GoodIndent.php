@@ -22,10 +22,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int refund_way
  * @property string pay_time
  * @property int refund_reason
+ * @property int is_automatic_receiving
  * @property string shipping_time
+ * @property string receiving_time
  * @property string created_at
  * @property string confirm_time
  * @property string refund_time
+ * @property string overtime
  */
 class GoodIndent extends Model
 {
@@ -33,7 +36,7 @@ class GoodIndent extends Model
     const GOOD_INDENT_STATE_PAY = 1; //状态：待付款
     const GOOD_INDENT_STATE_DELIVER = 2; //状态：待发货
     const GOOD_INDENT_STATE_TAKE = 3; //状态：待收货
-    const GOOD_INDENT_STATE_EVALUATE = 4; //状态：待评价
+    const GOOD_INDENT_STATE_FAILURE = 4; //状态：已失效
     const GOOD_INDENT_STATE_ACCOMPLISH = 5; //状态：已完成
     const GOOD_INDENT_STATE_CANCEL = 6; //状态：已取消
     const GOOD_INDENT_STATE_REFUND = 7; //状态：已退款
@@ -41,6 +44,8 @@ class GoodIndent extends Model
     const GOOD_INDENT_STATE_REFUND_FAILURE = 9; //状态：退款失败
     const GOOD_INDENT_REFUND_WAY_BALANCE = 0; //退款方式：退到余额
     const GOOD_INDENT_REFUND_WAY_BACK = 1; //退款方式：原路退回
+    const GOOD_INDENT_IS_AUTOMATIC_RECEIVING_YES = 1; //自动发货：是
+    const GOOD_INDENT_IS_AUTOMATIC_RECEIVING_NO = 0; //自动发货：否
     public static $withoutAppends = true;
     protected $appends = ['state_show'];
 
@@ -53,90 +58,6 @@ class GoodIndent extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
-    }
-
-    /**
-     * 支付处理
-     * @param $request
-     * @return array
-     */
-    public function payment($request)
-    {
-        $openid = $request->header('openid');
-        $GoodIndent = static::with(['goodsList'])->find($request->id);
-        $body = '对订单：' . $GoodIndent->identification . '的付款';
-        $fee = $GoodIndent->total;
-//        $fee=1;
-//        $trade_type="JSAPI";
-        $MiniProgram = new MiniProgram();
-        $payment = $MiniProgram->payment($request->platform, $body, $fee, $openid, $request->trade_type);
-        if ($payment['result'] == 'error') {
-            return $payment;
-        }
-        $PaymentLog = new PaymentLog();
-        $PaymentLog->name = $body;
-        $PaymentLog->number = $payment['number'];
-        $PaymentLog->money = $fee;
-        $PaymentLog->pay_id = $request->id; //订单ID
-        $PaymentLog->type = 'goodsIndent';
-        $PaymentLog->platform = $request->platform;
-        $PaymentLog->pay_type = 'App\Models\v1\GoodIndent';
-        $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;
-        $PaymentLog->save();
-        //库存判断
-        foreach ($GoodIndent->goodsList as $indentCommodity) {
-            $Good = Good::select('id', 'is_inventory', 'inventory')->find($indentCommodity['good_id']);
-            if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_FILM) { //付款减库存
-                if (!$indentCommodity['good_sku_id']) { //非SKU商品
-                    if ($Good->inventory - $indentCommodity['number'] < 0) {
-                        return [
-                            'result' => 'error',
-                            'msg' => '存在库存不足的商品，请重新购买'
-                        ];
-                    }
-                    $Good->inventory = $Good->inventory - $indentCommodity['number'];
-                    $Good->save();
-                } else {
-                    $GoodSku = GoodSku::find($indentCommodity['good_sku_id']);
-                    if ($GoodSku->inventory - $indentCommodity['number'] < 0) {
-                        return [
-                            'result' => 'error',
-                            'msg' => '存在库存不足的SKU商品，请重新购买'
-                        ];
-                    }
-                    $GoodSku->inventory = $GoodSku->inventory - $indentCommodity['number'];
-                    $GoodSku->save();
-                }
-            }
-        }
-        return $payment;
-    }
-
-    /**
-     * 支付回调
-     * @param $id
-     * @return void
-     */
-    public function goodIndentNotify($id)
-    {
-        $GoodIndent = GoodIndent::with(['goodsList', 'User'])->find($id);
-        $redis = new RedisService();
-        $redis->setex('goodIndent.pay.type.' . $GoodIndent->id, 5, '微信支付');
-        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
-        $GoodIndent->pay_time = Carbon::now()->toDateTimeString();
-        $GoodIndent->save();
-    }
-
-    /**
-     * 退款回调
-     * @param $id
-     * @return string
-     */
-    public function goodIndentRefundNotify($id)
-    {
-        $GoodIndent = GoodIndent::find($id);
-        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_REFUND;
-        $GoodIndent->save();
     }
 
     /**
@@ -192,8 +113,8 @@ class GoodIndent extends Model
                     case static::GOOD_INDENT_STATE_TAKE:
                         $return = '待收货';
                         break;
-                    case static::GOOD_INDENT_STATE_EVALUATE:
-                        $return = '待评价';
+                    case static::GOOD_INDENT_STATE_FAILURE:
+                        $return = '已失效';
                         break;
                     case static::GOOD_INDENT_STATE_ACCOMPLISH:
                         $return = '已完成';

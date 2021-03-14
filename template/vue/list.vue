@@ -136,7 +136,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="dialogStatus==='create'?createSubmit():updateSubmit()">确定</el-button>
+        <el-button type="primary" @click="dialogStatus==='create'?create():edit()">确定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -198,7 +198,7 @@
 </style>
 
 <script>
-import { getList, setDelete, createSubmit, updateSubmit } from '@/api/VueTemplate'
+import { getList, setDelete, create, edit } from '@/api/VueTemplate'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination' // Secondary package based on el-pagination
 
@@ -368,10 +368,10 @@ export default {
       }).catch(() => {
       })
     },
-    createSubmit() { // 添加
+    create() { // 添加
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          createSubmit(this.temp).then(() => {
+          create(this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({
@@ -384,10 +384,10 @@ export default {
         }
       })
     },
-    updateSubmit() { // 更新
+    edit() { // 更新
       this.$refs['dataForm'].validate((valid) => {
         if (valid) {
-          updateSubmit(this.temp.id, this.temp).then(() => {
+          edit(this.temp.id, this.temp).then(() => {
             this.getList()
             this.dialogFormVisible = false
             this.$notify({

@@ -2,6 +2,7 @@
 
 namespace App\Models\v1;
 
+use App\Code;
 use Illuminate\Database\Eloquent\Model;
 use EasyWeChat\Factory;
 
@@ -98,19 +99,14 @@ class MiniProgram extends Model
         $request->setCode($code);
         $result = json_decode(json_encode($aop->execute($request)), true);
         if (array_key_exists('error_response', $result)) {
-            $return = [
-                'result' => 'error',
-                'code' => $result['error_response']['code'],
-                'msg' => $result['error_response']['sub_msg']
-            ];
+            throw new \Exception($result['error_response']['sub_msg'], $result['error_response']['code']);
         } else {
-            $return = [
+            return [
                 'result' => 'ok',
                 'openid' => $result['alipay_system_oauth_token_response']['user_id'],
                 'session_key' => $result['alipay_system_oauth_token_response']['access_token']
             ];
         }
-        return $return;
     }
 
     /**
@@ -125,19 +121,14 @@ class MiniProgram extends Model
         $miniProgram = Factory::miniProgram($config); // 小程序
         $result = $miniProgram->auth->session((string)$code);
         if (array_key_exists('errcode', $result)) {
-            $return = [
-                'result' => 'error',
-                'code' => $result['errcode'],
-                'msg' => $result['errmsg']
-            ];
+            throw new \Exception($result['errmsg'], $result['errcode']);
         } else {
-            $return = [
+            return [
                 'result' => 'ok',
                 'openid' => $result['openid'],
                 'session_key' => $result['session_key']
             ];
         }
-        return $return;
     }
 
     /**
@@ -166,19 +157,14 @@ class MiniProgram extends Model
         $app = $factory->make('default');
         $result = $app->auth->session($code);
         if (array_key_exists('openid', $result)) {
-            $return = [
+            return [
                 'result' => 'ok',
                 'openid' => $result['openid'],
                 'session_key' => $result['session_key']
             ];
         } else {
-            $return = [
-                'result' => 'error',
-                'code' => $result['errcode'],
-                'msg' => $result['errmsg']
-            ];
+            throw new \Exception($result['errmsg'], $result['errcode']);
         }
-        return $return;
     }
 
     /**
@@ -195,17 +181,13 @@ class MiniProgram extends Model
         $miniProgram = Factory::miniProgram($config); // 小程序
         $result = $miniProgram->encryptor->decryptData($session_key, $iv, $encryptedData);
         if (array_key_exists('purePhoneNumber', $result)) {
-            $return = [
+            return [
                 'result' => 'ok',
                 'purePhoneNumber' => $result['purePhoneNumber']
             ];
         } else {
-            $return = [
-                'result' => 'error',
-                'msg' => '获取手机号失败'
-            ];
+            throw new \Exception('获取手机号失败', Code::CODE_WRONG);
         }
-        return $return;
     }
 
     /**
@@ -237,17 +219,13 @@ class MiniProgram extends Model
         $app = $factory->make('default');
         $result = $app->decrypt->decrypt($encryptedData, $session_key, $iv);
         if (array_key_exists('purePhoneNumber', $result)) {
-            $return = [
+            return [
                 'result' => 'ok',
                 'purePhoneNumber' => $result['purePhoneNumber']
             ];
         } else {
-            $return = [
-                'result' => 'error',
-                'msg' => '获取手机号失败'
-            ];
+            throw new \Exception('获取手机号失败', Code::CODE_WRONG);
         }
-        return $return;
     }
 
     /**
@@ -277,14 +255,10 @@ class MiniProgram extends Model
             'trade_type' => $trade_type,
             'openid' => $openid,
         ]);
-        $return = [
-            'result' => 'error',
-            'msg' => '支付异常，请联系管理员'
-        ];
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
             $prepayId = $result['prepay_id'];
             $config = $app->jssdk->sdkConfig($prepayId);
-            $return = [
+            return [
                 'result' => 'ok',
                 'msg' => $config,
                 'number' => $number,
@@ -292,12 +266,9 @@ class MiniProgram extends Model
             ];
         }
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
-            $return = [
-                'result' => 'error',
-                'msg' => $result['return_msg']
-            ];
+            throw new \Exception($result['return_msg'], Code::CODE_WRONG);
         }
-        return $return;
+        throw new \Exception('支付异常，请联系管理员', Code::CODE_WRONG);
     }
 
     /**
@@ -324,25 +295,19 @@ class MiniProgram extends Model
             'refund_desc' => $why,
         ]);
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $return = [
+            return [
                 'result' => 'ok',
                 'msg' => $config,
                 'number' => $refundNumber
             ];
         }
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
-            $return = [
-                'result' => 'error',
-                'msg' => $result['return_msg']
-            ];
+            throw new \Exception($result['return_msg'], Code::CODE_WRONG);
         }
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'FAIL' && isset($result['err_code_des'])) {
-            $return = [
-                'result' => 'error',
-                'msg' => $result['err_code_des']
-            ];
+            throw new \Exception($result['err_code_des'], Code::CODE_WRONG);
         }
-        return $return;
+        throw new \Exception('退款异常，请联系管理员', Code::CODE_WRONG);
     }
 
     /**
@@ -370,18 +335,18 @@ class MiniProgram extends Model
             $transaction_id = isset($result['transaction_id']) ? $result['transaction_id'] : '';
         }
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
-            $return = [
+            return [
                 'result' => 'ok',
                 'transaction_id' => $transaction_id,
                 'msg' => '需要同步'
             ];
         }
-        if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
-            $return = [
-                'result' => 'error',
-                'msg' => $result['return_msg']
-            ];
+        if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'FAIL') {
+            throw new \Exception($result['err_code_des'], Code::CODE_WRONG);
         }
-        return $return;
+        if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
+            throw new \Exception($result['return_msg'], Code::CODE_WRONG);
+        }
+        throw new \Exception('查询异常，请联系管理员', Code::CODE_WRONG);
     }
 }

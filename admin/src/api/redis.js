@@ -3,7 +3,7 @@ import Qs from 'qs'
 export function getList(query) {
   return request({
     url: 'redis',
-    method: 'get',
+    method: 'GET',
     params: query
   })
 }
@@ -12,20 +12,20 @@ export function destroy(id, data) {
   data = Qs.parse(data)
   return request({
     url: 'redis/destroy/' + id,
-    method: 'post',
+    method: 'POST',
     data
   })
 }
 export function detail(id, data) {
   return request({
     url: 'redis/' + id,
-    method: 'get',
+    method: 'GET',
     params: data
   })
 }
 export function panel() {
   return request({
     url: 'redisPanel',
-    method: 'get'
+    method: 'GET'
   })
 }
