@@ -13,7 +13,7 @@
     "babel-plugin-component": "^1.1.1"
   },
   "dependencies": {
-    "jspdf": "^1.5.3",
+    "jspdf": "^2.3.1",
     "vue-clipboard2": "^0.3.1"
   }
 }
