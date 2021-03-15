@@ -81,7 +81,7 @@ class ShipmentNotificationObserver
                     ],
                 ],
                 'remark' => '请保持收件手机畅通！',
-                'url' => '/pages/order/showOrder?id=' . $parameter['id'],
+                'url' => '/pages/indent/detail?id=' . $parameter['id'],
                 'parameter' => $parameter,
                 'prefers' => ['database', 'miniweixin', 'mail', 'wechat']
             ];
