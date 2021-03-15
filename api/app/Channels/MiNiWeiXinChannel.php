@@ -51,7 +51,7 @@ class MiNiWeiXinChannel
         $data = [
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->miniweixin,
-            'page' => 'pages/order/showOrder?id=' . $message['id'],
+            'page' => 'pages/indent/detail?id=' . $message['id'],
             'data' => [
                 'character_string1' => [
                     'value' => $message['identification'],

@@ -79,7 +79,7 @@ class ReceiptNotificationObserver
                     ]
                 ],
                 'remark' => '感谢您的支持与厚爱。',
-                'url' => '/pages/order/showOrder?id=' . $parameter['id'],
+                'url' => '/pages/indent/detail?id=' . $parameter['id'],
                 'parameter' => $parameter,
                 'prefers' => ['database', 'wechat', 'mail']
             ];

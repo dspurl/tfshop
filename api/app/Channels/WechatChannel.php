@@ -65,10 +65,10 @@ class WechatChannel
         if ($this->miniweixin) {
             $data['miniprogram'] = [
                 'appid' => $this->miniweixin,
-                'pagepath' => 'pages/order/showOrder?id=' . $message['id'],
+                'pagepath' => 'pages/indent/detail?id=' . $message['id'],
             ];
         } else {
-            $data['url'] = request()->root() . '/h5/#' . 'pages/order/showOrder?id=' . $message['id'];
+            $data['url'] = request()->root() . '/h5/#' . 'pages/indent/detail?id=' . $message['id'];
         }
         //发送记录
         $send = $this->app->template_message->send($data);
@@ -106,10 +106,10 @@ class WechatChannel
         if ($this->miniweixin) {
             $data['miniprogram'] = [
                 'appid' => $this->miniweixin,
-                'pagepath' => '/pages/order/showOrder?id=' . $message['id'],
+                'pagepath' => '/pages/indent/detail?id=' . $message['id'],
             ];
         } else {
-            $data['url'] = request()->root() . '/h5/#/pages/order/showOrder?id=' . $message['id'];
+            $data['url'] = request()->root() . '/h5/#/pages/indent/detail?id=' . $message['id'];
         }
         //发送记录
         $send = $this->app->template_message->send($data);
@@ -180,10 +180,10 @@ class WechatChannel
         if ($this->miniweixin) {
             $data['miniprogram'] = [
                 'appid' => $this->miniweixin,
-                'pagepath' => '/pages/order/showOrder?id=' . $message['id'],
+                'pagepath' => '/pages/indent/detail?id=' . $message['id'],
             ];
         } else {
-            $data['url'] = request()->root() . '/h5/#/pages/order/showOrder?id=' . $message['id'];
+            $data['url'] = request()->root() . '/h5/#/pages/indent/detail?id=' . $message['id'];
         }
         //发送记录
         $send = $this->app->template_message->send($data);

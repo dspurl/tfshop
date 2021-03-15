@@ -87,7 +87,7 @@ class FinishPaymentNotificationObserver
                     ]
                 ],
                 'price' => $parameter['total'],
-                'url' => '/pages/order/showOrder?id=' . $parameter['id'],
+                'url' => '/pages/indent/detail?id=' . $parameter['id'],
                 'parameter' => $parameter,
                 'prefers' => ['database', 'mail', 'wechat']
             ];
