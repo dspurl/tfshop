@@ -1,0 +1,23 @@
+[
+  {
+    "name": "three",
+    "path": "/three",
+    "component": "D:\\\\www\\\\dsshop\\\\web\\\\pages\\\\three.vue",
+    "chunkName": "pages/three",
+    "_name": "_cd51d6d4"
+  },
+  {
+    "name": "pass-login",
+    "path": "/pass/login",
+    "component": "D:\\\\www\\\\dsshop\\\\web\\\\pages\\\\pass\\\\login.vue",
+    "chunkName": "pages/pass/login",
+    "_name": "_4fad74b0"
+  },
+  {
+    "name": "index",
+    "path": "/",
+    "component": "D:\\\\www\\\\dsshop\\\\web\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "_name": "_73bc446c"
+  }
+]

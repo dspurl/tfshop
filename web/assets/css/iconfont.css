@@ -1,0 +1,22 @@
+@font-face {
+  font-family: 'iconfont';  /* project id 2420982 */
+  src: url('//at.alicdn.com/t/font_2420982_2shz2bye7h.eot');
+  src: url('//at.alicdn.com/t/font_2420982_2shz2bye7h.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_2420982_2shz2bye7h.woff2') format('woff2'),
+  url('//at.alicdn.com/t/font_2420982_2shz2bye7h.woff') format('woff'),
+  url('//at.alicdn.com/t/font_2420982_2shz2bye7h.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_2420982_2shz2bye7h.svg#iconfont') format('svg');
+}
+
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.dsshop-gouwuche:before {
+  content: "\e649";
+}
+
