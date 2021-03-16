@@ -1,3 +1,4 @@
+require('dotenv').config({path: '.env'})
 export default {
   server: {
     port: 3004, // default: 3000
@@ -40,7 +41,8 @@ export default {
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
-    ['@nuxtjs/dotenv', { filename: '.env.prod' }] // 指定打包时使用的dotenv
+    '@nuxtjs/axios',
+    '@nuxtjs/dotenv'
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build

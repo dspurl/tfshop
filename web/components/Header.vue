@@ -49,20 +49,14 @@
 export default {
   data() {
     return {
-      title: '宜云码-最好用的二维码生成器',
       searchRuleForm: {
         keyword: ''
+      },
+      rules: {
+        keyword: [
+          { required: true, message: '请输入关键字', trigger: 'blur' }
+        ]
       }
-    }
-  },
-  head () {
-    return {
-      title: 'dsshop商城网店系统',
-      meta: [
-        { hid: 'index', name: 'dsshop-快速开发商城网店系统', content: '商城网店系统|商城|网店|免费商城|免费网店' },
-        { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
-        { hid: 'description', name: 'description', content: 'dsshop-快速开发商城网店系统' }
-      ]
     }
   },
   methods: {
@@ -73,6 +67,9 @@ export default {
 }
 </script>
 <style lang='scss'>
+  .header{
+    background-color: #ffffff;
+  }
   .top-nav{
     display: flex;
     .logo{
@@ -132,7 +129,7 @@ export default {
         line-height: 39px;
       }
       .cart:hover{
-        color: #FA436A;
+        color: #fa524c;
       }
     }
   }
