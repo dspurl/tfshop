@@ -178,7 +178,7 @@ export async function setContext (app, context) {
       payload: context.payload,
       error: context.error,
       base: app.router.options.base,
-      env: {}
+      env: {"NODE_ENV":"prod","API_URL_BROWSER":"http://dsshop.test/api/v1/app/","API_URL":"http://dsshop.test/api/v1/app/","PROJECT_KEY":"base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM="}
     }
     // Only set once
 

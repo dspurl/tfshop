@@ -17,8 +17,8 @@
             <div class="li">其它6<i class="iconfont dsshop-youjiantou"></i></div>
           </div>
           <el-carousel class="banner" height="460px">
-            <el-carousel-item v-for="item in 4" :key="item">
-              <h3>{{ item }}</h3>
+            <el-carousel-item v-for="(item, index) in bannerList" :key="index">
+              <el-image class="image" :src="item.resources.img" lazy/>
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -117,55 +117,16 @@
     <div class="recommend container">
       <div class="title">为你推荐</div>
       <div class="list">
-        <NuxtLink class="li" to="/pass/login">
+        <NuxtLink class="li" v-for="(item, index) in goodsList" :key="index" :to="'/pass/login'">
           <el-card class="card" shadow="hover">
             <el-image
               class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/cccac948e1b8ffb47f1fecde67692e60.jpg?thumb=1&w=200&h=200&f=webp&q=90"
+              :src="item.resources.img | smallImage(200)"
               lazy/>
-            <div class="name">米家飞行员太阳镜 Pro</div>
+            <div class="name">{{item.name}}</div>
             <div class="price">
               <div class="symbol">¥</div>
-              <div class="value">199.00</div>
-            </div>
-          </el-card>
-        </NuxtLink>
-        <NuxtLink class="li" to="/pass/login">
-          <el-card class="card" shadow="hover">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/cccac948e1b8ffb47f1fecde67692e60.jpg?thumb=1&w=200&h=200&f=webp&q=90"
-              lazy/>
-            <div class="name">米家飞行员太阳镜 Pro</div>
-            <div class="price">
-              <div class="symbol">¥</div>
-              <div class="value">199.00</div>
-            </div>
-          </el-card>
-        </NuxtLink>
-        <NuxtLink class="li" to="/pass/login">
-          <el-card class="card" shadow="hover">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/cccac948e1b8ffb47f1fecde67692e60.jpg?thumb=1&w=200&h=200&f=webp&q=90"
-              lazy/>
-            <div class="name">米家飞行员太阳镜 Pro</div>
-            <div class="price">
-              <div class="symbol">¥</div>
-              <div class="value">199.00</div>
-            </div>
-          </el-card>
-        </NuxtLink>
-        <NuxtLink class="li" to="/pass/login">
-          <el-card class="card" shadow="hover">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/cccac948e1b8ffb47f1fecde67692e60.jpg?thumb=1&w=200&h=200&f=webp&q=90"
-              lazy/>
-            <div class="name">米家飞行员太阳镜 Pro</div>
-            <div class="price">
-              <div class="symbol">¥</div>
-              <div class="value">199.00</div>
+              <div class="value">{{item.order_price | thousands}}</div>
             </div>
           </el-card>
         </NuxtLink>
@@ -176,12 +137,10 @@
 </template>
 
 <script>
+import {getList as goodList} from '@/api/good'
+import {getList as bannerList} from '@/api/banner'
 export default {
-  data() {
-    return {
-      categoryStyle: 0
-    }
-  },
+  // middleware: 'auth',
   head () {
     return {
       title: 'dsshop商城网店系统',
@@ -191,6 +150,39 @@ export default {
         { hid: 'description', name: 'description', content: 'dsshop-快速开发商城网店系统' }
       ]
     }
+  },
+  data() {
+    return {
+      categoryStyle: 0,
+      goodsList: [],
+      bannerList: []
+    }
+  },
+  async asyncData (ctx) {
+    try {
+      let [goodsData,bannerData] = await Promise.all([
+        goodList({
+          limit: 10,
+          is_recommend: 1
+        }),
+        bannerList({
+          limit: 5,
+          type: 0,
+          sort: '+sort'
+        })
+      ])
+      return {
+        goodsList: goodsData.data.data,
+        bannerList: bannerData.data.data
+      }
+    } catch(err) {
+      ctx.$errorHandler(err)
+    }
+  },
+  mounted() {
+    console.log('bannerList',this.bannerList)
+  },
+  methods: {
   }
 }
 </script>
@@ -214,6 +206,10 @@ export default {
         width: 20%;
         .card{
           margin: 0 10px 10px 0;
+          .image{
+            width: 190px;
+            height: 190px;
+          }
           .name{
             font-size: 14px;
             overflow: hidden;
@@ -350,6 +346,10 @@ export default {
     }
     .banner{
       flex:1;
+      .image{
+        width: 100%;
+        height: 100%;
+      }
     }
   }
   .el-carousel__item h3 {

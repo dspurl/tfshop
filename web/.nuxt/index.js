@@ -5,7 +5,7 @@ import ClientOnly from 'vue-client-only'
 import NoSsr from 'vue-no-ssr'
 import { createRouter } from './router.js'
 import NuxtChild from './components/nuxt-child.js'
-import NuxtError from './components/nuxt-error.vue'
+import NuxtError from '..\\layouts\\error.vue'
 import Nuxt from './components/nuxt.js'
 import App from './App.js'
 import { setContext, getLocation, getRouteData, normalizeError } from './utils'
@@ -16,6 +16,8 @@ import { createStore } from './store.js'
 import nuxt_plugin_plugin_246bd79a from 'nuxt_plugin_plugin_246bd79a' // Source: .\\components\\plugin.js (mode: 'all')
 import nuxt_plugin_axios_26200654 from 'nuxt_plugin_axios_26200654' // Source: .\\axios.js (mode: 'all')
 import nuxt_plugin_elementui_d905880e from 'nuxt_plugin_elementui_d905880e' // Source: ..\\plugins\\element-ui (mode: 'all')
+import nuxt_plugin_ctxinject_7475112c from 'nuxt_plugin_ctxinject_7475112c' // Source: ..\\plugins\\ctx-inject.js (mode: 'all')
+import nuxt_plugin_filter_6c04580b from 'nuxt_plugin_filter_6c04580b' // Source: ..\\plugins\\filter.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -218,6 +220,14 @@ async function createApp(ssrContext, config = {}) {
 
   if (typeof nuxt_plugin_elementui_d905880e === 'function') {
     await nuxt_plugin_elementui_d905880e(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_ctxinject_7475112c === 'function') {
+    await nuxt_plugin_ctxinject_7475112c(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_filter_6c04580b === 'function') {
+    await nuxt_plugin_filter_6c04580b(app.context, inject)
   }
 
   // Lock enablePreview in context

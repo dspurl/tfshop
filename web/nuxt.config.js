@@ -1,8 +1,11 @@
-require('dotenv').config({path: '.env'})
+require('dotenv').config()
 export default {
   server: {
     port: 3004, // default: 3000
     host: '0.0.0.0', // default: localhost,
+  },
+  env: {
+    baseUrl: process.env.BASE_URL
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -29,7 +32,9 @@ export default {
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
-    '@/plugins/element-ui'
+    '@/plugins/element-ui',
+    '@/plugins/ctx-inject.js',
+    '@/plugins/filter.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
@@ -38,11 +43,13 @@ export default {
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
   ],
-
+  // router: {
+  //   middleware: ['auth']
+  // },
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    '@nuxtjs/dotenv'
+    ['@nuxtjs/dotenv', { filename: '.env.prod' }]
   ],
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
