@@ -18,7 +18,7 @@
           </div>
           <el-carousel class="banner" height="460px">
             <el-carousel-item v-for="(item, index) in bannerList" :key="index">
-              <el-image class="image" :src="item.resources.img" lazy/>
+              <el-image class="image" :src="item.resources.img"/>
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -156,7 +156,11 @@ export default {
       categoryStyle: 0,
       goodsList: [],
       bannerList: [],
-      categoryList: []
+      categoryList: {
+        one: [],
+        two: [],
+        three: []
+      }
     }
   },
   async asyncData (ctx) {
@@ -173,10 +177,26 @@ export default {
         }),
         goodCategory({}),
       ])
+      // 将分类转成多维数组
+      const categoryDataArray = categoryData
+      let categoryList = {
+        one: [],
+        two: [],
+        three: []
+      }
+      categoryDataArray.forEach(item=>{
+        if(!item.pid){
+          categoryList.one.push(item);  //pid为父级id, 没有pid或者pid=0是一级分类
+        }else if(!item.resources){
+          categoryList.two.push(item); //没有图的是2级分类
+        }else{
+          categoryList.three.push(item); //3级分类
+        }
+      })
       return {
-        goodsList: goodsData.data.data,
-        bannerList: bannerData.data.data,
-        categoryList: categoryData.data.data
+        goodsList: goodsData.data,
+        bannerList: bannerData.data,
+        categoryList: categoryDataArray
       }
     } catch(err) {
       ctx.$errorHandler(err)
