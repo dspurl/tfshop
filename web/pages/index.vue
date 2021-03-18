@@ -137,7 +137,7 @@
 </template>
 
 <script>
-import {getList as goodList} from '@/api/good'
+import {getList as goodList, goodCategory} from '@/api/good'
 import {getList as bannerList} from '@/api/banner'
 export default {
   // middleware: 'auth',
@@ -155,12 +155,13 @@ export default {
     return {
       categoryStyle: 0,
       goodsList: [],
-      bannerList: []
+      bannerList: [],
+      categoryList: []
     }
   },
   async asyncData (ctx) {
     try {
-      let [goodsData,bannerData] = await Promise.all([
+      let [goodsData,bannerData,categoryData] = await Promise.all([
         goodList({
           limit: 10,
           is_recommend: 1
@@ -169,18 +170,20 @@ export default {
           limit: 5,
           type: 0,
           sort: '+sort'
-        })
+        }),
+        goodCategory({}),
       ])
       return {
         goodsList: goodsData.data.data,
-        bannerList: bannerData.data.data
+        bannerList: bannerData.data.data,
+        categoryList: categoryData.data.data
       }
     } catch(err) {
       ctx.$errorHandler(err)
     }
   },
   mounted() {
-    console.log('bannerList',this.bannerList)
+    console.log('categoryList',this.categoryList)
   },
   methods: {
   }
