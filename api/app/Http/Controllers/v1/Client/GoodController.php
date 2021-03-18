@@ -114,6 +114,7 @@ class GoodController extends Controller
      * 商品分类
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  tree boolean 返回格式是否为树状结构
      * @queryParam  is_recommend int 是否首页展示
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
@@ -136,6 +137,9 @@ class GoodController extends Controller
             $q->orderBy('sort', 'ASC');
         }
         $paginate = $q->with(['resources'])->get();
+        if ($request->has('tree')) {
+            $paginate = genTree($paginate->toArray(), 'pid');
+        }
         return resReturn(1, $paginate);
     }
 }

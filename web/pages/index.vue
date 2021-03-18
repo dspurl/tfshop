@@ -4,17 +4,27 @@
     <div class="top">
       <div class="container">
         <div class="classify">
-          <div class="nave">
-            <div class="li">手机、电话卡<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">电脑<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">女装<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">男装<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">其它1<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">其它2<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">其它3<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">其它4<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">其它5<i class="iconfont dsshop-youjiantou"></i></div>
-            <div class="li">其它6<i class="iconfont dsshop-youjiantou"></i></div>
+          <div class="nave" @mouseover="categoryStyle = 1" @mouseleave="naveShiftOut">
+            <div class="nave-li" :class="{on:naveOn === index}" v-for="(item, index) in categoryList" :key="index" @mouseover="naveCut(index)">{{item.name}}<i class="iconfont dsshop-youjiantou"></i></div>
+            <!-- 二级分类-->
+            <div class="secondary-navigation" v-if="categoryStyle === 1">
+              <div class="list" v-for="(item, index) in categorySublevel" :key="index">
+                <NuxtLink class="dt" to="/pass/login">{{item.name}}<i class="iconfont dsshop-youjiantou"></i></NuxtLink>
+                <div class="dd">
+                  <NuxtLink class="li" v-for="(item2, index2) in item.children" :key="index2" to="/pass/login">{{item2.name}}</NuxtLink>
+                </div>
+              </div>
+            </div>
+            <div class="secondary-navigation2" v-if="categoryStyle === 2">
+              <NuxtLink class="li" to="/pass/login" v-for="(item, index) in categorySublevel" :key="index">
+                <el-image
+                  class="image"
+                  :src="item.resources.img"
+                  fit="scale-down"/>
+                <div class="name">{{item.name}}</div>
+              </NuxtLink>
+            </div>
+            <!-- 二级导航 end-->
           </div>
           <el-carousel class="banner" height="460px">
             <el-carousel-item v-for="(item, index) in bannerList" :key="index">
@@ -22,92 +32,6 @@
             </el-carousel-item>
           </el-carousel>
         </div>
-        <!-- 二级分类-->
-        <div class="secondary-navigation" v-if="categoryStyle === 1">
-          <div class="list">
-            <NuxtLink class="dt" to="/pass/login">女装<i class="iconfont dsshop-youjiantou"></i></NuxtLink>
-            <div class="dd">
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-            </div>
-          </div>
-          <div class="list">
-            <NuxtLink class="dt" to="/pass/login">男装<i class="iconfont dsshop-youjiantou"></i></NuxtLink>
-            <div class="dd">
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-              <NuxtLink class="li" to="/pass/login">连衣裙</NuxtLink>
-            </div>
-          </div>
-        </div>
-        <div class="secondary-navigation2" v-if="categoryStyle === 2">
-          <NuxtLink class="li" to="/pass/login">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/9074723edc522839834f7fcd12b6f558.png?thumb=1&w=40&h=40&f=webp&q=90"
-              fit="scale-down"/>
-            <div class="name">Redmi MAX 86” 超大屏电视Redmi MAX 86” 超大屏电视Redmi MAX 86” 超大屏电视Redmi MAX 86” 超大屏电视</div>
-          </NuxtLink>
-          <NuxtLink class="li" to="/pass/login">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/9074723edc522839834f7fcd12b6f558.png?thumb=1&w=40&h=40&f=webp&q=90"
-              fit="scale-down"/>
-            <div class="name">Redmi MAX 86” 超大屏电视</div>
-          </NuxtLink>
-          <NuxtLink class="li" to="/pass/login">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/9074723edc522839834f7fcd12b6f558.png?thumb=1&w=40&h=40&f=webp&q=90"
-              fit="scale-down"/>
-            <div class="name">Redmi MAX 86” 超大屏电视</div>
-          </NuxtLink>
-          <NuxtLink class="li" to="/pass/login">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/9074723edc522839834f7fcd12b6f558.png?thumb=1&w=40&h=40&f=webp&q=90"
-              fit="scale-down"/>
-            <div class="name">Redmi MAX 86” 超大屏电视</div>
-          </NuxtLink>
-          <NuxtLink class="li" to="/pass/login">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/9074723edc522839834f7fcd12b6f558.png?thumb=1&w=40&h=40&f=webp&q=90"
-              fit="scale-down"/>
-            <div class="name">Redmi MAX 86” 超大屏电视</div>
-          </NuxtLink>
-          <NuxtLink class="li" to="/pass/login">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/9074723edc522839834f7fcd12b6f558.png?thumb=1&w=40&h=40&f=webp&q=90"
-              fit="scale-down"/>
-            <div class="name">Redmi MAX 86” 超大屏电视</div>
-          </NuxtLink>
-          <NuxtLink class="li" to="/pass/login">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/9074723edc522839834f7fcd12b6f558.png?thumb=1&w=40&h=40&f=webp&q=90"
-              fit="scale-down"/>
-            <div class="name">Redmi MAX 86” 超大屏电视</div>
-          </NuxtLink>
-          <NuxtLink class="li" to="/pass/login">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/9074723edc522839834f7fcd12b6f558.png?thumb=1&w=40&h=40&f=webp&q=90"
-              fit="scale-down"/>
-            <div class="name">Redmi MAX 86” 超大屏电视</div>
-          </NuxtLink>
-        </div>
-        <!-- 二级导航 end-->
       </div>
     </div>
     <!--分类 end-->
@@ -154,13 +78,11 @@ export default {
   data() {
     return {
       categoryStyle: 0,
+      naveOn: null,
       goodsList: [],
       bannerList: [],
-      categoryList: {
-        one: [],
-        two: [],
-        three: []
-      }
+      categoryList: [],
+      categorySublevel:[]
     }
   },
   async asyncData (ctx) {
@@ -175,37 +97,44 @@ export default {
           type: 0,
           sort: '+sort'
         }),
-        goodCategory({}),
+        goodCategory({
+          tree: true
+        }),
       ])
-      // 将分类转成多维数组
-      const categoryDataArray = categoryData
-      let categoryList = {
-        one: [],
-        two: [],
-        three: []
-      }
-      categoryDataArray.forEach(item=>{
-        if(!item.pid){
-          categoryList.one.push(item);  //pid为父级id, 没有pid或者pid=0是一级分类
-        }else if(!item.resources){
-          categoryList.two.push(item); //没有图的是2级分类
-        }else{
-          categoryList.three.push(item); //3级分类
-        }
-      })
       return {
         goodsList: goodsData.data,
         bannerList: bannerData.data,
-        categoryList: categoryDataArray
+        categoryList: categoryData
       }
     } catch(err) {
       ctx.$errorHandler(err)
     }
   },
   mounted() {
-    console.log('categoryList',this.categoryList)
+
   },
   methods: {
+    // 分类切换
+    naveCut(index){
+      this.naveOn = index
+      if(this.categoryList[index].children){ //存在子类目
+        if(this.categoryList[index].children[0].resources){
+          this.categorySublevel = this.categoryList[index].children
+          this.categoryStyle = 2
+        }else{  //存在三级
+          this.categorySublevel = this.categoryList[index].children
+          this.categoryStyle = 1
+        }
+      }else{
+        this.categorySublevel = []
+      }
+      console.log('this.categoryList[index]',this.categoryList[index])
+    },
+    // 分类移出
+    naveShiftOut(){
+      this.naveOn = null
+      this.categoryStyle = 0
+    }
   }
 }
 </script>
@@ -311,7 +240,7 @@ export default {
     box-shadow: 0 8px 16px #888888;
     top:0;
     left: 200px;
-    z-index: 2;
+    z-index: 10;
     width: 1000px;
     height: 460px;
     padding:20px;
@@ -320,7 +249,7 @@ export default {
       line-height: 40px;
       display: flex;
       .dt{
-        width: 80px;
+        width: 100px;
         text-align: right;
         font-weight: bold;
         margin-right: 10px;
@@ -354,7 +283,7 @@ export default {
       padding-top:20px;
       height: 460px;
       overflow: hidden;
-      .li{
+      .nave-li{
         cursor:pointer;
         padding:10px;
         .iconfont{
@@ -363,7 +292,7 @@ export default {
           top:3px;
         }
       }
-      .li:hover{
+      .nave-li:hover,.nave-li.on{
         background-color: #fa524c;
       }
     }

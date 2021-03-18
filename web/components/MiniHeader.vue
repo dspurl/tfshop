@@ -1,9 +1,27 @@
 <template>
-  <div>
-    头
+  <div class="min-header">
+    <div class="container">
+      <NuxtLink to="/"><img class="logo" src="~/assets/img/logo.png"/></NuxtLink>
+      <div class="title">欢迎登录</div>
+    </div>
   </div>
 </template>
 
-<style>
-
+<style lang='scss'>
+  .min-header{
+    background-color: #ffffff;
+    padding: 10px 0 10px 0;
+    .container{
+      display: flex;
+      .logo{
+        width: 80px;
+        height: 80px;
+      }
+      .title{
+        font-size: 28px;
+        line-height: 80px;
+        margin-left:10px;
+      }
+    }
+  }
 </style>
