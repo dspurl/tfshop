@@ -139,7 +139,7 @@ export default {
 }
 </script>
 
-<style lang='scss'>
+<style lang='scss' scoped>
   .recommend{
     margin-top:40px;
     width: 1210px;

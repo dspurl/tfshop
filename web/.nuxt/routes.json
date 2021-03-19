@@ -14,6 +14,13 @@
     "_name": "_4fad74b0"
   },
   {
+    "name": "pass-register",
+    "path": "/pass/register",
+    "component": "D:\\\\www\\\\dsshop\\\\web\\\\pages\\\\pass\\\\register.vue",
+    "chunkName": "pages/pass/register",
+    "_name": "_2ee1b3a8"
+  },
+  {
     "name": "index",
     "path": "/",
     "component": "D:\\\\www\\\\dsshop\\\\web\\\\pages\\\\index.vue",

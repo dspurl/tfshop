@@ -23,10 +23,10 @@
                       <i slot="prefix" class="iconfont dsshop-mima"></i>
                     </el-input>
                   </el-form-item>
-                  <el-button class="button" type="danger">登录</el-button>
+                  <el-button class="button" type="danger" :loading="loading" @click="toLogin">登录</el-button>
                 </el-form>
                 <div class="other">
-                  <NuxtLink to="/pass/login">立即注册</NuxtLink>
+                  <NuxtLink to="/pass/register">立即注册</NuxtLink>
                   <el-divider direction="vertical"></el-divider>
                   <NuxtLink to="/pass/login">忘记密码？</NuxtLink>
                 </div>
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import {login} from '@/api/login'
 export default {
   layout: 'login',
   data() {
@@ -75,8 +76,12 @@ export default {
       }
     };
     return {
-      method: 2,
-      ruleForm: {},
+      method: 1,
+      ruleForm: {
+        cellphone: '',
+        password: ''
+      },
+      loading: false,
       rules: {
         cellphone: [
           { validator: validateCellphone, trigger: 'blur' }
@@ -88,9 +93,28 @@ export default {
       }
     }
   },
+  methods: {
+    toLogin(){
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          this.loading = true
+          login(this.ruleForm).then(() => {
+            this.$message({
+              message: '登录成功',
+              type: 'success'
+            });
+            this.loading = false
+            this.$router.replace('/center/index')
+          }).catch(() => {
+            this.loading = false
+          })
+        }
+      })
+    }
+  }
 }
 </script>
-<style  lang='scss'>
+<style lang='scss' scoped>
   body {
     background-color: #ffffff;
   }

@@ -32,7 +32,6 @@
 			<view class=" flex flex-direction padding">
 			  <button class="cu-btn round bg-red shadow lg" @click="toRegister">注册</button>
 			</view>
-		  </view>
 			<view class="register-section">
 				已有账号?
 				<text @click="toLogin">马上登录</text>
@@ -65,10 +64,10 @@
 
 <script>
 	import Login from '../../api/login'
-	import {  
-        mapMutations  
+	import {
+        mapMutations
     } from 'vuex';
-	
+
 	export default{
 		data(){
 			return {
@@ -144,7 +143,7 @@
 			if(option.uuid){
 				this.ruleForm.uuid = option.uuid
 			}
-			
+
 		},
 		methods: {
 			...mapMutations(['login']),
@@ -388,7 +387,7 @@
 			font-size: $font-base + 2upx;
 			color: $font-color-dark;
 			width: 100%;
-		}	
+		}
 	}
 
 	.confirm-btn{
