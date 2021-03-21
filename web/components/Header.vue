@@ -6,8 +6,23 @@
         <div class="topbar-nav">
           <div class="menu"></div>
           <div class="login">
-            <NuxtLink class="li" to="/pass/login">登录</NuxtLink>
-            <NuxtLink class="li" to="/pass/register">注册</NuxtLink>
+            <template v-if="user">
+              <div class="li user" :class="{ 'user-active': userActive }" @mouseover="userMenu" @mouseleave="userMenuOut">
+                <NuxtLink to="/user/portal" class="user-name"><span>{{ user.cellphone }}</span><i class="iconfont dsshop-xia"></i></NuxtLink>
+                <div class="user-menu-wrapper">
+                  <ul class="user-menu" :style="{height: userActive ? '100px' : 0}">
+                    <li><NuxtLink class="a" to="/user/portal">个人中心</NuxtLink></li>
+                    <li><NuxtLink class="a" to="/user/portal">我的收藏</NuxtLink></li>
+                    <li><div class="a" @click="logout">退出登录</div></li>
+                  </ul>
+                </div>
+              </div>
+              <NuxtLink class="li" to="/pass/login">我的订单</NuxtLink>
+            </template>
+            <template v-else>
+              <NuxtLink class="li" to="/pass/login">登录</NuxtLink>
+              <NuxtLink class="li" to="/pass/register">注册</NuxtLink>
+            </template>
             <NuxtLink class="li" to="/pass/notification">消息通知</NuxtLink>
             <div class="li cart">
               <i class="iconfont dsshop-gouwuche"></i>购物车(0)
@@ -47,11 +62,23 @@
 </template>
 <script>
 export default {
+  head () {
+    return {
+      title: 'DSSHOP商城网店系统',
+      meta: [
+        { hid: 'index', name: 'dsshop-快速开发商城网店系统', content: '商城网店系统|商城|网店|免费商城|免费网店' },
+        { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
+        { hid: 'description', name: 'description', content: 'dsshop-快速开发商城网店系统' }
+      ]
+    }
+  },
   data() {
     return {
       searchRuleForm: {
         keyword: ''
       },
+      userActive: false,
+      user:{},
       rules: {
         keyword: [
           { required: true, message: '请输入关键字', trigger: 'blur' }
@@ -59,14 +86,34 @@ export default {
       }
     }
   },
+  mounted() {
+    // this.$store.commit('loginCheck', this)
+    this.userInfo()
+  },
   methods: {
+    userMenu(){
+      this.userActive = true
+    },
+    userMenuOut(){
+      this.userActive = false
+    },
+    logout(){
+      this.$store.commit('logout')
+      this.$router.go(0)
+    },
     submitForm(){
 
+    },
+    userInfo(){
+      if(this.$store.state.hasLogin){
+        this.user = this.store.get(process.env.CACHE_PR + 'UserInfo')
+        console.log('user',this.user)
+      }
     }
   }
 }
 </script>
-<style lang='scss'>
+<style lang='scss' scoped>
   .header{
     background-color: #ffffff;
   }
@@ -119,6 +166,59 @@ export default {
         padding:0 10px 0 10px;
         line-height: 40px;
         color: #b0b0b0;
+        a{
+          color: #b0b0b0;
+          .iconfont{
+            font-size: 12px;
+            margin-left:10px;
+            position: relative;
+            top:1px;
+          }
+        }
+        a:hover{
+          color: #ffffff;
+        }
+      }
+      .user{
+        a{
+          display: flex;
+          padding: 0 10px 0 10px;
+          span{
+            display: inline-block;
+            width: 70px;
+            text-align: center;
+            overflow: hidden;
+            text-overflow:ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+      .user-menu-wrapper{
+        background: #fff;
+      }
+      .user-menu{
+        overflow: hidden;
+        padding-bottom: 10px;
+        .a{
+          padding: 3px 30px;
+          color: #757575;
+          line-height: 2;
+          cursor:pointer;
+        }
+        .a:hover{
+          color: #fa524c;
+        }
+      }
+      .user-active{
+        .user-name {
+          background: #fff;
+          color: #757575;
+          width: 110px;
+          text-align: center;
+        }
+        .user-name:hover{
+          color: #fa524c;
+        }
       }
       .li:hover{
         color: #ffffff;
@@ -127,6 +227,7 @@ export default {
         color: #b0b0b0;
         background: #424242;
         line-height: 39px;
+        height: 39px;
       }
       .cart:hover{
         color: #fa524c;

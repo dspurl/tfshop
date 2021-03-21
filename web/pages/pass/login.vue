@@ -61,8 +61,21 @@
 
 <script>
 import {login} from '@/api/login'
+import {
+  mapMutations
+} from 'vuex';
 export default {
   layout: 'login',
+  head () {
+    return {
+      title: 'dsshop商城网店系统-登录',
+      meta: [
+        { hid: 'index', name: 'dsshop-快速开发商城网店系统', content: '商城网店系统|商城|网店|免费商城|免费网店' },
+        { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
+        { hid: 'description', name: 'description', content: 'dsshop-快速开发商城网店系统' }
+      ]
+    }
+  },
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
@@ -94,17 +107,26 @@ export default {
     }
   },
   methods: {
+    ...mapMutations(['login']),
     toLogin(){
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           this.loading = true
-          login(this.ruleForm).then(() => {
+          login(this.ruleForm).then(response => {
+            console.log('response',response)
+            this.login(response)
             this.$message({
               message: '登录成功',
               type: 'success'
             });
             this.loading = false
-            this.$router.replace('/center/index')
+            const route = this.store.get('route')
+            if(route){
+              this.store.remove('route')
+              this.$router.replace({ path: route.path, query: route.query })
+            }else{
+              this.$router.replace('/user/portal')
+            }
           }).catch(() => {
             this.loading = false
           })
@@ -115,9 +137,6 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
-  body {
-    background-color: #ffffff;
-  }
   .banner-panel{
     width: 100%;
     height: 588px;

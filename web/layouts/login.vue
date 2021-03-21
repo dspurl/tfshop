@@ -1,9 +1,12 @@
 <template>
-  <div>
+  <div class="body">
     <MiniHeader />
     <Nuxt />
     <MiniFooter />
   </div>
 </template>
-<style>
+<style lang='scss' scoped>
+  .body {
+    background-color: #ffffff;
+  }
 </style>

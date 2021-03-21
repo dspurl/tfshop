@@ -45,7 +45,7 @@
     <!-- 版权信息-->
     <div class="copyright">
       <div class="container">
-        <span>Copyright © 2008-2021 DSSHOP</span>
+        <span>Copyright © 2020-2021 DSSHOP</span>
         <el-divider direction="vertical"></el-divider>
         <a href="http://beian.miit.gov.cn/" target="_blank">浙ICP备110120119</a>
       </div>
@@ -54,7 +54,7 @@
   </div>
 </template>
 
-<style lang='scss'>
+<style lang='scss' scoped>
   .footer{
     background-color: #ffffff;
     .copyright{

@@ -1,6 +1,7 @@
 <template>
   <div class="register">
     <el-card class="form" shadow="hover">
+      <div class="title">注册DSSHOP帐号</div>
       <el-form class="ruleForm" :model="ruleForm" :rules="rules" ref="ruleForm">
         <el-form-item prop="cellphone">
           <el-input v-model="ruleForm.cellphone" maxlength="11" placeholder="请输入手机号码" clearable>
@@ -25,6 +26,7 @@
         </el-form-item>
         <el-button class="button" type="danger" @click="toRegister" :loading="loading">注册</el-button>
       </el-form>
+      <div class="go-login">已有账号？马上去<NuxtLink to="/pass/login">登录</NuxtLink></div>
       <div class="user-agreement">
         已阅读并同意：DSSHOP <NuxtLink to="/pass/register">用户协议</NuxtLink>和 <NuxtLink to="/pass/register">隐私政策</NuxtLink>
       </div>
@@ -36,6 +38,16 @@
 import {cellphoneCode, register} from '@/api/login'
 export default {
   layout: 'login',
+  head () {
+    return {
+      title: 'dsshop商城网店系统-注册',
+      meta: [
+        { hid: 'index', name: 'dsshop-快速开发商城网店系统', content: '商城网店系统|商城|网店|免费商城|免费网店' },
+        { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
+        { hid: 'description', name: 'description', content: 'dsshop-快速开发商城网店系统' }
+      ]
+    }
+  },
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
@@ -137,16 +149,21 @@ export default {
 }
 </script>
 <style  lang='scss' scoped>
-  body {
-    background-color: #ffffff;
+  a:hover{
+    color: #fa524c;
   }
   .register{
     background-color: #f4f4f4;
+    padding: 30px 0 30px 0;
     .form{
       min-height: 550px;
       width: 850px;
       margin: 30px auto;
       text-align: center;
+      .title{
+        font-size: 30px;
+        margin: 30px 0 30px 0;
+      }
       .ruleForm{
         margin: 0 auto;
         width: 350px;
@@ -161,9 +178,19 @@ export default {
       }
       .user-agreement{
         margin-top:20px;
+        font-size: 12px;
         color: #999;
         a{
           margin:0 5px 0 5px;
+        }
+      }
+      .go-login{
+        text-align: right;
+        font-size: 12px;
+        color: #999;
+        margin: 10px 230px 0 0;
+        a{
+          margin: 0 5px 0 5px;
         }
       }
     }

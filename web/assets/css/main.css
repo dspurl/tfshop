@@ -30,6 +30,14 @@ a{
   text-decoration: none;
   color: #333;
 }
-body{
-  background-color: #f4f4f4;
+.el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover{
+  color: #fa524c;
+}
+.body{
+  overflow:hidden;
+}
+ul{
+  list-style-type:none;
+  margin:0;
+  padding:0;
 }

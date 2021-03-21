@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<style lang='scss'>
+<style lang='scss' scoped>
   .min-header{
     background-color: #ffffff;
     padding: 10px 0 10px 0;

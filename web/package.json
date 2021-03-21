@@ -15,7 +15,9 @@
     "core-js": "^3.8.3",
     "dotenv": "^8.2.0",
     "element-ui": "^2.15.0",
-    "nuxt": "^2.14.12"
+    "js-cookie": "^2.2.1",
+    "nuxt": "^2.14.12",
+    "store": "^2.0.12"
   },
   "devDependencies": {
     "@vue/test-utils": "^1.1.2",

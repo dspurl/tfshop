@@ -1,7 +1,12 @@
 <template>
-  <div>
+  <div class="body">
     <Header />
     <Nuxt />
     <Footer />
   </div>
 </template>
+<style lang='scss' scoped>
+  .body {
+    background-color: #f4f4f4;
+  }
+</style>

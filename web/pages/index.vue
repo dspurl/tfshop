@@ -4,12 +4,12 @@
     <div class="top">
       <div class="container">
         <div class="classify">
-          <div class="nave" @mouseover="categoryStyle = 1" @mouseleave="naveShiftOut">
+          <div class="nave" @mouseover="naveCut(-1)" @mouseleave="naveShiftOut">
             <div class="nave-li" :class="{on:naveOn === index}" v-for="(item, index) in categoryList" :key="index" @mouseover="naveCut(index)">{{item.name}}<i class="iconfont dsshop-youjiantou"></i></div>
             <!-- 二级分类-->
             <div class="secondary-navigation" v-if="categoryStyle === 1">
               <div class="list" v-for="(item, index) in categorySublevel" :key="index">
-                <NuxtLink class="dt" to="/pass/login">{{item.name}}<i class="iconfont dsshop-youjiantou"></i></NuxtLink>
+                <NuxtLink class="dt" to="{ path: 'product/detail', query: { id: item.id }}">{{item.name}}<i class="iconfont dsshop-youjiantou"></i></NuxtLink>
                 <div class="dd">
                   <NuxtLink class="li" v-for="(item2, index2) in item.children" :key="index2" to="/pass/login">{{item2.name}}</NuxtLink>
                 </div>
@@ -41,7 +41,7 @@
     <div class="recommend container">
       <div class="title">为你推荐</div>
       <div class="list">
-        <NuxtLink class="li" v-for="(item, index) in goodsList" :key="index" :to="'/pass/login'">
+        <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: 'product/detail', query: { id: item.id }}">
           <el-card class="card" shadow="hover">
             <el-image
               class="image"
@@ -61,10 +61,9 @@
 </template>
 
 <script>
-import {getList as goodList, goodCategory} from '@/api/good'
+import {getList as getGoodList, goodCategory} from '@/api/good'
 import {getList as bannerList} from '@/api/banner'
 export default {
-  // middleware: 'auth',
   head () {
     return {
       title: 'dsshop商城网店系统',
@@ -79,7 +78,7 @@ export default {
     return {
       categoryStyle: 0,
       naveOn: null,
-      goodsList: [],
+      goodList: [],
       bannerList: [],
       categoryList: [],
       categorySublevel:[]
@@ -87,9 +86,9 @@ export default {
   },
   async asyncData (ctx) {
     try {
-      let [goodsData,bannerData,categoryData] = await Promise.all([
-        goodList({
-          limit: 10,
+      let [goodData, bannerData, categoryData] = await Promise.all([
+        getGoodList({
+          limit: 20,
           is_recommend: 1
         }),
         bannerList({
@@ -102,7 +101,7 @@ export default {
         }),
       ])
       return {
-        goodsList: goodsData.data,
+        goodList: goodData.data,
         bannerList: bannerData.data,
         categoryList: categoryData
       }
@@ -111,24 +110,25 @@ export default {
     }
   },
   mounted() {
-
+  
   },
   methods: {
     // 分类切换
     naveCut(index){
-      this.naveOn = index
-      if(this.categoryList[index].children){ //存在子类目
-        if(this.categoryList[index].children[0].resources){
-          this.categorySublevel = this.categoryList[index].children
-          this.categoryStyle = 2
-        }else{  //存在三级
-          this.categorySublevel = this.categoryList[index].children
-          this.categoryStyle = 1
+      if(index !== -1){
+        this.naveOn = index
+        if(this.categoryList[index].children){ //存在子类目
+          if(this.categoryList[index].children[0].resources){
+            this.categorySublevel = this.categoryList[index].children
+            this.categoryStyle = 2
+          }else{  //存在三级
+            this.categorySublevel = this.categoryList[index].children
+            this.categoryStyle = 1
+          }
+        }else{
+          this.categorySublevel = []
         }
-      }else{
-        this.categorySublevel = []
       }
-      console.log('this.categoryList[index]',this.categoryList[index])
     },
     // 分类移出
     naveShiftOut(){

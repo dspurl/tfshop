@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { Message, MessageBox } from 'element-ui'
+import { Message } from 'element-ui'
+import { getToken } from '@/plugins/auth'
 const service = axios.create({
   baseURL: process.env.API_URL,
   timeout: 50000
@@ -8,7 +9,7 @@ service.interceptors.request.use(
   config => {
     config.headers['apply-secret'] = process.env.PROJECT_KEY
     config.headers['Accept'] = 'application/json'
-    config.headers['Authorization'] = 'Bearer '
+    config.headers['Authorization'] = 'Bearer ' + getToken('token')
     return config
   },
   error => {

@@ -7,6 +7,9 @@ export default {
   env: {
     baseUrl: process.env.BASE_URL
   },
+  router: {
+    middleware: 'refreshToken'
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'dsshop',
@@ -15,8 +18,9 @@ export default {
     },
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      { hid: 'index', name: 'dsshop-快速开发商城网店系统', content: '商城网店系统|商城|网店|免费商城|免费网店' },
+      { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
+      { hid: 'description', name: 'description', content: 'dsshop-快速开发商城网店系统' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -35,6 +39,8 @@ export default {
     '@/plugins/element-ui',
     '@/plugins/ctx-inject.js',
     '@/plugins/filter.js',
+    '@/plugins/store',
+    '@/plugins/global'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
