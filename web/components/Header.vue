@@ -6,9 +6,9 @@
         <div class="topbar-nav">
           <div class="menu"></div>
           <div class="login">
-            <template v-if="user">
+            <template v-if="user.cellphone">
               <div class="li user" :class="{ 'user-active': userActive }" @mouseover="userMenu" @mouseleave="userMenuOut">
-                <NuxtLink to="/user/portal" class="user-name"><span>{{ user.cellphone }}</span><i class="iconfont dsshop-xia"></i></NuxtLink>
+                <NuxtLink to="/user/portal" class="user-name"><span>{{ user.nickname ? user.nickname : user.cellphone }}</span><i class="iconfont dsshop-xia"></i></NuxtLink>
                 <div class="user-menu-wrapper">
                   <ul class="user-menu" :style="{height: userActive ? '100px' : 0}">
                     <li><NuxtLink class="a" to="/user/portal">个人中心</NuxtLink></li>
@@ -39,13 +39,7 @@
 
         <div class="nav">
           <div class="menu">
-            <NuxtLink class="li" to="/pass/login">帮助中心</NuxtLink>
-            <NuxtLink class="li" to="/pass/login">一级菜单</NuxtLink>
-            <NuxtLink class="li" to="/pass/login">一级菜单</NuxtLink>
-            <NuxtLink class="li" to="/pass/login">一级菜单</NuxtLink>
-            <NuxtLink class="li" to="/pass/login">一级菜单</NuxtLink>
-            <NuxtLink class="li" to="/pass/login">一级菜单</NuxtLink>
-            <NuxtLink class="li" to="/pass/login">一级菜单</NuxtLink>
+            <NuxtLink class="li" :class="index === navActive ? 'active' : ''" v-for="(item, index) in navList" :key="index" :to="{ path: item.path, query: item.query}">{{item.name}}</NuxtLink>
           </div>
           <el-form :model="searchRuleForm" :rules="rules" ref="searchRuleForm" label-width="100px" class="searchRuleForm" @submit.native.prevent>
             <el-form-item prop="keyword">
@@ -62,18 +56,15 @@
 </template>
 <script>
 export default {
-  head () {
-    return {
-      title: 'DSSHOP商城网店系统',
-      meta: [
-        { hid: 'index', name: 'dsshop-快速开发商城网店系统', content: '商城网店系统|商城|网店|免费商城|免费网店' },
-        { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
-        { hid: 'description', name: 'description', content: 'dsshop-快速开发商城网店系统' }
-      ]
-    }
-  },
   data() {
     return {
+      navList: [
+        { name: '首页', path: '/' },
+        { name: '帮助中心', path: '/new', query: { id: 1 } },
+        { name: '视频', path: '/video' },
+        { name: '直播', path: '/live' }
+      ],
+      navActive: -1,
       searchRuleForm: {
         keyword: ''
       },
@@ -87,10 +78,19 @@ export default {
     }
   },
   mounted() {
-    // this.$store.commit('loginCheck', this)
+    this.setNavActive()
     this.userInfo()
   },
   methods: {
+    setNavActive(){
+      for (let i=0;i<this.navList.length;i++)
+      {
+        if(this.navList[i].path.split('\/')[1]  === this.$route.path.split('\/')[1]){
+          this.navActive = i
+          break
+        }
+      }
+    },
     userMenu(){
       this.userActive = true
     },
@@ -131,6 +131,9 @@ export default {
       .menu{
         margin-top:10px;
         flex:1;
+        .active{
+          color: #FA436A;
+        }
         .li{
           padding: 0 10px 0 10px;
         }

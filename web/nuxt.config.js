@@ -12,7 +12,7 @@ export default {
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: 'dsshop',
+    title: 'dsshop商城网店系统',
     htmlAttrs: {
       lang: 'en'
     },

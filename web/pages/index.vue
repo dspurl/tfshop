@@ -41,11 +41,12 @@
     <div class="recommend container">
       <div class="title">为你推荐</div>
       <div class="list">
-        <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: 'product/detail', query: { id: item.id }}">
+        <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
           <el-card class="card" shadow="hover">
             <el-image
               class="image"
               :src="item.resources.img | smallImage(200)"
+              fit="cover"
               lazy/>
             <div class="name">{{item.name}}</div>
             <div class="price">

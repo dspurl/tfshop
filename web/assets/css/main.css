@@ -41,3 +41,27 @@ ul{
   margin:0;
   padding:0;
 }
+.bg-olive {
+  background-color: #8dc63f;
+  color: #ffffff;
+}
+.bg-blue {
+  background-color: #0081ff;
+  color: #ffffff;
+}
+.bg-purple {
+  background-color: #6739b6;
+  color: #ffffff;
+}
+.bg-orange {
+  background-color: #f37b1d;
+  color: #ffffff;
+}
+.bg-pink {
+  background-color: #e03997;
+  color: #ffffff;
+}
+.bg-mauve {
+  background-color: #9c26b0;
+  color: #ffffff;
+}
