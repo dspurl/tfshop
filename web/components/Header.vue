@@ -59,10 +59,7 @@ export default {
   data() {
     return {
       navList: [
-        { name: '首页', path: '/' },
-        { name: '帮助中心', path: '/new', query: { id: 1 } },
-        { name: '视频', path: '/video' },
-        { name: '直播', path: '/live' }
+        { name: '首页', path: '/' }
       ],
       navActive: -1,
       searchRuleForm: {
@@ -85,7 +82,7 @@ export default {
     setNavActive(){
       for (let i=0;i<this.navList.length;i++)
       {
-        if(this.navList[i].path.split('\/')[1]  === this.$route.path.split('\/')[1]){
+        if(this.navList[i].path.split('\/')[1]  === $nuxt.$route.path.split('\/')[1]){
           this.navActive = i
           break
         }

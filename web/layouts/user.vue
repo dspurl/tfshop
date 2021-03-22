@@ -37,7 +37,7 @@
             name: '个人中心',
             children: [
               { name: '我的个人中心', path: '/user/portal', active: false },
-              { name: '消息通知', path: '/user/notice', active: false},
+              { name: '消息通知', path: '/user/notice/list', active: false},
               { name: '我的收藏', path: '/user/collect', active: false},
               { name: '地址管理', path: '/user/address', active: false},
               { name: '我的账单', path: '/user/finance', active: false}
@@ -62,15 +62,22 @@
       }
     },
     mounted() {
-      this.setMenuActive()
-      console.log(1111111)
+      this.setMenuActive($nuxt.$route.path)
+    },
+    watch: {
+      $route: {
+        handler: function(val, oldVal){
+          this.setMenuActive(val.path)
+        },
+        deep: true
+      }
     },
     methods: {
-      setMenuActive() {
+      setMenuActive(path) {
         for (let i = 0; i < this.menuList.length; i++) {
           if(this.menuList[i].children.length>0){
             for (let j = 0; j < this.menuList[i].children.length; j++) {
-              if (this.menuList[i].children[j].path.split('\/')[2] === this.$route.path.split('\/')[2]) {
+              if (this.menuList[i].children[j].path.split('\/')[2] === path.split('\/')[2]) {
                 this.menuList[i].children[j].active = true
               } else {
                 this.menuList[i].children[j].active = false

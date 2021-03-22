@@ -21,7 +21,6 @@ class NotificationController extends Controller
      * @param Request $request
      * @return string
      * @queryParam  limit int 每页显示条数
-     * @queryParam  sort string 排序
      * @queryParam  page string 页码
      */
     public function list(Request $request)
@@ -30,15 +29,27 @@ class NotificationController extends Controller
         $q = Notification::query();
         $limit = $request->limit;
         $q->where('notifiable_id', auth('web')->user()->id);
-        if ($request->has('sort')) {
-            $sortFormatConversion = sortFormatConversion($request->sort);
-            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
-        }
+        $q->orderBy('read_at', 'ASC')->orderBy('created_at', 'DESC');
         $paginate = $q->paginate($limit);
-        // 标记为已读
-        $user = User::find(auth('web')->user()->id);
-        $user->unreadNotifications()->update(['read_at' => now()]);
+        if (!$request->has('pc')) {
+            // 标记为已读
+            $user = User::find(auth('web')->user()->id);
+            $user->unreadNotifications()->update(['read_at' => now()]);
+        }
         return resReturn(1, $paginate);
+    }
+
+    /**
+     * GoodIndentDetail
+     * 通知详情
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     * @queryParam  id int 订单ID
+     */
+    public function detail($id)
+    {
+        $notification = auth('web')->user()->notifications()->find($id);
+        return resReturn(1, $notification);
     }
 
     /**
@@ -53,16 +64,48 @@ class NotificationController extends Controller
     }
 
     /**
-     * NotificationDestroy
-     * 删除通知
+     * NotificationRead
+     * 标记为已读
      * @param $id
+     * @param Request $request
      * @return string
      * @queryParam  id int 通知ID
      */
-    public function destroy($id)
+    public function read($id, Request $request)
     {
         $user = User::find(auth('web')->user()->id);
-        $user->notifications()->where('id', $id)->delete();
+        if (!$id) {
+            $idArr = [];
+            foreach ($request->all() as $all) {
+                $idArr[] = $all['id'];
+            }
+            $user->notifications()->whereIn('id', $idArr)->update(['read_at' => now()]);
+        } else {
+            $user->notifications()->where('id', $id)->update(['read_at' => now()]);
+        }
+        return resReturn(1, '标记已读成功');
+    }
+
+    /**
+     * NotificationDestroy
+     * 删除通知
+     * @param $id
+     * @param Request $request
+     * @return string
+     * @queryParam  id int 通知ID
+     */
+    public function destroy($id, Request $request)
+    {
+        $user = User::find(auth('web')->user()->id);
+        if (!$id) {
+            $idArr = [];
+            foreach ($request->all() as $all) {
+                $idArr[] = $all['id'];
+            }
+            $user->notifications()->whereIn('id', $idArr)->delete();
+        } else {
+            $user->notifications()->where('id', $id)->delete();
+        }
         return resReturn(1, '删除成功');
     }
 

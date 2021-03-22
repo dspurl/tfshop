@@ -69,5 +69,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::get('notification', 'NotificationController@list');    //列表
         Route::get('notification/unread', 'NotificationController@unread');    //未读数量
         Route::post('notification/destroy/{id}', 'NotificationController@destroy');    //删除通知
+        Route::post('notification/read/{id}', 'NotificationController@read');    //标记为已读
+        Route::get('notification/detail/{id}', 'NotificationController@detail');    //通知详情
     });
 });
