@@ -5,8 +5,10 @@
       <el-table
         :data="noticeList"
         @selection-change="handleSelectionChange"
+        @sort-change="sortChange"
         ref="table"
         border
+        v-loading="tableLoading"
         class="table">
         <el-table-column
           type="selection"
@@ -37,6 +39,7 @@
         <el-button size="mini" :loading="buttonLoading" @click="handleCheckAllChange">全选/反选</el-button>
         <el-button size="mini" :loading="buttonLoading" @click="handleAllRead()">标记已读</el-button>
         <el-button size="mini" :loading="buttonLoading" @click="handleAllDelete()">删除</el-button>
+        <pagination v-if="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
       </div>
     </div>
   </div>
@@ -53,12 +56,14 @@ export default {
   },
   data() {
     return {
+      tableLoading: false,
       checkboxAll: false,
       loading: true,
       buttonLoading: false,
       noticeList: [],
+      total: 0,
       listQuery: {
-        limit: 8,
+        limit: 10,
         page: 1,
         sort: '-created_at',
         pc: true
@@ -71,13 +76,17 @@ export default {
   },
   methods: {
     async getList(){
+      this.tableLoading = true
       await Promise.all([
         getList(this.listQuery)
       ]).then(([notificationData]) => {
         this.noticeList = notificationData.data
+        this.total = notificationData.total
         this.loading = false
+        this.tableLoading = false
       }).catch((error) => {
         this.loading = false
+        this.tableLoading = false
       })
     },
     handleCheckAllChange() {
@@ -102,7 +111,7 @@ export default {
         this.buttonLoading = true
         destroy(this.multipleSelection).then(response => {
           this.buttonLoading = false
-          this.getList()
+          this.handleFilter()
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -133,12 +142,33 @@ export default {
         this.buttonLoading = false
       })
     },
+    sortChange(data) {
+      const { prop, order } = data
+      console.log('order',order)
+      if (order === 'ascending') {
+        this.listQuery.sort = '+' + prop
+      } else if(order === 'descending') {
+        this.listQuery.sort = '-' + prop
+      }else{
+        this.listQuery.sort = null
+      }
+      this.handleFilter()
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
+    },
   }
 }
 </script>
 <style lang='scss' scoped>
   .operation{
-    margin-top:10px;
+    margin-top:20px;
+    display: flex;
+    .pagination{
+      margin-left:5px;
+      padding:0 0;
+    }
   }
   .table{
     width: 100%;

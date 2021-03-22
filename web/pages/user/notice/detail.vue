@@ -1,6 +1,7 @@
 <template>
   <div class="box">
-    <div class="user-title">消息通知-详情</div>
+    <el-page-header @back="goBack" content="详情">
+    </el-page-header>
     <div v-loading="loading">
       <el-card shadow="hover" class="card" v-if="notice.data">
         <div class="title">{{ notice.data.title }}</div>
@@ -8,12 +9,16 @@
           <div class="text-money-name">付款金额</div>
           <div class="text-money-value">{{notice.data.price/100 | thousands}}</div>
         </template>
-        <div class="padding-bottom" v-if="notice.data.list.length > 0" v-for="(item, index) in notice.data.list" :key="index">
-          <div class="text-gray padding-right">{{item.keyword}}</div>
+        <div class="card-list" v-if="notice.data.list.length > 0" v-for="(item, index) in notice.data.list" :key="index">
+          <div class="card-list-title">{{item.keyword}}：</div>
           <div>{{item.data}}</div>
         </div>
         <div class="introduce" v-if="notice.data.remark">
           {{notice.data.remark}}
+        </div>
+        <el-divider></el-divider>
+        <div class="link">
+          <el-button v-if="notice.data.url" type="danger" @click="goNavigator(item.data.url)">查看详情</el-button>
         </div>
       </el-card>
     </div>
@@ -56,19 +61,52 @@ export default {
       }).catch((error) => {
         this.loading = false
       })
-    }
+    },
+    goBack() {
+      this.$router.go(-1)
+    },
+    goNavigator(url){
+      // 为了兼容老版本
+      uni.navigateTo({
+        url: url.replace('pages','user')
+      })
+    },
   }
 }
 </script>
 <style lang='scss' scoped>
-  .user-title{
-    color: #757575;
-    font-weight: 400;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
   .card{
-    margin:0 auto;
+    margin: 30px auto 0;
     width: 600px;
+    .title{
+      font-size: 20px;
+      margin-bottom: 30px;
+    }
+    .text-money-name{
+      text-align: center;
+      color: #999999;
+    }
+    .text-money-value{
+      text-align: center;
+    }
+    .card-list{
+      display: flex;
+      padding-bottom: 5px;
+      font-size: 14px;
+      .card-list-title{
+        width:80px;
+        text-align: right;
+        margin-right:10px;
+        color: #999999;
+      }
+    }
+    .introduce{
+      font-size: 14px;
+      margin-top:20px;
+      color: #999999;
+    }
+    .link{
+      text-align: center;
+    }
   }
 </style>

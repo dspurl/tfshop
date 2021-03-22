@@ -21,6 +21,7 @@ class NotificationController extends Controller
      * @param Request $request
      * @return string
      * @queryParam  limit int 每页显示条数
+     * @queryParam  sort string 排序
      * @queryParam  page string 页码
      */
     public function list(Request $request)
@@ -29,7 +30,10 @@ class NotificationController extends Controller
         $q = Notification::query();
         $limit = $request->limit;
         $q->where('notifiable_id', auth('web')->user()->id);
-        $q->orderBy('read_at', 'ASC')->orderBy('created_at', 'DESC');
+        if ($request->has('sort')) {
+            $sortFormatConversion = sortFormatConversion($request->sort);
+            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
         $paginate = $q->paginate($limit);
         if (!$request->has('pc')) {
             // 标记为已读
@@ -49,6 +53,7 @@ class NotificationController extends Controller
     public function detail($id)
     {
         $notification = auth('web')->user()->notifications()->find($id);
+        auth('web')->user()->notifications()->where('id', $id)->update(['read_at' => now()]);
         return resReturn(1, $notification);
     }
 
