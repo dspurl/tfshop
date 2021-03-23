@@ -111,7 +111,7 @@ export default {
     }
   },
   mounted() {
-  
+
   },
   methods: {
     // 分类切换
@@ -160,7 +160,7 @@ export default {
         .card{
           margin: 0 10px 10px 0;
           .image{
-            width: 190px;
+            width: 100%;
             height: 190px;
           }
           .name{

@@ -54,7 +54,8 @@
             name: '账户管理',
             children: [
               { name: '个人资料', path: '/user/userinfo', active: false },
-              { name: '通知与提醒', path: '/user/message', active: false},
+              { name: '修改密码', path: '/user/password', active: false },
+              { name: '修改手机号', path: '/user/cellphone', active: false },
               { name: '注销服务', path: '/user/cancel', active: false}
             ]
           }

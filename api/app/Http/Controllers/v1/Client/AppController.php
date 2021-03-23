@@ -130,7 +130,7 @@ class AppController extends Controller
      * @return string
      * @throws \AlibabaCloud\Client\Exception\ClientException
      * @queryParam  cellphone int 手机号
-     * @queryParam  state int 验证码类型
+     * @queryParam  state int 验证码类型 1找回密码 2更换手机
      */
     public function cellphoneCode(Request $request)
     {
@@ -144,9 +144,18 @@ class AppController extends Controller
                 return resReturn(0, '手机号已被注册', Code::CODE_WRONG);
             }
         } else {
-            if (!$user) {
-                return resReturn(0, '手机号不存在', Code::CODE_WRONG);
+            if ($request->state == 2) {
+                if ($user) {
+                    if ($user->id != auth('web')->user()->id) {
+                        return resReturn(0, '手机号已绑定其它账号，请更换手机号', Code::CODE_WRONG);
+                    }
+                }
+            } else {
+                if (!$user) {
+                    return resReturn(0, '手机号不存在', Code::CODE_WRONG);
+                }
             }
+
         }
         if ($redis->get('code.register.' . $request->cellphone)) {
             return resReturn(0, '您的验证码还没有失效，请不要重复获取', Code::CODE_WRONG);
@@ -248,6 +257,51 @@ class AppController extends Controller
         $return = DB::transaction(function () use ($request) {
             $User = User::find(auth('web')->user()->id);
             $User->email = $request->email;
+            $User->save();
+            return 1;
+        }, 5);
+        if ($return == 1) {
+            return resReturn(1, '绑定成功');
+        } else {
+            return resReturn(0, '绑定失败', Code::CODE_PARAMETER_WRONG);
+        }
+    }
+
+    /**
+     * ChangeCellphone
+     * 更换手机
+     * @param Request $request
+     * @return string
+     * @queryParam  cellphone string 手机
+     * @queryParam  oldCellphone string 旧手机
+     * @queryParam  code int 验证码
+     */
+    public function changeCellphone(Request $request)
+    {
+        if (!$request->cellphone) {
+            return resReturn(0, '手机不能为空', Code::CODE_WRONG);
+        }
+        if (auth('web')->user()->cellphone == $request->cellphone) {
+            return resReturn(0, '您当前手机已绑定，无需再次绑定', Code::CODE_WRONG);
+        }
+        $redis = new RedisService();
+        $code = $redis->get('code.register.' . $request->cellphone);
+        if (!$code) {
+            return resReturn(0, '验证码已失效，请重新获取', Code::CODE_MISUSE);
+        }
+        if ($code != $request->code) {
+            return resReturn(0, '验证码错误', Code::CODE_MISUSE);
+        }
+        $user = User::where('cellphone', $request->cellphone)->where('id', '!=', auth('web')->user()->id)->first();
+        if ($user) {
+            return resReturn(0, '手机号已被注册', Code::CODE_WRONG);
+        }
+        if (!preg_match('/^1[3456789][0-9]{9}$/', $request->cellphone)) {
+            return resReturn(0, '手机格式有误', Code::CODE_WRONG);
+        }
+        $return = DB::transaction(function () use ($request) {
+            $User = User::find(auth('web')->user()->id);
+            $User->cellphone = $request->cellphone;
             $User->save();
             return 1;
         }, 5);

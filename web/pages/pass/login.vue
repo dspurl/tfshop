@@ -28,7 +28,7 @@
                 <div class="other">
                   <NuxtLink to="/pass/register">立即注册</NuxtLink>
                   <el-divider direction="vertical"></el-divider>
-                  <NuxtLink to="/pass/login">忘记密码？</NuxtLink>
+                  <NuxtLink to="/pass/findPassword">忘记密码？</NuxtLink>
                 </div>
               </div>
               <div v-else>

@@ -71,5 +71,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('notification/destroy/{id}', 'NotificationController@destroy');    //删除通知
         Route::post('notification/read/{id}', 'NotificationController@read');    //标记为已读
         Route::get('notification/detail/{id}', 'NotificationController@detail');    //通知详情
+        Route::post('changeCellphone', 'AppController@changeCellphone');    //更换手机号
+        Route::post('amendPassword', 'LoginController@amendPassword');    //修改密码
     });
 });

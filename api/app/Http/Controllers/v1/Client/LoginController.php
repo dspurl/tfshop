@@ -256,6 +256,42 @@ class LoginController extends Controller
     }
 
     /**
+     * AmendPassword
+     * 修改密码
+     * @param Request $request
+     * @return string
+     * @queryParam  nowPassword string 当前密码
+     * @queryParam  password string 新密码
+     * @queryParam  rPassword string 重复密码
+     * @queryParam  code int 验证码
+     */
+    public function amendPassword(Request $request)
+    {
+        if (!$request->has('nowPassword')) {
+            return resReturn(0, '当前密码不能为空', Code::CODE_WRONG);
+        }
+        if (!$request->has('password')) {
+            return resReturn(0, '新密码不能为空', Code::CODE_WRONG);
+        }
+        if (!$request->has('rPassword')) {
+            return resReturn(0, '确认密码不能为空', Code::CODE_WRONG);
+        }
+        if (!Hash::check($request->nowPassword, auth('web')->user()->password)) {
+            return resReturn(0, '当前密码错误', Code::CODE_WRONG);
+        }
+        if ($request->nowPassword == $request->password) {
+            return resReturn(0, '新密码不能和旧密码相同', Code::CODE_WRONG);
+        }
+        if ($request->password != $request->rPassword) {
+            return resReturn(0, '确认密码和新密码不相同', Code::CODE_WRONG);
+        }
+        $user = User::find(auth('web')->user()->id);
+        $user->password = bcrypt($request->password);
+        $user->save();
+        return resReturn(1, '密码修改成功');
+    }
+
+    /**
      * 小程序换取openid
      * @param Request $request
      * @return string

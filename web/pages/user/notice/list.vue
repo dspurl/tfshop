@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="user-title">消息通知</div>
-    <div v-loading="loading">
+    <div class="padding-top-20" v-loading="loading">
       <el-table
         :data="noticeList"
         @selection-change="handleSelectionChange"

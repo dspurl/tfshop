@@ -87,7 +87,10 @@ export default {
       color: #999999;
     }
     .text-money-value{
+      margin-top:10px;
       text-align: center;
+      font-size: 30px;
+      margin-bottom: 10px;
     }
     .card-list{
       display: flex;

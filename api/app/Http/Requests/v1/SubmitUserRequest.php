@@ -15,7 +15,7 @@ class SubmitUserRequest extends Request
     public function authorize()
     {
         Validator::extend('mobile', function($attribute, $value, $parameters, $validator) {
-            return preg_match('/^1[345678][0-9]{9}$/', $value);
+            return preg_match('/^1[3456789][0-9]{9}$/', $value);
         });
         switch ($this->method()) {
             case 'POST':

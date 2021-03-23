@@ -8,7 +8,7 @@
         <div class="card-box">
           <div class="username">{{ user.cellphone ? (user.nickname ? user.nickname : user.cellphone) : '游客' }}</div>
           <div class="money">{{ (user.money ? user.money : 0) | thousands }}</div>
-          <NuxtLink class="personal" to="/pass/login">修改个人信息></NuxtLink>
+          <NuxtLink class="personal" to="/user/userinfo">修改个人信息></NuxtLink>
         </div>
       </div>
     </div>
