@@ -118,6 +118,7 @@ class GoodIndentController extends Controller
     /**
      * 添加商品到购物车
      * @param Request $request
+     * @return string
      */
     public function addShoppingCart(Request $request)
     {
@@ -126,6 +127,7 @@ class GoodIndentController extends Controller
         if (count($return) > 0) {
             $redis->set('shoppingCart' . auth('web')->user()->id, json_encode($return));
         }
+        return resReturn(1, '成功');
     }
 
     /**

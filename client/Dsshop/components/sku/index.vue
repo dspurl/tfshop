@@ -115,14 +115,15 @@ export default{
 			specification: [],
 			shoppingAttributes: [],	//购物属性
 			getLists:this.getList,
-			buyState: this.buy
+			buyState: this.buy,
+			loaded: false,	//是否已加载，微信小程序将会加载2次，为了防止加载2次产生的错误
 		};
 	},
 	watch: {
 		getList(newVal) {
 			this.$emit('getList', newVal)
 			this.getLists = this.getList
-			if(!this.update){
+			if(!this.update && !this.loaded){
 				this.loadData()
 			}
 			
@@ -142,6 +143,7 @@ export default{
 	methods:{
 		//获取详情
 		loadData() {
+			this.loaded = true
 			this.selectedSku = []
 			// sku
 			if (this.getLists.good_sku.length > 0) {
