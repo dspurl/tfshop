@@ -142,12 +142,12 @@ export default {
         goodDetailData.resources_many.forEach((item,index)=>{
           if(item.depict.indexOf('_video') !== -1){
             item.type = 'video'
-            resources_many.unshift(item.img)
+            resources_many.unshift(item)
           } else if(item.depict.indexOf('_poster') !== -1){
             poster = item.img
           } else {
             item.type = 'img'
-            resources_many.push(item.img)
+            resources_many.push(item)
           }
         })
       }
