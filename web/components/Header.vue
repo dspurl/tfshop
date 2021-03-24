@@ -104,7 +104,6 @@ export default {
     userInfo(){
       if(this.$store.state.hasLogin){
         this.user = this.store.get(process.env.CACHE_PR + 'UserInfo')
-        console.log('user',this.user)
       }
     }
   }

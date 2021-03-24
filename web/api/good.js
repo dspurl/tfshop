@@ -6,6 +6,12 @@ export function getList(query) {
     params: query
   })
 }
+export function detail(id) {
+  return request({
+    url: 'good/' + id,
+    method: 'GET'
+  })
+}
 export function goodCategory(query) {
   return request({
     url: 'goodCategory',
