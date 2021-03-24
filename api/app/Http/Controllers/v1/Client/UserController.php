@@ -30,20 +30,21 @@ class UserController extends Controller
     {
         $redis = new RedisService();
         $lock = RedisLock::lock($redis, 'dsShopUser');
-        if ($lock) {
-            User::$withoutAppends = false;
-            $User = User::select('cellphone', 'nickname', 'portrait', 'money', 'uuid', 'email', 'notification', 'wechat')->find(auth('web')->user()->id);
-            // 做uuid兼容
-            if (!$User->uuid) {
+        User::$withoutAppends = false;
+        $User = User::select('cellphone', 'nickname', 'portrait', 'money', 'uuid', 'email', 'notification', 'wechat')->find(auth('web')->user()->id);
+        // 做uuid兼容
+        if (!$User->uuid) {
+            if ($lock) {
                 $uuid = (string)Uuid::generate();
                 User::where('id', auth('web')->user()->id)->update(['uuid' => $uuid]);
                 $User->uuid = $uuid;
+                RedisLock::unlock($redis, 'dsShopUser');
+            } else {
+                return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
             }
-            RedisLock::unlock($redis, 'dsShopUser');
-            return resReturn(1, $User);
-        } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
         }
+        return resReturn(1, $User);
+
 
     }
 
