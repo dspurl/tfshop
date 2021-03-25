@@ -31,7 +31,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '个人中心-消息通知',
+      title: '消息通知-个人中心',
     }
   },
   data() {
@@ -50,20 +50,20 @@ export default {
           message: '参数有误，请联系管理员',
           type: 'error'
         });
-        this.$router.go(-1)
+        $nuxt.$router.go(-1);
         return false
       }
       await Promise.all([
         detail($nuxt.$route.query.id)
       ]).then(([notificationData]) => {
-        this.notice = notificationData
+        this.notice = notificationData;
         this.loading = false
       }).catch((error) => {
         this.loading = false
       })
     },
     goBack() {
-      this.$router.go(-1)
+      $nuxt.$router.go(-1)
     },
     goNavigator(url){
       // 为了兼容老版本

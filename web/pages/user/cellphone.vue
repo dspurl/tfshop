@@ -29,7 +29,7 @@
     layout: 'user',
     head () {
       return {
-        title: '个人中心-修改手机号',
+        title: '修改手机号-个人中心',
       }
     },
     data() {
@@ -43,7 +43,7 @@
           }
           callback();
         }
-      }
+      };
       return {
         buttonLoading: false,
         loading: true,
@@ -77,8 +77,8 @@
         await Promise.all([
           detail(this.listQuery)
         ]).then(([userData]) => {
-          this.user = userData
-          this.cellphone = JSON.parse(JSON.stringify(userData.cellphone))
+          this.user = userData;
+          this.cellphone = JSON.parse(JSON.stringify(userData.cellphone));
           this.loading = false
         }).catch((error) => {
           this.loading = false
@@ -86,26 +86,26 @@
       },
       // 获取验证码
       getCode(){
-        const that = this
-        this.buttonLoading = true
+        const that = this;
+        this.buttonLoading = true;
         cellphoneCode(this.ruleForm).then(response => {
           // 开始倒计时
-          this.seconds = 60
-          this.codename = ''
-          this.unit = 's'
-          this.disabled = true
-          this.buttonLoading = false
+          this.seconds = 60;
+          this.codename = '';
+          this.unit = 's';
+          this.disabled = true;
+          this.buttonLoading = false;
           this.timer = setInterval(function () {
-            that.seconds = that.seconds - 1
+            that.seconds = that.seconds - 1;
             if (that.seconds === 0) {
               // 读秒结束 清空计时器
-              clearInterval(that.timer)
-              that.seconds = ''
-              that.codename = '获取验证码'
-              that.unit = ''
+              clearInterval(that.timer);
+              that.seconds = '';
+              that.codename = '获取验证码';
+              that.unit = '';
               that.codeDisabled = false
             }
-          }, 1000)
+          }, 1000);
           // 模拟验证码发送
           if(response.code){
             that.ruleForm.code = response.code
@@ -117,19 +117,19 @@
       submitForm(){
         this.$refs['ruleForm'].validate((valid) => {
           if (valid) {
-            this.loading = true
-            this.buttonLoading = true
+            this.loading = true;
+            this.buttonLoading = true;
             changeCellphone(this.ruleForm).then(response => {
-              this.loading = false
-              this.buttonLoading = false
-              this.getUser()
+              this.loading = false;
+              this.buttonLoading = false;
+              this.getUser();
               this.$refs['ruleForm'].resetFields();
               this.$message({
                 message: '修改成功',
                 type: 'success'
               });
             }).catch(() => {
-              this.loading = false
+              this.loading = false;
               this.buttonLoading = false
             })
           }

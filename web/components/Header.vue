@@ -9,13 +9,15 @@
             <template v-if="user.cellphone">
               <div class="li user" :class="{ 'user-active': userActive }" @mouseover="userMenu" @mouseleave="userMenuOut">
                 <NuxtLink to="/user/portal" class="user-name"><span>{{ user.nickname ? user.nickname : user.cellphone }}</span><i class="iconfont dsshop-xia"></i></NuxtLink>
-                <div class="user-menu-wrapper">
-                  <ul class="user-menu" :style="{height: userActive ? '100px' : 0}">
-                    <li><NuxtLink class="a" to="/user/portal">个人中心</NuxtLink></li>
-                    <li><NuxtLink class="a" to="/user/portal">我的收藏</NuxtLink></li>
-                    <li><div class="a" @click="logout">退出登录</div></li>
-                  </ul>
-                </div>
+                <el-collapse-transition>
+                  <div class="user-menu-wrapper" v-show="userActive">
+                    <ul class="user-menu">
+                      <li><NuxtLink class="a" to="/user/portal">个人中心</NuxtLink></li>
+                      <li><NuxtLink class="a" to="/user/portal">我的收藏</NuxtLink></li>
+                      <li><div class="a" @click="logout">退出登录</div></li>
+                    </ul>
+                  </div>
+                </el-collapse-transition>
               </div>
               <NuxtLink class="li" to="/pass/login">我的订单</NuxtLink>
             </template>

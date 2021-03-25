@@ -51,7 +51,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '个人中心-消息通知',
+      title: '消息通知-个人中心',
     }
   },
   data() {
@@ -76,16 +76,16 @@ export default {
   },
   methods: {
     async getList(){
-      this.tableLoading = true
+      this.tableLoading = true;
       await Promise.all([
         getList(this.listQuery)
       ]).then(([notificationData]) => {
-        this.noticeList = notificationData.data
-        this.total = notificationData.total
-        this.loading = false
+        this.noticeList = notificationData.data;
+        this.total = notificationData.total;
+        this.loading = false;
         this.tableLoading = false
       }).catch((error) => {
-        this.loading = false
+        this.loading = false;
         this.tableLoading = false
       })
     },
@@ -108,10 +108,10 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.buttonLoading = true
+        this.buttonLoading = true;
         destroy(this.multipleSelection).then(response => {
-          this.buttonLoading = false
-          this.handleFilter()
+          this.buttonLoading = false;
+          this.handleFilter();
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -132,8 +132,8 @@ export default {
       }
       this.buttonLoading = true
       read(this.multipleSelection).then(response => {
-        this.buttonLoading = false
-        this.getList()
+        this.buttonLoading = false;
+        this.getList();
         this.$message({
           message: '标记成功',
           type: 'success'
@@ -143,8 +143,7 @@ export default {
       })
     },
     sortChange(data) {
-      const { prop, order } = data
-      console.log('order',order)
+      const { prop, order } = data;
       if (order === 'ascending') {
         this.listQuery.sort = '+' + prop
       } else if(order === 'descending') {
@@ -155,7 +154,7 @@ export default {
       this.handleFilter()
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.page = 1;
       this.getList()
     },
   }

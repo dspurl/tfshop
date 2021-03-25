@@ -27,7 +27,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '个人中心-修改密码',
+      title: '修改密码-个人中心',
     }
   },
   data() {
@@ -76,9 +76,9 @@ export default {
     submitForm(){
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           amendPassword(this.ruleForm).then(response => {
-            this.loading = false
+            this.loading = false;
             this.$refs['ruleForm'].resetFields();
             this.$message({
               message: '修改成功',

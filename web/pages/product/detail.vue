@@ -7,10 +7,10 @@
       </el-breadcrumb>
       <div class="product-box">
         <div class="picture">
-          <el-carousel :autoplay="false" arrow="always" height="460px">
+          <el-carousel :autoplay="false" arrow="always" height="450px" indicator-position="outside">
             <el-carousel-item v-for="(item, index) in goodDetail.resources_many" :key="index">
               <template v-if="item.type === 'img'">
-                <el-image class="image" fit="scale-down" :src="item.img" :preview-src-list="resources_many" lazy></el-image>
+                <el-image class="image" fit="scale-down" :src="item.img" :preview-src-list="resources_many_img"></el-image>
               </template>
             </el-carousel-item>
           </el-carousel>
@@ -49,19 +49,61 @@
           <div class="operation">
             <el-button type="danger" plain @click="buy(true)">立即购买</el-button>
             <el-button type="danger" @click="buy(false)">加入购物车</el-button>
-            <el-button type="info" icon="el-icon-star-off">收藏</el-button>
+            <el-button type="info" :class="{'product-detail-on' : collect}" icon="el-icon-star-off" @click="toCollect">收藏</el-button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <el-divider></el-divider>
+    <!-- 详情-->
+    <div class="product-box">
+      <div class="tab">
+        <span :class="{on:tab === 1}" @click="cutTab(1)">商品详情</span>
+        <el-divider direction="vertical"></el-divider>
+        <span :class="{on:tab === 2}" @click="cutTab(2)">商品规格</span>
+      </div>
+      <div class="detail-box">
+        <div class="container" v-loading="tabLoading">
+          <div v-if="tab === 1" v-html="goodDetail.details"></div>
+          <div v-else-if="tab === 2">
+
           </div>
         </div>
       </div>
     </div>
   </div>
 </template>
+<style lang='scss'>
+  .product-detail-on .el-icon-star-off{
+    color: #fa524c;
+  }
+</style>
 <style lang='scss' scoped>
   .box{
     border-top-width: 1px;
     border-top-style: solid;
     border-top-color: #dcdfe6;
     background-color: #ffffff;
+  }
+  .product-box{
+    .tab{
+      text-align: center;
+      padding: 10px 0 20px 0;
+      span{
+        padding: 0 20px 0 20px;
+        color: #757575;
+        cursor:pointer;
+      }
+      .on{
+        color: #fa524c;
+      }
+    }
+    .detail-box{
+      background-color: #f4f4f4;
+      .container{
+        text-align: center;
+      }
+    }
   }
   .product-detail{
     .breadcrumb{
@@ -117,43 +159,50 @@
 </style>
 <script>
 import {detail} from '@/api/good'
+import {create as collectCreate, destroy as collectDestroy, detail as getCollectDetail} from '@/api/collect'
 import sku from '@/components/sku'
 export default {
-  middleware: 'auth',
   components: {
     sku
   },
   data() {
     return {
+      tab: 2,
+      tabLoading: false,
       goodDetail: {},
       specificationDefaultDisplay: {},
       resources_many: [],
+      resources_many_img: [],
+      collect: 0
     }
   },
   async asyncData (ctx) {
     try {
-      const { query } = ctx
-      let [goodDetailData] = await Promise.all([
+      const { query } = ctx;
+      let [ goodDetailData ] = await Promise.all([
         detail(query.id)
-      ])
-      let resources_many = []
-      let poster = ''
+      ]);
+      let resources_many = [];
+      let resources_many_img = [];
+      let poster;
       if (goodDetailData.resources_many.length > 0) {
         goodDetailData.resources_many.forEach((item,index)=>{
           if(item.depict.indexOf('_video') !== -1){
-            item.type = 'video'
+            item.type = 'video';
             resources_many.unshift(item)
           } else if(item.depict.indexOf('_poster') !== -1){
             poster = item.img
           } else {
-            item.type = 'img'
-            resources_many.push(item)
+            item.type = 'img';
+            resources_many.push(item);
+            resources_many_img.push(item.img)
           }
         })
       }
       return {
         goodDetail: goodDetailData,
         resources_many: resources_many,
+        resources_many_img: resources_many_img,
         poster: poster
       }
     } catch(err) {
@@ -162,24 +211,51 @@ export default {
   },
   head () {
     return {
-      title: process.env.APP_NAME + '-' + this.goodDetail.name,
+      title: this.goodDetail.name + '-' + process.env.APP_NAME,
       meta: [
-        { hid: 'index', name: process.env.APP_NAME + '-' + this.goodDetail.name, content: this.goodDetail.keywords ? this.goodDetail.keywords : process.env.APP_KEYWORD },
+        { hid: 'index', name: this.goodDetail.name + '-' + process.env.APP_NAME, content: this.goodDetail.keywords ? this.goodDetail.keywords : process.env.APP_KEYWORD },
         { hid: 'description', name: 'description', content: this.goodDetail.short_description ? this.goodDetail.short_description : process.env.APP_DESCRIPTION }
       ]
     }
   },
   mounted() {
-    console.log('goodDetail',this.goodDetail)
+    if($nuxt.$store.state.hasLogin){
+      this.getCollect()
+    }
   },
   methods: {
     //选择后返回的数据
     purchasePattern(data) {
       this.specificationDefaultDisplay = data;
-      console.log('specificationDefaultDisplay',data)
     },
     buy(state){
       this.$refs.sku.cart(state)
+    },
+    getCollect(){
+      getCollectDetail($nuxt.$route.query.id).then(response => {
+        this.collect = response
+      })
+    },
+    // 收藏
+    toCollect() {
+      if(!$nuxt.$store.state.hasLogin){
+        $nuxt.$store.commit('loginCheck');
+        return false
+      }
+      if(this.collect){
+        collectDestroy(this.goodDetail.id)
+      }else{
+        collectCreate(this.goodDetail)
+      }
+      this.collect = !this.collect
+    },
+    // 切换栏目
+    cutTab(index){
+      this.tabLoading = true;
+      this.tab = index;
+      setTimeout(()=>{
+        this.tabLoading = false
+      },1000)
     }
   }
 }

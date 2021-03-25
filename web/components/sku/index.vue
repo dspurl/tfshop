@@ -388,7 +388,7 @@ export default{
 		},
 		//数量
 		numberChange(data){
-			this.cartGood.number = data.number
+			this.cartGood.number = data
 		},
 		//加入购物车
 		cart(buyState){

@@ -35,7 +35,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '个人中心-注销账户',
+      title: '注销账户-个人中心',
     }
   },
   data() {
@@ -52,8 +52,8 @@ export default {
     //注销提交
     cancel(){
       cancel(this.ruleForm).then(response => {
-        this.loading = false
-        this.$store.commit('logout')
+        this.loading = false;
+        $nuxt.$store.commit('logout');
         this.$message({
           message: '注销成功',
           type: 'success'

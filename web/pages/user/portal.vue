@@ -88,9 +88,9 @@ export default {
         getUserDetail(),
         quantity()
       ]).then(([browseData, userData, quantityData]) => {
-        this.browseList = browseData.data
-        this.user = userData
-        this.quantity = quantityData
+        this.browseList = browseData.data;
+        this.user = userData;
+        this.quantity = quantityData;
         this.loading = false
       }).catch((error) => {
         this.loading = false

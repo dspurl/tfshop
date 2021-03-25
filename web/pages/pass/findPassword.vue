@@ -37,12 +37,7 @@ export default {
   layout: 'login',
   head () {
     return {
-      title: 'dsshop商城网店系统-重置密码',
-      meta: [
-        { hid: 'index', name: 'dsshop-快速开发商城网店系统', content: '商城网店系统|商城|网店|免费商城|免费网店' },
-        { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
-        { hid: 'description', name: 'description', content: 'dsshop-快速开发商城网店系统' }
-      ]
+      title: '重置密码' + '-' + process.env.APP_NAME
     }
   },
   data() {
@@ -56,7 +51,7 @@ export default {
         }
         callback();
       }
-    }
+    };
     const validatePass = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('请再次输入密码'));
@@ -100,21 +95,21 @@ export default {
   methods: {
     // 获取验证码
     getCode(){
-      const that = this
+      const that = this;
       cellphoneCode(this.ruleForm).then(response => {
         // 开始倒计时
-        this.seconds = 60
-        this.codename = ''
-        this.unit = 's'
-        this.codeDisabled = true
+        this.seconds = 60;
+        this.codename = '';
+        this.unit = 's';
+        this.codeDisabled = true;
         this.timer = setInterval(function () {
-          that.seconds = that.seconds - 1
+          that.seconds = that.seconds - 1;
           if (that.seconds === 0) {
             // 读秒结束 清空计时器
-            clearInterval(that.timer)
-            that.seconds = ''
-            that.codename = '获取验证码'
-            that.unit = ''
+            clearInterval(that.timer);
+            that.seconds = '';
+            that.codename = '获取验证码';
+            that.unit = '';
             that.codeDisabled = false
           }
         }, 1000)
@@ -129,14 +124,14 @@ export default {
     submitForm(){
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          this.loading = true
+          this.loading = true;
           findPassword(this.ruleForm).then(() => {
             this.$message({
               message: '重置成功',
               type: 'success'
             });
-            this.loading = false
-            this.$router.replace('/pass/login')
+            this.loading = false;
+            $nuxt.$router.replace('/pass/login')
           }).catch(() => {
             this.loading = false
           })

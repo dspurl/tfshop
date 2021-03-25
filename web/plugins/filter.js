@@ -13,9 +13,9 @@ export function smallImage (img,size) {
 let filters = {
   thousands,
   smallImage
-}
+};
 
 Object.keys(filters).forEach(key => {
   Vue.filter(key, filters[key])
-})
+});
 export default filters

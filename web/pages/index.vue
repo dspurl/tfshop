@@ -107,13 +107,13 @@ export default {
     // 分类切换
     naveCut(index){
       if(index !== -1){
-        this.naveOn = index
+        this.naveOn = index;
         if(this.categoryList[index].children){ //存在子类目
           if(this.categoryList[index].children[0].resources){
-            this.categorySublevel = this.categoryList[index].children
+            this.categorySublevel = this.categoryList[index].children;
             this.categoryStyle = 2
           }else{  //存在三级
-            this.categorySublevel = this.categoryList[index].children
+            this.categorySublevel = this.categoryList[index].children;
             this.categoryStyle = 1
           }
         }else{
@@ -123,7 +123,7 @@ export default {
     },
     // 分类移出
     naveShiftOut(){
-      this.naveOn = null
+      this.naveOn = null;
       this.categoryStyle = 0
     }
   }

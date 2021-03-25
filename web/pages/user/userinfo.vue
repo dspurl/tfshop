@@ -77,7 +77,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '个人中心-个人资料',
+      title: '个人资料-个人中心',
     }
   },
   data() {
@@ -133,7 +133,7 @@ export default {
       await Promise.all([
         detail(this.listQuery)
       ]).then(([userData]) => {
-        this.user = userData
+        this.user = userData;
         this.loading = false
       }).catch((error) => {
         this.loading = false
@@ -142,12 +142,12 @@ export default {
     submitForm(){
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
-          this.buttonLoading = true
+          this.buttonLoading = true;
           if(this.dialogType === 'email'){
             verifyEmail(this.ruleForm).then(response => {
-              this.buttonLoading = false
-              this.centerDialogVisible = false
-              this.getUser()
+              this.buttonLoading = false;
+              this.centerDialogVisible = false;
+              this.getUser();
               this.$message({
                 message: '保存成功',
                 type: 'success'
@@ -157,9 +157,9 @@ export default {
             })
           }else{
             edit(this.ruleForm).then(response => {
-              this.buttonLoading = false
-              this.centerDialogVisible = false
-              this.getUser()
+              this.buttonLoading = false;
+              this.centerDialogVisible = false;
+              this.getUser();
               this.$message({
                 message: '保存成功',
                 type: 'success'
@@ -173,33 +173,33 @@ export default {
     },
     modification(type){
       this.centerDialogVisible = true
-      this.dialogType= type
+      this.dialogType= type;
 
       switch (type) {
         case 'portrait':
-          this.dialogTitle = '修改头像'
+          this.dialogTitle = '修改头像';
           this.ruleForm = {
             portrait: this.user.portrait
-          }
-          break
+          };
+          break;
         case 'nickname':
-          this.dialogTitle = '修改昵称'
+          this.dialogTitle = '修改昵称';
           this.ruleForm = {
             nickname: this.user.nickname
-          }
-          break
+          };
+          break;
         case 'email':
-          this.dialogTitle = '修改邮箱'
+          this.dialogTitle = '修改邮箱';
           this.ruleForm = {
             email: this.user.email,
             code: ''
-          }
+          };
           break
       }
     },
     handleAvatarSuccess(res, file) {
-      this.ruleForm.portrait = file.response
-      this.imgProgress = false
+      this.ruleForm.portrait = file.response;
+      this.imgProgress = false;
       this.imgProgressPercent = 0
     },
     // 上传时
@@ -207,44 +207,44 @@ export default {
       this.imgProgressPercent = file.percent
     },
     beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 / 1024 < 2
+      const isLt2M = file.size / 1024 / 1024 < 2;
       if (
         ['image/jpeg',
           'image/gif',
           'image/png',
           'image/bmp'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error('请上传正确的图片格式');
         return false
       }
       if (!isLt2M) {
         this.$message.error('上传头像图片大小不能超过 2MB!')
       }
-      this.imgProgress = true
+      this.imgProgress = true;
       return isLt2M
     },
     // 获取验证码
     getCode(){
-      const that = this
-      this.buttonLoading = true
+      const that = this;
+      this.buttonLoading = true;
       emailCode(this.ruleForm).then(response => {
         // 开始倒计时
-        this.seconds = 60
-        this.codename = ''
-        this.unit = 's'
-        this.disabled = true
-        this.buttonLoading = false
+        this.seconds = 60;
+        this.codename = '';
+        this.unit = 's';
+        this.disabled = true;
+        this.buttonLoading = false;
         this.timer = setInterval(function () {
-          that.seconds = that.seconds - 1
+          that.seconds = that.seconds - 1;
           if (that.seconds === 0) {
             // 读秒结束 清空计时器
-            clearInterval(that.timer)
-            that.seconds = ''
-            that.codename = '获取验证码'
-            that.unit = ''
+            clearInterval(that.timer);
+            that.seconds = '';
+            that.codename = '获取验证码';
+            that.unit = '';
             that.codeDisabled = false
           }
-        }, 1000)
+        }, 1000);
         // 模拟验证码发送
         if(response.code){
           that.ruleForm.code = response.code

@@ -13,4 +13,4 @@ var global= {
         };
     }
 }
-Vue.use(global)
+Vue.use(global);

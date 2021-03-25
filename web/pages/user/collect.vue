@@ -34,7 +34,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '个人中心-我的收藏',
+      title: '我的收藏-个人中心',
     }
   },
   data() {
@@ -54,12 +54,12 @@ export default {
   },
   methods: {
     async getList(){
-      this.loading = true
+      this.loading = true;
       await Promise.all([
         getList(this.listQuery)
       ]).then(([collectData]) => {
-        this.collectList = collectData.data
-        this.total = collectData.total
+        this.collectList = collectData.data;
+        this.total = collectData.total;
         this.loading = false
       }).catch((error) => {
         this.loading = false
@@ -72,7 +72,7 @@ export default {
         type: 'warning'
       }).then(() => {
         destroy(id).then(response => {
-          this.handleFilter()
+          this.handleFilter();
           this.$message({
             message: '删除成功',
             type: 'success'
@@ -84,7 +84,7 @@ export default {
       })
     },
     handleFilter() {
-      this.listQuery.page = 1
+      this.listQuery.page = 1;
       this.getList()
     },
   }
