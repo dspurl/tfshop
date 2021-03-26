@@ -34,7 +34,7 @@ a{
   color: #fa524c;
 }
 .body{
-  overflow:hidden;
+  min-width: 1200px;
 }
 ul{
   list-style-type:none;
