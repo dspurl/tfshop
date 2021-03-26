@@ -59,8 +59,8 @@
     <div class="product-box">
       <div class="tab">
         <span :class="{on:tab === 1}" @click="cutTab(1)">商品详情</span>
-        <el-divider direction="vertical"></el-divider>
-        <span :class="{on:tab === 2}" @click="cutTab(2)">商品规格</span>
+<!--        <el-divider direction="vertical"></el-divider>-->
+<!--        <span :class="{on:tab === 2}" @click="cutTab(2)">商品规格</span>-->
       </div>
       <div class="detail-box">
         <div class="container" v-loading="tabLoading">
@@ -167,7 +167,7 @@ export default {
   },
   data() {
     return {
-      tab: 2,
+      tab: 1,
       tabLoading: false,
       goodDetail: {},
       specificationDefaultDisplay: {},
@@ -229,6 +229,10 @@ export default {
       this.specificationDefaultDisplay = data;
     },
     buy(state){
+      if(!$nuxt.$store.state.hasLogin){
+        $nuxt.$store.commit('loginCheck');
+        return false
+      }
       this.$refs.sku.cart(state)
     },
     getCollect(){

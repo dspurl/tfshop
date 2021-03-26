@@ -424,11 +424,11 @@ export default{
 
 				}else{
           // store.remove(process.env.CACHE_PR + 'CartList')
-					let cartList =  store.set(process.env.CACHE_PR + 'CartList') || {}
+					let cartList =  store.get(process.env.CACHE_PR + 'CartList') || {};
 					if(buyState){	//直接购买
 						cartList = {}
 					}
-					let img = this.getLists.resources_many[0].img
+					let img = this.getLists.resources_many[0].img;
 					//sku
 					if(this.getLists.good_sku.length>0){
 						if(this.shoppingAttributes.resources){

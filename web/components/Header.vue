@@ -26,8 +26,40 @@
               <NuxtLink class="li" to="/pass/register">注册</NuxtLink>
             </template>
             <NuxtLink class="li" to="/pass/notification">消息通知</NuxtLink>
-            <div class="li cart">
-              <i class="iconfont dsshop-gouwuche"></i>购物车(0)
+            <div class="li cart" :class="{ on: shoppingCart.length > 0 }" @mouseover="userCart" @mouseleave="userCartOut">
+              <div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{shoppingCart.length}})</div>
+              <el-collapse-transition>
+                <div class="cart-box" v-show="cartActive" v-loading="cartLoading">
+                <template v-if="shoppingCart.length > 0">
+                  <div class="cart-list">
+                    <div class="cart-li" v-for="(item, index) in shoppingCart" :key="index"  @mouseover="cartCloseState(item)" @mouseleave="cartCloseStateOut(item)">
+                      <NuxtLink class="image" to="/pass/notification">
+                      <el-image
+                        :src="item.img"
+                        fit="scale-down"/>
+                      </NuxtLink>
+                      <NuxtLink to="/pass/notification" class="title">
+                        {{item.name}}
+                      </NuxtLink>
+                      <div class="price">{{item.price}}元 × {{item.number}}</div>
+                      <div class="close" v-show="item.on"><i class="el-icon-delete"></i></div>
+                    </div>
+                  </div>
+                  <div class="cart-total">
+                    <div class="number">
+                      <div class="name">共 {{ shoppingCart.length }} 件商品</div>
+                      <div class="price"><span>{{ shoppingTotal }}</span>元</div>
+                    </div>
+                    <div class="operation">
+                      <el-button type="danger">去购物车结算</el-button>
+                    </div>
+                  </div>
+                </template>
+                <template v-else>
+                  <div class="msg-empty">购物车中还没有商品，赶紧选购吧！</div>
+                </template>
+              </div>
+              </el-collapse-transition>
             </div>
           </div>
         </div>
@@ -63,10 +95,14 @@ export default {
       navList: [
         { name: '首页', path: '/' }
       ],
+      shoppingCart: [],
+      cartLoading: false,
+      shoppingTotal: 0,
       navActive: -1,
       searchRuleForm: {
         keyword: ''
       },
+      cartActive: false,
       userActive: false,
       user:{},
       rules: {
@@ -79,8 +115,24 @@ export default {
   mounted() {
     this.setNavActive()
     this.userInfo()
+    this.getShoppingCart()
   },
   methods: {
+    // 获取购物车
+    getShoppingCart(){
+      this.cartLoading = true
+      this.shoppingCart = this.store.get(process.env.CACHE_PR + 'CartList') ? Object.values(this.store.get(process.env.CACHE_PR + 'CartList')) : [];
+      let total = 0;
+      this.shoppingCart.forEach(item=>{
+        total += item.price * item.number;
+        item.on = false
+      });
+      this.shoppingTotal = Number(total.toFixed(2));
+      console.log('shoppingCart',this.shoppingCart)
+      setTimeout(()=>{
+        this.cartLoading = false
+      },1000)
+    },
     setNavActive(){
       for (let i=0;i<this.navList.length;i++)
       {
@@ -96,6 +148,21 @@ export default {
     userMenuOut(){
       this.userActive = false
     },
+    userCart(){
+      this.cartActive = true
+    },
+    userCartOut(){
+      this.cartActive = false
+    },
+    cartCloseState(item){
+      item.on = true
+      this.$forceUpdate()
+    },
+    cartCloseStateOut(item){
+      item.on = false
+      this.$forceUpdate()
+    },
+
     logout(){
       this.$store.commit('logout')
       this.$router.go(0)
@@ -227,11 +294,102 @@ export default {
       .cart{
         color: #b0b0b0;
         background: #424242;
-        line-height: 39px;
-        height: 39px;
+        line-height: 40px;
+        height: 40px;
+        position: relative;
+        .iconfont{
+          margin-right: 5px;
+        }
+        .cart-navigation{
+          cursor:pointer;
+        }
+        .cart-box{
+          position: absolute;
+          background-color: #ffffff;
+          width: 300px;
+          box-shadow: 0 2px 10px #999999;
+          overflow: hidden;
+          right: 0;
+          .cart-list{
+            padding:10px;
+            .cart-li{
+              font-size: 12px;
+              display: flex;
+              align-items: center;
+              color: #424242;
+              border-bottom: 1px solid #e0e0e0;
+              .image{
+                margin-top:20px;
+                width: 45px;
+                margin-right: 10px;
+                image{
+                  width: 100%;
+                }
+              }
+              .title{
+                line-height: 18px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                -webkit-line-clamp: 2;
+                line-clamp: 2;
+                margin-right: 20px;
+                width: 120px;
+                color: #424242;
+              }
+              .title:hover{
+                color: #fa524c;
+              }
+              .price{
+                width: 80px;
+              }
+              .close{
+                flex-shrink: 0;
+                width: 12px;
+                color: #b0b0b0;
+              }
+            }
+            .cart-li:last-child{
+              border-bottom:none;
+            }
+          }
+          .msg-empty{
+            padding: 20px 0 20px;
+            color: #424242;
+            text-align: center;
+          }
+          .cart-total{
+            padding: 15px 20px;
+            background: #fafafa;
+            display: flex;
+            .number{
+              flex:1;
+              font-size: 12px;
+              color: #424242;
+              .name{
+                line-height: normal;
+              }
+              .price{
+                line-height: normal;
+                color: #fa524c;
+                span{
+                  font-size: 22px;
+                }
+              }
+            }
+            .operation{
+              width: 126px;
+            }
+          }
+        }
       }
       .cart:hover{
         color: #fa524c;
+      }
+      .cart.on{
+        background-color: #fa524c;
+        color: #ffffff;
       }
     }
   }
