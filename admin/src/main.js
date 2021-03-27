@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VueBus from 'vue-bus'
 
 import { getToken } from '@/utils/auth'
 
@@ -50,6 +51,7 @@ Object.keys(filters).forEach(key => {
 
 import VueDND from 'awe-dnd'
 Vue.use(VueDND)
+Vue.use(VueBus)
 
 Vue.config.productionTip = false
 

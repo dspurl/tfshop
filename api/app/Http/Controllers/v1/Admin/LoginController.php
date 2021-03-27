@@ -113,7 +113,7 @@ class LoginController extends Controller
                         'title' => $rule->title,
                         'icon' => $rule->icon,
                         'roles' => $rolesArray,
-                        'noCache' => true,
+                        'noCache' => false,
                         'breadcrumb' => true
                     ),
                 );
