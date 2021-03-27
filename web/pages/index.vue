@@ -15,7 +15,7 @@
                 </div>
               </div>
             </div>
-            <div class="secondary-navigation2" v-if="categoryStyle === 2">
+            <div class="secondary-navigation2" v-else-if="categoryStyle === 2">
               <NuxtLink class="li" to="/pass/login" v-for="(item, index) in categorySublevel" :key="index">
                 <el-image
                   class="image"
@@ -181,7 +181,6 @@ export default {
     }
   }
   .top{
-    background-color: #ffffff;
     padding-bottom: 20px;
     .container{
       position: relative;
@@ -228,7 +227,7 @@ export default {
     position: absolute;
     background-color: #ffffff;
     border: 1px solid #e0e0e0;
-    box-shadow: 0 8px 16px #888888;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
     top:0;
     left: 200px;
     z-index: 10;
@@ -269,8 +268,8 @@ export default {
     background-color: #ffffff;
     .nave{
       width: 200px;
-      background: rgba(105,101,101,.9);
-      color: #ffffff;
+      background-color: #ffffff;
+      color: #000000;
       padding-top:20px;
       height: 460px;
       overflow: hidden;
@@ -284,6 +283,7 @@ export default {
         }
       }
       .nave-li:hover,.nave-li.on{
+        color: #ffffff;
         background-color: #fa524c;
       }
     }
