@@ -39,7 +39,7 @@
             <el-table-column label="商品">
               <template slot-scope="props">
                 <div class="drawing">
-                  <img :src="props.row.img" style="width:45px;height:45px;">
+                  <el-image :src="props.row.img" :preview-src-list="[props.row.img]" style="width:45px;height:45px;"> </el-image>
                   <div class="right">
                     <div style="width:300px;">{{ props.row.name }}</div>
                   </div>

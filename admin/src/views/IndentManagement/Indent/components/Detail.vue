@@ -53,7 +53,7 @@
           width="50"/>
         <el-table-column align="center" width="80">
           <template slot-scope="scope">
-            <img :src="scope.row.img" style="width:45px;height:45px;">
+            <el-image :src="scope.row.img" :preview-src-list="[scope.row.img]" style="width:45px;height:45px;"> </el-image>
           </template>
         </el-table-column>
         <el-table-column label="商品" align="left">
