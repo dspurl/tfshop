@@ -108,10 +108,14 @@ export default {
             this.$router.push('/')
           }
         }
+        // 关闭单个
+        this.$bus.$emit('removeCache', 'closeSelectedTag', view)
       })
     },
     closeOthersTags() {
       this.$router.push(this.selectedTag)
+      // 关闭其他
+      this.$bus.$emit('removeCache', 'closeOthersTags', this.selectedTag)
       this.$store.dispatch('delOthersViews', this.selectedTag).then(() => {
         this.moveToCurrentTag()
       })
@@ -119,6 +123,8 @@ export default {
     closeAllTags() {
       this.$store.dispatch('delAllViews')
       this.$router.push('/')
+      // 关闭所有
+      this.$bus.$emit('removeCache', 'closeAllTags')
     },
     openMenu(tag, e) {
       const menuMinWidth = 105
