@@ -43,7 +43,7 @@
       </el-table-column>
       <el-table-column label="图片" width="100">
         <template slot-scope="scope">
-          <img :src="scope.row.resources.img | smallImage(150)" style="width:80px;height:80px;">
+          <el-image :src="scope.row.resources.img | smallImage(150)" :preview-src-list="[ scope.row.resources.img ]" style="width:80px;height:80px;"/>
         </template>
       </el-table-column>
       <el-table-column label="商品" width="200">

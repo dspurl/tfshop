@@ -183,7 +183,7 @@ export default {
       if (value === '') {
         callback(new Error(this.$t('hint.enterMobile')))
       } else {
-        if (!(/^1[34578]\d{9}$/.test(value))) {
+        if (!(/^1[345789]\d{9}$/.test(value))) {
           callback(new Error(this.$t('hint.mobileFormatWrong')))
         }
         callback()
