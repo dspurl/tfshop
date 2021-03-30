@@ -2,7 +2,8 @@ const store = require('store');
 import { setToken, removeToken } from '@/plugins/auth'
 export const state = () => ({
   hasLogin: false,
-  cartTitle: ''
+  cartTitle: '',
+  shoppingCartNumber: 0
 })
 
 export const mutations = {
@@ -15,6 +16,9 @@ export const mutations = {
         store.set(process.env.CACHE_PR + 'UserInfo', provider)
       }
     }
+  },
+  setShoppingCartNumber(state, provider) {
+    state.shoppingCartNumber = provider
   },
   logout(state) {
     store.remove(process.env.CACHE_PR + 'ApplyToken');

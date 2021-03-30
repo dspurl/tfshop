@@ -22,12 +22,12 @@
               <NuxtLink class="li" to="/pass/login">我的订单</NuxtLink>
             </template>
             <template v-else>
-              <NuxtLink class="li" to="/pass/login">登录</NuxtLink>
+              <div class="li" @click="goLogin">登录</div>
               <NuxtLink class="li" to="/pass/register">注册</NuxtLink>
             </template>
             <NuxtLink class="li" to="/pass/notification">消息通知</NuxtLink>
             <div class="li cart" :class="{ on: shoppingCart.length > 0 }" @mouseover="userCart" @mouseleave="userCartOut">
-              <NuxtLink :to="{ path: '/cart'}" class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{shoppingCart.length}})</NuxtLink>
+              <div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{$nuxt.$store.state.shoppingCartNumber}})</div>
               <el-collapse-transition>
                 <div class="cart-box" v-show="cartActive" v-loading="cartLoading">
                 <template v-if="shoppingCart.length > 0">
@@ -47,7 +47,7 @@
                   </div>
                   <div class="cart-total">
                     <div class="number">
-                      <div class="name">共 {{ shoppingCart.length }} 件商品</div>
+                      <div class="name">共 {{ $nuxt.$store.state.shoppingCartNumber }} 件商品</div>
                       <div class="price"><span>{{ shoppingTotal }}</span>元</div>
                     </div>
                     <div class="operation">
@@ -89,7 +89,7 @@
   </div>
 </template>
 <script>
-import { addShoppingCart } from '@/api/goodIndent'
+import { addShoppingCart, synchronizationInventory } from '@/api/goodIndent'
 export default {
   data() {
     return {
@@ -98,6 +98,7 @@ export default {
         { name: '全部分类', path: '/category/list' }
       ],
       shoppingCart: [],
+      shoppingCartLoading: false,
       cartLoading: false,
       shoppingTotal: 0,
       navActive: -1,
@@ -125,7 +126,48 @@ export default {
     // 获取购物车
     getShoppingCart(){
       this.cartLoading = true
-      this.shoppingCart = this.store.get(process.env.CACHE_PR + 'CartList') ? Object.values(this.store.get(process.env.CACHE_PR + 'CartList')) : [];
+      let cartList = this.store.get(process.env.CACHE_PR + 'CartList') ? Object.values(this.store.get(process.env.CACHE_PR + 'CartList')) : [];
+      synchronizationInventory().then(response => {
+        this.cartLoading = false;
+        cartList = Object.values(response)
+        for(const k in cartList){
+          cartList[k].checked = true
+          cartList[k].loaded = 'loaded'
+          if(cartList[k].good_sku){
+            cartList[k].good_sku.skus.forEach(item=>{
+              if(cartList[k].specification){
+                cartList[k].specification+= item.v + ';'
+              }else{
+                cartList[k].specification = item.v + ';'
+              }
+        
+            })
+            cartList[k].specification = cartList[k].specification.substr(0,cartList[k].specification.length-1)
+          }
+          if(cartList[k].good.is_delete === 1 || cartList[k].good.is_show !== 1){
+            cartList[k].invalid = true
+          }
+          this.shoppingCart = cartList
+          $nuxt.$store.commit('setShoppingCartNumber', Object.values(cartList).length)
+          this.shoppingCart.forEach(item=>{
+            total += item.price * item.number;
+            item.on = false
+          });
+          this.shoppingTotal = Number(total.toFixed(2));
+          // if(cartList[k].invalid === true){ //失效的商品
+          //   that.invalidGood.push(cartList[k])
+          //   // cartList.splice(k,1)
+          // }
+        }
+        // for(var k in cartList){
+        //   if(cartList[k].invalid === true){ //失效的商品
+        //     cartList.splice(k,1)
+        //   }
+        // }
+      }).catch(() => {
+        this.cartLoading = false
+      })
+      /*this.shoppingCart = this.store.get(process.env.CACHE_PR + 'CartList') ? Object.values(this.store.get(process.env.CACHE_PR + 'CartList')) : [];
       let total = 0;
       this.shoppingCart.forEach(item=>{
         total += item.price * item.number;
@@ -133,7 +175,7 @@ export default {
       this.shoppingTotal = Number(total.toFixed(2));
       setTimeout(()=>{
         this.cartLoading = false
-      },1000)
+      },1000)*/
     },
     setNavActive(){
       for (let i=0;i<this.navList.length;i++)
@@ -152,20 +194,78 @@ export default {
     },
     userCart(){
       this.cartActive = true
+      if(this.shoppingCartLoading === true){
+        return false
+      }
+      this.cartLoading = true
+      let cartList = this.store.get(process.env.CACHE_PR + 'CartList') ? Object.values(this.store.get(process.env.CACHE_PR + 'CartList')) : [];
+      synchronizationInventory().then(response => {
+        this.cartLoading = false
+        this.shoppingCartLoading = true
+        cartList = Object.values(response)
+        for(const k in cartList){
+          cartList[k].checked = true
+          cartList[k].loaded = 'loaded'
+          if(cartList[k].good_sku){
+            cartList[k].good_sku.skus.forEach(item=>{
+              if(cartList[k].specification){
+                cartList[k].specification+= item.v + ';'
+              }else{
+                cartList[k].specification = item.v + ';'
+              }
+          
+            })
+            cartList[k].specification = cartList[k].specification.substr(0,cartList[k].specification.length-1)
+          }
+          if(cartList[k].good.is_delete === 1 || cartList[k].good.is_show !== 1){
+            cartList[k].invalid = true
+          }
+          this.shoppingCart = cartList
+          $nuxt.$store.commit('setShoppingCartNumber', Object.values(cartList).length)
+          this.shoppingCart.forEach(item=>{
+            total += item.price * item.number;
+            item.on = false
+          });
+          this.shoppingTotal = Number(total.toFixed(2));
+          // if(cartList[k].invalid === true){ //失效的商品
+          //   that.invalidGood.push(cartList[k])
+          //   // cartList.splice(k,1)
+          // }
+        }
+        // for(var k in cartList){
+        //   if(cartList[k].invalid === true){ //失效的商品
+        //     cartList.splice(k,1)
+        //   }
+        // }
+      }).catch(() => {
+        this.cartLoading = false
+      })
     },
     userCartOut(){
       this.cartActive = false
     },
+    cartCloseState(item){
+      item.on = true
+      this.$forceUpdate()
+    },
+    cartCloseStateOut(item){
+      item.on = false
+      this.$forceUpdate()
+    },
+    goLogin(){
+      $nuxt.store.set('route', { path:$nuxt.$route.path, query:$nuxt.$route.query })
+      $nuxt.$router.replace('/pass/login')
+    },
     logout(){
-      this.$store.commit('logout')
-      this.$router.go(0)
+      $nuxt.$store.commit('logout')
+      $nuxt.$router.go(0)
     },
     submitForm(){
 
     },
     userInfo(){
-      if(this.$store.state.hasLogin){
-        this.user = this.store.get(process.env.CACHE_PR + 'UserInfo')
+      if($nuxt.$store.state.hasLogin){
+        this.user = $nuxt.store.get(process.env.CACHE_PR + 'UserInfo')
       }
     },
     // 删除商品
@@ -234,6 +334,7 @@ export default {
         padding:0 10px 0 10px;
         line-height: 40px;
         color: #b0b0b0;
+        cursor:pointer;
         a{
           color: #b0b0b0;
           .iconfont{

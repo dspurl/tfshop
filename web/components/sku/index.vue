@@ -506,8 +506,9 @@ export default{
             store.set(process.env.CACHE_PR + 'OrderList', cartList)
 					}else{
 						// 发送给后台
-            addShoppingCart(cartList,function(res){})
+            addShoppingCart(cartList,function(res){});
             store.set(process.env.CACHE_PR + 'CartList', cartList)
+            $nuxt.$store.commit('setShoppingCartNumber', Object.values(cartList).length)
 					}
 				}
 				this.initList()
