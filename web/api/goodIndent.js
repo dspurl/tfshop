@@ -14,3 +14,9 @@ export function addShoppingCart(data) {
     data
   })
 }
+export function synchronizationInventory() {
+  return request({
+    url: 'goodIndent/synchronizationInventory',
+    method: 'POST'
+  })
+}

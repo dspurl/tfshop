@@ -1,7 +1,8 @@
 const store = require('store');
 import { setToken, removeToken } from '@/plugins/auth'
 export const state = () => ({
-  hasLogin: false
+  hasLogin: false,
+  cartTitle: ''
 })
 
 export const mutations = {
@@ -31,5 +32,8 @@ export const mutations = {
       $nuxt.$router.replace('/pass/login');
       $nuxt.$message.warning('请先登录')
     }
+  },
+  setCartTitle(state, provider){
+    state.cartTitle = provider
   }
 }

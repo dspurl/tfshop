@@ -13,7 +13,7 @@
                   <div class="user-menu-wrapper" v-show="userActive">
                     <ul class="user-menu">
                       <li><NuxtLink class="a" to="/user/portal">个人中心</NuxtLink></li>
-                      <li><NuxtLink class="a" to="/user/portal">我的收藏</NuxtLink></li>
+                      <li><NuxtLink class="a" to="/user/collect">我的收藏</NuxtLink></li>
                       <li><div class="a" @click="logout">退出登录</div></li>
                     </ul>
                   </div>
@@ -27,22 +27,22 @@
             </template>
             <NuxtLink class="li" to="/pass/notification">消息通知</NuxtLink>
             <div class="li cart" :class="{ on: shoppingCart.length > 0 }" @mouseover="userCart" @mouseleave="userCartOut">
-              <div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{shoppingCart.length}})</div>
+              <NuxtLink :to="{ path: '/cart'}" class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{shoppingCart.length}})</NuxtLink>
               <el-collapse-transition>
                 <div class="cart-box" v-show="cartActive" v-loading="cartLoading">
                 <template v-if="shoppingCart.length > 0">
                   <div class="cart-list">
-                    <div class="cart-li" v-for="(item, index) in shoppingCart" :key="index"  @mouseover="cartCloseState(item)" @mouseleave="cartCloseStateOut(item)">
-                      <NuxtLink class="image" to="/pass/notification">
+                    <div class="cart-li" v-for="(item, index) in shoppingCart" :key="index">
+                      <NuxtLink class="image" :to="{ path: '/product/detail', query: { id: item.good_id }}">
                       <el-image
                         :src="item.img"
                         fit="scale-down"/>
                       </NuxtLink>
-                      <NuxtLink to="/pass/notification" class="title">
+                      <NuxtLink :to="{ path: '/product/detail', query: { id: item.good_id }}" class="title">
                         {{item.name}}
                       </NuxtLink>
                       <div class="price">{{item.price}}元 × {{item.number}}</div>
-                      <div class="close" v-show="item.on"><i class="el-icon-delete"></i></div>
+                      <div class="close"><i class="el-icon-delete" @click="deleteCart(index)"></i></div>
                     </div>
                   </div>
                   <div class="cart-total">
@@ -51,7 +51,7 @@
                       <div class="price"><span>{{ shoppingTotal }}</span>元</div>
                     </div>
                     <div class="operation">
-                      <el-button type="danger">去购物车结算</el-button>
+                      <NuxtLink :to="{ path: '/cart'}"><el-button type="danger">去购物车结算</el-button></NuxtLink>
                     </div>
                   </div>
                 </template>
@@ -89,11 +89,13 @@
   </div>
 </template>
 <script>
+import { addShoppingCart } from '@/api/goodIndent'
 export default {
   data() {
     return {
       navList: [
-        { name: '首页', path: '/' }
+        { name: '首页', path: '/' },
+        { name: '全部分类', path: '/category/list' }
       ],
       shoppingCart: [],
       cartLoading: false,
@@ -115,7 +117,9 @@ export default {
   mounted() {
     this.setNavActive()
     this.userInfo()
-    this.getShoppingCart()
+    if(this.$store.state.hasLogin) {
+      this.getShoppingCart()
+    }
   },
   methods: {
     // 获取购物车
@@ -125,10 +129,8 @@ export default {
       let total = 0;
       this.shoppingCart.forEach(item=>{
         total += item.price * item.number;
-        item.on = false
       });
       this.shoppingTotal = Number(total.toFixed(2));
-      console.log('shoppingCart',this.shoppingCart)
       setTimeout(()=>{
         this.cartLoading = false
       },1000)
@@ -154,15 +156,6 @@ export default {
     userCartOut(){
       this.cartActive = false
     },
-    cartCloseState(item){
-      item.on = true
-      this.$forceUpdate()
-    },
-    cartCloseStateOut(item){
-      item.on = false
-      this.$forceUpdate()
-    },
-
     logout(){
       this.$store.commit('logout')
       this.$router.go(0)
@@ -174,6 +167,13 @@ export default {
       if(this.$store.state.hasLogin){
         this.user = this.store.get(process.env.CACHE_PR + 'UserInfo')
       }
+    },
+    // 删除商品
+    deleteCart(index){
+      this.shoppingCart.splice(index, 1)
+      this.store.set(process.env.CACHE_PR + 'CartList',this.shoppingCart)
+      addShoppingCart(this.shoppingCart)
+      this.getShoppingCart()
     }
   }
 }
@@ -348,6 +348,10 @@ export default {
                 flex-shrink: 0;
                 width: 12px;
                 color: #b0b0b0;
+                cursor:pointer;
+              }
+              .close:hover{
+                color: #fa524c;
               }
             }
             .cart-li:last-child{
@@ -390,6 +394,9 @@ export default {
       .cart.on{
         background-color: #fa524c;
         color: #ffffff;
+        .cart-navigation{
+          color: #ffffff;
+        }
       }
     }
   }

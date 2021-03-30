@@ -7,3 +7,4 @@ client/Dsshop/unpackage/
 version
 web/node_modules/
 web/.nuxt
+web/.env
