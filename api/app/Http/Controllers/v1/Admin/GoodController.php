@@ -41,25 +41,29 @@ class GoodController extends Controller
         GoodSku::$withoutAppends = false;
         $q = Good::query();
         $limit = $request->limit;
-        if ($request->activeIndex == 2) {
-            $q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
-        } else if ($request->activeIndex == 3) {
-            $q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
-        }
-        if ($request->title) {
-            /*
-            MySQL<5.7并且商品不多时可用模糊搜索方式
-            $q->where(function($q1) use($request){
-                $q1->where('name','like','%'.$request->title.'%')
-                    ->orWhere('number',$request->title);
-            });
-            */
-            $q->where(function ($q1) use ($request) {
-                $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\'' . $request->title . '\' IN NATURAL LANGUAGE MODE)')
-                    ->orWhere('number', $request->title);
-            });
+		if($request->activeIndex != 1) {
+			if ($request->activeIndex == 2) {
+				$q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
+			} else if ($request->activeIndex == 3) {
+				$q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
+			}
+			if ($request->title) {
+				/*
+				MySQL<5.7并且商品不多时可用模糊搜索方式
+				$q->where(function($q1) use($request){
+					$q1->where('name','like','%'.$request->title.'%')
+						->orWhere('number',$request->title);
+				});
+				*/
+				$q->where(function ($q1) use ($request) {
+					$q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\'' . $request->title . '\' IN NATURAL LANGUAGE MODE)')
+						->orWhere('number', $request->title);
+				});
 
-        }
+			}
+		}else{//全部商品
+			
+		}
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
