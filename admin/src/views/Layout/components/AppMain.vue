@@ -1,14 +1,19 @@
 <template>
 	<section class="app-main">
-			<keep-alive :max="20">
+			<keep-alive v-if="!isDev" :max="20">
 				<router-view :key="key" />
 			</keep-alive>
+			<router-view v-else :key="key" />
 	</section>
 </template>
-
 <script>
 export default {
 	name: 'AppMain',
+	data() {
+		return {
+			isDev: window.location.href.indexOf("localhost") >= 0 
+		}
+	},
 	computed: {
 		cachedViews() {
 			return this.$store.state.tagsView.cachedViews;
@@ -108,4 +113,3 @@ export default {
   overflow: hidden;
 }
 </style>
-
