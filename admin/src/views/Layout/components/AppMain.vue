@@ -11,7 +11,7 @@ export default {
 	name: 'AppMain',
 	data() {
 		return {
-			isDev: window.location.href.indexOf("localhost") >= 0 
+			isDev: process.env.ENV_CONFIG === 'dev'
 		}
 	},
 	computed: {
