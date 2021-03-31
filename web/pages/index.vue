@@ -4,7 +4,7 @@
     <div class="top">
       <div class="container">
         <div class="classify">
-          <div class="nave" @mouseover="naveCut(-1)" @mouseleave="naveShiftOut">
+          <div class="nave" @mouseenter="naveCut(-1)" @mouseleave="naveShiftOut">
             <div class="nave-li" :class="{on:naveOn === index}" v-for="(item, index) in categoryList" :key="index" @mouseover="naveCut(index)">{{item.name}}<i class="iconfont dsshop-youjiantou"></i></div>
             <!-- 二级分类-->
             <div class="secondary-navigation" v-if="categoryStyle === 1">

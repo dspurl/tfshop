@@ -160,7 +160,7 @@
 <script>
 import {detail} from '@/api/good'
 import {create as collectCreate, destroy as collectDestroy, detail as getCollectDetail} from '@/api/collect'
-import sku from '@/components/sku'
+import sku from '@/components/Sku'
 export default {
   components: {
     sku

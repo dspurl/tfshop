@@ -6,7 +6,7 @@
       <div class="right">
         <template v-if="$store.state.hasLogin">
           <div class="right-box">
-            <div class="li user" :class="{ 'user-active': userActive }" @mouseover="userMenu" @mouseleave="userMenuOut">
+            <div class="li user" :class="{ 'user-active': userActive }" @mouseenter="userMenu" @mouseleave="userMenuOut">
               <NuxtLink to="/user/portal" class="user-name"><span>{{ user.nickname ? user.nickname : user.cellphone }}</span><i class="iconfont dsshop-xia"></i></NuxtLink>
               <el-collapse-transition>
                 <div class="user-menu-wrapper" v-show="userActive">

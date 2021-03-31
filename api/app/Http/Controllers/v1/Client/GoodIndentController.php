@@ -216,7 +216,7 @@ class GoodIndentController extends Controller
             }]);
         }, 'User' => function ($q) {
             $q->select('id', 'money');
-        }])->select('id', 'total', 'user_id', 'state', 'overtime')->find($id);
+        },'GoodLocation'])->select('id', 'total', 'user_id', 'state', 'overtime','identification')->find($id);
         $time_diff = time_diff($GoodIndent->overtime);
         $GoodIndent->day = $time_diff['day'];
         $GoodIndent->hour = $time_diff['hour'];

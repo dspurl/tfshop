@@ -29,10 +29,10 @@ export function destroy(id) {
     method: 'POST'
   })
 }
-export function defaultGet(data) {
+export function freight(id, data) {
   data = Qs.parse(data)
   return request({
-    url: 'shipping/default/get',
+    url: 'shipping/freight/'+id,
     method: 'POST',
     data
   })

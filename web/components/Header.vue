@@ -7,7 +7,7 @@
           <div class="menu"></div>
           <div class="login">
             <template v-if="user.cellphone">
-              <div class="li user" :class="{ 'user-active': userActive }" @mouseover="userMenu" @mouseleave="userMenuOut">
+              <div class="li user" :class="{ 'user-active': userActive }" @mouseenter="userMenu" @mouseleave="userMenuOut">
                 <NuxtLink to="/user/portal" class="user-name"><span>{{ user.nickname ? user.nickname : user.cellphone }}</span><i class="iconfont dsshop-xia"></i></NuxtLink>
                 <el-collapse-transition>
                   <div class="user-menu-wrapper" v-show="userActive">
@@ -26,8 +26,8 @@
               <NuxtLink class="li" to="/pass/register">注册</NuxtLink>
             </template>
             <NuxtLink class="li" to="/pass/notification">消息通知</NuxtLink>
-            <div class="li cart" :class="{ on: shoppingCart.length > 0 }" @mouseover="userCart" @mouseleave="userCartOut">
-              <div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{$nuxt.$store.state.shoppingCartNumber}})</div>
+            <div class="li cart" :class="{ on: shoppingCart.length > 0 }" @mouseenter="userCart" @mouseleave="userCartOut">
+              <NuxtLink :to="{ path: '/cart'}"><div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{$nuxt.$store.state.shoppingCartNumber}})</div></NuxtLink>
               <el-collapse-transition>
                 <div class="cart-box" v-show="cartActive" v-loading="cartLoading">
                 <template v-if="shoppingCart.length > 0">
@@ -43,6 +43,9 @@
                       </NuxtLink>
                       <div class="price">{{item.price}}元 × {{item.number}}</div>
                       <div class="close"><i class="el-icon-delete" @click="deleteCart(index)"></i></div>
+                      <div class="invalid" v-if="item.invalid">
+                        商品已失效
+                      </div>
                     </div>
                   </div>
                   <div class="cart-total">
@@ -98,7 +101,7 @@ export default {
         { name: '全部分类', path: '/category/list' }
       ],
       shoppingCart: [],
-      shoppingCartLoading: false,
+      cartOriginalList: [],
       cartLoading: false,
       shoppingTotal: 0,
       navActive: -1,
@@ -127,8 +130,10 @@ export default {
     getShoppingCart(){
       this.cartLoading = true
       let cartList = this.store.get(process.env.CACHE_PR + 'CartList') ? Object.values(this.store.get(process.env.CACHE_PR + 'CartList')) : [];
+      let total = 0;
       synchronizationInventory().then(response => {
         this.cartLoading = false;
+        this.cartOriginalList = response
         cartList = Object.values(response)
         for(const k in cartList){
           cartList[k].checked = true
@@ -140,42 +145,21 @@ export default {
               }else{
                 cartList[k].specification = item.v + ';'
               }
-        
+
             })
             cartList[k].specification = cartList[k].specification.substr(0,cartList[k].specification.length-1)
           }
           if(cartList[k].good.is_delete === 1 || cartList[k].good.is_show !== 1){
             cartList[k].invalid = true
           }
-          this.shoppingCart = cartList
-          $nuxt.$store.commit('setShoppingCartNumber', Object.values(cartList).length)
-          this.shoppingCart.forEach(item=>{
-            total += item.price * item.number;
-            item.on = false
-          });
-          this.shoppingTotal = Number(total.toFixed(2));
-          // if(cartList[k].invalid === true){ //失效的商品
-          //   that.invalidGood.push(cartList[k])
-          //   // cartList.splice(k,1)
-          // }
+          total += cartList[k].price * cartList[k].number;
         }
-        // for(var k in cartList){
-        //   if(cartList[k].invalid === true){ //失效的商品
-        //     cartList.splice(k,1)
-        //   }
-        // }
+        this.shoppingCart = cartList;
+        $nuxt.$store.commit('setShoppingCartNumber', Object.values(cartList).length)
+        this.shoppingTotal = Number(total.toFixed(2));
       }).catch(() => {
         this.cartLoading = false
       })
-      /*this.shoppingCart = this.store.get(process.env.CACHE_PR + 'CartList') ? Object.values(this.store.get(process.env.CACHE_PR + 'CartList')) : [];
-      let total = 0;
-      this.shoppingCart.forEach(item=>{
-        total += item.price * item.number;
-      });
-      this.shoppingTotal = Number(total.toFixed(2));
-      setTimeout(()=>{
-        this.cartLoading = false
-      },1000)*/
     },
     setNavActive(){
       for (let i=0;i<this.navList.length;i++)
@@ -194,63 +178,12 @@ export default {
     },
     userCart(){
       this.cartActive = true
-      if(this.shoppingCartLoading === true){
-        return false
+      if(this.$store.state.hasLogin){
+        this.getShoppingCart()
       }
-      this.cartLoading = true
-      let cartList = this.store.get(process.env.CACHE_PR + 'CartList') ? Object.values(this.store.get(process.env.CACHE_PR + 'CartList')) : [];
-      synchronizationInventory().then(response => {
-        this.cartLoading = false
-        this.shoppingCartLoading = true
-        cartList = Object.values(response)
-        for(const k in cartList){
-          cartList[k].checked = true
-          cartList[k].loaded = 'loaded'
-          if(cartList[k].good_sku){
-            cartList[k].good_sku.skus.forEach(item=>{
-              if(cartList[k].specification){
-                cartList[k].specification+= item.v + ';'
-              }else{
-                cartList[k].specification = item.v + ';'
-              }
-          
-            })
-            cartList[k].specification = cartList[k].specification.substr(0,cartList[k].specification.length-1)
-          }
-          if(cartList[k].good.is_delete === 1 || cartList[k].good.is_show !== 1){
-            cartList[k].invalid = true
-          }
-          this.shoppingCart = cartList
-          $nuxt.$store.commit('setShoppingCartNumber', Object.values(cartList).length)
-          this.shoppingCart.forEach(item=>{
-            total += item.price * item.number;
-            item.on = false
-          });
-          this.shoppingTotal = Number(total.toFixed(2));
-          // if(cartList[k].invalid === true){ //失效的商品
-          //   that.invalidGood.push(cartList[k])
-          //   // cartList.splice(k,1)
-          // }
-        }
-        // for(var k in cartList){
-        //   if(cartList[k].invalid === true){ //失效的商品
-        //     cartList.splice(k,1)
-        //   }
-        // }
-      }).catch(() => {
-        this.cartLoading = false
-      })
     },
     userCartOut(){
       this.cartActive = false
-    },
-    cartCloseState(item){
-      item.on = true
-      this.$forceUpdate()
-    },
-    cartCloseStateOut(item){
-      item.on = false
-      this.$forceUpdate()
     },
     goLogin(){
       $nuxt.store.set('route', { path:$nuxt.$route.path, query:$nuxt.$route.query })
@@ -270,9 +203,15 @@ export default {
     },
     // 删除商品
     deleteCart(index){
+      if(this.shoppingCart[index].good_sku_id){
+        delete this.cartOriginalList[this.shoppingCart[index].good_sku_id]
+      }else{
+        delete this.cartOriginalList['good_'+this.shoppingCart[index].good_id]
+      }
+
       this.shoppingCart.splice(index, 1)
-      this.store.set(process.env.CACHE_PR + 'CartList',this.shoppingCart)
-      addShoppingCart(this.shoppingCart)
+      this.store.set(process.env.CACHE_PR + 'CartList',this.cartOriginalList)
+      addShoppingCart(this.cartOriginalList)
       this.getShoppingCart()
     }
   }
@@ -419,6 +358,7 @@ export default {
               align-items: center;
               color: #424242;
               border-bottom: 1px solid #e0e0e0;
+              position: relative;
               .image{
                 margin-top:20px;
                 width: 45px;
@@ -453,6 +393,18 @@ export default {
               }
               .close:hover{
                 color: #fa524c;
+              }
+              .invalid{
+                position: absolute;
+                left: 0;
+                top: 0;
+                background: rgba(0, 0, 0, 0.3);
+                width: 100%;
+                height: 100%;
+                color: #ffffff;
+                font-size: 16px;
+                text-align: center;
+                padding-top:20px;
               }
             }
             .cart-li:last-child{

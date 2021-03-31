@@ -14,19 +14,6 @@
  -->
 <template>
 	<div>
-		<!--<view class="a-t">
-			<image :src="specificationDefaultDisplay.img" @click="previewImage(specificationDefaultDisplay.img)"></image>
-			<view class="right">
-				<template v-if="getLists.price_show && specificationDefaultDisplay.price_show">
-					<text class="price" v-if="specificationDefaultDisplay.price_show.length > 1">¥{{specificationDefaultDisplay.price_show[0]}} - {{specificationDefaultDisplay.price_show[1]}}</text>
-					<text class="price" v-else-if="specificationDefaultDisplay.price_show.length === 1">¥{{specificationDefaultDisplay.price_show[0]}}</text>
-				</template>
-				<text class="stock">库存：{{specificationDefaultDisplay.inventory_show}}件</text>
-				<view class="selected">
-					<text class="selected-text" >{{ specificationDefaultDisplay.selected }}</text>
-				</view>
-			</view>
-		</view>-->
     <div v-for="(item, index) in specification" :key="index" class="specification-list">
       <div class="name">{{ item.value }}</div>
       <div class="item-list">
@@ -53,7 +40,7 @@
 
 <script>
 const store = require('store')
-import { param2Data } from '@/components/sku/sku2param'
+import { param2Data } from '@/components/Sku/sku2param'
 import { addShoppingCart } from '@/api/goodIndent'
 export default{
 	name: 'sku',
