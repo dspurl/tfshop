@@ -62,13 +62,5 @@ export default {
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [/^element-ui/],
-  },
-  axios: {
-    proxy: true // Can be also an object with default options
-  },
-
-  proxy: {
-    '/api/': 'http://api.example.com',
-    '/api2/': 'http://api.another-website.com'
   }
 }
