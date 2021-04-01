@@ -13,6 +13,13 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleFilter">搜索</el-button>
+          分类筛选: <el-select v-model="listQuery.category_id" placeholder="请选择分类" @change="changeCategorys">
+            <el-option
+              v-for="item in categorys"
+              :key="item.value"
+              :label="item.label"
+              :value="item.value"/>
+          </el-select>
         </el-form-item>
       </el-form>
       <br>
@@ -38,7 +45,7 @@
         fixed="left"/>
       <el-table-column label="编号" sortable="custom" prop="id" fixed="left" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <router-link target="_blank" style="width:300px;" :to="{path: '/commodityManagement/good/goodDetail', query: {id: scope.row.id }}"> {{ scope.row.id }}</router-link>
         </template>
       </el-table-column>
       <el-table-column label="图片" width="100">
@@ -229,9 +236,11 @@ export default {
         limit: 10,
         page: this.$route.query.page ? Number(this.$route.query.page) : 1,
         sort: '-id',
-        activeIndex: this.$route.query.activeIndex ? this.$route.query.activeIndex : '1'
+        activeIndex: this.$route.query.activeIndex ? this.$route.query.activeIndex : '1',
+        cateId: this.$route.query.cateId
       },
       temp: {},
+      categorys: {},
       rules: {
         title: [
           { required: true, message: '请输入标题', trigger: 'blur' }
@@ -278,6 +287,13 @@ export default {
         this.listQuery.sort = '-' + prop
       }
       this.handleFilter()
+    },
+    changeCategorys(id){
+      this.$router.push({path: '/commodityManagement/good/goodList?cateId=' + id});
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
     },
     handleSelect(key, keyPath) {
       this.listQuery.activeIndex = key
