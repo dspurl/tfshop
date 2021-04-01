@@ -6,7 +6,13 @@
           <div class="el-icon-circle-check"></div>
           <div class="order-info">
             <div class="title">订单提交成功！去付款咯～</div>
-            <div class="warn">请在<span>0 小时 59 分</span>内完成支付, 超时后将取消订单</div>
+            <div class="warn">请在<span>
+              <no-ssr>
+                <vue-countdown v-if="list.overtime_time" :time="list.overtime_time * 1000" v-slot="{ days, hours, minutes, seconds }">
+                  {{ days }} 天 {{ hours }} 小时 {{ minutes }} 分 {{ seconds }} 秒
+                </vue-countdown>
+              </no-ssr>
+            </span>内完成支付, 超时后将取消订单</div>
             <div class="address" v-show="!detail" v-if="list.good_location">收货信息：{{list.good_location.name}} {{list.good_location.cellphone}} {{list.good_location.location}}<template v-if="list.good_location.address">({{ list.good_location.address }})</template></div>
             <div class="order-details" v-show="detail" v-if="list.good_location">
               <el-divider></el-divider>
@@ -26,7 +32,7 @@
               </ul>
             </div>
             <div class="fright">
-              <div class="total">应付总额：<div class="price"><span>{{list.total}}</span>元</div></div>
+              <div class="total">应付总额：<div class="price"><span>{{list.total| thousands}}</span>元</div></div>
               <div class="show-detail" @click="showDetail">订单详情<i class="iconfont dsshop-xia"></i></div>
             </div>
           </div>
@@ -43,17 +49,8 @@
               src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/c66f98cff8649bd5ba722c2e8067c6ca.jpg"
               fit="cover"/>
           </div>
-          <div class="li on">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/c66f98cff8649bd5ba722c2e8067c6ca.jpg"
-              fit="cover"/>
-          </div>
-          <div class="li">
-            <el-image
-              class="image"
-              src="//cdn.cnbj1.fds.api.mi-img.com/mi-mall/c66f98cff8649bd5ba722c2e8067c6ca.jpg"
-              fit="cover"/>
+          <div class="li" v-if="list.user" @click="payment(1)">
+            余额支付（{{list.user.money| thousands}}）
           </div>
         </div>
       </el-card>
@@ -63,7 +60,10 @@
 
 <script>
 import { pay } from '@/api/goodIndent'
+import { unifiedPayment, balancePay } from '@/api/pay'
+import VueCountdown from '@chenfengyuan/vue-countdown';
 export default {
+  components: { VueCountdown },
   layout: 'cart',
   middleware: 'auth',
   head () {
@@ -86,11 +86,27 @@ export default {
     getList(){
       pay($nuxt.$route.query.id).then(response => {
         this.list = response
+      }).catch(error=>{
+        this.$message({
+          message: '请求参数有误',
+          type: 'error'
+        });
+        setTimeout(() => {
+          $nuxt.$router.go(-1)
+        }, 500);
       })
     },
     // 显示详情
     showDetail(){
       this.detail = !this.detail
+    },
+    // 支付
+    payment(type){
+      if(type === 1){ // 余额支付
+        balancePay({id:$nuxt.$route.query.id}).then(response => {
+          $nuxt.$router.replace('/money/success')
+        })
+      }
     }
   }
 }
@@ -118,7 +134,7 @@ export default {
         text-align: center;
         cursor: pointer;
         overflow: hidden;
-        width: 174px;
+        min-width: 174px;
         height: 60px;
         line-height: 60px;
         margin-left: 14px;

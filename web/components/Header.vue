@@ -19,7 +19,7 @@
                   </div>
                 </el-collapse-transition>
               </div>
-              <NuxtLink class="li" to="/pass/login">我的订单</NuxtLink>
+              <NuxtLink class="li" to="/user/indent/list">我的订单</NuxtLink>
             </template>
             <template v-else>
               <div class="li" @click="goLogin">登录</div>

@@ -47,7 +47,7 @@
           {
             name: '订单管理',
             children: [
-              { name: '我的订单', path: '/user/indent', active: false }
+              { name: '我的订单', path: '/user/indent/list', active: false }
             ]
           },
           {
@@ -102,6 +102,7 @@
   }
   .user-box{
     display: flex;
+    align-items: flex-start;
     .navigation{
       width: 180px;
       background-color: #ffffff;

@@ -1,5 +1,12 @@
 import request from '@/plugins/request'
 import Qs from 'qs'
+export function getList(query) {
+  return request({
+    url: 'goodIndent',
+    method: 'GET',
+    params: query
+  })
+}
 export function quantity() {
   return request({
     url: 'goodIndent/quantity',
