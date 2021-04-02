@@ -237,7 +237,7 @@
   }
 </style>
 <script>
-import { detail, create, edit, specification } from '@/api/Good'
+import { detail, create, edit, specification } from '@/api/good'
 import { getToken } from '@/utils/auth'
 import tinymce from '@/components/tinymce5'
 import Sku from '@/components/skutwo'

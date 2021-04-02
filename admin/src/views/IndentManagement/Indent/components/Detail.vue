@@ -58,7 +58,7 @@
         </el-table-column>
         <el-table-column label="商品" align="left">
           <template slot-scope="scope">
-            <router-link target="_blank" :to="{path: '/commodityManagement/good/goodDetail', query: {id: scope.row.good_id }}"> {{ scope.row.name }}</router-link>
+            <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.good_id }}" target="_blank"> {{ scope.row.name }}</router-link>
           </template>
         </el-table-column>
         <el-table-column label="规格">

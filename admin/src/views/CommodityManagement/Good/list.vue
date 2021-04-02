@@ -45,7 +45,7 @@
         fixed="left"/>
       <el-table-column label="编号" sortable="custom" prop="id" fixed="left" width="80">
         <template slot-scope="scope">
-          <router-link target="_blank" style="width:300px;" :to="{path: '/commodityManagement/good/goodDetail', query: {id: scope.row.id }}"> {{ scope.row.id }}</router-link>
+          <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.id }}" target="_blank" style="width:300px;"> {{ scope.row.id }}</router-link>
         </template>
       </el-table-column>
       <el-table-column label="图片" width="100">
@@ -198,7 +198,7 @@
 </style>
 
 <script>
-import { getList, destroy, state } from '@/api/Good'
+import { getList, destroy, state } from '@/api/good'
 import { getList as getCateList } from '@/api/category'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
@@ -295,12 +295,9 @@ export default {
       }
       this.handleFilter()
     },
-    changeCategorys(id){
-      this.$router.push({path: '/commodityManagement/good/goodList?cateId=' + id});
-    },
-    handleFilter() {
-      this.listQuery.page = 1
-      this.getList()
+    changeCategorys(id) {
+      this.listQuery.cateId = id
+      this.handleFilter()
     },
     handleSelect(key, keyPath) {
       this.listQuery.activeIndex = key

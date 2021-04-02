@@ -42,7 +42,7 @@
                   <el-image :src="props.row.img" :preview-src-list="[props.row.img]" style="width:45px;height:45px;"/>
                   <div class="right">
                     <div style="width:300px;">
-                      <router-link target="_blank" :to="{path: '/commodityManagement/good/goodDetail', query: {id: props.row.good_id }}"> {{ props.row.name }}</router-link>
+                      <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: props.row.good_id }}" target="_blank"> {{ props.row.name }}</router-link>
                     </div>
                   </div>
                 </div>

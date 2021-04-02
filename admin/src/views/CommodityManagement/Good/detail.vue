@@ -1,11 +1,12 @@
 <template>
   <div class="app-container">
-      <div class="detailColTitle"><p>商品名称</p></div>
-      <div class="detailColValue"><p class="detailColDetail">{{ temp.name }}</p></div>
-      <div class="detailColTitle"><p>货号</p></div>
-      <div class="detailColValue"><p class="detailColDetail">{{ temp.keypoint }}</p></div>
-      <div class="detailColTitle"><p>主图</p></div>
-      <div class="detailColValue"><p class="detailColDetail">
+    <div class="detailColTitle"><p>商品名称</p></div>
+    <div class="detailColValue"><p class="detailColDetail">{{ temp.name }}</p></div>
+    <div class="detailColTitle"><p>货号</p></div>
+    <div class="detailColValue"><p class="detailColDetail">{{ temp.keypoint }}</p></div>
+    <div class="detailColTitle"><p>主图</p></div>
+    <div class="detailColValue">
+      <p class="detailColDetail">
         <img v-if="temp.img" :src="temp.img" class="avatar">
         <video-player
           v-if="temp.video"
@@ -13,18 +14,18 @@
           :playsinline="true"
           :options="playerOptions"
           class="video-player vjs-custom-skin"/>
-      </p></div>
-	  <div class="detailColTitle"><p>图片列表</p></div>
-      <div class="detailColValue" v-if="temp.imgList"><p class="detailColDetail">
-        <div class="flex-sub" v-for="(item,index) in temp.imgList" :key="index">
-          <el-image  :src="item" :preview-src-list="[item]" style="width: 200px;height:200px;">
-          </el-image>
-		</div>
-      </div>
-	  <div class="detailColTitle"><p>详情</p></div>
-      <div class="detailColValue"><div class="detailColDetail" v-html="temp.details"></div>
+      </p>
     </div>
-
+    <div class="detailColTitle"><p>图片列表</p></div>
+    <div v-if="temp.imgList" class="detailColValue">
+      <div v-for="(item,index) in temp.imgList" :key="index" class="flex-sub">
+        <el-image :src="item" :preview-src-list="[item]" style="width: 200px;height:200px;"/>
+      </div>
+    </div>
+    <div class="detailColTitle"><p>详情</p></div>
+    <div class="detailColValue">
+      <div class="detailColDetail" v-html="temp.details"/>
+    </div>
   </div>
 </template>
 <style rel="stylesheet/scss" lang="scss">
@@ -45,10 +46,7 @@
 <script>
 import { detail } from '@/api/good'
 import { getToken } from '@/utils/auth'
-import Sku from '@/components/skutwo'
 import 'video.js/dist/video-js.css'
-import { videoPlayer } from 'vue-video-player'
-import { parseTime } from '@/utils'
 
 export default {
   name: 'GoodDetail',
@@ -65,7 +63,7 @@ export default {
       listLoading: true,
       query: {
         token: this.$route.query.token,
-        id: this.$route.query.id,
+        id: this.$route.query.id
       },
       temp: {},
       // 视频播放
@@ -91,7 +89,7 @@ export default {
           remainingTimeDisplay: false,
           fullscreenToggle: true // 全屏按钮
         }
-      },
+      }
     }
   },
   created() {
@@ -104,7 +102,6 @@ export default {
       detail(this.id ? this.id : 0, { category: getToken('applyCategory') }).then(response => {
         if (this.id > 0) {
           this.temp = response.data.goods
-          //this.$refs.SkuDemo._setData(this.ruleForm.good_sku)
           if (this.temp.video) {
             this.playerOptions['sources'][0]['src'] = this.ruleForm.video
           }
@@ -115,9 +112,8 @@ export default {
         this.goods_type = response.data.category
         this.freight = response.data.freight
         this.loading = false
-
       })
-    },
+    }
   }
 }
 </script>
