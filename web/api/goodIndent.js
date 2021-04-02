@@ -41,3 +41,21 @@ export function synchronizationInventory() {
     method: 'POST'
   })
 }
+export function cancel(id) {
+  return request({
+    url: 'goodIndent/cancel/' + id,
+    method: 'POST'
+  })
+}
+export function destroy(id) {
+  return request({
+    url: 'goodIndent/destroy/' + id,
+    method: 'POST'
+  })
+}
+export function receipt(id) {
+  return request({
+    url: 'goodIndent/receipt/' + id,
+    method: 'POST'
+  })
+}

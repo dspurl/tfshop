@@ -576,7 +576,7 @@ export default {
         })
       }
     },
-    // 得到 sku 数据
+    // 得到 Sku 数据
     getSkuData() {
       const product_skus = this.$refs.SkuDemo._getData().map(item => {
         const { id, format, img, market_price, cost_price, price, inventory, skus } = item

@@ -24,14 +24,14 @@
           <div class="details">
             <div class="good">
               <div class="good-li"  v-for="(item2, index2) in item.goods_list" :key="index2">
-                <el-link :underline="false" :href="'/product/detail?id='+item.good_id" target="_blank">
+                <el-link :underline="false" :href="'/product/detail?id='+item2.good_id" target="_blank">
                   <el-image
                     class="image"
                     :src="item2.img | smallImage(80)"
                     fit="cover"/>
                 </el-link>
                 <div class="good-name">
-                  <el-link :underline="false" :href="'/product/detail?id='+item.good_id" target="_blank" class="name">{{item2.name}}</el-link>
+                  <el-link :underline="false" :href="'/product/detail?id='+item2.good_id" target="_blank" class="name">{{item2.name}}</el-link>
                   <div class="price">￥{{item2.price}} x {{item2.number}}</div>
                   <div class="specification">{{item2.specification}}</div>
                 </div>
@@ -52,8 +52,8 @@
             <div class="operation">
               <div>
                 <NuxtLink :to="{ path: '/money/pay', query: { id: item.id }}" v-if="item.state === 1"><div class="button"><el-button type="danger" size="mini" round>立即付款</el-button></div></NuxtLink>
-                <div v-if="item.state === 3" class="button"><el-button type="danger" size="mini" round>确认收货</el-button></div>
-                <div v-if="item.state === 1" class="button"><el-button size="mini" round>取消订单</el-button></div>
+                <div v-if="item.state === 3" class="button"><el-button :loading="buttonLoading" type="danger" size="mini" round @click="confirmReceipt(item)">确认收货</el-button></div>
+                <div v-if="item.state === 1" class="button"><el-button :loading="buttonLoading" size="mini" round @click="cancelOrder(item)">取消订单</el-button></div>
               </div>
             </div>
           </div>
@@ -67,7 +67,7 @@
 </template>
 
 <script>
-  import { getList } from '@/api/goodIndent'
+  import { getList, cancel, destroy, receipt } from '@/api/goodIndent'
 export default {
   layout: 'user',
   head () {
@@ -78,6 +78,7 @@ export default {
   data() {
     return {
       tableLoading: false,
+      buttonLoading: false,
       loading: false,
       goodIndentList: [],
       total: 0,
@@ -85,11 +86,14 @@ export default {
         limit: 10,
         page: 1,
         index: '0',
-        sort: '+created_at',
+        sort: '-created_at',
       }
     }
   },
   mounted() {
+    if($nuxt.$route.query.index){
+      this.listQuery.index = $nuxt.$route.query.index
+    }
     this.getList()
   },
   methods: {
@@ -123,9 +127,68 @@ export default {
       this.listQuery.page = 1;
       this.getList()
     },
+    //取消订单
+    cancelOrder(item){
+      this.$confirm('是否确认取消订单？', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.buttonLoading = true
+        cancel(item.id).then(response => {
+          this.buttonLoading = false;
+          this.$message({
+            message: '取消成功',
+            type: 'success'
+          });
+          this.getReloadList();
+        }).catch(() => {
+          this.buttonLoading = false
+        })
+      }).catch(() => {
+      })
+    },
     // 删除订单
     deleteOrder(item){
-      
+      this.$confirm('是否确认删除订单？', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.buttonLoading = true
+        destroy(item.id).then(response => {
+          this.buttonLoading = false;
+          this.$message({
+            message: '删除成功',
+            type: 'success'
+          });
+          this.getReloadList();
+        }).catch(() => {
+          this.buttonLoading = false
+        })
+      }).catch(() => {
+      })
+    },
+    // 确认收货
+    confirmReceipt(item){
+      this.$confirm('是否确认收货？', '提示', {
+        confirmButtonText: '确认',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.buttonLoading = true
+        receipt(item.id).then(response => {
+          this.buttonLoading = false;
+          this.$message({
+            message: '操作成功',
+            type: 'success'
+          });
+          this.getReloadList();
+        }).catch(() => {
+          this.buttonLoading = false
+        })
+      }).catch(() => {
+      })
     }
   }
 }

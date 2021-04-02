@@ -98,8 +98,8 @@
 import uParse from '@/components/gaoyia-parse/parse.vue'
 import Good from '../../api/good';
 import share from '@/components/share';
-import { param2Data } from '@/components/sku/sku2param';
-import sku from '@/components/sku';
+import { param2Data } from '@/components/Sku/sku2param';
+import sku from '@/components/Sku';
 import Browse from '../../api/browse';
 import Collect from '../../api/collect';
 import {

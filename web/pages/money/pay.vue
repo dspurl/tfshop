@@ -138,6 +138,8 @@ export default {
         height: 60px;
         line-height: 60px;
         margin-left: 14px;
+        padding-left:10px;
+        padding-right: 10px;
       }
       .li:hover{
         border-color: #fa524c;

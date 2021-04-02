@@ -1,6 +1,6 @@
 <!-- 
 使用方法 
- <sku :getList="getList" @toggleSpec="toggleSpec"></sku>
+ <Sku :getList="getList" @toggleSpec="toggleSpec"></Sku>
  getList：商品数据
  update: 是否是更新
 
@@ -63,7 +63,7 @@
 
 <script>
 import uniNumberBox from '@/components/uni-number-box.vue'
-import { param2Data } from '@/components/sku/sku2param'
+import { param2Data } from '@/components/Sku/sku2param'
 import GoodIndent from '@/api/goodIndent'
 export default{
 	name: 'sku',
@@ -145,7 +145,7 @@ export default{
 		loadData() {
 			this.loaded = true
 			this.selectedSku = []
-			// sku
+			// Sku
 			if (this.getLists.good_sku.length > 0) {
 				const { productSkus, specification } = param2Data(this.getLists.good_sku)
 				this.specification = specification
@@ -204,7 +204,7 @@ export default{
 			this.good_sku = newVal.good_sku
 			let checkedId = []	//选中的ID
 			let checkedBrother = []	//兄弟列表
-			// sku
+			// Sku
 			if (newVal.good_sku) {
 				const { productSkus, specification } = param2Data(this.getLists.good_sku)
 				this.specification = specification
@@ -454,7 +454,7 @@ export default{
 						cartList = {}
 					}
 					let img = this.getLists.resources_many[0].img
-					//sku
+					//Sku
 					if(this.getLists.good_sku.length>0){
 						if(this.shoppingAttributes.resources){
 							img = this.shoppingAttributes.resources.img

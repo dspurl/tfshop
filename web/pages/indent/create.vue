@@ -89,7 +89,7 @@
 <script>
 import addressList from '@/components/Address/list'
 import { freight } from '@/api/shipping'
-import { create } from '@/api/goodIndent'
+import { create, addShoppingCart } from '@/api/goodIndent'
 export default {
   components: {
     addressList
@@ -122,7 +122,7 @@ export default {
     async getList(){
       this.ruleForm.indentCommodity = this.store.get(process.env.CACHE_PR + 'OrderList')
       this.ruleForm.indentCommodity.forEach(item=>{
-        this.total+= item.price + item.number
+        this.total+= item.price * item.number
       })
     },
     // 选择的地址
@@ -146,7 +146,8 @@ export default {
         this.buttonLoading = false;
         this.store.remove(process.env.CACHE_PR + 'CartList')
         this.store.remove(process.env.CACHE_PR + 'OrderList')
-        $nuxt.$router.replace({name: '/money/pay', query:{id: response}})
+        addShoppingCart([])
+        $nuxt.$router.replace({path: '/money/pay', query:{id: response}})
       }).catch(() => {
         this.buttonLoading = false
       })

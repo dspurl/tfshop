@@ -18,21 +18,21 @@
         <div class="icon bg-blue"><i class="iconfont dsshop-icon-"></i></div>
         <div class="describe">
           <div class="name">待支付的订单：<span>{{ quantity.obligation ? quantity.obligation : 0 }}</span></div>
-          <NuxtLink class="link" to="">查看待支付订单 ></NuxtLink>
+          <NuxtLink class="link" :to="{ path: '/user/indent/list', query: { index: 1 }}">查看待支付订单 ></NuxtLink>
         </div>
       </div>
       <div class="li">
         <div class="icon bg-purple"><i class="iconfont dsshop-daifahuo"></i></div>
         <div class="describe">
           <div class="name">待发货的订单：<span>{{ quantity.waitdeliver ? quantity.waitdeliver : 0 }}</span></div>
-          <NuxtLink class="link" to="">查看待发货订单 ></NuxtLink>
+          <NuxtLink class="link" :to="{ path: '/user/indent/list', query: { index: 2 }}">查看待发货订单 ></NuxtLink>
         </div>
       </div>
       <div class="li">
         <div class="icon bg-pink"><i class="iconfont dsshop-daishouhuofuben"></i></div>
         <div class="describe">
           <div class="name">待收货的订单：<span>{{ quantity.waitforreceiving ? quantity.waitforreceiving : 0 }}</span></div>
-          <NuxtLink class="link" to="">查看待收货订单 ></NuxtLink>
+          <NuxtLink class="link" :to="{ path: '/user/indent/list', query: { index: 3 }}">查看待收货订单 ></NuxtLink>
         </div>
       </div>
     </div>
