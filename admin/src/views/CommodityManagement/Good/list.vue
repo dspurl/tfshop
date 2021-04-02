@@ -199,6 +199,7 @@
 
 <script>
 import { getList, destroy, state } from '@/api/Good'
+import { getList as getCateList } from '@/api/category'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 
@@ -265,6 +266,7 @@ export default {
   },
   created() {
     this.getList()
+    this.getCateList()
   },
   methods: {
     getList() {
@@ -273,6 +275,11 @@ export default {
         this.list = response.data.data
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    getCateList() {
+      getCateList(this.listQuery).then(response => {
+        this.categorys = response.data.options
       })
     },
     handleFilter() {
