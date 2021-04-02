@@ -41,7 +41,9 @@
                 <div class="drawing">
                   <el-image :src="props.row.img" :preview-src-list="[props.row.img]" style="width:45px;height:45px;"/>
                   <div class="right">
-                    <div style="width:300px;">{{ props.row.name }}</div>
+                    <div style="width:300px;">
+                      <router-link target="_blank" :to="{path: '/commodityManagement/good/goodDetail', query: {id: props.row.good_id }}"> {{ props.row.name }}</router-link>
+                    </div>
                   </div>
                 </div>
               </template>

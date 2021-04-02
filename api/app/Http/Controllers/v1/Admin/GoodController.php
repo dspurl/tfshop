@@ -61,9 +61,10 @@ class GoodController extends Controller
 				});
 
 			}
-		}else{//全部商品
-			
 		}
+	  if ($request->cateId) {
+             $q->where('category_id', $request->cateId);
+        }
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);

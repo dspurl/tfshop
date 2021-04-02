@@ -17,6 +17,7 @@ export const componentsMap = {
   GoodList: () => import('@/views/CommodityManagement/Good/list'),
   GoodCreate: () => import('@/views/CommodityManagement/Good/create'),
   GoodEdit: () => import('@/views/CommodityManagement/Good/edit'),
+  GoodDetail: () => import('@/views/CommodityManagement/Good/detail'),
   Brand: () => import('@/views/CommodityManagement/Brand/index'),
   BrandList: () => import('@/views/CommodityManagement/Brand/list'),
   Specification: () => import('@/views/CommodityManagement/Specification/index'),
