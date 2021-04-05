@@ -1,37 +1,71 @@
 <template>
   <div class="box">
-    <el-page-header @back="goBack" content="详情">
+    <el-page-header @back="goBack" content="订单详情">
     </el-page-header>
     <div v-loading="loading">
-      <el-card shadow="hover" class="card" v-if="notice.data">
-        <div class="title">{{ notice.data.title }}</div>
-        <template v-if="notice.data.type === 2">
-          <div class="text-money-name">付款金额</div>
-          <div class="text-money-value">{{notice.data.price/100 | thousands}}</div>
-        </template>
-        <div class="card-list" v-if="notice.data.list.length > 0" v-for="(item, index) in notice.data.list" :key="index">
-          <div class="card-list-title">{{item.keyword}}：</div>
-          <div>{{item.data}}</div>
+      <div class="top">
+        <div class="order-number">订单号：21312312312321</div>
+        <div class="operation">
+          <el-button size="mini">取消订单</el-button>
+          <el-button size="mini" type="danger">立即付款</el-button>
         </div>
-        <div class="introduce" v-if="notice.data.remark">
-          {{notice.data.remark}}
+      </div>
+      <el-divider></el-divider>
+      <div class="steps-box">
+        <div class="title">等待付款</div>
+        <div class="steps">
+          <div class="on">
+            <div class="chunk">下单</div>
+          </div>
+          <div class="on">
+            <div class="chunk">付款</div>
+            <div class="name"></div>
+          </div>
+          <div class="">
+            <div class="chunk">配货</div>
+            <div class="name"></div>
+          </div>
+          <div class="">
+            <div class="chunk">交易成功</div>
+            <div class="name"></div>
+          </div>
         </div>
-        <el-divider></el-divider>
-        <div class="link">
-          <el-button v-if="notice.data.url" type="danger" @click="goNavigator(item.data.url)">查看详情</el-button>
+      </div>
+      <div class="steps-box-time">
+        <div class="steps">
+          <div>
+            <div class="chunk">03月31日 15:34</div>
+          </div>
+          <div>
+            <div class="chunk"></div>
+          </div>
+          <div>
+            <div class="chunk"></div>
+          </div>
+          <div>
+            <div class="chunk"></div>
+          </div>
         </div>
-      </el-card>
+      </div>
+      <el-divider></el-divider>
+      <div class="address">
+        <div class="min-title">收货信息</div>
+        <div class="li">
+          <div class="name">姓名：</div>
+          <div class="value">吴经理</div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import {detail} from '@/api/notification'
+import {detail} from '@/api/goodIndent'
 export default {
   layout: 'user',
   head () {
     return {
-      title: '消息通知-个人中心',
+      title: '订单详情-个人中心',
     }
   },
   data() {
@@ -64,52 +98,51 @@ export default {
     },
     goBack() {
       $nuxt.$router.go(-1)
-    },
-    goNavigator(url){
-      // 为了兼容老版本
-      uni.navigateTo({
-        url: url.replace('pages','user')
-      })
-    },
+    }
   }
 }
 </script>
 <style lang='scss' scoped>
-  .card{
-    margin: 30px auto 0;
-    width: 600px;
-    .title{
-      font-size: 20px;
-      margin-bottom: 30px;
-    }
-    .text-money-name{
-      text-align: center;
-      color: #999999;
-    }
-    .text-money-value{
-      margin-top:10px;
-      text-align: center;
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
-    .card-list{
+  .top{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top:20px;
+  }
+  .steps-box-time{
+    .steps{
       display: flex;
-      padding-bottom: 5px;
-      font-size: 14px;
-      .card-list-title{
-        width:80px;
-        text-align: right;
-        margin-right:10px;
-        color: #999999;
+      font-size: 12px;
+      line-height: 25px;
+      margin-top:5px;
+      div{
+        flex:1;
+        text-align: center;
       }
     }
-    .introduce{
-      font-size: 14px;
-      margin-top:20px;
-      color: #999999;
+  }
+  .steps-box{
+    .title{
+      color: #fa524c;
+      margin-bottom: 10px;
     }
-    .link{
-      text-align: center;
+    .steps{
+      display:flex;
+      border-radius:5px;
+      background-color: #e1e1e1;
+      font-size: 12px;
+      line-height: 25px;
+      .on{
+        background-color: #fa524c;
+        color: #ffffff;
+        border-radius:5px;
+      }
+      div{
+        flex:1;
+        .chunk{
+          text-align: center;
+        }
+      }
     }
   }
 </style>

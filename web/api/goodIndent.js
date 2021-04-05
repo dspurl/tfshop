@@ -7,6 +7,12 @@ export function getList(query) {
     params: query
   })
 }
+export function detail(id) {
+  return request({
+    url: 'goodIndent/detail/' + id,
+    method: 'GET'
+  })
+}
 export function quantity() {
   return request({
     url: 'goodIndent/quantity',

@@ -13,21 +13,21 @@
             align="center"
             width="100">
             <template slot-scope="scope">
-              <el-link :underline="false" :href="'/product/detail?id='+scope.row.good_id" target="_blank">
+              <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}" target="_blank">
                 <el-image
                   class="image"
                   :src="scope.row.img | smallImage(80)"
                   fit="cover"/>
-              </el-link>
+              </NuxtLink>
             </template>
           </el-table-column>
           <el-table-column
             label="商品名称">
             <template slot-scope="scope">
-              <el-link :underline="false" :href="'/product/detail?id='+scope.row.good_id" target="_blank">
+              <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}" target="_blank">
                 <p>{{scope.row.name}}</p>
                 <p class="specification">{{scope.row.specification}}</p>
-              </el-link>
+              </NuxtLink>
             </template>
           </el-table-column>
           <el-table-column

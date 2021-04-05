@@ -24,14 +24,14 @@
           <div class="details">
             <div class="good">
               <div class="good-li"  v-for="(item2, index2) in item.goods_list" :key="index2">
-                <el-link :underline="false" :href="'/product/detail?id='+item2.good_id" target="_blank">
+                <NuxtLink :to="{ path: '/product/detail', query: { id: item2.good_id }}" target="_blank">
                   <el-image
                     class="image"
                     :src="item2.img | smallImage(80)"
                     fit="cover"/>
-                </el-link>
+                </NuxtLink>
                 <div class="good-name">
-                  <el-link :underline="false" :href="'/product/detail?id='+item2.good_id" target="_blank" class="name">{{item2.name}}</el-link>
+                  <NuxtLink :to="{ path: '/product/detail', query: { id: item2.good_id }}" target="_blank">{{item2.name}}</NuxtLink>
                   <div class="price">￥{{item2.price}} x {{item2.number}}</div>
                   <div class="specification">{{item2.specification}}</div>
                 </div>
@@ -46,7 +46,7 @@
             <div class="state">
               <div>
                 <div>{{item.state_show}}</div>
-                <NuxtLink :to="{ path: '/indent/detail', query: { id: item.id }}">订单详情</NuxtLink>
+                <NuxtLink :to="{ path: '/user/indent/detail', query: { id: item.id }}">订单详情</NuxtLink>
               </div>
             </div>
             <div class="operation">
