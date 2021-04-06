@@ -199,7 +199,7 @@
         <el-col :span="24">退款说明：{{ list.refund_reason }}</el-col>
       </el-row>
     </el-card>
-    <div class="right" style="margin-top: 20px;">
+    <div class="right" style="margin-top: 20px;filter:alpha(Opacity=90);-moz-opacity:0.9;opacity: 0.9;">
       <el-button v-if="(list.state !== 1 && !list.refund_money) || !list.state === 8" :loading="shipmentLoading" type="danger" @click="dialogFormVisible = true">退款</el-button>
       <el-button v-if="list.state === 2" :loading="shipmentLoading" type="primary" @click="shipmentSubmit()">发货</el-button>
     </div>
@@ -524,6 +524,14 @@ export default {
           })
         } else {
           this.shipmentLoading = false
+          var isError = document.getElementsByClassName("is-error");
+          isError[0].querySelector("input").focus();
+          this.$notify({
+            title: '',
+            message: '请输入物流信息',
+            type: 'warning',
+            duration: 2000
+          })
         }
       })
     },
