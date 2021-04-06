@@ -134,6 +134,8 @@ export default {
   .recommend{
     margin-top:40px;
     width: 1210px;
+    position: relative;
+    left: 5px;
     .title{
       text-align: center;
       display: block;

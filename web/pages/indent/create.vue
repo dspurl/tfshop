@@ -55,6 +55,18 @@
             </template>
           </el-table-column>
         </el-table>
+        <el-form :model="ruleForm" :rules="rules" ref="ruleForm" class="remark">
+          <el-form-item prop="remark">
+            <el-input
+              type="textarea"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入备注信息"
+              v-model="ruleForm.remark"
+              maxlength="200"
+              show-word-limit>
+            </el-input>
+          </el-form-item>
+        </el-form>
         <div class="count-detail">
           <div class="bill-item">
             <div class="bill-name">商品件数：</div>
@@ -102,6 +114,14 @@ export default {
     }
   },
   data() {
+    const validateRemark = (rule, value, callback) => {
+      const flag = new RegExp("[`~!@#$^&*()=|{}':'\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘：”“'。？ ]");
+      if(flag.test(value)){
+        return callback(new Error('不允许输入非法字符'));
+      }else{
+        callback();
+      }
+    };
     return {
       loading: true,
       buttonLoading: false,
@@ -112,6 +132,11 @@ export default {
         remark: '',
         carriage: 0
       },
+      rules: {
+        remark: [
+          { validator: validateRemark, trigger: 'blur' }
+        ],
+      }
     }
   },
   mounted() {
@@ -120,9 +145,22 @@ export default {
   },
   methods: {
     async getList(){
-      this.ruleForm.indentCommodity = this.store.get(process.env.CACHE_PR + 'OrderList')
+      let specification = null
+      this.ruleForm.indentCommodity = Object.values(this.store.get(process.env.CACHE_PR + 'OrderList'))
+      console.log('this.ruleForm.indentCommodity',this.ruleForm.indentCommodity)
       this.ruleForm.indentCommodity.forEach(item=>{
         this.total+= item.price * item.number
+        if(item.good_sku){
+          specification = null;
+          item.good_sku.product_sku.forEach(item2 => {
+            if (specification) {
+              specification += item2.value + ';';
+            } else {
+              specification = item2.value + ';';
+            }
+          });
+          item.specification = specification.substr(0, specification.length - 1);
+        }
       })
     },
     // 选择的地址
@@ -134,23 +172,30 @@ export default {
     },
     // 提交订单
     submit(){
-      if(!this.ruleForm.address){
-        this.$message({
-          message: '请选择地址',
-          type: 'error'
-        });
-        return false
-      }
-      this.buttonLoading = true;
-      create(this.ruleForm).then(response => {
-        this.buttonLoading = false;
-        this.store.remove(process.env.CACHE_PR + 'CartList')
-        this.store.remove(process.env.CACHE_PR + 'OrderList')
-        addShoppingCart([])
-        $nuxt.$router.replace({path: '/money/pay', query:{id: response}})
-      }).catch(() => {
-        this.buttonLoading = false
-      })
+      this.$refs['ruleForm'].validate((valid) => {
+        if (valid) {
+          if(!this.ruleForm.address){
+            this.$message({
+              message: '请选择地址',
+              type: 'error'
+            });
+            return false
+          }
+          this.buttonLoading = true;
+          create(this.ruleForm).then(response => {
+            this.buttonLoading = false;
+            this.store.remove(process.env.CACHE_PR + 'CartList')
+            this.store.remove(process.env.CACHE_PR + 'OrderList')
+            addShoppingCart([])
+            $nuxt.$router.replace({path: '/money/pay', query:{id: response}})
+          }).catch(() => {
+            this.buttonLoading = false
+          })
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
     },
     go(){
       $nuxt.$router.go(-1)
@@ -159,6 +204,12 @@ export default {
 }
 </script>
 <style lang='scss' scoped>
+  .remark{
+    margin-top:30px;
+  }
+  .specification{
+    color: #999999;
+  }
   .indent-create{
     margin-top:40px;
     margin-bottom: 40px;
