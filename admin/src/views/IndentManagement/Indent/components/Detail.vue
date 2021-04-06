@@ -150,7 +150,7 @@
                 :value="item.id"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="运单号" prop="odd">
+          <el-form-item class="is-error" label="运单号" prop="odd">
             <div v-if="list.odd && !temp.odd">{{ list.odd }}</div>
             <el-input v-else v-model="temp.odd" maxlength="255" clearable/>
           </el-form-item>
@@ -524,8 +524,8 @@ export default {
           })
         } else {
           this.shipmentLoading = false
-          var isError = document.getElementsByClassName("is-error");
-          isError[0].querySelector("input").focus();
+          const isError = document.getElementsByClassName('is-error')
+          isError[0].querySelector('input').focus()
           this.$notify({
             title: '',
             message: '请输入物流信息',
