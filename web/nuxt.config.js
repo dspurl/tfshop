@@ -1,5 +1,9 @@
 require('dotenv').config()
 export default {
+  loading: {
+    color: '#FA436A',
+    height: '2px'
+  },
   server: {
     port: 3004, // default: 3000
     host: '0.0.0.0', // default: localhost,

@@ -3,7 +3,8 @@ import { setToken, removeToken } from '@/plugins/auth'
 export const state = () => ({
   hasLogin: false,
   cartTitle: '',
-  shoppingCartNumber: 0
+  shoppingCartNumber: 0,
+  searchKeyword: ''
 })
 
 export const mutations = {
@@ -19,6 +20,9 @@ export const mutations = {
   },
   setShoppingCartNumber(state, provider) {
     state.shoppingCartNumber = provider
+  },
+  setSearchKeyword(state, provider) {
+    state.searchKeyword = provider
   },
   logout(state) {
     store.remove(process.env.CACHE_PR + 'ApplyToken');

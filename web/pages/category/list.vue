@@ -12,7 +12,7 @@
             <div class="min-title">{{item2.name}}</div>
             <div class="list">
               <div class="li" v-for="(item3, index3) in item2.children" :key="index3">
-                <NuxtLink to="/product/list">
+                <NuxtLink :to="{ path: '/product/list', query: { pid: item3.id, title: item3.name }}">
                   <el-image
                     class="image"
                     :src="item3.resources.img"
@@ -27,7 +27,7 @@
           <div class="category-list-box">
             <div class="list">
               <div class="li" v-for="(item2, index2) in item.children" :key="index2">
-                <NuxtLink to="/product/list">
+                <NuxtLink :to="{ path: '/product/list', query: { pid: item2.id, title: item2.name }}">
                   <el-image
                     class="image"
                     :src="item2.resources.img"

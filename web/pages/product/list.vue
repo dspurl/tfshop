@@ -2,49 +2,67 @@
   <div class="box">
     <el-breadcrumb class="breadcrumb container" separator="/">
       <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-      <el-breadcrumb-item>一级分类</el-breadcrumb-item>
-      <el-breadcrumb-item>二级分类</el-breadcrumb-item>
-      <el-breadcrumb-item>三级分类</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="listQuery.pid">商品分类</el-breadcrumb-item>
+      <el-breadcrumb-item v-else>搜索结果</el-breadcrumb-item>
+      <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
     </el-breadcrumb>
-    <div class="screen-box">
-      <div class="screen container">
-        <div class="on">综合</div>
-        <el-divider class="divider" direction="vertical"></el-divider>
-        <div>销量</div>
-        <el-divider class="divider" direction="vertical"></el-divider>
-        <div class="f-sort">
-          <span class="fs-tit">价格</span>
-          <em class="fs-up">
-            <i class="up el-icon-caret-top"></i>
-            <i class="below el-icon-caret-bottom"></i>
-          </em>
+    <div v-if="total">
+      <div class="screen-box">
+        <div class="screen container">
+          <el-link :underline="false" :class="{on: !listQuery.sort}" @click="tabClick()">综合</el-link>
+          <el-divider class="divider" direction="vertical"></el-divider>
+          <el-link :underline="false" :class="{on: listQuery.sort === '-sales'}" @click="tabClick('sales')">销量</el-link>
+          <el-divider class="divider" direction="vertical"></el-divider>
+          <el-link class="f-sort" :underline="false" @click="tabClick('order_price')">
+            <span class="fs-tit">价格</span>
+            <em class="fs-up">
+              <i class="up el-icon-caret-top" :class="{on: listQuery.sort === '+order_price'}"></i>
+              <i class="below el-icon-caret-bottom" :class="{on: listQuery.sort === '-order_price'}"></i>
+            </em>
+          </el-link>
         </div>
       </div>
-    </div>
-    <div class="product-list container">
-      <div class="list">
-        <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
-          <el-card class="card" shadow="hover">
-            <el-image
-              class="image"
-              :src="item.resources.img | smallImage(200)"
-              fit="cover"
-              lazy/>
-            <div class="name">{{item.name}}</div>
-            <div class="price">
-              <div class="symbol">¥</div>
-              <div class="value">{{item.order_price | thousands}}</div>
-            </div>
-          </el-card>
-        </NuxtLink>
+      <div class="product-list container" v-loading="loading">
+        <div class="list">
+          <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}" target="_blank">
+            <el-card class="card" shadow="hover">
+              <el-image
+                class="image"
+                :src="item.resources.img | smallImage(200)"
+                fit="cover"
+                lazy/>
+              <div class="name">{{item.name}}</div>
+              <div class="price">
+                <div class="symbol">¥</div>
+                <div class="value">{{item.order_price | thousands}}</div>
+              </div>
+            </el-card>
+          </NuxtLink>
+        </div>
+      </div>
+      <div class="operation container">
+        <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="listQuery.page"
+          :page-sizes="[10, 20, 30, 40]"
+          :page-size="listQuery.limit"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="total"/>
       </div>
     </div>
-    <div class="operation container">
-      <pagination v-if="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
+    <div class="no-goods" v-else>
+      <img :src="require('assets/img/no-goods.png')"/>
+      <div v-if="listQuery.pid">抱歉，“{{title}}”分类下暂无商品，换个分类搜搜吧</div>
+      <div v-else>抱歉，没有找到商品“{{title}}”，换个词搜搜吧</div>
     </div>
   </div>
 </template>
 <style lang='scss' scoped>
+  .no-goods{
+    text-align: center;
+    margin: 20px 0 80px 0;
+  }
   .operation{
     margin-bottom: 20px;
   }
@@ -52,6 +70,7 @@
     width: 1210px;
     position: relative;
     left: 5px;
+    margin-bottom: 20px;
   }
   .list{
     display: flex;
@@ -104,7 +123,6 @@
         vertical-align: top;
       }
       .fs-up {
-        display: inline-block;
         width: 7px;
         margin-left: 5px;
         vertical-align: top;
@@ -116,12 +134,16 @@
       }
       .below{
         position: relative;
-        top: -17px;
-        left: -7px;
+        top: 3px;
+        left: -26px;
       }
     }
     .screen{
       display: flex;
+      margin-bottom: 20px;
+      .on{
+        color: #fa524c;
+      }
       .divider{
         position: relative;
         top:3px;
@@ -130,7 +152,7 @@
     }
   }
   .breadcrumb{
-    margin-top:10px;
+    margin-top:20px;
     margin-bottom: 10px;
   }
 </style>
@@ -141,23 +163,29 @@ export default {
     return {
       goodList: [],
       listQuery: {},
+      loading: false,
       total: 0,
+      title: ''
     }
   },
   async asyncData (ctx) {
     try {
+      const { query } = ctx;
       const listQuery={
-        limit: 10,
+        limit: 20,
         page: 1,
-        sort: '-created_at',
-      }
+        sort: '',
+        pid: query.pid,
+        title: query.pid ? '': query.title
+      };
       let [goodData] = await Promise.all([
         getGoodList(listQuery)
       ])
       return {
         goodList: goodData.data,
         total: goodData.total,
-        listQuery: listQuery
+        listQuery: listQuery,
+        title: query.title
       }
     } catch(err) {
       ctx.$errorHandler(err)
@@ -165,10 +193,48 @@ export default {
   },
   head () {
     return {
-      title: '商品列表-' + process.env.APP_NAME
+      title: this.title + (this.listQuery.pid ? '-商品分类-': '-搜索结果-') + process.env.APP_NAME
     }
   },
   methods: {
+    getList(){
+      this.loading = true;
+      Promise.all([
+        getGoodList(this.listQuery)
+      ]).then(([goodData]) => {
+        this.goodList = goodData.data;
+        this.total = goodData.total;
+        this.loading = false;
+      }).catch((error) => {
+        this.loading = false;
+      })
+    },
+    //筛选点击
+    tabClick(index){
+      if(index){
+        if(index === 'sales'){
+          this.listQuery.sort = '-sales'
+        }else{
+          if(this.listQuery.sort !== '+order_price'){
+            this.listQuery.sort = '+order_price'
+          }else{
+            this.listQuery.sort = '-order_price'
+          }
+        }
+      }else{
+        this.listQuery.sort = ''
+      }
+      this.listQuery.page = 1;
+      this.getList();
+    },
+    handleSizeChange(val) {
+      this.listQuery.limit = val;
+      this.getList()
+    },
+    handleCurrentChange(val) {
+      this.listQuery.page = val;
+      this.getList()
+    }
   }
 }
 </script>

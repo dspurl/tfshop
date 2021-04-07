@@ -37,16 +37,9 @@ class GoodController extends Controller
             $q->where('is_recommend', $request->is_recommend);
         }
         $q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
-        //全文搜索
         if ($request->title) {
             $q->where(function ($q1) use ($request) {
-                /* MySQL<5.7 请使用这种方式, 如果商品数量多, 请自己分词解决搜索效率问题
-                $q1->orWhere('name','like','%'.$request->title.'%')
-                    ->orWhere('number',$request->title)
-                    ->orWhere('keywords','like','%'.$request->title.'%');
-                */
-                $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\'' . $request->title . '\' IN NATURAL LANGUAGE MODE)')
-                    ->orWhere('number', $request->title);
+                $q1->orWhere('name', 'like', '%' . $request->title . '%');
             });
         }
         //排序

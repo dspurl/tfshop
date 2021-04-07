@@ -25,7 +25,7 @@
               <div class="li" @click="goLogin">登录</div>
               <NuxtLink class="li" to="/pass/register">注册</NuxtLink>
             </template>
-            <NuxtLink class="li" to="/pass/notification">消息通知</NuxtLink>
+            <NuxtLink class="li" to="/user/notice/list">消息通知</NuxtLink>
             <div class="li cart" :class="{ on: shoppingCart.length > 0 }" @mouseenter="userCart" @mouseleave="userCartOut">
               <NuxtLink :to="{ path: '/cart'}"><div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{$nuxt.$store.state.shoppingCartNumber}})</div></NuxtLink>
               <el-collapse-transition>
@@ -80,8 +80,8 @@
           </div>
           <el-form :model="searchRuleForm" :rules="rules" ref="searchRuleForm" label-width="100px" class="searchRuleForm" @submit.native.prevent>
             <el-form-item prop="keyword">
-              <el-input placeholder="苹果电脑" v-model="searchRuleForm.keyword" class="input-with-select">
-                <el-button class="button-search" slot="append" icon="el-icon-search"/>
+              <el-input placeholder="" v-model="searchRuleForm.keyword" class="input-with-select">
+                <el-button class="button-search" slot="append" icon="el-icon-search" native-type="submit" @click="search"/>
               </el-input>
             </el-form-item>
           </el-form>
@@ -95,6 +95,14 @@
 import { addShoppingCart, synchronizationInventory } from '@/api/goodIndent'
 export default {
   data() {
+    const validateRemark = (rule, value, callback) => {
+      const flag = new RegExp("[`~!@#$^&*()=|{}':'\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘：”“'。？ ]");
+      if(flag.test(value)){
+        return callback(new Error('不允许输入非法字符'));
+      }else{
+        callback();
+      }
+    };
     return {
       navList: [
         { name: '首页', path: '/' },
@@ -113,17 +121,26 @@ export default {
       user:{},
       rules: {
         keyword: [
-          { required: true, message: '请输入关键字', trigger: 'blur' }
+          { validator: validateRemark, trigger: 'blur' }
         ]
       }
     }
   },
+  watch: {
+    $route: {
+      handler: function(val, oldVal){
+        this.setNavActive(val.path)
+      },
+      deep: true
+    }
+  },
   mounted() {
-    this.setNavActive()
+    this.setNavActive($nuxt.$route.path)
     this.userInfo()
     if(this.$store.state.hasLogin) {
       this.getShoppingCart()
     }
+    this.searchRuleForm.keyword = $nuxt.$store.state.setSearchKeyword
   },
   methods: {
     // 获取购物车
@@ -161,10 +178,10 @@ export default {
         this.cartLoading = false
       })
     },
-    setNavActive(){
+    setNavActive(path){
       for (let i=0;i<this.navList.length;i++)
       {
-        if(this.navList[i].path.split('\/')[1]  === $nuxt.$route.path.split('\/')[1]){
+        if(this.navList[i].path.split('\/')[1]  === path.split('\/')[1]){
           this.navActive = i
           break
         }
@@ -213,6 +230,18 @@ export default {
       this.store.set(process.env.CACHE_PR + 'CartList',this.cartOriginalList)
       addShoppingCart(this.cartOriginalList)
       this.getShoppingCart()
+    },
+    // 搜索
+    search(){
+      this.$refs['searchRuleForm'].validate((valid) => {
+        if (valid) {
+          $nuxt.$store.commit('setSearchKeyword', this.searchRuleForm.keyword)
+          this.$router.push({
+            path: `/product/list`,
+            query: { title: this.searchRuleForm.keyword }
+          })
+        }
+      });
     }
   }
 }

@@ -41,7 +41,7 @@
               { name: '消息通知', path: '/user/notice/list', active: false},
               { name: '我的收藏', path: '/user/collect', active: false},
               { name: '地址管理', path: '/user/address', active: false},
-              { name: '我的账单', path: '/user/finance', active: false}
+              { name: '我的账单', path: '/user/finance/list', active: false}
             ]
           },
           {
