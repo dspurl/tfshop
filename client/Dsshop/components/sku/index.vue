@@ -63,7 +63,7 @@
 
 <script>
 import uniNumberBox from '@/components/uni-number-box.vue'
-import { param2Data } from '@/components/Sku/sku2param'
+import { param2Data } from '@/components/sku/sku2param'
 import GoodIndent from '@/api/goodIndent'
 export default{
 	name: 'sku',

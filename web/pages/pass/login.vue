@@ -8,8 +8,8 @@
             <el-card class="form" shadow="hover">
               <div class="login-method">
                 <span :class="{on:method === 1}" @click="method = 1">账号登录</span>
-                <el-divider direction="vertical"></el-divider>
-                <span :class="{on:method === 2}" @click="method = 2">扫码登录</span>
+<!--                <el-divider direction="vertical"></el-divider>-->
+<!--                <span :class="{on:method === 2}" @click="method = 2">扫码登录</span>-->
               </div>
               <div v-if="method === 1">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm">

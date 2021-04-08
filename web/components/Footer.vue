@@ -19,41 +19,28 @@
         <div>正品保证</div>
       </div>
     </div>
-    <!-- 服务end-->
-    <el-divider class="container"></el-divider>
-    <!-- 链接-->
-    <div class="links container">
-      <div class="li">
-        <div class="dt">购物指南</div>
-        <NuxtLink class="dd" to="/pass/login">常见问题</NuxtLink>
-      </div>
-      <div class="li">
-        <div class="dt">关于我们</div>
-        <NuxtLink class="dd" to="/pass/login">常见问题</NuxtLink>
-      </div>
-      <div class="li">
-        <div class="dt">帮助中心</div>
-        <NuxtLink class="dd" to="/pass/login">常见问题</NuxtLink>
-      </div>
-      <div class="li">
-        <div class="dt">支付方式</div>
-        <NuxtLink class="dd" to="/pass/login">常见问题</NuxtLink>
-      </div>
-    </div>
-    <!-- 链接end-->
-
     <!-- 版权信息-->
     <div class="copyright">
       <div class="container">
-        <span>Copyright © 2020-2021 DSSHOP</span>
+        <span>Copyright © 2020-{{year}} {{domain}}</span>
         <el-divider direction="vertical"></el-divider>
-        <a href="http://beian.miit.gov.cn/" target="_blank">浙ICP备110120119</a>
+        <a href="http://beian.miit.gov.cn/" target="_blank">{{icp}}</a>
       </div>
     </div>
     <!-- 版权信息end -->
   </div>
 </template>
-
+<script>
+  export default {
+    data() {
+      return {
+        icp: process.env.APP_ICP,
+        year: new Date().getFullYear(),
+        domain: process.env.APP_SHORT_NAME
+      }
+    }
+  }
+</script>
 <style lang='scss' scoped>
   .footer{
     background-color: #ffffff;

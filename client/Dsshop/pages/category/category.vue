@@ -6,13 +6,19 @@
 			</view>
 		</scroll-view>
 		<scroll-view scroll-with-animation scroll-y class="right-aside" @scroll="asideScroll" :scroll-top="tabScrollTop">
-			<view v-for="item in slist" :key="item.id" class="s-list" :id="'main-'+item.id">
+			<view v-if="slist.length > 0" v-for="item in slist" :key="item.id" class="s-list" :id="'main-'+item.id">
 				<text class="s-item">{{item.name}}</text>
 				<view class="t-list">
 					<view @click="navToList(item.id, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
 						<image :src="titem.resources.img  | smallImage(80)" lazy-load></image>
 						<text class="text-cut text-center">{{titem.name}}</text>
 					</view>
+				</view>
+			</view>
+			<view v-else class="t-list">
+				<view @click="navToList(item.id, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
+					<image :src="titem.resources.img  | smallImage(80)" lazy-load></image>
+					<text class="text-cut text-center">{{titem.name}}</text>
 				</view>
 			</view>
 		</scroll-view>
@@ -49,7 +55,7 @@
 						}else{
 							that.tlist.push(item); //3级分类
 						}
-					}) 
+					})
 					setTimeout(() => {
 					  if(!that.sizeCalcState){
 					  	that.calcSize();
@@ -185,7 +191,7 @@
 		font-size: 26upx;
 		color: #666;
 		padding-bottom: 20upx;
-		
+
 		image{
 			width: 140upx;
 			height: 140upx;

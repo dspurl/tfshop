@@ -1,24 +1,27 @@
 <template>
   <div class="min-footer">
-    <div class="links">
-      <NuxtLink to="/pass/login">关于我们</NuxtLink>
-      <el-divider direction="vertical"></el-divider>
-      <NuxtLink to="/pass/login">联系我们</NuxtLink>
-      <el-divider direction="vertical"></el-divider>
-      <NuxtLink to="/pass/login">友情链接</NuxtLink>
-    </div>
     <!-- 版权信息-->
     <div class="copyright">
       <div class="container">
-        <span>Copyright © 2020-2021 DSSHOP</span>
+        <span>Copyright © 2020-{{year}} {{domain}}</span>
         <el-divider direction="vertical"></el-divider>
-        <a href="http://beian.miit.gov.cn/" target="_blank">浙ICP备110120119</a>
+        <a href="http://beian.miit.gov.cn/" target="_blank">{{icp}}</a>
       </div>
     </div>
     <!-- 版权信息end -->
   </div>
 </template>
-
+<script>
+  export default {
+    data() {
+      return {
+        icp: process.env.APP_ICP,
+        year: new Date().getFullYear(),
+        domain: process.env.APP_SHORT_NAME
+      }
+    }
+  }
+</script>
 <style lang='scss' scoped>
   .min-footer{
     background-color: #ffffff;

@@ -8,9 +8,12 @@
       <div class="product-box">
         <div class="picture">
           <el-carousel :autoplay="false" arrow="always" height="450px" indicator-position="outside">
-            <el-carousel-item v-for="(item, index) in goodDetail.resources_many" :key="index">
+            <el-carousel-item v-for="(item, index) in resources_many" :key="index">
               <template v-if="item.type === 'img'">
                 <el-image class="image" fit="scale-down" :src="item.img" :preview-src-list="resources_many_img"></el-image>
+              </template>
+              <template v-else>
+                <VueVideo :sources="item.img" :poster="poster"/>
               </template>
             </el-carousel-item>
           </el-carousel>
@@ -161,9 +164,12 @@
 import {detail} from '@/api/good'
 import {create as collectCreate, destroy as collectDestroy, detail as getCollectDetail} from '@/api/collect'
 import sku from '@/components/Sku'
+import VueVideo from '@/components/VueVideo'
+import 'video.js/dist/video-js.css'
 export default {
   components: {
-    sku
+    sku,
+    VueVideo
   },
   data() {
     return {
@@ -173,7 +179,8 @@ export default {
       specificationDefaultDisplay: {},
       resources_many: [],
       resources_many_img: [],
-      collect: 0
+      collect: 0,
+      poster: ''
     }
   },
   async asyncData (ctx) {
@@ -198,6 +205,7 @@ export default {
             resources_many_img.push(item.img)
           }
         })
+        console.log('goodDetailData',goodDetailData)
       }
       return {
         goodDetail: goodDetailData,

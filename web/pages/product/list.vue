@@ -185,7 +185,7 @@ export default {
         goodList: goodData.data,
         total: goodData.total,
         listQuery: listQuery,
-        title: query.title
+        title: query.title ? query.title : '全部商品'
       }
     } catch(err) {
       ctx.$errorHandler(err)

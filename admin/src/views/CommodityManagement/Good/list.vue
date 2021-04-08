@@ -13,13 +13,13 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleFilter">搜索</el-button>
-          分类筛选: <el-select v-model="listQuery.category_id" placeholder="请选择分类" @change="changeCategorys">
-            <el-option
-              v-for="item in categorys"
-              :key="item.value"
-              :label="item.label"
-              :value="item.value"/>
-          </el-select>
+          分类筛选:
+          <el-cascader
+            v-model="listQuery.category_id"
+            :options="categorys"
+            :props="{ expandTrigger: 'hover' }"
+            clearable
+            @change="changeCategorys"/>
         </el-form-item>
       </el-form>
       <br>

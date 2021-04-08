@@ -36,7 +36,9 @@ export default {
   css: [
     'element-ui/lib/theme-chalk/index.css',
     '@/assets/css/main.css',
-    '@/assets/css/iconfont.css'
+    '@/assets/css/iconfont.css',
+    'video.js/dist/video-js.css',
+    '@/assets/css/video.css',
   ],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
@@ -45,7 +47,8 @@ export default {
     '@/plugins/ctx-inject.js',
     '@/plugins/filter.js',
     '@/plugins/store',
-    '@/plugins/global'
+    '@/plugins/global',
+    { src: '@/plugins/videoPlayer.js', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

@@ -63,7 +63,7 @@ class GoodController extends Controller
 			}
 		}
 	  if ($request->cateId) {
-             $q->where('category_id', $request->cateId);
+             $q->where('category_id', collect($request->cateId)->last());
         }
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);

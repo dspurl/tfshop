@@ -115,7 +115,7 @@
 	} from 'vuex';
 	import GoodIndent from '../../api/goodIndent'
 	import uniNumberBox from '@/components/uni-number-box.vue'
-	import sku from '@/components/Sku'
+	import sku from '@/components/sku'
 	export default {
 		components: {
 			uniNumberBox,
