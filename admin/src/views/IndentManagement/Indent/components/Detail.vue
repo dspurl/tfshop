@@ -135,7 +135,7 @@
         <span>配送</span>
       </div>
       <div>
-        <el-form ref="dataForm" :rules="rules" :model="temp" label-width="120px" style="width: 400px; margin-left:50px;">
+        <el-form ref="dataForm" :rules="!temp.id ? {} : rules" :model="temp" label-width="120px" style="width: 400px; margin-left:50px;">
           <el-form-item label="运费">
             <span v-if="list.carriage">{{ list.carriage | 1000 }}元</span>
             <span v-else>免运费</span>
