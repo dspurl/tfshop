@@ -568,18 +568,24 @@ export default {
     // 保存配送信息
     setDhlUpdate() {
       this.shipmentLoading = true
-      dhl(this.temp).then(() => {
-        this.shipmentLoading = false
-        this.temp = {}
-        this.getList()
-        this.$notify({
-          title: this.$t('hint.succeed'),
-          message: '保存成功',
-          type: 'success',
-          duration: 2000
-        })
-      }).catch(() => {
-        this.shipmentLoading = false
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          dhl(this.temp).then(() => {
+            this.shipmentLoading = false
+            this.temp = {}
+            this.getList()
+            this.$notify({
+              title: this.$t('hint.succeed'),
+              message: '保存成功',
+              type: 'success',
+              duration: 2000
+            })
+          }).catch(() => {
+            this.shipmentLoading = false
+          })
+        } else {
+          this.shipmentLoading = false
+        }
       })
     },
     // 延长收货时间
