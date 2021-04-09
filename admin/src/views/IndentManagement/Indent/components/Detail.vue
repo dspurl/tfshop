@@ -150,9 +150,9 @@
                 :value="item.id"/>
             </el-select>
           </el-form-item>
-          <el-form-item class="is-error" label="运单号" prop="odd">
+          <el-form-item label="运单号" prop="odd">
             <div v-if="list.odd && !temp.odd">{{ list.odd }}</div>
-            <el-input v-else v-model="temp.odd" maxlength="255" clearable/>
+            <el-input v-else ref="odd" v-model="temp.odd" maxlength="255" clearable/>
           </el-form-item>
           <el-form-item v-if="list.state === 3">
             <el-button v-if="temp.id" :loading="shipmentLoading" type="primary" @click="setDhlUpdate">保存</el-button>
@@ -405,7 +405,8 @@ export default {
       listLoading: true,
       id: this.$route.query.id,
       temp: {
-        dhl_id: null
+        dhl_id: null,
+        odd: ''
       },
       receivingTemp: {
         id: 0,
@@ -524,8 +525,7 @@ export default {
           })
         } else {
           this.shipmentLoading = false
-          const isError = document.getElementsByClassName('is-error')
-          isError[0].querySelector('input').focus()
+          this.$refs.odd.focus()
           this.$notify({
             title: '',
             message: '请输入物流信息',
