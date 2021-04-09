@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^1.1.5",
+    "@chenfengyuan/vue-qrcode": "^1.0.2",
     "@nuxtjs/axios": "^5.13.1",
     "@nuxtjs/dotenv": "^1.4.1",
     "core-js": "^3.8.3",
@@ -18,7 +19,9 @@
     "element-ui": "^2.15.0",
     "js-cookie": "^2.2.1",
     "nuxt": "^2.14.12",
+    "qrcode": "^1.4.4",
     "store": "^2.0.12",
+    "vue": "^2.6.12",
     "vue-video-player": "^5.0.2"
   },
   "devDependencies": {
