@@ -273,7 +273,6 @@
 	}
 	.wrapper{
 		z-index: 90;
-		position:relative;
 		background: #fff;
 		padding-bottom: 40upx;
 	}
