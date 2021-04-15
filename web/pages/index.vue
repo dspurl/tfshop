@@ -9,14 +9,14 @@
             <!-- 二级分类-->
             <div class="secondary-navigation" v-if="categoryStyle === 1">
               <div class="list" v-for="(item, index) in categorySublevel" :key="index">
-                <NuxtLink class="dt" to="{ path: 'product/detail', query: { id: item.id }}">{{item.name}}<i class="iconfont dsshop-youjiantou"></i></NuxtLink>
+                <NuxtLink class="dt">{{item.name}}<i class="iconfont dsshop-youjiantou"></i></NuxtLink>
                 <div class="dd">
-                  <NuxtLink class="li" v-for="(item2, index2) in item.children" :key="index2" to="/pass/login">{{item2.name}}</NuxtLink>
+                  <NuxtLink class="li" v-for="(item2, index2) in item.children" :key="index2" :to="{ path: 'product/list', query: { pid: item2.id, title: item2.name }}">{{item2.name}}</NuxtLink>
                 </div>
               </div>
             </div>
             <div class="secondary-navigation2" v-else-if="categoryStyle === 2">
-              <NuxtLink class="li" to="/pass/login" v-for="(item, index) in categorySublevel" :key="index">
+              <NuxtLink class="li" :to="{ path: 'product/list', query: { pid: item.id, title: item.name }}" v-for="(item, index) in categorySublevel" :key="index">
                 <el-image
                   class="image"
                   :src="item.resources.img | smallImage(80)"

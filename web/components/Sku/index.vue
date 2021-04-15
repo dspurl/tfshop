@@ -15,7 +15,7 @@
 <template>
 	<div>
     <div v-for="(item, index) in specification" :key="index" class="specification-list">
-      <div class="name">{{ item.value }}</div>
+      <div class="name">选择{{ item.value }}</div>
       <div class="item-list">
         <div
           v-for="(childItem, childIndex) in item.leaf"
