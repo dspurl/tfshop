@@ -19,7 +19,7 @@
               <NuxtLink class="li" to="/pass/login" v-for="(item, index) in categorySublevel" :key="index">
                 <el-image
                   class="image"
-                  :src="item.resources.img"
+                  :src="item.resources.img | smallImage(80)"
                   fit="scale-down"/>
                 <div class="name">{{item.name}}</div>
               </NuxtLink>
@@ -205,7 +205,6 @@ export default {
     .li{
       font-size: 12px;
       line-height: 40px;
-      margin-bottom: 40px;
       display: flex;
       width: 25%;
       .name{
@@ -215,14 +214,15 @@ export default {
         overflow: hidden;
         text-overflow:ellipsis;
         white-space: nowrap;
+        line-height: 80px;
       }
     }
     .li:hover{
       color: #fa524c;
     }
     .image{
-      width: 40px;
-      height: 40px;
+      width: 80px;
+      height: 80px;
     }
   }
   .secondary-navigation{
