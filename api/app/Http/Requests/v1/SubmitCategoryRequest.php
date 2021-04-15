@@ -40,9 +40,6 @@ class SubmitCategoryRequest extends Request
                     return [
                         'name'=> [
                             'required',
-                            Rule::unique('categorys')->where(function ($query) use($request) {
-                                $query->where('deleted_at', null)->where('id','!=',$request['id']);
-                            }),
                             'string',
                             'max:30',
                         ],
@@ -54,8 +51,8 @@ class SubmitCategoryRequest extends Request
                     return [
                         'name'=> [
                             'required',
-                            Rule::unique('categorys')->where(function ($query) {
-                                $query->where('deleted_at', null);
+                            Rule::unique('categorys')->where(function ($query) use($request) {
+                                $query->where('deleted_at', null)->where('pid',$request['pid']);
                             }),
                             'string',
                             'max:30',

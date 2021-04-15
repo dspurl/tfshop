@@ -33,7 +33,11 @@
             <el-progress :percentage="imgProgressPercent" type="circle" class="progress-img"/>
           </span>
           <span v-else>
-            <img v-if="ruleForm.img" :src="ruleForm.img" class="avatar">
+            <el-image
+              v-if="ruleForm.img"
+              :src="ruleForm.img"
+              fit="scale-down"
+              class="avatar"/>
             <i v-else class="el-icon-plus avatar-uploader-icon"/>
           </span>
         </el-upload>

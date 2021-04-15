@@ -88,7 +88,11 @@
               <el-progress :percentage="imgProgressPercent" type="circle" class="progress-img"/>
             </span>
             <span v-else>
-              <img v-if="temp.portrait" :src="temp.portrait" class="avatar">
+              <el-image
+                v-if="temp.portrait"
+                :src="temp.portrait"
+                fit="scale-down"
+                class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon"/>
             </span>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过500kb</div>
