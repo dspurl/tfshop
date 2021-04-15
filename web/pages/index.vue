@@ -195,7 +195,7 @@ export default {
     box-shadow: 0 8px 16px #888888;
     top:0;
     left: 200px;
-    z-index: 2;
+    z-index: 10;
     width: 1000px;
     height: 460px;
     padding:20px;

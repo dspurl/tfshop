@@ -127,7 +127,7 @@ class GoodController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         } else {
-            $q->orderBy('sort', 'ASC');
+            $q->orderBy('sort', 'ASC')->orderBy('id', 'ASC');
         }
         $paginate = $q->with(['resources'])->get();
         if ($request->has('tree')) {
