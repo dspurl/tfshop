@@ -253,8 +253,10 @@ export default {
   .top-nav{
     display: flex;
     .logo{
-      width: 80px;
-      height: 80px;
+      width: 60px;
+      height: 60px;
+      margin-top:10px;
+      margin-bottom: 10px;
     }
     .nav{
       margin-left:50px;

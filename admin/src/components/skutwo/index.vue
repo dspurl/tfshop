@@ -72,6 +72,10 @@
       overflow: hidden
       text-overflow: ellipsis
       white-space: nowrap
+.sku-unified-set
+  width: 300px
+  .input
+    margin-bottom: 10px
 </style>
 
 <template lang="pug">
@@ -107,7 +111,34 @@
             )
         .spec_title
           el-button(type='info' :disabled='disabled' @click='addSpec') 添加规格项目
-
+  el-form-item(
+    label="统一设置"
+    class="sku-unified-set"
+  )
+    el-input.input(
+      placeholder="成本价"
+      v-model="allUnified.cost_price"
+      clearable
+      @input="e => updateUnifiedInput(e, 'cost_price')"
+    )
+    el-input.input(
+      placeholder="市场价"
+      v-model="allUnified.market_price"
+      clearable
+      @input="e => updateUnifiedInput(e, 'market_price')"
+    )
+    el-input.input(
+      placeholder="销售价"
+      v-model="allUnified.price"
+      clearable
+      @input="e => updateUnifiedInput(e, 'price')"
+    )
+    el-input.input(
+      placeholder="库存"
+      v-model="allUnified.inventory"
+      clearable
+      @input="e => updateUnifiedInput(e, 'inventory')"
+    )
   el-form-item
       .sku_container
         SkuTable(:specification.sync="specificationFilter" :productSkus.sync="productSkus" ref="SkuTable")
@@ -130,6 +161,12 @@ class EditSku extends Vue {
   addValues = []
   productSkus = []
   specification = []
+  allUnified = {
+    cost_price: null,
+    market_price: null,
+    price: null,
+    inventory: null
+  }
 
   get disabled() {
     return (
@@ -182,6 +219,10 @@ class EditSku extends Vue {
 
   delOption(spec_index, option_index) {
     this.specification[spec_index].leaf.splice(option_index, 1)
+  }
+
+  updateUnifiedInput(e, name) {
+    this.$refs.SkuTable._setInput(name, e)
   }
 }
 

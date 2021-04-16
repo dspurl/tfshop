@@ -241,7 +241,7 @@ export default {
         cateId: this.$route.query.cateId
       },
       temp: {},
-      categorys: {},
+      categorys: [],
       rules: {
         title: [
           { required: true, message: '请输入标题', trigger: 'blur' }

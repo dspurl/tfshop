@@ -151,6 +151,13 @@ import { getToken } from '@/utils/auth'
       this.data[index][name] = e
       this.data = JSON.parse(JSON.stringify(this.data))
     },
+    // 父组件调用，修改统一数据
+    _setInput(name, value) {
+      this.data.map(item => {
+        item[name] = value
+      })
+      this.data = JSON.parse(JSON.stringify(this.data))
+    },
     // 图片格式大小验证
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2
