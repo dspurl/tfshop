@@ -134,6 +134,28 @@
             title="设置推荐后，将在首页展示，只有三级分类能正常访问"
             type="warning"/>
         </el-form-item>
+        <el-form-item label="默认规格项目" prop="is_specification">
+          <el-tag
+            v-for="tag in temp.is_specification"
+            :key="tag"
+            :disable-transitions="false"
+            closable
+            class="el-tag"
+            @close="handleClose(tag)">
+            {{ tag }}
+          </el-tag>
+          <el-input
+            v-if="inputVisible"
+            ref="saveTagInput"
+            v-model="inputValue"
+            class="input-new-tag"
+            size="small"
+            style="width: 80px;"
+            @keyup.enter.native="handleInputConfirm"
+            @blur="handleInputConfirm"
+          />
+          <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加规格项目</el-button>
+        </el-form-item>
         <el-form-item label="规格" prop="specification">
           <el-transfer
             :filter-method="filterMethod"
@@ -198,6 +220,9 @@
   .el-dialog{
     width:65% !important;
   }
+  .el-tag{
+    margin-right: 5px;
+  }
 </style>
 
 <script>
@@ -253,7 +278,8 @@ export default {
         attribute: [],
         brand: [],
         sort: 5,
-        is_recommend: 0
+        is_recommend: 0,
+        is_specification: []
       },
       dialogFormVisible: false,
       dialogStatus: '',
@@ -268,7 +294,9 @@ export default {
           { required: true, message: '状态必须填写', trigger: 'blur' }
         ]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      inputVisible: false,
+      inputValue: ''
     }
   },
   created() {
@@ -324,7 +352,8 @@ export default {
         attribute: [],
         brand: [],
         sort: 5,
-        is_recommend: 0
+        is_recommend: 0,
+        is_specification: []
       }
     },
     handleCreate(row = null) {
@@ -459,6 +488,24 @@ export default {
       }
       this.imgProgress = true
       return isLt2M
+    },
+    handleClose(tag) {
+      this.temp.is_specification.splice(this.temp.is_specification.indexOf(tag), 1)
+    },
+
+    showInput() {
+      this.inputVisible = true
+      this.$nextTick(_ => {
+        this.$refs.saveTagInput.$refs.input.focus()
+      })
+    },
+    handleInputConfirm() {
+      const inputValue = this.inputValue
+      if (inputValue) {
+        this.temp.is_specification.push(inputValue)
+      }
+      this.inputVisible = false
+      this.inputValue = ''
     }
   }
 }

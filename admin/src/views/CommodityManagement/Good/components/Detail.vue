@@ -570,6 +570,7 @@ export default {
                 })
               }
             })
+            this.$refs.SkuDemo._addSpec(['测试', '下玉'])
           } else {
             this.good_attribute = []
           }

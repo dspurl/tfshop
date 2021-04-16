@@ -200,6 +200,16 @@ class EditSku extends Vue {
     })
   }
 
+  _addSpec(list) {
+    list.foreach(item => {
+      this.specification.push({
+        id: createUniqueString() + '_id',
+        value: item,
+        leaf: []
+      })
+    })
+  }
+
   delSepc(index) {
     this.specification.splice(index, 1)
   }
