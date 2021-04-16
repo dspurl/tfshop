@@ -32,7 +32,6 @@ class CategoryController extends Controller
      */
     public function list(Request $request)
     {
-        Category::$withoutAppends = false;
         $q = Category::query();
         $limit = $request->limit;
         if ($request->has('sort')) {
@@ -47,7 +46,7 @@ class CategoryController extends Controller
             $q->where('name', 'like', '%' . $request->title . '%');
         }
         if ($request->has('pid')) {
-            $q->where('pid', $request->pid[count($request->pid) - 1]);
+            $q->where('pid', $request->pid[count($request->pid)-1]);
         } else {
             $q->where('pid', 0);
         }
@@ -84,7 +83,6 @@ class CategoryController extends Controller
             $Category->pid = $request->pid;
             $Category->sort = $request->sort;
             $Category->is_recommend = $request->is_recommend;
-            $Category->is_specification = $request->is_specification;
             $Category->state = $request->state;
             $Category->save();
             if ($request->logo) {
@@ -149,7 +147,6 @@ class CategoryController extends Controller
             $Category->sort = $request->sort;
             $Category->state = $request->state;
             $Category->is_recommend = $request->is_recommend;
-            $Category->is_specification = $request->is_specification;
             $Category->save();
             if ($request->resources && $request->logo) {
                 $Resource = Resource::find($request->resources['id']);

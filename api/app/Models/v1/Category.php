@@ -13,12 +13,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int state
  * @property string resources
  * @property int is_recommend
- * @property array is_specification
  */
 class Category extends Model
 {
     use SoftDeletes;
-    public static $withoutAppends = true;
+    public static $withoutAppends = false;
     const CATEGORY_STATE_YES = 0; //状态：正常
     const CATEGORY_STATE_NO = 1; //状态：隐藏
     const CATEGORY_IS_RECONMEND_NO = 0; //首页推荐：否
@@ -109,34 +108,5 @@ class Category extends Model
             return true;
         }
 
-    }
-
-    /**
-     * 获取默认产品规格项目
-     *
-     * @return array
-     */
-    public function getIsSpecificationAttribute()
-    {
-        if (isset($this->attributes['is_specification'])) {
-            if (self::$withoutAppends) {
-                return $this->attributes['is_specification'];
-            } else {
-                return json_decode($this->attributes['is_specification'], true);
-            }
-        }else{
-            return [];
-        }
-    }
-
-    /**
-     * 设置默认产品规格项目
-     *
-     * @param string $value
-     * @return void
-     */
-    public function setIsSpecificationAttribute($value)
-    {
-        $this->attributes['is_specification'] = json_encode($value);
     }
 }
