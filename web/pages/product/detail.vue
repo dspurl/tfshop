@@ -105,6 +105,11 @@
       background-color: #f4f4f4;
       .container{
         text-align: center;
+        overflow: hidden;
+        width: 100%;
+        img{
+          display: block;
+        }
       }
     }
   }
