@@ -68,6 +68,14 @@ class GoodController extends Controller
                 $query->where('category_id', $request->pid);
             });
         }
+        // 获取指定分类下的商品
+        if ($request->has('category_id')) {
+            $Category = Category::where('state', Category::CATEGORY_STATE_YES)->select('id', 'pid')->get();
+            $allSublevel = allSublevel($Category->toArray(), [$request->category_id]);
+            if (count($allSublevel) > 0) {
+                $q->whereIn('category_id', $allSublevel);
+            }
+        }
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
         }, 'goodSku' => function ($q) {

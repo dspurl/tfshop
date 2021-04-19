@@ -6,10 +6,14 @@
     </el-breadcrumb>
     <div class="category-box">
       <div class="category-list container" v-for="(item, index) in goodCategory" :key="index">
-        <div class="title">{{item.name}}</div>
+        <NuxtLink class="title" :to="{ path: '/product/list', query: { pid: item.id, title: item.name }}">
+          {{item.name}}
+        </NuxtLink>
         <template v-if="item.level === 3">
           <div class="category-list-box" v-for="(item2, index2) in item.children" :key="index2">
-            <div class="min-title">{{item2.name}}</div>
+            <NuxtLink class="min-title" :to="{ path: '/product/list', query: { pid: item2.id, title: item2.name }}">
+              {{item2.name}}
+            </NuxtLink>
             <div class="list">
               <div class="li" v-for="(item3, index3) in item2.children" :key="index3">
                 <NuxtLink :to="{ path: '/product/list', query: { pid: item3.id, title: item3.name }}">
@@ -52,6 +56,7 @@
       border-bottom-style: solid;
       border-bottom-color: #CCC;
       padding-bottom: 10px;
+      display: flex;
     }
     .category-list-box{
       padding-top:20px;
@@ -59,6 +64,7 @@
         font-weight: bold;
         color: #999999;
         margin-bottom: 20px;
+        display: flex;
       }
       .list{
         display: flex;

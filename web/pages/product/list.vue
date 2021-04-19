@@ -175,7 +175,7 @@ export default {
         limit: 20,
         page: 1,
         sort: '',
-        pid: query.pid,
+        category_id: query.pid,
         title: query.pid ? '': query.title
       };
       let [goodData] = await Promise.all([

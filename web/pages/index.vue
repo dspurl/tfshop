@@ -58,6 +58,30 @@
       </div>
     </div>
     <!--推荐 end-->
+    <!--分类推荐-->
+    <div class="recommend container" v-for="(fitem, findex) in recommendCategoryList" :key="findex">
+      <div class="title-box">
+        <div class="min-title">{{fitem.name}}</div>
+        <NuxtLink class="more" :to="{ path: '/product/list', query: { pid: fitem.id, title: fitem.name }}">查看更多>></NuxtLink>
+      </div>
+      <div class="list">
+        <NuxtLink class="li" v-for="(item, index) in recommendGoodList[findex]" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
+          <el-card class="card" shadow="hover">
+            <el-image
+              class="image"
+              :src="item.resources.img | smallImage(200)"
+              fit="cover"
+              lazy/>
+            <div class="name">{{item.name}}</div>
+            <div class="price">
+              <div class="symbol">¥</div>
+              <div class="value">{{item.order_price | thousands}}</div>
+            </div>
+          </el-card>
+        </NuxtLink>
+      </div>
+    </div>
+    <!--分类推荐 end-->
   </div>
 </template>
 
@@ -72,14 +96,16 @@ export default {
       goodList: [],
       bannerList: [],
       categoryList: [],
-      categorySublevel:[]
+      categorySublevel:[],
+      recommendCategoryList: [],
+      recommendGoodList: [],
     }
   },
   async asyncData (ctx) {
     try {
-      let [goodData, bannerData, categoryData] = await Promise.all([
+      let [goodData, bannerData, categoryData, recommendCategoryData] = await Promise.all([
         getGoodList({
-          limit: 20,
+          limit: 10,
           is_recommend: 1
         }),
         bannerList({
@@ -90,18 +116,22 @@ export default {
         goodCategory({
           tree: true
         }),
+        goodCategory({
+          is_recommend: 1
+        }),
       ])
       return {
         goodList: goodData.data,
         bannerList: bannerData.data,
-        categoryList: categoryData
+        categoryList: categoryData,
+        recommendCategoryList: recommendCategoryData
       }
     } catch(err) {
       ctx.$errorHandler(err)
     }
   },
   mounted() {
-
+    this.categoryGood()
   },
   methods: {
     // 分类切换
@@ -121,6 +151,19 @@ export default {
         }
       }
     },
+    // 获取分类商品
+    categoryGood() {
+      this.recommendCategoryList.forEach((item,index)=>{
+        this.recommendGoodList[index] = []
+        getGoodList({
+          limit: 10,
+          category_id: item.id
+        }).then(response => {
+          this.recommendGoodList[index] = response.data
+          this.$forceUpdate()
+        })
+      })
+    },
     // 分类移出
     naveShiftOut(){
       this.naveOn = null;
@@ -136,6 +179,24 @@ export default {
     width: 1210px;
     position: relative;
     left: 5px;
+    .title-box{
+      display: flex;
+      .min-title{
+        font-size: 22px;
+        color: #333;
+        line-height: 58px;
+        flex:1;
+      }
+      .more{
+        font-size: 16px;
+        line-height: 58px;
+        color: #424242;
+        width: 95px;
+      }
+      .more:hover{
+        color: #fa524c;
+      }
+    }
     .title{
       text-align: center;
       display: block;
