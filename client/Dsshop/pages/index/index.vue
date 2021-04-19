@@ -186,7 +186,7 @@ import Banner from '../../api/banner'
 				//测试数据没有写id，用title代替
 				let id = item.id;
 				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`
+					url: `/pages/product/detail?id=${id}`
 				})
 			},
 			//跳转
