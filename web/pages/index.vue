@@ -26,7 +26,7 @@
             </div>
             <!-- 二级导航 end-->
           </div>
-          <el-carousel class="banner" height="460px">
+          <el-carousel class="banner" height="460px" arrow="never">
             <el-carousel-item v-for="(item, index) in bannerList" :key="index">
               <NuxtLink v-if="item.url" target="_blank" :to="item.url.split('pages/').join('')">
                 <el-image class="image" :src="item.resources.img"/>
@@ -60,7 +60,7 @@
     </div>
     <!--推荐 end-->
     <!-- 广告-->
-    <div class="container banner" v-if="banner">
+    <div class="container advertising" v-if="banner">
       <NuxtLink v-if="banner.url" target="_blank" :to="banner.url.split('pages/').join('')">
         <el-image
           fit="cover"
@@ -200,7 +200,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-  .banner{
+  .advertising{
     margin-top: 20px;
   }
   .recommend{
@@ -358,13 +358,17 @@ export default {
   .classify{
     display: flex;
     background-color: #ffffff;
+    position: relative;
     .nave{
+      z-index: 10;
+      position: absolute;
+      left: 0;
+      top:0;
       width: 200px;
-      background-color: #ffffff;
-      color: #000000;
+      color: #ffffff;
       padding-top:20px;
       height: 460px;
-      overflow: hidden;
+      background: rgba(105,101,101,.6);
       .nave-li{
         cursor:pointer;
         padding:10px;
