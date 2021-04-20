@@ -176,6 +176,7 @@ export default {
   .main-color{
     margin-left: 5px;
     margin-right: 5px;
+    color: #fa524c;
   }
   .money-pay{
     margin: 40px 0 40px 0;

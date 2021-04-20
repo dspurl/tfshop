@@ -287,13 +287,13 @@ export default {
         margin-top:10px;
         flex:1;
         .active{
-          color: #FA436A;
+          color: $font-color-main;
         }
         .li{
           padding: 0 10px 0 10px;
         }
         .li:hover{
-          color: #FA436A;
+          color: $font-color-main;
         }
       }
       .searchRuleForm{
@@ -399,7 +399,7 @@ export default {
           cursor:pointer;
         }
         .a:hover{
-          color: #fa524c;
+          color: $font-color-main;
         }
       }
       .user-active{
@@ -410,7 +410,7 @@ export default {
           text-align: center;
         }
         .user-name:hover{
-          color: #fa524c;
+          color: $font-color-main;
         }
       }
       .li:hover{
@@ -465,7 +465,7 @@ export default {
                 color: #424242;
               }
               .title:hover{
-                color: #fa524c;
+                color: $font-color-main;
               }
               .price{
                 width: 80px;
@@ -477,7 +477,7 @@ export default {
                 cursor:pointer;
               }
               .close:hover{
-                color: #fa524c;
+                color: $font-color-main;
               }
               .invalid{
                 position: absolute;
@@ -514,7 +514,7 @@ export default {
               }
               .price{
                 line-height: normal;
-                color: #fa524c;
+                color: $font-color-main;
                 span{
                   font-size: 22px;
                 }
@@ -527,10 +527,10 @@ export default {
         }
       }
       .cart:hover{
-        color: #fa524c;
+        color: $font-color-main;
       }
       .cart.on{
-        background-color: #fa524c;
+        background-color: $font-color-main;
         color: #ffffff;
         .cart-navigation{
           color: #ffffff;

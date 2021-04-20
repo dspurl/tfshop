@@ -1,7 +1,7 @@
 require('dotenv').config()
 export default {
   loading: {
-    color: '#FA436A',
+    color: '#fa524c',
     height: '2px'
   },
   server: {
@@ -63,9 +63,12 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    ['@nuxtjs/dotenv', { filename: '.env' }]
+    ['@nuxtjs/dotenv', { filename: '.env' }],
+    '@nuxtjs/style-resources'
   ],
-
+  styleResources: {
+    scss: './assets/css/main.scss'
+  },
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
     transpile: [/^element-ui/],

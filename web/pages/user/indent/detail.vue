@@ -276,7 +276,7 @@ export default {
       .value{
         width: 100px;
         text-align: right;
-        color: #fa524c;
+        color: $font-color-main;
       }
       .total{
         position: relative;
@@ -318,7 +318,7 @@ export default {
   }
   .steps-box{
     .title{
-      color: #fa524c;
+      color: $font-color-main;
       margin-bottom: 10px;
     }
     .steps{
@@ -328,7 +328,7 @@ export default {
       font-size: 12px;
       line-height: 25px;
       .on{
-        background-color: #fa524c;
+        background-color: $font-color-main;
         color: #ffffff;
         border-radius:5px;
       }

@@ -30,9 +30,6 @@ a{
   text-decoration: none;
   color: #333;
 }
-.el-breadcrumb__inner a:hover, .el-breadcrumb__inner.is-link:hover{
-  color: #fa524c;
-}
 .body{
   min-width: 1200px;
 }
@@ -94,7 +91,4 @@ ul{
   height: 188px;
   display: block;
   cursor:pointer;
-}
-.main-color{
-  color: #fa524c;
 }

@@ -87,7 +87,7 @@
         }
         .li:hover{
           .name{
-            color: #fa524c;
+            color: $font-color-main;
           }
         }
       }

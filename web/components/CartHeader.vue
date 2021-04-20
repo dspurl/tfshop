@@ -64,7 +64,7 @@
   .min-header{
     background-color: #ffffff;
     padding: 10px 0 10px 0;
-    border-bottom: 2px solid #fa524c;
+    border-bottom: 2px solid $font-color-main;
     .container{
       display: flex;
       position: relative;
@@ -86,7 +86,7 @@
           color: #757575;
         }
         a:hover{
-          color: #fa524c;
+          color: $font-color-main;
         }
         .right-box{
           justify-content: right;
@@ -105,11 +105,11 @@
               }
             }
             a:hover{
-              color: #fa524c;
+              color: $font-color-main;
             }
           }
           .li:hover{
-            color: #fa524c;
+            color: $font-color-main;
           }
           .user{
             a{
@@ -138,7 +138,7 @@
               cursor:pointer;
             }
             .a:hover{
-              color: #fa524c;
+              color: $font-color-main;
             }
           }
           .user-active{
@@ -149,7 +149,7 @@
               text-align: center;
             }
             .user-name:hover{
-              color: #fa524c;
+              color: $font-color-main;
             }
           }
         }

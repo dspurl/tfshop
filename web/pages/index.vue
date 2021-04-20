@@ -222,7 +222,7 @@ export default {
         width: 95px;
       }
       .more:hover{
-        color: #fa524c;
+        color: $font-color-main;
       }
     }
     .title{
@@ -257,10 +257,10 @@ export default {
             .symbol{
               font-size: 12px;
               line-height: 40px;
-              color: #fa524c;
+              color: $font-color-main;
             }
             .value{
-              color: #fa524c;
+              color: $font-color-main;
               line-height: 35px;
             }
           }
@@ -307,7 +307,7 @@ export default {
       }
     }
     .li:hover{
-      color: #fa524c;
+      color: $font-color-main;
     }
     .image{
       width: 80px;
@@ -340,7 +340,7 @@ export default {
         }
       }
       .dt:hover{
-        color: #fa524c;
+        color: $font-color-main;
       }
       .dd{
         display: flex;
@@ -349,7 +349,7 @@ export default {
           padding: 0 10px 0 10px;
         }
         .li:hover{
-          color: #fa524c;
+          color: $font-color-main;
         }
       }
     }
@@ -379,7 +379,7 @@ export default {
       }
       .nave-li:hover,.nave-li.on{
         color: #ffffff;
-        background-color: #fa524c;
+        background-color: $font-color-main;
       }
     }
     .banner{

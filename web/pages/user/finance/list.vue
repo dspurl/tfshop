@@ -152,7 +152,7 @@ export default {
             margin-bottom: 5px;
           }
           a:hover{
-            color: #fa524c;
+            color: $font-color-main;
           }
         }
         .operation{
@@ -185,7 +185,7 @@ export default {
           cursor:pointer;
         }
         .delete:hover{
-          color: #fa524c;
+          color: $font-color-main;
         }
       }
     }

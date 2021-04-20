@@ -98,10 +98,10 @@
           .symbol{
             font-size: 12px;
             line-height: 40px;
-            color: #fa524c;
+            color: $font-color-main;
           }
           .value{
-            color: #fa524c;
+            color: $font-color-main;
             line-height: 35px;
           }
         }
@@ -114,7 +114,7 @@
   .screen-box{
     margin: 30px 0 10px 0;
     .on{
-      color: #fa524c;
+      color: $font-color-main;
     }
     .f-sort{
       position: relative;
@@ -142,7 +142,7 @@
       display: flex;
       margin-bottom: 20px;
       .on{
-        color: #fa524c;
+        color: $font-color-main;
       }
       .divider{
         position: relative;

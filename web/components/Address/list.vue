@@ -347,7 +347,7 @@ export default{
             font-size: 18px;
             margin-bottom: 20px;
             span{
-              color: #FA436A;
+              color: $font-color-main;
               float: right;
               font-size: 12px;
             }
@@ -366,7 +366,7 @@ export default{
         }
       }
       .item-on.on{
-        border: 1px solid #FA436A;
+        border: 1px solid $font-color-main;
       }
     }
   }

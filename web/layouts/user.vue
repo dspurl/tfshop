@@ -124,7 +124,7 @@
               font-size: 12px;
             }
             .active{
-              color: #FA436A;
+              color: $font-color-main;
             }
             a:hover{
               color: #333;

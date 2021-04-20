@@ -167,7 +167,7 @@ export default {
         font-size: 12px;
         margin: 20px 0 20px 0;
         span{
-          color: #fa524c;
+          color: $font-color-main;
           margin: 0 5px 0 5px;
         }
       }
@@ -203,7 +203,7 @@ export default {
           cursor:pointer;
         }
         .on, span:hover{
-          color: #fa524c;
+          color: $font-color-main;
         }
       }
       .button{
@@ -217,7 +217,7 @@ export default {
         color: #999;
       }
       .other a:hover{
-        color: #fa524c;
+        color: $font-color-main;
       }
     }
   }

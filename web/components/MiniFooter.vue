@@ -30,7 +30,7 @@
       text-align: center;
       padding:20px 0 0 0;
       a:hover{
-        color: #FA436A;
+        color: $font-color-main;
       }
     }
     .copyright{

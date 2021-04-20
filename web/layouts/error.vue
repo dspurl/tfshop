@@ -46,7 +46,7 @@
       }
       .link{
         span{
-          color: #fa524c;
+          color: $font-color-main;
           cursor:pointer;
         }
       }
