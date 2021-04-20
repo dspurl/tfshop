@@ -4,7 +4,27 @@
     <div class="site-topbar">
       <div class="container">
         <div class="topbar-nav">
-          <div class="menu"></div>
+          <div class="menu">
+            <div class="li">微信小程序
+              <div class="appcode">
+                <img class="padding" src="~/assets/img/miniweixin.jpg"/>
+                <p>微信小程序</p>
+              </div>
+            </div>
+            <div class="li">h5
+              <div class="appcode">
+                <img src="~/assets/img/h5.png"/>
+                <p>h5</p>
+              </div>
+            </div>
+            <div class="li">下载APP
+              <div class="appcode">
+                <img src="~/assets/img/android.png"/>
+                <p>安卓APP</p>
+              </div>
+            </div>
+
+          </div>
           <div class="login">
             <template v-if="user.cellphone">
               <div class="li user" :class="{ 'user-active': userActive }" @mouseenter="userMenu" @mouseleave="userMenuOut">
@@ -296,6 +316,40 @@ export default {
     display: flex;
     .menu{
       flex:1;
+      display: flex;
+      .li{
+        padding: 0 10px 0 10px;
+        line-height: 40px;
+        color: #b0b0b0;
+        cursor: pointer;
+        position: relative;
+        .appcode{
+          display: none;
+          position: absolute;
+          left: -30px;
+          box-shadow: 0 1px 5px #aaa;
+          text-align: center;
+          font-size: 14px;
+          line-height: 14px;
+          color: #333;
+          background-color: #ffffff;
+          .padding{
+            padding:10px;
+          }
+          p{
+            padding-bottom: 10px;
+          }
+          img{
+            width: 120px;
+          }
+        }
+      }
+      .li:hover{
+        color: #ffffff;
+        .appcode{
+          display: block;
+        }
+      }
     }
     .login{
       justify-content: right;

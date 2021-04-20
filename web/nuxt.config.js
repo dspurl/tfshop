@@ -12,7 +12,7 @@ export default {
     baseUrl: process.env.BASE_URL
   },
   router: {
-    middleware: 'refreshToken'
+    middleware: ['refreshToken', 'terminal']
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {

@@ -192,7 +192,6 @@ export default {
         sort: '+sort'
       }).then(response => {
         this.banner = response.data[0]
-        console.log('banner', this.banner)
       })
     }
   }
