@@ -37,33 +37,32 @@ class GoodController extends Controller
      */
     public function list(Request $request)
     {
+        DB::connection()->enableQueryLog();
         Good::$withoutAppends = false;
         GoodSku::$withoutAppends = false;
         $q = Good::query();
         $limit = $request->limit;
-		if($request->activeIndex != 1) {
-			if ($request->activeIndex == 2) {
-				$q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
-			} else if ($request->activeIndex == 3) {
-				$q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
-			}
-			if ($request->title) {
-				/*
-				MySQL<5.7并且商品不多时可用模糊搜索方式
-				$q->where(function($q1) use($request){
-					$q1->where('name','like','%'.$request->title.'%')
-						->orWhere('number',$request->title);
-				});
-				*/
-				$q->where(function ($q1) use ($request) {
-					$q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\'' . $request->title . '\' IN NATURAL LANGUAGE MODE)')
-						->orWhere('number', $request->title);
-				});
+        if ($request->activeIndex != 1) {
+            if ($request->activeIndex == 2) {
+                $q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
+            } else if ($request->activeIndex == 3) {
+                $q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
+            }
 
-			}
-		}
-	  if ($request->cateId) {
-             $q->where('category_id', collect($request->cateId)->last());
+        }
+        if ($request->title) {
+            $q->where(function ($q1) use ($request) {
+                $q1->where('name', 'like', '%' . $request->title . '%')
+                    ->orWhere('number', $request->title);
+            });
+            //全文索引需要MyISAM的支持
+            /*$q->where(function ($q1) use ($request) {
+                $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\'' . $request->title . '\' IN NATURAL LANGUAGE MODE)')
+                    ->orWhere('number', $request->title);
+            });*/
+        }
+        if ($request->cateId) {
+            $q->where('category_id', collect($request->cateId)->last());
         }
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);
@@ -83,6 +82,7 @@ class GoodController extends Controller
                 $paginate[$id]['delete'] = false;
             }
         }
+        dump(DB::getQueryLog());
         return resReturn(1, $paginate);
     }
 
@@ -244,7 +244,7 @@ class GoodController extends Controller
      * GoodEdit
      * 保存商品
      * @param SubmitGoodRequest $request
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID
      * @queryParam  name string 商品名称
@@ -429,7 +429,7 @@ class GoodController extends Controller
                 $Good->order_price = $order_price;
                 $Good->save();
                 //删除去除的SKU
-                GoodSku::where('good_id', $Good->id)->whereNotIn('id', $GoodSkuAll)->update(['deleted_at' =>Carbon::now()->toDateTimeString()]);
+                GoodSku::where('good_id', $Good->id)->whereNotIn('id', $GoodSkuAll)->update(['deleted_at' => Carbon::now()->toDateTimeString()]);
             }
             return 1;
         }, 5);
@@ -443,7 +443,7 @@ class GoodController extends Controller
     /**
      * GoodDetail
      * 商品详情
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID
      */
@@ -484,7 +484,7 @@ class GoodController extends Controller
     /**
      * GoodSpecification
      * 商品规格
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID
      */
@@ -502,7 +502,7 @@ class GoodController extends Controller
     /**
      * GoodState
      * 变更商品状态
-     * @param  int $id
+     * @param int $id
      * @param Request $request
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID
@@ -544,7 +544,7 @@ class GoodController extends Controller
     /**
      * GoodDestroy
      * 删除商品
-     * @param  int $id
+     * @param int $id
      * @param Request $request
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID
@@ -559,7 +559,7 @@ class GoodController extends Controller
                     return resReturn(0, '请选择内容', Code::CODE_WRONG);
                 }
                 $idData = collect($request->all())->pluck('id');
-                Good::whereIn('id', $idData)->update(['deleted_at' =>Carbon::now()->toDateTimeString()]);
+                Good::whereIn('id', $idData)->update(['deleted_at' => Carbon::now()->toDateTimeString()]);
             }
             return 1;
         }, 5);
