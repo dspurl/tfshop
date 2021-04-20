@@ -28,15 +28,16 @@
           </div>
           <el-carousel class="banner" height="460px">
             <el-carousel-item v-for="(item, index) in bannerList" :key="index">
-              <el-image class="image" :src="item.resources.img"/>
+              <NuxtLink v-if="item.url" target="_blank" :to="item.url.split('pages/').join('')">
+                <el-image class="image" :src="item.resources.img"/>
+              </NuxtLink>
+              <el-image v-else class="image" :src="item.resources.img"/>
             </el-carousel-item>
           </el-carousel>
         </div>
       </div>
     </div>
     <!--分类 end-->
-    <!--广告-->
-    <!--广告 end-->
     <!--推荐-->
     <div class="recommend container">
       <div class="title">为你推荐</div>
@@ -58,6 +59,18 @@
       </div>
     </div>
     <!--推荐 end-->
+    <!-- 广告-->
+    <div class="container banner" v-if="banner">
+      <NuxtLink v-if="banner.url" target="_blank" :to="banner.url.split('pages/').join('')">
+        <el-image
+          fit="cover"
+          :src="banner.resources.img"/>
+      </NuxtLink>
+      <el-image
+        v-else
+        fit="cover"
+        :src="banner.resources.img"/>
+    </div>
     <!--分类推荐-->
     <div class="recommend container" v-for="(fitem, findex) in recommendCategoryList" :key="findex">
       <div class="title-box">
@@ -94,6 +107,7 @@ export default {
       categoryStyle: 0,
       naveOn: null,
       goodList: [],
+      banner: '',
       bannerList: [],
       categoryList: [],
       categorySublevel:[],
@@ -131,7 +145,8 @@ export default {
     }
   },
   mounted() {
-    this.categoryGood()
+    this.categoryGood();
+    this.getBanner()
   },
   methods: {
     // 分类切换
@@ -168,12 +183,26 @@ export default {
     naveShiftOut(){
       this.naveOn = null;
       this.categoryStyle = 0
+    },
+    // 首页广告
+    getBanner(){
+      bannerList({
+        limit: 1,
+        type: 1,
+        sort: '+sort'
+      }).then(response => {
+        this.banner = response.data[0]
+        console.log('banner', this.banner)
+      })
     }
   }
 }
 </script>
 
 <style lang='scss' scoped>
+  .banner{
+    margin-top: 20px;
+  }
   .recommend{
     margin-top:40px;
     width: 1210px;
