@@ -11,7 +11,7 @@ use Illuminate\Console\Command;
 class ResourceMigration extends Command
 {
     /**
-     * 生成demo数据
+     * 本地资源一键迁移
      *
      * @var string
      */

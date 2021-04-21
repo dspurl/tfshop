@@ -136,7 +136,7 @@
 				// 商品
 				await Good.getList({
 					limit: 6,
-					pid: this.cateId,
+					category_id: this.cateId,
 					page: this.page,
 					sort: this.filterIndex
 				},function(res){
