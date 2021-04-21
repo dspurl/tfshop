@@ -37,7 +37,6 @@ class GoodController extends Controller
      */
     public function list(Request $request)
     {
-        DB::connection()->enableQueryLog();
         Good::$withoutAppends = false;
         GoodSku::$withoutAppends = false;
         $q = Good::query();
@@ -82,7 +81,6 @@ class GoodController extends Controller
                 $paginate[$id]['delete'] = false;
             }
         }
-        dump(DB::getQueryLog());
         return resReturn(1, $paginate);
     }
 
