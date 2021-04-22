@@ -2,7 +2,11 @@
   <div class="box">
     <div class="container product-detail">
       <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>
+          <NuxtLink :to="{ path: '/' }">
+            首页
+          </NuxtLink>
+        </el-breadcrumb-item>
         <el-breadcrumb-item>{{ goodDetail.name }}</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="product-box">

@@ -1,7 +1,11 @@
 <template>
   <div class="box">
     <el-breadcrumb class="breadcrumb container" separator="/">
-      <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+      <el-breadcrumb-item>
+        <NuxtLink :to="{ path: '/' }">
+          首页
+        </NuxtLink>
+      </el-breadcrumb-item>
       <el-breadcrumb-item v-if="listQuery.pid">商品分类</el-breadcrumb-item>
       <el-breadcrumb-item v-else>搜索结果</el-breadcrumb-item>
       <el-breadcrumb-item>{{title}}</el-breadcrumb-item>

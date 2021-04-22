@@ -3,7 +3,11 @@
     <Header />
     <div class="container user-portal">
       <el-breadcrumb separator="/" class="breadcrumb">
-        <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
+        <el-breadcrumb-item>
+          <NuxtLink :to="{ path: '/' }">
+            首页
+          </NuxtLink>
+        </el-breadcrumb-item>
         <el-breadcrumb-item>个人中心</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="user-box">
