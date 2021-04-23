@@ -1,4 +1,5 @@
 require('dotenv').config()
+// console.log(process.env.APP_ENV)
 export default {
   loading: {
     color: '#fa524c',
@@ -9,7 +10,8 @@ export default {
     host: '0.0.0.0', // default: localhost,
   },
   env: {
-    baseUrl: process.env.BASE_URL
+    baseUrl: process.env.BASE_URL,
+    APP_ENV: process.env.APP_ENV
   },
   router: {
     middleware: ['refreshToken', 'terminal']
@@ -63,7 +65,8 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
-    ['@nuxtjs/dotenv', { filename: '.env' }],
+    // ['@nuxtjs/dotenv', { filename: '.env' }],
+    ['@nuxtjs/dotenv', { filename: process.env.APP_ENV === 'local' ? '.env' : '.env.' + process.env.APP_ENV }],
     '@nuxtjs/style-resources'
   ],
   styleResources: {

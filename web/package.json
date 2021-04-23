@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "build": "nuxt build",
+    "build": "cross-env process.env.APP_ENV=prod nuxt build",
+    "build:test": "cross-env process.env.APP_ENV=test nuxt build",
     "start": "nuxt start",
     "generate": "nuxt generate",
     "test": "jest"
@@ -16,6 +17,7 @@
     "@nuxtjs/dotenv": "^1.4.1",
     "@nuxtjs/style-resources": "^1.0.0",
     "core-js": "^3.8.3",
+    "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "element-ui": "^2.15.0",
     "js-cookie": "^2.2.1",
