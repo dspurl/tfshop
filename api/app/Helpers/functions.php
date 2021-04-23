@@ -104,7 +104,13 @@ function unsetMultiKeys($unset, $array)
     return $recursiveIterator->getArrayCopy();
 }
 
-//获取所有父类值
+/**
+ * 获取所有父类值
+ * @param $pid
+ * @param $options
+ * @param array $return
+ * @return array
+ */
 function getParentClassHierarchy($pid, $options, &$return = array())
 {
     foreach ($options as $o) {
@@ -114,6 +120,26 @@ function getParentClassHierarchy($pid, $options, &$return = array())
             continue;
         }
     }
+    return $return;
+}
+
+/**
+ * 获取所有父类并返回原数据
+ * @param $pid
+ * @param $options
+ * @param array $return
+ * @return array
+ */
+function getParentClassHierarchyData($pid, $options, &$return = array())
+{
+    foreach ($options as $o) {
+        if ($o['id'] == $pid) {
+            $return[] = $o;
+            getParentClassHierarchyData($o['pid'], $options, $return);
+            continue;
+        }
+    }
+//    $return = genTree($return);
     return $return;
 }
 
