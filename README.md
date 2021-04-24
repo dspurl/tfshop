@@ -38,7 +38,8 @@ Dsshop是一个商城解决方案，它采用前后端分离，后端基于larav
 
 演示
 ------------
-- 后台演示地址：<a href="http://dsshop.dswjcms.com/admin">http://dsshop.dswjcms.com/admin</a> 用户名：admin 密码: admin
+- 后台演示地址：<a href="https://dsshop.dswjcms.com/admin">https://dsshop.dswjcms.com/admin</a> 用户名：admin 密码: admin
+- 网站演示地址：<a href="https://dsshop.dswjcms.com">https://dsshop.dswjcms.com</a>
 - h5、小程序、安卓演示
 <p align="center">
   <img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg">
