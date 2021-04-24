@@ -66,7 +66,7 @@ export default {
   modules: [
     '@nuxtjs/axios',
     // ['@nuxtjs/dotenv', { filename: '.env' }],
-    ['@nuxtjs/dotenv', { filename: process.env.APP_ENV === 'local' ? '.env' : '.env.' + process.env.APP_ENV }],
+    ['@nuxtjs/dotenv', { filename: process.env.APP_ENV === 'local' || !process.env.APP_ENV ? '.env' : '.env.' + process.env.APP_ENV }],
     '@nuxtjs/style-resources'
   ],
   styleResources: {

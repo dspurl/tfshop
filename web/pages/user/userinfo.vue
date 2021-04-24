@@ -22,7 +22,7 @@
       :title="dialogTitle"
       :visible.sync="centerDialogVisible"
       :close-on-click-modal="false"
-      width="30%">
+      width="600px">
       <el-form class="ruleForm" :model="ruleForm" :rules="rules" ref="ruleForm" label-width="100px">
         <template v-if="dialogType === 'portrait'">
           <el-form-item label="头像" prop="portrait">
@@ -262,6 +262,10 @@ export default {
   }
   .ruleForm{
     width: 500px;
+    .avatar-uploader-icon{
+      line-height: 190px;
+      margin:auto;
+    }
     .code-button{
       position: absolute;
       right: 5px;
