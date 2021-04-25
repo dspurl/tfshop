@@ -25,7 +25,10 @@
 
 介绍
 ------------
-Dsshop是一个商城解决方案，它采用前后端分离，后端基于laravel,前端基于Vue，我们不生成代码，我们只是代码的搬运工，60%的复制粘贴，30%的思考，10%的代码量。
+DSSHOP是一套多终端商城解决方案，它采用前后端分离，后端基于laravel,前端基于Vue。
+
+我们不生成代码，我们只是代码的搬运工，60%的复制粘贴，30%的思考，10%的代码量。
+
 > 本项目定位：入门简单，无需一行代码；深入需要多人协同完成，亦可全栈实现。
 >
 > 本项目涉及前后端代码，深入会需要掌握VUE、JS、HTML、H5、Laravel、小程序、uni-app
@@ -36,16 +39,29 @@ Dsshop是一个商城解决方案，它采用前后端分离，后端基于larav
 >
 > 欢迎社区贡献代码，帮助自己也可以帮助他人
 
+##### DSSHOP是什么
+
+- DSSHOP并非一套商城系统，它仅是一种多终端、前后端分离的解决方案；既然是方案，就不会有授权这一概念，我们只是将一些基于MIT、GUN等开源协议发布的开源项目拼接成一个直观的项目而已，也就是说你可以基于DSSHOP快速搭建自己个性化系统。
+- 我们一定要区分方案和系统的区别，方案是不限于语言、工具的，也就是说DSSHOP可以利用go、java、c++等等语言重写API，或是用Android、Ios重写APP，从而达到项目的可持续发展。
+- DSSHOP的开源之初就提及不适合任何人群，我们只面向开发者，所以需要你或你的团队掌握一定的编程基础。
+
+##### DSSHOP名字由来
+
+DSSHOP中文名：点石商城系统，因本人2012年开始做开源项目：点石为金资源管理系统（DSWJCMS），然后购买了dswjcms.com的域名,基于TP3.2做了好几个开源项目，后来对DSSHOP进行了重构，所以才有了现在的项目
+
 演示
 ------------
 - 后台演示地址：<a href="https://dsshop.dswjcms.com/admin">https://dsshop.dswjcms.com/admin</a> 用户名：admin 密码: admin
 - 网站演示地址：<a href="https://dsshop.dswjcms.com">https://dsshop.dswjcms.com</a>
 - h5、小程序、安卓演示
-<p align="center">
-  <img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg">
-  <img src="https://dspurl.github.io/image/13.png">
-  <img src="https://dspurl.github.io/image/1618405140569.png">
-</p>
+<table>
+    <tr>
+    	<td><img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg"></td>
+        <td><img src="https://dspurl.github.io/image/13.png"></td>
+        <td><img src="https://dspurl.github.io/image/1618405140569.png"></td>
+    </tr>
+</table>
+
 
 要求
 ------------
