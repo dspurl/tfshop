@@ -93,7 +93,7 @@ class BrandController extends Controller
             $Brand->name = $request->name;
             $Brand->sort = $request->sort;
             $Brand->save();
-            if ($request->resources['id'] && $request->logo) {
+            if ($request->resources && $request->logo) {
                 $Resource = Resource::find($request->resources['id']);
                 if ($request->logo != $Resource->img) {
                     resourceAutoDelete($Resource->img);
