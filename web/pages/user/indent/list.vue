@@ -24,14 +24,14 @@
           <div class="details">
             <div class="good">
               <div class="good-li"  v-for="(item2, index2) in item.goods_list" :key="index2">
-                <NuxtLink :to="{ path: '/product/detail', query: { id: item2.good_id }}" target="_blank">
+                <NuxtLink :to="{ path: '/product/detail', query: { id: item2.good_id }}">
                   <el-image
                     class="image"
                     :src="item2.img | smallImage(80)"
                     fit="cover"/>
                 </NuxtLink>
                 <div class="good-name">
-                  <NuxtLink :to="{ path: '/product/detail', query: { id: item2.good_id }}" target="_blank">{{item2.name}}</NuxtLink>
+                  <NuxtLink :to="{ path: '/product/detail', query: { id: item2.good_id }}">{{item2.name}}</NuxtLink>
                   <div class="price">￥{{item2.price}} x {{item2.number}}</div>
                   <div class="specification">{{item2.specification}}</div>
                 </div>

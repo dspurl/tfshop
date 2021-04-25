@@ -7,7 +7,7 @@ export default {
   },
   server: {
     port: 3004, // default: 3000
-    host: '0.0.0.0', // default: localhost,
+    host: process.env.APP_ENV === 'local' || !process.env.APP_ENV ? 'localhost' : '0.0.0.0', // default: localhost,
   },
   env: {
     baseUrl: process.env.BASE_URL,
@@ -15,6 +15,23 @@ export default {
   },
   router: {
     middleware: ['refreshToken', 'terminal']
+  },
+  pwa: {
+    icon: {
+      source: "/icon.png",
+      fileName: 'icon.png'
+    },
+    manifest: {
+      name: process.env.APP_SHORT_NAME,
+      short_name: process.env.APP_SHORT_NAME,
+      lang: 'zh-CN',
+      theme_color: '#fff',
+      description: process.env.APP_DESCRIPTION,
+      display: 'standalone'
+    },
+    workbox: {
+      dev: process.env.APP_ENV === 'local' || !process.env.APP_ENV
+    }
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
@@ -30,7 +47,9 @@ export default {
       { hid: 'keyword', name: 'keyword', content: process.env.APP_KEYWORD }
     ],
     link: [
-      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      { rel: "shortcut icon", href: "/favicon.ico" },
+      { rel: "apple-touch-icon", href: "/favicon.ico" }
     ]
   },
 
@@ -65,6 +84,7 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios',
+    '@nuxtjs/pwa',
     // ['@nuxtjs/dotenv', { filename: '.env' }],
     ['@nuxtjs/dotenv', { filename: process.env.APP_ENV === 'local' || !process.env.APP_ENV ? '.env' : '.env.' + process.env.APP_ENV }],
     '@nuxtjs/style-resources'

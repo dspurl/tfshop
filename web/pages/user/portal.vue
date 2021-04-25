@@ -39,7 +39,7 @@
     <el-divider></el-divider>
     <div class="user-title">浏览历史</div>
     <div class="browse-box">
-      <NuxtLink class="card" v-for="(item, index) in browseList" :key="index" :to="{ path: '/product/detail', query: { id: item.good_id }}" target="_blank">
+      <NuxtLink class="card" v-for="(item, index) in browseList" :key="index" :to="{ path: '/product/detail', query: { id: item.good_id }}">
         <el-image
           class="image"
           :src="item.good.resources.img | smallImage(200)"

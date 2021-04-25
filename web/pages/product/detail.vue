@@ -214,7 +214,6 @@ export default {
             resources_many_img.push(item.img)
           }
         })
-        console.log('goodDetailData',goodDetailData)
       }
       return {
         goodDetail: goodDetailData,

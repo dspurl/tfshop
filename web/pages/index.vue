@@ -28,7 +28,7 @@
           </div>
           <el-carousel class="banner" height="460px" arrow="never">
             <el-carousel-item v-for="(item, index) in bannerList" :key="index">
-              <NuxtLink v-if="item.url" target="_blank" :to="item.url.split('pages/').join('')">
+              <NuxtLink v-if="item.url" :to="item.url.split('pages/').join('')">
                 <el-image class="image" :src="item.resources.img"/>
               </NuxtLink>
               <el-image v-else class="image" :src="item.resources.img"/>
@@ -42,7 +42,7 @@
     <div class="recommend container">
       <div class="title">为你推荐</div>
       <div class="list">
-        <NuxtLink target="_blank" class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
+        <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
           <el-card class="card" shadow="hover">
             <el-image
               class="image"
@@ -61,7 +61,7 @@
     <!--推荐 end-->
     <!-- 广告-->
     <div class="container advertising" v-if="banner">
-      <NuxtLink v-if="banner.url" target="_blank" :to="banner.url.split('pages/').join('')">
+      <NuxtLink v-if="banner.url" :to="banner.url.split('pages/').join('')">
         <el-image
           fit="cover"
           :src="banner.resources.img"/>
@@ -75,10 +75,10 @@
     <div class="recommend container" v-for="(fitem, findex) in recommendCategoryList" :key="findex">
       <div class="title-box">
         <div class="min-title">{{fitem.name}}</div>
-        <NuxtLink target="_blank" class="more" :to="{ path: '/product/list', query: { pid: fitem.id, title: fitem.name }}">查看更多>></NuxtLink>
+        <NuxtLink class="more" :to="{ path: '/product/list', query: { pid: fitem.id, title: fitem.name }}">查看更多>></NuxtLink>
       </div>
       <div class="list">
-        <NuxtLink target="_blank" class="li" v-for="(item, index) in recommendGoodList[findex]" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
+        <NuxtLink class="li" v-for="(item, index) in recommendGoodList[findex]" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
           <el-card class="card" shadow="hover">
             <el-image
               class="image"

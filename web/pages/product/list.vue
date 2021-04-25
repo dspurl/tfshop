@@ -28,7 +28,7 @@
       </div>
       <div class="product-list container" v-loading="loading">
         <div class="list">
-          <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}" target="_blank">
+          <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
             <el-card class="card" shadow="hover">
               <el-image
                 class="image"

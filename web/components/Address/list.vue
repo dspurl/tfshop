@@ -281,7 +281,6 @@ export default{
               item.value = item.name
             })
             this.restaurants = restaurants
-            console.log('restaurant',restaurants)
           }else{
             console.log('没有查询结果')
           }

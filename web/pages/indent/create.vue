@@ -13,7 +13,7 @@
             align="center"
             width="100">
             <template slot-scope="scope">
-              <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}" target="_blank">
+              <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}">
                 <el-image
                   class="image"
                   :src="scope.row.img | smallImage(80)"
@@ -24,7 +24,7 @@
           <el-table-column
             label="商品名称">
             <template slot-scope="scope">
-              <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}" target="_blank">
+              <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}">
                 <p>{{scope.row.name}}</p>
                 <p class="specification">{{scope.row.specification}}</p>
               </NuxtLink>
@@ -147,7 +147,6 @@ export default {
     async getList(){
       let specification = null
       this.ruleForm.indentCommodity = Object.values(this.store.get(process.env.CACHE_PR + 'OrderList'))
-      console.log('this.ruleForm.indentCommodity',this.ruleForm.indentCommodity)
       this.ruleForm.indentCommodity.forEach(item=>{
         this.total+= item.price * item.number
         if(item.good_sku){

@@ -8,3 +8,4 @@ version
 web/node_modules/
 web/.nuxt
 web/.env
+web/static/sw.js
