@@ -13,6 +13,13 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="handleFilter">搜索</el-button>
+          分类筛选:
+          <el-cascader
+            v-model="listQuery.category_id"
+            :options="categorys"
+            :props="{ expandTrigger: 'hover' }"
+            clearable
+            @change="changeCategorys"/>
         </el-form-item>
       </el-form>
       <br>
@@ -38,12 +45,12 @@
         fixed="left"/>
       <el-table-column label="编号" sortable="custom" prop="id" fixed="left" width="80">
         <template slot-scope="scope">
-          <span>{{ scope.row.id }}</span>
+          <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.id }}" target="_blank" style="width:300px;"> {{ scope.row.id }}</router-link>
         </template>
       </el-table-column>
       <el-table-column label="图片" width="100">
         <template slot-scope="scope">
-          <img :src="scope.row.resources.img | smallImage(150)" style="width:80px;height:80px;">
+          <el-image :src="scope.row.resources.img | smallImage(150)" :preview-src-list="[ scope.row.resources.img ]" style="width:80px;height:80px;"/>
         </template>
       </el-table-column>
       <el-table-column label="商品" width="200">
@@ -191,7 +198,8 @@
 </style>
 
 <script>
-import { getList, destroy, state } from '@/api/Good'
+import { getList, destroy, state } from '@/api/good'
+import { getList as getCateList } from '@/api/category'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
 
@@ -229,9 +237,11 @@ export default {
         limit: 10,
         page: this.$route.query.page ? Number(this.$route.query.page) : 1,
         sort: '-id',
-        activeIndex: this.$route.query.activeIndex ? this.$route.query.activeIndex : '1'
+        activeIndex: this.$route.query.activeIndex ? this.$route.query.activeIndex : '1',
+        cateId: this.$route.query.cateId
       },
       temp: {},
+      categorys: [],
       rules: {
         title: [
           { required: true, message: '请输入标题', trigger: 'blur' }
@@ -256,6 +266,7 @@ export default {
   },
   created() {
     this.getList()
+    this.getCateList()
   },
   methods: {
     getList() {
@@ -264,6 +275,11 @@ export default {
         this.list = response.data.data
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    getCateList() {
+      getCateList(this.listQuery).then(response => {
+        this.categorys = response.data.options
       })
     },
     handleFilter() {
@@ -277,6 +293,10 @@ export default {
       } else {
         this.listQuery.sort = '-' + prop
       }
+      this.handleFilter()
+    },
+    changeCategorys(id) {
+      this.listQuery.cateId = id
       this.handleFilter()
     },
     handleSelect(key, keyPath) {

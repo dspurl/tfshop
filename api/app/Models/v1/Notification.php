@@ -2,6 +2,7 @@
 
 namespace App\Models\v1;
 
+use App\Notifications\InvoicePaid;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,6 +16,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Notification extends Model
 {
+
+    protected $keyType = 'string';
     public static $withoutAppends = true;
 
     /**
@@ -34,8 +37,20 @@ class Notification extends Model
             $return = $this->attributes['data'];
             if (self::$withoutAppends) {
             } else {
-                $return = json_decode($this->attributes['data']);
-
+                if($this->attributes['data']){
+                    $return = json_decode($this->attributes['data']);
+                    switch ($return->type){
+                        case InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES:
+                            $return->typeShow = '系统消息';
+                            break;
+                        case InvoicePaid::NOTIFICATION_TYPE_DEAL:
+                            $return->typeShow = '交易';
+                            break;
+                        case InvoicePaid::NOTIFICATION_TYPE_ACTIVITY:
+                            $return->typeShow = '活动';
+                            break;
+                    }
+                }
             }
             return $return;
         }

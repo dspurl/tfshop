@@ -39,7 +39,7 @@ export default {
 		// 获取购物车角标
 		showDsshopCartNumber(){
 			const dsshopCartNumber = uni.getStorageSync('dsshopCartList') ? Object.keys(uni.getStorageSync('dsshopCartList')).length + '' : ''
-			if(dsshopCartNumber){
+			if(dsshopCartNumber && dsshopCartNumber != '0'){
 				uni.setTabBarBadge({
 				  index: 2,
 				  text: dsshopCartNumber

@@ -14,10 +14,10 @@
 					<text :class="{active: filterIndex === '-order_price'}" class="yticon icon-shang xia"></text>
 				</view>
 			</view>
-			<text class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
+			<text v-if="sid>0" class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 		</view>
 		<view class="goods-list">
-			<view 
+			<view
 				v-for="(item, index) in goodsList" :key="index"
 				class="goods-item"
 				@click="navToDetailPage(item)"
@@ -32,15 +32,15 @@
 			</view>
 		</view>
 		<uni-load-more :status="loadingType"></uni-load-more>
-		
+
 		<view class="cate-mask" :class="cateMaskState===0 ? 'none' : cateMaskState===1 ? 'show' : ''" @click="toggleCateMask">
 			<view class="cate-content" @click.stop.prevent="stopPrevent" @touchmove.stop.prevent="stopPrevent">
 				<scroll-view scroll-y class="cate-list">
 					<view v-for="item in cateList" :key="item.id">
 						<view class="cate-item b-b two">{{item.name}}</view>
-						<view 
-							v-for="tItem in item.child" :key="tItem.id" 
-							class="cate-item b-b" 
+						<view
+							v-for="tItem in item.child" :key="tItem.id"
+							class="cate-item b-b"
 							:class="{active: tItem.id==cateId}"
 							@click="changeCate(tItem)">
 							{{tItem.name}}
@@ -49,7 +49,7 @@
 				</scroll-view>
 			</view>
 		</view>
-		
+
 	</view>
 </template>
 
@@ -58,7 +58,7 @@
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
 		components: {
-			uniLoadMore	
+			uniLoadMore
 		},
 		data() {
 			return {
@@ -66,19 +66,21 @@
 				headerPosition:"fixed",
 				headerTop:"0px",
 				loadingType: 'more', //加载更多状态
-				filterIndex: '', 
+				filterIndex: '',
 				cateId: 0, //已选三级分类id
+				sid: 0,
 				cateList: [],
 				goodsList: [],
 				page:1,
 			};
 		},
-		
+
 		onLoad(options){
 			// #ifdef H5
 			this.headerTop = '80upx';
 			// #endif
 			this.cateId = options.tid;
+			this.sid = options.sid
 			this.loadCateList(options.fid,options.sid);
 			this.loadData();
 		},
@@ -128,13 +130,13 @@
 				}else{
 					this.loadingType = 'more'
 				}
-				
+
 				let goodsList = [];
 				let that =this
 				// 商品
 				await Good.getList({
 					limit: 6,
-					pid: this.cateId,
+					category_id: this.cateId,
 					page: this.page,
 					sort: this.filterIndex
 				},function(res){
@@ -147,7 +149,7 @@
 					}
 				})
 				;
-				
+
 				//判断是否还有下一页，有是more  没有是nomore(测试数据判断大于20就没有了)
 				// this.loadingType  = this.goodsList.length > 20 ? 'nomore' : 'more';
 				if(type === 'refresh'){
@@ -209,7 +211,7 @@
 				//测试数据没有写id，用title代替
 				let id = item.id;
 				uni.navigateTo({
-					url: `/pages/product/product?id=${id}`
+					url: `/pages/product/detail?id=${id}`
 				})
 			},
 			stopPrevent(){}
@@ -310,7 +312,7 @@
 		background: rgba(0,0,0,0);
 		z-index: 95;
 		transition: .3s;
-		
+
 		.cate-content{
 			width: 630upx;
 			height: 100%;
@@ -324,7 +326,7 @@
 		}
 		&.show{
 			background: rgba(0,0,0,.4);
-			
+
 			.cate-content{
 				transform: translateX(0);
 			}
@@ -404,6 +406,6 @@
 			}
 		}
 	}
-	
+
 
 </style>

@@ -1,0 +1,40 @@
+{
+  "name": "dsshop",
+  "version": "2.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt",
+    "build": "cross-env process.env.APP_ENV=prod nuxt build",
+    "build:test": "cross-env process.env.APP_ENV=test nuxt build",
+    "start": "nuxt start",
+    "generate": "nuxt generate",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@chenfengyuan/vue-countdown": "^1.1.5",
+    "@chenfengyuan/vue-qrcode": "^1.0.2",
+    "@nuxtjs/axios": "^5.13.1",
+    "@nuxtjs/dotenv": "^1.4.1",
+    "@nuxtjs/pwa": "^3.3.5",
+    "@nuxtjs/style-resources": "^1.0.0",
+    "core-js": "^3.8.3",
+    "cross-env": "^7.0.3",
+    "dotenv": "^8.2.0",
+    "element-ui": "^2.15.0",
+    "js-cookie": "^2.2.1",
+    "nuxt": "^2.14.12",
+    "qrcode": "^1.4.4",
+    "store": "^2.0.12",
+    "vue": "^2.6.12",
+    "vue-video-player": "^5.0.2"
+  },
+  "devDependencies": {
+    "@vue/test-utils": "^1.1.2",
+    "babel-core": "7.0.0-bridge.0",
+    "babel-jest": "^26.6.3",
+    "jest": "^26.6.3",
+    "node-sass": "^5.0.0",
+    "sass-loader": "^10.1.1",
+    "vue-jest": "^3.0.4"
+  }
+}

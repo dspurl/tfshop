@@ -53,12 +53,12 @@
           width="50"/>
         <el-table-column align="center" width="80">
           <template slot-scope="scope">
-            <img :src="scope.row.img" style="width:45px;height:45px;">
+            <el-image :src="scope.row.img" :preview-src-list="[scope.row.img]" style="width:45px;height:45px;"/>
           </template>
         </el-table-column>
         <el-table-column label="商品" align="left">
           <template slot-scope="scope">
-            <span>{{ scope.row.name }}</span>
+            <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.good_id }}" target="_blank"> {{ scope.row.name }}</router-link>
           </template>
         </el-table-column>
         <el-table-column label="规格">
@@ -152,7 +152,7 @@
           </el-form-item>
           <el-form-item label="运单号" prop="odd">
             <div v-if="list.odd && !temp.odd">{{ list.odd }}</div>
-            <el-input v-else v-model="temp.odd" maxlength="255" clearable/>
+            <el-input v-else ref="odd" v-model="temp.odd" maxlength="255" clearable/>
           </el-form-item>
           <el-form-item v-if="list.state === 3">
             <el-button v-if="temp.id" :loading="shipmentLoading" type="primary" @click="setDhlUpdate">保存</el-button>
@@ -199,7 +199,7 @@
         <el-col :span="24">退款说明：{{ list.refund_reason }}</el-col>
       </el-row>
     </el-card>
-    <div class="right" style="margin-top: 20px;">
+    <div class="right" style="margin-top: 20px;filter:alpha(Opacity=90);-moz-opacity:0.9;opacity: 0.9;">
       <el-button v-if="(list.state !== 1 && !list.refund_money) || !list.state === 8" :loading="shipmentLoading" type="danger" @click="dialogFormVisible = true">退款</el-button>
       <el-button v-if="list.state === 2" :loading="shipmentLoading" type="primary" @click="shipmentSubmit()">发货</el-button>
     </div>
@@ -405,7 +405,8 @@ export default {
       listLoading: true,
       id: this.$route.query.id,
       temp: {
-        dhl_id: null
+        dhl_id: null,
+        odd: ''
       },
       receivingTemp: {
         id: 0,
@@ -524,6 +525,13 @@ export default {
           })
         } else {
           this.shipmentLoading = false
+          this.$refs.odd.focus()
+          this.$notify({
+            title: '',
+            message: '请输入物流信息',
+            type: 'warning',
+            duration: 2000
+          })
         }
       })
     },
@@ -560,18 +568,24 @@ export default {
     // 保存配送信息
     setDhlUpdate() {
       this.shipmentLoading = true
-      dhl(this.temp).then(() => {
-        this.shipmentLoading = false
-        this.temp = {}
-        this.getList()
-        this.$notify({
-          title: this.$t('hint.succeed'),
-          message: '保存成功',
-          type: 'success',
-          duration: 2000
-        })
-      }).catch(() => {
-        this.shipmentLoading = false
+      this.$refs['dataForm'].validate((valid) => {
+        if (valid) {
+          dhl(this.temp).then(() => {
+            this.shipmentLoading = false
+            this.temp = {}
+            this.getList()
+            this.$notify({
+              title: this.$t('hint.succeed'),
+              message: '保存成功',
+              type: 'success',
+              duration: 2000
+            })
+          }).catch(() => {
+            this.shipmentLoading = false
+          })
+        } else {
+          this.shipmentLoading = false
+        }
       })
     },
     // 延长收货时间

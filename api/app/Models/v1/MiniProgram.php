@@ -262,7 +262,8 @@ class MiniProgram extends Model
                 'result' => 'ok',
                 'msg' => $config,
                 'number' => $number,
-                'mweb_url' => array_key_exists('mweb_url', $result) ? $result['mweb_url'] : ''
+                'mweb_url' => array_key_exists('mweb_url', $result) ? $result['mweb_url'] : '',
+                'code_url' => array_key_exists('code_url', $result) ? $result['code_url'] : '',
             ];
         }
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {

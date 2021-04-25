@@ -32,7 +32,7 @@
 		<view class="goods-section">
 			<!-- 商品列表 -->
 			<navigator
-				:url="'/pages/product/product?id=' + item.good_id"
+				:url="'/pages/product/detail?id=' + item.good_id"
 				hover-class="none"
 				class="g-item padding-top-sm"
 				v-for="(item, index) in indentList.goods_list"

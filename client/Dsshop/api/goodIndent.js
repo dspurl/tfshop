@@ -45,7 +45,7 @@ export default {
 		})
 	},
 	addShoppingCart(data, success,fail) {
-		Network.setPostMessage('goodIndent/addShoppingCart',data,'加载中', function (res) {
+		Network.setPost('goodIndent/addShoppingCart',data, function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({

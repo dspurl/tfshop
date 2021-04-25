@@ -18,7 +18,7 @@
 			</text>
 			<text class="yticon icon-shouhuodizhi"></text>
 		</view>
-		<view class="row b-b"> 
+		<view class="row b-b">
 			<text class="tit">门牌号</text>
 			<input class="input" type="text" v-model="addressData.house" placeholder="楼号、门牌" placeholder-class="placeholder" />
 		</view>
@@ -67,7 +67,7 @@
 			switchChange(e){
 				this.addressData.default = e.detail;
 			},
-			
+
 			//地图选择地址
 			chooseLocation(){
 				const that = this
@@ -135,7 +135,7 @@
 				})
 				// #endif
 			},
-			
+
 			//提交
 			confirm(){
 				const that = this
@@ -144,7 +144,7 @@
 					this.$api.msg('请填写收货人姓名');
 					return;
 				}
-				if(!/(^1[3|4|5|7|8][0-9]{9}$)/.test(data.cellphone)){
+				if(!/(^1[3|4|5|7|8|9][0-9]{9}$)/.test(data.cellphone)){
 					this.$api.msg('请输入正确的手机号码');
 					return;
 				}
@@ -192,7 +192,7 @@
 		padding:0 30upx;
 		height: 110upx;
 		background: #fff;
-		
+
 		.tit{
 			flex-shrink: 0;
 			width: 120upx;

@@ -118,6 +118,7 @@ class GoodIndentController extends Controller
     /**
      * 添加商品到购物车
      * @param Request $request
+     * @return string
      */
     public function addShoppingCart(Request $request)
     {
@@ -125,7 +126,12 @@ class GoodIndentController extends Controller
         $return = $request->all();
         if (count($return) > 0) {
             $redis->set('shoppingCart' . auth('web')->user()->id, json_encode($return));
+        } else {
+            if ($redis->get('shoppingCart' . auth('web')->user()->id)) {   //如果传过来空数组，则代表需要移除购物车列表
+                $redis->del('shoppingCart' . auth('web')->user()->id);
+            }
         }
+        return resReturn(1, '成功');
     }
 
     /**
@@ -210,12 +216,13 @@ class GoodIndentController extends Controller
             }]);
         }, 'User' => function ($q) {
             $q->select('id', 'money');
-        }])->select('id', 'total', 'user_id', 'state', 'overtime')->find($id);
+        }, 'GoodLocation'])->select('id', 'total', 'user_id', 'state', 'overtime', 'identification')->find($id);
         $time_diff = time_diff($GoodIndent->overtime);
         $GoodIndent->day = $time_diff['day'];
         $GoodIndent->hour = $time_diff['hour'];
         $GoodIndent->minute = $time_diff['minute'];
         $GoodIndent->second = $time_diff['second'];
+        $GoodIndent->overtime_time = strtotime($GoodIndent->overtime) - time();
         return resReturn(1, $GoodIndent);
     }
 

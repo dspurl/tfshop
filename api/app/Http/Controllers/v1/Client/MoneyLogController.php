@@ -33,6 +33,11 @@ class MoneyLogController extends Controller
             $q->where('created_at', '>=', $start_date);
             $q->where('created_at', '<=', $end_date);
         }
+        if ($request->has('type')) {
+            if ($request->type) {
+                $q->where('type', $request->type - 1);
+            }
+        }
         $q->where('user_id', auth('web')->user()->id);
         $q->whereIn('type', [MoneyLog::MONEY_LOG_TYPE_INCOME, MoneyLog::MONEY_LOG_TYPE_EXPEND]);
         if ($request->has('sort')) {

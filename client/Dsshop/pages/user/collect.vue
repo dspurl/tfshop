@@ -67,7 +67,7 @@
 			//访问商品
 			goProduct(res){
 				uni.navigateTo({
-					url: `/pages/product/product?id=${res.good_id}`
+					url: `/pages/product/detail?id=${res.good_id}`
 				})
 			}
 		}

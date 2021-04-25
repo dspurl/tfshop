@@ -29,7 +29,11 @@
       </el-table-column>
       <el-table-column label="类目图标" align="center">
         <template slot-scope="scope">
-          <img v-if="scope.row.resources" :src="scope.row.resources.img | smallImage(300)" style="width: 120px;">
+          <el-image
+            v-if="scope.row.resources"
+            :src="scope.row.resources.img | smallImage(300)"
+            fit="scale-down"
+            style="width: 80px;"/>
           <span v-else>无</span>
         </template>
       </el-table-column>
@@ -106,7 +110,11 @@
               <el-progress :percentage="imgProgressPercent" type="circle" class="progress-img"/>
             </span>
             <span v-else>
-              <img v-if="temp.logo" :src="temp.logo" class="avatar">
+              <el-image
+                v-if="temp.logo"
+                :src="temp.logo"
+                fit="scale-down"
+                class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon"/>
             </span>
             <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过500kb，尺寸推荐120*120</div>
@@ -126,9 +134,6 @@
             <el-radio :label="1">是</el-radio>
             <el-radio :label="0">否</el-radio>
           </el-radio-group>
-          <el-alert
-            title="设置推荐后，将在首页展示，只有三级分类能正常访问"
-            type="warning"/>
         </el-form-item>
         <el-form-item label="规格" prop="specification">
           <el-transfer

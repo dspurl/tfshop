@@ -13,9 +13,4 @@
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/home', function () {
-    return view('home');
-});
-Route::namespace('v1')->group(function () {
-});
-Auth::routes();
+//Auth::routes();

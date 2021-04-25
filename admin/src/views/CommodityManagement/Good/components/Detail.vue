@@ -33,7 +33,11 @@
             <el-progress :percentage="imgProgressPercent" type="circle" class="progress-img"/>
           </span>
           <span v-else>
-            <img v-if="ruleForm.img" :src="ruleForm.img" class="avatar">
+            <el-image
+              v-if="ruleForm.img"
+              :src="ruleForm.img"
+              fit="scale-down"
+              class="avatar"/>
             <i v-else class="el-icon-plus avatar-uploader-icon"/>
           </span>
         </el-upload>
@@ -237,7 +241,7 @@
   }
 </style>
 <script>
-import { detail, create, edit, specification } from '@/api/Good'
+import { detail, create, edit, specification } from '@/api/good'
 import { getToken } from '@/utils/auth'
 import tinymce from '@/components/tinymce5'
 import Sku from '@/components/skutwo'
@@ -576,7 +580,7 @@ export default {
         })
       }
     },
-    // 得到 sku 数据
+    // 得到 Sku 数据
     getSkuData() {
       const product_skus = this.$refs.SkuDemo._getData().map(item => {
         const { id, format, img, market_price, cost_price, price, inventory, skus } = item

@@ -75,6 +75,7 @@
 	import GoodIndent from '../../api/goodIndent'
 	import Pay from '../../api/pay'
 	import User from '../../api/user';
+	import { micromessenger } from 'utils'
 	import {
 	  authMsg
 	} from '../../utils'
@@ -96,6 +97,7 @@
 				index:0,
 				jweixin:null,
 				modalName: null,
+				jweixin:null,
 				user: {}
 			};
 		},
@@ -108,6 +110,9 @@
 				return false
 			}
 			this.id = options.id
+			if(micromessenger){
+				this.getWeixin()
+			}
 		},
 		onShow(){
 			this.loginCheck()
@@ -146,9 +151,16 @@
 			goBack(){
 				this.hideModal()
 				this.getList()
-				/* uni.redirectTo({
-					url: '/pages/indent/list?state=2'
-				}) */
+			},
+			getWeixin(){
+				this.jweixin = require('jweixin-module')
+				const that = this
+				JsSdk.buildConfig(function(res){
+					that.jweixin.config(res)
+					that.jweixin.error(function(res){
+					  console.log('失败')
+					})
+				})
 			},
 			//确认支付
 			confirm: async function() {
@@ -184,16 +196,42 @@
 					})
 				} else {
 					// #ifdef H5
-					Pay.unifiedPayment({
-						platform: this.payType,
-						type: 'goodsIndent',
-						trade_type: 'MWEB',
-						id: this.id,
-					},function(res){
-						that.confirmDisabled = false
-						that.showModal('payHint')
-						window.location.href = res.mweb_url
-					})
+					if(micromessenger){
+						Pay.unifiedPayment({
+							platform: this.payType,
+							type: 'goodsIndent',
+							trade_type: 'JSAPI',
+							id: this.id,
+						},function(res){
+							this.jweixin.chooseWXPay({
+							  appId:res.msg.appId,
+							  timestamp: res.msg.timestamp,
+							  nonceStr: res.msg.nonceStr,
+							  package: res.msg.package,
+							  signType: res.msg.signType,
+							  paySign: res.msg.paySign,
+							  success: function (res) {
+								uni.redirectTo({
+									url: '/pages/money/paySuccess'
+								})
+							  },
+								fail(res) {
+									that.$api.msg('支付失败，请重新支付')
+								}
+							})
+						})
+					} else {
+						Pay.unifiedPayment({
+							platform: this.payType,
+							type: 'goodsIndent',
+							trade_type: 'MWEB',
+							id: this.id,
+						},function(res){
+							that.confirmDisabled = false
+							that.showModal('payHint')
+							window.location.href = res.mweb_url
+						})
+					}
 					// #endif
 					// #ifdef MP
 					Pay.unifiedPayment({

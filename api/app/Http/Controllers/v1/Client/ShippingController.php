@@ -152,14 +152,20 @@ class ShippingController extends Controller
     }
 
     /**
-     * ShippingDefaultGet
-     * 默认收货地址
+     * ShippingFreight
+     * 获取运费
      * @param Request $request
+     * @param int $id   //用户收货地址ID，没有则取默认收货地址ID
      * @return string
      */
-    public function defaultGet(Request $request)
+    public function freight($id,Request $request)
     {
-        $return['shipping'] = Shipping::where('defaults', Shipping::SHIPPING_DEFAULTS_YES)->where('user_id', auth('web')->user()->id)->first();
+        if($id){
+            $return['shipping'] = Shipping::find($id);
+        }else{
+            $return['shipping'] = Shipping::where('defaults', Shipping::SHIPPING_DEFAULTS_YES)->where('user_id', auth('web')->user()->id)->first();
+        }
+
         if ($return['shipping']) {
             if (count(explode("省", $return['shipping']['address'])) > 1) {
                 $name = explode("省", $return['shipping']['address'])[0] . '省';
@@ -173,15 +179,16 @@ class ShippingController extends Controller
             foreach ($provinces as $p) {
                 if ($p['label'] == $name) {
                     $value = $p['value'];
+                    break;
                 }
             }
             $carriage = 0;
             $list = [];
             foreach ($request->all() as $all) {
-                if (array_key_exists($all['freight_id'], $list)) {
-                    $list[$all['freight_id']] += $all['number'];
+                if (array_key_exists($all['good']['freight_id'], $list)) {
+                    $list[$all['good']['freight_id']] += $all['number'];
                 } else {
-                    $list[$all['freight_id']] = $all['number'];
+                    $list[$all['good']['freight_id']] = $all['number'];
                 }
             }
             if ($value) {

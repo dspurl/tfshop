@@ -37,16 +37,9 @@ class GoodController extends Controller
             $q->where('is_recommend', $request->is_recommend);
         }
         $q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
-        //全文搜索
         if ($request->title) {
             $q->where(function ($q1) use ($request) {
-                /* MySQL<5.7 请使用这种方式, 如果商品数量多, 请自己分词解决搜索效率问题
-                $q1->orWhere('name','like','%'.$request->title.'%')
-                    ->orWhere('number',$request->title)
-                    ->orWhere('keywords','like','%'.$request->title.'%');
-                */
-                $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\'' . $request->title . '\' IN NATURAL LANGUAGE MODE)')
-                    ->orWhere('number', $request->title);
+                $q1->orWhere('name', 'like', '%' . $request->title . '%');
             });
         }
         //排序
@@ -74,6 +67,14 @@ class GoodController extends Controller
             $q->whereHas('category', function ($query) use ($request) {
                 $query->where('category_id', $request->pid);
             });
+        }
+        // 获取指定分类下的商品
+        if ($request->has('category_id')) {
+            $Category = Category::where('state', Category::CATEGORY_STATE_YES)->select('id', 'pid')->get();
+            $allSublevel = allSublevel($Category->toArray(), [$request->category_id]);
+            if (count($allSublevel) > 0) {
+                $q->whereIn('category_id', $allSublevel);
+            }
         }
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
@@ -114,6 +115,7 @@ class GoodController extends Controller
      * 商品分类
      * @param Request $request
      * @return \Illuminate\Http\Response
+     * @queryParam  tree boolean 返回格式是否为树状结构
      * @queryParam  is_recommend int 是否首页展示
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
@@ -133,9 +135,12 @@ class GoodController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         } else {
-            $q->orderBy('sort', 'ASC');
+            $q->orderBy('sort', 'ASC')->orderBy('id', 'ASC');
         }
         $paginate = $q->with(['resources'])->get();
+        if ($request->has('tree')) {
+            $paginate = genTree($paginate->toArray(), 'pid');
+        }
         return resReturn(1, $paginate);
     }
 }
