@@ -7,7 +7,7 @@ export default {
   },
   server: {
     port: 3004, // default: 3000
-    host: process.env.APP_ENV === 'local' || !process.env.APP_ENV ? 'localhost' : '0.0.0.0', // default: localhost,
+    host: '0.0.0.0', // 本地需要测试pwa的话，改成localhost,
   },
   env: {
     baseUrl: process.env.BASE_URL,
