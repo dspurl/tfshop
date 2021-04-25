@@ -6,8 +6,9 @@ export default {
     height: '2px'
   },
   server: {
-    port: 3004, // default: 3000
+    port: 3005, // default: 3000
     host: '0.0.0.0', // 本地需要测试pwa的话，改成localhost,
+    // host: 'localhost',
   },
   env: {
     baseUrl: process.env.BASE_URL,
@@ -27,7 +28,8 @@ export default {
       lang: 'zh-CN',
       theme_color: '#fff',
       description: process.env.APP_DESCRIPTION,
-      display: 'standalone'
+      display: 'standalone',
+      scope: '/'
     },
     workbox: {
       dev: process.env.APP_ENV === 'local' || !process.env.APP_ENV
@@ -77,6 +79,7 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
+    '@nuxtjs/pwa'
   ],
   // router: {
   //   middleware: ['auth']
