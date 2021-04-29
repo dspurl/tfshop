@@ -203,7 +203,7 @@
 							trade_type: 'JSAPI',
 							id: this.id,
 						},function(res){
-							this.jweixin.chooseWXPay({
+							that.jweixin.chooseWXPay({
 							  appId:res.msg.appId,
 							  timestamp: res.msg.timestamp,
 							  nonceStr: res.msg.nonceStr,
