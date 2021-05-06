@@ -1,5 +1,5 @@
 import { constantRouterMap } from '@/router'
-import Layout from '@/views/layout/Layout'
+import Layout from '@/views/Layout/Layout'
 // 模板
 export const componentsMap = {
   Dashboard: () => import('@/views/Dashboard/index'),

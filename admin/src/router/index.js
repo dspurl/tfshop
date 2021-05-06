@@ -4,7 +4,7 @@ import Router from 'vue-router'
 Vue.use(Router)
 
 /* Layout */
-import Layout from '@/views/layout/Layout'
+import Layout from '@/views/Layout/Layout'
 /* 全局权限 */
 /* Router Modules */
 
