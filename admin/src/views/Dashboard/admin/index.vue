@@ -79,7 +79,7 @@
       <el-col :span="8">
         <el-card id="inventory" shadow="hover">
           <h3>低库存</h3>
-          <div v-for="(item) in options.inventoryList" :key="item.id" class="ll">
+          <div v-for="(item, index) in options.inventoryList" :key="index" class="ll">
             <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id:item.id }}" :title="item.name" class="inventory_link">
               {{ item.name }} - {{ item.inventory }}
             </router-link>
