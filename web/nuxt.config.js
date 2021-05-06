@@ -30,10 +30,10 @@ export default {
       description: process.env.APP_DESCRIPTION,
       display: 'standalone',
       scope: '/'
-    },
-    workbox: {
-      dev: process.env.APP_ENV === 'local' || !process.env.APP_ENV
     }
+    // workbox: {
+    //   dev: process.env.APP_ENV === 'local' || !process.env.APP_ENV
+    // }
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
