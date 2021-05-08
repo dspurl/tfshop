@@ -15,6 +15,8 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AdminLog extends Model
 {
+    public static $withoutAppends = true;
+
     /**
      * Prepare a date for array / JSON serialization.
      *
@@ -24,5 +26,19 @@ class AdminLog extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    /**
+     * 提交的数据
+     * @return void
+     */
+    public function getInputAttribute()
+    {
+        if (!self::$withoutAppends) {
+            return json_decode($this->attributes['input']);
+        } else {
+            return $this->attributes['input'];
+        }
+
     }
 }

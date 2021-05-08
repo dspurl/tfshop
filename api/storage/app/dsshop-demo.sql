@@ -128,7 +128,8 @@ INSERT INTO `auth_group_auth_rules` (`auth_group_id`, `auth_rule_id`) VALUES
 (1, 147),
 (1, 100),
 (1, 101),
-(1, 104);
+(1, 104),
+(1, 194);
 INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `sort`) VALUES
 (2, 'UserManagement', '', 'user', '用户管理', 0, 1, 1),
 (6, 'Admin', '', '', '管理员管理', 2, 1, 0),
@@ -212,6 +213,7 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (191, 'PowerList', '', '', '权限列表', 19, 1, 0),
 (192, 'PlugInDestroy', '', '', '插件卸载', 156, 0, 0),
 (193, 'PlugInEdit', '', '', '插件更新', 156, 0, 0),
+(194, 'AdminLog', '', '', '管理员操作日志', 216, 1, 0),
 (195, 'GoodDetail', '', '', '商品详情', 116, 0, 0),
 (196, 'IndentDhl', '', '', '保存订单配送信息', 127, 0, 0),
 (197, 'RedisServiceDetail', '', '', 'Redis详情', 60, 0, 0);
