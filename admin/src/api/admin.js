@@ -32,3 +32,11 @@ export function destroy(id) {
     method: 'POST'
   })
 }
+
+export function log(query) {
+  return request({
+    url: 'admin/log',
+    method: 'GET',
+    params: query
+  })
+}

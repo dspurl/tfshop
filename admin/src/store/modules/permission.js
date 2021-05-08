@@ -5,6 +5,7 @@ export const componentsMap = {
   Dashboard: () => import('@/views/Dashboard/index'),
   Admin: () => import('@/views/UserManagement/Admin/index'),
   AdminList: () => import('@/views/UserManagement/Admin/list'),
+  AdminLog: () => import('@/views/UserManagement/Admin/log'),
   Manage: () => import('@/views/UserManagement/Manage/index'),
   ManageList: () => import('@/views/UserManagement/Manage/list'),
   Member: () => import('@/views/UserManagement/Member/index'),

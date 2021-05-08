@@ -111,4 +111,21 @@ class AdminController extends Controller
         $Admin->delete();
         return resReturn(1, '删除成功');
     }
+   /**
+     * Display a listing of the Syslog.
+     *
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function log(Request $request)
+    {
+        $q = AdminLog::query();
+        if($request->name){
+            $q->where('name',$request->name);
+        }
+        $limit=$request->limit;
+        $q->orderBy('id','DESC');
+        $paginate=$q->paginate($limit);
+        return resReturn(1,$paginate);
+    }
 }
