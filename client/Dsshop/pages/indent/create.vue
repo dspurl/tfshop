@@ -172,8 +172,17 @@
 				this.data.address = this.addressData
 				this.data.carriage = this.carriage
 				GoodIndent.create(this.data,function(res){
+					//比对购物车, 清除已下单的商品
+					const cartList  =  uni.getStorageSync('dsshopCartList') || {}
+					cartList.forEach((item, index)=>{
+						if(!item.checked){
+							cartList.splice(index, 1);
+						}
+					});
+					uni.setStorageSync('dsshopCartList', cartList)
+					GoodIndent.addShoppingCart(cartList,function(res){})
+					//清除购买列表
 					uni.removeStorageSync('dsshopOrderList')
-					uni.removeStorageSync('dsshopCartList')
 					uni.redirectTo({
 						url: '/pages/money/pay?id='+res
 					})

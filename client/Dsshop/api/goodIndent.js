@@ -45,14 +45,16 @@ export default {
 		})
 	},
 	addShoppingCart(data, success,fail) {
-		Network.setPost('goodIndent/addShoppingCart',data, function (res) {
+		Network.setPostMessage('goodIndent/addShoppingCart',data,'', function (res) {
+			success(res)
+		}, function (res) {
+		})
+	},
+	clearShoppingCart(data, success,fail) {
+		Network.setPostMessage('goodIndent/clearShoppingCart',data,'', function (res) {
 		  success(res)
 		}, function (res) {
-		  uni.showToast({
-			title: res.message,
-			icon: 'none',
-			duration: 2000
-		  })
+		  
 		})
 	},
 	pay(id, success,fail) {

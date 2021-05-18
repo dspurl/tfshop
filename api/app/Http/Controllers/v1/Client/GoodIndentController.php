@@ -133,7 +133,17 @@ class GoodIndentController extends Controller
         }
         return resReturn(1, '成功');
     }
-
+    /**
+     * 清空购物车
+     * @param Request $request
+     * @return string
+     */
+    public function clearShoppingCart(Request $request)
+    {
+        $redis = new RedisService();
+        $redis->del('shoppingCart' . auth('web')->user()->id );
+        return resReturn(1, '成功');
+    }
     /**
      * SynchronizationInventory
      * 同步线上商品库存
