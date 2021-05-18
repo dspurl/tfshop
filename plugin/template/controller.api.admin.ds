@@ -1,0 +1,120 @@
+<?php
+
+namespace App\Http\Controllers\v{{ versions }}\Plugin\Admin;
+
+use App\Http\Requests\v{{ versions }}\Submit{{ name }}Request;
+use App\Models\v{{ versions }}\{{ name }};
+use App\Models\v{{ versions }}\Resource;
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
+
+/**
+ * {{ name }}
+ * {{ annotation }}
+ * Class {{ name }}Controller
+ * @package App\Http\Controllers\v{{ versions }}\Plugin\Admin
+ */
+class {{ name }}Controller extends Controller
+{
+    /**
+     * {{ name }}List
+     * {{ annotation }}列表
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  sort string 排序
+     * @queryParam  page string 页码
+     */
+    public function list(Request $request)
+    {
+        $q = {{ name }}::query();
+        $limit = $request->limit;
+        if ($request->has('sort')) {
+            $sortFormatConversion = sortFormatConversion($request->sort);
+            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
+        $paginate = $q->paginate($limit);
+        return resReturn(1, $paginate);
+    }
+
+    /**
+     * {{ name }}Create
+     * {{ annotation }}添加
+     * @param Submit{{ name }}Request $request
+     * @return \Illuminate\Http\Response
+     {{ queryParam }}
+     */
+    public function create(Submit{{ name }}Request $request)
+    {
+        $return = DB::transaction(function () use ($request) {
+            ${{ name }} = new {{ name }}();
+            {{ attribute }}
+            ${{ name }}->save();
+            return 1;
+        }, 5);
+        if ($return == 1) {
+            return resReturn(1, '添加成功');
+        } else {
+            return resReturn(0, $return[0], $return[1]);
+        }
+    }
+
+    /**
+     * {{ name }}Detail
+     * {{ annotation }}详情
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     * @queryParam  id int {{ annotation }}ID
+     */
+    public function detail($id)
+    {
+        {{ name }}::$withoutAppends = false;
+        ${{ name }} = {{ name }}::find($id);
+        return resReturn(1, ${{ name }});
+    }
+
+    /**
+     * {{ name }}Edit
+     * {{ annotation }}更新
+     * @param Submit{{ name }}Request $request
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     * @queryParam  id int {{ annotation }}ID
+     {{ queryParam }}
+     */
+    public function edit(Submit{{ name }}Request $request, $id)
+    {
+        $return = DB::transaction(function () use ($request, $id) {
+            ${{ name }} = {{ name }}::find($id);
+            {{ attribute }}
+            ${{ name }}->save();
+            return 1;
+        }, 5);
+        if ($return == 1) {
+            return resReturn(1, '更新成功');
+        } else {
+            return resReturn(0, $return[0], $return[1]);
+        }
+    }
+
+    /**
+     * {{ name }}Destroy
+     * {{ annotation }}删除
+     * @param int $id
+     * @return \Illuminate\Http\Response
+     * @queryParam  id int {{ annotation }}ID
+     */
+    public function destroy($id)
+    {
+        $return = DB::transaction(function () use ($id) {
+            {{ name }}::destroy($id);
+            return 1;
+        }, 5);
+        if ($return == 1) {
+            return resReturn(1, '删除成功');
+        } else {
+            return resReturn(0, $return[0], $return[1]);
+        }
+    }
+}

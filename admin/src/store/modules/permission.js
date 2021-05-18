@@ -50,7 +50,9 @@ export const componentsMap = {
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
-  PlugInList: () => import('@/views/Plugin/list')
+  PlugInList: () => import('@/views/Plugin/list'),
+  PlugInCreate: () => import('@/views/Plugin/create'),
+  PlugInEdit: () => import('@/views/Plugin/edit')
 }
 const permission = {
   state: {

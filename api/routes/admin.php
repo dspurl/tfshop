@@ -86,8 +86,12 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('banner/{id}', 'BannerController@edit')->middleware(['permissions:BannerEdit']);    //保存轮播
         Route::post('banner/destroy/{id}', 'BannerController@destroy')->middleware(['permissions:BannerDestroy']);    //删除轮播
         Route::get('plugin', 'PluginController@list')->middleware(['permissions:PlugInList']);    //插件列表
-        Route::get('plugin/{name}', 'PluginController@create')->middleware(['permissions:PlugInCreate']);    //插件安装
-        Route::post('plugin/destroy/{name}', 'PluginController@destroy')->middleware(['permissions:PlugInDestroy']);    //插件卸载
+        Route::post('plugin', 'PluginController@create')->middleware(['permissions:PlugInCreate']);    //创建插件
+        Route::post('plugin/{name}', 'PluginController@edit')->middleware(['permissions:PlugInEdit']);    //保存插件
+        Route::get('plugin/{name}', 'PluginController@details')->middleware(['permissions:PlugInEdit']);    //插件详情
+        Route::get('plugin/install/{name}', 'PluginController@install')->middleware(['permissions:PlugInInstall']);    //插件安装
+        Route::post('plugin/destroy/{name}', 'PluginController@destroy')->middleware(['permissions:PlugInDestroy']);    //插件删除
+        Route::post('plugin/uninstall/{name}', 'PluginController@uninstall')->middleware(['permissions:PlugInUninstall']);    //插件卸载
         Route::get('statistic/behavior', 'StatisticsController@behavior')->middleware(['permissions:StatisticsVisit']);    //使用分析
         Route::get('statistic/keep', 'StatisticsController@keep')->middleware(['permissions:StatisticsVisit']);    //留存趋势
         Route::get('statistic/source', 'StatisticsController@source')->middleware(['permissions:StatisticsVisit']);    //来源分析

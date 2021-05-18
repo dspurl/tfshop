@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Http\Controllers\v{{ versions }}\Plugin\Client;
+
+use App\Models\v{{ versions }}\{{ name }};
+use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+
+/**
+ * {{ name }}
+ * {{ annotation }}
+ * Class {{ name }}Controller
+ * @package App\Http\Controllers\v{{ versions }}\Plugin\Admin
+ */
+class {{ name }}Controller extends Controller
+{
+    /**
+     * {{ name }}List
+     * {{ annotation }}列表
+     * @param $id
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  page string 页码
+     */
+    public function list(Request $request)
+    {
+        $q = {{ name }}::query();
+        $q->orderBy('created_at', 'ASC');
+        $limit = $request->limit;
+        $paginate = $q->paginate($limit);
+        return resReturn(1, $paginate);
+    }
+
+    /**
+     * {{ name }}Detail
+     * {{ annotation }}详情
+     * @param $id
+     * @return \Illuminate\Http\Response
+     * @queryParam  id int {{ annotation }}ID
+     */
+    public function detail($id)
+    {
+        $return = {{ name }}::find($id);
+        return resReturn(1, $return);
+    }
+}
