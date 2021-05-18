@@ -181,6 +181,7 @@
 						}
 					}
 					that.cartList = cartList
+					uni.setStorageSync('dsshopCartList', cartList)
 					uni.setStorageSync('dsshopOrderList', cartList)
 					getApp().showDsshopCartNumber()
 					that.calcTotal();  //计算总价

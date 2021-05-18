@@ -110,9 +110,11 @@
 				return false
 			}
 			this.id = options.id
+			// #ifdef H5
 			if(micromessenger){
 				this.getWeixin()
 			}
+			// #endif
 		},
 		onShow(){
 			this.loginCheck()
