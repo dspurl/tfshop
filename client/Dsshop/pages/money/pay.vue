@@ -111,7 +111,7 @@
 			}
 			this.id = options.id
 			// #ifdef H5
-			if(micromessenger){
+			if(micromessenger()){
 				this.getWeixin()
 			}
 			// #endif
@@ -198,7 +198,7 @@
 					})
 				} else {
 					// #ifdef H5
-					if(micromessenger){
+					if(micromessenger()){
 						Pay.unifiedPayment({
 							platform: this.payType,
 							type: 'goodsIndent',

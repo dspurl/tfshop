@@ -162,9 +162,14 @@ export function getPlatform(){
  */
 export function micromessenger() {
 	let ua = window.navigator.userAgent.toLowerCase()
-	if (ua.match(/MicroMessenger/i)[0] == 'micromessenger') {
-		return true
-	} else {
+	if(ua.match(/MicroMessenger/i)){
+		if (ua.match(/MicroMessenger/i)[0] == 'micromessenger') {
+			return true
+		} else {
+			return false
+		}
+	}else{
 		return false
 	}
+	
 }
