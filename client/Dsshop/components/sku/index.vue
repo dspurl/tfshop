@@ -526,7 +526,11 @@ export default{
 						}
 						
 					}
-					
+					for(var key in cartList){
+					    if(cartList[key] ===null){
+					       delete cartList[key]
+					    }
+					}
 					if(this.buyState){	//直接购买
 						uni.setStorageSync('dsshopOrderList', cartList)
 					}else{

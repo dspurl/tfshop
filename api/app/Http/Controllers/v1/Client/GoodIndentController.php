@@ -125,6 +125,11 @@ class GoodIndentController extends Controller
         $redis = new RedisService();
         $return = $request->all();
         if (count($return) > 0) {
+            foreach ($return as $id => $r) {
+                if (!$r) {
+                    unset($return[$id]);
+                }
+            }
             $redis->set('shoppingCart' . auth('web')->user()->id, json_encode($return));
         } else {
             if ($redis->get('shoppingCart' . auth('web')->user()->id)) {   //如果传过来空数组，则代表需要移除购物车列表
