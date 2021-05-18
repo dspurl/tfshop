@@ -1,0 +1,86 @@
+.indent-box{
+  display: flex;
+  .li{
+    display: flex;
+    margin-right: 20px;
+    .icon{
+      display: flex;
+      justify-content: center;
+      align-items:center;
+      border-radius: 50%;
+      width: 80px;
+      height: 80px;
+      margin-right: 10px;
+      .iconfont{
+        color: #ffffff;
+        font-size: 40px;
+      }
+    }
+    .describe{
+      margin-top:15px;
+      .name{
+        font-size: 18px;
+        font-weight: 400;
+        margin-bottom: 5px;
+        span{
+          color: #fa524c;
+        }
+      }
+      .link{
+        font-size: 12px;
+      }
+      .link:hover{
+        color: #fa524c;
+      }
+    }
+  }
+}
+.browse-box{
+  display: flex;
+  .card{
+    width: 135px;
+    margin-right: 8px;
+    border: 1px solid #EBEEF5;
+    padding:10px;
+    .image{
+      width: 100%;
+      height: 120px;
+    }
+    .name{
+      font-size: 14px;
+      overflow: hidden;
+      text-overflow:ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+.user-title{
+  color: #757575;
+  font-weight: 400;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.portal-main{
+  display: flex;
+  .user-card{
+    display: flex;
+    width: 400px;
+    .card-box{
+      margin-left:20px;
+      .username{
+        font-size: 22px;
+        font-weight: 400;
+        color: #616161;
+        padding: 0 0 0 0;
+      }
+      .money{
+        line-height: 25px;
+        color: #616161;
+      }
+      .personal{
+        font-size: 12px;
+        color: #fa524c;
+      }
+    }
+  }
+}

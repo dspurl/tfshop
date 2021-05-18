@@ -5,8 +5,12 @@
     <Footer />
   </div>
 </template>
+
 <style lang='scss' scoped>
-  .body {
-    background-color: #f4f4f4;
-  }
+  @import "./scss/cart";
 </style>
+
+<script>
+import js from './js/cart'
+export default js
+</script>

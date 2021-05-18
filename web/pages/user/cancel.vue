@@ -29,84 +29,11 @@
   </div>
 </template>
 
-<script>
-import {cancel} from '@/api/user'
-export default {
-  layout: 'user',
-  head () {
-    return {
-      title: '注销账户-个人中心',
-    }
-  },
-  data() {
-    return {
-      loading: false,
-      checked: false,
-      disabled: true
-    }
-  },
-  mounted() {
-
-  },
-  methods: {
-    //注销提交
-    cancel(){
-      cancel(this.ruleForm).then(response => {
-        this.loading = false;
-        $nuxt.$store.commit('logout');
-        this.$message({
-          message: '注销成功',
-          type: 'success'
-        });
-        this.$router.replace('/')
-      }).catch(() => {
-        this.loading = false
-      })
-    },
-    agree(){
-      if(this.checked){
-        this.disabled = false
-      }else{
-        this.disabled = true
-      }
-    }
-  }
-}
-</script>
 <style lang='scss' scoped>
-  .card{
-    margin: 30px auto 0;
-    width: 600px;
-    .title{
-      text-align: center;
-      font-size: 20px;
-      margin-bottom: 30px;
-      margin-top:20px;
-    }
-    .condition{
-      .name{
-        font-size: 16px;
-        margin-bottom: 5px;
-      }
-      .explain{
-        font-size: 12px;
-      }
-    }
-    .notice{
-      margin:20px 0 20px 0;
-      text-align: center;
-      .text-red{
-        color: #fa524c;
-      }
-    }
-    .button{
-      text-align: center;
-    }
-  }
-  .user-title{
-    color: #757575;
-    font-weight: 400;
-    font-size: 18px;
-    margin-bottom: 20px;
-  }
+  @import "./scss/cancel";
 </style>
+
+<script>
+import js from './js/cancel'
+export default js
+</script>

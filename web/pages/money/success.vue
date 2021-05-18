@@ -16,57 +16,11 @@
   </div>
 </template>
 
-<script>
-export default {
-  layout: 'cart',
-  middleware: 'auth',
-  head () {
-    return {
-      title: '支付成功' + '-' + process.env.APP_NAME,
-    }
-  },
-  data() {
-    return {
-
-    }
-  },
-  mounted() {
-    $nuxt.$store.commit('setCartTitle', '支付成功');
-  },
-  methods: {
-    go(path){
-      $nuxt.$router.push(path);
-    }
-  }
-}
-</script>
 <style lang='scss' scoped>
-  .cart{
-    margin-top:100px;
-    margin-bottom: 100px;
-    display: flex;
-    position: relative;
-    .empty-cart{
-      img{
-        width: 500px;
-      }
-    }
-    .instructions{
-      margin: 160px 0 0 50px;
-      .title{
-        font-size: 35px;
-        color: #83c44e;
-        line-height: 55px;
-        font-weight: bold;
-      }
-      .login{
-        font-size: 18px;
-        line-height: 45px;
-        color: #b0b0b0;
-      }
-      .operation{
-        margin-top: 20px;
-      }
-    }
-  }
+  @import "./scss/success";
 </style>
+
+<script>
+import js from './js/success'
+export default js
+</script>

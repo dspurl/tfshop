@@ -1,0 +1,96 @@
+.no-goods{
+  text-align: center;
+  margin: 20px 0 80px 0;
+}
+.operation{
+  margin-bottom: 20px;
+}
+.product-list{
+  width: 1210px;
+  position: relative;
+  left: 5px;
+  margin-bottom: 20px;
+}
+.list{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  .li{
+    cursor:pointer;
+    width: 20%;
+    .card{
+      margin: 0 10px 10px 0;
+      .image{
+        width: 100%;
+        height: 190px;
+      }
+      .name{
+        font-size: 14px;
+        overflow: hidden;
+        text-overflow:ellipsis;
+        white-space: nowrap;
+      }
+      .price{
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        .symbol{
+          font-size: 12px;
+          line-height: 40px;
+          color: $font-color-main;
+        }
+        .value{
+          color: $font-color-main;
+          line-height: 35px;
+        }
+      }
+    }
+    .card:hover{
+      transform: translate(0,-5px);
+    }
+  }
+}
+.screen-box{
+  margin: 30px 0 10px 0;
+  .on{
+    color: $font-color-main;
+  }
+  .f-sort{
+    position: relative;
+    .fs-tit {
+      display: inline-block;
+      vertical-align: top;
+    }
+    .fs-up {
+      width: 7px;
+      margin-left: 5px;
+      vertical-align: top;
+    }
+    .up{
+      position: relative;
+      top: -3px;
+      left: -7px;
+    }
+    .below{
+      position: relative;
+      top: 3px;
+      left: -26px;
+    }
+  }
+  .screen{
+    display: flex;
+    margin-bottom: 20px;
+    .on{
+      color: $font-color-main;
+    }
+    .divider{
+      position: relative;
+      top:3px;
+      margin: 0 20px 0 20px;
+    }
+  }
+}
+.breadcrumb{
+  margin-top:20px;
+  margin-bottom: 10px;
+}

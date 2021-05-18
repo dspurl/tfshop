@@ -1,0 +1,95 @@
+.min-header{
+  background-color: #ffffff;
+  padding: 10px 0 10px 0;
+  border-bottom: 2px solid $font-color-main;
+  .container{
+    display: flex;
+    position: relative;
+    .logo{
+      width: 80px;
+      height: 80px;
+    }
+    .title{
+      font-size: 28px;
+      line-height: 80px;
+      margin-left:10px;
+    }
+    .right{
+      position: absolute;
+      right: 0;
+      top:35px;
+      font-size: 12px;
+      a{
+        color: #757575;
+      }
+      a:hover{
+        color: $font-color-main;
+      }
+      .right-box{
+        justify-content: right;
+        display: flex;
+        .li{
+          padding:0 10px 0 10px;
+          line-height: 40px;
+          color: #b0b0b0;
+          a{
+            color: #b0b0b0;
+            .iconfont{
+              font-size: 12px;
+              margin-left:10px;
+              position: relative;
+              top:1px;
+            }
+          }
+          a:hover{
+            color: $font-color-main;
+          }
+        }
+        .li:hover{
+          color: $font-color-main;
+        }
+        .user{
+          a{
+            display: flex;
+            padding: 0 10px 0 10px;
+            span{
+              display: inline-block;
+              width: 70px;
+              text-align: center;
+              overflow: hidden;
+              text-overflow:ellipsis;
+              white-space: nowrap;
+            }
+          }
+        }
+        .user-menu-wrapper{
+          background: #fff;
+        }
+        .user-menu{
+          overflow: hidden;
+          padding-bottom: 10px;
+          .a{
+            padding: 3px 30px;
+            color: #757575;
+            line-height: 2;
+            cursor:pointer;
+          }
+          .a:hover{
+            color: $font-color-main;
+          }
+        }
+        .user-active{
+          .user-name {
+            background: #fff;
+            color: #757575;
+            width: 110px;
+            text-align: center;
+          }
+          .user-name:hover{
+            color: $font-color-main;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,48 @@
+.body {
+  background-color: #f4f4f4;
+}
+.user-portal{
+  .breadcrumb{
+    margin: 20px 0 20px 0;
+  }
+}
+.user-box{
+  display: flex;
+  align-items: flex-start;
+  .navigation{
+    width: 180px;
+    background-color: #ffffff;
+    padding:0 20px 20px 20px;
+    margin-bottom: 20px;
+    .menu-box{
+      padding-top:20px;
+      .title{
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 52px;
+        color: #333;
+      }
+      .list{
+        li{
+          padding: 6px 0;
+          a{
+            color: #757575;
+            font-size: 12px;
+          }
+          .active{
+            color: $font-color-main;
+          }
+          a:hover{
+            color: #333;
+          }
+        }
+      }
+    }
+  }
+  .main-box{
+    flex:1;
+    background-color: #ffffff;
+    margin: 0 0 20px 10px;
+    padding: 30px 20px 30px 20px;
+  }
+}

@@ -1,0 +1,49 @@
+.operation{
+  margin-top:20px;
+  display: flex;
+  .pagination{
+    margin-left:5px;
+    padding:0 0;
+  }
+}
+.recommend{
+  .list{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    .li{
+      cursor:pointer;
+      width: 20%;
+      .card{
+        position: relative;
+        margin: 0 5px 5px 0;
+        .image{
+          width: 147px;
+          height: 147px;
+        }
+        .name{
+          font-size: 14px;
+          overflow: hidden;
+          text-overflow:ellipsis;
+          white-space: nowrap;
+        }
+        .delete{
+          position: absolute;
+          top:2px;
+          right: 2px;
+          z-index: 10;
+          .iconfont{
+            color: #fa524c;
+            font-size: 18px;
+          }
+        }
+      }
+    }
+  }
+}
+.user-title{
+  color: #757575;
+  font-weight: 400;
+  font-size: 18px;
+  margin-bottom: 20px;
+}

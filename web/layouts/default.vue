@@ -6,8 +6,12 @@
     <el-backtop/>
   </div>
 </template>
+
 <style lang='scss' scoped>
-  .body {
-    background-color: #f4f4f4;
-  }
+  @import "./scss/default";
 </style>
+
+<script>
+import js from './js/default'
+export default js
+</script>

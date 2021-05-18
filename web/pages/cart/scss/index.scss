@@ -1,0 +1,79 @@
+.invalid-title{
+  padding: 20px 0 20px 0;
+  font-size: 26px;
+  color: #cccccc;
+  text-align: center;
+}
+.invalidTable{
+  margin-top:20px;
+}
+.cart-list{
+  padding:30px 0 30px 0;
+  .specification{
+    color: #999999;
+  }
+}
+.cart-operation{
+  margin-top:20px;
+  background-color: #ffffff;
+  display: flex;
+  line-height: 40px;
+  font-size: 12px;
+  .left{
+    flex:1;
+    padding-left: 20px;
+    color: #757575;
+    .delete{
+      cursor:pointer;
+    }
+    .delete:hover{
+      color: #fa524c;
+    }
+    .number{
+      color: #fa524c;
+    }
+  }
+  .right{
+    width: 400px;
+    justify-content: flex-end;
+    display: flex;
+    .total{
+      margin-right: 30px;
+      color: #fa524c;
+      span{
+        font-size: 28px;
+      }
+    }
+    .settlement{
+      width: 150px;
+    }
+  }
+}
+.cart{
+  margin-top:100px;
+  margin-bottom: 100px;
+  display: flex;
+  position: relative;
+  .empty-cart{
+    img{
+      width: 500px;
+    }
+  }
+  .instructions{
+    margin: 160px 0 0 50px;
+    .title{
+      font-size: 35px;
+      color: #b0b0b0;
+      line-height: 55px;
+      font-weight: bold;
+    }
+    .login{
+      font-size: 18px;
+      line-height: 45px;
+      color: #b0b0b0;
+    }
+    .operation{
+      margin-top: 20px;
+    }
+  }
+}

@@ -30,58 +30,12 @@
     <!-- 版权信息end -->
   </div>
 </template>
-<script>
-  export default {
-    data() {
-      return {
-        icp: process.env.APP_ICP,
-        year: new Date().getFullYear(),
-        domain: process.env.APP_SHORT_NAME
-      }
-    }
-  }
-</script>
+
 <style lang='scss' scoped>
-  .footer{
-    background-color: #ffffff;
-    .copyright{
-      padding:20px 0 20px 0;
-      background-color: #f4f4f4;
-      color: #999;
-      font-size: 12px;
-    }
-    .links{
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
-      .li{
-        width: 25%;
-        text-align: center;
-        .dt{
-          display: block;
-          line-height: 40px;
-        }
-        .dd{
-          line-height: 35px;
-          font-size: 12px;
-        }
-      }
-    }
-    .safeguard{
-      padding:20px;
-      display: flex;
-      flex-wrap: wrap;
-      align-content: flex-start;
-      .li{
-        display: flex;
-        width: 25%;
-        line-height: 40px;
-        justify-content: center;
-        .iconfont{
-          font-size: 32px;
-          margin-right: 5px;
-        }
-      }
-    }
-  }
+  @import "./scss/Footer";
 </style>
+
+<script>
+import js from './js/Footer'
+export default js
+</script>

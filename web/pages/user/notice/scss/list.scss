@@ -1,0 +1,31 @@
+.operation{
+  margin-top:20px;
+  display: flex;
+  .pagination{
+    margin-left:5px;
+    padding:0 0;
+  }
+}
+.table{
+  width: 100%;
+  a{
+    color: #999;
+    span{
+      font-size: 16px;
+      color: #fa524c;
+      margin-right: 5px;
+    }
+  }
+  a:hover{
+    color: #fa524c;
+  }
+  .on{
+    color: #000;
+  }
+}
+.user-title{
+  color: #757575;
+  font-weight: 400;
+  font-size: 18px;
+  margin-bottom: 20px;
+}

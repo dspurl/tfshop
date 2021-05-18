@@ -1,0 +1,90 @@
+.banner-panel{
+  width: 100%;
+  height: 588px;
+  background-repeat: no-repeat;
+  background-position: top center;
+  position: relative;
+  .qr-code{
+    text-align: center;
+    margin-top:30px;
+    .qr{
+      position: relative;
+      margin:0 auto;
+      border: 1px solid #f4f4f4;
+      padding: 8px;
+      width: 155px;
+      .lose-efficacy{
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        .name{
+          margin-top:50px;
+          color: #fff;
+          font-size: 16px;
+        }
+        .flush{
+          margin-top:10px;
+        }
+      }
+    }
+    .explain{
+      font-size: 12px;
+      margin: 20px 0 20px 0;
+      span{
+        color: $font-color-main;
+        margin: 0 5px 0 5px;
+      }
+    }
+    .advantage{
+      display: flex;
+      color: #999;
+      justify-content: center;
+      div{
+        i{
+          padding-right: 3px;
+          color: #e2e1e5;
+        }
+        margin: 0 10px 0 10px;
+      }
+    }
+  }
+  .link{
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: block;
+    height: 588px;
+    width: 800px;
+  }
+  .form{
+    margin: 40px 0 40px 0;
+    height: 508px;
+    .login-method{
+      text-align: center;
+      font-size: 26px;
+      padding:30px 0 30px 0;
+      span{
+        cursor:pointer;
+      }
+      .on, span:hover{
+        color: $font-color-main;
+      }
+    }
+    .button{
+      width: 100%;
+    }
+    .other{
+      margin-top:50px;
+      text-align: center;
+    }
+    .other a{
+      color: #999;
+    }
+    .other a:hover{
+      color: $font-color-main;
+    }
+  }
+}

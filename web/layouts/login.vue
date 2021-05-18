@@ -5,8 +5,12 @@
     <MiniFooter />
   </div>
 </template>
+
 <style lang='scss' scoped>
-  .body {
-    background-color: #ffffff;
-  }
+  @import "./scss/login";
 </style>
+
+<script>
+import js from './js/login'
+export default js
+</script>

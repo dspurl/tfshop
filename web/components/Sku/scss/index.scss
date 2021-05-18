@@ -1,0 +1,48 @@
+.specification-list{
+  display: flex;
+  margin-top:10px;
+  .name{
+    font-size: 12px;
+    line-height: 40px;
+    width: 80px;
+    text-align: right;
+    color: #999999;
+  }
+  .item-list{
+    flex:1;
+    display: flex;
+    flex-wrap: wrap;
+    .item{
+      border: 1px solid #e0e0e0;
+      line-height: 40px;
+      padding: 0 20px 0 20px;
+      margin-left: 10px;
+      margin-bottom: 10px;
+      cursor:pointer;
+    }
+    .selected{
+      border: 1px solid #fa524c;
+      color: #fa524c;
+    }
+    .disabled{
+      color: #C0C4CC;
+      border: 1px solid #C0C4CC;
+    }
+  }
+}
+.purchase-quantity{
+  margin-top:20px;
+  display: flex;
+  line-height: 40px;
+  .name{
+    font-size: 12px;
+    width: 80px;
+    text-align: right;
+    margin-right:10px;
+    color: #999999;
+  }
+  .inventory{
+    font-size: 12px;
+    margin-left: 10px;
+  }
+}

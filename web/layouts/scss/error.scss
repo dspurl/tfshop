@@ -1,0 +1,21 @@
+.box{
+  text-align: center;
+  position: relative;
+  .explain{
+    position: absolute;
+    bottom: 100px;
+    width: 100%;
+    text-align: center;
+    .name{
+      font-size: 18px;
+      margin: 15px 0;
+      text-align: center;
+    }
+    .link{
+      span{
+        color: $font-color-main;
+        cursor:pointer;
+      }
+    }
+  }
+}

@@ -1,0 +1,88 @@
+.specification{
+  color: #999999;
+}
+.top{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top:20px;
+}
+.right{
+  .li{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #999999;
+    line-height: 45px;
+    .name{
+      text-align: right;
+      flex:1;
+    }
+    .value{
+      width: 100px;
+      text-align: right;
+      color: $font-color-main;
+    }
+    .total{
+      position: relative;
+      top:-5px;
+      span{
+        font-size: 30px;
+      }
+    }
+  }
+}
+.address{
+  .min-title{
+    margin-bottom: 20px;
+  }
+  .li{
+    display: flex;
+    line-height: 25px;
+    font-size: 12px;
+    .name{
+      width: 80px;
+      text-align: right;
+    }
+    .value{
+      color: #999999;
+    }
+  }
+}
+.steps-box-time{
+  .steps{
+    display: flex;
+    font-size: 12px;
+    line-height: 25px;
+    margin-top:5px;
+    div{
+      flex:1;
+      text-align: center;
+    }
+  }
+}
+.steps-box{
+  .title{
+    color: $font-color-main;
+    margin-bottom: 10px;
+  }
+  .steps{
+    display:flex;
+    border-radius:5px;
+    background-color: #e1e1e1;
+    font-size: 12px;
+    line-height: 25px;
+    .on{
+      background-color: $font-color-main;
+      color: #ffffff;
+      border-radius:5px;
+    }
+    div{
+      flex:1;
+      .chunk{
+        text-align: center;
+      }
+    }
+  }
+}

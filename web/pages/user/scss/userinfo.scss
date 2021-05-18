@@ -1,0 +1,25 @@
+.portrait{
+  cursor:pointer;
+}
+.ruleForm{
+  width: 500px;
+  .avatar-uploader-icon{
+    line-height: 190px;
+    margin:auto;
+  }
+  .code-button{
+    position: absolute;
+    right: 5px;
+    top:6px;
+  }
+  a{
+    position: relative;
+    top:-1px;
+  }
+}
+.user-title{
+  color: #757575;
+  font-weight: 400;
+  font-size: 18px;
+  margin-bottom: 20px;
+}

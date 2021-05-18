@@ -25,91 +25,11 @@
   </div>
 </template>
 
-<script>
-import {detail} from '@/api/notification'
-export default {
-  layout: 'user',
-  head () {
-    return {
-      title: '消息通知-个人中心',
-    }
-  },
-  data() {
-    return {
-      loading: true,
-      notice:{}
-    }
-  },
-  mounted() {
-    this.getDetail()
-  },
-  methods: {
-    async getDetail(){
-      if(!$nuxt.$route.query.id){
-        this.$message({
-          message: '参数有误，请联系管理员',
-          type: 'error'
-        });
-        $nuxt.$router.go(-1);
-        return false
-      }
-      await Promise.all([
-        detail($nuxt.$route.query.id)
-      ]).then(([notificationData]) => {
-        this.notice = notificationData;
-        this.loading = false
-      }).catch((error) => {
-        this.loading = false
-      })
-    },
-    goBack() {
-      $nuxt.$router.go(-1)
-    },
-    goNavigator(url){
-      // 为了兼容老版本
-      uni.navigateTo({
-        url: url.replace('pages','user')
-      })
-    },
-  }
-}
-</script>
 <style lang='scss' scoped>
-  .card{
-    margin: 30px auto 0;
-    width: 600px;
-    .title{
-      font-size: 20px;
-      margin-bottom: 30px;
-    }
-    .text-money-name{
-      text-align: center;
-      color: #999999;
-    }
-    .text-money-value{
-      margin-top:10px;
-      text-align: center;
-      font-size: 30px;
-      margin-bottom: 10px;
-    }
-    .card-list{
-      display: flex;
-      padding-bottom: 5px;
-      font-size: 14px;
-      .card-list-title{
-        width:80px;
-        text-align: right;
-        margin-right:10px;
-        color: #999999;
-      }
-    }
-    .introduce{
-      font-size: 14px;
-      margin-top:20px;
-      color: #999999;
-    }
-    .link{
-      text-align: center;
-    }
-  }
+  @import "./scss/detail";
 </style>
+
+<script>
+  import js from './js/detail'
+  export default js
+</script>

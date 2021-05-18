@@ -1,0 +1,53 @@
+.remark{
+  margin-top:30px;
+}
+.specification{
+  color: #999999;
+}
+.indent-create{
+  margin-top:40px;
+  margin-bottom: 40px;
+  .address-box{
+    .title{
+      color: #333;
+      font-size: 18px;
+      margin-bottom: 20px;
+    }
+    .address-box-list{
+      margin-bottom: 20px;
+    }
+    .count-detail{
+      margin-top:50px;
+      text-align: right;
+      .bill-item{
+        display: flex;
+        justify-content:flex-end;
+        line-height: 35px;
+        color: #757575;
+        font-size: 14px;
+        .bill-money{
+          width: 80px;
+          color: #fa524c;
+        }
+        .bill-name{
+          display: flex;
+          .price{
+            color: #fa524c;
+            font-size: 30px;
+            position: relative;
+            top:-5px;
+            margin-right: 5px;
+            margin-left: 5px;
+          }
+          .unit{
+            color: #fa524c;
+          }
+        }
+      }
+    }
+  }
+  .operation{
+    display: flex;
+    justify-content:flex-end;
+  }
+}
