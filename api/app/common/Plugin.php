@@ -1062,7 +1062,6 @@ class Plugin
                 if ($attribute['attribute'] == 'UNSIGNED' && in_array($attribute['type'], $unsigned_type)) {
                     $attribute_type = 'unsigned' . $this->convertUnderline($attribute_type);
                 }
-                $attribute_length = $attribute['length'] ? ',' . $attribute['length'] : '';
                 if (isset($attribute['default'])) {
                     if ($attribute['default'] == 'null') {
                         $attribute_default = '->nullable()';
@@ -1072,7 +1071,7 @@ class Plugin
                 }
                 $attribute_nullable = $attribute['is_empty'] ? '->nullable()' : '';
                 $newContent .= "
-            \$table->$attribute_type('" . $attribute['name'] . "'$attribute_length)" . $attribute_default . $attribute_nullable . "->comment('" . $attribute['annotation'] . "');";
+            \$table->$attribute_type('" . $attribute['name'] . "')" . $attribute_default . $attribute_nullable . "->comment('" . $attribute['annotation'] . "');";
             }
         }
         if ($db['softDeletes'] == 1) {
@@ -1094,6 +1093,7 @@ class Plugin
             $newContent,
             $db['annotation'],
         ], $content);
+        $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
         file_put_contents($this->migrationsPath . '/' . $getLocalMigrations, $content);
     }
 

@@ -82,6 +82,7 @@
       <el-form ref="dataTableForm" :model="temp" :rules="dataTableRules" class="dataTableForm" label-position="top" label-width="120px">
         <el-form-item class="min-input" label="表名" prop="name">
           <el-input v-model="temp.name" placeholder="请输入表名" maxlength="60" clearable/>
+          <p>表名在没有特殊情况下，请在表最后加上s</p>
         </el-form-item>
         <el-form-item class="min-input" label="表注释" prop="annotation">
           <el-input v-model="temp.annotation" placeholder="请输入表注释" maxlength="60" clearable/>
@@ -235,6 +236,7 @@
           </el-table>
           <div class="tip">
             <p>1、表注释如果有参数说明的话，请以下面的格式进行编写[说明:值=值含义-英文简写]，如[是否隐藏:0=否-no,1=是-yes]</p>
+            <p>2、名字如果是ID的话，将自动设置主键自增类型</p>
           </div>
           <el-button style="margin-top:10px;" type="success" round @click="addDBAttribute">增加属性</el-button>
         </el-form-item>
