@@ -330,7 +330,7 @@ class Plugin
                     case 'longText':
                         $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-input type="textarea" :rows="2" v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' clearable/>
+        <el-input :rows="2" v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' type="textarea" clearable/>
       </el-form-item>';
                         $rules .= "
         " . $a['name'] . ": [
