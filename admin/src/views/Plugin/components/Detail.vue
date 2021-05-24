@@ -25,8 +25,7 @@
       </div>
       <el-table
         :data="ruleForm.db"
-        style="width: 100%"
-        height="250">
+        style="width: 100%">
         <el-table-column
           prop="name"
           label="表名"
@@ -72,13 +71,13 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-button style="margin: 10px 0 50px 0;" type="success" round @click="addDataTable">新建数据表</el-button>
+      <el-button style="margin: 10px 0 100px 0;" type="success" round @click="addDataTable">新建数据表</el-button>
       <el-form-item class="float-button">
         <el-button :loading="formLoading" type="primary" @click="submit">提交</el-button>
       </el-form-item>
     </el-form>
     <!--新建数据表-->
-    <el-dialog :close-on-click-modal="false" :visible.sync="dialogDataTable" :fullscreen="true" title="新建数据表">
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogDataTable" :fullscreen="true" :title="eidt ? '编辑数据表': '新建数据表'">
       <el-form ref="dataTableForm" :model="temp" :rules="dataTableRules" class="dataTableForm" label-position="top" label-width="120px">
         <el-form-item class="min-input" label="表名" prop="name">
           <el-input v-model="temp.name" placeholder="请输入表名" maxlength="60" clearable/>
@@ -90,12 +89,14 @@
         <el-form-item label="属性" prop="attribute">
           <el-table
             :data="temp.attribute"
+            row-key="id"
             style="width: 100%"
-            height="250">
+            class="dragTable">
             <el-table-column
               prop="name"
+              row-key="id"
               label="名字"
-              width="200">
+              width="180">
               <template slot-scope="scope">
                 <el-form-item
                   :rules="{
@@ -110,7 +111,7 @@
             <el-table-column
               prop="type"
               label="类型"
-              width="300">
+              width="180">
               <template slot-scope="scope">
                 <el-form-item
                   :rules="{
@@ -148,7 +149,7 @@
             <el-table-column
               prop="default"
               label="默认值"
-              width="200">
+              width="180">
               <template slot-scope="scope">
                 <el-form :model="scope.row">
                   <el-form-item prop="default">
@@ -160,7 +161,7 @@
             <el-table-column
               prop="sort"
               label="排序规则"
-              width="300">
+              width="200">
               <template slot-scope="scope">
                 <el-form-item
                   :rules="{
@@ -181,7 +182,7 @@
             <el-table-column
               prop="attribute"
               label="属性"
-              width="300">
+              width="180">
               <template slot-scope="scope">
                 <el-form-item>
                   <el-select v-model="scope.row.attribute" placeholder="请选择" filterable clearable>
@@ -237,6 +238,7 @@
           <div class="tip">
             <p>1、表注释如果有参数说明的话，请以下面的格式进行编写[说明:值=值含义-英文简写]，如[是否隐藏:0=否-no,1=是-yes]</p>
             <p>2、名字如果是ID的话，将自动设置主键自增类型</p>
+            <p>3、支持拖拽排序</p>
           </div>
           <el-button style="margin-top:10px;" type="success" round @click="addDBAttribute">增加属性</el-button>
         </el-form-item>
@@ -255,8 +257,7 @@
         <el-form-item label="索引" prop="indexes">
           <el-table
             :data="temp.indexes"
-            style="width: 100%"
-            height="250">
+            style="width: 100%">
             <el-table-column
               prop="name"
               label="键名"
@@ -333,7 +334,7 @@
           <p>2、不重置的话，保存后会不将修改后的数据更新到对应的文件中，需要自行在对应文件中手动添加</p>
         </el-form-item>
       </el-form>
-      <div slot="footer" class="dialog-footer">
+      <div slot="footer" class="float-button">
         <el-button :loading="formLoading" @click="dialogDataTable = false">{{ $t('usuel.cancel') }}</el-button>
         <el-button :loading="formLoading" type="primary" @click="dataTableSubmit">确定</el-button>
       </div>

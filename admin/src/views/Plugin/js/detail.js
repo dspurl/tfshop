@@ -1,4 +1,5 @@
 import { create, details, edit } from '@/api/plugin'
+import Sortable from 'sortablejs'
 export default {
   name: 'PluginDetail',
   props: {
@@ -9,6 +10,7 @@ export default {
   },
   data() {
     return {
+      eidt: false,
       name: '',
       dialogIndexes: false,
       dialogIndexesIndex: '',
@@ -215,6 +217,7 @@ export default {
     },
     // 添加数据表
     addDataTable() {
+      this.eidt = false
       this.dialogDataTable = true
       this.temp = {
         name: '',
@@ -231,13 +234,18 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs['dataTableForm'].clearValidate()
+        this.setSort()
       })
     },
     // 编辑数据表
     editDataTable(row, index) {
+      this.eidt = true
       this.dialogDataTable = true
       this.dialogDataTableIndex = index
       this.temp = row
+      this.$nextTick(() => {
+        this.setSort()
+      })
     },
     // 数据表添加/保存
     dataTableSubmit() {
@@ -270,6 +278,22 @@ export default {
           } else {
             this.temp.indexes.push(this.indexesTemp)
           }
+        }
+      })
+    },
+    // 行拖拽
+    setSort() {
+      const tbody = document.querySelector('.dragTable .el-table__body-wrapper tbody')
+      const _this = this
+      Sortable.create(tbody, {
+        onEnd({ newIndex, oldIndex }) {
+          const currRow = _this.temp.attribute.splice(oldIndex, 1)[0]
+          _this.temp.attribute.splice(newIndex, 0, currRow)
+          const newArray = _this.temp.attribute.slice(0)
+          _this.temp.attribute = []
+          _this.$nextTick(function() {
+            _this.temp.attribute = newArray
+          })
         }
       })
     },
