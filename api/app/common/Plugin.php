@@ -1062,6 +1062,7 @@ class Plugin
                 if ($attribute['attribute'] == 'UNSIGNED' && in_array($attribute['type'], $unsigned_type)) {
                     $attribute_type = 'unsigned' . $this->convertUnderline($attribute_type);
                 }
+                $attribute_default = '';
                 if (isset($attribute['default'])) {
                     if ($attribute['default'] == 'null') {
                         $attribute_default = '->nullable()';
