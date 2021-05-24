@@ -557,7 +557,7 @@ class GoodController extends Controller
                     return resReturn(0, '请选择内容', Code::CODE_WRONG);
                 }
                 $idData = collect($request->all())->pluck('id');
-                Good::whereIn('id', $idData)->update(['deleted_at' => Carbon::now()->toDateTimeString()]);
+                Good::destroy($idData);
             }
             return 1;
         }, 5);

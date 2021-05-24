@@ -1,0 +1,41 @@
+import request from '@/utils/request'
+import Qs from 'qs'
+export function getList(query) {
+  return request({
+    url: '{{ name }}',
+    method: 'GET',
+    params: query
+  })
+}
+
+export function create(data) {
+  data = Qs.parse(data)
+  return request({
+    url: '{{ name }}',
+    method: 'POST',
+    data
+  })
+}
+
+export function edit(data) {
+  data = Qs.parse(data)
+  return request({
+    url: '{{ name }}/' + data.id,
+    method: 'POST',
+    data
+  })
+}
+
+export function detail(id) {
+  return request({
+    url: '{{ name }}/' + id,
+    method: 'GET'
+  })
+}
+
+export function destroy(id) {
+  return request({
+    url: '{{ name }}/destroy/' + id,
+    method: 'POST'
+  })
+}

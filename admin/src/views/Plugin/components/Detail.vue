@@ -19,7 +19,7 @@
       </el-form-item>
       <h3>数据库</h3>
       <div class="tip">
-        <p>1、创建数据表后将会自动生成数据库迁移文件、控制器、模型、验证器，如有不需要的文件，请在生成后进行删除</p>
+        <p>1、创建的表可以是伪数据表，即不创建数据表，只需要创建一些模板和后端代码</p>
         <p>2、删除插件时，将会删除自动生成的文件，其它非自动生成的文件不会进行删除</p>
         <p>3、在未发布时，修改数据库可以直接修改当前版本下的数据库迁移文件，当已经发布后，会自动生成修改的数据迁移文件</p>
       </div>
@@ -72,16 +72,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-form-item v-if="name" class="min-input" label="是否重置" prop="reset">
-        <el-switch
-          v-model="ruleForm.reset"
-          active-text="是"
-          inactive-text="否"/>
-      </el-form-item>
-      <div class="tip">
-        <p>1、勾选重置将重新生成所有插件相关文件，如已对部分文件做了修改，请不要勾选</p>
-        <p>2、不重置的话，保存后会不将修改后的数据更新到对应的文件中，需要自行在对应文件中手动添加</p>
-      </div>
       <el-button style="margin: 10px 0 50px 0;" type="success" round @click="addDataTable">新建数据表</el-button>
       <el-form-item class="float-button">
         <el-button :loading="formLoading" type="primary" @click="submit">提交</el-button>
@@ -243,6 +233,9 @@
               </template>
             </el-table-column>
           </el-table>
+          <div class="tip">
+            <p>1、表注释如果有参数说明的话，请以下面的格式进行编写[说明:值=值含义-英文简写]，如[是否隐藏:0=否-no,1=是-yes]</p>
+          </div>
           <el-button style="margin-top:10px;" type="success" round @click="addDBAttribute">增加属性</el-button>
         </el-form-item>
         <el-form-item class="min-input" label="软删除" prop="softDeletes">
@@ -301,6 +294,42 @@
           </el-table>
           <el-button style="margin-top:10px;" type="success" round @click="addDBIndexes">增加索引</el-button>
         </el-form-item>
+        <el-form-item label="数据表" prop="data_table">
+          <el-radio-group v-model="temp.data_table">
+            <el-radio :label="1">生成</el-radio>
+            <el-radio :label="0">不生成</el-radio>
+          </el-radio-group>
+          <div>选择生成后，系统将自动生成数据表迁移文件</div>
+        </el-form-item>
+        <el-form-item label="后端代码" prop="after_end">
+          <el-radio-group v-model="temp.after_end">
+            <el-radio :label="1">生成</el-radio>
+            <el-radio :label="0">不生成</el-radio>
+          </el-radio-group>
+          <div>选择生成后，系统将自动生成控制器、模型、验证器</div>
+        </el-form-item>
+        <el-form-item label="后台代码" prop="backstage">
+          <el-radio-group v-model="temp.backstage">
+            <el-radio :label="1">生成</el-radio>
+            <el-radio :label="0">不生成</el-radio>
+          </el-radio-group>
+          <div>选择生成后，系统将自动生成后台模板文件</div>
+        </el-form-item>
+        <el-form-item label="权限" prop="jurisdiction">
+          <el-radio-group v-model="temp.jurisdiction">
+            <el-radio :label="1">生成</el-radio>
+            <el-radio :label="0">不生成</el-radio>
+          </el-radio-group>
+          <div>选择生成后，系统将自动创建数据表对应的权限，并为当前用户增加该权限</div>
+        </el-form-item>
+        <el-form-item v-if="name" label="是否重置" prop="reset">
+          <el-switch
+            v-model="temp.reset"
+            active-text="是"
+            inactive-text="否"/>
+          <p>1、勾选重置将重新生成所有插件相关文件，如已对部分文件做了修改，请不要勾选</p>
+          <p>2、不重置的话，保存后会不将修改后的数据更新到对应的文件中，需要自行在对应文件中手动添加</p>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :loading="formLoading" @click="dialogDataTable = false">{{ $t('usuel.cancel') }}</el-button>
@@ -343,6 +372,6 @@
   @import "../scss/detail";
 </style>
 <script>
-import detail from '../js/detail'
-export default detail
+import js from '../js/detail'
+export default js
 </script>

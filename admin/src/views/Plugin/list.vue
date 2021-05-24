@@ -91,6 +91,6 @@
   @import "./scss/list";
 </style>
 <script>
-import list from './js/list'
-export default list
+import js from './js/list'
+export default js
 </script>

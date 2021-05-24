@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Model;
 class {{ name }} extends Model
 {
     {{ SoftDeletesUse }}
+    {{ constant }}
     public static $withoutAppends = true;
 
     /**

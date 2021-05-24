@@ -1,0 +1,15 @@
+.pagination-operation{
+  margin-bottom: 80px;
+  float:left;
+}
+.pagination-operation .operation{
+  margin-left:20px;
+  margin-top: 32px;
+  font-size: 12px;
+  float:left;
+  margin-right: 10px;
+}
+.pagination-operation .pagination{
+  float:left;
+  padding: 0 0;
+}

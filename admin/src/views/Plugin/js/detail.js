@@ -25,8 +25,7 @@ export default {
       ruleForm: {
         name: '',
         identification: '',
-        db: [],
-        reset: false
+        db: []
       },
       rules: {
         name: [
@@ -145,7 +144,12 @@ export default {
         indexes: [],
         attribute: [],
         softDeletes: 0,
-        timestamps: 1
+        timestamps: 1,
+        after_end: 1,
+        backstage: 1,
+        data_table: 1,
+        jurisdiction: 1,
+        reset: false
       }
     }
   },
@@ -160,6 +164,11 @@ export default {
     details() {
       details(this.name).then((res) => {
         this.ruleForm = res.data
+        this.ruleForm.data_table = 1
+        this.ruleForm.after_end = 1
+        this.ruleForm.backstage = 1
+        this.ruleForm.jurisdiction = 1
+        this.ruleForm.reset = 0
       }).catch(() => {
         this.formLoading = false
       })
@@ -213,7 +222,12 @@ export default {
         indexes: [],
         attribute: [],
         softDeletes: 0,
-        timestamps: 1
+        timestamps: 1,
+        after_end: 1,
+        backstage: 1,
+        data_table: 1,
+        jurisdiction: 1,
+        reset: false
       }
       this.$nextTick(() => {
         this.$refs['dataTableForm'].clearValidate()
