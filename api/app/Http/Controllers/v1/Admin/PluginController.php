@@ -152,4 +152,12 @@ class PluginController extends Controller
     {
         return resReturn(1, (new Plugin())->models());
     }
+
+    /**
+     * 获取所有模板
+     */
+    public function template()
+    {
+        return resReturn(1, (new Plugin())->template());
+    }
 }

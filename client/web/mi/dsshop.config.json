@@ -1,0 +1,7 @@
+{
+  "name": "仿小米商城",
+  "en": "mi",
+  "version": "0.0.1",
+  "describe": "参考小米2021年商城界面风格，基于nuxt，利用element写的网站模板，支持seo",
+  "imgList": []
+}

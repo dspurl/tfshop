@@ -77,6 +77,44 @@ class Plugin
     }
 
     /**
+     * 获取所有模板
+     */
+    public function template()
+    {
+        $data = scandir($this->path . '/client');
+        $return = [];
+        foreach ($data as $value) {
+            if ($value != '.' && $value != '..') {
+                $catalogue = $this->path . '/client/' . $value;
+                if (is_dir($catalogue)) {
+                    $list = scandir($catalogue);
+                    $return[$value] = [
+                        'name' => $value,
+                        'children' => []
+                    ];
+                    foreach ($list as $l) {
+                        if ($l != '.' && $l != '..') {
+                            if (is_dir($catalogue . '/' . $l)) {
+                                $path = $catalogue . '/' . $l . '/dsshop.config.json';
+                                if (!file_exists($path)) {
+                                    return resReturn(0, '缺少dsshop.config.json配置文件', Code::CODE_WRONG);
+                                }
+                                $config = json_decode(file_get_contents($path), true);
+                                $return[$value]['children'][] = $config;
+                                unset($path);
+                                unset($config);
+                            }
+                        }
+                    }
+                    unset($list);
+                }
+                unset($catalogue);
+            }
+        }
+        return collect($return)->values();
+    }
+
+    /**
      * 创建插件
      * @param Request $request
      * @return string
@@ -975,6 +1013,7 @@ class Plugin
             'versions' => $request->versions,
             'author' => $request->author,
             'local' => true,
+            'client' => $request->client,
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
@@ -998,6 +1037,7 @@ class Plugin
             'versions' => $request->versions,
             'author' => $request->author,
             'local' => true,
+            'client' => $request->client,
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,

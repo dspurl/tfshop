@@ -14,6 +14,23 @@
       <el-form-item class="min-input" label="插件简介" prop="describe">
         <el-input v-model="ruleForm.describe" maxlength="200" placeholder="请输入插件简介" clearable/>
       </el-form-item>
+      <el-form-item class="min-input" label="支持的客户端" prop="client">
+        <el-select v-model="ruleForm.client" multiple clearable placeholder="请选择">
+          <el-option-group
+            v-for="group in template"
+            :key="group.name"
+            :label="group.name">
+            <el-option
+              v-for="item in group.children"
+              :key="item.en"
+              :label="item.name"
+              :value="item.en"/>
+          </el-option-group>
+        </el-select>
+      </el-form-item>
+      <div class="tip">
+        <p>1、插件发行时，将会把支持的客户端,以插件标识命名的目录全部进行打包</p>
+      </div>
       <el-form-item class="min-input" label="使用说明" prop="instructions">
         <mavon-editor v-model="ruleForm.instructions" :xss_options="xssOptions" :toolbars="markdownOption" placeholder="请输入正文" style="width:800px;"/>
       </el-form-item>
@@ -134,6 +151,7 @@
       <h3>关联文件</h3>
       <div class="tip">
         <p>1、如果数据库和观察者还不能满足您的需求，可以自行添加其实文件到任何位置，然后将文件的绝对地址添加进来，插件发行时将自动将关联文件打包进去</p>
+        <p>2、如果客户端需要使用除插件标识命名外的其它文件，也可在这里添加</p>
       </div>
       <el-table
         :data="ruleForm.relevance"

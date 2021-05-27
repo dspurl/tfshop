@@ -66,3 +66,10 @@ export function models() {
     method: 'GET'
   })
 }
+
+export function template() {
+  return request({
+    url: 'plugin/template/all',
+    method: 'GET'
+  })
+}

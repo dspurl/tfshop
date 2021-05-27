@@ -1,4 +1,4 @@
-import { create, details, edit, routes, models } from '@/api/plugin'
+import { create, details, edit, routes, models, template } from '@/api/plugin'
 import Sortable from 'sortablejs'
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
@@ -24,6 +24,7 @@ export default {
     return {
       path: [],
       models: [],
+      template: [],
       dialogObserver: false,
       dialogRelevance: false,
       dbEdit: false,
@@ -54,6 +55,7 @@ export default {
         explain: ''
       },
       ruleForm: {
+        client: [],
         name: '',
         identification: '',
         instructions: '',
@@ -259,8 +261,15 @@ export default {
     }
     this.getRoutes()
     this.getModels()
+    this.getTemplate()
   },
   methods: {
+    // 获取客户端模板列表
+    getTemplate() {
+      template().then((res) => {
+        this.template = res.data
+      })
+    },
     // 获取模型列表
     getModels() {
       models().then((res) => {
