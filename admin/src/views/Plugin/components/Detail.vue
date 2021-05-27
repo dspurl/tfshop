@@ -58,9 +58,17 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="annotation"
+          label="表注释"
+          width="200">
+          <template slot-scope="scope">
+            {{ scope.row.annotation }}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="softDeletes"
           label="软删除"
-          width="200">
+          width="80">
           <template slot-scope="scope">
             {{ scope.row.annotation ? '支持' : '不支持' }}
           </template>
@@ -68,9 +76,53 @@
         <el-table-column
           prop="timestamps"
           label="timestamps"
-          width="200">
+          width="120">
           <template slot-scope="scope">
             {{ scope.row.timestamps ? '支持' : '不支持' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="reset"
+          label="数据表"
+          width="200">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.data_table"
+              active-text="生成"
+              inactive-text="不生成"/>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="reset"
+          label="后端代码"
+          width="200">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.after_end"
+              active-text="生成"
+              inactive-text="不生成"/>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="reset"
+          label="后台代码"
+          width="200">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.backstage"
+              active-text="生成"
+              inactive-text="不生成"/>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="reset"
+          label="权限"
+          width="200">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.jurisdiction"
+              active-text="生成"
+              inactive-text="不生成"/>
           </template>
         </el-table-column>
         <el-table-column
@@ -82,13 +134,6 @@
               v-model="scope.row.reset"
               active-text="是"
               inactive-text="否"/>
-          </template>
-        </el-table-column>
-        <el-table-column
-          prop="annotation"
-          label="表注释">
-          <template slot-scope="scope">
-            {{ scope.row.annotation }}
           </template>
         </el-table-column>
         <el-table-column
@@ -423,31 +468,31 @@
           <el-button style="margin-top:10px;" type="success" round @click="addDBIndexes">增加索引</el-button>
         </el-form-item>
         <el-form-item label="数据表" prop="data_table">
-          <el-radio-group v-model="temp.data_table">
-            <el-radio :label="1">生成</el-radio>
-            <el-radio :label="0">不生成</el-radio>
-          </el-radio-group>
+          <el-switch
+            v-model="temp.data_table"
+            active-text="生成"
+            inactive-text="不生成"/>
           <div>选择生成后，系统将自动生成数据表迁移文件</div>
         </el-form-item>
         <el-form-item label="后端代码" prop="after_end">
-          <el-radio-group v-model="temp.after_end">
-            <el-radio :label="1">生成</el-radio>
-            <el-radio :label="0">不生成</el-radio>
-          </el-radio-group>
+          <el-switch
+            v-model="temp.after_end"
+            active-text="生成"
+            inactive-text="不生成"/>
           <div>选择生成后，系统将自动生成控制器、模型、验证器</div>
         </el-form-item>
         <el-form-item label="后台代码" prop="backstage">
-          <el-radio-group v-model="temp.backstage">
-            <el-radio :label="1">生成</el-radio>
-            <el-radio :label="0">不生成</el-radio>
-          </el-radio-group>
+          <el-switch
+            v-model="temp.backstage"
+            active-text="生成"
+            inactive-text="不生成"/>
           <div>选择生成后，系统将自动生成后台模板文件</div>
         </el-form-item>
         <el-form-item label="权限" prop="jurisdiction">
-          <el-radio-group v-model="temp.jurisdiction">
-            <el-radio :label="1">生成</el-radio>
-            <el-radio :label="0">不生成</el-radio>
-          </el-radio-group>
+          <el-switch
+            v-model="temp.jurisdiction"
+            active-text="生成"
+            inactive-text="不生成"/>
           <div>选择生成后，系统将自动创建数据表对应的权限，并为当前用户增加该权限</div>
         </el-form-item>
         <el-form-item v-if="name" label="是否重置" prop="reset">
