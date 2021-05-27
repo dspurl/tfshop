@@ -32,7 +32,7 @@
         <p>1、插件发行时，将会把支持的客户端,以插件标识命名的目录全部进行打包</p>
       </div>
       <el-form-item class="min-input" label="使用说明" prop="instructions">
-        <mavon-editor v-model="ruleForm.instructions" :xss_options="xssOptions" :toolbars="markdownOption" placeholder="请输入正文" style="width:800px;"/>
+        <mavon-editor :class="{'full-screen': fullScreen }" v-model="ruleForm.instructions" :xss_options="xssOptions" :toolbars="markdownOption" placeholder="请输入正文" style="min-width:1000px;" @fullScreen="fullScreen"/>
       </el-form-item>
       <div class="tip">
         <p>1、使用说明支持markdown语法</p>
@@ -71,6 +71,17 @@
           width="200">
           <template slot-scope="scope">
             {{ scope.row.timestamps ? '支持' : '不支持' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="reset"
+          label="是否重置"
+          width="200">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.reset"
+              active-text="是"
+              inactive-text="否"/>
           </template>
         </el-table-column>
         <el-table-column

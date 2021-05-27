@@ -199,6 +199,7 @@ export default {
         }]
       },
       temp: {
+        fullScreen: false,
         name: '',
         annotation: '',
         indexes: [],
@@ -286,11 +287,9 @@ export default {
     details() {
       details(this.name).then((res) => {
         this.ruleForm = res.data
-        this.ruleForm.data_table = 1
-        this.ruleForm.after_end = 1
-        this.ruleForm.backstage = 1
-        this.ruleForm.jurisdiction = 1
-        this.ruleForm.reset = 0
+        this.ruleForm.db.forEach(item => {
+          item.reset = false
+        })
       }).catch(() => {
         this.formLoading = false
       })
@@ -516,6 +515,9 @@ export default {
           })
         }
       })
+    },
+    fullScreen(status) {
+      this.fullScreen = status
     },
     // 插件提交
     submit() {
