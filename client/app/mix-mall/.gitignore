@@ -1,0 +1,4 @@
+node_modules/
+config/dev.env.js
+.hbuilderx
+unpackage

@@ -1,0 +1,4 @@
+node_modules/
+.nuxt
+.env
+static/sw.js
