@@ -51,6 +51,7 @@
     "js-cookie": "2.2.0",
     "jsonlint": "1.6.3",
     "jszip": "3.1.5",
+    "mavon-editor": "^2.9.1",
     "moment": "^2.28.0",
     "normalize.css": "7.0.0",
     "nprogress": "0.2.0",

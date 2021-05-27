@@ -1,7 +1,12 @@
-import { create, details, edit } from '@/api/plugin'
+import { create, details, edit, routes, models } from '@/api/plugin'
 import Sortable from 'sortablejs'
+import { mavonEditor } from 'mavon-editor'
+import 'mavon-editor/dist/css/index.css'
 export default {
   name: 'PluginDetail',
+  components: {
+    mavonEditor
+  },
   props: {
     isEdit: {
       type: Boolean,
@@ -9,12 +14,26 @@ export default {
     }
   },
   data() {
+    const validateObserverName = (rule, value, callback) => {
+      if (!(/^(?!_)([A-Za-z ]+)$/.test(value))) {
+        callback(new Error('观察者名称格式有误'))
+      } else {
+        callback()
+      }
+    }
     return {
-      eidt: false,
+      path: [],
+      models: [],
+      dialogObserver: false,
+      dialogRelevance: false,
+      dbEdit: false,
+      observerEdit: false,
       name: '',
       dialogIndexes: false,
       dialogIndexesIndex: '',
+      dialogRelevanceIndex: '',
       dialogDataTableIndex: '',
+      dialogObserverIndex: '',
       dialogDataTable: false,
       loading: false,
       formLoading: false,
@@ -24,10 +43,23 @@ export default {
         synopsis: '',
         field: []
       },
+      observerTemp: {
+        name: '',
+        models: '',
+        path: '',
+        explain: ''
+      },
+      relevanceTemp: {
+        file: '',
+        explain: ''
+      },
       ruleForm: {
         name: '',
         identification: '',
-        db: []
+        instructions: '',
+        db: [],
+        observer: [],
+        relevance: []
       },
       rules: {
         name: [
@@ -65,6 +97,29 @@ export default {
           { required: true, message: '请选择字段', trigger: 'change' }
         ]
       },
+      observerRules: {
+        name: [
+          { required: true, message: '请输入观察者名称', trigger: 'blur' },
+          { validator: validateObserverName, trigger: 'blur' }
+        ],
+        models: [
+          { required: true, message: '请选择依赖模型', trigger: 'change' }
+        ],
+        path: [
+          { required: false, message: '请选择可执行路由', trigger: 'change' }
+        ],
+        explain: [
+          { required: true, message: '请输入说明', trigger: 'blur' }
+        ]
+      },
+      relevanceRules: {
+        file: [
+          { required: true, message: '请输入文件完整路径', trigger: 'blur' }
+        ],
+        explain: [
+          { required: true, message: '请输入说明', trigger: 'blur' }
+        ]
+      },
       indexesType: [{
         value: 'INDEX',
         label: 'INDEX'
@@ -90,6 +145,7 @@ export default {
           value: 'UNSIGNED',
           label: 'UNSIGNED'
         }],
+        path: [],
         type: [{
           label: '数字',
           options: [{
@@ -152,6 +208,47 @@ export default {
         data_table: 1,
         jurisdiction: 1,
         reset: false
+      },
+      markdownOption: {
+        bold: true, // 粗体
+        italic: true, // 斜体
+        header: true, // 标题
+        // underline: true, // 下划线
+        // strikethrough: true, // 中划线
+        // mark: true, // 标记
+        // superscript: true, // 上角标
+        // subscript: true, // 下角标
+        quote: true, // 引用
+        ol: true, // 有序列表
+        ul: true, // 无序列表
+        link: true, // 链接
+        // imagelink: true, // 图片链接
+        code: true, // code
+        table: true, // 表格
+        fullscreen: true, // 全屏编辑
+        readmodel: true, // 沉浸式阅读
+        htmlcode: true, // 展示html源码
+        help: true, // 帮助
+        /* 1.3.5 */
+        undo: true, // 上一步
+        redo: true, // 下一步
+        // trash: true, // 清空
+        // save: true, // 保存（触发events中的save事件）
+        /* 1.4.2 */
+        navigation: true, // 导航目录
+        /* 2.1.8 */
+        alignleft: true, // 左对齐
+        aligncenter: true, // 居中
+        alignright: true, // 右对齐
+        /* 2.2.1 */
+        subfield: true, // 单双栏模式
+        preview: true // 预览
+      },
+      xssOptions: {
+        whiteList: {
+          img: ['src', 'alt', 'width', 'height']
+        },
+        stripIgnoreTagBody: true
       }
     }
   },
@@ -160,8 +257,22 @@ export default {
       this.name = this.$route.query.name
       this.details()
     }
+    this.getRoutes()
+    this.getModels()
   },
   methods: {
+    // 获取模型列表
+    getModels() {
+      models().then((res) => {
+        this.models = res.data
+      })
+    },
+    // 获取可执行路由
+    getRoutes() {
+      routes().then((res) => {
+        this.path = res.data
+      })
+    },
     // 获取插件信息
     details() {
       details(this.name).then((res) => {
@@ -215,9 +326,17 @@ export default {
       this.dialogIndexesIndex = index
       this.indexesTemp = row
     },
+    // 添加观察者
+    addObserverTable() {
+      this.dialogObserver = true
+    },
+    // 添加关联文件
+    addRelevanceTable() {
+      this.dialogRelevance = true
+    },
     // 添加数据表
     addDataTable() {
-      this.eidt = false
+      this.dbEdit = false
       this.dialogDataTable = true
       this.temp = {
         name: '',
@@ -239,12 +358,54 @@ export default {
     },
     // 编辑数据表
     editDataTable(row, index) {
-      this.eidt = true
+      this.dbEdit = true
       this.dialogDataTable = true
       this.dialogDataTableIndex = index
       this.temp = row
       this.$nextTick(() => {
         this.setSort()
+      })
+    },
+    // 编辑观察者
+    editObserverTable(row, index) {
+      this.observerEdit = true
+      this.dialogObserver = true
+      this.dialogObserverIndex = index
+      this.observerTemp = row
+    },
+    // 编辑关联文件
+    editRelevanceTable(row, index) {
+      this.relevanceEdit = true
+      this.dialogRelevance = true
+      this.dialogRelevanceIndex = index
+      this.relevanceTemp = row
+    },
+    // 观察者添加/保存
+    observerSubmit() {
+      this.$refs['observerForm'].validate(valid => {
+        if (valid) {
+          this.dialogObserver = false
+          if (this.dialogObserverIndex !== '') {
+            this.ruleForm.observer[this.dialogObserverIndex] = this.observerTemp
+            this.dialogObserverIndex = ''
+          } else {
+            this.ruleForm.observer.push(this.observerTemp)
+          }
+        }
+      })
+    },
+    // 关联文件添加/保存
+    relevanceSubmit() {
+      this.$refs['relevanceForm'].validate(valid => {
+        if (valid) {
+          this.dialogRelevance = false
+          if (this.dialogRelevanceIndex !== '') {
+            this.ruleForm.relevance[this.dialogRelevanceIndex] = this.relevanceTemp
+            this.dialogRelevanceIndex = ''
+          } else {
+            this.ruleForm.relevance.push(this.relevanceTemp)
+          }
+        }
       })
     },
     // 数据表添加/保存
@@ -265,7 +426,57 @@ export default {
     },
     // 删除索引
     deleteDataTable(index) {
-      this.ruleForm.db.splice(index, 1)
+      const title = '是否确认删除该索引?'
+      const win = '删除成功'
+      this.$confirm(title, this.$t('hint.hint'), {
+        confirmButtonText: this.$t('usuel.confirm'),
+        cancelButtonText: this.$t('usuel.cancel'),
+        type: 'warning'
+      }).then(() => {
+        this.ruleForm.db.splice(index, 1)
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: win,
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+    // 删除观察者
+    deleteObserverTable(index) {
+      const title = '是否确认删除该观察者?'
+      const win = '删除成功'
+      this.$confirm(title, this.$t('hint.hint'), {
+        confirmButtonText: this.$t('usuel.confirm'),
+        cancelButtonText: this.$t('usuel.cancel'),
+        type: 'warning'
+      }).then(() => {
+        this.ruleForm.observer.splice(index, 1)
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: win,
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+    // 删除关联文件
+    deleteRelevanceTable(index) {
+      const title = '是否确认删除该关联文件?'
+      const win = '删除成功'
+      this.$confirm(title, this.$t('hint.hint'), {
+        confirmButtonText: this.$t('usuel.confirm'),
+        cancelButtonText: this.$t('usuel.cancel'),
+        type: 'warning'
+      }).then(() => {
+        this.ruleForm.relevance.splice(index, 1)
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: win,
+          type: 'success',
+          duration: 2000
+        })
+      })
     },
     // 添加/编辑索引
     indexesSubmit() {

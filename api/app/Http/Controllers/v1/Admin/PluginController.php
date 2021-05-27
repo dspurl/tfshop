@@ -108,4 +108,48 @@ class PluginController extends Controller
     {
         return (new Plugin())->autoUninstall($name);
     }
+
+    /**
+     * 获取所有路由列表
+     * @param $type // 类型：all为全部，no_get为除get请求外
+     * @return string
+     */
+    public function routes($type)
+    {
+        $app = app();
+        $routes = $app->routes->getRoutes();
+        $path = [];
+        foreach ($routes as $k => $value) {
+            if (array_key_exists('prefix', $value->action)) {
+                if ($value->action['prefix'] && !in_array($value->action['prefix'], ['oauth'])) {
+                    if($type == 'no_get'){
+                        if($value->methods[0] != 'GET'){
+                            $path[$k] = [
+                                'uri' => $value->uri,
+                                'path' => $value->methods[0],
+                                'name' => explode('@', $value->action['controller'])[1],
+                                'explain' => __('route.' . $value->action['as']),
+                            ];
+                        }
+                    }else{
+                        $path[$k] = [
+                            'uri' => $value->uri,
+                            'path' => $value->methods[0],
+                            'name' => explode('@', $value->action['controller'])[1],
+                            'explain' => __('route.' . $value->action['as']),
+                        ];
+                    }
+                }
+            }
+        }
+        return resReturn(1, collect($path)->values());
+    }
+
+    /**
+     * 获取所有模型
+     */
+    public function models()
+    {
+        return resReturn(1, (new Plugin())->models());
+    }
 }

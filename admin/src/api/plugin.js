@@ -26,7 +26,7 @@ export function create(data) {
 export function edit(data) {
   data = Qs.parse(data)
   return request({
-    url: 'plugin/' + data.name,
+    url: 'plugin/' + data.abbreviation,
     method: 'POST',
     data
   })
@@ -50,5 +50,19 @@ export function uninstall(name) {
   return request({
     url: 'plugin/uninstall/' + name,
     method: 'POST'
+  })
+}
+
+export function routes() {
+  return request({
+    url: 'plugin/routes/no_get',
+    method: 'GET'
+  })
+}
+
+export function models() {
+  return request({
+    url: 'plugin/models/all',
+    method: 'GET'
   })
 }

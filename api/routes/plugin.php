@@ -22,7 +22,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         //APP验证插件列表
         });
         Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
-            //APP无需验证插件列表
+        //APP无需验证插件列表
         });
     });
 });

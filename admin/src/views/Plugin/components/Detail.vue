@@ -14,6 +14,12 @@
       <el-form-item class="min-input" label="插件简介" prop="describe">
         <el-input v-model="ruleForm.describe" maxlength="200" placeholder="请输入插件简介" clearable/>
       </el-form-item>
+      <el-form-item class="min-input" label="使用说明" prop="instructions">
+        <mavon-editor v-model="ruleForm.instructions" :xss_options="xssOptions" :toolbars="markdownOption" placeholder="请输入正文" style="width:800px;"/>
+      </el-form-item>
+      <div class="tip">
+        <p>1、使用说明支持markdown语法</p>
+      </div>
       <el-form-item class="min-input" label="插件版本" prop="versions">
         <el-input v-model="ruleForm.versions" maxlength="20" placeholder="请输入插件版本" clearable/>
       </el-form-item>
@@ -71,13 +77,103 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-button style="margin: 10px 0 100px 0;" type="success" round @click="addDataTable">新建数据表</el-button>
+      <el-button style="margin: 10px 0 0 0;" type="success" round @click="addDataTable">新建数据表</el-button>
+      <h3>观察者</h3>
+      <div class="tip">
+        <p>1、如果你的插件涉及到其它插件或需要在某个业务执行前后去做处理，那请用观察者，而不是直接去修改业务代码</p>
+      </div>
+      <el-table
+        :data="ruleForm.observer"
+        style="width: 100%">
+        <el-table-column
+          prop="name"
+          label="观察者名称"
+          width="300">
+          <template slot-scope="scope">
+            {{ scope.row.name }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="models"
+          label="依赖模型"
+          width="300">
+          <template slot-scope="scope">
+            {{ scope.row.models }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="path"
+          label="可执行路由"
+          width="300">
+          <template slot-scope="scope">
+            {{ scope.row.path }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="explain"
+          label="说明">
+          <template slot-scope="scope">
+            {{ scope.row.explain }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="120"
+          fixed="right">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+              <el-button type="primary" icon="el-icon-edit" circle @click="editObserverTable(scope.row)"/>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+              <el-button type="danger" icon="el-icon-delete" circle @click="deleteObserverTable(scope.$index)"/>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-button style="margin: 10px 0 0 0;" type="success" round @click="addObserverTable">新建观察者</el-button>
+      <h3>关联文件</h3>
+      <div class="tip">
+        <p>1、如果数据库和观察者还不能满足您的需求，可以自行添加其实文件到任何位置，然后将文件的绝对地址添加进来，插件发行时将自动将关联文件打包进去</p>
+      </div>
+      <el-table
+        :data="ruleForm.relevance"
+        style="width: 100%">
+        <el-table-column
+          prop="file"
+          label="文件"
+          width="500">
+          <template slot-scope="scope">
+            {{ scope.row.file }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="explain"
+          label="说明">
+          <template slot-scope="scope">
+            {{ scope.row.explain }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="120"
+          fixed="right">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+              <el-button type="primary" icon="el-icon-edit" circle @click="editRelevanceTable(scope.row)"/>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+              <el-button type="danger" icon="el-icon-delete" circle @click="deleteRelevanceTable(scope.$index)"/>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-button style="margin: 10px 0 0 0;" type="success" round @click="addRelevanceTable">添加关联文件</el-button>
       <el-form-item class="float-button">
         <el-button :loading="formLoading" type="primary" @click="submit">提交</el-button>
       </el-form-item>
     </el-form>
     <!--新建数据表-->
-    <el-dialog :close-on-click-modal="false" :visible.sync="dialogDataTable" :fullscreen="true" :title="eidt ? '编辑数据表': '新建数据表'">
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogDataTable" :fullscreen="true" :title="dbEdit ? '编辑数据表': '新建数据表'">
       <el-form ref="dataTableForm" :model="temp" :rules="dataTableRules" class="dataTableForm" label-position="top" label-width="120px">
         <el-form-item class="min-input" label="表名" prop="name">
           <el-input v-model="temp.name" placeholder="请输入表名" maxlength="60" clearable/>
@@ -367,6 +463,63 @@
       <div slot="footer" class="dialog-footer">
         <el-button :loading="formLoading" @click="dialogIndexes = false">{{ $t('usuel.cancel') }}</el-button>
         <el-button :loading="formLoading" type="primary" @click="indexesSubmit">确定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 添加观察者-->
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogObserver" :title="dialogObserverIndex === '' ? `新建观察者` : `修改观察者`">
+      <el-form ref="observerForm" :model="observerTemp" :rules="observerRules" label-position="left" label-width="120px">
+        <el-form-item label="观察者名称" prop="name">
+          <el-input v-model="observerTemp.name" class="min-input" placeholder="请输入观察者名称" maxlength="60" clearable/>
+          <div>观察者名称仅支持英文和空格，最终会解析成类名</div>
+        </el-form-item>
+        <el-form-item label="依赖模型" prop="models">
+          <el-select v-model="observerTemp.models" placeholder="请选择" clearable filterable>
+            <el-option
+              v-for="(item, index) in models"
+              :key="index"
+              :label="item"
+              :value="item"/>
+          </el-select>
+          <div>为空即不允许路由执行</div>
+        </el-form-item>
+        <el-form-item label="可执行路由" prop="path">
+          <el-select v-model="observerTemp.path" placeholder="请选择" clearable filterable multiple>
+            <el-option
+              v-for="(item, index) in path"
+              :key="index"
+              :label="item.uri"
+              :value="item.uri">
+              <span style="float: left">{{ item.uri }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">{{ item.explain }}[{{ item.path }}]</span>
+            </el-option>
+          </el-select>
+          <div>为空即不允许路由执行</div>
+        </el-form-item>
+        <el-form-item label="说明" prop="explain">
+          <el-input v-model="observerTemp.explain" class="min-input" placeholder="请输入说明" type="textarea" maxlength="200" clearable/>
+          <div>说明下该观察者的作用</div>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button :loading="formLoading" @click="dialogObserver = false">{{ $t('usuel.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="observerSubmit">确定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 添加关联文件-->
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogRelevance" :title="dialogRelevanceIndex === '' ? `新建关联文件` : `修改关联文件`">
+      <el-form ref="relevanceForm" :model="relevanceTemp" :rules="relevanceRules" label-position="left" label-width="120px">
+        <el-form-item label="文件" prop="file">
+          <el-input v-model="relevanceTemp.file" class="min-input" placeholder="请输入文件完整路径" maxlength="255" clearable/>
+          <div>在发行时会对文件进行校验，如不存在将无法完成发行</div>
+        </el-form-item>
+        <el-form-item label="说明" prop="explain">
+          <el-input v-model="relevanceTemp.explain" class="min-input" placeholder="请输入说明" type="textarea" maxlength="200" clearable/>
+          <div>说明下该观察者的作用</div>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button :loading="formLoading" @click="dialogRelevance = false">{{ $t('usuel.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="relevanceSubmit">确定</el-button>
       </div>
     </el-dialog>
   </div>
