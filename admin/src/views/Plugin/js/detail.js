@@ -206,10 +206,11 @@ export default {
         attribute: [],
         softDeletes: 0,
         timestamps: 1,
-        after_end: 1,
-        backstage: 1,
-        data_table: 1,
-        jurisdiction: 1,
+        after_end: true,
+        backstage: true,
+        data_table: true,
+        jurisdiction: true,
+        client: true,
         reset: false
       },
       markdownOption: {
@@ -353,10 +354,11 @@ export default {
         attribute: [],
         softDeletes: 0,
         timestamps: 1,
-        after_end: 1,
-        backstage: 1,
-        data_table: 1,
-        jurisdiction: 1,
+        after_end: true,
+        backstage: true,
+        data_table: true,
+        jurisdiction: true,
+        client: true,
         reset: false
       }
       this.$nextTick(() => {

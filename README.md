@@ -139,12 +139,12 @@ BASE_API: '"http://dsshop.com/api/v1/admin/"',
 npm run dev
 
 # 搭建H5
-cd ../trade/Dsshop
+cd ../secret/Dsshop
 npm install 
-# HBuilder X导入trade/Dsshop目录
-#trade/Dsshop/utils/config.js修改服务器地址
+# HBuilder X导入secret/Dsshop目录
+#secret/Dsshop/utils/config.js修改服务器地址
 #修改`BaseURL`为API访问地址
-#修改`secret`为API密钥'API的.env中的APP_KEY'
+#`secret`有个默认密钥，如需自定义，只需在`.env`中配置`PROJECT_KEY`
 
 ```
 常见错误

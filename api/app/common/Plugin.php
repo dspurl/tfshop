@@ -154,6 +154,10 @@ class Plugin
                     $this->createBackstage($db);
                     $this->createBackstageApi($db);
                 }
+                // 生成客户端代码
+                if ($db['client']) {
+                    $this->createClient($db, $request);
+                }
                 // 生成权限
                 if ($db['jurisdiction']) {
                     $this->createJurisdiction($db);
@@ -200,6 +204,10 @@ class Plugin
                         $this->createBackstage($db);
                         $this->createBackstageApi($db);
                     }
+                    // 生成客户端代码
+                    if ($db['client']) {
+                        $this->createClient($db, $request);
+                    }
                     // 生成权限
                     if ($db['jurisdiction']) {
                         $this->createJurisdiction($db);
@@ -232,6 +240,13 @@ class Plugin
                     $this->delDirAndFile($this->path . '/admin/src/views/ToolManagement/' . $names, true);
                     $this->fileDestroy($this->path . '/admin/src/api/' . $n . '.js');
                     $this->clearJurisdiction($db);
+                    //删除前端模板（目录移动过将不会进行删除）
+                    if (count($path['client']) > 0) {
+                        foreach ($path['client'] as $c) {
+                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $names, true);
+                            $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $n . '.js');
+                        }
+                    }
                 }
             }
             if ($path['observer']) {
@@ -390,6 +405,49 @@ class Plugin
         $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
         $path = $this->path . '/admin/src/api/' . $name . '.js';
         $this->createFile('api.admin.ds', ['/{{ name }}/'], [$name], $path);
+    }
+
+    /**
+     * 生成客户端代码
+     * @param $db
+     * @param $request
+     * @throws \Exception
+     */
+    protected function createClient($db, $request)
+    {
+        $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
+        $client = $request->client;
+        //获取支持的客户端
+        if (count($client) > 0) {
+            foreach ($client as $c) {
+                $path = $this->path . '/client/' . $c;
+                $pages = $path . '/pages/' . $request->abbreviation;
+                $structure = explode('/', $c);
+                if (count($structure) != 2) {
+                    throw new \Exception('前端模板目录结构有误', Code::CODE_INEXISTENCE);
+                }
+
+                $pathArr = [$pages, $pages . '/' . $name, $pages . '/' . $name . '/components', $pages . '/' . $name . '/js', $pages . '/' . $name . '/scss'];
+                // 生成表对应的目录
+                foreach ($pathArr as $p) {
+                    if (!file_exists($p)) {
+                        mkdir($p, 0777, true);
+                    }
+                }
+                // 生成模板
+                $this->createFile('list.client.' . $structure[0] . '.ds', [], [], $pages . '/' . $name . '/list.vue');
+                $this->createFile('list.client.' . $structure[0] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/list.js');
+                if (!file_exists($pages . '/' . $name . '/scss/list.scss')) {
+                    fopen($pages . '/' . $name . '/scss/list.scss', 'w+');
+                }
+                $this->createFile('detail.client.' . $structure[0] . '.ds', [], [], $pages . '/' . $name . '/detail.vue');
+                $this->createFile('detail.client.' . $structure[0] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/detail.js');
+                if (!file_exists($pages . '/' . $name . '/scss/detail.scss')) {
+                    fopen($pages . '/' . $name . '/scss/detail.scss', 'w+');
+                }
+                $this->createFile('api.client.' . $structure[0] . '.ds', ['/{{ name }}/'], [$name], $path . '/api/' . $name . '.js');
+            }
+        }
     }
 
     /**

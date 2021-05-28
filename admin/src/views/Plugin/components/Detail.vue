@@ -24,12 +24,12 @@
               v-for="item in group.children"
               :key="item.en"
               :label="item.name"
-              :value="item.en"/>
+              :value="group.name + '/' + item.en"/>
           </el-option-group>
         </el-select>
       </el-form-item>
       <div class="tip">
-        <p>1、插件发行时，将会把支持的客户端,以插件标识命名的目录全部进行打包</p>
+        <p>1、创建数据库时，会根据支持的客户端自动创建相关的模板</p>
       </div>
       <el-form-item class="min-input" label="使用说明" prop="instructions">
         <mavon-editor :class="{'full-screen': fullScreen }" v-model="ruleForm.instructions" :xss_options="xssOptions" :toolbars="markdownOption" placeholder="请输入正文" style="min-width:1000px;" @fullScreen="fullScreen"/>
@@ -110,6 +110,17 @@
           <template slot-scope="scope">
             <el-switch
               v-model="scope.row.backstage"
+              active-text="生成"
+              inactive-text="不生成"/>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="reset"
+          label="客户端代码"
+          width="200">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.client"
               active-text="生成"
               inactive-text="不生成"/>
           </template>
@@ -487,6 +498,14 @@
             active-text="生成"
             inactive-text="不生成"/>
           <div>选择生成后，系统将自动生成后台模板文件</div>
+        </el-form-item>
+        <el-form-item label="客户端代码" prop="client">
+          <el-switch
+            v-model="temp.client"
+            active-text="生成"
+            inactive-text="不生成"/>
+          <p>选择生成后，系统将自动生支持的客户端代码;客户端不会自动生成路由文件，所以需要自行添加对应路由;</p>
+          <p>发行时，系统会自动将pages目录下以插件标识命名的目录、user目录下以插件标识命名的目录、api目录下以表命名的文件进行打包</p>
         </el-form-item>
         <el-form-item label="权限" prop="jurisdiction">
           <el-switch
