@@ -215,7 +215,7 @@ class Plugin
                 }
             }
         }
-        $this->createRoutes($request);
+        $this->createRoutes($request, true);
         return '更新成功';
     }
 
@@ -426,7 +426,6 @@ class Plugin
                 if (count($structure) != 2) {
                     throw new \Exception('前端模板目录结构有误', Code::CODE_INEXISTENCE);
                 }
-
                 $pathArr = [$pages, $pages . '/' . $name, $pages . '/' . $name . '/components', $pages . '/' . $name . '/js', $pages . '/' . $name . '/scss'];
                 // 生成表对应的目录
                 foreach ($pathArr as $p) {
@@ -591,8 +590,9 @@ class Plugin
     /**
      * 创建路由
      * @param $request
+     * @param bool $edit // 是否更新
      */
-    protected function createRoutes($request)
+    protected function createRoutes($request, $edit = false)
     {
         if ($request->db) {
             $targetPath = $this->path . '/api/routes/plugin.php';
@@ -614,6 +614,12 @@ class Plugin
             $clientRoutesLang = "";
             $permissionRoutes = "";
             foreach ($request->db as $db) {
+                if (!$db['jurisdiction']) {  //当开启生成权限时才执行
+                    break;
+                }
+                if ($edit && !$db['reset']) {  //当更新且重置不开启时
+                    break;
+                }
                 $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
                 $names = $this->convertUnderline($name);
                 $routes .= "

@@ -1,6 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="getList()">刷新权限</el-button>
       <router-link :to="'PlugInCreate'">
         <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">添加</el-button>
       </router-link>
