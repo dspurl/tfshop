@@ -86,6 +86,18 @@ class PluginController extends Controller
     }
 
     /**
+     * PlugInPublish
+     * 发行
+     * @param $name
+     * @return string
+     * @throws \Exception
+     */
+    public function publish($name)
+    {
+        return (new Plugin())->publish($name);
+    }
+
+    /**
      * PlugInDelete
      * 插件删除
      * @param $name

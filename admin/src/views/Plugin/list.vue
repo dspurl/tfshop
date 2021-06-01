@@ -68,6 +68,9 @@
                 <el-button type="primary" icon="el-icon-edit" circle/>
               </el-tooltip>
             </router-link>
+            <el-tooltip v-if="scope.row.local" :loading="butLoading" class="item" effect="dark" content="发布" placement="top-start">
+              <el-button :loading="formLoading" type="success" icon="el-icon-position" circle @click="handlePublish(scope.row.abbreviation)"/>
+            </el-tooltip>
             <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" class="item" effect="dark" content="删除" placement="top-start">
               <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row.abbreviation)"/>
             </el-tooltip>

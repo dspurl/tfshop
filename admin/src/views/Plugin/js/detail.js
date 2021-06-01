@@ -48,7 +48,8 @@ export default {
         name: '',
         models: '',
         path: '',
-        explain: ''
+        explain: '',
+        reset: false
       },
       relevanceTemp: {
         file: '',
@@ -57,10 +58,13 @@ export default {
       ruleForm: {
         client: [],
         name: '',
-        identification: '',
+        abbreviation: '',
         instructions: '',
+        author: '',
         db: [],
         observer: [],
+        describe: '',
+        versions: '',
         relevance: []
       },
       rules: {

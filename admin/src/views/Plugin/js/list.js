@@ -107,6 +107,9 @@ export default {
           this.formLoading = false
         })
       })
+    },
+    handlePublish() {
+      this.formLoading = true
     }
   }
 }

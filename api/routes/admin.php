@@ -91,6 +91,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('plugin/{name}', 'PluginController@details')->name('admin.plugInDetails')->middleware(['permissions:PlugInEdit']);    //插件详情
         Route::get('plugin/install/{name}', 'PluginController@install')->name('admin.plugInInstall')->middleware(['permissions:PlugInInstall']);    //插件安装
         Route::post('plugin/destroy/{name}', 'PluginController@destroy')->name('admin.plugInDestroy')->middleware(['permissions:PlugInDestroy']);    //插件删除
+        Route::post('plugin/publish/{name}', 'PluginController@publish')->name('admin.plugInPublish');    //插件发行
         Route::get('plugin/routes/{type}', 'PluginController@routes')->name('admin.plugInRoutes')->middleware(['permissions:PlugInRoutes']);    //获取路由列表
         Route::get('plugin/models/all', 'PluginController@models')->name('admin.plugInModels')->middleware(['permissions:PlugInModels']);    //获取模型列表
         Route::get('plugin/template/all', 'PluginController@template')->name('admin.plugInTemplate')->middleware(['permissions:PlugInTemplate']);    //获取模板列表

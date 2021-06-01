@@ -201,6 +201,17 @@
           </template>
         </el-table-column>
         <el-table-column
+          prop="reset"
+          label="是否重置"
+          width="200">
+          <template slot-scope="scope">
+            <el-switch
+              v-model="scope.row.reset"
+              active-text="是"
+              inactive-text="否"/>
+          </template>
+        </el-table-column>
+        <el-table-column
           label="操作"
           width="120"
           fixed="right">
@@ -592,6 +603,14 @@
           <el-input v-model="observerTemp.explain" class="min-input" placeholder="请输入说明" type="textarea" maxlength="200" clearable/>
           <div>说明下该观察者的作用</div>
         </el-form-item>
+        <el-form-item v-if="name" label="是否重置" prop="reset">
+          <el-switch
+            v-model="observerTemp.reset"
+            active-text="是"
+            inactive-text="否"/>
+          <p>1、勾选重置将重新生成所有插件相关文件，如已对部分文件做了修改，请不要勾选</p>
+          <p>2、不重置的话，保存后会不将修改后的数据更新到对应的文件中，需要自行在对应文件中手动添加</p>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :loading="formLoading" @click="dialogObserver = false">{{ $t('usuel.cancel') }}</el-button>
@@ -603,7 +622,7 @@
       <el-form ref="relevanceForm" :model="relevanceTemp" :rules="relevanceRules" label-position="left" label-width="120px">
         <el-form-item label="文件" prop="file">
           <el-input v-model="relevanceTemp.file" class="min-input" placeholder="请输入文件完整路径" maxlength="255" clearable/>
-          <div>在发行时会对文件进行校验，如不存在将无法完成发行</div>
+          <div>在发行时会对文件进行校验，如不存在将无法完成发行，格式：/api/app/Providers/AppServiceProvider.php</div>
         </el-form-item>
         <el-form-item label="说明" prop="explain">
           <el-input v-model="relevanceTemp.explain" class="min-input" placeholder="请输入说明" type="textarea" maxlength="200" clearable/>
