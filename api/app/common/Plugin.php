@@ -264,6 +264,7 @@ class Plugin
     /**
      * 发行插件
      * @param $name
+     * @return string
      * @throws \Exception
      */
     public function publish($name)
@@ -281,16 +282,39 @@ class Plugin
             }
 
             // 配置文件
-            $this->filePackageDeployment($this->path . '/api/config/' . $name . '.php', $this->pluginPath . '/' . $name . '/config/' . $name . '.php');
+            $this->filePackageDeployment($this->path . '/api/config/' . $name . '.php', $this->pluginPath . '/' . $name . '/api/config/' . $name . '.php');
             // 观察者文件
             if ($path['observer']) {
                 foreach ($path['observer'] as $observer) {
-                    $this->filePackageDeployment($this->path . '/api/app/Observers/' . $observer['models'] . '/' . $this->convertUnderline($observer['name']) . 'Observer.php', $this->pluginPath . '/observers/' . $observer['models'] . '/' . $this->convertUnderline($observer['name']) . 'Observer.php');
+                    $this->filePackageDeployment($this->path . '/api/app/Observers/' . $observer['models'] . '/' . $this->convertUnderline($observer['name']) . 'Observer.php', $this->pluginPath . '/' . $name . '/api/observers/' . $observer['models'] . '/' . $this->convertUnderline($observer['name']) . 'Observer.php');
+                }
+            }
+            // 打包关联文件
+            if ($path['relevance']) {
+                foreach ($path['relevance'] as $relevance) {
+                    $this->filePackageDeployment($this->path . $relevance['file'], $this->pluginPath . '/' . $name . '/api/relevance/' . basename($relevance['file']));
                 }
             }
             // 打包路由文件
             $this->packageRoutes($path);
+            return '打包成功';
         }
+    }
+
+    /**
+     * 下载插件
+     * @param $name
+     */
+    public function download($name)
+    {
+        if (file_exists($this->pluginPath . '/' . $name . '/dsshop.json')) {
+            $path = json_decode(file_get_contents($this->pluginPath . '/' . $name . '/dsshop.json'), true);
+            $pluginPath = $this->pluginPath . '/' . $path['abbreviation'];
+            $newPath = $this->path . '/api/storage/app/public/plugin';
+            // 将插件移动到可下载目录
+            $this->fileDeployment($pluginPath, $newPath);
+        }
+
     }
 
     /**
@@ -300,12 +324,14 @@ class Plugin
     protected function packageRoutes($request)
     {
         $name = $request['name'];
-
         $routes = [];
+        $routesPath = $this->pluginPath . '/' . $request['abbreviation'] . '/routes.json';
+        $dsshopPath = $this->pluginPath . '/' . $request['abbreviation'] . '/dsshop.json';
         $pluginPath = $this->path . '/api/routes/plugin.php';
         $permissionPath = $this->path . '/admin/src/store/modules/permission.js';
         $langPath = $this->path . '/api/resources/lang/zn/route.php';
         $providerPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
+        $wechatChannelPath = $this->path . '/api/app/Channels/WechatChannel.php';
         $file_get_plugin_contents = file_get_contents($pluginPath);
         preg_match_all('/\/\/' . $name . '_s(.*?)\/\/' . $name . '_e/is', $file_get_plugin_contents, $file_get_plugin_contents);
         $routes['admin'] = $file_get_plugin_contents[1][0];
@@ -322,8 +348,26 @@ class Plugin
         $provider_file_get_contents = file_get_contents($providerPath);
         preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $provider_file_get_contents, $provider_file_get_contents);
         $routes['observers'] = $provider_file_get_contents[1][0];
-        print_r($routes);
-        exit;
+        // 微信公众号模板消息
+        $file_wechat_channel_get_contents = file_get_contents($wechatChannelPath);
+        preg_match_all('/\/\/' . $name . '_s(.*?)\/\/' . $name . '_e/is', $file_wechat_channel_get_contents, $file_wechat_channel_get_contents);
+        $routes['wechatChannel'] = $file_wechat_channel_get_contents[1][0];
+        // 关联文件
+        $routes['relevance'] = [];
+        if ($request['relevance']) {
+            foreach ($request['relevance'] as $relevance) {
+                $routes['relevance'][] = $relevance['file'];
+            }
+        }
+        // 生成routes.json
+        if (!file_exists($routesPath)) {
+            fopen($routesPath, 'w+');
+        }
+        file_put_contents($routesPath, json_encode($routes));
+        // 修改配置信息
+        $dsshop_file_get_contents = json_decode(file_get_contents($dsshopPath), true);
+        $dsshop_file_get_contents['publish'] = true;
+        file_put_contents($dsshopPath, json_encode($dsshop_file_get_contents));
     }
 
     /**

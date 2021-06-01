@@ -158,6 +158,17 @@ class PluginController extends Controller
     }
 
     /**
+     * PlugInDownload
+     * 下载插件
+     * @param $name
+     * @return string
+     */
+    public function download($name)
+    {
+        return (new Plugin())->download($name);
+    }
+
+    /**
      * 获取所有模型
      */
     public function models()
