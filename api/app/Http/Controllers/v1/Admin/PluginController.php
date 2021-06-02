@@ -78,6 +78,7 @@ class PluginController extends Controller
      * 插件安装/更新
      * @param $name
      * @return string
+     * @throws \Exception
      * @queryParam  name string 插件简称
      */
     public function install($name)

@@ -80,15 +80,17 @@
               <el-button :loading="formLoading" type="warning" icon="el-icon-download" circle @click="handleDownload(scope.row.abbreviation)"/>
             </el-tooltip>
           </template>
-          <el-tooltip v-permission="$store.jurisdiction.PlugInInstall" v-if="!scope.row.locality_versions || scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="安装" placement="top-start">
-            <el-button :loading="formLoading" type="primary" icon="el-icon-share" circle @click="handleInstall(scope.row.abbreviation)"/>
-          </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.PlugInUpdate" v-else-if="scope.row.locality_versions && scope.row.versions > scope.row.locality_versions" :loading="butLoading" class="item" effect="dark" content="升级" placement="top-start">
-            <el-button :loading="formLoading" type="primary" icon="el-icon-upload" circle @click="handleInstall(scope.row.abbreviation, 1)"/>
-          </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.PlugInUninstall" v-if="scope.row.locality_versions && !scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="卸载插件" placement="top-start">
-            <el-button :loading="formLoading" type="primary" icon="el-icon-delete" circle @click="handleUninstall(scope.row.abbreviation)"/>
-          </el-tooltip>
+          <template v-if="(scope.row.local && scope.row.publish) || !scope.row.local">
+            <el-tooltip v-permission="$store.jurisdiction.PlugInInstall" v-if="!scope.row.locality_versions || scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="安装" placement="top-start">
+              <el-button :loading="formLoading" type="primary" icon="el-icon-share" circle @click="handleInstall(scope.row.abbreviation)"/>
+            </el-tooltip>
+            <el-tooltip v-permission="$store.jurisdiction.PlugInUpdate" v-else-if="scope.row.locality_versions && scope.row.versions > scope.row.locality_versions" :loading="butLoading" class="item" effect="dark" content="升级" placement="top-start">
+              <el-button :loading="formLoading" type="primary" icon="el-icon-upload" circle @click="handleInstall(scope.row.abbreviation, 1)"/>
+            </el-tooltip>
+            <el-tooltip v-permission="$store.jurisdiction.PlugInUninstall" v-if="scope.row.locality_versions && !scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="卸载插件" placement="top-start">
+              <el-button :loading="formLoading" type="primary" icon="el-icon-delete" circle @click="handleUninstall(scope.row.abbreviation)"/>
+            </el-tooltip>
+          </template>
           <template v-if="scope.row.local">
             <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" class="item" effect="dark" content="删除" placement="top-start">
               <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row.abbreviation)"/>
