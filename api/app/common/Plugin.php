@@ -6,6 +6,7 @@ use App\Code;
 use App\Models\v1\AuthGroupAuthRule;
 use App\Models\v1\AuthRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
 class Plugin
@@ -526,6 +527,7 @@ class Plugin
             );
         }
         file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
+        Artisan::call('migrate');
         return '安装成功';
     }
 
