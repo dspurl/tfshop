@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1\Admin;
 use App\Code;
 use App\Http\Requests\v1\SubmitAdminRequest;
 use App\Models\v1\Admin;
+use App\Models\v1\AuthGroup;
 use App\Models\v1\AdminLog;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -36,6 +37,10 @@ class AdminController extends Controller
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
+        if ($request->has('activeIndex')) {
+            $q->leftJoin('admin_auth_group', 'admin_auth_group.admin_id', '=', 'admins.id');
+            $q->where('admin_auth_group.auth_group_id',$request->activeIndex);
         }
         $q->queryTitle($request->title);
         $paginate = $q->with('AuthGroup')->paginate($limit);
@@ -112,7 +117,18 @@ class AdminController extends Controller
         $Admin->delete();
         return resReturn(1, '删除成功');
     }
-
+    /**
+     * Display a listing of the auth group.
+     *
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAuthGroupList(Request $request)
+    {
+        $q = AuthGroup::query();
+        $res = $q->get();
+        return resReturn(1, $res);
+    }
     /**
      * Display a listing of the Syslog.
      *

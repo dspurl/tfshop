@@ -40,3 +40,10 @@ export function log(query) {
     params: query
   })
 }
+export function getAuthGroupList(query) {
+  return request({
+    url: 'authGroup',
+    method: 'GET',
+    params: query
+  })
+}

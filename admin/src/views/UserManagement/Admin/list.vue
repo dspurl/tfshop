@@ -1,6 +1,10 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-menu  :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
+        <el-menu-item v-for="item of authGroupList" :index="item.id.toString()">{{ item.introduction }}</el-menu-item>
+      </el-menu>
+      <br />
       <el-input :placeholder="$t('user.queryTitle')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
       <el-button v-permission="$store.jurisdiction.AdminCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
@@ -136,7 +140,7 @@
   }
 </style>
 <script>
-import { getList, create, edit, destroy } from '@/api/admin'
+import { getList, create, edit, destroy, getAuthGroupList } from '@/api/admin'
 import { getToken } from '@/utils/auth'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
@@ -172,6 +176,7 @@ export default {
       portrait: '',
       tableKey: 0,
       list: null,
+      authGroupList: null,
       textMap: {
         update: '修改',
         create: '添加'
@@ -217,11 +222,15 @@ export default {
   },
   methods: {
     getList() {
+      let that = this
       this.listLoading = true
       getList(this.listQuery).then(response => {
         this.list = response.data.data
         this.total = response.data.total
-        this.listLoading = false
+        getAuthGroupList(this.listQuery).then(resp => {
+            that.authGroupList = resp.data
+            that.listLoading = false
+          })
       })
     },
     handleFilter() {
@@ -335,6 +344,12 @@ export default {
       }
       this.imgProgress = true
       return isLt2M
+    },
+    handleSelect(index) {
+      this.listQuery.title = ''
+      this.listQuery.activeIndex = index
+      this.listQuery.page = 1
+      this.getList()
     },
     handleDelete(row) { // 删除
       this.$confirm(this.$t('user.deleteAdmin'), this.$t('hint.hint'), {
