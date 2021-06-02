@@ -326,7 +326,7 @@ class Plugin
             ];
             $disk->put($newPluginPath . '/dsshop.json', json_encode($json));
             $disk->put($newPluginPath . '/README.md', $path['instructions']);
-            $zip_file = $name . '.zip';
+            $zip_file = $newPath . '.zip';
             $zip = new \ZipArchive();
             $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
             $path = storage_path('app/public/plugin/' . $name);
@@ -364,45 +364,8 @@ class Plugin
     public function autoPlugin($name)
     {
         $path = $this->pluginPath . '/' . $name;
-        $plugin= scandir($path);
-        $data=[
-            'admin'=>[
-                'api' => $this->path . '/admin/src/api',
-                'views' => $this->path . '/admin/src/views/ToolManagement',
-            ],
-        ];
-        foreach ($plugin as $value) {
-            switch ($value){
-                case 'admin':
-                    $this->fileDeployment($path . '/admin/api', $this->path . '/admin/src/api');
-                    $this->fileDeployment($path . '/admin/views', $this->path . '/admin/src/views/ToolManagement');
-                    break;
-                case 'api':
-
-                    break;
-                case 'client':
-                    break;
-                case 'database':
-                    break;
-            }
-        }
-        print_r($plugin);
-        exit;
-
-
-
-
-
-
-
-
-
-
-
-
-        exit;
-        $routes = $this->pluginPath . '/' . $name . '/routes.json';
-        $dsshop = $this->pluginPath . '/' . $name . '/dsshop.json';
+        $dsshop = $path . '/dsshop.json';
+        $routes = $path . '/routes.json';
         if (!file_exists($routes)) {
             throw new \Exception('插件缺少routes.json文件', Code::CODE_PARAMETER_WRONG);
         }
@@ -410,23 +373,27 @@ class Plugin
             throw new \Exception('插件缺少dsshop.json文件', Code::CODE_PARAMETER_WRONG);
         }
         $dsshop = json_decode(file_get_contents($dsshop), true);
-
-        // 文件自动部署
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/admin/api', $this->path . '/admin/src/api');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/admin/views/' . $this->convertUnderline($name), $this->path . '/admin/src/views/ToolManagement/' . $this->convertUnderline($name));
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/config', $this->path . '/api/config');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/console', $this->path . '/api/app/Console/Commands');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v' . config('dsshop.versions'));
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dsshop.versions'));
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/api/observers', $this->path . '/api/app/Observers');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/client/Dsshop/api');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/client/Dsshop/components');
-        $this->fileDeployment($this->pluginPath . '/' . $name . '/uniApp/pages', $this->path . '/client/Dsshop/pages');
-        // 路由自动部署
         $routes = json_decode(file_get_contents($routes), true);
-        // api
+        $this->fileDeployment($path . '/admin/api', $this->path . '/admin/src/api');
+        $this->fileDeployment($path . '/admin/views', $this->path . '/admin/src/views/ToolManagement');
+        $this->fileDeployment($path . '/api/config', $this->path . '/api/config');
+        $this->fileDeployment($path . '/api/models', $this->path . '/api/app/Models/v' . config('dsshop.versions'));
+        $this->fileDeployment($path . '/api/plugin', $this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin');
+        $this->fileDeployment($path . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dsshop.versions'));
+        $this->fileDeployment($path . '/api/observers', $this->path . '/api/app/Observers');
+        $this->fileDeployment($path . '/database', $this->path . '/api/database/migrations');
+        if (count($routes['client']) > 0) {
+            foreach ($routes['client'] as $client) {
+                $this->fileDeployment($path . '/' . $client, $this->path . '/client/' . $client);
+            }
+        }
+        // 关联的文件
+        if (count($routes['relevance']) > 0) {
+            foreach ($routes['relevance'] as $relevance) {
+                $this->filePackageDeployment($path . 'api/relevance/' . basename($relevance), $this->path . '/' . $relevance);
+            }
+        }
+        // 添加路由
         if (array_key_exists('admin', $routes) || array_key_exists('app', $routes) || array_key_exists('notValidatedApp', $routes)) {
             $targetPath = $this->path . '/api/routes/plugin.php';
             $file_get_contents = file_get_contents($targetPath);
@@ -440,25 +407,24 @@ class Plugin
         //" . $dsshop['name'] . "_e
         //前台插件列表", $file_get_contents);
             }
-
             if (array_key_exists('notValidatedApp', $routes)) {
                 $file_get_contents = str_replace("APP无需验证插件列表", $dsshop['name'] . "_s
         " . $routes['notValidatedApp'] . "
         //" . $dsshop['name'] . "_e
         //APP无需验证插件列表", $file_get_contents);
             }
-
             if (array_key_exists('app', $routes)) {
                 $file_get_contents = str_replace("APP验证插件列表", $dsshop['name'] . "_s
         " . $routes['app'] . "
         //" . $dsshop['name'] . "_e
         //APP验证插件列表", $file_get_contents);
             }
+            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             file_put_contents($targetPath, $file_get_contents);
             unset($targetPath);
             unset($file_get_contents);
-            unset($metadata);
         }
+
         // permission
         if (array_key_exists('permission', $routes)) {
             $targetPath = $this->path . '/admin/src/store/modules/permission.js';
@@ -467,32 +433,16 @@ class Plugin
             $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             // 添加新的插件代码
-            $metadata = str_replace("插件列表", $dsshop['name'] . "_s
+            $file_get_contents = str_replace("插件列表", $dsshop['name'] . "_s
   " . $routes['permission'] . "
   // " . $dsshop['name'] . "_e
   // 插件列表", $file_get_contents);
-            file_put_contents($targetPath, $metadata);
-            unset($targetPath);
-            unset($file_get_contents);
-            unset($metadata);
-        }
-        // uni-app
-        if (array_key_exists('uniApp', $routes)) {
-            $targetPath = $this->path . '/client/Dsshop/pages.json';
-            $file_get_contents = file_get_contents($targetPath);
-            //去除已存在的插件代码
-            $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-            // 添加新的插件代码
-            $metadata = str_replace("插件列表", $dsshop['name'] . "_s
-		" . $routes['uniApp'] . "
-		// " . $dsshop['name'] . "_e
-		// 插件列表", $file_get_contents);
-            file_put_contents($targetPath, $metadata);
+            file_put_contents($targetPath, $file_get_contents);
             unset($targetPath);
             unset($file_get_contents);
-            unset($metadata);
         }
+
         // observers
         if (array_key_exists('observers', $routes)) {
             $targetPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
@@ -505,6 +455,7 @@ class Plugin
         " . $routes['observers'] . "
         // " . $dsshop['name'] . "_e
         // 插件", $file_get_contents);
+            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             file_put_contents($targetPath, $file_get_contents);
             unset($targetPath);
             unset($file_get_contents);
@@ -521,10 +472,41 @@ class Plugin
     " . $routes['wechatChannel'] . "
     // " . $dsshop['name'] . "_e
     // 插件", $file_get_contents);
+            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             file_put_contents($targetPath, $file_get_contents);
             unset($targetPath);
             unset($file_get_contents);
         }
+        // 路由语言包
+        if (array_key_exists('routeLangAdmin', $routes) || array_key_exists('routeLangClient', $routes)) {
+            $targetPath = $this->path . '/api/resources/lang/zn/route.php';
+            $file_get_contents = file_get_contents($targetPath);
+            if (array_key_exists('routeLangAdmin', $routes)) {
+                //去除已存在的插件代码
+                $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+                $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+                // 添加新的插件代码
+                $file_get_contents = str_replace("admin插件", $dsshop['name'] . "_s
+    " . $routes['routeLangAdmin'] . "
+    // " . $dsshop['name'] . "_e
+    // admin插件", $file_get_contents);
+            }
+            if (array_key_exists('routeLangClient', $routes)) {
+                //去除已存在的插件代码
+                $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+                $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+                // 添加新的插件代码
+                $file_get_contents = str_replace("client插件", $dsshop['name'] . "_s
+    " . $routes['routeLangClient'] . "
+    // " . $dsshop['name'] . "_e
+    // client插件", $file_get_contents);
+            }
+            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+            file_put_contents($targetPath, $file_get_contents);
+            unset($targetPath);
+            unset($file_get_contents);
+        }
+
         //写入本地插件列表
         $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
         if (collect($json_dsshop)->firstWhere('name', $name)) {
@@ -544,7 +526,7 @@ class Plugin
             );
         }
         file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
-        return resReturn(1, '成功');
+        return '安装成功';
     }
 
     /**
@@ -598,6 +580,11 @@ class Plugin
             foreach ($request['relevance'] as $relevance) {
                 $routes['relevance'][] = $relevance['file'];
             }
+        }
+        // 客户端
+        $routes['client'] = [];
+        if ($request['client']) {
+            $routes['client'] = $request['client'];
         }
         // 生成routes.json
         if (!file_exists($routesPath)) {
@@ -1195,7 +1182,7 @@ class Plugin
 
 
     /**
-     * 拷贝目录下文件到指定目录下，没有目录则创建
+     * 拷贝目录下所有文件到指定目录下，没有目录则创建
      * @param string $original //原始目录
      * @param string $target //目标目录
      */

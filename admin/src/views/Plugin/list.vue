@@ -65,7 +65,7 @@
           <span>{{ scope.row.describe }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="250">
+      <el-table-column label="操作" class-name="small-padding fixed-width" width="180">
         <template slot-scope="scope">
           <template v-if="scope.row.local">
             <router-link v-permission="$store.jurisdiction.PlugInEdit" :to="{ path: 'PlugInEdit', query: { name: scope.row.abbreviation }}">
@@ -79,8 +79,11 @@
             <el-tooltip v-permission="$store.jurisdiction.PlugInDownload" v-else :loading="butLoading" class="item" effect="dark" content="下载" placement="top-start">
               <el-button :loading="formLoading" type="warning" icon="el-icon-download" circle @click="handleDownload(scope.row.abbreviation)"/>
             </el-tooltip>
+            <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" class="item" effect="dark" content="删除" placement="top-start">
+              <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row.abbreviation)"/>
+            </el-tooltip>
           </template>
-          <template v-if="(scope.row.local && scope.row.publish) || !scope.row.local">
+          <template v-else>
             <el-tooltip v-permission="$store.jurisdiction.PlugInInstall" v-if="!scope.row.locality_versions || scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="安装" placement="top-start">
               <el-button :loading="formLoading" type="primary" icon="el-icon-share" circle @click="handleInstall(scope.row.abbreviation)"/>
             </el-tooltip>
@@ -89,11 +92,6 @@
             </el-tooltip>
             <el-tooltip v-permission="$store.jurisdiction.PlugInUninstall" v-if="scope.row.locality_versions && !scope.row.is_delete" :loading="butLoading" class="item" effect="dark" content="卸载插件" placement="top-start">
               <el-button :loading="formLoading" type="primary" icon="el-icon-delete" circle @click="handleUninstall(scope.row.abbreviation)"/>
-            </el-tooltip>
-          </template>
-          <template v-if="scope.row.local">
-            <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" class="item" effect="dark" content="删除" placement="top-start">
-              <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row.abbreviation)"/>
             </el-tooltip>
           </template>
         </template>

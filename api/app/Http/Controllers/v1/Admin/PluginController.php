@@ -83,7 +83,7 @@ class PluginController extends Controller
      */
     public function install($name)
     {
-        return (new Plugin())->autoPlugin($name);
+        return resReturn(1, (new Plugin())->autoPlugin($name));
     }
 
     /**
@@ -135,8 +135,8 @@ class PluginController extends Controller
         foreach ($routes as $k => $value) {
             if (array_key_exists('prefix', $value->action)) {
                 if ($value->action['prefix'] && !in_array($value->action['prefix'], ['oauth'])) {
-                    if($type == 'no_get'){
-                        if($value->methods[0] != 'GET'){
+                    if ($type == 'no_get') {
+                        if ($value->methods[0] != 'GET') {
                             $path[$k] = [
                                 'uri' => $value->uri,
                                 'path' => $value->methods[0],
@@ -144,7 +144,7 @@ class PluginController extends Controller
                                 'explain' => __('route.' . $value->action['as']),
                             ];
                         }
-                    }else{
+                    } else {
                         $path[$k] = [
                             'uri' => $value->uri,
                             'path' => $value->methods[0],
