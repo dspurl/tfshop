@@ -193,7 +193,7 @@ export default {
       rules: {
         name: [
           { required: true, message: this.$t('hint.enterUsername'), trigger: 'blur' },
-          { min: 2, max: 16, message: this.$t('hint.length2_16'), trigger: 'blur' }
+          { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
         ],
         email: [
           { required: true, message: this.$t('hint.enterEmail'), trigger: 'blur' },
