@@ -32,6 +32,13 @@ export function edit(data) {
   })
 }
 
+export function publish(name) {
+  return request({
+    url: 'plugin/publish/' + name,
+    method: 'POST'
+  })
+}
+
 export function details(name) {
   return request({
     url: 'plugin/' + name,

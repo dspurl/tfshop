@@ -1,4 +1,4 @@
-import { getList, install, destroy, uninstall } from '@/api/plugin'
+import { getList, install, destroy, uninstall, publish } from '@/api/plugin'
 export default {
   name: 'PlugInList',
   data() {
@@ -108,8 +108,27 @@ export default {
         })
       })
     },
-    handlePublish() {
+    handlePublish(name) {
+      this.butLoading = true
       this.formLoading = true
+      publish(name).then(() => {
+        this.butLoading = false
+        this.formLoading = false
+        this.getList()
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: '发行成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(() => {
+        this.butLoading = false
+        this.formLoading = false
+      })
+    },
+    // 下载
+    handleDownload(name) {
+      window.open(process.env.BASE_API + 'plugin/download/' + name)
     }
   }
 }

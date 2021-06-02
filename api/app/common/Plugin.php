@@ -6,6 +6,7 @@ use App\Code;
 use App\Models\v1\AuthGroupAuthRule;
 use App\Models\v1\AuthRule;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class Plugin
 {
@@ -304,17 +305,42 @@ class Plugin
     /**
      * 下载插件
      * @param $name
+     * @return \Symfony\Component\HttpFoundation\BinaryFileResponse
      */
     public function download($name)
     {
         if (file_exists($this->pluginPath . '/' . $name . '/dsshop.json')) {
             $path = json_decode(file_get_contents($this->pluginPath . '/' . $name . '/dsshop.json'), true);
             $pluginPath = $this->pluginPath . '/' . $path['abbreviation'];
-            $newPath = $this->path . '/api/storage/app/public/plugin';
+            $newPath = $this->path . '/api/storage/app/public/plugin/' . $name;
+            $newPluginPath = 'plugin/' . $name;
             // 将插件移动到可下载目录
             $this->fileDeployment($pluginPath, $newPath);
+            $disk = Storage::disk('public');
+            $json = [
+                'name' => $path['name'],
+                'abbreviation' => $path['abbreviation'],
+                'describe' => $path['describe'],
+                'versions' => $path['versions'],
+                'author' => $path['author'],
+            ];
+            $disk->put($newPluginPath . '/dsshop.json', json_encode($json));
+            $disk->put($newPluginPath . '/README.md', $path['instructions']);
+            $zip_file = $name . '.zip';
+            $zip = new \ZipArchive();
+            $zip->open($zip_file, \ZipArchive::CREATE | \ZipArchive::OVERWRITE);
+            $path = storage_path('app/public/plugin/' . $name);
+            $files = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
+            foreach ($files as $name => $file) {
+                if (!$file->isDir()) {
+                    $filePath = $file->getRealPath();
+                    $relativePath = './' . substr($filePath, strlen($path) + 1);
+                    $zip->addFile($filePath, $relativePath);
+                }
+            }
+            $zip->close();
+            return response()->download($zip_file);
         }
-
     }
 
     /**
@@ -334,24 +360,34 @@ class Plugin
         $wechatChannelPath = $this->path . '/api/app/Channels/WechatChannel.php';
         $file_get_plugin_contents = file_get_contents($pluginPath);
         preg_match_all('/\/\/' . $name . '_s(.*?)\/\/' . $name . '_e/is', $file_get_plugin_contents, $file_get_plugin_contents);
-        $routes['admin'] = $file_get_plugin_contents[1][0];
-        $routes['app'] = $file_get_plugin_contents[1][1];
-        $routes['notValidatedApp'] = $file_get_plugin_contents[1][2];
+        if(count($file_get_plugin_contents[1])>0){
+            $routes['admin'] = $file_get_plugin_contents[1][0];
+            $routes['app'] = $file_get_plugin_contents[1][1];
+            $routes['notValidatedApp'] = $file_get_plugin_contents[1][2];
+        }
         $permission_file_get_contents = file_get_contents($permissionPath);
         preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $permission_file_get_contents, $permission_file_get_contents);
-        $routes['permission'] = $permission_file_get_contents[1][0];
+        if(count($permission_file_get_contents[1])>0){
+            $routes['permission'] = $permission_file_get_contents[1][0];
+        }
         $file_get_lang_contents = file_get_contents($langPath);
         preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $file_get_lang_contents, $file_get_lang_contents);
-        $routes['routeLangAdmin'] = $file_get_lang_contents[1][0];
-        $routes['routeLangClient'] = $file_get_lang_contents[1][1];
+        if(count($file_get_lang_contents[1])>0){
+            $routes['routeLangAdmin'] = $file_get_lang_contents[1][0];
+            $routes['routeLangClient'] = $file_get_lang_contents[1][1];
+        }
         // 观察者
         $provider_file_get_contents = file_get_contents($providerPath);
         preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $provider_file_get_contents, $provider_file_get_contents);
-        $routes['observers'] = $provider_file_get_contents[1][0];
+        if(count($provider_file_get_contents[1])>0){
+            $routes['observers'] = $provider_file_get_contents[1][0];
+        }
         // 微信公众号模板消息
         $file_wechat_channel_get_contents = file_get_contents($wechatChannelPath);
         preg_match_all('/\/\/' . $name . '_s(.*?)\/\/' . $name . '_e/is', $file_wechat_channel_get_contents, $file_wechat_channel_get_contents);
-        $routes['wechatChannel'] = $file_wechat_channel_get_contents[1][0];
+        if(count($file_wechat_channel_get_contents[1])>0){
+            $routes['wechatChannel'] = $file_wechat_channel_get_contents[1][0];
+        }
         // 关联文件
         $routes['relevance'] = [];
         if ($request['relevance']) {

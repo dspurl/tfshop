@@ -94,7 +94,7 @@ class PluginController extends Controller
      */
     public function publish($name)
     {
-        return (new Plugin())->publish($name);
+        return resReturn(1, (new Plugin())->publish($name));
     }
 
     /**
