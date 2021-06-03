@@ -25,6 +25,7 @@ export default {
       path: [],
       models: [],
       template: [],
+      adminTemplate: [],
       dialogObserver: false,
       dialogRelevance: false,
       dbEdit: false,
@@ -57,6 +58,7 @@ export default {
       },
       ruleForm: {
         client: [],
+        admin: [],
         name: '',
         abbreviation: '',
         instructions: '',
@@ -267,13 +269,18 @@ export default {
     }
     this.getRoutes()
     this.getModels()
-    this.getTemplate()
+    this.getTemplate('client')
+    this.getTemplate('admin')
   },
   methods: {
     // 获取客户端模板列表
-    getTemplate() {
-      template().then((res) => {
-        this.template = res.data
+    getTemplate(name) {
+      template(name).then((res) => {
+        if (name === 'admin') {
+          this.adminTemplate = res.data
+        } else {
+          this.template = res.data
+        }
       })
     },
     // 获取模型列表

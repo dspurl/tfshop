@@ -124,6 +124,7 @@ class PluginController extends Controller
     }
 
     /**
+     * Gets a list of all routes
      * 获取所有路由列表
      * @param $type // 类型：all为全部，no_get为除get请求外
      * @return string
@@ -171,6 +172,7 @@ class PluginController extends Controller
     }
 
     /**
+     * Get all models
      * 获取所有模型
      */
     public function models()
@@ -179,10 +181,13 @@ class PluginController extends Controller
     }
 
     /**
+     * Get all templates
      * 获取所有模板
+     * @param $name //client or admin
+     * @return string
      */
-    public function template()
+    public function template($name)
     {
-        return resReturn(1, (new Plugin())->template());
+        return resReturn(1, (new Plugin())->template($name));
     }
 }

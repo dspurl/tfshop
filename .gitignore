@@ -1,3 +1,4 @@
 .idea/
 需完善的功能.text
 admin/config/dev.env.js
+plugin/list

@@ -74,9 +74,9 @@ export function models() {
   })
 }
 
-export function template() {
+export function template(name) {
   return request({
-    url: 'plugin/template/all',
+    url: 'plugin/template/' + name,
     method: 'GET'
   })
 }

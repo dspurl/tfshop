@@ -1,6 +1,6 @@
 <template>
   <div v-loading="loading" class="container">
-    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="100px" class="ruleForm">
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="140px" class="ruleForm">
       <h3>基本信息</h3>
       <el-form-item class="min-input" label="插件名称" prop="name">
         <el-input v-model="ruleForm.name" maxlength="20" placeholder="请输入插件名称" clearable/>
@@ -14,10 +14,24 @@
       <el-form-item class="min-input" label="插件简介" prop="describe">
         <el-input v-model="ruleForm.describe" maxlength="200" placeholder="请输入插件简介" clearable/>
       </el-form-item>
-      <el-form-item class="min-input" label="支持的客户端" prop="client">
+      <el-form-item class="min-input" label="支持的客户端模板" prop="client">
         <el-select v-model="ruleForm.client" multiple clearable placeholder="请选择">
           <el-option-group
             v-for="group in template"
+            :key="group.name"
+            :label="group.name">
+            <el-option
+              v-for="item in group.children"
+              :key="item.en"
+              :label="item.name"
+              :value="group.name + '/' + item.en"/>
+          </el-option-group>
+        </el-select>
+      </el-form-item>
+      <el-form-item class="min-input" label="支持的后台模板" prop="client">
+        <el-select v-model="ruleForm.admin" multiple clearable placeholder="请选择">
+          <el-option-group
+            v-for="group in adminTemplate"
             :key="group.name"
             :label="group.name">
             <el-option
