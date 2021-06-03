@@ -107,7 +107,7 @@ class PluginController extends Controller
      */
     public function destroy($name)
     {
-        return (new Plugin())->destroy($name);
+        return resReturn(1, (new Plugin())->destroy($name));
     }
 
     /**
@@ -115,11 +115,12 @@ class PluginController extends Controller
      * 插件卸载
      * @param $name
      * @return string
+     * @throws \Exception
      * @queryParam  name string 插件简称
      */
     public function uninstall($name)
     {
-        return (new Plugin())->autoUninstall($name);
+        return resReturn(1, (new Plugin())->autoUninstall($name));
     }
 
     /**

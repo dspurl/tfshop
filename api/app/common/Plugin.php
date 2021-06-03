@@ -253,9 +253,16 @@ class Plugin
                     }
                 }
             }
+            // 观察者
             if ($path['observer']) {
                 foreach ($path['observer'] as $observer) {
                     $this->removeObserver($observer);
+                }
+            }
+            // 关联的文件
+            if ($path['relevance']) {
+                foreach ($path['relevance'] as $relevance) {
+                    $this->fileDestroy($this->path . '/' . $relevance);
                 }
             }
             $this->removeRoutes($path['name']);
@@ -489,8 +496,8 @@ class Plugin
                 // 添加新的插件代码
                 $file_get_contents = str_replace("admin插件", $dsshop['name'] . "_s
     " . $routes['routeLangAdmin'] . "
-    // " . $dsshop['name'] . "_e
-    // admin插件", $file_get_contents);
+        // " . $dsshop['name'] . "_e
+        // admin插件", $file_get_contents);
             }
             if (array_key_exists('routeLangClient', $routes)) {
                 //去除已存在的插件代码
@@ -499,8 +506,8 @@ class Plugin
                 // 添加新的插件代码
                 $file_get_contents = str_replace("client插件", $dsshop['name'] . "_s
     " . $routes['routeLangClient'] . "
-    // " . $dsshop['name'] . "_e
-    // client插件", $file_get_contents);
+        // " . $dsshop['name'] . "_e
+        // client插件", $file_get_contents);
             }
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             file_put_contents($targetPath, $file_get_contents);
@@ -529,6 +536,112 @@ class Plugin
         file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
         Artisan::call('migrate');
         return '安装成功';
+    }
+
+
+    /**
+     * 卸载插件
+     * @param string $name //组件名称
+     * @return string
+     * @throws \Exception
+     */
+    public function autoUninstall($name)
+    {
+        $names = $this->convertUnderline($name);
+        $this->fileDestroy($this->path . '/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $names . 'Request.php');
+        $this->delDirAndFile($this->path . '/admin/src/views/ToolManagement/' . $names, true);
+
+
+        $path = $this->pluginPath . '/' . $name;
+        $routes = $this->pluginPath . '/' . $name . '/routes.json';
+        $dsshop = $this->pluginPath . '/' . $name . '/dsshop.json';
+        if (!file_exists($routes)) {
+            throw new \Exception('插件缺少routes.json文件', Code::CODE_PARAMETER_WRONG);
+        }
+        if (!file_exists($dsshop)) {
+            throw new \Exception('插件缺少dsshop.json文件', Code::CODE_PARAMETER_WRONG);
+        }
+        Artisan::call('migrate:rollback');
+        $dsshop = json_decode(file_get_contents($dsshop), true);
+        $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
+        $routes = json_decode(file_get_contents($routes), true);
+        //去除API路由
+        $targetPath = $this->path . '/api/routes/plugin.php';
+        $file_get_contents = file_get_contents($targetPath);
+        $file_get_contents = preg_replace('/\/\/' . $dsshop['name'] . '_s(.*?)\/\/' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+        file_put_contents($targetPath, $file_get_contents);
+        unset($targetPath);
+        unset($file_get_contents);
+        //去除observers注册代码
+        $targetPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
+        $file_get_contents = file_get_contents($targetPath);
+        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+        file_put_contents($targetPath, $file_get_contents);
+        unset($targetPath);
+        unset($file_get_contents);
+        // 去除微信公众号模板消息
+        $targetPath = $this->path . '/api/app/Channels/WechatChannel.php';
+        $file_get_contents = file_get_contents($targetPath);
+        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+        file_put_contents($targetPath, $file_get_contents);
+        unset($targetPath);
+        unset($file_get_contents);
+        //去除后台路由
+        $targetPath = $this->path . '/admin/src/store/modules/permission.js';
+        $file_get_contents = file_get_contents($targetPath);
+        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+        file_put_contents($targetPath, $file_get_contents);
+        unset($targetPath);
+        unset($file_get_contents);
+        //去除路由语言包
+        $targetPath = $this->path . '/api/resources/lang/zn/route.php';
+        $file_get_contents = file_get_contents($targetPath);
+        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+        file_put_contents($targetPath, $file_get_contents);
+        unset($targetPath);
+        unset($file_get_contents);
+        $this->fileUninstall($path . '/admin/api', $this->path . '/admin/src/api');
+        $this->fileUninstall($path . '/admin/views', $this->path . '/admin/src/views/ToolManagement');
+        $this->fileUninstall($path . '/api/config', $this->path . '/api/config');
+        $this->fileUninstall($path . '/api/models', $this->path . '/api/app/Models/v' . config('dsshop.versions'));
+        $this->fileUninstall($path . '/api/plugin', $this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin');
+        $this->fileUninstall($path . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dsshop.versions'));
+        $this->fileUninstall($path . '/api/observers', $this->path . '/api/app/Observers');
+        $this->fileUninstall($path . '/database', $this->path . '/api/database/migrations');
+        if (count($routes['client']) > 0) {
+            foreach ($routes['client'] as $client) {
+                $this->fileDestroy($this->path . '/client/' . $client);
+            }
+        }
+        if (count($routes['client']) > 0) {
+            foreach ($routes['client'] as $c) {
+                $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $names, true);
+                $this->delDirAndFile($this->path . '/client/' . $c . '/pages/user/' . $names, true);
+                // 删除对应的api
+                foreach ($routes['db'] as $db) {
+                    $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $this->convertUnderline(rtrim($db, 's'), true) . '.js');
+                }
+            }
+        }
+        // 关联的文件
+        if (count($routes['relevance']) > 0) {
+            foreach ($routes['relevance'] as $relevance) {
+                $this->fileDestroy($this->path . '/' . $relevance);
+            }
+        }
+
+        foreach ($json_dsshop as $id => $json) {
+            if ($json['name'] == $name) {
+                $json_dsshop[$id]['is_delete'] = 1;
+            }
+        }
+        file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
+        return '卸载完成';
     }
 
     /**
@@ -587,6 +700,13 @@ class Plugin
         $routes['client'] = [];
         if ($request['client']) {
             $routes['client'] = $request['client'];
+        }
+        // 数据库
+        $routes['db'] = [];
+        if ($request['db']) {
+            foreach ($request['db'] as $db) {
+                $routes['db'][] = $db['name'];
+            }
         }
         // 生成routes.json
         if (!file_exists($routesPath)) {
@@ -1141,17 +1261,6 @@ class Plugin
     }
 
     /**
-     * 删除目录
-     * @param $path
-     */
-    protected function catalogueDestroy($path)
-    {
-        if (is_dir($path)) {
-            @rmdir($path);
-        }
-    }
-
-    /**
      * 拷贝目录下文件到指定目录下，没有目录则创建
      * @param $file
      * @param string $target //目标目录
@@ -1205,88 +1314,6 @@ class Plugin
                 }
             }
         }
-    }
-
-    /**
-     * 卸载插件
-     * @param string $name //组件名称
-     * @return string
-     */
-    public function autoUninstall($name)
-    {
-        $routes = $this->pluginPath . '/' . $name . '/routes.json';
-        $dsshop = $this->pluginPath . '/' . $name . '/dsshop.json';
-        if (!file_exists($routes)) {
-            return resReturn(0, '插件缺少routes.json文件', Code::CODE_WRONG);
-        }
-        if (!file_exists($dsshop)) {
-            return resReturn(0, '插件缺少dsshop.json文件', Code::CODE_WRONG);
-        }
-        $dsshop = json_decode(file_get_contents($dsshop), true);
-        $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
-        //去除uni-app路由
-        $targetPath = $this->path . '/client/Dsshop/pages.json';
-        $file_get_contents = file_get_contents($targetPath);
-        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
-        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-        file_put_contents($targetPath, $file_get_contents);
-        unset($targetPath);
-        unset($file_get_contents);
-        //去除API路由
-        $targetPath = $this->path . '/api/routes/plugin.php';
-        $file_get_contents = file_get_contents($targetPath);
-        //去除已存在的插件代码
-        $file_get_contents = preg_replace('/\/\/' . $dsshop['name'] . '_s(.*?)\/\/' . $dsshop['name'] . '_e/is', '', $file_get_contents);
-        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-        file_put_contents($targetPath, $file_get_contents);
-        unset($targetPath);
-        unset($file_get_contents);
-        //去除observers注册代码
-        $targetPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
-        $file_get_contents = file_get_contents($targetPath);
-        //去除已存在的插件代码
-        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
-        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-        file_put_contents($targetPath, $file_get_contents);
-        unset($targetPath);
-        unset($file_get_contents);
-        // 去除微信公众号模板消息
-        $targetPath = $this->path . '/api/app/Channels/WechatChannel.php';
-        $file_get_contents = file_get_contents($targetPath);
-        //去除已存在的插件代码
-        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
-        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-        file_put_contents($targetPath, $file_get_contents);
-        unset($targetPath);
-        unset($file_get_contents);
-        //去除后台路由
-        $targetPath = $this->path . '/admin/src/store/modules/permission.js';
-        $file_get_contents = file_get_contents($targetPath);
-        //去除已存在的插件代码
-        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
-        $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-        file_put_contents($targetPath, $file_get_contents);
-        unset($targetPath);
-        unset($file_get_contents);
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/admin/api', $this->path . '/admin/src/api');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/admin/views/' . $this->convertUnderline($name), $this->path . '/admin/src/views/ToolManagement/' . $this->convertUnderline($name));
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/config', $this->path . '/api/config');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/console', $this->path . '/api/app/Console/Commands');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/models', $this->path . '/api/app/Models/v' . config('dsshop.versions'));
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/plugin', $this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dsshop.versions'));
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/api/observers', $this->path . '/api/app/Observers');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/database', $this->path . '/api/database/migrations');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/api', $this->path . '/client/Dsshop/api');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/components', $this->path . '/client/Dsshop/components');
-        $this->fileUninstall($this->pluginPath . '/' . $name . '/uniApp/pages', $this->path . '/client/Dsshop/pages');
-        foreach ($json_dsshop as $id => $json) {
-            if ($json['name'] == $name) {
-                $json_dsshop[$id]['is_delete'] = 1;
-            }
-        }
-        file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
-        return resReturn(1, '成功');
     }
 
     /**

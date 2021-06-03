@@ -84,7 +84,7 @@ export default {
       })
     },
     handleUninstall(name) {
-      const title = '是否确认删除该插件?'
+      const title = '是否确认卸载该插件?'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),
@@ -98,7 +98,7 @@ export default {
           this.getList()
           this.$notify({
             title: this.$t('hint.succeed'),
-            message: '已成功移除',
+            message: '已成功卸载',
             type: 'success',
             duration: 2000
           })
