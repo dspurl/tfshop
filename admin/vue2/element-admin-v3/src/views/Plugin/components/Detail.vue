@@ -640,7 +640,7 @@
         </el-form-item>
         <el-form-item label="说明" prop="explain">
           <el-input v-model="relevanceTemp.explain" class="min-input" placeholder="请输入说明" type="textarea" maxlength="200" clearable/>
-          <div>说明下该观察者的作用</div>
+          <div>说明下该文件的作用</div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">

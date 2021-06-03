@@ -275,7 +275,7 @@ class Plugin
             // 关联的文件
             if ($path['relevance']) {
                 foreach ($path['relevance'] as $relevance) {
-                    $this->fileDestroy($this->path . '/' . $relevance);
+                    $this->fileDestroy($this->path . '/' . $relevance['file']);
                 }
             }
             $this->removeRoutes($path['name'],$path);
@@ -687,7 +687,7 @@ class Plugin
         }
         if (count($request['admin']) > 0) {
             foreach ($request['admin'] as $c) {
-                $permissionPath = $this->path . '/' . $c . '/src/store/modules/permission.js';
+                $permissionPath = $this->path . '/admin/' . $c . '/src/store/modules/permission.js';
                 $permission_file_get_contents = file_get_contents($permissionPath);
                 preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $permission_file_get_contents, $permission_file_get_contents);
                 if (count($permission_file_get_contents[1]) > 0) {
@@ -1468,6 +1468,7 @@ class Plugin
             'author' => $request->author,
             'local' => true,
             'client' => $request->client,
+            'admin' => $request->admin,
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
