@@ -251,15 +251,15 @@ class Plugin
                     $this->fileDestroy($this->path . '/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $names . 'Request.php');
                     $this->clearJurisdiction($db);
                     //删除后台模板（目录移动过将不会进行删除）
-                    if (count($path['admin']) > 0) {
-                        foreach ($path['admin'] as $c) {
+                    if (count($path['adminTemplate']) > 0) {
+                        foreach ($path['adminTemplate'] as $c) {
                             $this->delDirAndFile($this->path . '/admin/' . $c . '/src/views/ToolManagement/' . $names, true);
                             $this->fileDestroy($this->path . '/admin/' . $c . '/src/api/' . $n . '.js');
                         }
                     }
                     //删除客户端模板（目录移动过将不会进行删除）
-                    if (count($path['client']) > 0) {
-                        foreach ($path['client'] as $c) {
+                    if (count($path['clientTemplate']) > 0) {
+                        foreach ($path['clientTemplate'] as $c) {
                             $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $names, true);
                             $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $n . '.js');
                         }
@@ -278,7 +278,7 @@ class Plugin
                     $this->fileDestroy($this->path . '/' . $relevance['file']);
                 }
             }
-            $this->removeRoutes($path['name'],$path);
+            $this->removeRoutes($path['name'], $path);
             $this->delDirAndFile($this->pluginListPath . '/' . $name, true);
             return '删除成功';
         }
@@ -401,14 +401,14 @@ class Plugin
         $this->fileDeployment($path . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dsshop.versions'));
         $this->fileDeployment($path . '/api/observers', $this->path . '/api/app/Observers');
         $this->fileDeployment($path . '/database', $this->path . '/api/database/migrations');
-        if (count($routes['admin']) > 0) {
-            foreach ($routes['admin'] as $admin) {
+        if (count($routes['adminTemplate']) > 0) {
+            foreach ($routes['adminTemplate'] as $admin) {
                 $this->fileDeployment($path . '/' . $admin . '/api', $this->path . '/client/' . $admin . '/src/api');
                 $this->fileDeployment($path . '/' . $admin . '/views', $this->path . '/client/' . $admin . '/src/views/ToolManagement');
             }
         }
-        if (count($routes['client']) > 0) {
-            foreach ($routes['client'] as $client) {
+        if (count($routes['clientTemplate']) > 0) {
+            foreach ($routes['clientTemplate'] as $client) {
                 $this->fileDeployment($path . '/' . $client, $this->path . '/client/' . $client);
             }
         }
@@ -452,16 +452,16 @@ class Plugin
 
         // permission
         if (array_key_exists('permission', $routes)) {
-            if (count($routes['admin']) > 0) {
-                foreach ($routes['admin'] as $admin) {
-                    $targetPath = $this->path . '/' . $admin . '/src/store/modules/permission.js';
+            if (count($routes['adminTemplate']) > 0) {
+                foreach ($routes['adminTemplate'] as $admin) {
+                    $targetPath = $this->path . '/admin/' . $admin . '/src/store/modules/permission.js';
                     $file_get_contents = file_get_contents($targetPath);
                     //去除已存在的插件代码
                     $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
                     $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
                     // 添加新的插件代码
                     $file_get_contents = str_replace("插件列表", $dsshop['name'] . "_s
-  " . $routes[$admin]['permission'] . "
+  " . $routes['permission'][$admin] . "
   // " . $dsshop['name'] . "_e
   // 插件列表", $file_get_contents);
                     $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
@@ -620,8 +620,8 @@ class Plugin
         $this->fileUninstall($path . '/api/requests', $this->path . '/api/app/Http/Requests/v' . config('dsshop.versions'));
         $this->fileUninstall($path . '/api/observers', $this->path . '/api/app/Observers');
         $this->fileUninstall($path . '/database', $this->path . '/api/database/migrations');
-        if (count($routes['admin']) > 0) {
-            foreach ($routes['admin'] as $c) {
+        if (count($routes['adminTemplate']) > 0) {
+            foreach ($routes['adminTemplate'] as $c) {
                 //去除后台路由
                 $targetPath = $this->path . '/admin/' . $c . '/src/store/modules/permission.js';
                 $file_get_contents = file_get_contents($targetPath);
@@ -637,8 +637,8 @@ class Plugin
                 }
             }
         }
-        if (count($routes['client']) > 0) {
-            foreach ($routes['client'] as $c) {
+        if (count($routes['clientTemplate']) > 0) {
+            foreach ($routes['clientTemplate'] as $c) {
                 $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $names, true);
                 $this->delDirAndFile($this->path . '/client/' . $c . '/pages/user/' . $names, true);
                 // 删除对应的api
@@ -685,8 +685,8 @@ class Plugin
             $routes['app'] = $file_get_plugin_contents[1][1];
             $routes['notValidatedApp'] = $file_get_plugin_contents[1][2];
         }
-        if (count($request['admin']) > 0) {
-            foreach ($request['admin'] as $c) {
+        if (count($request['adminTemplate']) > 0) {
+            foreach ($request['adminTemplate'] as $c) {
                 $permissionPath = $this->path . '/admin/' . $c . '/src/store/modules/permission.js';
                 $permission_file_get_contents = file_get_contents($permissionPath);
                 preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $permission_file_get_contents, $permission_file_get_contents);
@@ -721,14 +721,14 @@ class Plugin
             }
         }
         // 客户端模板
-        $routes['client'] = [];
-        if ($request['client']) {
-            $routes['client'] = $request['client'];
+        $routes['clientTemplate'] = [];
+        if ($request['clientTemplate']) {
+            $routes['clientTemplate'] = $request['clientTemplate'];
         }
         // 后台模板
-        $routes['admin'] = [];
-        if ($request['admin']) {
-            $routes['admin'] = $request['admin'];
+        $routes['clientTemplate'] = [];
+        if ($request['clientTemplate']) {
+            $routes['adminTemplate'] = $request['adminTemplate'];
         }
         // 数据库
         $routes['db'] = [];
@@ -766,8 +766,8 @@ class Plugin
         $this->filePackageDeployment($this->path . '/api/app/Models/v' . config('dsshop.versions') . '/' . $dbName . '.php', $this->pluginListPath . '/' . $name . '/api/models/' . $dbName . '.php');
         // 后台
         //获取支持的后台
-        if (count($request['admin']) > 0) {
-            foreach ($request['admin'] as $c) {
+        if (count($request['adminTemplate']) > 0) {
+            foreach ($request['adminTemplate'] as $c) {
                 $path = $this->path . '/admin/' . $c;
                 $structure = explode('/', $c);
                 if (count($structure) != 2) {
@@ -781,8 +781,8 @@ class Plugin
         }
         // 客户端
         //获取支持的客户端
-        if (count($request['client']) > 0) {
-            foreach ($request['client'] as $c) {
+        if (count($request['clientTemplate']) > 0) {
+            foreach ($request['clientTemplate'] as $c) {
                 $path = $this->path . '/client/' . $c;
                 $structure = explode('/', $c);
                 if (count($structure) != 2) {
@@ -949,8 +949,8 @@ class Plugin
     protected function createBackstageApi($db, $request)
     {
         $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
-        if (count($request->admin) > 0) {
-            foreach ($request->admin as $c) {
+        if (count($request->adminTemplate) > 0) {
+            foreach ($request->adminTemplate as $c) {
                 $path = $this->path . '/admin/' . $c . '/src/api/' . $name . '.js';
                 $this->createFile('api.admin.ds', ['/{{ name }}/'], [$name], $path);
                 unset($path);
@@ -969,7 +969,7 @@ class Plugin
     protected function createClient($db, $request)
     {
         $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
-        $client = $request->client;
+        $client = $request->clientTemplate;
         //获取支持的客户端
         if (count($client) > 0) {
             foreach ($client as $c) {
@@ -1012,10 +1012,10 @@ class Plugin
     {
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
         $api = $this->convertUnderline(rtrim($db['name'], 's'), true);
-        $admin = $request->admin;
+        $admin = $request->adminTemplate;
         if (count($admin) > 0) {
             foreach ($admin as $c) {
-                $path = $this->path . '/admin/'.$c.'/src/views/ToolManagement/' . $name;
+                $path = $this->path . '/admin/' . $c . '/src/views/ToolManagement/' . $name;
                 $pathArr = [$path, $path . '/components', $path . '/js', $path . '/scss'];
                 // 生成表对应的目录
                 foreach ($pathArr as $p) {
@@ -1163,32 +1163,6 @@ class Plugin
             //去除已存在的插件代码
             $file_get_contents = preg_replace('/\/\/' . $request->name . '_s(.*?)\/\/' . $request->name . '_e/is', '', $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-
-            $admin = $request->admin;
-            if (count($admin) > 0) {
-                foreach ($admin as $c) {
-                    $permissionRoutes = "";
-                    $permissionPath = $this->path . '/admin/'.$c.'/src/store/modules/permission.js';
-                    $permission_file_get_contents = file_get_contents($permissionPath);
-                    //去除已存在的插件代码
-                    $permission_file_get_contents = preg_replace('/\/\/ ' . $request->name . '_s(.*?)\/\/ ' . $request->name . '_e/is', '', $permission_file_get_contents);
-                    $permission_file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $permission_file_get_contents);
-                    // 前端
-                    $metadata = str_replace("插件列表", $request->name . "_s
-  " . $permissionRoutes . "
-  // " . $request->name . "_e
-  // 插件列表", $permission_file_get_contents);
-                    $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $metadata);
-                    file_put_contents($permissionPath, $content);
-                    unset($content);
-                    unset($permissionPath);
-                    unset($permission_file_get_contents);
-                }
-            }
-
-
-
-
             // 去除已存在的观察者插件代码
             $provider_file_get_contents = file_get_contents($providerPath);
             $provider_file_get_contents = preg_replace('/\/\/ ' . $request->name . '_s(.*?)\/\/ ' . $request->name . '_e/is', '', $provider_file_get_contents);
@@ -1199,13 +1173,14 @@ class Plugin
             $clientRoutes = "";
             $clientRoutesLang = "";
             $providerRoutes = "";
+            $permissionRoutes = "";
             if ($request->db) {
                 foreach ($request->db as $db) {
                     if (!$db['jurisdiction']) {  //当开启生成权限时才执行
-                        break;
+                        continue;
                     }
                     if ($edit && !$db['reset']) {  //当更新且重置不开启时
-                        break;
+                        continue;
                     }
                     $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
                     $names = $this->convertUnderline($name);
@@ -1244,6 +1219,26 @@ class Plugin
                     $providerRoutes .= '
         \App\Models\v' . config('dsshop.versions') . '\\' . $observer['models'] . '::observe(\App\Observers\\' . $observer['models'] . '\\' . $this->convertUnderline($observer['name']) . 'Observer::class);
                     ';
+                }
+            }
+            $admin = $request->adminTemplate;
+            if (count($admin) > 0) {
+                foreach ($admin as $c) {
+                    $permissionPath = $this->path . '/admin/' . $c . '/src/store/modules/permission.js';
+                    $permission_file_get_contents = file_get_contents($permissionPath);
+                    //去除已存在的插件代码
+                    $permission_file_get_contents = preg_replace('/\/\/ ' . $request->name . '_s(.*?)\/\/ ' . $request->name . '_e/is', '', $permission_file_get_contents);
+                    $permission_file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $permission_file_get_contents);
+                    // 前端
+                    $metadata = str_replace("插件列表", $request->name . "_s
+  " . $permissionRoutes . "
+  // " . $request->name . "_e
+  // 插件列表", $permission_file_get_contents);
+                    $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $metadata);
+                    file_put_contents($permissionPath, $content);
+                    unset($content);
+                    unset($permissionPath);
+                    unset($permission_file_get_contents);
                 }
             }
             // 后端
@@ -1289,7 +1284,7 @@ class Plugin
      * @param $name
      * @param $request
      */
-    protected function removeRoutes($name,$request)
+    protected function removeRoutes($name, $request)
     {
         $targetPath = $this->path . '/api/routes/plugin.php';
         $langPath = $this->path . '/api/resources/lang/zn/route.php';
@@ -1299,10 +1294,10 @@ class Plugin
         $file_get_contents = preg_replace('/\/\/' . $name . '_s(.*?)\/\/' . $name . '_e/is', '', $file_get_contents);
         $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
 
-        $admin = $request['admin'];
+        $admin = $request['adminTemplate'];
         if (count($admin) > 0) {
             foreach ($admin as $c) {
-                $permissionPath = $this->path . '/admin/'.$c.'/src/store/modules/permission.js';
+                $permissionPath = $this->path . '/admin/' . $c . '/src/store/modules/permission.js';
                 $permission_file_get_contents = file_get_contents($permissionPath);
                 //去除已存在的插件代码
                 $permission_file_get_contents = preg_replace('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', '', $permission_file_get_contents);
@@ -1467,8 +1462,8 @@ class Plugin
             'versions' => $request->versions,
             'author' => $request->author,
             'local' => true,
-            'client' => $request->client,
-            'admin' => $request->admin,
+            'clientTemplate' => $request->clientTemplate,
+            'adminTemplate' => $request->adminTemplate,
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
@@ -1500,8 +1495,8 @@ class Plugin
             'versions' => $request->versions,
             'author' => $request->author,
             'local' => true,
-            'client' => $request->client,
-            'admin' => $request->admin,
+            'clientTemplate' => $request->clientTemplate,
+            'adminTemplate' => $request->adminTemplate,
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
@@ -1731,7 +1726,7 @@ class Plugin
                     if ($attribute['default'] == 'null') {
                         $attribute_default = '->nullable()';
                     } else {
-                        $attribute_default = '->default(' . $attribute['default'] . ')';
+                        $attribute_default = '->default(\'' . $attribute['default'] . '\')';
                     }
                 }
                 $attribute_nullable = $attribute['is_empty'] ? '->nullable()' : '';

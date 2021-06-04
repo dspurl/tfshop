@@ -57,8 +57,8 @@ export default {
         explain: ''
       },
       ruleForm: {
-        client: [],
-        admin: [],
+        clientTemplate: [],
+        adminTemplate: [],
         name: '',
         abbreviation: '',
         instructions: '',
@@ -217,7 +217,7 @@ export default {
         data_table: true,
         jurisdiction: true,
         client: true,
-        reset: false
+        reset: true
       },
       markdownOption: {
         bold: true, // 粗体
@@ -300,7 +300,9 @@ export default {
       details(this.name).then((res) => {
         this.ruleForm = res.data
         this.ruleForm.db.forEach(item => {
-          item.reset = false
+          if (item.reset) {
+            item.reset = false
+          }
         })
       }).catch(() => {
         this.formLoading = false
@@ -370,7 +372,7 @@ export default {
         data_table: true,
         jurisdiction: true,
         client: true,
-        reset: false
+        reset: true
       }
       this.$nextTick(() => {
         this.$refs['dataTableForm'].clearValidate()

@@ -15,7 +15,7 @@
         <el-input v-model="ruleForm.describe" maxlength="200" placeholder="请输入插件简介" clearable/>
       </el-form-item>
       <el-form-item class="min-input" label="支持的客户端模板" prop="client">
-        <el-select v-model="ruleForm.client" multiple clearable placeholder="请选择">
+        <el-select v-model="ruleForm.clientTemplate" multiple clearable placeholder="请选择">
           <el-option-group
             v-for="group in template"
             :key="group.name"
@@ -29,7 +29,7 @@
         </el-select>
       </el-form-item>
       <el-form-item class="min-input" label="支持的后台模板" prop="client">
-        <el-select v-model="ruleForm.admin" multiple clearable placeholder="请选择">
+        <el-select v-model="ruleForm.adminTemplate" multiple clearable placeholder="请选择">
           <el-option-group
             v-for="group in adminTemplate"
             :key="group.name"
