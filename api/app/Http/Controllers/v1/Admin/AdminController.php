@@ -6,6 +6,7 @@ use App\Code;
 use App\Http\Requests\v1\SubmitAdminRequest;
 use App\Models\v1\Admin;
 use App\Models\v1\AdminLog;
+use App\Models\v1\AuthGroup;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -24,6 +25,7 @@ class AdminController extends Controller
      * 管理员列表
      * @param Request $request
      * @queryParam  title string 管理员账号
+     * @queryParam  authGroup string 管理组ID
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
@@ -36,6 +38,12 @@ class AdminController extends Controller
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
+        if ($request->has('authGroup')) {
+            if ($request->authGroup > 0) {
+                $q->leftJoin('admin_auth_group', 'admin_auth_group.admin_id', '=', 'admins.id');
+                $q->where('admin_auth_group.auth_group_id', $request->authGroup);
+            }
         }
         $q->queryTitle($request->title);
         $paginate = $q->with('AuthGroup')->paginate($limit);
@@ -111,6 +119,19 @@ class AdminController extends Controller
         Storage::delete('public/image/avatar/' . $Admin->portrait);    //删除头像
         $Admin->delete();
         return resReturn(1, '删除成功');
+    }
+
+    /**
+     * Display a listing of the auth group.
+     *
+     * @param  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function getAuthGroupList(Request $request)
+    {
+        $q = AuthGroup::query();
+        $res = $q->get();
+        return resReturn(1, $res);
     }
 
     /**

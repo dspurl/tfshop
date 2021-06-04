@@ -25,6 +25,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('admin', 'AdminController@create')->name('admin.adminCreate')->middleware(['permissions:AdminCreate']);  //创建管理员
         Route::post('admin/{id}', 'AdminController@edit')->name('admin.adminEdit')->middleware(['permissions:AdminEdit']);  //保存管理员/密码
         Route::post('admin/destroy/{id}', 'AdminController@destroy')->name('admin.adminDestroy')->middleware(['permissions:AdminDestroy']); //删除管理员
+        Route::get('authGroup', 'AdminController@getAuthGroupList')->name('admin.authGroupList')->middleware(['permissions:AdminList']);  //管理权限列表
         Route::get('admin/log', 'AdminController@log')->name('admin.adminLog')->middleware(['permissions:AdminLog']);  //管理员操作日志
         Route::get('member', 'MemberController@list')->name('admin.memberList')->middleware(['permissions:MemberList']);  //会员列表
         Route::post('member', 'MemberController@create')->name('admin.memberCreate')->middleware(['permissions:MemberCreate']);  //创建会员

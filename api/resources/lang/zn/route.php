@@ -18,6 +18,7 @@ return [
         'adminCreate'=>'创建管理员',
         'adminEdit'=>'保存管理员',
         'adminDestroy'=>'删除管理员',
+        'authGroupList'=>'管理权限列表',
         'adminLog'=>'管理员操作日志',
         'memberList'=>'会员列表',
         'memberCreate'=>'创建会员',

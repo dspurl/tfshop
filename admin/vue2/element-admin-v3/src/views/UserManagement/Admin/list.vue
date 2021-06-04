@@ -1,6 +1,10 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
+      <el-menu :default-active="listQuery.authGroup" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
+        <el-menu-item v-for="(item, index) of authGroupList" :key="index" :index="item.id.toString()">{{ item.introduction }}</el-menu-item>
+      </el-menu>
+      <br>
       <el-input :placeholder="$t('user.queryTitle')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
       <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
       <el-button v-permission="$store.jurisdiction.AdminCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
@@ -80,7 +84,7 @@
             :on-success="handleAvatarSuccess"
             :before-upload="beforeAvatarUpload"
             :on-progress="handleProgress"
-            :action="actionurl"
+            :action="actionUrl"
             :headers="imgHeaders"
             :data="imgData"
             class="avatar-uploader">
@@ -136,7 +140,7 @@
   }
 </style>
 <script>
-import { getList, create, edit, destroy } from '@/api/admin'
+import { getList, create, edit, destroy, getAuthGroupList } from '@/api/admin'
 import { getToken } from '@/utils/auth'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
@@ -157,7 +161,7 @@ export default {
     }
     return {
       formLoading: false,
-      actionurl: process.env.BASE_API + 'uploadPictures',
+      actionUrl: process.env.BASE_API + 'uploadPictures',
       imgProgress: false,
       imgProgressPercent: 0,
       imgHeaders: {
@@ -172,6 +176,7 @@ export default {
       portrait: '',
       tableKey: 0,
       list: null,
+      authGroupList: null,
       textMap: {
         update: '修改',
         create: '添加'
@@ -181,7 +186,8 @@ export default {
       listQuery: {
         page: 1,
         limit: 10,
-        sort: 'id'
+        sort: 'id',
+        authGroup: '0'
       },
       temp: {
         password: '',
@@ -214,6 +220,7 @@ export default {
   },
   created() {
     this.getList()
+    this.getAuthGroup()
   },
   methods: {
     getList() {
@@ -222,6 +229,15 @@ export default {
         this.list = response.data.data
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    getAuthGroup() {
+      getAuthGroupList(this.listQuery).then(resp => {
+        this.authGroupList = resp.data
+        this.authGroupList.unshift({
+          id: 0,
+          introduction: '全部'
+        })
       })
     },
     handleFilter() {
@@ -335,6 +351,12 @@ export default {
       }
       this.imgProgress = true
       return isLt2M
+    },
+    handleSelect(index) {
+      this.listQuery.title = ''
+      this.listQuery.authGroup = index
+      this.listQuery.page = 1
+      this.getList()
     },
     handleDelete(row) { // 删除
       this.$confirm(this.$t('user.deleteAdmin'), this.$t('hint.hint'), {
