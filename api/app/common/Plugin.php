@@ -556,7 +556,7 @@ class Plugin
         }
         file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
         Artisan::call('migrate');
-        return '安装成功';
+        return '操作成功';
     }
 
 
