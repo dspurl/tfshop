@@ -1501,6 +1501,7 @@ class Plugin
             'author' => $request->author,
             'local' => true,
             'client' => $request->client,
+            'admin' => $request->admin,
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
