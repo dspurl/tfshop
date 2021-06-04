@@ -403,13 +403,13 @@ class Plugin
         $this->fileDeployment($path . '/database', $this->path . '/api/database/migrations');
         if (count($routes['adminTemplate']) > 0) {
             foreach ($routes['adminTemplate'] as $admin) {
-                $this->fileDeployment($path . '/' . $admin . '/api', $this->path . '/client/' . $admin . '/src/api');
-                $this->fileDeployment($path . '/' . $admin . '/views', $this->path . '/client/' . $admin . '/src/views/ToolManagement');
+                $this->fileDeployment($path . '/admin/' . $admin . '/api', $this->path . '/admin/' . $admin . '/src/api');
+                $this->fileDeployment($path . '/admin/' . $admin . '/views', $this->path . '/admin/' . $admin . '/src/views/ToolManagement');
             }
         }
         if (count($routes['clientTemplate']) > 0) {
             foreach ($routes['clientTemplate'] as $client) {
-                $this->fileDeployment($path . '/' . $client, $this->path . '/client/' . $client);
+                $this->fileDeployment($path . '/client/' . $client, $this->path . '/client/' . $client);
             }
         }
         // 关联的文件
@@ -726,8 +726,8 @@ class Plugin
             $routes['clientTemplate'] = $request['clientTemplate'];
         }
         // 后台模板
-        $routes['clientTemplate'] = [];
-        if ($request['clientTemplate']) {
+        $routes['adminTemplate'] = [];
+        if ($request['adminTemplate']) {
             $routes['adminTemplate'] = $request['adminTemplate'];
         }
         // 数据库
