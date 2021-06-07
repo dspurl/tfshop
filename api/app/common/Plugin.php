@@ -1649,7 +1649,7 @@ class Plugin
         if ($type === 'admin') {
             foreach ($db['attribute'] as $a) {
                 $attribute .= '
-            $' . $this->convertUnderline($db['name']) . '->' . $a['name'] . ' = $request->' . $a['name'] . ';';
+            $' . $this->convertUnderline(rtrim($db['name'], 's')) . '->' . $a['name'] . ' = $request->' . $a['name'] . ';';
                 $queryParam .= '
             * @queryParam  ' . $a['name'] . ' ' . $this->casting[$a['type']] . ' ' . $a['annotation'] . '';
             }
