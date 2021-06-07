@@ -33,9 +33,11 @@ export function detail(id) {
   })
 }
 
-export function destroy(id) {
+export function destroy(id, data) {
+  data = Qs.parse(data)
   return request({
     url: '{{ name }}/destroy/' + id,
-    method: 'POST'
+    method: 'POST',
+    data
   })
 }
