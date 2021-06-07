@@ -260,7 +260,8 @@ class Plugin
                     //删除客户端模板（目录移动过将不会进行删除）
                     if (count($path['clientTemplate']) > 0) {
                         foreach ($path['clientTemplate'] as $c) {
-                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $names, true);
+                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $n, true);
+                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/user/' . $n, true);
                             $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $n . '.js');
                         }
                     }
