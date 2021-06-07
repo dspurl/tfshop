@@ -74,6 +74,10 @@ export default {
       })
     },
     handleAllDelete() { // 批量删除
+      if (!this.multipleSelection) {
+        this.$message.error('请选择要删除的内容')
+        return false
+      }
       const title = '是否确认批量删除内容?'
       const win = '删除成功'
       this.$confirm(title, this.$t('hint.hint'), {
