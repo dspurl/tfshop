@@ -579,7 +579,7 @@ class Plugin
         if (!file_exists($dsshop)) {
             throw new \Exception('插件缺少dsshop.json文件', Code::CODE_PARAMETER_WRONG);
         }
-//        Artisan::call('migrate:rollback');
+        Artisan::call('migrate:rollback');
         $dsshop = json_decode(file_get_contents($dsshop), true);
         $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
         $routes = json_decode(file_get_contents($routes), true);
