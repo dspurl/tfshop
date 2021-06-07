@@ -1193,9 +1193,9 @@ class Plugin
                     if (!$db['jurisdiction']) {  //当开启生成权限时才执行
                         continue;
                     }
-                    if ($edit && !$db['reset']) {  //当更新且重置不开启时
+                    /*if ($edit && !$db['reset']) {  //当更新且重置不开启时
                         continue;
-                    }
+                    }*/
                     $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
                     $names = $this->convertUnderline($name);
                     $routes .= "
