@@ -416,7 +416,7 @@ class Plugin
         // 关联的文件
         if (count($routes['relevance']) > 0) {
             foreach ($routes['relevance'] as $relevance) {
-                $this->filePackageDeployment($path . 'api/relevance/' . basename($relevance), $this->path . '/' . $relevance);
+                $this->filePackageDeployment($path . '/api/relevance/' . basename($relevance), $this->path . $relevance);
             }
         }
         // 添加路由
@@ -579,7 +579,7 @@ class Plugin
         if (!file_exists($dsshop)) {
             throw new \Exception('插件缺少dsshop.json文件', Code::CODE_PARAMETER_WRONG);
         }
-        Artisan::call('migrate:rollback');
+//        Artisan::call('migrate:rollback');
         $dsshop = json_decode(file_get_contents($dsshop), true);
         $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
         $routes = json_decode(file_get_contents($routes), true);
@@ -631,10 +631,10 @@ class Plugin
                 file_put_contents($targetPath, $file_get_contents);
                 unset($targetPath);
                 unset($file_get_contents);
-                $this->fileUninstall($path . '/' . $c . '/views', $this->path . '/' . $c . '/src/views/ToolManagement');
+                $this->fileUninstall($path . '/admin/' . $c . '/views', $this->path . '/admin/' . $c . '/src/views/ToolManagement');
                 // 删除对应的api
                 foreach ($routes['db'] as $db) {
-                    $this->fileDestroy($this->path . '/admin/' . $c . '/api/' . $this->convertUnderline(rtrim($db, 's'), true) . '.js');
+                    $this->fileDestroy($this->path . '/admin/' . $c . '/src/api/' . $this->convertUnderline(rtrim($db, 's'),true).'.js');
                 }
             }
         }
