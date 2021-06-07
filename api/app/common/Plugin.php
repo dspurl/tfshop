@@ -557,6 +557,11 @@ class Plugin
         }
         file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
         Artisan::call('migrate');
+        if ($routes['db']) {
+            foreach ($routes['db'] as $db) {
+                $this->createJurisdiction($db);
+            }
+        }
         return '操作成功';
     }
 
@@ -634,7 +639,7 @@ class Plugin
                 $this->fileUninstall($path . '/admin/' . $c . '/views', $this->path . '/admin/' . $c . '/src/views/ToolManagement');
                 // 删除对应的api
                 foreach ($routes['db'] as $db) {
-                    $this->fileDestroy($this->path . '/admin/' . $c . '/src/api/' . $this->convertUnderline(rtrim($db, 's'),true).'.js');
+                    $this->fileDestroy($this->path . '/admin/' . $c . '/src/api/' . $this->convertUnderline(rtrim($db['name'], 's'), true) . '.js');
                 }
             }
         }
@@ -644,7 +649,7 @@ class Plugin
                 $this->delDirAndFile($this->path . '/client/' . $c . '/pages/user/' . $names, true);
                 // 删除对应的api
                 foreach ($routes['db'] as $db) {
-                    $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $this->convertUnderline(rtrim($db, 's'), true) . '.js');
+                    $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $this->convertUnderline(rtrim($db['name'], 's'), true) . '.js');
                 }
             }
         }
@@ -661,6 +666,11 @@ class Plugin
             }
         }
         file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
+        if ($routes['db']) {
+            foreach ($routes['db'] as $db) {
+                $this->clearJurisdiction($db);
+            }
+        }
         return '卸载完成';
     }
 
@@ -735,7 +745,10 @@ class Plugin
         $routes['db'] = [];
         if ($request['db']) {
             foreach ($request['db'] as $db) {
-                $routes['db'][] = $db['name'];
+                $routes['db'][] = [
+                    'name' => $db['name'],
+                    'annotation' => $db['annotation'],
+                ];
             }
         }
         // 生成routes.json
