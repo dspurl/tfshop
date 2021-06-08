@@ -445,6 +445,7 @@
             <p>1、表注释如果有参数说明的话，请以下面的格式进行编写[说明:值=值含义-英文简写]，如[是否隐藏:0=否-no,1=是-yes]</p>
             <p>2、名字如果是ID的话，将自动设置主键自增类型</p>
             <p>3、支持拖拽排序</p>
+            <p>4、如果字段非必填，请设为空或设置默认值为null</p>
           </div>
           <el-button style="margin-top:10px;" type="success" round @click="addDBAttribute">增加属性</el-button>
         </el-form-item>
