@@ -1673,7 +1673,7 @@ class Plugin
                 '/{{ annotation }}/'
             ], [
                 config('dsshop.versions'),
-                $this->convertUnderline($db['name']),
+                $name,
                 $db['annotation']
             ], $content);
         }
