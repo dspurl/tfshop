@@ -56,6 +56,7 @@ export default {
         file: '',
         explain: ''
       },
+      versions: '',
       ruleForm: {
         clientTemplate: [],
         adminTemplate: [],
@@ -67,7 +68,8 @@ export default {
         observer: [],
         describe: '',
         versions: '',
-        relevance: []
+        relevance: [],
+        routes: false
       },
       rules: {
         name: [
@@ -304,6 +306,8 @@ export default {
             item.reset = false
           }
         })
+        this.ruleForm.routes = false
+        this.versions = res.data.versions
       }).catch(() => {
         this.formLoading = false
       })
@@ -540,6 +544,10 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           if (this.name) {
+            if (this.versions !== this.ruleForm.versions) {
+              this.$message.error('已发布的版本无法直接编辑，请修改版本号')
+              return false
+            }
             edit(this.ruleForm).then(() => {
               this.$notify({
                 title: '成功',

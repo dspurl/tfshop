@@ -278,7 +278,14 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-button style="margin: 10px 0 0 0;" type="success" round @click="addRelevanceTable">添加关联文件</el-button>
+      <el-button style="margin: 10px 0 20px 0;" type="success" round @click="addRelevanceTable">添加关联文件</el-button>
+      <el-form-item v-if="name" label="是否重置路由" prop="routes">
+        <el-switch
+          v-model="ruleForm.routes"
+          active-text="是"
+          inactive-text="否"/>
+        <p>重置后将会重新生成后台路由代码、后端路由代码、语言包路由代码</p>
+      </el-form-item>
       <el-form-item class="float-button">
         <el-button :loading="formLoading" type="primary" @click="submit">提交</el-button>
       </el-form-item>

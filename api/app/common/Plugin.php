@@ -227,7 +227,9 @@ class Plugin
                 }
             }
         }
-        $this->createRoutes($request, true);
+        if ($request->routes) {
+            $this->createRoutes($request, true);
+        }
         return '更新成功';
     }
 
@@ -1484,6 +1486,7 @@ class Plugin
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
+            'routes' => $request->routes
         ];
         file_put_contents($path . '/dsshop.json', json_encode($json));
     }
@@ -1517,6 +1520,7 @@ class Plugin
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
+            'routes' => $request->routes
         ];
         file_put_contents($path, json_encode($json));
     }
