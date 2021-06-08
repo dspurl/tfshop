@@ -1271,6 +1271,9 @@ class Plugin
             file_put_contents($targetPath, $content);
             unset($content);
             // 路由语言包
+            //去除已存在的插件代码
+            $file_get_lang_contents = preg_replace('/\/\/' . $request->name . '_s(.*?)\/\/' . $request->name . '_e/is', '', $file_get_lang_contents);
+            $file_get_lang_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_lang_contents);
             $file_get_lang_contents = str_replace("admin插件", $request->name . "_s
         " . $routesLang . "
         // " . $request->name . "_e
