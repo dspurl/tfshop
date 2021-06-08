@@ -151,12 +151,12 @@ class Plugin
             foreach ($request->db as $db) {
                 if ($db['data_table']) {
                     $this->createDBMigration($db, true);
+                    $this->createModels($db);
                 }
                 // 生成后端代码
                 if ($db['after_end']) {
                     $this->createController($db, 'admin');
                     $this->createController($db, 'client');
-                    $this->createModels($db);
                     $this->createRequests($db);
                 }
                 // 生成后台代码
@@ -204,11 +204,11 @@ class Plugin
                 if ($db['reset']) {
                     if ($db['data_table']) {
                         $this->createDBMigration($db, $db['reset']);
+                        $this->createModels($db);
                     }
                     if ($db['after_end']) {
                         $this->createController($db, 'admin');
                         $this->createController($db, 'client');
-                        $this->createModels($db);
                         $this->createRequests($db);
                     }
                     // 生成后台代码
@@ -1723,6 +1723,7 @@ class Plugin
         // 填充数据库迁移表内容
         $newContent = '';
         foreach ($db['attribute'] as $attribute) {
+            $length = '';
             // 如果字段存在ID，则直接添加主键
             if ($attribute['name'] == 'id') {
                 $newContent .= "
@@ -1735,17 +1736,19 @@ class Plugin
                 if ($attribute['attribute'] == 'UNSIGNED' && in_array($attribute['type'], $unsigned_type)) {
                     $attribute_type = 'unsigned' . $this->convertUnderline($attribute_type);
                 }
+                // 当设置了长度，且字段支持长度设置时
+                $length = '';
+                $length_type = ['char', 'string'];
+                if (in_array($attribute['type'], $length_type)) {
+                    $length = ',' . $attribute['length'];
+                }
                 $attribute_default = '';
                 if (isset($attribute['default'])) {
-                    if ($attribute['default'] == 'null') {
-                        $attribute_default = '->nullable()';
-                    } else {
-                        $attribute_default = '->default(\'' . $attribute['default'] . '\')';
-                    }
+                    $attribute_default = '->default(\'' . $attribute['default'] . '\')';
                 }
                 $attribute_nullable = $attribute['is_empty'] ? '->nullable()' : '';
                 $newContent .= "
-            \$table->$attribute_type('" . $attribute['name'] . "')" . $attribute_default . $attribute_nullable . "->comment('" . $attribute['annotation'] . "');";
+            \$table->$attribute_type('" . $attribute['name'] . "'" . $length . ")" . $attribute_default . $attribute_nullable . "->comment('" . $attribute['annotation'] . "');";
             }
         }
         if ($db['softDeletes'] == 1) {
