@@ -752,6 +752,7 @@ class Plugin
                 $routes['db'][] = [
                     'name' => $db['name'],
                     'annotation' => $db['annotation'],
+                    'jurisdiction' => $db['jurisdiction']
                 ];
             }
         }
@@ -923,22 +924,34 @@ class Plugin
                 'name' => '删除' . $db['annotation'],
             ]
         ];
+        $AuthGroupId = auth('api')->user()->AuthGroup->pluck('id');
+        $AuthRules = new AuthRule();
+        $AuthRules->api = $name;
+        $AuthRules->title = $db['annotation'];
+        $AuthRules->pid = 23;
+        $AuthRules->state = 1;
+        $AuthRules->sort = 0;
+        $AuthRules->save();
+        foreach ($AuthGroupId as $aid) {
+            AuthGroupAuthRule::insert([
+                'auth_group_id' => $aid,
+                'auth_rule_id' => $AuthRules->id,
+            ]);
+        }
         foreach ($apiArr as $a) {
             $AuthRule = new AuthRule();
             $AuthRule->api = $a['api'];
             $AuthRule->title = $a['name'];
-            $AuthRule->pid = 23;
+            $AuthRule->pid = $AuthRules->id;
             $AuthRule->state = $a['api'] == $name . 'List' ? 1 : 0;
             $AuthRule->sort = 0;
             $AuthRule->save();
-            $AuthGroupId = auth('api')->user()->AuthGroup->pluck('id');
             foreach ($AuthGroupId as $aid) {
                 AuthGroupAuthRule::insert([
                     'auth_group_id' => $aid,
                     'auth_rule_id' => $AuthRule->id,
                 ]);
             }
-
         }
     }
 
@@ -1124,6 +1137,7 @@ class Plugin
             }
         }
         // 生成list模板
+        $this->createFile('index.admin.ds', [], [], $path . '/index.vue');
         $this->createFile('list.admin.ds', ['/{{ name }}/', '/{{ list }}/'], [$name, $list], $path . '/list.vue');
         $this->createFile('list.admin.js.ds', ['/{{ name }}/', '/{{ api }}/'], [$name, $api], $path . '/js/list.js');
         $this->createFile('list.admin.scss.ds', [], [], $path . '/scss/list.scss');
@@ -1225,6 +1239,7 @@ class Plugin
         '" . $name . "Detail'=>'" . $db['annotation'] . "详情',
             ";
                     $permissionRoutes .= "
+  " . $names . ": () => import('@/views/ToolManagement/" . $names . "/index'),
   " . $names . "List: () => import('@/views/ToolManagement/" . $names . "/list'),
   " . $names . "Create: () => import('@/views/ToolManagement/" . $names . "/create'),
   " . $names . "Edit: () => import('@/views/ToolManagement/" . $names . "/edit'),
