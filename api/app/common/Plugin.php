@@ -561,7 +561,9 @@ class Plugin
         Artisan::call('migrate');
         if ($routes['db']) {
             foreach ($routes['db'] as $db) {
-                $this->createJurisdiction($db);
+                if ($db['jurisdiction']) {
+                    $this->createJurisdiction($db);
+                }
             }
         }
         return '操作成功';
