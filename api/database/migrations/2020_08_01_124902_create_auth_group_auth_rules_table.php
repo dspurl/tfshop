@@ -17,9 +17,6 @@ class CreateAuthGroupAuthRulesTable extends Migration
         Schema::create('auth_group_auth_rules', function (Blueprint $table) {
             $table->bigInteger('auth_group_id')->index();
             $table->bigInteger('auth_rule_id');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
         });
         DB::statement("ALTER TABLE `auth_group_auth_rules` COMMENT='权限组-权限关联表'");
     }

@@ -23,9 +23,6 @@ class CreateCategorysTable extends Migration
             $table->tinyInteger('is_recommend')->default(0)->comment('首页推荐0否1是');
             $table->softDeletes();
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `categorys` COMMENT='分类'");

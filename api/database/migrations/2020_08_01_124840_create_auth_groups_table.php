@@ -19,9 +19,6 @@ class CreateAuthGroupsTable extends Migration
             $table->string('introduction', 80);
             $table->timestamps();
             $table->unique('id');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
         });
     }
 

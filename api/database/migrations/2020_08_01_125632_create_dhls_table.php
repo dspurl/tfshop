@@ -23,9 +23,6 @@ class CreateDhlsTable extends Migration
             $table->integer('sort')->default(5)->comment('排序');
             $table->softDeletes();
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `dhls` COMMENT='快递公司'");

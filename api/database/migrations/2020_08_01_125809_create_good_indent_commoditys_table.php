@@ -24,9 +24,6 @@ class CreateGoodIndentCommoditysTable extends Migration
             $table->integer('price')->default(0)->comment('售价');
             $table->integer('number')->default(0)->comment('数量');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `good_indent_commoditys` COMMENT='订单商品'");

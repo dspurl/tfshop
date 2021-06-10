@@ -41,9 +41,6 @@ class CreateGoodsTable extends Migration
             $table->timestamp('time')->nullable()->comment('上架时间');
             $table->timestamp('timing')->nullable()->comment('定时上架时间');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `goods` COMMENT='商品'");

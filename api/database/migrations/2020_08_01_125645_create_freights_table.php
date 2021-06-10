@@ -21,9 +21,6 @@ class CreateFreightsTable extends Migration
             $table->text('pinkage')->comment('包邮地区JSON');
             $table->tinyInteger('valuation')->comment('计价方式');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `freights` COMMENT='运费模板'");

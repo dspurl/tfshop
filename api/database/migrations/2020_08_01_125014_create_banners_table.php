@@ -23,9 +23,6 @@ class CreateBannersTable extends Migration
             $table->tinyInteger('state')->default(0)->comment('是否显示0显示1隐藏');
             $table->timestamps();
             $table->unique('id');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
         });
         DB::statement("ALTER TABLE `banners` COMMENT='轮播'");
     }

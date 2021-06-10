@@ -21,9 +21,6 @@ class CreateMoneyLogsTable extends Migration
             $table->integer('money')->default(0)->comment('操作金额');
             $table->string('remark',300)->nullable()->comment('操作说明');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `money_logs` COMMENT='资金记录'");

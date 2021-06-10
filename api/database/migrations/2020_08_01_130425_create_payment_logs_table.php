@@ -28,9 +28,6 @@ class CreatePaymentLogsTable extends Migration
             $table->string('type',80)->nullable()->comment('支付类型标识');
             $table->string('platform',50)->nullable()->comment('支付平台');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `payment_logs` COMMENT='支付记录'");

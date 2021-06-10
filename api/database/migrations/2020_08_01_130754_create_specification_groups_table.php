@@ -19,9 +19,6 @@ class CreateSpecificationGroupsTable extends Migration
             $table->string('name',30)->comment('规格组名称');
             $table->softDeletes();
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `specification_groups` COMMENT='规格组'");

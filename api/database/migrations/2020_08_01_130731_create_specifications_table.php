@@ -26,9 +26,6 @@ class CreateSpecificationsTable extends Migration
             $table->integer('sort')->default(0)->comment('排序');
             $table->softDeletes();
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `specifications` COMMENT='规格'");

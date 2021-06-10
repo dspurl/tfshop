@@ -22,9 +22,6 @@ class CreateResourcesTable extends Migration
             $table->integer('image_id')->default(0);
             $table->string('image_type',200);
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `resources` COMMENT='资源'");

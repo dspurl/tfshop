@@ -22,9 +22,6 @@ class CreateNotificationLogsTable extends Migration
             $table->json('feedback')->nullable()->comment('反馈的信息');
             $table->tinyInteger('state')->default(1)->comment('状态1发送成功2失败');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `notification_logs` COMMENT='通知记录'");

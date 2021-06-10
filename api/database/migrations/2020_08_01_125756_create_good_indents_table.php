@@ -37,9 +37,6 @@ class CreateGoodIndentsTable extends Migration
             $table->tinyInteger('is_automatic_receiving')->default(0)->comment('自动确认收货1是0否');
             $table->timestamp('receiving_time')->nullable()->comment('收货时间');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `good_indents` COMMENT='订单'");

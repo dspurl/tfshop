@@ -24,9 +24,6 @@ class CreateGoodSkusTable extends Migration
             $table->text('product_sku')->comment('json商品规格');
             $table->softDeletes();
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `good_skus` COMMENT='商品SKU'");

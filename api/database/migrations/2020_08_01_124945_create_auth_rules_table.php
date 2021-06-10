@@ -23,9 +23,6 @@ class CreateAuthRulesTable extends Migration
             $table->tinyInteger('state')->default(0)->comment('是否显示在菜单栏，顶级类目不受此约束；1为显示0为隐藏');
             $table->integer('sort')->default(0)->comment('排序：同级有效');
             $table->unique('id');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
         });
     }
 

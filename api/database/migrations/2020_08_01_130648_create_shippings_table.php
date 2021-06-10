@@ -26,9 +26,6 @@ class CreateShippingsTable extends Migration
             $table->string('house',100)->comment('门牌号');
             $table->tinyInteger('defaults')->default(0)->comment('是否默认1是0否');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `shippings` COMMENT='收货人地址(和good_locations是1:N关系)'");

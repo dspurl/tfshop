@@ -22,9 +22,6 @@ class CreateUserLogsTable extends Migration
             $table->ipAddress('ip',30)->comment('IP');
             $table->text('input')->nullable()->comment('提交的数据');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `user_logs` COMMENT='用户记录'");

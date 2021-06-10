@@ -20,9 +20,6 @@ class CreateGoodSpecificationsTable extends Migration
             $table->bigInteger('specification_id')->default(0)->index()->comment('规格ID');
             $table->text('data')->nullable()->comment('值JSON');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `good_specifications` COMMENT='商品规格表'");

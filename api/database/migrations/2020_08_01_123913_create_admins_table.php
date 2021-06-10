@@ -26,9 +26,6 @@ class CreateAdminsTable extends Migration
             $table->timestamp('last_login_at')->nullable();
             $table->timestamps();
             $table->unique('id');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
         });
         DB::statement("ALTER TABLE `admins` COMMENT='管理员表'");
     }

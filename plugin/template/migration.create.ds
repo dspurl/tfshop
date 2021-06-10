@@ -15,9 +15,6 @@ class {{ class }} extends Migration
     {
         Schema::create('{{ table }}', function (Blueprint $table) {
             {{ field }}
-            $table->charset = 'utf8';
-            $table->engine = 'INNODB';
-            $table->collation = 'utf8_general_ci';
         });
         DB::statement("ALTER TABLE `{{ table }}` COMMENT='{{ annotation }}'");
     }

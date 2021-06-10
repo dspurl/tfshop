@@ -23,9 +23,6 @@ class CreateFreightWaysTable extends Migration
             $table->integer('add_cost')->default(0)->comment('续费');
             $table->text('location')->comment('送货到json');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `freight_ways` COMMENT='运送方式'");

@@ -20,9 +20,6 @@ class CreateSmsLogsTable extends Migration
             $table->string('phone',11)->comment('接收短信的手机号');
             $table->text('data')->nullable()->comment('返回数据');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `sms_logs` COMMENT='短信发送记录'");

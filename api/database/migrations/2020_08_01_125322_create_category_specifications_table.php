@@ -18,9 +18,6 @@ class CreateCategorySpecificationsTable extends Migration
             $table->id();
             $table->bigInteger('specification_id')->default(0)->index()->comment('规格ID');
             $table->bigInteger('category_id')->default(0)->index()->comment('分类ID	');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `category_specifications` COMMENT='分类规格中间表'");

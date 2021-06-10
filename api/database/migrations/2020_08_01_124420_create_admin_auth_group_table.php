@@ -16,9 +16,6 @@ class CreateAdminAuthGroupTable extends Migration
         Schema::create('admin_auth_group', function (Blueprint $table) {
             $table->bigInteger('admin_id')->index()->comment('权限组ID');
             $table->bigInteger('auth_group_id')->index()->comment('权限ID');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
         });
     }
 

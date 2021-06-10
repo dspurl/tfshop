@@ -23,9 +23,6 @@ class CreateAdminLogsTable extends Migration
             $table->text('input')->comment('提交的数据');
             $table->timestamps();
             $table->unique('id');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
         });
         DB::statement("ALTER TABLE `admin_logs` COMMENT='管理员记录'");
     }

@@ -25,9 +25,6 @@ class CreateGoodLocationsTable extends Migration
             $table->string('longitude',50)->comment('经度');
             $table->string('house',100)->comment('门牌号');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `good_locations` COMMENT='订单配送地址'");

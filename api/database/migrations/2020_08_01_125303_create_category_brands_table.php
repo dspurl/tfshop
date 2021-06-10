@@ -18,9 +18,6 @@ class CreateCategoryBrandsTable extends Migration
             $table->id();
             $table->bigInteger('category_id')->default(0)->index()->comment('分类ID');
             $table->bigInteger('brand_id')->default(0)->index()->comment('品牌ID');
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `category_brands` COMMENT='分类品牌中间表'");

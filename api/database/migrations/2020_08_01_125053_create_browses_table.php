@@ -19,9 +19,6 @@ class CreateBrowsesTable extends Migration
             $table->bigInteger('user_id')->index()->comment('用户ID');
             $table->bigInteger('good_id')->index()->comment('商品ID');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `browses` COMMENT='浏览记录'");

@@ -34,9 +34,6 @@ class CreateUsersTable extends Migration
             $table->string('minitoutiao',255)->nullable()->comment('字节跳动小程序openid');
             $table->json('notification')->nullable()->comment('用户通知接收状态');
             $table->timestamps();
-            $table->charset = 'utf8';
-            $table->engine = 'InnoDB';
-            $table->collation = 'utf8_general_ci';
             $table->unique('id');
         });
         DB::statement("ALTER TABLE `users` COMMENT='用户'");
