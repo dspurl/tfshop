@@ -185,10 +185,12 @@ class ShippingController extends Controller
             $carriage = 0;
             $list = [];
             foreach ($request->all() as $all) {
-                if (array_key_exists($all['good']['freight_id'], $list)) {
-                    $list[$all['good']['freight_id']] += $all['number'];
-                } else {
-                    $list[$all['good']['freight_id']] = $all['number'];
+                if (is_array($all)) {
+                    if (array_key_exists($all['good']['freight_id'], $list)) {
+                        $list[$all['good']['freight_id']] += $all['number'];
+                    } else {
+                        $list[$all['good']['freight_id']] = $all['number'];
+                    }
                 }
             }
             if ($value) {
