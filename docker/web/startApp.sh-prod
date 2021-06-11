@@ -1,0 +1,7 @@
+#!/bin/sh
+
+###### 生产环境使用 未经充分测试，请慎用 ########
+cd /src
+/usr/local/bin/npm install
+/usr/local/bin/npm run build
+/usr/local/bin/npm start
