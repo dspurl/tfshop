@@ -78,7 +78,7 @@ services:
     ports:
       - "3005:3005"
     volumes:
-      - ./web/:/src/
+      - ./client/nuxt-web/mi/:/src/
     # restart: on-failure
     networks:
       dsshop-network:
@@ -94,7 +94,7 @@ services:
     ports:
       - "3100:3100"
     volumes:
-      - ./admin/:/src/
+      - ./admin/vue2/element-admin-v3/:/src/
     # restart: on-failure
     networks:
       dsshop-network:
