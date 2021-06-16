@@ -190,7 +190,7 @@ npm install
 
 图标
 ------------
-> 图标部分是svg，部分使用iconfont，iconfont并未说明可以免费开源使用，如果需要在线运营，请自行更换图标
+> 图标部分是svg，部分使用iconfont，iconfont并未明确可以免费用于商业用途，版权归图标作者所有，如对版权有要求的，请自行更换图标
 - 后端使用svg图标，路径在`admin/src/icons/svg`，根据文件名可以看出图标用途
 - 前端使用了用了1个ttf图标文件(https://at.alicdn.com/t/font_1078604_w4kpxh0rafi.ttf)
 - 在App.vue中引用，用[百度字体编辑器](http://fontstore.baidu.com/static/editor/index.html)可以查看和编辑字体
