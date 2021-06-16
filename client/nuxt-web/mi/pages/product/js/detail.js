@@ -58,7 +58,8 @@ export default {
       title: this.goodDetail.name + '-' + process.env.APP_NAME,
       meta: [
         { hid: 'index', name: this.goodDetail.name + '-' + process.env.APP_NAME, content: this.goodDetail.keywords ? this.goodDetail.keywords : process.env.APP_KEYWORD },
-        { hid: 'description', name: 'description', content: this.goodDetail.short_description ? this.goodDetail.short_description : process.env.APP_DESCRIPTION }
+        { hid: 'description', name: 'description', content: this.goodDetail.short_description ? this.goodDetail.short_description : process.env.APP_DESCRIPTION },
+        { hid: 'keywords', name: 'keywords', content: this.goodDetail.keywords ? this.goodDetail.keywords : process.env.APP_KEYWORD }
       ]
     }
   },

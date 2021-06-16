@@ -46,7 +46,7 @@ export default {
       { hid: 'index', name: process.env.APP_NAME, content: process.env.APP_KEYWORD },
       { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
       { hid: 'description', name: 'description', content: process.env.APP_DESCRIPTION },
-      { hid: 'keyword', name: 'keyword', content: process.env.APP_KEYWORD }
+      { hid: 'keywords', name: 'keywords', content: process.env.APP_KEYWORD }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
