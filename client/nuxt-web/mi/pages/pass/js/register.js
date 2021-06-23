@@ -11,7 +11,7 @@ export default {
       if (value === '') {
         callback(new Error('请输入手机号'));
       } else {
-        const myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        const myreg = /^1[3456789]\d{9}$/;
         if (!myreg.test(value)) {
           callback(new Error('手机号格式有误'));
         }

@@ -59,10 +59,10 @@
 
 <script>
 	import Login from '../../api/login'
-	import {  
-        mapMutations  
+	import {
+        mapMutations
     } from 'vuex';
-	
+
 	export default{
 		data(){
 			return {
@@ -108,7 +108,7 @@
 					  this.$api.msg('手机号长度有误')
 					  return false;
 					}
-					var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+					var myreg = /^1[3456789]\d{9}$/;
 					if (!myreg.test(ruleForm.cellphone)) {
 					  this.$api.msg('手机号有误')
 					  return false
@@ -313,7 +313,7 @@
 			font-size: $font-base + 2upx;
 			color: $font-color-dark;
 			width: 100%;
-		}	
+		}
 	}
 
 	.confirm-btn{
