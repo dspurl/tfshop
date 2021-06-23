@@ -306,6 +306,7 @@ export default {
             item.reset = false
           }
         })
+        this.ruleForm.instructions = this.ruleForm.instructions ? this.ruleForm.instructions : ''
         this.ruleForm.routes = false
         this.versions = res.data.versions
       }).catch(() => {
@@ -544,8 +545,9 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           if (this.name) {
-            if (this.versions !== this.ruleForm.versions) {
+            if (this.ruleForm.publish && this.versions !== this.ruleForm.versions) {
               this.$message.error('已发布的版本无法直接编辑，请修改版本号')
+              this.formLoading = false
               return false
             }
             edit(this.ruleForm).then(() => {
