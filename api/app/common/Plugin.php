@@ -1032,10 +1032,12 @@ class Plugin
             ]
         ];
         $AuthGroupId = auth('api')->user()->AuthGroup->pluck('id');
+        // 获取权限名为工具的权限ID
+        $tool = AuthRule::where('title', '工具')->select('id')->first();
         $AuthRules = AuthRule::firstOrCreate([
             'api' => $name,
             'title' => $db['annotation'],
-            'pid' => 23,
+            'pid' => $tool->id,
             'state' => AuthRule::AUTH_RULE_STATE_ON,
             'sort' => 0
         ]);
