@@ -21,6 +21,7 @@ class AuthRule extends Model
     const AUTH_RULE_STATE_ON = 1;
     const AUTH_RULE_STATE_OFF = 0;
     protected $appends = ['state_show'];
+    protected $fillable = ['api', 'url', 'icon', 'title', 'pid', 'state', 'sort'];
 
     /**
      * Prepare a date for array / JSON serialization.

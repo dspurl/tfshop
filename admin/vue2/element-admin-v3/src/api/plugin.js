@@ -80,3 +80,11 @@ export function template(name) {
     method: 'GET'
   })
 }
+
+export function jurisdiction(data) {
+  return request({
+    url: 'plugin/jurisdiction/all',
+    method: 'POST',
+    data
+  })
+}

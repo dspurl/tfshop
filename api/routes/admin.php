@@ -96,6 +96,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('plugin/publish/{name}', 'PluginController@publish')->name('admin.plugInPublish')->middleware(['permissions:PlugInPublish']);    //插件发行
         Route::get('plugin/routes/{type}', 'PluginController@routes')->name('admin.plugInRoutes')->middleware(['permissions:PlugInRoutes']);    //获取路由列表
         Route::get('plugin/models/all', 'PluginController@models')->name('admin.plugInModels')->middleware(['permissions:PlugInModels']);    //获取模型列表
+        Route::post('plugin/jurisdiction/all', 'PluginController@jurisdiction')->name('admin.plugInJurisdiction')->middleware(['permissions:PlugInJurisdiction']);    //获取权限列表
         Route::get('plugin/template/{name}', 'PluginController@template')->name('admin.plugInTemplate')->middleware(['permissions:PlugInTemplate']);    //获取模板列表
         Route::post('plugin/uninstall/{name}', 'PluginController@uninstall')->name('admin.plugInUninstall')->middleware(['permissions:PlugInUninstall']);    //插件卸载
         Route::get('statistic/behavior', 'StatisticsController@behavior')->name('admin.behavior')->middleware(['permissions:StatisticsVisit']);    //使用分析

@@ -125,6 +125,52 @@ class Plugin
     }
 
     /**
+     * 获取所有的权限，去除已选中的
+     * @param array $arr //已选中的ID数组
+     * @return array
+     */
+    public function jurisdiction($arr = [])
+    {
+        if (count($arr) > 0) {
+            $arr = getsAllValues(json_decode(json_encode($arr), true), 'id');
+        }
+        $AuthRule = AuthRule::orderBy('pid', 'asc')->orderBy('sort', 'asc')->orderBy('id')->get();
+        $returnAuthRule = [];
+        foreach ($AuthRule as $a) {
+            if (count($arr) > 0) {
+                if (!in_array($a->id, $arr) || $a->pid == 0) {
+                    $returnAuthRule[] = array(
+                        'label' => $a->title,
+                        'value' => $a->id,
+                        'pid' => $a->pid,
+                        'id' => $a->id,
+                        'api' => $a->api,
+                        'url' => $a->url,
+                        'icon' => $a->icon,
+                        'title' => $a->title,
+                        'state' => $a->state,
+                        'sort' => $a->sort,
+                    );
+                }
+            } else {
+                $returnAuthRule[] = array(
+                    'label' => $a->title,
+                    'value' => $a->id,
+                    'pid' => $a->pid,
+                    'id' => $a->id,
+                    'api' => $a->api,
+                    'url' => $a->url,
+                    'icon' => $a->icon,
+                    'title' => $a->title,
+                    'state' => $a->state,
+                    'sort' => $a->sort,
+                );
+            }
+        }
+        return genTree($returnAuthRule, 'pid');
+    }
+
+    /**
      * 创建插件
      * @param Request $request
      * @return string
@@ -231,60 +277,6 @@ class Plugin
             $this->createRoutes($request, true);
         }
         return '更新成功';
-    }
-
-    /**
-     * 删除插件
-     * @param $name
-     * @return string
-     */
-    public function destroy($name)
-    {
-        if (file_exists($this->pluginListPath . '/' . $name . '/dsshop.json')) {
-            $path = json_decode(file_get_contents($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
-            if ($path['db']) {
-                foreach ($path['db'] as $db) {
-                    $names = $this->convertUnderline(rtrim($db['name'], 's'));
-                    $n = $this->convertUnderline(rtrim($db['name'], 's'), true);
-                    $this->fileDestroy($this->migrationsPath . '/' . $this->getLocalMigrations('create_' . $db['name'] . '_table'));
-                    $this->fileDestroy($this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Admin/' . $names . 'Controller.php');
-                    $this->fileDestroy($this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Client/' . $names . 'Controller.php');
-                    $this->fileDestroy($this->path . '/api/app/Models/v' . config('dsshop.versions') . '/' . $names . '.php');
-                    $this->fileDestroy($this->path . '/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $names . 'Request.php');
-                    $this->clearJurisdiction($db);
-                    //删除后台模板（目录移动过将不会进行删除）
-                    if (count($path['adminTemplate']) > 0) {
-                        foreach ($path['adminTemplate'] as $c) {
-                            $this->delDirAndFile($this->path . '/admin/' . $c . '/src/views/ToolManagement/' . $names, true);
-                            $this->fileDestroy($this->path . '/admin/' . $c . '/src/api/' . $n . '.js');
-                        }
-                    }
-                    //删除客户端模板（目录移动过将不会进行删除）
-                    if (count($path['clientTemplate']) > 0) {
-                        foreach ($path['clientTemplate'] as $c) {
-                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $n, true);
-                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/user/' . $n, true);
-                            $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $n . '.js');
-                        }
-                    }
-                }
-            }
-            // 观察者
-            if ($path['observer']) {
-                foreach ($path['observer'] as $observer) {
-                    $this->removeObserver($observer);
-                }
-            }
-            // 关联的文件
-            if ($path['relevance']) {
-                foreach ($path['relevance'] as $relevance) {
-                    $this->fileDestroy($this->path . '/' . $relevance['file']);
-                }
-            }
-            $this->removeRoutes($path['name'], $path);
-            $this->delDirAndFile($this->pluginListPath . '/' . $name, true);
-            return '删除成功';
-        }
     }
 
     /**
@@ -559,16 +551,68 @@ class Plugin
         }
         file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
         Artisan::call('migrate');
-        if ($routes['db']) {
-            foreach ($routes['db'] as $db) {
-                if ($db['jurisdiction']) {
-                    $this->createJurisdiction($db);
-                }
-            }
+        // 生成权限
+        if (count($routes['packagingJurisdiction']) > 0) {
+            $routes['packagingJurisdiction'] = $this->installPermissions($routes['packagingJurisdiction']);
+            file_put_contents($path . '/routes.json', json_encode($routes));
         }
         return '操作成功';
     }
 
+    /**
+     * 删除插件
+     * @param $name
+     * @return string
+     */
+    public function destroy($name)
+    {
+        if (file_exists($this->pluginListPath . '/' . $name . '/dsshop.json')) {
+            $path = json_decode(file_get_contents($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
+            if ($path['db']) {
+                foreach ($path['db'] as $db) {
+                    $names = $this->convertUnderline(rtrim($db['name'], 's'));
+                    $n = $this->convertUnderline(rtrim($db['name'], 's'), true);
+                    $this->fileDestroy($this->migrationsPath . '/' . $this->getLocalMigrations('create_' . $db['name'] . '_table'));
+                    $this->fileDestroy($this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Admin/' . $names . 'Controller.php');
+                    $this->fileDestroy($this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Client/' . $names . 'Controller.php');
+                    $this->fileDestroy($this->path . '/api/app/Models/v' . config('dsshop.versions') . '/' . $names . '.php');
+                    $this->fileDestroy($this->path . '/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $names . 'Request.php');
+                    $this->clearJurisdiction($db);
+                    //删除后台模板（目录移动过将不会进行删除）
+                    if (count($path['adminTemplate']) > 0) {
+                        foreach ($path['adminTemplate'] as $c) {
+                            $this->delDirAndFile($this->path . '/admin/' . $c . '/src/views/ToolManagement/' . $names, true);
+                            $this->fileDestroy($this->path . '/admin/' . $c . '/src/api/' . $n . '.js');
+                        }
+                    }
+                    //删除客户端模板（目录移动过将不会进行删除）
+                    if (count($path['clientTemplate']) > 0) {
+                        foreach ($path['clientTemplate'] as $c) {
+                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $n, true);
+                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/user/' . $n, true);
+                            $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $n . '.js');
+                        }
+                    }
+                }
+
+            }
+            // 观察者
+            if ($path['observer']) {
+                foreach ($path['observer'] as $observer) {
+                    $this->removeObserver($observer);
+                }
+            }
+            // 关联的文件
+            if ($path['relevance']) {
+                foreach ($path['relevance'] as $relevance) {
+                    $this->fileDestroy($this->path . '/' . $relevance['file']);
+                }
+            }
+            $this->removeRoutes($path['name'], $path);
+            $this->delDirAndFile($this->pluginListPath . '/' . $name, true);
+            return '删除成功';
+        }
+    }
 
     /**
      * 卸载插件
@@ -588,10 +632,15 @@ class Plugin
         if (!file_exists($dsshop)) {
             throw new \Exception('插件缺少dsshop.json文件', Code::CODE_PARAMETER_WRONG);
         }
-        Artisan::call('migrate:rollback');
+
         $dsshop = json_decode(file_get_contents($dsshop), true);
         $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
         $routes = json_decode(file_get_contents($routes), true);
+        // 删除权限
+        if (count($routes['packagingJurisdiction']) > 0) {
+            $this->uninstallJurisdiction($routes['packagingJurisdiction']);
+        }
+        Artisan::call('migrate:rollback');
         //去除API路由
         $targetPath = $this->path . '/api/routes/plugin.php';
         $file_get_contents = file_get_contents($targetPath);
@@ -679,6 +728,63 @@ class Plugin
     }
 
     /**
+     * 安装权限
+     * @param $jurisdiction //权限
+     * @return mixed
+     */
+    protected function installPermissions(&$jurisdiction)
+    {
+        $AuthGroupId = auth('api')->user()->AuthGroup->pluck('id');
+        foreach ($jurisdiction as $id => &$j) {
+            $AuthRules = AuthRule::firstOrCreate([
+                'api' => $j['api'],
+                'url' => $j['url'] ? $j['url'] : '',
+                'icon' => $j['icon'],
+                'title' => $j['title'],
+                'pid' => $j['pid'],
+                'state' => $j['state'] ? AuthRule::AUTH_RULE_STATE_ON : AuthRule::AUTH_RULE_STATE_OFF,
+                'sort' => $j['sort'] ? $j['sort'] : 0
+            ]);
+            $jurisdiction[$id]['id'] = $AuthRules->id;
+            foreach ($AuthGroupId as $aid) {
+                AuthGroupAuthRule::firstOrCreate([
+                    'auth_group_id' => $aid,
+                    'auth_rule_id' => $AuthRules->id,
+                ]);
+            }
+            if (array_key_exists("children", $j)) {
+                $this->installPermissions($j['children']);
+            }
+        }
+        return $jurisdiction;
+    }
+
+    /**
+     * 卸载权限
+     * @param $jurisdiction //已安装的权限
+     */
+    protected function uninstallJurisdiction($jurisdiction)
+    {
+        $AuthGroupId = auth('api')->user()->AuthGroup->pluck('id');
+        foreach ($jurisdiction as $j) {
+            if ($j['pid'] != 0) {
+                $AuthRules = AuthRule::find($j['id']);
+                foreach ($AuthGroupId as $aid) {
+                    AuthGroupAuthRule::where([
+                        'auth_group_id' => $aid,
+                        'auth_rule_id' => $AuthRules->id,
+                    ])->delete();
+                }
+                AuthRule::where('id', $AuthRules->id)->delete();
+            }
+            if (array_key_exists("children", $j)) {
+                $this->uninstallJurisdiction($j['children']);
+            }
+        }
+    }
+
+
+    /**
      * 打包路由
      * @param $request
      */
@@ -756,6 +862,8 @@ class Plugin
                 ];
             }
         }
+        // 权限
+        $routes['packagingJurisdiction'] = $request['packagingJurisdiction'];
         // 生成routes.json
         if (!file_exists($routesPath)) {
             fopen($routesPath, 'w+');
@@ -901,7 +1009,6 @@ class Plugin
     protected function createJurisdiction($db)
     {
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
-        $this->clearJurisdiction($db);
         $apiArr = [
             [
                 'api' => $name . 'List',
@@ -925,29 +1032,29 @@ class Plugin
             ]
         ];
         $AuthGroupId = auth('api')->user()->AuthGroup->pluck('id');
-        $AuthRules = new AuthRule();
-        $AuthRules->api = $name;
-        $AuthRules->title = $db['annotation'];
-        $AuthRules->pid = 23;
-        $AuthRules->state = 1;
-        $AuthRules->sort = 0;
-        $AuthRules->save();
+        $AuthRules = AuthRule::firstOrCreate([
+            'api' => $name,
+            'title' => $db['annotation'],
+            'pid' => 23,
+            'state' => AuthRule::AUTH_RULE_STATE_ON,
+            'sort' => 0
+        ]);
         foreach ($AuthGroupId as $aid) {
-            AuthGroupAuthRule::insert([
+            AuthGroupAuthRule::firstOrCreate([
                 'auth_group_id' => $aid,
                 'auth_rule_id' => $AuthRules->id,
             ]);
         }
         foreach ($apiArr as $a) {
-            $AuthRule = new AuthRule();
-            $AuthRule->api = $a['api'];
-            $AuthRule->title = $a['name'];
-            $AuthRule->pid = $AuthRules->id;
-            $AuthRule->state = $a['api'] == $name . 'List' ? 1 : 0;
-            $AuthRule->sort = 0;
-            $AuthRule->save();
+            $AuthRule = AuthRule::firstOrCreate([
+                'api' => $a['api'],
+                'title' => $a['name'],
+                'pid' => $AuthRules->id,
+                'state' => $a['api'] == $name . 'List' ? AuthRule::AUTH_RULE_STATE_ON : AuthRule::AUTH_RULE_STATE_OFF,
+                'sort' => 0
+            ]);
             foreach ($AuthGroupId as $aid) {
-                AuthGroupAuthRule::insert([
+                AuthGroupAuthRule::firstOrCreate([
                     'auth_group_id' => $aid,
                     'auth_rule_id' => $AuthRule->id,
                 ]);
@@ -1500,6 +1607,7 @@ class Plugin
             'local' => true,
             'clientTemplate' => $request->clientTemplate,
             'adminTemplate' => $request->adminTemplate,
+            'packagingJurisdiction' => $request->packagingJurisdiction,
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
@@ -1534,6 +1642,7 @@ class Plugin
             'local' => true,
             'clientTemplate' => $request->clientTemplate,
             'adminTemplate' => $request->adminTemplate,
+            'packagingJurisdiction' => $request->packagingJurisdiction,
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,

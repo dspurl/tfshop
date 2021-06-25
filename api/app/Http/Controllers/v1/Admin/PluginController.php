@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\common\Plugin;
+use App\Models\v1\AuthRule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -56,8 +57,7 @@ class PluginController extends Controller
      */
     public function details($name)
     {
-        $Json = (new Plugin())->details($name);
-        return resReturn(1, $Json);
+        return resReturn(1, (new Plugin())->details($name));
     }
 
     /**
@@ -189,5 +189,16 @@ class PluginController extends Controller
     public function template($name)
     {
         return resReturn(1, (new Plugin())->template($name));
+    }
+
+    /**
+     * Get all jurisdiction
+     * 获取所有权限
+     * @param Request $request
+     * @return string
+     */
+    public function jurisdiction(Request $request)
+    {
+        return resReturn(1, (new Plugin())->jurisdiction($request->input('packagingJurisdiction', [])));
     }
 }

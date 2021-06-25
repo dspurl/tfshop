@@ -1,11 +1,13 @@
-import { create, details, edit, routes, models, template } from '@/api/plugin'
+import { create, details, edit, routes, models, template, jurisdiction } from '@/api/plugin'
 import Sortable from 'sortablejs'
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
+import treeTransfer from 'el-tree-transfer'
 export default {
   name: 'PluginDetail',
   components: {
-    mavonEditor
+    mavonEditor,
+    treeTransfer
   },
   props: {
     isEdit: {
@@ -69,6 +71,7 @@ export default {
         describe: '',
         versions: '',
         relevance: [],
+        packagingJurisdiction: [],
         routes: false
       },
       rules: {
@@ -261,13 +264,19 @@ export default {
           img: ['src', 'alt', 'width', 'height']
         },
         stripIgnoreTagBody: true
-      }
+      },
+      fromData: [],
+      oldFromData: [],
+      toData: [],
+      mode: 'transfer'
     }
   },
   created() {
     if (this.isEdit) {
       this.name = this.$route.query.name
       this.details()
+    } else {
+      this.getJurisdiction()
     }
     this.getRoutes()
     this.getModels()
@@ -291,6 +300,13 @@ export default {
         this.models = res.data
       })
     },
+    // 获取所有权限
+    getJurisdiction() {
+      const packagingJurisdiction = this.ruleForm.packagingJurisdiction ? this.ruleForm.packagingJurisdiction : []
+      jurisdiction({ packagingJurisdiction: packagingJurisdiction }).then((res) => {
+        this.fromData = res.data
+      })
+    },
     // 获取可执行路由
     getRoutes() {
       routes().then((res) => {
@@ -307,8 +323,11 @@ export default {
           }
         })
         this.ruleForm.instructions = this.ruleForm.instructions ? this.ruleForm.instructions : ''
+        this.ruleForm.packagingJurisdiction = this.ruleForm.packagingJurisdiction ? this.ruleForm.packagingJurisdiction : []
+        this.toData = this.ruleForm.packagingJurisdiction
         this.ruleForm.routes = false
         this.versions = res.data.versions
+        this.getJurisdiction()
       }).catch(() => {
         this.formLoading = false
       })
@@ -578,6 +597,16 @@ export default {
           this.formLoading = false
         }
       })
+    },
+    // 监听穿梭框组件添加
+    add(fromData, toData, obj) {
+      this.ruleForm.packagingJurisdiction = toData
+      this.$forceUpdate()
+    },
+    // 监听穿梭框组件移除
+    remove(fromData, toData, obj) {
+      this.ruleForm.packagingJurisdiction = toData
+      this.$forceUpdate()
     }
   }
 }

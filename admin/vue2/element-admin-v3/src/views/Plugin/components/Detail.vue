@@ -286,6 +286,27 @@
           inactive-text="否"/>
         <p>重置后将会重新生成后台路由代码、后端路由代码、语言包路由代码</p>
       </el-form-item>
+      <el-form-item v-if="name" label="打包权限" prop="packagingJurisdiction">
+        <tree-transfer
+          :from_data="fromData"
+          :to_data="toData"
+          :default-props="{label:'label'}"
+          :title="['未分配', '已分配']"
+          mode="transfer"
+          placeholder="请输入关键词进行筛选"
+          height="500px"
+          filter
+          open-all
+          style="width: 800px"
+          @addBtn="add"
+          @removeBtn="remove"/>
+        <div class="tip">
+          <p>1、如果有设计到后台权限，请配置此处，不然则无需配置</p>
+          <p>2、插件权限在卸载的时候，不会对一级权限进行删除，如需要删除，请通过权限管理自行手动删除</p>
+          <p>3、配置打包插件所需要的权限，配置后的权限在用户安装插件时会根据该权限进行添加</p>
+          <p>4、打包权限为最终插件所需权限，请确保配置正常，不然将导致用户安装插件后无法正常使用插件</p>
+        </div>
+      </el-form-item>
       <el-form-item class="float-button">
         <el-button :loading="formLoading" type="primary" @click="submit">提交</el-button>
       </el-form-item>

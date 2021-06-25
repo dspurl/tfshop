@@ -53,6 +53,25 @@ function genTree($items, $pid = "pid", $son = "children")
 }
 
 /**
+ * 获取多维数组中所有指定键的值，
+ * @param array $items 数据源
+ * @param string $key 键名
+ * @param string $son 子类键名
+ * @param array $data
+ * @return array
+ */
+function getsAllValues($items, $key, $son = "children", $data = [])
+{
+    foreach ($items as $i) {
+        $data[] = $i[$key];
+        if (array_key_exists($son, $i)) {
+            return getsAllvalues($i[$son], $key, $son, $data);
+        }
+    }
+    return $data;
+}
+
+/**
  * 获取所有子级及同父级数据
  * @param array $items 数据源
  * @param array $map 当前的id
