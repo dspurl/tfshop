@@ -1786,7 +1786,7 @@ class Plugin
                 $attribute .= '
             $' . $this->convertUnderline(rtrim($db['name'], 's')) . '->' . $a['name'] . ' = $request->' . $a['name'] . ';';
                 $queryParam .= '
-            * @queryParam  ' . $a['name'] . ' ' . $this->casting[$a['type']] . ' ' . $a['annotation'] . '';
+     * @queryParam  ' . $a['name'] . ' ' . $this->casting[$a['type']] . ' ' . $a['annotation'] . '';
             }
             $content = preg_replace([
                 '/{{ versions }}/',
