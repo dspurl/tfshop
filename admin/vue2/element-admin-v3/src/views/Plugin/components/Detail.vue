@@ -629,7 +629,6 @@
               :label="item"
               :value="item"/>
           </el-select>
-          <div>为空即不允许路由执行</div>
         </el-form-item>
         <el-form-item label="可执行路由" prop="path">
           <el-select v-model="observerTemp.path" placeholder="请选择" clearable filterable multiple>
