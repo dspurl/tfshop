@@ -322,6 +322,11 @@ export default {
             item.reset = false
           }
         })
+        this.ruleForm.observer.forEach(item => {
+          if (item.reset) {
+            item.reset = false
+          }
+        })
         this.ruleForm.instructions = this.ruleForm.instructions ? this.ruleForm.instructions : ''
         this.ruleForm.packagingJurisdiction = this.ruleForm.packagingJurisdiction ? this.ruleForm.packagingJurisdiction : []
         this.toData = this.ruleForm.packagingJurisdiction

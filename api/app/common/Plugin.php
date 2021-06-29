@@ -976,7 +976,7 @@ class Plugin
                 throw new \Exception('可执行路由格式错误', Code::CODE_INEXISTENCE);
             }
             $route .= "
-        '" . 'app' . $routeName[1] . "',
+        '" . 'app' . preg_replace('/\/{(.*?)}/', '', $routeName[1]) . "',
             ";
             unset($routeName);
         }
