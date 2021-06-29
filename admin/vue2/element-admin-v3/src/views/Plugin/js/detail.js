@@ -375,10 +375,27 @@ export default {
     // 添加观察者
     addObserverTable() {
       this.dialogObserver = true
+      this.observerTemp = {
+        name: '',
+        models: '',
+        path: '',
+        explain: '',
+        reset: false
+      }
+      this.$nextTick(() => {
+        this.$refs['observerForm'].clearValidate()
+      })
     },
     // 添加关联文件
     addRelevanceTable() {
       this.dialogRelevance = true
+      this.relevanceTemp = {
+        file: '',
+        explain: ''
+      }
+      this.$nextTick(() => {
+        this.$refs['relevanceForm'].clearValidate()
+      })
     },
     // 添加数据表
     addDataTable() {

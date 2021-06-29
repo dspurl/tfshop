@@ -128,6 +128,7 @@ class PluginController extends Controller
      * 获取所有路由列表
      * @param $type // 类型：all为全部，no_get为除get请求外
      * @return string
+     * @throws \Exception
      */
     public function routes($type)
     {
@@ -139,6 +140,9 @@ class PluginController extends Controller
                 if ($value->action['prefix'] && !in_array($value->action['prefix'], ['oauth'])) {
                     if ($type == 'no_get') {
                         if ($value->methods[0] != 'GET') {
+                            if(!array_key_exists('as',$value->action)){
+                                throw new \Exception('请配置修改后的路由语言包', Code::CODE_PARAMETER_WRONG);
+                            }
                             $path[$k] = [
                                 'uri' => $value->uri,
                                 'path' => $value->methods[0],
