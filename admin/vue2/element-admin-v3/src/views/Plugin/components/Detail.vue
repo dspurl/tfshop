@@ -251,8 +251,7 @@
         style="width: 100%">
         <el-table-column
           prop="file"
-          label="文件"
-          width="500">
+          label="文件">
           <template slot-scope="scope">
             {{ scope.row.file }}
           </template>
