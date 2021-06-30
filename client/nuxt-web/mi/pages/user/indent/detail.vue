@@ -86,7 +86,7 @@
           width="150"
           align="center">
           <template slot-scope="scope">
-            {{scope.row.good_sku.inventory}}
+            {{scope.row.number}}
           </template>
         </el-table-column>
         <el-table-column
