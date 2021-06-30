@@ -173,7 +173,7 @@
 				await GoodIndent.getList({
 					limit: 5,
 					page: this.page,
-					index: index,
+					index: state,
 					sort: '+created_at',
 					startTime: this.details.startTime,
 					endTime: this.details.endTime,
