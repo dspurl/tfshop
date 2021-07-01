@@ -23,7 +23,7 @@ export default {
     };
     return {
       loading: true,
-      buttonLoading: false,
+      buttonLoading: true,
       total: 0,
       ruleForm: {
         indentCommodity: [],
@@ -63,9 +63,11 @@ export default {
     },
     // 选择的地址
     selectedAddress(res){
+      this.buttonLoading = true;
       this.ruleForm.address = res
       freight(res.id, this.ruleForm.indentCommodity).then(response => {
         this.ruleForm.carriage = response.carriage
+        this.buttonLoading = false;
       })
     },
     // 提交订单
