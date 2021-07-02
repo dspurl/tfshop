@@ -730,9 +730,11 @@ class Plugin
     /**
      * 安装权限
      * @param $jurisdiction //权限
+     * @param $old // 旧的pid
+     * @param $new // 新的pid
      * @return mixed
      */
-    protected function installPermissions(&$jurisdiction)
+    protected function installPermissions(&$jurisdiction, $old = 0, $new = 0)
     {
         $AuthGroupId = auth('api')->user()->AuthGroup->pluck('id');
         foreach ($jurisdiction as $id => &$j) {
@@ -741,7 +743,7 @@ class Plugin
                 'url' => $j['url'] ? $j['url'] : '',
                 'icon' => $j['icon'],
                 'title' => $j['title'],
-                'pid' => $j['pid'],
+                'pid' => $j['pid'] == $old ? $old : $new,
                 'state' => $j['state'] ? AuthRule::AUTH_RULE_STATE_ON : AuthRule::AUTH_RULE_STATE_OFF,
                 'sort' => $j['sort'] ? $j['sort'] : 0
             ]);
@@ -753,7 +755,7 @@ class Plugin
                 ]);
             }
             if (array_key_exists("children", $j)) {
-                $this->installPermissions($j['children']);
+                $this->installPermissions($j['children'], $j['pid'], $AuthRules->id);
             }
         }
         return $jurisdiction;
