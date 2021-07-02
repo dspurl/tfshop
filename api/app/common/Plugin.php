@@ -550,12 +550,12 @@ class Plugin
             );
         }
         file_put_contents($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
-        Artisan::call('migrate');
         // 生成权限
         if (count($routes['packagingJurisdiction']) > 0) {
             $routes['packagingJurisdiction'] = $this->installPermissions($routes['packagingJurisdiction']);
             file_put_contents($path . '/routes.json', json_encode($routes));
         }
+        Artisan::call('migrate');
         return '操作成功';
     }
 
