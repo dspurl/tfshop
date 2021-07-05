@@ -493,9 +493,9 @@ export default {
         }
       })
     },
-    // 删除索引
+    // 删除表
     deleteDataTable(index) {
-      const title = '是否确认删除该索引?'
+      const title = '是否确认删除该表?'
       const win = '删除成功'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
