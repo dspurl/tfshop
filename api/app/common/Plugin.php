@@ -216,7 +216,9 @@ class Plugin
                 }
                 // 生成权限
                 if ($db['jurisdiction']) {
-                    $this->createJurisdiction($db);
+                    if ($db['backstage']) {
+                        $this->createJurisdiction($db);
+                    }
                 }
             }
         }
@@ -268,7 +270,9 @@ class Plugin
                     }
                     // 生成权限
                     if ($db['jurisdiction']) {
-                        $this->createJurisdiction($db);
+                        if ($db['backstage']) {
+                            $this->createJurisdiction($db);
+                        }
                     }
                 }
             }
