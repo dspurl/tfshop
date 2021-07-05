@@ -1207,9 +1207,9 @@ class Plugin
                                 break;
                             case 'timestamp':
                                 $detail .= '
-      <el-form-item label="' . $annotation . '" prop=".' . $a['name'] . '">
+      <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '">
         <el-date-picker
-          v-model="ruleForm..' . $a['name'] . '"
+          v-model="ruleForm.' . $a['name'] . '"
           type="date"
           placeholder="选择日期时间"
           align="right"
