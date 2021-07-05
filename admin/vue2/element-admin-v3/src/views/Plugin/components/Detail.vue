@@ -85,7 +85,7 @@
           label="软删除"
           width="80">
           <template slot-scope="scope">
-            {{ scope.row.annotation ? '支持' : '不支持' }}
+            {{ scope.row.softDeletes ? '支持' : '不支持' }}
           </template>
         </el-table-column>
         <el-table-column
