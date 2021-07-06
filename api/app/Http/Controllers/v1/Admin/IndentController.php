@@ -38,6 +38,7 @@ class IndentController extends Controller
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
         $q = GoodIndent::query();
+        $q->withTrashed();
         if ($request->activeIndex) {
             if ($request->activeIndex == 7) {
                 $q->whereRaw('(state=7 OR state=8)');
@@ -83,7 +84,7 @@ class IndentController extends Controller
     {
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
-        $GoodIndent = GoodIndent::with(['goodsList' => function ($q) {
+        $GoodIndent = GoodIndent::withTrashed()->with(['goodsList' => function ($q) {
             $q->with(['goodSku', 'Good' => function ($q) {
                 $q->select('id', 'identification', 'number');
             }]);
