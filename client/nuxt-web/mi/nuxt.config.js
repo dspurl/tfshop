@@ -71,6 +71,7 @@ export default {
     '@/plugins/filter.js',
     '@/plugins/store',
     '@/plugins/global',
+    '@/plugins/vue-moment',
     { src: '@/plugins/videoPlayer.js', ssr: false }
   ],
 
