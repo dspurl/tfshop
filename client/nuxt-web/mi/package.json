@@ -1,6 +1,6 @@
 {
   "name": "dsshop",
-  "version": "2.1.1",
+  "version": "2.2.0",
   "private": true,
   "scripts": {
     "dev": "nuxt",
@@ -26,6 +26,7 @@
     "qrcode": "^1.4.4",
     "store": "^2.0.12",
     "vue": "^2.6.12",
+    "vue-moment": "^4.1.0",
     "vue-video-player": "^5.0.2"
   },
   "devDependencies": {
