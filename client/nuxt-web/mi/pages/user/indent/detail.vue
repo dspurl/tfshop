@@ -152,7 +152,7 @@
       <div class="right">
         <div class="li">
           <div class="name">商品总价：</div>
-          <div class="value">{{indent.total | thousands}}元</div>
+          <div class="value">{{total | thousands}}元</div>
         </div>
         <div class="li">
           <div class="name">运费：</div>
