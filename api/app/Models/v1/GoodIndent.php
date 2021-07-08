@@ -100,9 +100,8 @@ class GoodIndent extends Model
     public function getStateShowAttribute()
     {
         if (isset($this->attributes['state'])) {
-            if (self::$withoutAppends) {
-                $return = '';
-            } else {
+            $return = '';
+            if (!self::$withoutAppends) {
                 switch ($this->attributes['state']) {
                     case static::GOOD_INDENT_STATE_PAY:
                         $return = '待付款';
