@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\v{{ versions }}\Plugin\Admin;
 
+use App\Code;
 use App\Http\Requests\v{{ versions }}\Submit{{ name }}Request;
 use App\Models\v{{ versions }}\{{ name }};
 use App\Models\v{{ versions }}\Resource;
@@ -102,19 +103,23 @@ class {{ name }}Controller extends Controller
      * {{ name }}Destroy
      * {{ annotation }}删除
      * @param int $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
      * @queryParam  id int {{ annotation }}ID
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $return = DB::transaction(function () use ($id) {
-            {{ name }}::destroy($id);
-            return 1;
+        DB::transaction(function () use ($request, $id) {
+            if ($id > 0) {
+                {{ name }}::destroy($id);
+            } else {
+                if (!$request->all()) {
+                    throw new \Exception('请选择内容', Code::CODE_WRONG);
+                }
+                $idData = collect($request->all())->pluck('id');
+                {{ name }}::destroy($idData);
+            }
         }, 5);
-        if ($return == 1) {
-            return resReturn(1, '删除成功');
-        } else {
-            return resReturn(0, $return[0], $return[1]);
-        }
+        return resReturn(1, '删除成功');
     }
 }
