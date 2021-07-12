@@ -11,6 +11,7 @@ return [
     'admin' => [
         'login' => '登录',
         'updateLogin' => '登录更新',
+        'plugInDownload' => '插件下载',
         'uploadPictures' => '上传',
         'userInfo' => '用户详情',
         'index' => '首页展示',

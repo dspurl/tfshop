@@ -139,13 +139,13 @@ class PluginController extends Controller
             if (array_key_exists('prefix', $value->action)) {
                 if ($value->action['prefix'] && !in_array($value->action['prefix'], ['oauth'])) {
                     if ($type == 'no_get') {
-                        if ($value->methods[0] != 'GET') {
-                            if(!array_key_exists('as',$value->action)){
+                        if (count($value->methods) != 1 || $value->methods[0] != 'GET') {
+                            if (!array_key_exists('as', $value->action)) {
                                 throw new \Exception('请配置修改后的路由语言包', Code::CODE_PARAMETER_WRONG);
                             }
                             $path[$k] = [
                                 'uri' => $value->uri,
-                                'path' => $value->methods[0],
+                                'path' => implode(",", $value->methods),
                                 'name' => explode('@', $value->action['controller'])[1],
                                 'explain' => __('route.' . $value->action['as']),
                             ];
@@ -153,7 +153,7 @@ class PluginController extends Controller
                     } else {
                         $path[$k] = [
                             'uri' => $value->uri,
-                            'path' => $value->methods[0],
+                            'path' => implode(",", $value->methods),
                             'name' => explode('@', $value->action['controller'])[1],
                             'explain' => __('route.' . $value->action['as']),
                         ];
