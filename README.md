@@ -19,6 +19,7 @@
 更新说明
 ------------
 2.2.0不对online分支进行升级，online分支和线上演示还是基于2.1.1，接下去的工作主要是开发dsshop官网，以便后续开发者可以直接通过dsshop进行在线插件安装和上传
+
 说明
 ------------
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
