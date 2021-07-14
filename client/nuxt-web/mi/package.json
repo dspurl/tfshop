@@ -19,7 +19,7 @@
     "@nuxtjs/style-resources": "^1.0.0",
     "core-js": "^3.8.3",
     "cross-env": "^7.0.3",
-    "dotenv": "^8.2.0",
+    "dotenv": "^10.0.0",
     "element-ui": "^2.15.0",
     "js-cookie": "^2.2.1",
     "nuxt": "^2.14.12",
@@ -32,9 +32,9 @@
   "devDependencies": {
     "@vue/test-utils": "^1.1.2",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^26.6.3",
-    "jest": "^26.6.3",
-    "node-sass": "^5.0.0",
+    "babel-jest": "^27.0.6",
+    "jest": "^27.0.6",
+    "node-sass": "^6.0.1",
     "sass-loader": "^10.1.1",
     "vue-jest": "^3.0.4"
   }
