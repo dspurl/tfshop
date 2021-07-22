@@ -36,6 +36,7 @@
         "beyondcode/laravel-dump-server": "^1.0",
         "filp/whoops": "^2.0",
         "mockery/mockery": "^1.0",
+        "mpociot/laravel-apidoc-generator": "^4.8",
         "nunomaduro/collision": "^4.1",
         "slevomat/coding-standard": "^6.4",
         "squizlabs/php_codesniffer": "^3.5"
