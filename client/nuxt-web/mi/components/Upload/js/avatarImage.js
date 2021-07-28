@@ -50,20 +50,16 @@ export default{
     },
     // 图片列表图片格式大小验证
     beforeUploadList(file) {
-      const isLt2M = file.size < this.imgData.size
+      const isLt = file.size < this.imgData.size
       if (
-        ['image/jpeg',
-          'image/gif',
-          'image/png',
-          'image/bmp'
-        ].indexOf(file.type) === -1) {
+        this.format.indexOf(file.type) === -1) {
         this.$message.error('请上传正确的文件格式')
         return false
       }
-      if (!isLt2M) {
+      if (!isLt) {
         this.$message.error('上传文件大小不能超过 ' + file.size / 1024 / 1024 + 'MB!')
       }
-      return isLt2M
+      return isLt
     },
   },
 }
