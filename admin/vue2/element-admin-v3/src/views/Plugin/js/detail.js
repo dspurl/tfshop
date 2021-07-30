@@ -354,6 +354,7 @@ export default {
     // 增加索引
     addDBIndexes() {
       this.dialogIndexes = true
+      this.dialogIndexesIndex = ''
       this.indexesTemp = {
         name: '',
         type: '',
@@ -380,6 +381,7 @@ export default {
     // 添加观察者
     addObserverTable() {
       this.dialogObserver = true
+      this.dialogObserverIndex = ''
       this.observerTemp = {
         name: '',
         models: '',
@@ -394,6 +396,7 @@ export default {
     // 添加关联文件
     addRelevanceTable() {
       this.dialogRelevance = true
+      this.dialogRelevanceIndex = ''
       this.relevanceTemp = {
         file: '',
         explain: ''
@@ -406,6 +409,7 @@ export default {
     addDataTable() {
       this.dbEdit = false
       this.dialogDataTable = true
+      this.dialogDataTableIndex = ''
       this.temp = {
         name: '',
         annotation: '',
@@ -456,7 +460,6 @@ export default {
           this.dialogObserver = false
           if (this.dialogObserverIndex !== '') {
             this.ruleForm.observer[this.dialogObserverIndex] = this.observerTemp
-            this.dialogObserverIndex = ''
           } else {
             this.ruleForm.observer.push(this.observerTemp)
           }
@@ -470,7 +473,6 @@ export default {
           this.dialogRelevance = false
           if (this.dialogRelevanceIndex !== '') {
             this.ruleForm.relevance[this.dialogRelevanceIndex] = this.relevanceTemp
-            this.dialogRelevanceIndex = ''
           } else {
             this.ruleForm.relevance.push(this.relevanceTemp)
           }
@@ -484,7 +486,6 @@ export default {
           this.dialogDataTable = false
           if (this.dialogDataTableIndex !== '') {
             this.ruleForm.db[this.dialogDataTableIndex] = this.temp
-            this.dialogIndexesIndex = ''
           } else {
             this.ruleForm.db.push(this.temp)
           }
@@ -554,7 +555,6 @@ export default {
           this.dialogIndexes = false
           if (this.dialogIndexesIndex !== '') {
             this.temp.indexes[this.dialogIndexesIndex] = this.indexesTemp
-            this.dialogIndexesIndex = ''
           } else {
             this.temp.indexes.push(this.indexesTemp)
           }

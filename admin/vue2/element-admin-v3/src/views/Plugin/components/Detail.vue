@@ -392,7 +392,7 @@
                 </el-form>
               </template>
             </el-table-column>
-            <el-table-column
+            <!--<el-table-column
               prop="sort"
               label="排序规则"
               width="200">
@@ -412,7 +412,7 @@
                   </el-select>
                 </el-form-item>
               </template>
-            </el-table-column>
+            </el-table-column>-->
             <el-table-column
               prop="attribute"
               label="属性"
