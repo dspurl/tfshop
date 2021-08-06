@@ -25,7 +25,7 @@ export default {
         page: 1,
         limit: 10,
         sort: '+id',
-        activeIndex: '1'
+        activeIndex: 1
       }
     }
   },

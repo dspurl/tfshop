@@ -24,4 +24,8 @@ return [
     'orderOvertime' => env('ORDER_OVERTIME', 1440),  // 订单超时时间(分钟)
     'automaticReceivingState' => env('AUTOMATIC_RECEIVING_STATE', true),  // 是否开启自动收货
     'automaticReceiving' => env('AUTOMATIC_RECEIVING', 7),  // 多少天后自动收货(天)
+
+    // 插件市场相关配置
+    'marketApplicationSecret' => env('MARKET_APPLICATION_SECRET', null),    // 插件市场应用密钥
+    'marketApplySecret' => env('MARKET_APPLY_SECRET', null),    // 开发者密钥
 ];
