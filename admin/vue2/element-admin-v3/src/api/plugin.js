@@ -1,9 +1,10 @@
 import request from '@/utils/request'
 import Qs from 'qs'
-export function getList() {
+export function getList(query) {
   return request({
     url: 'plugin',
-    method: 'GET'
+    method: 'GET',
+    params: query
   })
 }
 

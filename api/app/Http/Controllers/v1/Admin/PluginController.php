@@ -27,12 +27,18 @@ class PluginController extends Controller
     /**
      * PlugInList
      * 插件列表
+     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
-    public function list()
+    public function list(Request $request)
     {
         $Plugin = new Plugin();
-        $Json = $Plugin->getLocalPlugin();
+        if($request->activeIndex == 1){
+            $Json = $Plugin->getLocalPlugin($request);
+        }else{
+            $Json = $Plugin->getOnLinePlugin();
+        }
         return resReturn(1, $Json);
     }
 

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
-      <el-menu-item :index="1">本地</el-menu-item>
-      <el-menu-item :index="2">市场</el-menu-item>
+      <el-menu-item index="1">本地</el-menu-item>
+      <el-menu-item index="2">市场</el-menu-item>
     </el-menu>
     <div class="filter-container">
       <!--      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="getList()">刷新列表</el-button>-->
@@ -15,20 +15,25 @@
         </router-link>
       </div>
     </div>
+    <div class="tip">
+      <p>自己创建和下载的插件可以在本地列表中进行管理</p>
+      <p>如自己创建的插件并发布到了市场，是会同时存在于本地和市场列表中的</p>
+    </div>
     <!-- 商品列表-->
-    <div class="goods">
+    <div v-loading="listLoading" class="goods">
       <div v-for="(item, index) in list" :key="index" class="goods-item">
         <el-card :body-style="{ padding: '0px' }">
           <div>
-            <!--<el-image
+            <el-image
+              v-if="item.img"
+              :src="item.img"
               class="image"
-              src="https://img.zcool.cn/community/01b45760f5452811013eaf70ef3051.jpg@520w_390h_1c_1e_2o_100sh.jpg"
               fit="cover">
               <div slot="error" class="image-slot">
                 <i class="el-icon-picture-outline"/>
               </div>
-            </el-image>-->
-            <div class="image">
+            </el-image>
+            <div v-else class="image">
               {{ item.name }}
             </div>
           </div>
@@ -37,7 +42,16 @@
               <div class="name">{{ item.name }}({{ item.abbreviation }})</div>
             </div>
             <div class="generalize">{{ item.describe }}</div>
-            <div v-if="listQuery.activeIndex === 2" class="statistics">
+            <div class="tag">
+              <template v-if="listQuery.activeIndex === '2'">
+                <el-tag v-if="item.state === 1" type="success" size="mini" effect="dark">已下载</el-tag>
+                <el-tag v-else-if="item.state === 2" size="mini" effect="dark">已安装</el-tag>
+                <el-tag v-else-if="item.state === 3" type="danger" size="mini" effect="dark">已卸载</el-tag>
+                <el-tag v-else type="info" size="mini" effect="dark">未下载</el-tag>
+              </template>
+              <el-tag v-if="item.local" class="right" type="info" size="mini">本地</el-tag>
+            </div>
+            <div v-if="listQuery.activeIndex === '2'" class="statistics">
               <div class="statistics-item">
                 <i class="el-icon-view"/>
                 123
@@ -53,7 +67,7 @@
             </div>
           </div>
           <div class="operation">
-            <template v-if="listQuery.activeIndex === 1">
+            <template v-if="listQuery.activeIndex === '1'">
               <template v-if="item.local">
                 <router-link v-permission="$store.jurisdiction.PlugInEdit" :to="{ path: 'PlugInEdit', query: { name: item.abbreviation }}">
                   <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
@@ -82,10 +96,27 @@
                 </el-tooltip>
               </template>
             </template>
-            <template v-else/>
+            <template v-else>
+              <el-tooltip v-permission="$store.jurisdiction.PlugInInstall" :loading="butLoading" class="item" effect="dark" content="下载" placement="top-start">
+                <el-button :loading="formLoading" class="button" type="primary" icon="el-icon-download" circle @click="handleInstall(item.abbreviation)"/>
+              </el-tooltip>
+              <el-tooltip v-permission="$store.jurisdiction.PlugInInstall" :loading="butLoading" class="item" effect="dark" content="安装" placement="top-start">
+                <el-button :loading="formLoading" class="button" type="success" icon="el-icon-share" circle @click="handleInstall(item.abbreviation)"/>
+              </el-tooltip>
+              <el-tooltip v-permission="$store.jurisdiction.PlugInUpdate" :loading="butLoading" class="item" effect="dark" content="升级" placement="top-start">
+                <el-button :loading="formLoading" class="button" type="warning" icon="el-icon-upload" circle @click="handleInstall(item.abbreviation, 1)"/>
+              </el-tooltip>
+              <el-tooltip v-permission="$store.jurisdiction.PlugInUninstall" :loading="butLoading" class="item" effect="dark" content="卸载插件" placement="top-start">
+                <el-button :loading="formLoading" class="button" type="danger" icon="el-icon-delete" circle @click="handleUninstall(item.abbreviation)"/>
+              </el-tooltip>
+            </template>
           </div>
         </el-card>
       </div>
+    </div>
+    <!--分页-->
+    <div class="pagination-operation">
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="list"/>
     </div>
     <!-- 商品列表-->
     <!--<el-table

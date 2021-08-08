@@ -5,9 +5,11 @@ namespace App\common;
 use App\Code;
 use App\Models\v1\AuthGroupAuthRule;
 use App\Models\v1\AuthRule;
+use GuzzleHttp\Exception\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
+use GuzzleHttp\Client;
 
 class Plugin
 {
@@ -44,8 +46,10 @@ class Plugin
 
     /**
      * 获取本地插件列表
+     * @param $request
+     * @return array
      */
-    public function getLocalPlugin()
+    public function getLocalPlugin($request)
     {
         // 创建list插件目录
         if (!file_exists($this->pluginListPath)) {
@@ -66,7 +70,60 @@ class Plugin
                 $list[] = $dsshop;
             }
         }
-        return $list;
+        $page = $request->has('page') ? $request->page : 1;
+        $limit = $request->has('limit') ? $request->limit : 20;
+        $return = [
+            'current_page' => $page,
+            'data' => collect($list)->forPage($page, $limit),
+            'total' => collect($list)->count()
+        ];
+        return $return;
+    }
+
+    /**
+     * 获取线上插件库数据
+     * @throws \Exception
+     */
+    public function getOnLinePlugin()
+    {
+        $client = new Client();
+        $url = config('dsshop.marketUrl') . '/api/v1/app/market';
+        $params = [
+            'version' => config('dsshop.appVersion')
+        ];
+        $headers = [
+            'apply-secret' => config('dsshop.marketApplySecret'),
+            'application-secret' => config('dsshop.marketApplicationSecret'),
+        ];
+        try {
+            $respond = $client->get($url, ['query' => $params, 'headers' => $headers]);
+            $list = json_decode($respond->getBody()->getContents(), true);
+            $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
+            $scandir = scandir($this->pluginListPath);
+            foreach ($list['message']['data'] as &$message) {
+                // 已安装
+                if (collect($json_dsshop)->contains('name', $message['abbreviation'])) {
+                    $data = collect($json_dsshop)->first(function ($value) use ($message) {
+                        return $value['name'] == $message['abbreviation'];
+                    });
+                    // 获取当前插件是否卸载过和当前版本
+                    $message['locality_versions'] = $data['versions'];
+                    $message['is_delete'] = $data['is_delete'];
+                    $message['state'] = $data['is_delete'] == 1 ? 3 : 2;
+                } else if (in_array($message['abbreviation'], $scandir)) {  // 已下载
+                    $dsshop = json_decode(file_get_contents($this->pluginListPath . '/' . $message['abbreviation'] . '/dsshop.json'), true);
+                    $message['local'] = $dsshop['local'] ? 1 : 0;
+                    $message['publish'] = array_key_exists('publish',$dsshop) ? $dsshop['publish'] : 0;
+                    $message['state'] = 1;
+                } else {
+                    $message['state'] = 0;
+                }
+            }
+            return $list['message'];
+        } catch (RequestException $e) {
+            $list = json_decode($e->getResponse()->getBody()->getContents(), true);
+            throw new \Exception($list['message'], Code::CODE_WRONG);
+        }
     }
 
     /**

@@ -1,6 +1,8 @@
 import { getList, install, destroy, uninstall, publish } from '@/api/plugin'
+import Pagination from '@/components/Pagination'
 export default {
   name: 'PlugInList',
+  components: { Pagination },
   data() {
     return {
       formLoading: false,
@@ -8,7 +10,7 @@ export default {
       ruleForm: [],
       checkAll: false,
       tableKey: 0,
-      list: null,
+      list: [],
       total: 0,
       textMap: {
         update: '修改',
@@ -25,7 +27,7 @@ export default {
         page: 1,
         limit: 10,
         sort: '+id',
-        activeIndex: 1
+        activeIndex: '2'
       }
     }
   },
@@ -36,9 +38,18 @@ export default {
     getList() {
       this.listLoading = true
       getList(this.listQuery).then(response => {
-        this.list = response.data
+        this.list = response.data.data
+        this.total = response.data.total
         this.listLoading = false
       })
+    },
+    handleSelect(key, keyPath) {
+      this.listQuery.activeIndex = key
+      this.handleFilter()
+    },
+    handleFilter() {
+      this.listQuery.page = 1
+      this.getList()
     },
     handleInstall(name, type) {
       this.butLoading = true
