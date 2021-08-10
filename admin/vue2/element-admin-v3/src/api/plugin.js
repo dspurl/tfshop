@@ -40,6 +40,15 @@ export function publish(name) {
   })
 }
 
+export function updatePack(code, data) {
+  data = Qs.parse(data)
+  return request({
+    url: 'plugin/updatePack/' + code,
+    method: 'POST',
+    data
+  })
+}
+
 export function details(name) {
   return request({
     url: 'plugin/' + name,

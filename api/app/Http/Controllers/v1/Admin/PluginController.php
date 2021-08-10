@@ -34,9 +34,9 @@ class PluginController extends Controller
     public function list(Request $request)
     {
         $Plugin = new Plugin();
-        if($request->activeIndex == 1){
+        if ($request->activeIndex == 1) {
             $Json = $Plugin->getLocalPlugin($request);
-        }else{
+        } else {
             $Json = $Plugin->getOnLinePlugin();
         }
         return resReturn(1, $Json);
@@ -179,6 +179,19 @@ class PluginController extends Controller
     public function download($name)
     {
         return (new Plugin())->download($name);
+    }
+
+    /**
+     * PlugInUpdatePack
+     * 在线下载/更新
+     * @param $code
+     * @param Request $request
+     * @return string
+     * @throws \Exception
+     */
+    public function updatePack($code, Request $request)
+    {
+        return (new Plugin())->updatePack($code, $request);
     }
 
     /**

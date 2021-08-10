@@ -107,19 +107,78 @@ class Plugin
                         return $value['name'] == $message['abbreviation'];
                     });
                     // 获取当前插件是否卸载过和当前版本
-                    $message['locality_versions'] = $data['versions'];
+                    $message['update'] = $data['versions'] == $message['versions'] ? 0 : 1;
                     $message['is_delete'] = $data['is_delete'];
                     $message['state'] = $data['is_delete'] == 1 ? 3 : 2;
+                    $message['current_version'] = $data['versions'];
                 } else if (in_array($message['abbreviation'], $scandir)) {  // 已下载
                     $dsshop = json_decode(file_get_contents($this->pluginListPath . '/' . $message['abbreviation'] . '/dsshop.json'), true);
-                    $message['local'] = $dsshop['local'] ? 1 : 0;
-                    $message['publish'] = array_key_exists('publish',$dsshop) ? $dsshop['publish'] : 0;
+                    $local = array_key_exists('local', $dsshop) ? $dsshop['local'] : 0;  //是否本地
+                    $publish = array_key_exists('publish', $dsshop) ? $dsshop['publish'] : 0;    // 是否发布
+                    $message['local'] = $local ? 1 : 0;
+                    $message['publish'] = $publish ? 1 : 0;
+                    // 不是本地创建的插件，获取更新状态
+                    if (!$local) {
+                        $message['update'] = $dsshop['versions'] == $message['versions'] ? 0 : 1;
+                    } else {
+                        $message['update'] = 0;
+                    }
+                    $message['current_version'] = $dsshop['versions'];
                     $message['state'] = 1;
                 } else {
                     $message['state'] = 0;
+                    $message['current_version'] = $message['versions'];
                 }
             }
             return $list['message'];
+        } catch (RequestException $e) {
+            $list = json_decode($e->getResponse()->getBody()->getContents(), true);
+            throw new \Exception($list['message'], Code::CODE_WRONG);
+        }
+    }
+
+    /**
+     * 在线下载/更新
+     * @param $code
+     * @param $request
+     * @return void
+     * @throws \Exception
+     */
+    public function updatePack($code, $request)
+    {
+        if (PHP_OS != 'Linux') {
+            throw new \Exception('您的操作系统不支持在线安装', Code::CODE_FORBIDDEN);
+        }
+        $client = new Client();
+        $url = config('dsshop.marketUrl') . '/api/v1/app/market/download/' . $code;
+        $params = [
+            'suffix' => $request->suffix ? true : false
+        ];
+        $headers = [
+            'apply-secret' => config('dsshop.marketApplySecret'),
+            'application-secret' => config('dsshop.marketApplicationSecret'),
+        ];
+        try {
+            $respond = $client->get($url, ['query' => $params, 'headers' => $headers]);
+            // 下载远程作品到临时目录
+            if ($request->suffix) {
+                Storage::disk('plugin')->put('/temporary/' . $code . '/dsshop.json', $respond->getBody()->getContents());
+            } else {
+                Storage::disk('plugin')->put('/temporary/' . $code . '.zip', $respond->getBody()->getContents());
+            }
+            $path = $this->pluginPath . '/temporary';
+            if (!$request->suffix) {
+                exec('cd ' . $path . ' && unzip ' . $code . '.zip -d ' . $code . '/');
+                $config = json_decode(file_get_contents($path . '/' . $code . '/dsshop.json'), true);
+                exec("mkdir " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && mv " . $path . "/" . $code . "/* " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && rm -rf " . $path . "/" . $code . " && rm -rf " . $path . "/" . $code . ".zip");
+            } else {
+                $config = json_decode(file_get_contents($path . '/' . $code . '/dsshop.json'), true);
+                if (!file_exists($this->pluginPath . "/list/" . $config['abbreviation'])) {
+                    throw new \Exception('请先进行安装插件', Code::CODE_WRONG);
+                }
+                exec("mv " . $path . "/" . $code . "/* " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && rm -rf " . $path . "/" . $code);
+            }
+
         } catch (RequestException $e) {
             $list = json_decode($e->getResponse()->getBody()->getContents(), true);
             throw new \Exception($list['message'], Code::CODE_WRONG);

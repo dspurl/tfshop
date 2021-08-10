@@ -88,6 +88,7 @@ return [
         'plugInEdit' => '保存插件',
         'plugInDestroy' => '插件删除',
         'plugInPublish' => '插件发行',
+        'plugInUpdatePack' => '插件在线下载/更新',
         'plugInRoutes' => '获取路由列表',
         'plugInModels' => '获取模型列表',
         'plugInJurisdiction' => '获取权限列表',
