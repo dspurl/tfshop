@@ -1,4 +1,4 @@
-import { getList, install, destroy, uninstall, publish } from '@/api/plugin'
+import { getList, install, destroy, uninstall, publish, updatePack } from '@/api/plugin'
 import Pagination from '@/components/Pagination'
 export default {
   name: 'PlugInList',
@@ -16,6 +16,7 @@ export default {
         update: '修改',
         create: '添加'
       },
+      category: ['插件'],
       imgProgressPercent: 0,
       loading: false,
       butLoading: false,
@@ -50,6 +51,26 @@ export default {
     handleFilter() {
       this.listQuery.page = 1
       this.getList()
+    },
+    handleUpdatePack(code, suffix = 0) {
+      this.butLoading = true
+      this.formLoading = true
+      updatePack(code, {
+        suffix: suffix
+      }).then(() => {
+        this.butLoading = false
+        this.formLoading = false
+        this.getList()
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: '下载成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).catch(() => {
+        this.butLoading = false
+        this.formLoading = false
+      })
     },
     handleInstall(name, type) {
       this.butLoading = true

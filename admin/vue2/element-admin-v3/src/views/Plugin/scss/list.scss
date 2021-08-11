@@ -109,7 +109,7 @@
   .goods-item{
     padding-top:20px;
     padding-right: 10px;
-    width: 350px;
+    width: 330px;
     margin-right: 5px;
     .item-info{
       padding:10px 14px 14px 14px;
@@ -156,16 +156,26 @@
       padding:10px 14px 10px 14px;
       display: flex;
       .usrname{
+        width: 100%;
         display: flex;
         font-size: 12px;
         color: #333;
+        align-items: flex-start;
         .name{
           padding-left:10px;
           line-height: 25px;
+          flex: 1;
+          &:hover{
+            color: #409EFF;
+          }
         }
-        &:hover{
-          color: #409EFF;
+        .category{
+          border: 1px solid #DCDFE6;
+          border-radius: 3px;
+          line-height: 25px;
+          padding: 0 10px;
         }
+
       }
     }
   }
