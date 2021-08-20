@@ -8,6 +8,13 @@ const filter = {
       size = 300
     }
     return img.substring(0, index) + '_' + size + '.' + img.substring(index + 1, img.length)
+  },
+  'numberThousandCarry': function(val) {
+    if (parseInt(val) >= 10000) {
+      return parseInt(val) / 10000 + 'w'
+    } else {
+      return parseInt(val)
+    }
   }
 }
 

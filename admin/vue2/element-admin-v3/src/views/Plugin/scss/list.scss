@@ -155,12 +155,13 @@
     .bottom{
       padding:10px 14px 10px 14px;
       display: flex;
+      align-items: flex-start;
       .usrname{
-        width: 100%;
+        flex:1;
         display: flex;
+        align-items: flex-start;
         font-size: 12px;
         color: #333;
-        align-items: flex-start;
         .name{
           padding-left:10px;
           line-height: 25px;
@@ -169,13 +170,14 @@
             color: #409EFF;
           }
         }
-        .category{
-          border: 1px solid #DCDFE6;
-          border-radius: 3px;
-          line-height: 25px;
-          padding: 0 10px;
-        }
-
+      }
+      .category{
+        border: 1px solid #DCDFE6;
+        border-radius: 3px;
+        line-height: 25px;
+        padding: 0 10px;
+        margin-left: 10px;
+        font-size: 12px;
       }
     }
   }

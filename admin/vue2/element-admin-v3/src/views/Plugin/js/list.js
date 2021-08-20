@@ -52,11 +52,16 @@ export default {
       this.listQuery.page = 1
       this.getList()
     },
-    handleUpdatePack(code, suffix = 0) {
+    handleUpdatePack(item, suffix = 0) {
       this.butLoading = true
       this.formLoading = true
-      updatePack(code, {
-        suffix: suffix
+      updatePack(item.code, {
+        suffix: suffix,
+        img: item.img,
+        author: item.author,
+        author_url: item.author_url,
+        portrait: item.portrait,
+        category: item.category
       }).then(() => {
         this.butLoading = false
         this.formLoading = false

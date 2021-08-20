@@ -4,20 +4,19 @@
       <el-menu-item index="1">本地</el-menu-item>
       <el-menu-item index="2">市场</el-menu-item>
     </el-menu>
+    <div class="tip">
+      <p>自己创建和下载的插件可以在本地列表中进行管理</p>
+      <p>如自己创建的插件并发布到了市场，是会同时存在于本地和市场列表中的</p>
+      <p>本地已安装插件更新步骤：市场更新插件->本地升级插件</p>
+    </div>
     <div class="filter-container">
       <!--      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="getList()">刷新列表</el-button>-->
-      <div class="condition">
-        筛选条件
-      </div>
+      <div class="condition"/>
       <div class="operation">
         <router-link v-permission="$store.jurisdiction.PlugInCreate" :to="'PlugInCreate'">
           <el-button class="filter-item" type="primary" icon="el-icon-edit">添加插件</el-button>
         </router-link>
       </div>
-    </div>
-    <div class="tip">
-      <p>自己创建和下载的插件可以在本地列表中进行管理</p>
-      <p>如自己创建的插件并发布到了市场，是会同时存在于本地和市场列表中的</p>
     </div>
     <!-- 商品列表-->
     <div v-loading="listLoading" class="goods">
@@ -54,24 +53,25 @@
             <div v-if="listQuery.activeIndex === '2'" class="statistics">
               <div class="statistics-item">
                 <i class="el-icon-view"/>
-                {{ item.pv }}
+                {{ item.pv | numberThousandCarry }}
               </div>
               <div class="statistics-item">
                 <i class="el-icon-download"/>
-                {{ item.download_amount }}
+                {{ item.download_amount | numberThousandCarry }}
               </div>
               <div class="statistics-item">
                 <i class="el-icon-chat-dot-round"/>
-                {{ item.comment_amount }}
+                {{ item.comment_amount | numberThousandCarry }}
               </div>
             </div>
           </div>
-          <div v-if="listQuery.activeIndex === '2'" class="bottom">
+          <div class="bottom">
             <a :title="item.author" :href="item.author_url" class="usrname">
               <el-avatar :size="26" :src="item.portrait"/>
               <div class="name">{{ item.author }}</div>
-              <div class="category">{{ category[item.category] }}</div>
             </a>
+            <div class="category">{{ item.versions }}</div>
+            <div class="category">{{ category[item.category] ? category[item.category] : '插件' }}</div>
           </div>
           <div class="operation">
             <template v-if="listQuery.activeIndex === '1'">
@@ -86,9 +86,6 @@
                 </el-tooltip>
                 <el-tooltip v-permission="$store.jurisdiction.PlugInDownload" v-else :loading="butLoading" class="item" effect="dark" content="下载" placement="top-start">
                   <el-button :loading="formLoading" class="button" type="warning" icon="el-icon-download" circle @click="handleDownload(item.abbreviation)"/>
-                </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="文档" placement="top-start">
-                  <el-button class="button" type="warning" icon="el-icon-tickets" circle @click="handleInstall(item.abbreviation)"/>
                 </el-tooltip>
                 <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" class="item" effect="dark" content="删除" placement="top-start">
                   <el-button :loading="formLoading" class="button" type="danger" icon="el-icon-delete" circle @click="handleDelete(item.abbreviation)"/>
@@ -121,17 +118,22 @@
                     <el-button :loading="formLoading" class="button" icon="el-icon-link" circle/>
                   </el-tooltip>
                 </a>
+                <a :href="item.log_url" target="_blank">
+                  <el-tooltip :loading="butLoading" class="item" effect="dark" content="更新记录" placement="top-start">
+                    <el-button :loading="formLoading" class="button" icon="el-icon-date" circle/>
+                  </el-tooltip>
+                </a>
                 <el-tooltip v-permission="$store.jurisdiction.PlugInInstall" v-if="item.state === 0" :loading="butLoading" class="item" effect="dark" content="下载" placement="top-start">
-                  <el-button :loading="formLoading" class="button" type="primary" icon="el-icon-download" circle @click="handleUpdatePack(item.code)"/>
+                  <el-button :loading="formLoading" class="button" type="primary" icon="el-icon-download" circle @click="handleUpdatePack(item)"/>
                 </el-tooltip>
                 <el-tooltip v-permission="$store.jurisdiction.PlugInInstall" v-if="item.state === 2 && item.is_publish" :loading="butLoading" class="item" effect="dark" content="下载开发版" placement="top-start">
-                  <el-button :loading="formLoading" class="button" type="primary" icon="el-icon-s-platform" circle @click="handleUpdatePack(item.code, 1)"/>
+                  <el-button :loading="formLoading" class="button" type="primary" icon="el-icon-s-platform" circle @click="handleUpdatePack(item, 1)"/>
                 </el-tooltip>
                 <el-tooltip v-permission="$store.jurisdiction.PlugInInstall" v-if="item.state === 1" :loading="butLoading" class="item" effect="dark" content="安装" placement="top-start">
                   <el-button :loading="formLoading" class="button" type="success" icon="el-icon-share" circle @click="handleInstall(item.abbreviation)"/>
                 </el-tooltip>
-                <el-tooltip v-permission="$store.jurisdiction.PlugInUpdate" v-if="item.update" :loading="butLoading" class="item" effect="dark" content="升级" placement="top-start">
-                  <el-button :loading="formLoading" class="button" type="warning" icon="el-icon-upload" circle @click="handleInstall(item.abbreviation, 1)"/>
+                <el-tooltip v-permission="$store.jurisdiction.PlugInUpdate" v-if="item.update" :loading="butLoading" class="item" effect="dark" content="更新" placement="top-start">
+                  <el-button :loading="formLoading" class="button" type="warning" icon="el-icon-upload" circle @click="handleUpdatePack(item)"/>
                 </el-tooltip>
                 <el-tooltip v-permission="$store.jurisdiction.PlugInUninstall" v-if="item.state === 2" :loading="butLoading" class="item" effect="dark" content="卸载插件" placement="top-start">
                   <el-button :loading="formLoading" class="button" type="danger" icon="el-icon-delete" circle @click="handleUninstall(item.abbreviation)"/>
@@ -146,13 +148,6 @@
     <div class="pagination-operation">
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="list"/>
     </div>
-    <!-- 文档-->
-    <el-dialog :title="textMap[dialogStatus]" :close-on-click-modal="false" :visible.sync="dialogVisible">
-      <mavon-editor :toolbars-flag="false" :subfield="false" :preview="true" v-model="ruleForm.details" default-open="preview"/>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">关闭</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 <style lang='scss' scoped>

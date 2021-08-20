@@ -45,6 +45,19 @@ class Plugin
     }
 
     /**
+     * 验证目录结构
+     * @throws \Exception
+     */
+    public function verifyDirectoryStructure()
+    {
+        $local = scandir($this->path);
+        $verify = ['api', 'admin', 'client', 'plugin'];
+        if (!empty(array_diff($verify, $local))) {
+            throw new \Exception('你的项目目录结构有误，无法使用插件', Code::CODE_WRONG);
+        }
+    }
+
+    /**
      * 获取本地插件列表
      * @param $request
      * @return array
@@ -141,13 +154,16 @@ class Plugin
      * 在线下载/更新
      * @param $code
      * @param $request
-     * @return void
+     * @return string
      * @throws \Exception
      */
     public function updatePack($code, $request)
     {
         if (PHP_OS != 'Linux') {
             throw new \Exception('您的操作系统不支持在线安装', Code::CODE_FORBIDDEN);
+        }
+        if (!$request->has('img') || !$request->has('author') || !$request->has('author_url') || !$request->has('portrait') || !$request->has('category')) {
+            throw new \Exception('插件配置信息不完整', Code::CODE_WRONG);
         }
         $client = new Client();
         $url = config('dsshop.marketUrl') . '/api/v1/app/market/download/' . $code;
@@ -167,18 +183,26 @@ class Plugin
                 Storage::disk('plugin')->put('/temporary/' . $code . '.zip', $respond->getBody()->getContents());
             }
             $path = $this->pluginPath . '/temporary';
+            $shell_exec = '';
             if (!$request->suffix) {
-                exec('cd ' . $path . ' && unzip ' . $code . '.zip -d ' . $code . '/');
+                $shell_exec .= shell_exec('cd ' . $path . ' && unzip ' . $code . '.zip -d ' . $code . '/');
                 $config = json_decode(file_get_contents($path . '/' . $code . '/dsshop.json'), true);
-                exec("mkdir " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && mv " . $path . "/" . $code . "/* " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && rm -rf " . $path . "/" . $code . " && rm -rf " . $path . "/" . $code . ".zip");
+                //修改插件信息
+                $config['img'] = $request->img;
+                $config['author'] = $request->author;
+                $config['author_url'] = $request->author_url;
+                $config['portrait'] = $request->portrait;
+                $config['category'] = $request->category;
+                file_put_contents($path . '/' . $code . '/dsshop.json', json_encode($config));
+                $shell_exec .= shell_exec("rm -rf $this->pluginPath/list/" . $config['abbreviation'] . " && mkdir " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && mv " . $path . "/" . $code . "/* " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && rm -rf " . $path . "/" . $code . " && rm -rf " . $path . "/" . $code . ".zip");
             } else {
                 $config = json_decode(file_get_contents($path . '/' . $code . '/dsshop.json'), true);
                 if (!file_exists($this->pluginPath . "/list/" . $config['abbreviation'])) {
                     throw new \Exception('请先进行安装插件', Code::CODE_WRONG);
                 }
-                exec("mv " . $path . "/" . $code . "/* " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && rm -rf " . $path . "/" . $code);
+                $shell_exec .= shell_exec("mv " . $path . "/" . $code . "/* " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && rm -rf " . $path . "/" . $code);
             }
-
+            return $shell_exec;
         } catch (RequestException $e) {
             $list = json_decode($e->getResponse()->getBody()->getContents(), true);
             throw new \Exception($list['message'], Code::CODE_WRONG);

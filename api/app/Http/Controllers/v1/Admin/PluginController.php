@@ -19,9 +19,7 @@ class PluginController extends Controller
 
     function __construct()
     {
-        if (env('APP_ENV') != 'local') {
-            return resReturn(0, '插件仅本地环境可以使用', Code::CODE_FORBIDDEN);
-        }
+        (new Plugin())->verifyDirectoryStructure();
     }
 
     /**
