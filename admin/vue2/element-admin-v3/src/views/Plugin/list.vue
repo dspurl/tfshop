@@ -2,13 +2,13 @@
   <div class="app-container">
     <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
       <el-menu-item index="1">本地</el-menu-item>
-      <el-menu-item index="2">市场</el-menu-item>
+      <!--<el-menu-item index="2">市场</el-menu-item>-->
     </el-menu>
-    <div class="tip">
+    <!--<div class="tip">
       <p>自己创建和下载的插件可以在本地列表中进行管理</p>
       <p>如自己创建的插件并发布到了市场，是会同时存在于本地和市场列表中的</p>
       <p>本地已安装插件更新步骤：市场更新插件->本地升级插件</p>
-    </div>
+    </div>-->
     <div class="filter-container">
       <!--      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="getList()">刷新列表</el-button>-->
       <div class="condition"/>

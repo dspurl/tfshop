@@ -28,7 +28,7 @@ export default {
         page: 1,
         limit: 10,
         sort: '+id',
-        activeIndex: '2'
+        activeIndex: '1'
       }
     }
   },
