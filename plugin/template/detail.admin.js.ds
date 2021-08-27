@@ -25,6 +25,7 @@ export default {
   created() {
     if (this.isEdit) {
       this.id = this.$route.query.id
+      this.dialogStatus = 'update'
       this.getList()
     }
   },
