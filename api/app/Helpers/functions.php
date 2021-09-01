@@ -237,6 +237,9 @@ function imgPathShift($new, $img)
         $path = 'storage/temporary/';
         $img = explode($path, $img);
         if (count($img) == 2) {
+            if (!Storage::exists('public/temporary/' . $img['1'])) { //临时文件如果不在, 则是表明图片已存在, 就不用再次移动一个不存在的图片
+                return request()->root() . '/storage/image/'.$new.'/' . $img['1'];
+            }
             Storage::move('public/temporary/' . $img['1'], 'public/image/' . $new . '/' . $img['1']);
             //拷贝不同规格的图片
             $imageSpecification = config('image.specification');
