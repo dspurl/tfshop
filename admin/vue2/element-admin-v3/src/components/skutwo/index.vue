@@ -80,7 +80,7 @@
 
 <template lang="pug">
 .container
-  h3 设置产品规格
+  h3 设置产品参数
   el-form-item
       .sku_container
         .sku_group.mb10(v-for="(spec, index) in specification" :key="spec.id")

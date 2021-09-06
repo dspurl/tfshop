@@ -422,7 +422,7 @@ export default {
           { required: true, message: '请选择物流公司', trigger: 'change' }
         ],
         odd: [
-          { required: true, message: '请输入订单号', trigger: 'blur' }
+          { required: true, message: '请输入运单号', trigger: 'blur' }
         ]
       },
       refundRules: {
