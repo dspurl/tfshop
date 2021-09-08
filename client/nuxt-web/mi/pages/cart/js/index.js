@@ -30,36 +30,38 @@ export default {
       this.cartList = []
       this.invalidGood = []
       await synchronizationInventory().then(response => {
-        this.cartList = Object.values(response)
         this.store.set(process.env.CACHE_PR + 'CartList',response)
         this.cartOriginalList = response
-        if(this.cartList.length>0){
-
+        if(response.length>0){
           this.empty = false
         }else{
           this.empty = true
         }
-        for(let k in this.cartList){
-          if(this.cartList[k].good_sku){
-            this.cartList[k].good_sku.skus.forEach(item=>{
-              if(this.cartList[k].specification){
-                this.cartList[k].specification+= item.v + ';'
+        for(let k in response){
+          if(response[k].good_sku){
+            response[k].specification = ''
+            response[k].good_sku.skus.forEach(item=>{
+              if(response[k].specification){
+                response[k].specification+= item.v + ';'
               }else{
-                this.cartList[k].specification = item.v + ';'
+                response[k].specification = item.v + ';'
               }
             })
-            this.cartList[k].specification = this.cartList[k].specification.substr(0,this.cartList[k].specification.length-1)
+            response[k].specification = response[k].specification.substr(0,response[k].specification.length-1)
           }
-          if(this.cartList[k].good.is_delete === 1 || this.cartList[k].good.is_show !== 1){
-            this.cartList[k].invalid = true
+          if(response[k].good.is_delete === 1 || response[k].good.is_show !== 1){
+            response[k].invalid = true
           }
-          if(this.cartList[k].invalid === true){ //失效的商品
-            this.invalidGood.push(this.cartList[k])
-          }
-        }
-        for(let k in this.cartList){
-          if(this.cartList[k].invalid === true){ //失效的商品
-            this.cartList.splice(k,1)
+          if(response[k].invalid === true){ //失效的商品
+            this.invalidGood.push({
+              ...response[k],
+              index: k
+            })
+          }else{
+            this.cartList.push({
+              ...response[k],
+              index: k
+            })
           }
         }
         this.$nextTick(()=>{
@@ -103,11 +105,7 @@ export default {
     },
     //修改数量
     numberChange(index){
-      if(this.cartList[index].good_sku_id){
-        this.cartOriginalList[this.cartList[index].good_sku_id].number =  this.cartList[index].number
-      }else{
-        this.cartOriginalList['good_'+this.cartList[index].good_id].number =  this.cartList[index].number
-      }
+      this.cartOriginalList[index].number =  this.cartList[index].number
       this.store.set(process.env.CACHE_PR + 'CartList',this.cartOriginalList)
       addShoppingCart(this.cartOriginalList)
       this.calcTotal();
@@ -119,19 +117,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        if(this.invalidGood[index].good_sku_id){
-          delete this.cartOriginalList[this.invalidGood[index].good_sku_id]
-        }else{
-          delete this.cartOriginalList['good_'+this.invalidGood[index].good_id]
-        }
+        this.cartOriginalList.splice(this.invalidGood[index].index, 1)
         if(Object.values(this.cartOriginalList).length > 0){
           this.store.set(process.env.CACHE_PR + 'CartList',this.cartOriginalList)
         }else{
           this.store.remove(process.env.CACHE_PR + 'CartList')
         }
-        addShoppingCart(this.cartOriginalList)
+        addShoppingCart(this.cartOriginalList).then(() => {
+          this.getList();
+        })
         this.invalidGood.splice(index, 1);
-        this.getList();
       }).catch(() => {
       })
     },
@@ -142,19 +137,16 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        if(this.cartList[index].good_sku_id){
-          delete this.cartOriginalList[this.cartList[index].good_sku_id]
-        }else{
-          delete this.cartOriginalList['good_'+this.cartList[index].good_id]
-        }
+        this.cartOriginalList.splice(this.cartList[index].index, 1)
         if(Object.values(this.cartOriginalList).length > 0){
           this.store.set(process.env.CACHE_PR + 'CartList',this.cartOriginalList)
         }else{
           this.store.remove(process.env.CACHE_PR + 'CartList')
         }
-        addShoppingCart(this.cartOriginalList)
+        addShoppingCart(this.cartOriginalList).then(() => {
+          this.getList();
+        })
         this.cartList.splice(index, 1);
-        this.getList();
       }).catch(() => {
       })
     },
@@ -169,23 +161,28 @@ export default {
           this.cartList.forEach((item2,index)=>{
             if(item.good_sku_id){
               if(item.good_sku_id === item2.good_sku_id){
-                delete this.cartOriginalList[item2.good_sku_id]
+                delete this.cartOriginalList[item2.index]
                 this.cartList.splice(index, 1);
               }
             }else{
               if(item.good_id === item2.good_id){
-                delete this.cartOriginalList['good_'+item2.good_id]
+                delete this.cartOriginalList[item2.index]
                 this.cartList.splice(index, 1);
               }
             }
           })
+        })
+        this.cartOriginalList = this.cartOriginalList.filter((res) => {
+          return res;
         })
         if(Object.values(this.cartOriginalList).length > 0){
           this.store.set(process.env.CACHE_PR + 'CartList',this.cartOriginalList)
         }else{
           this.store.remove(process.env.CACHE_PR + 'CartList')
         }
-        addShoppingCart(this.cartOriginalList)
+        addShoppingCart(this.cartOriginalList).then(() => {
+          this.getList();
+        })
       }).catch(() => {
       })
     },

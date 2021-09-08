@@ -129,6 +129,7 @@
 				allChecked: true, //全选状态  true|false
 				empty: false, //空白页现实  true|false
 				cartList: [],
+				cartOriginalList: [],
 				data: ['苹果', '香蕉', '葡萄', '草莓', '西瓜'],
 				invalidGood: []
 			};
@@ -149,40 +150,45 @@
 			async loadData(){
 				this.cartList = []
 				this.invalidGood = []
-				let cartList =  uni.getStorageSync('dsshopCartList') || {}
+				let cartList =  []
 				const that = this
+				that.cartList = []
+				that.cartOriginalList = []
 				GoodIndent.synchronizationInventory({},function(res){
-					cartList = Object.values(res)
-					for(var k in cartList){
-						cartList[k].checked = true
-						cartList[k].loaded = 'loaded'
-						if(cartList[k].good_sku){
-							cartList[k].good_sku.skus.forEach(item=>{
-								if(cartList[k].specification){
-									cartList[k].specification+= item.v + ';'
+					for(var k in res){
+						res[k].checked = true
+						res[k].loaded = 'loaded'
+						if(res[k].good_sku){
+							res[k].specification = ''
+							res[k].good_sku.skus.forEach(item=>{
+								if(res[k].specification){
+									res[k].specification+= item.v + ';'
 								}else{
-									cartList[k].specification = item.v + ';'
+									res[k].specification = item.v + ';'
 								}
 								
 							})
-							cartList[k].specification = cartList[k].specification.substr(0,cartList[k].specification.length-1)
+							res[k].specification = res[k].specification.substr(0,res[k].specification.length-1)
 						}
-						if(cartList[k].good.is_delete === 1 || cartList[k].good.is_show !== 1){
-							cartList[k].invalid = true
+						if(res[k].good.is_delete === 1 || res[k].good.is_show !== 1){
+							res[k].invalid = true
 						}
-						if(cartList[k].invalid === true){ //失效的商品
-							that.invalidGood.push(cartList[k])
-							// cartList.splice(k,1)
+						if(res[k].invalid === true){ //失效的商品
+							that.invalidGood.push({
+								...res[k],
+								index: k
+							})
+						}else{
+							cartList.push({
+								...res[k],
+								index: k
+							})
 						}
 					}
-					for(var k in cartList){
-						if(cartList[k].invalid === true){ //失效的商品
-							cartList.splice(k,1)
-						}
-					}
+					that.cartOriginalList = res
 					that.cartList = cartList
-					uni.setStorageSync('dsshopCartList', cartList)
-					uni.setStorageSync('dsshopOrderList', cartList)
+					uni.setStorageSync('dsshopCartList', res)
+					uni.setStorageSync('dsshopOrderList', res)
 					getApp().showDsshopCartNumber()
 					that.calcTotal();  //计算总价
 				})
@@ -232,60 +238,39 @@
 				uni.setStorageSync('dsshopOrderList', this.cartList)
 				GoodIndent.addShoppingCart(this.cartList,function(res){})
 			},
-			//数量
-			numberChange(data){
-				this.cartList[data.index].number = data.number
-				const cartList =  uni.getStorageSync('dsshopCartList') || {}
-				if(this.cartList[data.index].good_sku_id){
-					cartList[this.cartList[data.index].good_sku_id]=JSON.parse(JSON.stringify(this.cartList[data.index]))
-					delete cartList[this.cartList[data.index].good_sku_id]['checked']
-					delete cartList[this.cartList[data.index].good_sku_id]['loaded']
-					delete cartList[this.cartList[data.index].good_sku_id]['specification']
-				}else{
-					cartList['good_'+this.cartList[data.index].good_id]=JSON.parse(JSON.stringify(this.cartList[data.index]))
-					delete cartList['good_'+this.cartList[data.index].good_id]['checked']
-					delete cartList['good_'+this.cartList[data.index].good_id]['loaded']
-					delete cartList['good_'+this.cartList[data.index].good_id]['specification']
-				}
-				
-				uni.setStorageSync('dsshopCartList', cartList)
-				this.calcTotal()
-				
-			},
 			//删除
 			deleteCartItem(index){
 				let list = this.cartList;
 				let row = list[index];
 				let id = row.id;
-				const cartList =  uni.getStorageSync('dsshopCartList') || {}
-				if(this.cartList[index].good_sku_id){
-					delete cartList[this.cartList[index].good_sku_id]
-				}else{
-					delete cartList['good_'+this.cartList[index].good_id]
+				const that = this
+				this.cartOriginalList.splice(row.index, 1)
+				uni.setStorageSync('dsshopCartList', this.cartOriginalList)
+				uni.setStorageSync('dsshopOrderList', this.cartOriginalList)
+				if(this.cartOriginalList.length === 0){
+					uni.removeStorageSync('dsshopCartList')
+					uni.removeStorageSync('dsshopOrderList')
 				}
-				
-				uni.setStorageSync('dsshopCartList', cartList)
-				uni.setStorageSync('dsshopOrderList', cartList)
-				getApp().showDsshopCartNumber()
 				this.cartList.splice(index, 1);
 				this.calcTotal();
-				GoodIndent.addShoppingCart(this.cartList,function(res){})
+				GoodIndent.addShoppingCart(this.cartOriginalList,function(res){
+					getApp().showDsshopCartNumber()
+					that.loadData()
+				})
+				
 			},
 			//删除失效的商品
 			deleteInvalidGood(index){
 				let list = this.invalidGood;
 				let row = list[index];
 				let id = row.id;
-				const cartList =  uni.getStorageSync('dsshopCartList') || {}
-				if(this.invalidGood[index].good_sku_id){
-					delete cartList[this.invalidGood[index].good_sku_id]
-				}else{
-					delete cartList['good_'+this.invalidGood[index].good_id]
-				}
-				
-				uni.setStorageSync('dsshopCartList', cartList)
-				uni.setStorageSync('dsshopOrderList', cartList)
-				GoodIndent.addShoppingCart(this.cartList,function(res){})
+				const that = this
+				this.cartOriginalList.splice(row.index, 1)
+				uni.setStorageSync('dsshopCartList', this.cartOriginalList)
+				uni.setStorageSync('dsshopOrderList', this.cartOriginalList)
+				GoodIndent.addShoppingCart(this.cartOriginalList,function(res){
+					that.loadData()
+				})
 				this.invalidGood.splice(index, 1);
 			},
 			//清空

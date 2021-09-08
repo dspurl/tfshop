@@ -134,21 +134,25 @@ PASSPORT_CLIENT_SECRET="生成的 Client secret"
 # 参考：https://github.com/dspurl/dsshop/pull/84
 
 # 搭建后台
-cd ../admin
+cd ../admin/vue2/element-admin-v3
 #不要在linux下执行，会报错，推荐windows
 npm install 
-#admin/config/dev.env.js修改自己的api地址
-BASE_API: '"http://dsshop.com/api/v1/admin/"',
+#admin/config/dev.env.js or prod.env.js修改自己的api地址
+BASE_API: '"http://172.27.16.1/api/v1/admin/"',  //172.27.16.1是window主机的局域网IP
 
 npm run dev
+# 默认后台账号、密码
+admin
+admin
 
 # 搭建H5
-cd ../secret/Dsshop
+cd ../client/uni-app/mix-mall
 npm install 
-# HBuilder X导入secret/Dsshop目录
-#secret/Dsshop/utils/config.js修改服务器地址
-#修改`BaseURL`为API访问地址
-#`secret`有个默认密钥，如需自定义，只需在`.env`中配置`PROJECT_KEY`
+# HBuilder X导入client/uni-app/mix-mall目录
+# client/uni-app/mix-mall/utils/config.js修改服务器地址
+# 修改`BaseURL`为API访问地址
+# `secret`有个默认密钥，如需自定义，只需在`.env`中配置`PROJECT_KEY`
+# HBuilder X可以通过浏览器、微信小程序运行项目，也可以直接发布项目，但需要配置账号，具体请参考HBuilder X
 
 ```
 常见错误

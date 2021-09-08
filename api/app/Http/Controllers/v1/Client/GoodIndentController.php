@@ -124,20 +124,13 @@ class GoodIndentController extends Controller
     {
         $redis = new RedisService();
         $return = $request->all();
+        $redis->del('shoppingCart' . auth('web')->user()->id);
         if (count($return) > 0) {
-            foreach ($return as $id => $r) {
-                if (!$r) {
-                    unset($return[$id]);
-                }
-            }
             $redis->set('shoppingCart' . auth('web')->user()->id, json_encode($return));
-        } else {
-            if ($redis->get('shoppingCart' . auth('web')->user()->id)) {   //如果传过来空数组，则代表需要移除购物车列表
-                $redis->del('shoppingCart' . auth('web')->user()->id);
-            }
         }
         return resReturn(1, '成功');
     }
+
     /**
      * 清空购物车
      * @param Request $request
@@ -146,9 +139,10 @@ class GoodIndentController extends Controller
     public function clearShoppingCart(Request $request)
     {
         $redis = new RedisService();
-        $redis->del('shoppingCart' . auth('web')->user()->id );
+        $redis->del('shoppingCart' . auth('web')->user()->id);
         return resReturn(1, '成功');
     }
+
     /**
      * SynchronizationInventory
      * 同步线上商品库存
@@ -163,6 +157,11 @@ class GoodIndentController extends Controller
         if (count($redisData) > 0) {
             foreach ($redisData as $id => $all) {
                 if ($all['good_sku_id']) { //sku商品
+                    $Good = Good::find($all['good_id']);
+                    if ($Good->is_show == Good::GOOD_SHOW_ENTREPOT || $Good->deleted_at) {
+                        $redisData[$id]['invalid'] = true;  //标记为失效
+                        continue;
+                    }
                     $GoodSku = GoodSku::find($all['good_sku_id']);
                     if ($GoodSku->deleted_at) {
                         $redisData[$id]['invalid'] = true;  //标记为失效

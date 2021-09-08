@@ -370,10 +370,14 @@ export default{
 
         }else{
           // store.remove(process.env.CACHE_PR + 'CartList')
-          let cartList =  store.get(process.env.CACHE_PR + 'CartList') || {};
+          let cartList =  store.get(process.env.CACHE_PR + 'CartList') || [];
+          let cartMap = new Map()
           if(buyState){	//直接购买
-            cartList = {}
+            cartList = []
           }
+          cartList.forEach(item=>{
+            cartMap.set(item.good_sku_id,item)
+          })
           let img = this.getLists.resources_many[0].img;
           //Sku
           if(this.getLists.good_sku.length>0){
@@ -383,31 +387,31 @@ export default{
             if(this.update){ //更新
               // 判断用户是否更改了SKU
               if(this.good_sku.id !== this.shoppingAttributes.id){
-                delete cartList[this.good_sku.id]
+                cartMap.delete(this.good_sku.id)
               }
             }
-            if(cartList[this.shoppingAttributes.id]){	//已存在，更新其它属性，增加新添加的数量
+            if(cartMap.get(this.shoppingAttributes.id)){	//已存在，更新其它属性，增加新添加的数量
               if(this.update){ //更新
-                cartList[this.shoppingAttributes.id].number= this.cartGood.number
+                cartMap.get(this.shoppingAttributes.id).number= this.cartGood.number
               }else{
-                cartList[this.shoppingAttributes.id].number+= this.cartGood.number
+                cartMap.get(this.shoppingAttributes.id).number+= this.cartGood.number
               }
 
               //如果购物车商品购买数大于当前库存，将结果改成库存数量
-              if(cartList[this.shoppingAttributes.id].number > this.specificationDefaultDisplay.inventory_show){
-                cartList[this.shoppingAttributes.id].number = this.specificationDefaultDisplay.inventory_show
+              if(cartMap.get(this.shoppingAttributes.id).number > this.specificationDefaultDisplay.inventory_show){
+                cartMap.get(this.shoppingAttributes.id).number = this.specificationDefaultDisplay.inventory_show
               }
-              cartList[this.shoppingAttributes.id].price = this.cartGood.price
-              cartList[this.shoppingAttributes.id].name = this.getLists.name
-              cartList[this.shoppingAttributes.id].good_id = this.getLists.id
+              cartMap.get(this.shoppingAttributes.id).price = this.cartGood.price
+              cartMap.get(this.shoppingAttributes.id).name = this.getLists.name
+              cartMap.get(this.shoppingAttributes.id).good_id = this.getLists.id
               const good = JSON.parse(JSON.stringify(this.getLists))
               delete good.details
-              cartList[this.shoppingAttributes.id].good = good
-              cartList[this.shoppingAttributes.id].good_sku_id = this.shoppingAttributes.id
-              cartList[this.shoppingAttributes.id].good_sku = this.shoppingAttributes
-              cartList[this.shoppingAttributes.id].img = img
+              cartMap.get(this.shoppingAttributes.id).good = good
+              cartMap.get(this.shoppingAttributes.id).good_sku_id = this.shoppingAttributes.id
+              cartMap.get(this.shoppingAttributes.id).good_sku = this.shoppingAttributes
+              cartMap.get(this.shoppingAttributes.id).img = img
             }else{
-              cartList[this.shoppingAttributes.id]={
+              cartMap.set(this.shoppingAttributes.id,{
                 price: this.cartGood.price,
                 number: this.cartGood.number,
                 name: this.getLists.name,
@@ -416,9 +420,10 @@ export default{
                 good_sku_id:this.shoppingAttributes.id,
                 good_sku:this.shoppingAttributes,
                 img: img
-              }
+              })
             }
           }else{
+            // 现只有sku商品，故这里不做处理
             if(cartList['good_' + this.getLists.id]){
               if(this.update){ //更新
                 cartList['good_' + this.getLists.id].number= this.cartGood.number
@@ -452,9 +457,11 @@ export default{
             store.set(process.env.CACHE_PR + 'OrderList', cartList)
           }else{
             // 发送给后台
-            addShoppingCart(cartList,function(res){});
-            store.set(process.env.CACHE_PR + 'CartList', cartList)
-            $nuxt.$store.commit('setShoppingCartNumber', Object.values(cartList).length)
+            addShoppingCart([...cartMap.values()],function(res){
+              this.$emit('loadCart') //重载数据
+            });
+            store.set(process.env.CACHE_PR + 'CartList', [...cartMap.values()])
+            $nuxt.$store.commit('setShoppingCartNumber', cartMap.size)
           }
         }
         this.initList()
@@ -470,7 +477,7 @@ export default{
           }
 
         }
-        this.$emit('loadCart') //重载数据
+
       } else{
         this.$message.error('请选择规格')
       }
