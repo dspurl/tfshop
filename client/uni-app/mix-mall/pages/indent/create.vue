@@ -122,7 +122,7 @@
 			async loadData(){
 				this.cartList = []
 				this.invalidGood = []
-				let cartList =  uni.getStorageSync('dsshopOrderList') || {}
+				let cartList =  uni.getStorageSync('dsshopOrderList') || []
 				const that = this
 				for(var k in cartList){
 					cartList[k].checked = true

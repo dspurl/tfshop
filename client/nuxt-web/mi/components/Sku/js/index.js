@@ -454,13 +454,13 @@ export default{
           }
 
           if(buyState){	//直接购买
-            store.set(process.env.CACHE_PR + 'OrderList', cartList)
+            store.set(process.env.CACHE_PR + 'OrderList', [...cartMap.values()])
           }else{
             // 发送给后台
             addShoppingCart([...cartMap.values()],function(res){
               this.$emit('loadCart') //重载数据
             });
-            store.set(process.env.CACHE_PR + 'CartList', [...cartMap.values()])
+            store.set(process.env.CACHE_PR + 'CartList', [...cartMnnap.values()])
             $nuxt.$store.commit('setShoppingCartNumber', cartMap.size)
           }
         }

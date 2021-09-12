@@ -537,7 +537,7 @@ export default{
 					//     }
 					// }
 					if(this.buyState){	//直接购买
-						uni.setStorageSync('dsshopOrderList', cartList)
+						uni.setStorageSync('dsshopOrderList', [...cartMap.values()])
 					}else{
 						const that = this
 						// 发送给后台
