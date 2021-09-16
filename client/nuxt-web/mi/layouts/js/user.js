@@ -48,7 +48,8 @@ export default {
       for (let i = 0; i < this.menuList.length; i++) {
         if(this.menuList[i].children.length>0){
           for (let j = 0; j < this.menuList[i].children.length; j++) {
-            if (this.menuList[i].children[j].path.split('\/')[2] === path.split('\/')[2]) {
+            // if (this.menuList[i].children[j].path.split('\/')[2] === path.split('\/')[2]) {
+            if (this.menuList[i].children[j].path === path) {
               this.menuList[i].children[j].active = true
             } else {
               this.menuList[i].children[j].active = false
