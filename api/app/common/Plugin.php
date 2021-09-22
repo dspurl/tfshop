@@ -35,9 +35,9 @@ class Plugin
 
     function __construct()
     {
-        $file_path = explode("/", base_path());
+        $file_path = explode(DIRECTORY_SEPARATOR, base_path());
         unset($file_path[count($file_path) - 1]);
-        $this->path = implode("/", $file_path);
+        $this->path = implode(DIRECTORY_SEPARATOR, $file_path);
         $this->pluginPath = $this->path . '/plugin';
         $this->pluginListPath = $this->pluginPath . '/list';
         $this->migrationsPath = $this->path . '/api/database/migrations';
