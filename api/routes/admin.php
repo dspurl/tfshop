@@ -14,7 +14,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
     // 后台API
     Route::prefix('admin')->namespace('Admin')->group(function () {
         Route::post('login', 'LoginController@index')->name('admin.login');  //登录
-        Route::post('gologin', 'LoginController@index')->name('admin.updateLogin')->middleware(['auth:api']);  //不需要token登录
+        Route::post('refreshToken', 'LoginController@refresh')->name('admin.refreshToken');  //刷新token
         Route::get('plugin/download/{name}', 'PluginController@download')->name('admin.plugInDownload');    //插件下载
     });
     Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {

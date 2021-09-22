@@ -11,11 +11,15 @@ export function getToken(key) {
   }
 }
 
-export function setToken(key, token) {
+export function setToken(key, token, time = 0) {
+  let expires = {}
+  if (time) {
+    expires = { expires: time }
+  }
   if (key) {
-    return Cookies.set(TokenPr + key, token)
+    return Cookies.set(TokenPr + key, token, expires)
   } else {
-    return Cookies.set(TokenKey, token)
+    return Cookies.set(TokenKey, token, expires)
   }
 }
 

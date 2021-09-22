@@ -16,7 +16,7 @@ function hasPermission(roles, permissionRoles) {
 
 const whiteList = ['/login', '/auth-redirect']// no redirect whitelist
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async(to, from, next) => {
   NProgress.start() // start progress bar
   if (to.meta.title) {
     document.title = to.meta.title + '-' + process.env.SITE_NAME
@@ -29,8 +29,14 @@ router.beforeEach((to, from, next) => {
       next({ path: '/' })
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
+      // 刷新token处理
+      if (getToken('expires_in') && !getToken('refresh_token_state')) {
+        if ((new Date()).getTime() >= getToken('expires_in') - 300 * 1000) { // token失效前5分钟会自动刷新token
+          await store.dispatch('RefreshToken').then()
+        }
+      }
       if (store.getters.roles.length === 0) { // 判断当前用户是否已拉取完权限
-        store.dispatch('GetUserInfo').then(res => { // 拉取user_info
+        await store.dispatch('GetUserInfo').then(res => { // 拉取user_info
           const roles = res.data.roles // note: roles must be a array! such as: ['editor','develop']
           store.jurisdiction = res.data.jurisdiction // 获取权限表
           const asyncRouterMap = res.data.asyncRouterMap // 获取菜单
@@ -51,7 +57,6 @@ router.beforeEach((to, from, next) => {
         } else {
           next({ path: '/401', replace: true, query: { noGoBack: true }})
         }
-        // 可删 ↑
       }
     }
   } else {

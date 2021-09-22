@@ -39,6 +39,9 @@
       <el-form-item>
         <Verify :type="3" :bar-size="{ width:'100%',height:'40px' }" :show-button="false" @success="verification = 1"/>
       </el-form-item>
+      <el-form-item class="no">
+        <el-checkbox v-model="loginForm.remember">记住密码</el-checkbox>
+      </el-form-item>
       <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.logIn') }}</el-button>
       <div style="position:relative">
         <!--<div class="tips">
@@ -91,7 +94,8 @@ export default {
     return {
       loginForm: {
         username: '',
-        password: ''
+        password: '',
+        remember: false
       },
       loginRules: {
         username: [{ required: true, trigger: 'blur', validator: validateUsername }],
@@ -218,6 +222,13 @@ export default {
       background: rgba(0, 0, 0, 0.1);
       border-radius: 5px;
       color: #454545;
+      &.no{
+        border: none;
+        background: none;
+        .el-checkbox__label{
+          color: #ffffff;
+        }
+      }
     }
   }
 </style>

@@ -29,13 +29,13 @@ class LoginController extends Controller
         $admin->last_login_at = Carbon::now()->toDateTimeString();
         $admin->save();
         $access_token = '';
-        
+
         if ($this->hasTooManyLoginAttempts($request)) {
             $this->limiter()->clear($this->throttleKey($request));
             $this->fireLockoutEvent($request);
             return $this->sendLockoutResponse($request);
         }
-        
+
         if ($request->type == 1) {  //首次登录获取token
             $client = new Client();
             $url = request()->root() . '/oauth/token';
@@ -54,6 +54,7 @@ class LoginController extends Controller
             $respond = $client->post($url, ['form_params' => $params]);
             $access_token = json_decode($respond->getBody()->getContents(), true);
         }
+        $access_token['refresh_expires_in'] = config('passport.refresh_expires_in')/60/60/24;
         $this->incrementLoginAttempts($request);
         //日志记录
         $input = $request->all();
@@ -64,6 +65,22 @@ class LoginController extends Controller
         $log->ip = $request->ip();
         $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
         $log->save();   # 记录日志
+        return resReturn(1, $access_token);
+    }
+
+    /**
+     * token刷新
+     * @param Request $request
+     * @return string
+     */
+    public function refresh(Request $request){
+        $client = new Client();
+        $url = request()->root() . '/oauth/token';
+        $params = array_merge(config('passport.refresh'), [
+            'refresh_token' => $request->refresh_token,
+        ]);
+        $respond = $client->post($url, ['form_params' => $params]);
+        $access_token = json_decode($respond->getBody()->getContents(), true);
         return resReturn(1, $access_token);
     }
 

@@ -1,4 +1,4 @@
-import { loginByUsername, getUserInfo } from '@/api/login'
+import { loginByUsername, getUserInfo, refreshToken } from '@/api/login'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -61,12 +61,16 @@ const user = {
           const token = response.data
           // 保存会token数据
           if (token) {
-            setToken('access_token', token.access_token)
-            setToken('expires_in', (new Date()).getTime() + token.expires_in * 1000)
-            setToken('refresh_token', token.refresh_token)
-            setToken('token_type', token.token_type)
+            let refresh_expires_in = 0
+            if (userInfo.remember) {
+              refresh_expires_in = token.refresh_expires_in ? token.refresh_expires_in : 0
+            }
+            setToken('access_token', token.access_token, refresh_expires_in)
+            setToken('expires_in', (new Date()).getTime() + token.expires_in * 1000, refresh_expires_in)
+            setToken('refresh_token', token.refresh_token, refresh_expires_in)
+            setToken('token_type', token.token_type, refresh_expires_in)
             commit('SET_TOKEN', token.access_token)
-            setToken('', token.access_token)
+            setToken('', token.access_token, refresh_expires_in)
           } else {
             setToken('', getToken('access_token'))
           }
@@ -76,7 +80,28 @@ const user = {
         })
       })
     },
-
+    // 刷新token
+    RefreshToken({ commit }) {
+      return new Promise((resolve, reject) => {
+        setToken('refresh_token_state', true)
+        refreshToken({
+          refresh_token: getToken('refresh_token')
+        }).then(response => {
+          const token = response.data
+          setToken('access_token', token.access_token)
+          setToken('expires_in', (new Date()).getTime() + token.expires_in * 1000)
+          setToken('refresh_token', token.refresh_token)
+          setToken('token_type', token.token_type)
+          commit('SET_TOKEN', token.access_token)
+          setToken('', token.access_token)
+          resolve()
+        }).catch(error => {
+          reject(error)
+        }).finally(() => {
+          removeToken('refresh_token_state')
+        })
+      })
+    },
     // 获取用户信息
     GetUserInfo({ commit, state }) {
       return new Promise((resolve, reject) => {

@@ -1,13 +1,18 @@
 import request from '@/utils/request'
 import Qs from 'qs'
 export function loginByUsername(data) {
-  var url = 'login'
-  if (!data.type) {
-    url = 'gologin'
-  }
   data = Qs.parse(data)
   return request({
-    url: url,
+    url: 'login',
+    method: 'POST',
+    data
+  })
+}
+
+export function refreshToken(data) {
+  data = Qs.parse(data)
+  return request({
+    url: 'refreshToken',
     method: 'POST',
     data
   })

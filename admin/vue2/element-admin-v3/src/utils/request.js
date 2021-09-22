@@ -54,14 +54,12 @@ service.interceptors.response.use(
 
       if (res.status === 50002 || res.status === 50003) {
         // to re-login
-        MessageBox.confirm('你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+        MessageBox.confirm('长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
           confirmButtonText: '重新登录',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          store.dispatch('user/resetToken').then(() => {
-            location.reload()
-          })
+          store.dispatch('LogOut').then()
         })
       }
       return Promise.reject(new Error(res.message || 'Error'))
@@ -73,11 +71,21 @@ service.interceptors.response.use(
   },
   error => {
     // console.log('err' + error) // for debug
-    Message({
-      message: error.response.data.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    if (error.response.data.status_code === 500) {
+      MessageBox.confirm('长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
+        confirmButtonText: '重新登录',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        store.dispatch('LogOut').then()
+      })
+    } else {
+      Message({
+        message: error.response.data.message,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
     return Promise.reject(error)
   }
 )
