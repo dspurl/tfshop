@@ -22,6 +22,17 @@ export default {
 			})
 		})
 	},
+	refreshToken(data, success, fail) {
+		Network.setPost('refreshToken', data, function(res) {
+			success(res)
+		}, function(res) {
+			uni.showToast({
+				title: res.message,
+				icon: 'none',
+				duration: 2000
+			})
+		})
+	},
 	verifyEmail(data, success, fail) {
 		Network.setPostMessage('verifyEmail', data, '处理中', function(res) {
 			success(res)

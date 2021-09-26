@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Code;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 
 class Authenticate extends Middleware
@@ -11,12 +12,13 @@ class Authenticate extends Middleware
      *
      * @param \Illuminate\Http\Request $request
      * @return string
+     * @throws \Exception
      */
     protected function redirectTo($request)
     {
         if (!$request->expectsJson()) {
-//            return route('login');
-            exit('密钥已失效，请清空本地缓存');
+//            exit('密钥已失效，请清空本地缓存');
+            throw new \Exception('登录超时，请重新登录', 500);
         }
     }
 }

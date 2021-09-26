@@ -5,12 +5,16 @@ export function getToken(key) {
   return Cookies.get(TokenPr + key)
 }
 
-export function setToken(key, token) {
-  return Cookies.set(TokenPr + key, token)
-}
-
-export function setExpiresToken(key, token ,time) {
-  return Cookies.set(TokenPr + key, token, { expires: time})
+export function setToken(key, token, time = 0) {
+  let expires = {}
+  if (time) {
+    expires = { expires: time }
+  }
+  if (key) {
+    return Cookies.set(TokenPr + key, token, expires)
+  } else {
+    return Cookies.set(TokenPr, token, expires)
+  }
 }
 
 export function removeToken(key) {

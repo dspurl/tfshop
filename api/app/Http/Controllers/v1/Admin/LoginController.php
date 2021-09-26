@@ -39,7 +39,7 @@ class LoginController extends Controller
         if ($request->type == 1) {  //首次登录获取token
             $client = new Client();
             $url = request()->root() . '/oauth/token';
-            $params = array_merge(config('passport.proxy'), [
+            $params = array_merge(config('passport.admin.proxy'), [
                 'username' => $request->username,
                 'password' => $request->password,
             ]);
@@ -48,7 +48,7 @@ class LoginController extends Controller
         } else if ($request->type == 2) {    //token失效更新token
             $client = new Client();
             $url = request()->root() . '/oauth/token';
-            $params = array_merge(config('passport.refresh'), [
+            $params = array_merge(config('passport.admin.refresh'), [
                 'refresh_token' => $request->refresh_token,
             ]);
             $respond = $client->post($url, ['form_params' => $params]);
@@ -76,7 +76,7 @@ class LoginController extends Controller
     public function refresh(Request $request){
         $client = new Client();
         $url = request()->root() . '/oauth/token';
-        $params = array_merge(config('passport.refresh'), [
+        $params = array_merge(config('passport.admin.refresh'), [
             'refresh_token' => $request->refresh_token,
         ]);
         $respond = $client->post($url, ['form_params' => $params]);

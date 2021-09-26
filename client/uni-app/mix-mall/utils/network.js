@@ -1,5 +1,6 @@
 import { getPlatform,getLogin } from 'utils'
 import configURL from './config.js'
+import store from '@/store'
 function request(url, method, params, header, success, fail) {
   this.requestLoading(url, method, params, header, "", success, fail)
 }
@@ -86,7 +87,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
       'content-type': 'application/json',
       'apply-secret': configURL.secret,
       'openid': uni.getStorageSync('applyDsshopOpenid'),
-	  'Authorization': 'Bearer ' + applytoken
+	  'Authorization': uni.getStorageSync('dsshopTokenType') + ' ' + applytoken
     },
     method: method ? method : 'get',
     success: function (res) {
@@ -103,10 +104,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
 		  }
 		  
 	  }else if (res.statusCode == 500) {
-		  // #ifdef MP
-		  getLogin()
-		  // #endif
-		  fail({message: '服务器异常，请重新尝试'})
+		  store.commit('logout')
 	  }else if (res.statusCode == 302) {
 		  // #ifdef MP
 		  getLogin()

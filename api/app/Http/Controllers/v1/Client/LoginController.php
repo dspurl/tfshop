@@ -7,6 +7,8 @@ use App\common\RedisService;
 use App\Models\v1\MiniProgram;
 use App\Models\v1\User;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +24,7 @@ use Webpatser\Uuid\Uuid;
  */
 class LoginController extends Controller
 {
-
+    use AuthenticatesUsers;
     /**
      * Login
      * 登录
@@ -57,13 +59,35 @@ class LoginController extends Controller
         }
         $user->updated_at = Carbon::now()->toDateTimeString();
         $user->save();
-        return resReturn(1, [
-            'nickname' => $user->nickname,
-            'cellphone' => $user->cellphone,
-            'portrait' => $user->portrait,
-            'api_token' => $user->api_token,
-            'wechat' => $user->wechat
+        $client = new Client();
+        $url = request()->root() . '/oauth/token';
+        $params = array_merge(config('passport.web.proxy'), [
+            'username' => $request->cellphone,
+            'password' => $request->password,
         ]);
+        $respond = $client->post($url, ['form_params' => $params]);
+        $access_token = json_decode($respond->getBody()->getContents(), true);
+        $access_token['refresh_expires_in'] = config('passport.refresh_expires_in')/60/60/24;
+        $access_token['nickname'] = $user->nickname;
+        $access_token['cellphone'] = $user->cellphone;
+        $access_token['wechat'] = $user->wechat;
+        return resReturn(1, $access_token);
+    }
+
+    /**
+     * token刷新
+     * @param Request $request
+     * @return string
+     */
+    public function refresh(Request $request){
+        $client = new Client();
+        $url = request()->root() . '/oauth/token';
+        $params = array_merge(config('passport.web.refresh'), [
+            'refresh_token' => $request->refresh_token,
+        ]);
+        $respond = $client->post($url, ['form_params' => $params]);
+        $access_token = json_decode($respond->getBody()->getContents(), true);
+        return resReturn(1, $access_token);
     }
 
     /**
@@ -85,6 +109,8 @@ class LoginController extends Controller
                 return resReturn(0, $miniPhoneNumber['msg'], Code::CODE_MISUSE);
             }
             $User = User::where('cellphone', $miniPhoneNumber['purePhoneNumber'])->first();
+            $client = new Client();
+            $url = request()->root() . '/oauth/token';
             if (!$User) {
                 $return = DB::transaction(function () use ($request, $miniPhoneNumber, $openid) {
                     $password = substr(MD5(time()), 5, 6);  //随机生成密码
@@ -104,13 +130,18 @@ class LoginController extends Controller
                     ];
                 }, 5);
                 if ($return['state'] == 1) {
-                    return resReturn(1, [
-                        'nickname' => $return['data']->nickname,
-                        'cellphone' => $return['data']->cellphone,
-                        'portrait' => $return['data']->portrait,
-                        'api_token' => $return['data']->api_token,
-                        'wechat' => $return['data']->wechat
+                    $params = array_merge(config('passport.web.proxy'), [
+                        'username' => $return['data']->name,
+                        'password' => $return['data']->password,
                     ]);
+                    $respond = $client->post($url, ['form_params' => $params]);
+                    $access_token = json_decode($respond->getBody()->getContents(), true);
+                    $access_token['refresh_expires_in'] = config('passport.refresh_expires_in')/60/60/24;
+                    $access_token['nickname'] = $return['data']->nickname;
+                    $access_token['cellphone'] = $return['data']->cellphone;
+                    $access_token['portrait'] = $return['data']->portrait;
+                    $access_token['wechat'] = $return['data']->wechat;
+                    return resReturn(1, $access_token);
                 } else {
                     return resReturn(0, $return['msg'], $return['code']);
                 }
@@ -130,13 +161,19 @@ class LoginController extends Controller
                     ];
                 }, 5);
                 if ($return['state'] == 1) {
-                    return resReturn(1, [
-                        'nickname' => $return['data']->nickname,
-                        'cellphone' => $return['data']->cellphone,
-                        'portrait' => $return['data']->portrait,
-                        'api_token' => $return['data']->api_token,
-                        'wechat' => $return['data']->wechat
+
+                    $params = array_merge(config('passport.web.proxy'), [
+                        'username' => $return['data']->name,
+                        'password' => $return['data']->password,
                     ]);
+                    $respond = $client->post($url, ['form_params' => $params]);
+                    $access_token = json_decode($respond->getBody()->getContents(), true);
+                    $access_token['refresh_expires_in'] = config('passport.refresh_expires_in')/60/60/24;
+                    $access_token['nickname'] = $return['data']->nickname;
+                    $access_token['cellphone'] = $return['data']->cellphone;
+                    $access_token['portrait'] = $return['data']->portrait;
+                    $access_token['wechat'] = $return['data']->wechat;
+                    return resReturn(1, $access_token);
                 }
             }
         } else {

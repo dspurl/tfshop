@@ -12,9 +12,18 @@ export const mutations = {
     if(provider){
       state.hasLogin = true;
       // 登录时才需要保存数据
-      if(provider.api_token){
-        setToken('token',provider.api_token);
-        store.set(process.env.CACHE_PR + 'UserInfo', provider)
+      let refresh_expires_in = 0
+      if (provider.remember) {
+        refresh_expires_in = provider.refresh_expires_in ? provider.refresh_expires_in : 0
+      }
+      if(provider.access_token){
+        setToken('token',provider.access_token, refresh_expires_in);
+        setToken('expires_in', (new Date()).getTime() + provider.expires_in * 1000, refresh_expires_in)
+        setToken('refresh_token',provider.refresh_token, refresh_expires_in);
+        setToken('token_type',provider.token_type, refresh_expires_in);
+        if (provider.cellphone) {
+          store.set(process.env.CACHE_PR + 'UserInfo', provider)
+        }
       }
     }
   },
@@ -31,6 +40,9 @@ export const mutations = {
     store.remove(process.env.CACHE_PR + 'UserInfo');
     store.remove(process.env.CACHE_PR + 'CartList');
     removeToken('token');
+    removeToken('expires_in');
+    removeToken('refresh_token');
+    removeToken('token_type');
     state.hasLogin = false;
     state.userInfo = {};
   },

@@ -4,6 +4,8 @@
  */
 import { mapMutations } from 'vuex';
 import { getPlatform,getLogin } from 'utils'
+import Login from '@/api/login.js'
+import store from '@/store'
 export default {
 	onLaunch: function(options) {
 		// uni.clearStorage()
@@ -53,6 +55,27 @@ export default {
 	},
 	onShow: function() {
 		this.showDsshopCartNumber()
+		uni.addInterceptor('request', {
+			invoke(args) {
+			    if(args.url.indexOf('refreshToken') === -1){
+			    	if(uni.getStorageSync('dsshopExpiresIn') && !store.state.refresh){
+			    		if ((new Date()).getTime() >= uni.getStorageSync('dsshopExpiresIn') - 300 * 1000) { // token失效前5分钟会自动刷新token
+							store.commit('setRefresh',true)
+							// 计时器的作用是防止刷新token早于其它接口触发前触发导致接口数据获取失效，可用vue-router或是服务端配置token的时间
+							setTimeout(function(){
+								Login.refreshToken({
+									refresh_token: uni.getStorageSync('dsshopRefreshToken')
+								},function(res){
+									store.commit('login',res)
+									store.commit('setRefresh',false)
+								})
+							},5000);
+			    			
+			    		}
+			    	}
+			    }
+			}
+		})
 	},
 	onHide: function() {},
 };

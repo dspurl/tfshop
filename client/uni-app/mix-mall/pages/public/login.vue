@@ -174,7 +174,6 @@
 				}
 				this.logining = true
 				Login.login(ruleForm,function(res){
-					uni.setStorageSync('dsshopApplytoken', res.api_token)
 					that.login(res)
 					that.logining = false
 					that.$api.msg(`登录成功`);
@@ -241,7 +240,6 @@
 						session_key: uni.getStorageSync('applyDsshopSession_key'),
 						platform: getPlatform()
 					  },function(res){
-						uni.setStorageSync('dsshopApplytoken', res.api_token)
 						that.login(res)
 						that.$api.msg(`登录成功`);
 						uni.navigateBack()

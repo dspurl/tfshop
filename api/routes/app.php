@@ -16,6 +16,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::any('serve', 'AppController@serve')->name('client.serve');    //处理应用的请求消息
         Route::any('paymentNotify', 'AppController@paymentNotify')->name('client.paymentNotify');    //支付回调
         Route::any('refundNotify', 'AppController@refundNotify')->name('client.refundNotify');    //退款回调
+        Route::post('refreshToken', 'LoginController@refresh')->name('client.refreshToken');  //刷新token
     });
     // 需要secret验证
     Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
@@ -23,6 +24,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('cellphoneCode', 'AppController@cellphoneCode')->name('client.cellphoneCode');    //获取手机验证码
         Route::post('emailCode', 'AppController@emailCode')->name('client.emailCode');    //获取邮箱验证码
         Route::post('login', 'LoginController@login')->name('client.login');    //登录
+
         Route::post('register', 'LoginController@register')->name('client.register');    //注册
         Route::post('findPassword', 'LoginController@findPassword')->name('client.findPassword');    //找回密码
         Route::post('miniLogin', 'LoginController@miniLogin')->name('client.miniLogin');    //小程序换取openid

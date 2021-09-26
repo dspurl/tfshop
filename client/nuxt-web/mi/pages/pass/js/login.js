@@ -25,7 +25,8 @@ export default {
       method: 1,
       ruleForm: {
         cellphone: '',
-        password: ''
+        password: '',
+        remember: false
       },
       loading: false,
       rules: {
@@ -46,6 +47,7 @@ export default {
         if (valid) {
           this.loading = true;
           login(this.ruleForm).then(response => {
+            response.remember = this.ruleForm.remember
             this.login(response);
             this.$message({
               message: '登录成功',

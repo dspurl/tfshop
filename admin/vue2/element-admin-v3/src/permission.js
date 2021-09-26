@@ -30,7 +30,7 @@ router.beforeEach(async(to, from, next) => {
       NProgress.done() // if current page is dashboard will not trigger	afterEach hook, so manually handle it
     } else {
       // 刷新token处理
-      if (getToken('expires_in') && !getToken('refresh_token_state')) {
+      if (getToken('expires_in')) {
         if ((new Date()).getTime() >= getToken('expires_in') - 300 * 1000) { // token失效前5分钟会自动刷新token
           await store.dispatch('RefreshToken').then()
         }

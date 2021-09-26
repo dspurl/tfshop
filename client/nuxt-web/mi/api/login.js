@@ -8,6 +8,14 @@ export function login(data) {
     data
   })
 }
+export function refreshToken(data) {
+  data = Qs.parse(data)
+  return request({
+    url: 'refreshToken',
+    method: 'POST',
+    data
+  })
+}
 export function cellphoneCode(data) {
   data = Qs.parse(data)
   return request({

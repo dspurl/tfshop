@@ -1,5 +1,6 @@
 import axios from 'axios'
-import { Message } from 'element-ui'
+import { Message, MessageBox } from 'element-ui'
+import store from '@/store'
 import { getToken } from '@/plugins/auth'
 const service = axios.create({
   baseURL: process.env.API_URL,
@@ -9,7 +10,7 @@ service.interceptors.request.use(
   config => {
     config.headers['apply-secret'] = process.env.PROJECT_KEY
     config.headers['Accept'] = 'application/json'
-    config.headers['Authorization'] = 'Bearer ' + getToken('token')
+    config.headers['Authorization'] = getToken('token_type') + ' ' + getToken('token')
     return config
   },
   error => {
@@ -42,11 +43,17 @@ service.interceptors.response.use(
   },
   error => {
     // console.log('err' + error) // for debug
-    Message({
-      message: error.response.data.message,
-      type: 'error',
-      duration: 5 * 1000
-    })
+    console.log('error.response.data', error.response.data)
+    if (error.response.data.status_code === 500) {
+      $nuxt.$store.commit('logout')
+      location.reload()
+    } else {
+      Message({
+        message: error.response.data.message,
+        type: 'error',
+        duration: 5 * 1000
+      })
+    }
     return Promise.reject(error)
   }
 )

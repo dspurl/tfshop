@@ -10,7 +10,7 @@ return [
     */
     'admin' => [
         'login' => '登录',
-        'updateLogin' => '刷新token',
+        'refreshToken' => '刷新token',
         'plugInDownload' => '插件下载',
         'uploadPictures' => '上传',
         'userInfo' => '用户详情',
@@ -109,6 +109,7 @@ return [
         'cellphoneCode' => '获取手机验证码',
         'emailCode' => '获取邮箱验证码',
         'login' => '登录',
+        'refreshToken' => '刷新token',
         'register' => '注册',
         'findPassword' => '找回密码',
         'miniLogin' => '小程序换取openid',

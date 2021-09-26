@@ -83,7 +83,6 @@ const user = {
     // 刷新token
     RefreshToken({ commit }) {
       return new Promise((resolve, reject) => {
-        setToken('refresh_token_state', true)
         refreshToken({
           refresh_token: getToken('refresh_token')
         }).then(response => {
@@ -97,8 +96,6 @@ const user = {
           resolve()
         }).catch(error => {
           reject(error)
-        }).finally(() => {
-          removeToken('refresh_token_state')
         })
       })
     },

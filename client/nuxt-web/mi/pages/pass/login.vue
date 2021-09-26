@@ -23,6 +23,9 @@
                       <i slot="prefix" class="iconfont dsshop-mima"></i>
                     </el-input>
                   </el-form-item>
+                  <el-form-item>
+                    <el-checkbox v-model="ruleForm.remember">记住密码</el-checkbox>
+                  </el-form-item>
                   <el-button class="button" type="danger" :loading="loading" @click="toLogin">登录</el-button>
                 </el-form>
                 <div class="other">
