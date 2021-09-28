@@ -44,7 +44,7 @@ service.interceptors.response.use(
   error => {
     // console.log('err' + error) // for debug
     console.log('error.response.data', error.response.data)
-    if (error.response.data.status_code === 500  && error.response.data.message.indexOf('The refresh token is invalid') !== -1) {
+    if (error.response.data.status_code === 500  && (error.response.data.message.indexOf('The refresh token is invalid') !== -1 || error.response.data.message.indexOf('Unauthenticated') !== -1)) {
       $nuxt.$store.commit('logout')
       location.reload()
     } else {
