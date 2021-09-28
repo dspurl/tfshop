@@ -104,7 +104,9 @@ function requestLoading(url, method, params, header, message, success, fail) {
 		  }
 		  
 	  }else if (res.statusCode == 500) {
-		  store.commit('logout')
+		  if(res.data.message.indexOf('The refresh token is invalid') !== -1){
+			  store.commit('logout')
+		  }
 	  }else if (res.statusCode == 302) {
 		  // #ifdef MP
 		  getLogin()

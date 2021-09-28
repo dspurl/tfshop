@@ -19,7 +19,10 @@ class PluginController extends Controller
 
     function __construct()
     {
-        (new Plugin())->verifyDirectoryStructure();
+        try {
+            (new Plugin())->verifyDirectoryStructure();
+        } catch (\Exception $e) {
+        }
     }
 
     /**

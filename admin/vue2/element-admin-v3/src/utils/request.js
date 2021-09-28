@@ -71,7 +71,7 @@ service.interceptors.response.use(
   },
   error => {
     // console.log('err' + error) // for debug
-    if (error.response.data.status_code === 500) {
+    if (error.response.data.status_code === 500 && error.response.data.message.indexOf('The refresh token is invalid') !== -1) {
       MessageBox.confirm('长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
         confirmButtonText: '重新登录',
         cancelButtonText: '取消',
