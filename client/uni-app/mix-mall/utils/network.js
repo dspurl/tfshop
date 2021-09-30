@@ -104,7 +104,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
 		  }
 		  
 	  }else if (res.statusCode == 500) {
-		  if(res.data.message.indexOf('The refresh token is invalid') !== -1 || res.data.message.indexOf('Unauthenticated') !== -1){
+		  if(res.data.message.indexOf('The refresh token is invalid') !== -1 || res.data.message.indexOf('Unauthenticated') !== -1 || res.data.message.indexOf('登录超时') !== -1){
 			  store.commit('logout')
 		  }
 	  }else if (res.statusCode == 302) {
