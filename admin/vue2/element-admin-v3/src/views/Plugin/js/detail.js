@@ -586,7 +586,7 @@ export default {
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           if (this.name) {
-            if (this.ruleForm.publish && this.versions !== this.ruleForm.versions) {
+            if (this.ruleForm.publish && this.versions === this.ruleForm.versions) {
               this.$message.error('已发布的版本无法直接编辑，请修改版本号')
               this.formLoading = false
               return false

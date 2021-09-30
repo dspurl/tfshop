@@ -1633,8 +1633,13 @@ class Plugin
     {
         if (!file_exists($target)) {
             if (file_exists($file)) {
-                $this->makeDirByPath(dirname($target));
-                copy($file, $target);
+                // 判断是否目录
+                if (is_dir($file)) {
+                    $this->fileDeployment($file, $target);
+                } else {
+                    $this->makeDirByPath(dirname($target));
+                    copy($file, $target);
+                }
             }
         }
     }
