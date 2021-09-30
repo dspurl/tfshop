@@ -434,8 +434,10 @@ class Plugin
         if (file_exists($this->pluginListPath . '/' . $name . '/dsshop.json')) {
             $path = json_decode(file_get_contents($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
             // 清空插件打包产生的相关文件
-            $this->delDirAndFile($this->pluginListPath . '/' . $name . '/admin');
-            $this->delDirAndFile($this->pluginListPath . '/' . $name . '/api');
+            $this->delDirAndFile($this->pluginListPath . '/' . $name . '/admin', true);
+            $this->delDirAndFile($this->pluginListPath . '/' . $name . '/api', true);
+            $this->delDirAndFile($this->pluginListPath . '/' . $name . '/client', true);
+            $this->delDirAndFile($this->pluginListPath . '/' . $name . '/database', true);
             // 打包数据表相关文件
             if ($path['db']) {
                 foreach ($path['db'] as $db) {
