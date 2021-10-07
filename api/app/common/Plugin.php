@@ -35,13 +35,13 @@ class Plugin
 
     function __construct()
     {
-        $file_path = explode(DIRECTORY_SEPARATOR, base_path());
-        unset($file_path[count($file_path) - 1]);
-        $this->path = implode(DIRECTORY_SEPARATOR, $file_path);
-        $this->pluginPath = $this->path . '/plugin';
+//        $file_path = explode(DIRECTORY_SEPARATOR, base_path());
+//        unset($file_path[count($file_path) - 1]);
+//        $this->path = implode(DIRECTORY_SEPARATOR, $file_path);
+        $this->pluginPath = 'plugin';
         $this->pluginListPath = $this->pluginPath . '/list';
-        $this->migrationsPath = $this->path . '/api/database/migrations';
-        $this->migrations = scandir($this->migrationsPath);
+        $this->migrationsPath = '/api/database/migrations';
+        $this->migrations = Storage::disk('root')->files($this->migrationsPath);
     }
 
     /**
@@ -50,7 +50,7 @@ class Plugin
      */
     public function verifyDirectoryStructure()
     {
-        $local = scandir($this->path);
+        $local = Storage::disk('root')->directories();
         $verify = ['api', 'admin', 'client', 'plugin'];
         if (!empty(array_diff($verify, $local))) {
             throw new \Exception('你的项目目录结构有误，无法使用插件', Code::CODE_WRONG);
@@ -61,27 +61,24 @@ class Plugin
      * 获取本地插件列表
      * @param $request
      * @return array
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getLocalPlugin($request)
     {
         // 创建list插件目录
-        if (!file_exists($this->pluginListPath)) {
-            mkdir($this->pluginListPath, 0777, true);
-        }
-        $data = scandir($this->pluginListPath);
+        Storage::disk('root')->makeDirectory($this->pluginListPath);
+        $data = Storage::disk('root')->directories($this->pluginListPath);
         $list = [];
-        $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
+        $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
         foreach ($data as $value) {
-            if ($value != '.' && $value != '..') {
-                $dsshop = json_decode(file_get_contents($this->pluginListPath . '/' . $value . '/dsshop.json'), true);
-                foreach ($json_dsshop as $js) {
-                    if ($js['name'] == $dsshop['abbreviation']) {
-                        $dsshop['locality_versions'] = $js['versions'];
-                        $dsshop['is_delete'] = $js['is_delete'];
-                    }
+            $dsshop = json_decode(Storage::disk('root')->get($value . '/dsshop.json'), true);
+            foreach ($json_dsshop as $js) {
+                if ($js['name'] == $dsshop['abbreviation']) {
+                    $dsshop['locality_versions'] = $js['versions'];
+                    $dsshop['is_delete'] = $js['is_delete'];
                 }
-                $list[] = $dsshop;
             }
+            $list[] = $dsshop;
         }
         $page = $request->has('page') ? $request->page : 1;
         $limit = $request->has('limit') ? $request->limit : 20;
@@ -214,53 +211,46 @@ class Plugin
      */
     public function models()
     {
-        $data = scandir($this->path . '/api/app/Models/v' . config('dsshop.versions'));
+        $data = Storage::disk('root')->files('/api/app/Models/v' . config('dsshop.versions'));
         $return = [];
         foreach ($data as $value) {
-            if ($value != '.' && $value != '..') {
-                $return[] = str_replace(".php", "", $value);
-            }
+            $name = explode("/", str_replace(".php", "", $value));
+            $return[] = end($name);
         }
         return $return;
     }
 
     /**
      * 获取所有模板
-     * @param $name //区分后台还是客户端
+     * @param string $name //区分后台还是客户端
      * @return \Illuminate\Support\Collection|string
+     * @throws \Exception
      */
     public function template($name = 'client')
     {
-        $data = scandir($this->path . "/$name");
+        $data = Storage::disk('root')->directories("/$name");
         $return = [];
         foreach ($data as $value) {
-            if ($value != '.' && $value != '..') {
-                $catalogue = $this->path . "/$name/" . $value;
-                if (is_dir($catalogue)) {
-                    $list = scandir($catalogue);
-                    $return[$value] = [
-                        'name' => $value,
-                        'children' => []
-                    ];
-                    foreach ($list as $l) {
-                        if ($l != '.' && $l != '..') {
-                            if (is_dir($catalogue . '/' . $l)) {
-                                $path = $catalogue . '/' . $l . '/dsshop.config.json';
-                                if (!file_exists($path)) {
-                                    return resReturn(0, '缺少dsshop.config.json配置文件', Code::CODE_WRONG);
-                                }
-                                $config = json_decode(file_get_contents($path), true);
-                                $return[$value]['children'][] = $config;
-                                unset($path);
-                                unset($config);
-                            }
-                        }
-                    }
-                    unset($list);
+            $list = Storage::disk('root')->directories("/$value");
+            $return[$value] = [
+                'name' => $value,
+                'children' => []
+            ];
+
+            foreach ($list as $l) {
+                try {
+                    $path = Storage::disk('root')->get('/' . $l . '/dsshop.config.json');
+                } catch (\Exception $e) {
+                    throw new \Exception('缺少dsshop.config.json配置文件', Code::CODE_WRONG);
                 }
-                unset($catalogue);
+                $config = json_decode($path, true);
+                $return[$value]['children'][] = $config;
+                unset($path);
+                unset($config);
             }
+            unset($list);
         }
+
         return collect($return)->values();
     }
 
@@ -323,7 +313,7 @@ class Plugin
         }
         // 创建插件时，先清除插件创建过的文件和目录
         $this->destroy($request->abbreviation);
-        if (file_exists($this->pluginListPath . '/' . $request->abbreviation . '/dsshop.json')) {
+        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $request->abbreviation . '/dsshop.json')) {
             throw new \Exception('创建的插件已经存在', Code::CODE_PARAMETER_WRONG);
         }
         $this->generatePlugInDirectory();
@@ -510,11 +500,13 @@ class Plugin
      * 插件详情
      * @param $name
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function details($name)
     {
         $path = $this->pluginListPath . '/' . $name . '/dsshop.json';
-        return json_decode(file_get_contents($path));
+        $path = Storage::disk('root')->get($path);
+        return json_decode($path);
     }
 
     /**
@@ -571,19 +563,19 @@ class Plugin
                 $file_get_contents = str_replace("前台插件列表", $dsshop['name'] . "_s
         " . $routes['admin'] . "
         //" . $dsshop['name'] . "_e
-        //前台插件列表", $file_get_contents);
+        // 前台插件列表", $file_get_contents);
             }
             if (array_key_exists('notValidatedApp', $routes)) {
                 $file_get_contents = str_replace("APP无需验证插件列表", $dsshop['name'] . "_s
         " . $routes['notValidatedApp'] . "
         //" . $dsshop['name'] . "_e
-        //APP无需验证插件列表", $file_get_contents);
+        // APP无需验证插件列表", $file_get_contents);
             }
             if (array_key_exists('app', $routes)) {
                 $file_get_contents = str_replace("APP验证插件列表", $dsshop['name'] . "_s
         " . $routes['app'] . "
         //" . $dsshop['name'] . "_e
-        //APP验证插件列表", $file_get_contents);
+        // APP验证插件列表", $file_get_contents);
             }
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             file_put_contents($targetPath, $file_get_contents);
@@ -709,34 +701,35 @@ class Plugin
      * 删除插件
      * @param $name
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function destroy($name)
     {
-        if (file_exists($this->pluginListPath . '/' . $name . '/dsshop.json')) {
-            $path = json_decode(file_get_contents($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
+        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $name . '/dsshop.json')) {
+            $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
             if ($path['db']) {
                 foreach ($path['db'] as $db) {
                     $names = $this->convertUnderline(rtrim($db['name'], 's'));
                     $n = $this->convertUnderline(rtrim($db['name'], 's'), true);
                     $this->fileDestroy($this->migrationsPath . '/' . $this->getLocalMigrations('create_' . $db['name'] . '_table'));
-                    $this->fileDestroy($this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Admin/' . $names . 'Controller.php');
-                    $this->fileDestroy($this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Client/' . $names . 'Controller.php');
-                    $this->fileDestroy($this->path . '/api/app/Models/v' . config('dsshop.versions') . '/' . $names . '.php');
-                    $this->fileDestroy($this->path . '/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $names . 'Request.php');
+                    $this->fileDestroy('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Admin/' . $names . 'Controller.php');
+                    $this->fileDestroy('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Client/' . $names . 'Controller.php');
+                    $this->fileDestroy('/api/app/Models/v' . config('dsshop.versions') . '/' . $names . '.php');
+                    $this->fileDestroy('/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $names . 'Request.php');
                     $this->clearJurisdiction($db);
                     //删除后台模板（目录移动过将不会进行删除）
                     if (count($path['adminTemplate']) > 0) {
                         foreach ($path['adminTemplate'] as $c) {
-                            $this->delDirAndFile($this->path . '/admin/' . $c . '/src/views/ToolManagement/' . $names, true);
-                            $this->fileDestroy($this->path . '/admin/' . $c . '/src/api/' . $n . '.js');
+                            Storage::disk('root')->deleteDirectory('/admin/' . $c . '/src/views/ToolManagement/' . $names);
+                            $this->fileDestroy('/admin/' . $c . '/src/api/' . $n . '.js');
                         }
                     }
                     //删除客户端模板（目录移动过将不会进行删除）
                     if (count($path['clientTemplate']) > 0) {
                         foreach ($path['clientTemplate'] as $c) {
-                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/' . $n, true);
-                            $this->delDirAndFile($this->path . '/client/' . $c . '/pages/user/' . $n, true);
-                            $this->fileDestroy($this->path . '/client/' . $c . '/api/' . $n . '.js');
+                            Storage::disk('root')->deleteDirectory('/client/' . $c . '/pages/' . $n);
+                            Storage::disk('root')->deleteDirectory('/client/' . $c . '/pages/user/' . $n);
+                            $this->fileDestroy('/client/' . $c . '/api/' . $n . '.js');
                         }
                     }
                 }
@@ -755,7 +748,7 @@ class Plugin
                 }
             }
             $this->removeRoutes($path['name'], $path);
-            $this->delDirAndFile($this->pluginListPath . '/' . $name, true);
+            Storage::disk('root')->deleteDirectory($this->pluginListPath . '/' . $name);
             return '删除成功';
         }
     }
@@ -1084,7 +1077,7 @@ class Plugin
     protected function removeObserver($observer)
     {
         $name = $this->convertUnderline($observer['name']);
-        $observersPath = $this->path . '/api/app/Observers/' . $observer['models'];
+        $observersPath = '/api/app/Observers/' . $observer['models'];
         $path = $observersPath . '/' . $name . 'Observer.php';
         $this->fileDestroy($path);
     }
@@ -1098,19 +1091,13 @@ class Plugin
     {
         $name = $this->convertUnderline($observer['name']);
         // 生成观察者所在目录文件夹
-        $observersPath = $this->path . '/api/app/Observers/' . $observer['models'];
+        $observersPath = '/api/app/Observers/' . $observer['models'];
         $path = $observersPath . '/' . $name . 'Observer.php';
-        if (!file_exists($observersPath)) {
-            mkdir($observersPath, 0777, true);
-        }
+        Storage::disk('root')->makeDirectory($observersPath);
         // 模板
         $controller = $this->pluginPath . '/template/observer.ds';
-        if (!file_exists($controller)) {
+        if (!Storage::disk('root')->exists($controller)) {
             throw new \Exception('缺少observer.ds文件', Code::CODE_INEXISTENCE);
-        }
-        // 生成观察者
-        if (!file_exists($path)) {
-            fopen($path, 'w+');
         }
         // 可执行路由
         $route = '';
@@ -1128,7 +1115,7 @@ class Plugin
             ";
             unset($routeName);
         }
-        $content = file_get_contents($controller);
+        $content = Storage::disk('root')->get($controller);
         $content = preg_replace([
             '/{{ package }}/',
             '/{{ versions }}/',
@@ -1147,7 +1134,7 @@ class Plugin
             lcfirst($observer['models'])
         ], $content);
         $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
-        file_put_contents($path, $content);
+        Storage::disk('root')->put($path, $content);
     }
 
     /**
@@ -1239,7 +1226,7 @@ class Plugin
         $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
         if (count($request->adminTemplate) > 0) {
             foreach ($request->adminTemplate as $c) {
-                $path = $this->path . '/admin/' . $c . '/src/api/' . $name . '.js';
+                $path = '/' . $c . '/src/api/' . $name . '.js';
                 $this->createFile('api.admin.ds', ['/{{ name }}/'], [$name], $path);
                 unset($path);
             }
@@ -1261,31 +1248,22 @@ class Plugin
         //获取支持的客户端
         if (count($client) > 0) {
             foreach ($client as $c) {
-                $path = $this->path . '/client/' . $c;
+                $path = '/' . $c;
                 $pages = $path . '/pages/' . $request->abbreviation;
                 $structure = explode('/', $c);
-                if (count($structure) != 2) {
-                    throw new \Exception('前端模板目录结构有误', Code::CODE_INEXISTENCE);
-                }
                 $pathArr = [$pages, $pages . '/' . $name, $pages . '/' . $name . '/components', $pages . '/' . $name . '/js', $pages . '/' . $name . '/scss'];
                 // 生成表对应的目录
                 foreach ($pathArr as $p) {
-                    if (!file_exists($p)) {
-                        mkdir($p, 0777, true);
-                    }
+                    Storage::disk('root')->makeDirectory($p);
                 }
                 // 生成模板
-                $this->createFile('list.client.' . $structure[0] . '.ds', [], [], $pages . '/' . $name . '/list.vue');
-                $this->createFile('list.client.' . $structure[0] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/list.js');
-                if (!file_exists($pages . '/' . $name . '/scss/list.scss')) {
-                    fopen($pages . '/' . $name . '/scss/list.scss', 'w+');
-                }
-                $this->createFile('detail.client.' . $structure[0] . '.ds', [], [], $pages . '/' . $name . '/detail.vue');
-                $this->createFile('detail.client.' . $structure[0] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/detail.js');
-                if (!file_exists($pages . '/' . $name . '/scss/detail.scss')) {
-                    fopen($pages . '/' . $name . '/scss/detail.scss', 'w+');
-                }
-                $this->createFile('api.client.' . $structure[0] . '.ds', ['/{{ name }}/'], [$name], $path . '/api/' . $name . '.js');
+                $this->createFile('list.client.' . $structure[1] . '.ds', [], [], $pages . '/' . $name . '/list.vue');
+                $this->createFile('list.client.' . $structure[1] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/list.js');
+                Storage::disk('root')->put($pages . '/' . $name . '/scss/list.scss', '');
+                $this->createFile('detail.client.' . $structure[1] . '.ds', [], [], $pages . '/' . $name . '/detail.vue');
+                $this->createFile('detail.client.' . $structure[1] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/detail.js');
+                Storage::disk('root')->put($pages . '/' . $name . '/scss/detail.scss', '');
+                $this->createFile('api.client.' . $structure[1] . '.ds', ['/{{ name }}/'], [$name], $path . '/api/' . $name . '.js');
             }
         }
     }
@@ -1301,15 +1279,18 @@ class Plugin
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
         $api = $this->convertUnderline(rtrim($db['name'], 's'), true);
         $admin = $request->adminTemplate;
+        $path = '';
+        $list = '';
+        $detail = '';
+        $ruleForm = '';
+        $rules = '';
         if (count($admin) > 0) {
             foreach ($admin as $c) {
-                $path = $this->path . '/admin/' . $c . '/src/views/ToolManagement/' . $name;
+                $path = '/' . $c . '/src/views/ToolManagement/' . $name;
                 $pathArr = [$path, $path . '/components', $path . '/js', $path . '/scss'];
                 // 生成表对应的目录
                 foreach ($pathArr as $p) {
-                    if (!file_exists($p)) {
-                        mkdir($p, 0777, true);
-                    }
+                    Storage::disk('root')->makeDirectory($p);
                 }
                 $list = '';
                 $detail = '';
@@ -1419,41 +1400,38 @@ class Plugin
     {
         // 模板
         $pluginTemplate = $this->pluginPath . '/template/' . $template;
-        if (!file_exists($pluginTemplate)) {
+        if (!Storage::disk('root')->exists($pluginTemplate)) {
             throw new \Exception('缺少' . $template . '文件', Code::CODE_INEXISTENCE);
         }
-        // 生成文件
-        if (!file_exists($name)) {
-            fopen($name, 'w+');
-        }
         // 读取模板
-        $content = file_get_contents($pluginTemplate);
+        $content = Storage::disk('root')->get($pluginTemplate);
         if (count($find) > 0) {
             $content = preg_replace($find, $replace, $content);
             $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
         }
-        file_put_contents($name, $content);
+        Storage::disk('root')->put($name, $content);
     }
 
     /**
      * 创建路由
      * @param $request
      * @param bool $edit // 是否更新
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function createRoutes($request, $edit = false)
     {
         if ($request->db) {
-            $targetPath = $this->path . '/api/routes/plugin.php';
+            $targetPath = '/api/routes/plugin.php';
 
-            $langPath = $this->path . '/api/resources/lang/zn/route.php';
-            $providerPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
-            $file_get_lang_contents = file_get_contents($langPath);
-            $file_get_contents = file_get_contents($targetPath);
+            $langPath = '/api/resources/lang/zn/route.php';
+            $providerPath = '/api/app/Providers/AppServiceProvider.php';
+            $file_get_lang_contents = Storage::disk('root')->get($langPath);
+            $file_get_contents = Storage::disk('root')->get($targetPath);
             //去除已存在的插件代码
             $file_get_contents = preg_replace('/\/\/' . $request->name . '_s(.*?)\/\/' . $request->name . '_e/is', '', $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             // 去除已存在的观察者插件代码
-            $provider_file_get_contents = file_get_contents($providerPath);
+            $provider_file_get_contents = Storage::disk('root')->get($providerPath);
             $provider_file_get_contents = preg_replace('/\/\/ ' . $request->name . '_s(.*?)\/\/ ' . $request->name . '_e/is', '', $provider_file_get_contents);
             $provider_file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $provider_file_get_contents);
             // 生成路由
@@ -1474,11 +1452,11 @@ class Plugin
                     $name = $this->convertUnderline(rtrim($db['name'], 's'), true);
                     $names = $this->convertUnderline($name);
                     $routes .= "
-        Route::get('$name', '" . $names . "Controller@list')->name('admin." . $name . "List')->middleware(['permissions:" . $names . "List']);    //" . $db['annotation'] . "列表
-        Route::get('$name/{id}', '" . $names . "Controller@detail')->name('admin." . $name . "Detail')->middleware(['permissions:" . $names . "Detail']);    //" . $db['annotation'] . "详情
-        Route::post('$name', '" . $names . "Controller@create')->name('admin." . $name . "Create')->middleware(['permissions:" . $names . "Create']);    //创建" . $db['annotation'] . "
-        Route::post('$name/{id}', '" . $names . "Controller@edit')->name('admin." . $name . "Edit')->middleware(['permissions:" . $names . "Edit']);    //保存" . $db['annotation'] . "
-        Route::post('$name/destroy/{id}', '" . $names . "Controller@destroy')->name('admin." . $name . "Destroy')->middleware(['permissions:" . $names . "Destroy']);    //删除" . $db['annotation'] . "
+            Route::get('$name', '" . $names . "Controller@list')->name('admin." . $name . "List')->middleware(['permissions:" . $names . "List']);    //" . $db['annotation'] . "列表
+            Route::get('$name/{id}', '" . $names . "Controller@detail')->name('admin." . $name . "Detail')->middleware(['permissions:" . $names . "Detail']);    //" . $db['annotation'] . "详情
+            Route::post('$name', '" . $names . "Controller@create')->name('admin." . $name . "Create')->middleware(['permissions:" . $names . "Create']);    //创建" . $db['annotation'] . "
+            Route::post('$name/{id}', '" . $names . "Controller@edit')->name('admin." . $name . "Edit')->middleware(['permissions:" . $names . "Edit']);    //保存" . $db['annotation'] . "
+            Route::post('$name/destroy/{id}', '" . $names . "Controller@destroy')->name('admin." . $name . "Destroy')->middleware(['permissions:" . $names . "Destroy']);    //删除" . $db['annotation'] . "
         ";
                     $routesLang .= "
         '" . $name . "List'=>'" . $db['annotation'] . "列表',
@@ -1488,8 +1466,8 @@ class Plugin
         '" . $name . "Destroy'=>'删除" . $db['annotation'] . "',
             ";
                     $clientRoutes .= "
-        Route::get('$name', '" . $names . "Controller@list')->name('client." . $name . "List');    //" . $db['annotation'] . "列表
-        Route::get('$name/{id}', '" . $names . "Controller@detail')->name('client." . $name . "Detail');    //" . $db['annotation'] . "详情
+            Route::get('$name', '" . $names . "Controller@list')->name('client." . $name . "List');    //" . $db['annotation'] . "列表
+            Route::get('$name/{id}', '" . $names . "Controller@detail')->name('client." . $name . "Detail');    //" . $db['annotation'] . "详情
         ";
                     $clientRoutesLang .= "
         '" . $name . "List'=>'" . $db['annotation'] . "列表',
@@ -1514,8 +1492,8 @@ class Plugin
             $admin = $request->adminTemplate;
             if (count($admin) > 0) {
                 foreach ($admin as $c) {
-                    $permissionPath = $this->path . '/admin/' . $c . '/src/store/modules/permission.js';
-                    $permission_file_get_contents = file_get_contents($permissionPath);
+                    $permissionPath = '/' . $c . '/src/store/modules/permission.js';
+                    $permission_file_get_contents = Storage::disk('root')->get($permissionPath);
                     //去除已存在的插件代码
                     $permission_file_get_contents = preg_replace('/\/\/ ' . $request->name . '_s(.*?)\/\/ ' . $request->name . '_e/is', '', $permission_file_get_contents);
                     $permission_file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $permission_file_get_contents);
@@ -1525,7 +1503,7 @@ class Plugin
   // " . $request->name . "_e
   // 插件列表", $permission_file_get_contents);
                     $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $metadata);
-                    file_put_contents($permissionPath, $content);
+                    Storage::disk('root')->put($permissionPath, $content);
                     unset($content);
                     unset($permissionPath);
                     unset($permission_file_get_contents);
@@ -1535,16 +1513,16 @@ class Plugin
             $file_get_contents = str_replace("前台插件列表", $request->name . "_s
         " . $routes . "
         //" . $request->name . "_e
-        //前台插件列表", $file_get_contents);
+        // 前台插件列表", $file_get_contents);
             $file_get_contents = str_replace("APP验证插件列表", $request->name . "_s
         //" . $request->name . "_e
-        //APP验证插件列表", $file_get_contents);
+        // APP验证插件列表", $file_get_contents);
             $file_get_contents = str_replace("APP无需验证插件列表", $request->name . "_s
         " . $clientRoutes . "
         //" . $request->name . "_e
-        //APP无需验证插件列表", $file_get_contents);
+        // APP无需验证插件列表", $file_get_contents);
             $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-            file_put_contents($targetPath, $content);
+            Storage::disk('root')->put($targetPath, $content);
             unset($content);
             // 路由语言包
             //去除已存在的插件代码
@@ -1559,7 +1537,7 @@ class Plugin
         // " . $request->name . "_e
         // client插件", $file_get_lang_contents);
             $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_lang_contents);
-            file_put_contents($langPath, $content);
+            Storage::disk('root')->put($langPath, $content);
             unset($content);
             // 观察者
             $provider_file_get_contents = str_replace("插件", $request->name . "_s
@@ -1567,7 +1545,7 @@ class Plugin
         // " . $request->name . "_e
         // 插件", $provider_file_get_contents);
             $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $provider_file_get_contents);
-            file_put_contents($providerPath, $content);
+            Storage::disk('root')->put($providerPath, $content);
             unset($content);
         }
     }
@@ -1576,42 +1554,40 @@ class Plugin
      * 移除路由
      * @param $name
      * @param $request
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function removeRoutes($name, $request)
     {
-        $targetPath = $this->path . '/api/routes/plugin.php';
-        $langPath = $this->path . '/api/resources/lang/zn/route.php';
-        $providerPath = $this->path . '/api/app/Providers/AppServiceProvider.php';
-        $file_get_contents = file_get_contents($targetPath);
+        $targetPath = '/api/routes/plugin.php';
+        $langPath = '/api/resources/lang/zn/route.php';
+        $providerPath = '/api/app/Providers/AppServiceProvider.php';
+        $file_get_contents = Storage::disk('root')->get($targetPath);
         //去除已存在的插件代码
         $file_get_contents = preg_replace('/\/\/' . $name . '_s(.*?)\/\/' . $name . '_e/is', '', $file_get_contents);
         $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-
         $admin = $request['adminTemplate'];
         if (count($admin) > 0) {
             foreach ($admin as $c) {
-                $permissionPath = $this->path . '/admin/' . $c . '/src/store/modules/permission.js';
-                $permission_file_get_contents = file_get_contents($permissionPath);
+                $permissionPath = '/' . $c . '/src/store/modules/permission.js';
+                $permission_file_get_contents = Storage::disk('root')->get($permissionPath);
                 //去除已存在的插件代码
                 $permission_file_get_contents = preg_replace('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', '', $permission_file_get_contents);
                 $permission_file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $permission_file_get_contents);
-                file_put_contents($permissionPath, $permission_file_get_contents);
+                Storage::disk('root')->put($permissionPath, $permission_file_get_contents);
             }
         }
 
         //去除已存在的插件代码
-        $file_get_lang_contents = file_get_contents($langPath);
+        $file_get_lang_contents = Storage::disk('root')->get($langPath);
         $file_get_lang_contents = preg_replace('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', '', $file_get_lang_contents);
         $file_get_lang_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_lang_contents);
         // 去除已存在的观察者插件代码
-        $provider_file_get_contents = file_get_contents($providerPath);
+        $provider_file_get_contents = Storage::disk('root')->get($providerPath);
         $provider_file_get_contents = preg_replace('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', '', $provider_file_get_contents);
         $provider_file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $provider_file_get_contents);
-
-        file_put_contents($targetPath, $file_get_contents);
-
-        file_put_contents($langPath, $file_get_lang_contents);
-        file_put_contents($providerPath, $provider_file_get_contents);
+        Storage::disk('root')->put($targetPath, $file_get_contents);
+        Storage::disk('root')->put($langPath, $file_get_lang_contents);
+        Storage::disk('root')->put($providerPath, $provider_file_get_contents);
     }
 
     /**
@@ -1620,8 +1596,8 @@ class Plugin
      */
     protected function fileDestroy($path)
     {
-        if (!is_dir($path) && file_exists($path)) {
-            unlink($path);
+        if (Storage::disk('root')->exists($path)) {
+            Storage::disk('root')->delete($path);
         }
     }
 
@@ -1640,7 +1616,7 @@ class Plugin
                     $this->fileDeployment($file, $target);
                 } else {
                     $this->makeDirByPath(dirname($target));
-                    copy($file, $target);
+                    Storage::disk('root')->copy($file, $target);
                 }
             }
         }
@@ -1657,7 +1633,7 @@ class Plugin
     {
         if (!file_exists($path)) {
             $this->makeDirByPath(dirname($path));
-            mkdir($path, 0777);
+            Storage::disk('root')->makeDirectory($path);
         }
     }
 
@@ -1671,7 +1647,7 @@ class Plugin
     {
         if (file_exists($original)) {
             if (!file_exists($target)) {
-                mkdir($target, 0777, true);
+                Storage::disk('root')->makeDirectory($target);
             }
             $data = scandir($original);
             foreach ($data as $value) {
@@ -1679,7 +1655,7 @@ class Plugin
                     if (is_dir($original . '/' . $value)) { //如果是目录
                         $this->fileDeployment($original . '/' . $value, $target . '/' . $value);
                     } else {
-                        copy($original . '/' . $value, $target . '/' . $value);
+                        Storage::disk('root')->copy($original . '/' . $value, $target . '/' . $value);
                     }
                 }
             }
@@ -1701,7 +1677,7 @@ class Plugin
                         $this->fileUninstall($original . '/' . $value, $target . '/' . $value);
                     } else {
                         if (file_exists($target . '/' . $value)) {
-                            unlink($target . '/' . $value);
+                            Storage::disk('root')->delete($target . '/' . $value);
                         }
                     }
                 }
@@ -1722,14 +1698,14 @@ class Plugin
             if ($handle) {
                 while (false !== ($item = readdir($handle))) {
                     if ($item != "." && $item != "..")
-                        is_dir("$path/$item") ? $this->delDirAndFile("$path/$item", $delDir) : unlink("$path/$item");
+                        is_dir("$path/$item") ? $this->delDirAndFile("$path/$item", $delDir) : Storage::disk('root')->delete("$path/$item");
                 }
                 closedir($handle);
                 if ($delDir)
                     return rmdir($path);
             } else {
                 if (file_exists($path)) {
-                    return unlink($path);
+                    return Storage::disk('root')->delete($path);
                 } else {
                     return FALSE;
                 }
@@ -1745,13 +1721,8 @@ class Plugin
     {
         // 创建插件目录
         $path = $this->pluginListPath . '/' . $request->abbreviation;
-        if (!file_exists($path)) {
-            mkdir($path, 0777, true);
-        }
+        Storage::disk('root')->makeDirectory($path);
         // 创建插件数据
-        if (!file_exists($path . '/dsshop.json')) {
-            fopen($path . '/dsshop.json', 'w+');
-        }
         $json = [
             'name' => $request->name,
             'abbreviation' => $request->abbreviation,
@@ -1768,7 +1739,7 @@ class Plugin
             'relevance' => $request->relevance,
             'routes' => $request->routes
         ];
-        file_put_contents($path . '/dsshop.json', json_encode($json));
+        Storage::disk('root')->put($path . '/dsshop.json', json_encode($json));
     }
 
     /**
@@ -1782,7 +1753,7 @@ class Plugin
         $path = $this->pluginListPath . '/' . $request->abbreviation . '/dsshop.json';
         if ($request->relevance) {
             foreach ($request->relevance as $relevance) {
-                if (!file_exists($this->path . $relevance['file'])) {
+                if (!Storage::disk('root')->exists($relevance['file'])) {
                     throw new \Exception('关联文件不存在' . $relevance['file'], Code::CODE_INEXISTENCE);
                 }
             }
@@ -1803,7 +1774,7 @@ class Plugin
             'relevance' => $request->relevance,
             'routes' => $request->routes
         ];
-        file_put_contents($path, json_encode($json));
+        Storage::disk('root')->put($path, json_encode($json));
     }
 
     /**
@@ -1818,17 +1789,12 @@ class Plugin
         // 控制器名称为去掉尾部s每个单词首字母大写
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
         // 控制器文件
-        $path = $this->path . '/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $name . 'Request.php';
-        if (!file_exists($controller)) {
+        $path = '/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $name . 'Request.php';
+        if (!Storage::disk('root')->exists($controller)) {
             throw new \Exception('缺少requests.api.ds文件', Code::CODE_INEXISTENCE);
         }
         // 生成控制器
-        if (!file_exists($path)) {
-            fopen($path, 'w+');
-        }
-        $content = file_get_contents($controller);
-        $rule = '';
-        $ruleHint = '';
+        $content = Storage::disk('root')->get($controller);
         $content = preg_replace([
             '/{{ versions }}/',
             '/{{ name }}/'
@@ -1837,7 +1803,7 @@ class Plugin
             $name
         ], $content);
         $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
-        file_put_contents($path, $content);
+        Storage::disk('root')->put($path, $content);
     }
 
     /**
@@ -1852,15 +1818,12 @@ class Plugin
         // 控制器名称为去掉尾部s首字母大写
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
         // 控制器文件
-        $path = $this->path . '/api/app/Models/v' . config('dsshop.versions') . '/' . $name . '.php';
-        if (!file_exists($controller)) {
+        $path = '/api/app/Models/v' . config('dsshop.versions') . '/' . $name . '.php';
+        if (!Storage::disk('root')->exists($controller)) {
             throw new \Exception('缺少models.api.ds文件', Code::CODE_INEXISTENCE);
         }
         // 生成控制器
-        if (!file_exists($path)) {
-            fopen($path, 'w+');
-        }
-        $content = file_get_contents($controller);
+        $content = Storage::disk('root')->get($controller);
         $property = '';
         $constant = '';
         $SoftDeletes = $db['softDeletes'] ? 'use Illuminate\Database\Eloquent\SoftDeletes;' : '';
@@ -1907,7 +1870,7 @@ class Plugin
             $property
         ], $content);
         $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
-        file_put_contents($path, $content);
+        Storage::disk('root')->put($path, $content);
     }
 
     /**
@@ -1923,15 +1886,13 @@ class Plugin
         // 控制器名称为去掉尾部s首字母大写
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
         // 控制器文件
-        $path = $this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/' . $this->convertUnderline($type) . '/' . $name . 'Controller.php';
-        if (!file_exists($controller)) {
+        $path = '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/' . $this->convertUnderline($type) . '/' . $name . 'Controller.php';
+
+        if (!Storage::disk('root')->exists($controller)) {
             throw new \Exception('缺少controller.api.' . $type . '.ds文件', Code::CODE_INEXISTENCE);
         }
         // 生成控制器
-        if (!file_exists($path)) {
-            fopen($path, 'w+');
-        }
-        $content = file_get_contents($controller);
+        $content = Storage::disk('root')->get($controller);
         $attribute = '';
         $queryParam = '';
         if ($type === 'admin') {
@@ -1966,7 +1927,7 @@ class Plugin
             ], $content);
         }
         $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
-        file_put_contents($path, $content);
+        Storage::disk('root')->put($path, $content);
     }
 
     /**
@@ -1974,16 +1935,14 @@ class Plugin
      */
     protected function generatePlugInDirectory()
     {
-        $path = $this->path . '/api/app/Http/Controllers/v' . config('dsshop.versions');
+        $path = '/api/app/Http/Controllers/v' . config('dsshop.versions');
         $pathArr = [
             $path . '/Plugin',
             $path . '/Plugin/Admin',
             $path . '/Plugin/Client'
         ];
         foreach ($pathArr as $p) {
-            if (!file_exists($p)) {
-                mkdir($p, 0777, true);
-            }
+            Storage::disk('root')->makeDirectory($p);
         }
     }
 
@@ -2001,13 +1960,13 @@ class Plugin
             if (!$reset) {
                 throw new \Exception($db['name'] . '表已经存在，无法创建', Code::CODE_INEXISTENCE);
             }
-            if (!file_exists($this->pluginPath . '/template/migration.create.ds')) {
+
+            if (!Storage::disk('root')->exists($this->pluginPath . '/template/migration.create.ds')) {
                 throw new \Exception('缺少migration.create.ds文件', Code::CODE_INEXISTENCE);
             }
             $getLocalMigrations = date("Y") . '_' . date("m") . '_' . date("d") . '_' . date("His") . '_create_' . $db['name'] . '_table.php';
-            fopen($this->migrationsPath . '/' . $getLocalMigrations, 'w+');
         }
-        $content = file_get_contents($this->pluginPath . '/template/migration.create.ds');
+        $content = Storage::disk('root')->get($this->pluginPath . '/template/migration.create.ds');
         // 填充数据库迁移表内容
         $newContent = '';
         foreach ($db['attribute'] as $attribute) {
@@ -2059,7 +2018,7 @@ class Plugin
             $db['annotation'],
         ], $content);
         $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
-        file_put_contents($this->migrationsPath . '/' . $getLocalMigrations, $content);
+        Storage::disk('root')->put($this->migrationsPath . '/' . $getLocalMigrations, $content);
     }
 
     /**

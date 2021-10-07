@@ -61,6 +61,7 @@ class PluginController extends Controller
      * 插件详情
      * @param $name
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function details($name)
     {
@@ -209,6 +210,7 @@ class PluginController extends Controller
      * 获取所有模板
      * @param $name //client or admin
      * @return string
+     * @throws \Exception
      */
     public function template($name)
     {

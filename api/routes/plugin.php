@@ -15,14 +15,14 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
     Route::namespace('Plugin')->group(function () {
         // 插件后台
         Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {
-        //前台插件列表
+            // 前台插件列表
         });
         // 插件前台
         Route::prefix('app')->namespace('Client')->middleware(['appverify', 'auth:web'])->group(function () {
-        //APP验证插件列表
+            // APP验证插件列表
         });
         Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
-        //APP无需验证插件列表
+            // APP无需验证插件列表
         });
     });
 });
