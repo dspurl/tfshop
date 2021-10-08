@@ -111,6 +111,7 @@ class PluginController extends Controller
      * 插件删除
      * @param $name
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      * @queryParam  name string 插件简称
      */
     public function destroy($name)
@@ -177,6 +178,7 @@ class PluginController extends Controller
      * 下载插件
      * @param $name
      * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function download($name)
     {
