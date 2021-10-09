@@ -104,8 +104,8 @@ class Plugin
         try {
             $respond = $client->get($url, ['query' => $params, 'headers' => $headers]);
             $list = json_decode($respond->getBody()->getContents(), true);
-            $json_dsshop = json_decode(file_get_contents($this->pluginPath . '/dsshop.json'), true);
-            $scandir = scandir($this->pluginListPath);
+            $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
+            $scandir = Storage::disk('root')->directories($this->pluginListPath);
             foreach ($list['message']['data'] as &$message) {
                 // 已安装
                 if (collect($json_dsshop)->contains('name', $message['abbreviation'])) {
@@ -117,8 +117,8 @@ class Plugin
                     $message['is_delete'] = $data['is_delete'];
                     $message['state'] = $data['is_delete'] == 1 ? 3 : 2;
                     $message['current_version'] = $data['versions'];
-                } else if (in_array($message['abbreviation'], $scandir)) {  // 已下载
-                    $dsshop = json_decode(file_get_contents($this->pluginListPath . '/' . $message['abbreviation'] . '/dsshop.json'), true);
+                } else if (in_array('plugin/list/' . $message['abbreviation'], $scandir)) {  // 已下载
+                    $dsshop = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $message['abbreviation'] . '/dsshop.json'), true);
                     $local = array_key_exists('local', $dsshop) ? $dsshop['local'] : 0;  //是否本地
                     $publish = array_key_exists('publish', $dsshop) ? $dsshop['publish'] : 0;    // 是否发布
                     $message['local'] = $local ? 1 : 0;
@@ -175,25 +175,26 @@ class Plugin
             } else {
                 Storage::disk('plugin')->put('/temporary/' . $code . '.zip', $respond->getBody()->getContents());
             }
-            $path = $this->pluginPath . '/temporary';
+            $temporary_path = str_replace("api", "plugin/temporary", base_path());
+            $plugin_apth = str_replace("api", "plugin", base_path());
             $shell_exec = '';
             if (!$request->suffix) {
-                $shell_exec .= shell_exec('cd ' . $path . ' && unzip ' . $code . '.zip -d ' . $code . '/');
-                $config = json_decode(Storage::disk('root')->get($path . '/' . $code . '/dsshop.json'), true);
+                $shell_exec .= shell_exec('cd ' . $temporary_path . ' && unzip ' . $code . '.zip -d ' . $code . '/');
+                $config = json_decode(Storage::disk('plugin')->get('/temporary/' . $code . '/dsshop.json'), true);
                 //修改插件信息
                 $config['img'] = $request->img;
                 $config['author'] = $request->author;
                 $config['author_url'] = $request->author_url;
                 $config['portrait'] = $request->portrait;
                 $config['category'] = $request->category;
-                Storage::disk('root')->put($path . '/' . $code . '/dsshop.json', json_encode($config));
-                $shell_exec .= shell_exec("rm -rf $this->pluginPath/list/" . $config['abbreviation'] . " && mkdir " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && mv " . $path . "/" . $code . "/* " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && rm -rf " . $path . "/" . $code . " && rm -rf " . $path . "/" . $code . ".zip");
+                Storage::disk('plugin')->put('/temporary/' . $code . '/dsshop.json', json_encode($config));
+                $shell_exec .= shell_exec("rm -rf $plugin_apth/list/" . $config['abbreviation'] . " && mkdir " . $plugin_apth . "/list/" . $config['abbreviation'] . " && mv " . $temporary_path . "/" . $code . "/* " . $plugin_apth . "/list/" . $config['abbreviation'] . " && rm -rf " . $temporary_path . "/" . $code . " && rm -rf " . $temporary_path . "/" . $code . ".zip");
             } else {
-                $config = json_decode(Storage::disk('root')->get($path . '/' . $code . '/dsshop.json'), true);
-                if (!Storage::disk('root')->exists($this->pluginPath . "/list/" . $config['abbreviation'])) {
+                $config = json_decode(Storage::disk('plugin')->get('/temporary/' . $code . '/dsshop.json'), true);
+                if (!Storage::disk('plugin')->exists("/list/" . $config['abbreviation'])) {
                     throw new \Exception('请先进行安装插件', Code::CODE_WRONG);
                 }
-                $shell_exec .= shell_exec("mv " . $path . "/" . $code . "/* " . $this->pluginPath . "/list/" . $config['abbreviation'] . " && rm -rf " . $path . "/" . $code);
+                $shell_exec .= shell_exec("mv " . $temporary_path . "/" . $code . "/* " . $plugin_apth . "/list/" . $config['abbreviation'] . " && rm -rf " . $temporary_path . "/" . $code);
             }
             return $shell_exec;
         } catch (RequestException $e) {
@@ -365,7 +366,7 @@ class Plugin
             throw new \Exception('您的插件至少配置了数据库或观察者', Code::CODE_PARAMETER_WRONG);
         }
         // 当编辑时插件标识不同时，会清除旧的插件
-        if($request->old_abbreviation != $request->abbreviation){
+        if ($request->old_abbreviation != $request->abbreviation) {
             $this->destroy($request->old_abbreviation);
             return $this->create($request);
         }
