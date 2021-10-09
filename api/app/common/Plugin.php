@@ -14,7 +14,6 @@ use GuzzleHttp\Client;
 class Plugin
 {
     private $pluginPath;
-    private $path;
     private $migrations;
     private $migrationsPath;
     private $pluginListPath;
@@ -35,9 +34,6 @@ class Plugin
 
     function __construct()
     {
-//        $file_path = explode(DIRECTORY_SEPARATOR, base_path());
-//        unset($file_path[count($file_path) - 1]);
-//        $this->path = implode(DIRECTORY_SEPARATOR, $file_path);
         $this->pluginPath = 'plugin';
         $this->pluginListPath = $this->pluginPath . '/list';
         $this->migrationsPath = '/api/database/migrations';
@@ -351,6 +347,7 @@ class Plugin
                     }
                 }
             }
+//            Artisan::call('migrate');   //暂不支持创建插件自动生成数据表，因插件中的数据库功能并不完善，无法实现通过后台操作完全取代代码
         }
         $this->createRoutes($request);
         return '创建成功';
@@ -366,6 +363,11 @@ class Plugin
     {
         if (count($request->db) == 0 && count($request->observer) == 0) {
             throw new \Exception('您的插件至少配置了数据库或观察者', Code::CODE_PARAMETER_WRONG);
+        }
+        // 当编辑时插件标识不同时，会清除旧的插件
+        if($request->old_abbreviation != $request->abbreviation){
+            $this->destroy($request->old_abbreviation);
+            return $this->create($request);
         }
         $this->generatePlugInDirectory();
         $this->editPlugInJson($request);
@@ -719,6 +721,7 @@ class Plugin
             $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
             $abbreviation = ucwords($name);
             if ($path['db']) {
+//                Artisan::call('migrate:rollback');
                 foreach ($path['db'] as $db) {
                     $names = $this->convertUnderline(rtrim($db['name'], 's'));
                     $n = $this->convertUnderline(rtrim($db['name'], 's'), true);
@@ -755,7 +758,9 @@ class Plugin
             // 关联的文件
             if ($path['relevance']) {
                 foreach ($path['relevance'] as $relevance) {
-                    Storage::disk('root')->delete($relevance['file']);
+                    if (Storage::disk('root')->exists($relevance['file'])) {
+                        Storage::disk('root')->delete($relevance['file']);
+                    }
                 }
             }
             $this->removeRoutes($path['name'], $path);
@@ -1913,17 +1918,13 @@ class Plugin
     protected function createDBMigration($db, $reset = false)
     {
         //读取生成的文件内容
-        $getLocalMigrations = $this->getLocalMigrations('create_' . $db['name'] . '_table');
-        if (!$getLocalMigrations) {
-            if (!$reset) {
-                throw new \Exception($db['name'] . '表已经存在，无法创建', Code::CODE_INEXISTENCE);
-            }
-
-            if (!Storage::disk('root')->exists($this->pluginPath . '/template/migration.create.ds')) {
-                throw new \Exception('缺少migration.create.ds文件', Code::CODE_INEXISTENCE);
-            }
-            $getLocalMigrations = date("Y") . '_' . date("m") . '_' . date("d") . '_' . date("His") . '_create_' . $db['name'] . '_table.php';
+        if (!$reset) {
+            throw new \Exception($db['name'] . '表已经存在，无法创建', Code::CODE_INEXISTENCE);
         }
+        if (!Storage::disk('root')->exists($this->pluginPath . '/template/migration.create.ds')) {
+            throw new \Exception('缺少migration.create.ds文件', Code::CODE_INEXISTENCE);
+        }
+        $getLocalMigrations = date("Y") . '_' . date("m") . '_' . date("d") . '_' . date("His") . '_create_' . $db['name'] . '_table.php';
         $content = Storage::disk('root')->get($this->pluginPath . '/template/migration.create.ds');
         // 填充数据库迁移表内容
         $newContent = '';

@@ -64,6 +64,7 @@ export default {
         adminTemplate: [],
         name: '',
         abbreviation: '',
+        old_abbreviation: '',
         instructions: '',
         author: '',
         db: [],
@@ -332,6 +333,7 @@ export default {
         this.toData = this.ruleForm.packagingJurisdiction
         this.ruleForm.routes = false
         this.versions = res.data.versions
+        this.ruleForm.old_abbreviation = JSON.parse(JSON.stringify(this.ruleForm.abbreviation))
         this.getJurisdiction()
       }).catch(() => {
         this.formLoading = false
