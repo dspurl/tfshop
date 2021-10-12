@@ -60,7 +60,7 @@ return [
         ],
         'root' => [
             'driver' => 'local',
-            'root'   => '../../',
+            'root'   => '../../../',
         ],
         's3' => [
             'driver' => 's3',
