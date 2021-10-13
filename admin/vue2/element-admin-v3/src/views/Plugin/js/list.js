@@ -7,6 +7,7 @@ export default {
     return {
       formLoading: false,
       dialogVisible: false,
+      dialogDiff: false,
       ruleForm: [],
       checkAll: false,
       tableKey: 0,

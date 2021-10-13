@@ -34,7 +34,7 @@ class Plugin
 
     function __construct()
     {
-        $this->pluginPath = 'plugin';
+        $this->pluginPath = '/plugin';
         $this->pluginListPath = $this->pluginPath . '/list';
         $this->migrationsPath = '/api/database/migrations';
         $this->migrations = Storage::disk('root')->files($this->migrationsPath);
@@ -68,6 +68,15 @@ class Plugin
         $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
         foreach ($data as $value) {
             $dsshop = json_decode(Storage::disk('root')->get($value . '/dsshop.json'), true);
+            if (Storage::disk('root')->exists($value . '/diff.json')) {
+                $dsshop['diff_count'] = 0;
+                $diff = json_decode(Storage::disk('root')->get($value . '/diff.json'), true);
+                foreach ($diff as $d) {
+                    if ($d['state'] != 1) {
+                        $dsshop['diff_count'] += 1;
+                    }
+                }
+            }
             foreach ($json_dsshop as $js) {
                 if ($js['name'] == $dsshop['abbreviation']) {
                     $dsshop['locality_versions'] = $js['versions'];
@@ -560,10 +569,7 @@ class Plugin
         // 关联的文件
         if (count($routes['relevance']) > 0) {
             foreach ($routes['relevance'] as $relevance) {
-                if (Storage::disk('root')->exists($relevance)) {
-                    Storage::disk('root')->delete($relevance);
-                }
-                $this->copyProcessing($path . $relevance, $relevance);
+                $this->fileConflictHandling($path . $relevance, $relevance, $name);
             }
         }
         // 添加路由
@@ -1620,15 +1626,13 @@ class Plugin
      * 拷贝目录下所有文件到指定目录下
      * @param string $original //原始目录
      * @param string $target //目标目录
+     * @throws \Exception
      */
     protected function fileDeployment($original, $target)
     {
         $files = Storage::disk('root')->allFiles($original);
         foreach ($files as $f) {
-            $path = str_replace($original, $target, $f);
-            if (Storage::disk('root')->exists($path)) {
-                Storage::disk('root')->delete($path);
-            }
+            $path = str_replace($original, $target, '/' . $f);
             $this->copyProcessing($f, $path);
         }
     }
@@ -2022,14 +2026,58 @@ class Plugin
 
     /**
      * 拷贝处理
-     * 不存在不拷贝
-     * @param string $from
-     * @param string $to
+     * @param string $from //原文件
+     * @param string $to //目标文件
+     * @throws \Exception
      */
     protected function copyProcessing($from, $to)
     {
         if (Storage::disk('root')->exists($from)) {
-            Storage::disk('root')->copy($from, $to);
+            // 目标文件已存在的不拷贝，交给关联文件处理
+            if (!Storage::disk('root')->exists($to)) {
+                Storage::disk('root')->copy($from, $to);
+            }
+
+        }
+    }
+
+    /**
+     * 文件冲突处理
+     * @param string $from //原文件
+     * @param string $to //目标文件
+     * @param string $name
+     * @throws \Exception
+     */
+    protected function fileConflictHandling($from, $to, $name)
+    {
+        if (PHP_OS != 'Linux') {
+            if (Storage::disk('root')->exists($to)) {
+                Storage::disk('root')->delete($to);
+            }
+            $this->copyProcessing($from, $to);
+        } else {
+            $pluginPath = $this->pluginListPath . '/' . $name;
+            $diffPath = $pluginPath . '/diff.json';
+            $diff = [];
+            if (Storage::disk('root')->exists($diffPath)) {
+                $diff = json_decode(Storage::disk('root')->get($diffPath), true);
+            }
+            $path = str_replace("/api", "", base_path());
+            $shellExec = shell_exec("diff -u $path$to $path$from");
+            // 存在冲突
+            if ($shellExec) {
+                $diff[$to] = [
+                    'state' => 0,
+                    'from' => $path . $from,
+                    'to' => $path . $to,
+                    'details' => $shellExec,
+                ];
+                Storage::disk('root')->put($diffPath, json_encode($diff));
+            } else {
+                if (!Storage::disk('root')->exists($to)) {
+                    $this->copyProcessing($from, $to);
+                }
+            }
         }
     }
 }

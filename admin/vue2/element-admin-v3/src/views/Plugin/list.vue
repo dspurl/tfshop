@@ -141,9 +141,15 @@
               </template>
             </template>
           </div>
+          <div v-if="item.diff_count > 0" class="hint"><i class="el-icon-warning"/>{{ item.diff_count }}个冲突未处理。<el-button type="danger" size="mini" round @click="dialogDiff = true">立即处理</el-button></div>
+
         </el-card>
       </div>
     </div>
+    <!-- 冲突-->
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogDiff" title="冲突处理">
+      冲突页
+    </el-dialog>
     <!--分页-->
     <div class="pagination-operation">
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="list"/>

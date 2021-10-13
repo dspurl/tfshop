@@ -111,6 +111,16 @@
     padding-right: 10px;
     width: 330px;
     margin-right: 5px;
+    .hint{
+      background-color: #fef0f0;
+      color: #f56c6c;
+      font-size: 14px;
+      padding: 10px;
+      text-align: center;
+      i{
+        margin-right: 5px;
+      }
+    }
     .item-info{
       padding:10px 14px 14px 14px;
       border-bottom: 1px solid #eee;
