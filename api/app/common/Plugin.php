@@ -439,18 +439,18 @@ class Plugin
             }
             // 配置文件
             if (Storage::disk('root')->exists('/api/config/' . $name . '.php')) {
-                Storage::disk('root')->copy('/api/config/' . $name . '.php', $this->pluginListPath . '/' . $name . '/api/config/' . $name . '.php');
+                $this->copyProcessing('/api/config/' . $name . '.php', $this->pluginListPath . '/' . $name . '/api/config/' . $name . '.php');
             }
             // 观察者文件
             if ($path['observer']) {
                 foreach ($path['observer'] as $observer) {
-                    Storage::disk('root')->copy('/api/app/Observers/' . $observer['models'] . '/' . $this->convertUnderline($observer['name']) . 'Observer.php', $this->pluginListPath . '/' . $name . '/api/observers/' . $observer['models'] . '/' . $this->convertUnderline($observer['name']) . 'Observer.php');
+                    $this->copyProcessing('/api/app/Observers/' . $observer['models'] . '/' . $this->convertUnderline($observer['name']) . 'Observer.php', $this->pluginListPath . '/' . $name . '/api/observers/' . $observer['models'] . '/' . $this->convertUnderline($observer['name']) . 'Observer.php');
                 }
             }
             // 打包关联文件
             if ($path['relevance']) {
                 foreach ($path['relevance'] as $relevance) {
-                    Storage::disk('root')->copy($relevance['file'], $this->pluginListPath . '/' . $name . $relevance['file']);
+                    $this->copyProcessing($relevance['file'], $this->pluginListPath . '/' . $name . $relevance['file']);
                 }
             }
             // 打包路由文件
@@ -476,7 +476,7 @@ class Plugin
             Storage::disk('root')->deleteDirectory($newPath);
             $files = Storage::disk('root')->allFiles($pluginPath);
             foreach ($files as $f) {
-                Storage::disk('root')->copy($f, str_replace("plugin/list", "/api/storage/app/public/plugin", $f));
+                $this->copyProcessing($f, str_replace("plugin/list", "/api/storage/app/public/plugin", $f));
             }
             $disk = Storage::disk('public');
             $json = [
@@ -563,7 +563,7 @@ class Plugin
                 if (Storage::disk('root')->exists($relevance)) {
                     Storage::disk('root')->delete($relevance);
                 }
-                Storage::disk('root')->copy($path . $relevance, $relevance);
+                $this->copyProcessing($path . $relevance, $relevance);
             }
         }
         // 添加路由
@@ -1042,21 +1042,21 @@ class Plugin
         $dbNames = $this->convertUnderline(rtrim($db['name'], 's'), true);
         $abbreviation = ucwords($name);
         // 后端
-        Storage::disk('root')->copy('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Admin/' . $dbName . 'Controller.php', $this->pluginListPath . '/' . $name . '/api/plugin/Admin/' . $dbName . 'Controller.php');
-        Storage::disk('root')->copy('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Client/' . $dbName . 'Controller.php', $this->pluginListPath . '/' . $name . '/api/plugin/Client/' . $dbName . 'Controller.php');
-        Storage::disk('root')->copy('/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $dbName . 'Request.php', $this->pluginListPath . '/' . $name . '/api/requests/Submit' . $dbName . 'Request.php');
-        Storage::disk('root')->copy('/api/app/Models/v' . config('dsshop.versions') . '/' . $dbName . '.php', $this->pluginListPath . '/' . $name . '/api/models/' . $dbName . '.php');
+        $this->copyProcessing('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Admin/' . $dbName . 'Controller.php', $this->pluginListPath . '/' . $name . '/api/plugin/Admin/' . $dbName . 'Controller.php');
+        $this->copyProcessing('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Client/' . $dbName . 'Controller.php', $this->pluginListPath . '/' . $name . '/api/plugin/Client/' . $dbName . 'Controller.php');
+        $this->copyProcessing('/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $dbName . 'Request.php', $this->pluginListPath . '/' . $name . '/api/requests/Submit' . $dbName . 'Request.php');
+        $this->copyProcessing('/api/app/Models/v' . config('dsshop.versions') . '/' . $dbName . '.php', $this->pluginListPath . '/' . $name . '/api/models/' . $dbName . '.php');
         // 后台
         //获取支持的后台
         if (count($request['adminTemplate']) > 0) {
             foreach ($request['adminTemplate'] as $c) {
                 $path = '/' . $c;
-                Storage::disk('root')->copy($path . '/src/api/' . $dbNames . '.js', $this->pluginListPath . '/' . $name . '/' . $c . '/api/' . $dbNames . '.js');
+                $this->copyProcessing($path . '/src/api/' . $dbNames . '.js', $this->pluginListPath . '/' . $name . '/' . $c . '/api/' . $dbNames . '.js');
                 $files = Storage::disk('root')->allFiles($path . '/src/views/ToolManagement/' . $abbreviation);
 
                 foreach ($files as $f) {
                     $pathArr = explode('/src/views/ToolManagement/' . $abbreviation, $f);
-                    Storage::disk('root')->copy($f, $this->pluginListPath . '/' . $name . '/' . $c . '/views/' . $abbreviation . $pathArr[1]);
+                    $this->copyProcessing($f, $this->pluginListPath . '/' . $name . '/' . $c . '/views/' . $abbreviation . $pathArr[1]);
                 }
                 unset($path);
                 unset($structure);
@@ -1070,21 +1070,21 @@ class Plugin
                 $files = Storage::disk('root')->allFiles($path . '/pages/' . $request['abbreviation']);
                 foreach ($files as $f) {
                     $pathArr = explode('/pages/' . $request['abbreviation'], $f);
-                    Storage::disk('root')->copy($f, $this->pluginListPath . '/' . $name . '/' . $c . '/pages/' . $request['abbreviation'] . $pathArr[1]);
+                    $this->copyProcessing($f, $this->pluginListPath . '/' . $name . '/' . $c . '/pages/' . $request['abbreviation'] . $pathArr[1]);
                 }
                 $files = Storage::disk('root')->allFiles($path . '/pages/user/' . $request['abbreviation']);
                 foreach ($files as $f) {
                     $pathArr = explode('/pages/user/' . $request['abbreviation'], $f);
-                    Storage::disk('root')->copy($f, $this->pluginListPath . '/' . $name . '/' . $c . '/pages/user/' . $request['abbreviation'] . $pathArr[1]);
+                    $this->copyProcessing($f, $this->pluginListPath . '/' . $name . '/' . $c . '/pages/user/' . $request['abbreviation'] . $pathArr[1]);
                 }
-                Storage::disk('root')->copy($path . '/api/' . $dbNames . '.js', $this->pluginListPath . '/' . $name . '/' . $c . '/api/' . $dbNames . '.js');
+                $this->copyProcessing($path . '/api/' . $dbNames . '.js', $this->pluginListPath . '/' . $name . '/' . $c . '/api/' . $dbNames . '.js');
                 unset($path);
             }
         }
         // 数据迁移文件
         $getLocalMigrations = $this->getLocalMigrations('_' . $db['name'] . '_table', true);
         foreach ($getLocalMigrations as $g) {
-            Storage::disk('root')->copy($g, $this->pluginListPath . '/' . $name . '/database/' . basename($g));
+            $this->copyProcessing($g, $this->pluginListPath . '/' . $name . '/database/' . basename($g));
         }
     }
 
@@ -1629,7 +1629,7 @@ class Plugin
             if (Storage::disk('root')->exists($path)) {
                 Storage::disk('root')->delete($path);
             }
-            Storage::disk('root')->copy($f, $path);
+            $this->copyProcessing($f, $path);
         }
     }
 
@@ -2018,5 +2018,18 @@ class Plugin
         $str = ucwords(str_replace('_', ' ', $str));
         $str = str_replace(' ', '', $lcfirst ? lcfirst($str) : $str);
         return $str;
+    }
+
+    /**
+     * 拷贝处理
+     * 不存在不拷贝
+     * @param string $from
+     * @param string $to
+     */
+    protected function copyProcessing($from, $to)
+    {
+        if (Storage::disk('root')->exists($from)) {
+            Storage::disk('root')->copy($from, $to);
+        }
     }
 }
