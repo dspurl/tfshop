@@ -98,3 +98,18 @@ export function jurisdiction(data) {
     data
   })
 }
+
+export function diff(name) {
+  return request({
+    url: 'plugin/diff/' + name,
+    method: 'GET'
+  })
+}
+
+export function conflictResolution(name, data) {
+  return request({
+    url: 'plugin/conflictResolution/' + name,
+    method: 'POST',
+    data
+  })
+}

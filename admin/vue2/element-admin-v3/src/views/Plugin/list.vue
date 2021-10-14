@@ -141,19 +141,71 @@
               </template>
             </template>
           </div>
-          <div v-if="item.diff_count > 0" class="hint"><i class="el-icon-warning"/>{{ item.diff_count }}个冲突未处理。<el-button type="danger" size="mini" round @click="dialogDiff = true">立即处理</el-button></div>
-
+          <div v-if="item.diff_count > 0" class="hint"><i class="el-icon-warning"/>{{ item.diff_count }}个冲突未处理。<el-button type="danger" size="mini" round @click="getDiff(item.name, item.abbreviation)">立即处理</el-button></div>
         </el-card>
       </div>
     </div>
-    <!-- 冲突-->
-    <el-dialog :close-on-click-modal="false" :visible.sync="dialogDiff" title="冲突处理">
-      冲突页
-    </el-dialog>
     <!--分页-->
     <div class="pagination-operation">
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="list"/>
     </div>
+    <!-- 冲突-->
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogDiff" :title="diffTitle" @close="getList">
+      <div class="tip">
+        <p>以下文件存在冲突，可自行合并，或直接覆盖（直接覆盖可能导致程序无法正常运行）</p>
+        <p>合并可以使用专业工具进行比对合并，也可以手动比对</p>
+        <p>点击">"可以查看具体冲突的内容</p>
+        <p>冲突通过linux diff记录，"---"表示变动前的文件，"+++"表示变动后的文件</p>
+        <p>@@ -90,26 +90,6 @@ 如上面内容，代表哪个文件从哪行开始连续多少行，如"-90,26"意思是:变动前的文件第90行开始连续26行</p>
+        <p>代码中的"-"代表变动后的文件中删除的代码，"+"代表变动后的文件中增加的代码</p>
+      </div>
+      <el-table
+        v-loading="diffLoading"
+        :data="dialogData"
+        border
+        style="width: 100%">
+        <el-table-column type="expand">
+          <template slot-scope="scope">
+            <json-viewer
+              :value="scope.row.details"
+              :expand-depth="5"
+              :copyable="copyable"
+              theme="my-awesome-json-theme"
+              boxed
+              sort/>
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="原文件"
+          prop="from"/>
+        <el-table-column
+          label="目标文件"
+          prop="to"/>
+        <el-table-column
+          label="操作"
+          align="right"
+          width="100">
+          <template v-if="scope.row.state === 0" slot-scope="scope">
+            <el-popconfirm
+              confirm-button-text="已处理"
+              cancel-button-text="覆盖"
+              icon="el-icon-info"
+              icon-color="red"
+              title="请选择处理方式？"
+              @confirm="handleDiff(scope.row.to, 1)"
+              @cancel="handleDiff(scope.row.to, 2)"
+            >
+              <el-button
+                slot="reference"
+                :loading="handleDiffLoading"
+                size="mini"
+                type="primary"
+                round>处理</el-button>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-dialog>
   </div>
 </template>
 <style lang='scss' scoped>

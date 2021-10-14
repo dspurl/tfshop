@@ -1,10 +1,22 @@
-import { getList, install, destroy, uninstall, publish, updatePack } from '@/api/plugin'
+import { getList, install, destroy, uninstall, publish, updatePack, diff, conflictResolution } from '@/api/plugin'
 import Pagination from '@/components/Pagination'
+import JsonViewer from 'vue-json-viewer'
 export default {
   name: 'PlugInList',
-  components: { Pagination },
+  components: { Pagination, JsonViewer },
   data() {
     return {
+      dialogData: [],
+      diffTitle: '',
+      diffName: '',
+      diffAbbreviation: '',
+      handleDiffLoading: false,
+      diffLoading: false,
+      diffSearch: '',
+      copyable: {
+        copyText: '复制',
+        copiedText: '复制中'
+      },
       formLoading: false,
       dialogVisible: false,
       dialogDiff: false,
@@ -43,6 +55,33 @@ export default {
         this.list = response.data.data
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    // 冲突文件列表
+    getDiff(name, abbreviation) {
+      this.diffLoading = true
+      this.dialogDiff = true
+      this.diffTitle = name + '的冲突列表'
+      this.diffName = abbreviation
+      this.diffAbbreviation = abbreviation
+      diff(abbreviation).then(response => {
+        this.dialogData = response.data
+        this.diffLoading = false
+      })
+    },
+    // 冲突处理
+    handleDiff(index, type) {
+      this.handleDiffLoading = true
+      conflictResolution(this.diffAbbreviation, { index: index, type: type }).then(response => {
+        this.getDiff(this.diffName, this.diffAbbreviation)
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: '处理成功',
+          type: 'success',
+          duration: 2000
+        })
+      }).finally(() => {
+        this.handleDiffLoading = false
       })
     },
     handleSelect(key, keyPath) {
@@ -122,7 +161,7 @@ export default {
       })
     },
     handleUninstall(name) {
-      const title = '是否确认卸载该插件?'
+      const title = '存在冲突的插件卸载后相关文件也会被删除哦，是否确认卸载?'
       this.$confirm(title, this.$t('hint.hint'), {
         confirmButtonText: this.$t('usuel.confirm'),
         cancelButtonText: this.$t('usuel.cancel'),

@@ -547,6 +547,7 @@ class Plugin
         if (!Storage::disk('root')->exists($dsshop)) {
             throw new \Exception('插件缺少dsshop.json文件', Code::CODE_PARAMETER_WRONG);
         }
+        $this->fileDestroy($path . '/diff.json');
         $dsshop = json_decode(Storage::disk('root')->get($dsshop), true);
         $routes = json_decode(Storage::disk('root')->get($routes), true);
         $this->fileDeployment($path . '/api/config', '/api/config');
@@ -2066,7 +2067,7 @@ class Plugin
             $shellExec = shell_exec("diff -u $path$to $path$from");
             // 存在冲突
             if ($shellExec) {
-                $diff[$to] = [
+                $diff[$path . $to] = [
                     'state' => 0,
                     'from' => $path . $from,
                     'to' => $path . $to,
@@ -2079,5 +2080,41 @@ class Plugin
                 }
             }
         }
+    }
+
+    /**
+     * 冲突文件列表
+     * @param $name
+     * @return mixed
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function diff($name)
+    {
+        $diffPath = $this->pluginListPath . '/' . $name . '/diff.json';
+        $diff = json_decode(Storage::disk('root')->get($diffPath), true);
+        return collect($diff)->values();
+    }
+
+    /**
+     * 冲突处理
+     * @param $name
+     * @param $request
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function conflictResolution($name, $request)
+    {
+        $diffPath = $this->pluginListPath . '/' . $name . '/diff.json';
+        $diff = json_decode(Storage::disk('root')->get($diffPath), true);
+        $diff[$request->index]['state'] = 1;
+        if ($request->type === 2) {
+            $condition = explode("/plugin", $diff[$request->index]['from'])[0];
+            $from = str_replace($condition, "", $diff[$request->index]['from']);
+            $to = str_replace($condition, "", $diff[$request->index]['to']);
+            Storage::disk('root')->delete($to);
+            Storage::disk('root')->copy($from, $to);
+        }
+        Storage::disk('root')->put($diffPath, json_encode($diff));
+        return 'ok';
     }
 }

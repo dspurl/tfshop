@@ -229,4 +229,33 @@ class PluginController extends Controller
     {
         return resReturn(1, (new Plugin())->jurisdiction($request->input('packagingJurisdiction', [])));
     }
+
+    /**
+     * Get all diff
+     * 获取冲突文件列表
+     * @param $name // 插件标识
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function diff($name)
+    {
+        return resReturn(1, (new Plugin())->diff($name));
+    }
+
+    /**
+     * conflict resolution
+     * 冲突处理
+     * @param $name // 插件标识
+     * @param Request $request
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Exception
+     */
+    public function conflictResolution($name, Request $request)
+    {
+        if(!$request->has('index')){
+            throw new \Exception('参数有误', Code::CODE_WRONG);
+        }
+        return resReturn(1, (new Plugin())->conflictResolution($name, $request));
+    }
 }
