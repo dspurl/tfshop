@@ -142,6 +142,7 @@
             </template>
           </div>
           <div v-if="item.diff_count > 0" class="hint"><i class="el-icon-warning"/>{{ item.diff_count }}个冲突未处理。<el-button type="danger" size="mini" round @click="getDiff(item.name, item.abbreviation)">立即处理</el-button></div>
+          <div v-else class="hint-box"/>
         </el-card>
       </div>
     </div>

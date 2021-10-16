@@ -109,14 +109,18 @@
   .goods-item{
     padding-top:20px;
     padding-right: 10px;
-    width: 330px;
-    margin-right: 5px;
+    width: 25%;
+    .hint-box{
+      background-color: #ffffff;
+      height: 48px;
+    }
     .hint{
       background-color: #fef0f0;
       color: #f56c6c;
       font-size: 14px;
       padding: 10px;
       text-align: center;
+      height: 48px;
       i{
         margin-right: 5px;
       }

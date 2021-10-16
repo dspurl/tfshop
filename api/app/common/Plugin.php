@@ -1647,7 +1647,7 @@ class Plugin
     {
         $data = Storage::disk('root')->allFiles($original);
         foreach ($data as $f) {
-            $path = str_replace($original, $target, $f);
+            $path = str_replace($original, $target, '/' . $f);
             if (Storage::disk('root')->exists($path)) {
                 Storage::disk('root')->delete($path);
             }
