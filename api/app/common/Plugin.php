@@ -803,7 +803,7 @@ class Plugin
         if (count($routes['packagingJurisdiction']) > 0) {
             $this->uninstallJurisdiction($routes['packagingJurisdiction']);
         }
-        Artisan::call('migrate:rollback');
+//        Artisan::call('migrate:rollback');
         //去除API路由
         $targetPath = '/api/routes/plugin.php';
         $file_get_contents = Storage::disk('root')->get($targetPath);
