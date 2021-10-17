@@ -995,7 +995,7 @@ class Plugin
         }
         // 微信公众号模板消息
         $file_wechat_channel_get_contents = Storage::disk('root')->get($wechatChannelPath);
-        preg_match_all('/\/\/' . $name . '_s(.*?)\/\/' . $name . '_e/is', $file_wechat_channel_get_contents, $file_wechat_channel_get_contents);
+        preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $file_wechat_channel_get_contents, $file_wechat_channel_get_contents);
         if (count($file_wechat_channel_get_contents[1]) > 0) {
             $routes['wechatChannel'] = $file_wechat_channel_get_contents[1][0];
         }
