@@ -241,11 +241,45 @@
         </el-table-column>
       </el-table>
       <el-button style="margin: 10px 0 0 0;" type="success" round @click="addObserverTable">新建观察者</el-button>
+      <h3>依赖插件</h3>
+      <div class="tip">
+        <p>1、如果您的插件需要依赖其它插件才可以运作，或是有根据其它插件开发对应的功能，可通过添加依赖插件实现</p>
+      </div>
+      <el-table
+        :data="ruleForm.relyOn"
+        style="width: 100%">
+        <el-table-column
+          prop="file"
+          label="依赖的插件">
+          <template slot-scope="scope">
+            {{ scope.row.name }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="explain"
+          label="是否必须">
+          <template slot-scope="scope">
+            {{ scope.row.must ? '是' : '否' }}
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+          width="120"
+          fixed="right">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+              <el-button type="primary" icon="el-icon-edit" circle @click="editRelyOnTable(scope.row)"/>
+            </el-tooltip>
+            <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+              <el-button type="danger" icon="el-icon-delete" circle @click="deleteRelyOnTable(scope.$index)"/>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+      </el-table>
+      <el-button style="margin: 10px 0 20px 0;" type="success" round @click="addRelyOnTable">添加依赖插件</el-button>
       <h3>关联文件</h3>
       <div class="tip">
-        <p>1、如果数据库和观察者还不能满足您的需求，可以自行添加其实文件到任何位置，然后将文件的绝对地址添加进来，插件发行时将自动将关联文件打包进去</p>
-        <p>2、如果客户端需要使用除插件标识命名外的其它文件，也可在这里添加</p>
-        <p>3、关联文件不能存在相同的文件名或目录名，如客户端和移动端相同，请自行修改</p>
+        <p>1、关联文件不能存在相同的文件名或目录名，如客户端和移动端相同，请自行修改</p>
       </div>
       <el-table
         :data="ruleForm.relevance"
@@ -677,6 +711,31 @@
       <div slot="footer" class="dialog-footer">
         <el-button :loading="formLoading" @click="dialogRelevance = false">{{ $t('usuel.cancel') }}</el-button>
         <el-button :loading="formLoading" type="primary" @click="relevanceSubmit">确定</el-button>
+      </div>
+    </el-dialog>
+    <!-- 添加依赖插件-->
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogRelyOn" :title="dialogRelyOnIndex === '' ? `新建依赖插件` : `修改依赖插件`">
+      <el-form ref="relyOnForm" :model="relyOnTemp" :rules="relyOnRules" label-position="left" label-width="120px">
+        <el-form-item class="min-input" label="插件" prop="name">
+          <el-select v-model="relyOnTemp.name" clearable placeholder="请选择">
+            <el-option
+              v-for="(item, index) in relyOn"
+              :key="index"
+              :label="item.name"
+              :value="item.name"/>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="是否必须" prop="must">
+          <el-switch
+            v-model="relyOnTemp.must"
+            active-text="是"
+            inactive-text="否"/>
+          <p>1、设为必须后，使用者必须先安装依赖插件才允许继续操作</p>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button :loading="formLoading" @click="dialogRelyOn = false">{{ $t('usuel.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="relyOnSubmit">确定</el-button>
       </div>
     </el-dialog>
   </div>

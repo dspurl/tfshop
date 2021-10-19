@@ -243,6 +243,17 @@ class PluginController extends Controller
     }
 
     /**
+     * Get install plugin list
+     * 获取安装的插件列表
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function installPluginList()
+    {
+        return resReturn(1, (new Plugin())->installList());
+    }
+
+    /**
      * conflict resolution
      * 冲突处理
      * @param $name // 插件标识

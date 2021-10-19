@@ -93,6 +93,7 @@ return [
         'plugInModels' => '获取模型列表',
         'plugInJurisdiction' => '获取权限列表',
         'plugInDiff' => '获取冲突文件列表',
+        'installPlugInList' => '获取安装的插件列表',
         'plugInTemplate' => '获取模板列表',
         'plugInUninstall' => '插件卸载',
         'behavior' => '使用分析',

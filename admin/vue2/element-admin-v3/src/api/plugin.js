@@ -113,3 +113,11 @@ export function conflictResolution(name, data) {
     data
   })
 }
+
+export function installList() {
+  return request({
+    url: 'plugin/installList/all',
+    method: 'GET'
+  })
+}
+

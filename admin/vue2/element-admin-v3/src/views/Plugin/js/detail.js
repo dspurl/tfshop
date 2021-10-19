@@ -1,4 +1,4 @@
-import { create, details, edit, routes, models, template, jurisdiction } from '@/api/plugin'
+import { create, details, edit, routes, models, template, jurisdiction, installList } from '@/api/plugin'
 import Sortable from 'sortablejs'
 import { mavonEditor } from 'mavon-editor'
 import 'mavon-editor/dist/css/index.css'
@@ -27,15 +27,18 @@ export default {
       path: [],
       models: [],
       template: [],
+      relyOn: [],
       adminTemplate: [],
       dialogObserver: false,
       dialogRelevance: false,
+      dialogRelyOn: false,
       dbEdit: false,
       observerEdit: false,
       name: '',
       dialogIndexes: false,
       dialogIndexesIndex: '',
       dialogRelevanceIndex: '',
+      dialogRelyOnIndex: '',
       dialogDataTableIndex: '',
       dialogObserverIndex: '',
       dialogDataTable: false,
@@ -58,6 +61,12 @@ export default {
         file: '',
         explain: ''
       },
+      relyOnTemp: {
+        name: '',
+        abbreviation: '',
+        versions: '',
+        must: false
+      },
       versions: '',
       ruleForm: {
         clientTemplate: [],
@@ -73,7 +82,8 @@ export default {
         versions: '',
         relevance: [],
         packagingJurisdiction: [],
-        routes: false
+        routes: false,
+        relyOn: []
       },
       rules: {
         name: [
@@ -132,6 +142,11 @@ export default {
         ],
         explain: [
           { required: true, message: '请输入说明', trigger: 'blur' }
+        ]
+      },
+      relyOnRules: {
+        name: [
+          { required: true, message: '请选择插件', trigger: 'blur' }
         ]
       },
       indexesType: [{
@@ -281,6 +296,7 @@ export default {
     }
     this.getRoutes()
     this.getModels()
+    this.getInstallList()
     this.getTemplate('client')
     this.getTemplate('admin')
   },
@@ -299,6 +315,12 @@ export default {
     getModels() {
       models().then((res) => {
         this.models = res.data
+      })
+    },
+    // 获取安装的插件列表
+    getInstallList() {
+      installList().then((res) => {
+        this.relyOn = res.data
       })
     },
     // 获取所有权限
@@ -330,6 +352,7 @@ export default {
         })
         this.ruleForm.instructions = this.ruleForm.instructions ? this.ruleForm.instructions : ''
         this.ruleForm.packagingJurisdiction = this.ruleForm.packagingJurisdiction ? this.ruleForm.packagingJurisdiction : []
+        this.ruleForm.relyOn = this.ruleForm.relyOn ? this.ruleForm.relyOn : []
         this.toData = this.ruleForm.packagingJurisdiction
         this.ruleForm.routes = false
         this.versions = res.data.versions
@@ -395,6 +418,20 @@ export default {
         this.$refs['observerForm'].clearValidate()
       })
     },
+    // 添加依赖插件
+    addRelyOnTable() {
+      this.dialogRelyOn = true
+      this.dialogRelyOnIndex = ''
+      this.relyOnTemp = {
+        name: '',
+        abbreviation: '',
+        versions: '',
+        must: false
+      }
+      this.$nextTick(() => {
+        this.$refs['relyOnForm'].clearValidate()
+      })
+    },
     // 添加关联文件
     addRelevanceTable() {
       this.dialogRelevance = true
@@ -455,6 +492,13 @@ export default {
       this.dialogRelevanceIndex = index
       this.relevanceTemp = row
     },
+    // 编辑依赖插件
+    editRelyOnTable(row, index) {
+      this.relyOnEdit = true
+      this.dialogRelyOn = true
+      this.dialogRelyOnIndex = index
+      this.relyOnTemp = row
+    },
     // 观察者添加/保存
     observerSubmit() {
       this.$refs['observerForm'].validate(valid => {
@@ -477,6 +521,25 @@ export default {
             this.ruleForm.relevance[this.dialogRelevanceIndex] = this.relevanceTemp
           } else {
             this.ruleForm.relevance.push(this.relevanceTemp)
+          }
+        }
+      })
+    },
+    // 依赖插件添加/保存
+    relyOnSubmit() {
+      this.$refs['relyOnForm'].validate(valid => {
+        if (valid) {
+          this.relyOn.map((item) => {
+            if (item.name === this.relyOnTemp.name) {
+              this.relyOnTemp.abbreviation = item.abbreviation
+              this.relyOnTemp.versions = item.versions
+            }
+          })
+          this.dialogRelyOn = false
+          if (this.dialogRelyOnIndex !== '') {
+            this.ruleForm.relyOn[this.dialogRelyOnIndex] = this.relyOnTemp
+          } else {
+            this.ruleForm.relyOn.push(this.relyOnTemp)
           }
         }
       })
@@ -545,6 +608,23 @@ export default {
         this.$notify({
           title: this.$t('hint.succeed'),
           message: win,
+          type: 'success',
+          duration: 2000
+        })
+      })
+    },
+    // 删除依赖插件
+    deleteRelyOnTable(index) {
+      const title = '是否确认删除该依赖插件?'
+      this.$confirm(title, this.$t('hint.hint'), {
+        confirmButtonText: this.$t('usuel.confirm'),
+        cancelButtonText: this.$t('usuel.cancel'),
+        type: 'warning'
+      }).then(() => {
+        this.ruleForm.relyOn.splice(index, 1)
+        this.$notify({
+          title: this.$t('hint.succeed'),
+          message: '删除成功',
           type: 'success',
           duration: 2000
         })

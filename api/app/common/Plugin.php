@@ -1706,7 +1706,8 @@ class Plugin
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
-            'routes' => $request->routes
+            'routes' => $request->routes,
+            'relyOn' => $request->relyOn,
         ];
         Storage::disk('root')->put($path . '/dsshop.json', json_encode($json));
     }
@@ -1741,7 +1742,8 @@ class Plugin
             'db' => $request->db,
             'observer' => $request->observer,
             'relevance' => $request->relevance,
-            'routes' => $request->routes
+            'routes' => $request->routes,
+            'relyOn' => $request->relyOn,
         ];
         Storage::disk('root')->put($path, json_encode($json));
     }
@@ -2083,6 +2085,23 @@ class Plugin
     }
 
     /**
+     * 插件是否安装
+     * @param $name // 插件名
+     * @return bool
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Exception
+     */
+    public function has($name)
+    {
+        if (!Storage::disk('root')->exists($this->pluginPath . '/dsshop.json')) {
+            throw new \Exception('缺少dsshop.json文件', Code::CODE_INEXISTENCE);
+        }
+        $dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
+        $dsshop = collect($dsshop)->pluck('name')->toArray();
+        return in_array($name, $dsshop);
+    }
+
+    /**
      * 冲突文件列表
      * @param $name
      * @return mixed
@@ -2116,5 +2135,14 @@ class Plugin
         }
         Storage::disk('root')->put($diffPath, json_encode($diff));
         return 'ok';
+    }
+
+    /**
+     * 安装的插件列表
+     */
+    public function installList()
+    {
+        $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
+        return collect($json_dsshop)->where('is_delete', 0);
     }
 }

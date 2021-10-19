@@ -102,6 +102,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('plugin/uninstall/{name}', 'PluginController@uninstall')->name('admin.plugInUninstall')->middleware(['permissions:PlugInUninstall']);    //插件卸载
         Route::get('plugin/diff/{name}', 'PluginController@diff')->name('admin.plugInDiff')->middleware(['permissions:PlugInList']);    //获取冲突文件列表
         Route::post('plugin/conflictResolution/{name}', 'PluginController@conflictResolution')->name('admin.plugInConflictResolution')->middleware(['permissions:PlugInList']);    //冲突处理
+        Route::get('plugin/installList/all', 'PluginController@installPluginList')->name('admin.installPlugInList')->middleware(['permissions:PlugInList']);    //获取安装的插件列表
         Route::get('statistic/behavior', 'StatisticsController@behavior')->name('admin.behavior')->middleware(['permissions:StatisticsVisit']);    //使用分析
         Route::get('statistic/keep', 'StatisticsController@keep')->name('admin.keep')->middleware(['permissions:StatisticsVisit']);    //留存趋势
         Route::get('statistic/source', 'StatisticsController@source')->name('admin.source')->middleware(['permissions:StatisticsVisit']);    //来源分析
