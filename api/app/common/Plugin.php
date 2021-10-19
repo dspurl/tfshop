@@ -550,6 +550,15 @@ class Plugin
         $this->fileDestroy($path . '/diff.json');
         $dsshop = json_decode(Storage::disk('root')->get($dsshop), true);
         $routes = json_decode(Storage::disk('root')->get($routes), true);
+        // 依赖插件
+        if (count($routes['relyOn']) > 0) {
+            foreach ($routes['relyOn'] as $relyOn) {
+                // 不存在依赖插件且设置了必须安装依赖插件时
+                if(!$this->has($relyOn['name']) && $this->has($relyOn['must'])){
+                    throw new \Exception('请先安装'.$relyOn['name'].'插件', Code::CODE_WRONG);
+                }
+            }
+        }
         $this->fileDeployment($path . '/api/config', '/api/config');
         $this->fileDeployment($path . '/api/models', '/api/app/Models/v' . config('dsshop.versions'));
         $this->fileDeployment($path . '/api/plugin', '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin');
