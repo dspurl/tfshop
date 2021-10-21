@@ -551,7 +551,7 @@ class Plugin
         $dsshop = json_decode(Storage::disk('root')->get($dsshop), true);
         $routes = json_decode(Storage::disk('root')->get($routes), true);
         // 依赖插件
-        if (count($routes['relyOn']) > 0) {
+        if(array_key_exists('relyOn', $routes)){
             foreach ($routes['relyOn'] as $relyOn) {
                 // 不存在依赖插件且设置了必须安装依赖插件时
                 if(!$this->has($relyOn['name']) && $this->has($relyOn['must'])){
