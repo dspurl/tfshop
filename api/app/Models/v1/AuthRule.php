@@ -65,4 +65,20 @@ class AuthRule extends Model
 
     }
 
+    /**
+     * 获取所有子级权限
+     * @param $id
+     * @param array $arr
+     * @return array
+     */
+    public function obtainAllChildPermissions($id, &$arr= []){
+        $authRule = AuthRule::where('pid', $id)->get();
+        $arr[]=$id;
+        if($authRule){
+            foreach ($authRule as $a){
+                $this->obtainAllChildPermissions($a->id, $arr);
+            }
+        }
+        return $arr;
+    }
 }

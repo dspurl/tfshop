@@ -138,9 +138,9 @@ class PowerController extends Controller
             if (!$id) {
                 return resReturn(0, '参数错误', Code::CODE_PARAMETER_WRONG);
             }
-            $authRule = AuthRule::find($id);
-            $authRule->delete();
-            AuthGroupAuthRule::where('auth_rule_id', $id)->delete();
+            $arr = (new AuthRule())->obtainAllChildPermissions($id);
+            AuthRule::whereIn('id', $arr)->delete();
+            AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
         }, 5);
         return resReturn(1, '删除成功');
     }
