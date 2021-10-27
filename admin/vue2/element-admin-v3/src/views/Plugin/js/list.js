@@ -57,6 +57,10 @@ export default {
         this.listLoading = false
       })
     },
+    refreshList() {
+      this.listQuery.page = 1
+      this.getList()
+    },
     // 冲突文件列表
     getDiff(name, abbreviation) {
       this.diffLoading = true

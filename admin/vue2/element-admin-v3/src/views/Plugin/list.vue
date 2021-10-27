@@ -2,20 +2,23 @@
   <div class="app-container">
     <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
       <el-menu-item index="1">本地</el-menu-item>
-      <!--<el-menu-item index="2">市场</el-menu-item>-->
+      <el-menu-item index="2">市场</el-menu-item>
     </el-menu>
-    <!--<div class="tip">
-      <p>自己创建和下载的插件可以在本地列表中进行管理</p>
-      <p>如自己创建的插件并发布到了市场，是会同时存在于本地和市场列表中的</p>
-      <p>本地已安装插件更新步骤：市场更新插件->本地升级插件</p>
-    </div>-->
+    <div class="tip">
+      <p>插件安装需开发人员操作，安装插件前请备份项目及数据库，安装插件可能导致不可逆操作。</p>
+      <p>插件安装请确保是开发模式下操作，因涉及文件修改、替换操作，需要人为操作环节。</p>
+      <p>自己创建和下载的插件可以在本地列表中进行管理。</p>
+      <p>如自己创建的插件并发布到了市场，是会同时存在于本地和市场列表中的，请不要尝试下载市场中的插件，这将导致本地的插件被替换。</p>
+      <p>本地已安装插件更新步骤：市场更新插件(下载最新插件)->本地升级插件(更新本地插件)。</p>
+      <p>插件安装后一闪而过的错误是正常现象，因项目文件发生变化，会重新加载，如刷新后还是报错，请重新运行`npm run dev`</p>
+    </div>
     <div class="filter-container">
-      <!--      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="getList()">刷新列表</el-button>-->
       <div class="condition"/>
       <div class="operation">
         <router-link v-permission="$store.jurisdiction.PlugInCreate" :to="'PlugInCreate'">
           <el-button class="filter-item" type="primary" icon="el-icon-edit">添加插件</el-button>
         </router-link>
+        <el-button v-permission="$store.jurisdiction.PlugInCreate" :to="'PlugInCreate'" class="filter-item" type="success" icon="el-icon-refresh" @click="refreshList()">刷新插件列表</el-button>
       </div>
     </div>
     <!-- 商品列表-->
