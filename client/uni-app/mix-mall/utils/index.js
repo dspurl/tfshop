@@ -173,3 +173,15 @@ export function micromessenger() {
 	}
 	
 }
+
+// 获取字符串中url的参数
+export function urlToObj(url) {
+  let obj = {}
+  let str = url.slice(url.indexOf('?') + 1)
+  let arr = str.split('&')
+  for (let j = arr.length, i = 0; i < j; i++) {
+    let arr_temp = arr[i].split('=')
+    obj[arr_temp[0]] = arr_temp[1]
+  }
+  return obj
+}
