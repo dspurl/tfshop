@@ -15,7 +15,7 @@ class ResourceMigration extends Command
      *
      * @var string
      */
-    protected $signature = 'resource:migration';
+    protected $signature = 'resource:migration {url?}';
 
     /**
      * The console command description.
@@ -41,12 +41,14 @@ class ResourceMigration extends Command
      */
     public function handle()
     {
+        // 如果没有传递地址，则取当前项目地址
+        $url = $this->argument('url') ? $this->argument('url') : request()->root();
         // 只迁移本地资源
         $Resource = Resource::get();
         foreach ($Resource as $r) {
             $con = explode("/storage", $r->img);
             if (count($con) > 1) {
-                $con[0] = request()->root();
+                $con[0] = $url;
                 Resource::where('id', $r->id)->update(['img' => implode("/storage", $con)]);
             }
         }
@@ -54,7 +56,7 @@ class ResourceMigration extends Command
         foreach ($Admin as $a) {
             $con = explode("/storage", $a->portrait);
             if (count($con) > 1) {
-                $con[0] = request()->root();
+                $con[0] = $url;
                 Admin::where('id', $a->id)->update(['portrait' => implode("/storage", $con)]);
             }
         }
@@ -62,7 +64,7 @@ class ResourceMigration extends Command
         foreach ($User as $u) {
             $con = explode("/storage", $u->portrait);
             if (count($con) > 1) {
-                $con[0] = request()->root();
+                $con[0] = $url;
                 User::where('id', $u->id)->update(['portrait' => implode("/storage", $con)]);
             }
         }
@@ -70,7 +72,7 @@ class ResourceMigration extends Command
         foreach ($GoodIndentCommodity as $g) {
             $con = explode("/storage", $g->img);
             if (count($con) > 1) {
-                $con[0] = request()->root();
+                $con[0] = $url;
                 GoodIndentCommodity::where('id', $g->id)->update(['img' => implode("/storage", $con)]);
             }
         }
