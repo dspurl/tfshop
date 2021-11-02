@@ -7,14 +7,15 @@ FROM php:7.4-fpm
 # session shmop simplexml snmp soap sockets sodium spl standard sysvmsg sysvsem
 # sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zend_test zip
 COPY sources.list.stretch /etc/apt/sources.list
-RUN apt update \
-    && apt install -y libfreetype6-dev \
-    && apt install -y zlib1g-dev \
-    && apt install -y libzip-dev \
-    && apt install -y libjpeg62-turbo-dev \
-    && apt install -y libpng-dev \
-    && apt install -y zip \
-    && apt install -y git \
+RUN apt-get update \
+    && apt-get upgrade -y \
+    && apt-get install -y libfreetype6-dev \
+    && apt-get install -y zlib1g-dev \
+    && apt-get install -y libzip-dev \
+    && apt-get install -y libjpeg62-turbo-dev \
+    && apt-get install -y libpng-dev \
+    && apt-get install -y zip \
+    && apt-get install -y git \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install ctype \
     && docker-php-ext-configure gd \
