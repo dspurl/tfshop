@@ -1,0 +1,83 @@
+version: '2.3'
+volumes:
+  dsdocker_redis_data:
+  dsdocker_mysql_data:
+networks:
+  dsdocker-network:
+    driver: bridge
+services:
+  mysql:
+    container_name: dsdocker-mysql
+    restart: on-failure
+    volumes:
+      - dsdocker_mysql_data:/var/lib/mysql
+    image: mysql:5.7
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_DATABASE=dsdocker
+    ports:
+      - "3306:3306"
+    networks:
+      dsdocker-network:
+        aliases:
+          - mysql.dsdocker
+  redis:
+    container_name: dsdocker-redis
+    restart: on-failure
+    volumes:
+      - dsdocker_redis_data:/data:rw
+    image: redis:5.0.8
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    networks:
+      dsdocker-network:
+        aliases:
+          - redis.dsdocker
+
+  php:
+    container_name: "dsdocker-php-fpm"
+    depends_on:
+      - redis
+      - mysql
+    build:
+      context: ./docker/php-fpm/
+    volumes:
+      - /www/:/var/www/html/
+    restart: on-failure
+    networks:
+      dsdocker-network:
+        aliases:
+          - php-fpm.dsdocker
+
+  nginx:
+    container_name: "dsdocker-nginx"
+    depends_on:
+      - php
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - /www/:/var/www/html/:rw
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/:rw
+    restart: on-failure
+    networks:
+      dsdocker-network:
+        aliases:
+          - nginx.dsdocker
+  web:
+    container_name: "dsdocker-web"
+    build:
+      context: ./docker/web/
+    ports:
+      - "3005:3005"
+    volumes:
+      - /www/:/src/
+    # restart: on-failure
+    networks:
+      dsdocker-network:
+        aliases:
+          - web.dsdocker
+    stdin_open: true
+    tty: true
