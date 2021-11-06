@@ -58,9 +58,11 @@ services:
     image: nginx
     ports:
       - "80:80"
+      - "443:443"
     volumes:
       - ./:/var/www/html/:rw
       - ./docker/nginx/conf.d:/etc/nginx/conf.d/:rw
+      - ./docker/nginx/ssl:/etc/nginx/ssl/:rw
       - ./storage/logs/:/var/log/nginx/:rw
     restart: on-failure
     networks:
