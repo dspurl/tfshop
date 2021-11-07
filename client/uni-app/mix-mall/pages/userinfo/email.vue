@@ -11,7 +11,7 @@
 			</view>
 			<view class="cu-form-group">
 				<view class="title">验证码</view>
-				<input maxlength="5" placeholder="请输入验证码" name="code" v-model="data.code"></input>
+				<input maxlength="5" placeholder="请输入验证码" name="code" v-model="data.code.number"></input>
 				<button class='cu-btn bg-red shadow round getcode' :disabled="disabled" @click="getCode">{{codename + seconds + unit}}</button>
 			</view>
 			<view class=" flex flex-direction padding">
