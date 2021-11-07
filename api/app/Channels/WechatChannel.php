@@ -279,7 +279,7 @@ class WechatChannel
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->wechat,
             'data' => [
-                'first' => '您好，恭喜您成功注帐号。',
+                'first' => '您好，恭喜您成功注册帐号。',
                 'keyword1' => $message['phoneNumber'],
                 'keyword2' => $message['password'],
                 'keyword3' => $message['phoneNumber'],

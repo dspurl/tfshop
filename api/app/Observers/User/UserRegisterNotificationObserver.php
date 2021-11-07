@@ -53,7 +53,7 @@ class UserRegisterNotificationObserver
                 ];
                 $invoice = [
                     'type' => InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
-                    'title' => '您好，恭喜您成功注帐号。',
+                    'title' => '您好，恭喜您成功注册帐号。',
                     'list' => [
                         [
                             'keyword' => '账号',
