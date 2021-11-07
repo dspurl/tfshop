@@ -56,7 +56,7 @@
             <el-input maxlength="255" v-model="ruleForm.email" placeholder="请输入邮箱" clearable></el-input>
           </el-form-item>
           <el-form-item label="验证码" prop="code">
-            <el-input v-model="ruleForm.code" maxlength="5" placeholder="请输入验证码" clearable></el-input>
+            <el-input v-model.number="ruleForm.code" maxlength="5" placeholder="请输入验证码" clearable></el-input>
             <el-button class="code-button" :loading="buttonLoading" type="danger" round size="mini" :disabled="disabled" @click="getCode">{{codename + seconds + unit}}</el-button>
           </el-form-item>
         </template>
