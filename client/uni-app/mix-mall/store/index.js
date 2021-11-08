@@ -13,7 +13,7 @@ const store = new Vuex.Store({
 		login(state, provider) {
 			state.hasLogin = true
 			state.userInfo = provider;
-			if(!uni.getStorageSync('dsshopApplytoken')){
+			if(!provider.update){
 				uni.setStorageSync('dsshopApplytoken', provider.access_token)
 				uni.setStorageSync('dsshopExpiresIn', (new Date()).getTime() + provider.expires_in * 1000)
 				uni.setStorageSync('dsshopRefreshToken', provider.refresh_token)

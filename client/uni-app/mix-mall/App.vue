@@ -25,6 +25,7 @@ export default {
 			let userInfo = uni.getStorageSync('dsshopUserInfo') || '';
 			if (userInfo && uni.getStorageSync('dsshopApplytoken')) {
 				//更新登陆状态
+				userInfo.update = 1
 				this.login(userInfo)
 			}
 		},
