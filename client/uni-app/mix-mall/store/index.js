@@ -38,6 +38,12 @@ const store = new Vuex.Store({
 				uni.navigateTo({
 					url:'/pages/public/login'
 				}) 
+			}else{
+				if(new Date().getTime() >= uni.getStorageSync('dsshopExpiresIn')){
+					uni.navigateTo({
+						url:'/pages/public/login'
+					}) 
+				}
 			}
 		},
 		// 刷新状态
