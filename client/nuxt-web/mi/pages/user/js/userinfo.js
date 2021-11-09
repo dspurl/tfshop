@@ -170,7 +170,7 @@ export default {
             that.seconds = '';
             that.codename = '获取验证码';
             that.unit = '';
-            that.codeDisabled = false
+            that.disabled = false
           }
         }, 1000);
         // 模拟验证码发送
