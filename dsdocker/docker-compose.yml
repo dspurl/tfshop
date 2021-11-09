@@ -45,6 +45,7 @@ services:
       context: ./docker/php-fpm/
     volumes:
       - /www/:/var/www/html/
+      - ./docker/supervisor/conf.d:/etc/supervisor/conf.d/:rw
     restart: on-failure
     networks:
       dsdocker-network:
@@ -60,6 +61,7 @@ services:
       - "80:80"
     volumes:
       - /www/:/var/www/html/:rw
+      - ./docker/nginx/ssl:/etc/nginx/ssl/:rw
       - ./docker/nginx/conf.d:/etc/nginx/conf.d/:rw
     restart: on-failure
     networks:

@@ -9,6 +9,7 @@ FROM php:7.4-fpm
 COPY sources.list.stretch /etc/apt/sources.list
 RUN apt-get update \
     && apt-get upgrade -y \
+    && apt-get install -y nano \
     && apt-get install -y libfreetype6-dev \
     && apt-get install -y zlib1g-dev \
     && apt-get install -y libzip-dev \
@@ -16,6 +17,8 @@ RUN apt-get update \
     && apt-get install -y libpng-dev \
     && apt-get install -y zip \
     && apt-get install -y git \
+    && apt-get install -y supervisor \
+    && apt-get install -y mariadb-client \
     && docker-php-ext-install bcmath \
     && docker-php-ext-install ctype \
     && docker-php-ext-configure gd \
