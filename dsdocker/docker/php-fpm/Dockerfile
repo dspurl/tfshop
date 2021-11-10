@@ -38,4 +38,7 @@ RUN composer config -g repo.packagist composer https://mirrors.aliyun.com/compos
 RUN pecl install redis
 RUN echo "extension=redis.so" > $PHP_INI_DIR/conf.d/redis.ini
 
+CMD service supervisor start \
+    && php-fpm
+
 EXPOSE 9000
