@@ -95,7 +95,7 @@ class InvoicePaid extends Notification
         }
         $this->invoice['image'] = array_key_exists("image", $this->invoice) ? $this->invoice['image'] : '';   //带图
         $this->invoice['price'] = array_key_exists("price", $this->invoice) ? sprintf("%01.2f", $this->invoice['price'] / 100) : '';   //金额
-        $this->invoice['list'] = array_key_exists("list", $this->invoice) ? $this->invoice['list'] : '';   //列表
+        $this->invoice['list'] = array_key_exists("list", $this->invoice) ? $this->invoice['list'] : [];   //列表
         $this->invoice['remark'] = array_key_exists("remark", $this->invoice) ? $this->invoice['remark'] : '';   //通知备注
         return (new MailMessage)->view('emails.notification', $this->invoice)
             ->subject($this->invoice['title']);
@@ -148,7 +148,7 @@ class InvoicePaid extends Notification
             'image' => array_key_exists("image", $this->invoice) ? $this->invoice['image'] : '',   //带图
             'price' => array_key_exists("price", $this->invoice) ? $this->invoice['price'] : '',   //金额
             'title' => $this->invoice['title'],   //通知标题
-            'list' => array_key_exists("list", $this->invoice) ? $this->invoice['list'] : '',   //列表
+            'list' => array_key_exists("list", $this->invoice) ? $this->invoice['list'] : [],   //列表
             'remark' => array_key_exists("remark", $this->invoice) ? $this->invoice['remark'] : '',   //通知备注
         ];
     }
