@@ -46,7 +46,7 @@
         <p>1、创建数据库时，会根据支持的客户端自动创建相关的模板</p>
       </div>
       <el-form-item class="min-input" label="使用说明" prop="instructions">
-        <mavon-editor :class="{'full-screen': fullScreen }" v-model="ruleForm.instructions" :xss_options="xssOptions" :toolbars="markdownOption" placeholder="请输入正文" style="min-width:1000px;" @fullScreen="fullScreen"/>
+        <mavon-editor :class="{'full-screen': fullScreen }" v-model="ruleForm.instructions" :xss_options="xssOptions" :toolbars="markdownOption" :ishljs="true" code-style="atom-one-dark" placeholder="请输入正文" style="min-width:1000px;" @fullScreen="fullScreen"/>
       </el-form-item>
       <div class="tip">
         <p>1、使用说明支持markdown语法</p>
