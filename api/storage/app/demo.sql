@@ -231,7 +231,7 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (191, 'PowerList', '', '', '权限列表', 19, 1, 0),
 (192, 'PlugInDestroy', '', '', '插件删除', 156, 0, 0),
 (193, 'PlugInEdit', '', '', '插件编辑', 156, 0, 0),
-(194, 'AdminLog', '', '', '管理员操作日志', 216, 1, 0),
+(194, 'AdminLog', '', '', '管理员操作日志', 6, 1, 0),
 (195, 'GoodDetail', '', '', '商品详情', 116, 0, 0),
 (196, 'IndentDhl', '', '', '保存订单配送信息', 127, 0, 0),
 (197, 'RedisServiceDetail', '', '', 'Redis详情', 60, 0, 0);
