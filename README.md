@@ -15,7 +15,7 @@
 </p>
 <h3 align="center">DSSHOP(DSSHOPING)电商商城</h3>
 <p align="center">前后端分离架构，VUE2.0+Laravel7，免费开源可商用。</p>
-<p align="center">官网: <a href="https://dsshoping.dswjcms.com" target="_blank">https://dsshoping.dswjcms.com"</a></p>
+<p align="center">官网: <a href="https://dsshoping.dswjcms.com" target="_blank">https://dsshoping.dswjcms.com</a></p>
 
 更新说明
 ------------
