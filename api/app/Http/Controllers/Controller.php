@@ -44,6 +44,9 @@ class Controller extends BaseController
             if ($request->size < $request->file->getSize()) {
                 return resReturn(0, '您上传的文件过大', Code::CODE_PARAMETER_WRONG);
             }
+            if ($request->file->getSize() > config('dsshop.maxFileUploadSize')) {
+                return resReturn(0, '您上传的文件大于后台配置的最大上传大小' . (config('dsshop.maxFileUploadSize') / 1024 / 1024) . 'M', Code::CODE_PARAMETER_WRONG);
+            }
         }
         $url = $this->uploadFiles($file, $request);
         if ($url['state'] != 'SUCCESS') {
