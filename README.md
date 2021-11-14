@@ -15,17 +15,19 @@
 </p>
 <h3 align="center">DSSHOP电商商城</h3>
 <p align="center">前后端分离架构，VUE2.0+Laravel7，免费开源可商用。</p>
+<p align="center">官网: <a href="https://dsshoping.dswjcms.com" target="_blank">https://dsshoping.dswjcms.com"</a></p>
 
 更新说明
 ------------
-2.2.0不对online分支进行升级，online分支和线上演示还是基于2.1.1，接下去的工作主要是开发dsshop官网，以便后续开发者可以直接通过dsshop进行在线插件安装和上传
+下一版本将拆分业务代码，全部业务代码脱离，改成插件模式；丰富官方网站功能
 
 说明
 ------------
+<p>master分支为稳定版本，推荐大多数用户下载，new分支为新版本，随时会有更新，未进行测试验收，不推荐用户使用</p>
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
 <p>因版本更新迭代比较快，文档可能存在没有涉及的面，请自行阅读源码</p>
-<p>已验证版本(经测试后可以正常安装的版本):2.2.1</p>
-<p>当前版本2.2.1</p>
+<p>已验证版本(经测试后可以正常安装的版本):2.3.0</p>
+<p>当前版本2.3.0</p>
 
 介绍
 ------------
@@ -51,7 +53,8 @@ DSSHOP是一套多终端商城解决方案，它采用前后端分离，后端�
 
 ##### DSSHOP名字由来
 
-DSSHOP中文名：点石商城系统，因本人2012年开始做开源项目：点石为金资源管理系统（DSWJCMS），然后购买了dswjcms.com的域名,基于TP3.2做了好几个开源项目，后来对DSSHOP进行了重构，所以才有了现在的项目
+- DSSHOP中文名：点石商城系统，因本人2012年开始做开源项目：点石为金资源管理系统（DSWJCMS），然后购买了dswjcms.com的域名,基于TP3.2做了好几个开源项目，后来对DSSHOP进行了重构，所以才有了现在的项目
+- DSSHOP又名DSSHOPING
 
 演示
 ------------
