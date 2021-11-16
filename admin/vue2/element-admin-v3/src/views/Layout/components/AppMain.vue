@@ -11,8 +11,8 @@ export default {
   name: 'AppMain',
   data() {
     return {
-      // isDev: process.env.ENV_CONFIG === 'dev'
-      isDev: false
+      isDev: process.env.ENV_CONFIG === 'dev'
+      // isDev: false
     }
   },
   computed: {
