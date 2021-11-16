@@ -1,7 +1,7 @@
 <template>
   <div class="body">
     <Header />
-    <Nuxt />
+    <Nuxt keep-alive />
     <Footer />
     <el-backtop/>
   </div>
