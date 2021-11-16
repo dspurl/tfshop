@@ -18,6 +18,10 @@ export default {
       }
     }
   },
+  activated() {
+    this.getList()
+    window.scrollTo(0, 1)
+  },
   created() {
     this.getList()
   },

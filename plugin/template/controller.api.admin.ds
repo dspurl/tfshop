@@ -48,17 +48,13 @@ class {{ name }}Controller extends Controller
      */
     public function create(Submit{{ name }}Request $request)
     {
-        $return = DB::transaction(function () use ($request) {
+        DB::transaction(function () use ($request) {
             ${{ name }} = new {{ name }}();
             {{ attribute }}
             ${{ name }}->save();
             return 1;
         }, 5);
-        if ($return == 1) {
-            return resReturn(1, '添加成功');
-        } else {
-            return resReturn(0, $return[0], $return[1]);
-        }
+        return resReturn(1, '添加成功');
     }
 
     /**
@@ -86,17 +82,13 @@ class {{ name }}Controller extends Controller
      */
     public function edit(Submit{{ name }}Request $request, $id)
     {
-        $return = DB::transaction(function () use ($request, $id) {
+        DB::transaction(function () use ($request, $id) {
             ${{ name }} = {{ name }}::find($id);
             {{ attribute }}
             ${{ name }}->save();
             return 1;
         }, 5);
-        if ($return == 1) {
-            return resReturn(1, '更新成功');
-        } else {
-            return resReturn(0, $return[0], $return[1]);
-        }
+        return resReturn(1, '更新成功');
     }
 
     /**
