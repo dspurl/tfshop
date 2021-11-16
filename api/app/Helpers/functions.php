@@ -290,6 +290,17 @@ function resourceAutoDelete($resource)
     if (count($data) > 1) {
         //$data[1]: XX/xx.jpg
         //本地将无法删除
+        $filename = explode('.', $data[1]);
+        // 删除生成的规格图片
+        if (count($filename) > 1) {
+            foreach (config('image.specification') as $specification) {
+                $path = $filename[0] . '_' . $specification . '.' . $filename[1];
+                if (Storage::exists('public/image/' . $path)) {
+                    Storage::delete('public/image/' . $path);
+                }
+            }
+        }
+        // 删除原文件
         if (Storage::exists('public/image/' . $data[1])) {
             Storage::delete('public/image/' . $data[1]);
         }
