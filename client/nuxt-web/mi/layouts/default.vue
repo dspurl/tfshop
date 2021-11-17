@@ -1,7 +1,13 @@
 <template>
   <div class="body">
     <Header />
-    <Nuxt keep-alive />
+    <template v-if="!isDev">
+      <Nuxt keep-alive/>
+    </template>
+    <template v-else>
+      <Nuxt/>
+    </template>
+
     <Footer />
     <el-backtop/>
   </div>
