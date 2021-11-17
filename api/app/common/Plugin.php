@@ -551,11 +551,11 @@ class Plugin
         $dsshop = json_decode(Storage::disk('root')->get($dsshop), true);
         $routes = json_decode(Storage::disk('root')->get($routes), true);
         // 依赖插件
-        if(array_key_exists('relyOn', $routes)){
+        if (array_key_exists('relyOn', $routes)) {
             foreach ($routes['relyOn'] as $relyOn) {
                 // 不存在依赖插件且设置了必须安装依赖插件时
-                if(!$this->has($relyOn['name']) && $this->has($relyOn['must'])){
-                    throw new \Exception('请先安装'.$relyOn['name'].'插件', Code::CODE_WRONG);
+                if (!$this->has($relyOn['name']) && $this->has($relyOn['must'])) {
+                    throw new \Exception('请先安装' . $relyOn['name'] . '插件', Code::CODE_WRONG);
                 }
             }
         }
@@ -994,7 +994,7 @@ class Plugin
         preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $file_get_lang_contents, $file_get_lang_contents);
         if (count($file_get_lang_contents[1]) > 0) {
             $routes['routeLangAdmin'] = $file_get_lang_contents[1][0];
-            if(count($file_get_lang_contents[1]) > 1){
+            if (count($file_get_lang_contents[1]) > 1) {
                 $routes['routeLangClient'] = $file_get_lang_contents[1][1];
             }
         }
@@ -1329,7 +1329,13 @@ class Plugin
                 $ruleForm = '';
                 $rules = '';
                 foreach ($db['attribute'] as $a) {
-                    $annotation = $a['annotation'] ? explode(":", $a['annotation'])[0] : 'ID';
+                    $annotationData = explode(":", $a['annotation']);
+                    $annotationParameterList = [];
+                    if (count($annotationData) > 1) {   //存在参数
+                        // 获取每条参数
+                        $annotationParameterList = explode(",", $annotationData[1]);
+                    }
+                    $annotation = $a['annotation'] ? $annotationData[0] : 'ID';
                     $list .= '
       <el-table-column label="' . $annotation . '" prop="' . $a['name'] . '">
         <template slot-scope="scope">
@@ -1339,11 +1345,26 @@ class Plugin
                     if ($a['name'] != 'id') {
                         switch ($a['type']) {
                             case 'tinyInteger':
+                                if (count($annotationParameterList) < 2) {
+                                    throw new \Exception('表注释不带参数的话，请不要用":"', Code::CODE_INEXISTENCE);
+                                }
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-radio-group v-model="ruleForm.' . $a['name'] . '">
-          <el-radio :label="0">否</el-radio>
-          <el-radio :label="1">是</el-radio>
+        <el-radio-group v-model="ruleForm.' . $a['name'] . '">';
+
+                                foreach ($annotationParameterList as $apList) {
+                                    $radioLabel = explode("=", $apList);
+                                    if (count($radioLabel) != 2) {
+                                        throw new \Exception('表注释格式有误', Code::CODE_INEXISTENCE);
+                                    }
+                                    $radioName = explode("-", $radioLabel[1]);
+                                    if (count($radioName) != 2) {
+                                        throw new \Exception('表注释格式有误', Code::CODE_INEXISTENCE);
+                                    }
+                                    $detail .= '
+          <el-radio :label="' . $radioLabel[0] . '">' . $radioName[0] . '</el-radio>';
+                                }
+                                $detail .= '     
         </el-radio-group>
       </el-form-item>';
                                 $rules .= "
@@ -1381,6 +1402,10 @@ class Plugin
                                 break;
                             case 'char':
                             case 'string':
+                                $rules .= "
+        " . $a['name'] . ": [
+          { required: true, message: '请输入" . $annotation . "', trigger: 'blur' }
+        ],";
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
         <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' clearable/>
@@ -1399,8 +1424,20 @@ class Plugin
         ],";
                                 break;
                         }
-                        $ruleForm .= "
+                        if ($a['default']) {
+                            if (is_numeric($a['default'])) {
+                                $ruleForm .= "
+        " . $a['name'] . ": " . $a['default'] . ",";
+                            } else {
+                                $ruleForm .= "
+        " . $a['name'] . ": '" . $a['default'] . "',";
+                            }
+
+                        } else {
+                            $ruleForm .= "
         " . $a['name'] . ": '',";
+                        }
+
                     }
 
                 }
