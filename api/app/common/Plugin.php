@@ -994,7 +994,9 @@ class Plugin
         preg_match_all('/\/\/ ' . $name . '_s(.*?)\/\/ ' . $name . '_e/is', $file_get_lang_contents, $file_get_lang_contents);
         if (count($file_get_lang_contents[1]) > 0) {
             $routes['routeLangAdmin'] = $file_get_lang_contents[1][0];
-            $routes['routeLangClient'] = $file_get_lang_contents[1][1];
+            if(count($file_get_lang_contents[1]) > 1){
+                $routes['routeLangClient'] = $file_get_lang_contents[1][1];
+            }
         }
         // 观察者
         $provider_file_get_contents = Storage::disk('root')->get($providerPath);
