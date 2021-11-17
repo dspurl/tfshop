@@ -1350,7 +1350,7 @@ class Plugin
                                 }
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-radio-group v-model="ruleForm.' . $a['name'] . '">';
+        <el-radio-group v-model="ruleForm.' . $a['name'] . '" placeholder="请选择'.$annotation.'">';
 
                                 foreach ($annotationParameterList as $apList) {
                                     $radioLabel = explode("=", $apList);
@@ -1364,7 +1364,7 @@ class Plugin
                                     $detail .= '
           <el-radio :label="' . $radioLabel[0] . '">' . $radioName[0] . '</el-radio>';
                                 }
-                                $detail .= '     
+                                $detail .= '
         </el-radio-group>
       </el-form-item>';
                                 $rules .= "
@@ -1378,7 +1378,7 @@ class Plugin
                             case 'bigInteger':
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' clearable/>
+        <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入'.$annotation.'" clearable/>
       </el-form-item>';
                                 $rules .= "
         " . $a['name'] . ": [
@@ -1408,7 +1408,7 @@ class Plugin
         ],";
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' clearable/>
+        <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入'.$annotation.'" clearable/>
       </el-form-item>';
                                 break;
                             case 'text':
@@ -1416,7 +1416,7 @@ class Plugin
                             case 'longText':
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-input :rows="2" v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' type="textarea" clearable/>
+        <el-input :rows="2" v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入'.$annotation.'" type="textarea" clearable/>
       </el-form-item>';
                                 $rules .= "
         " . $a['name'] . ": [
@@ -1424,7 +1424,7 @@ class Plugin
         ],";
                                 break;
                         }
-                        if ($a['default']) {
+                        if (isset($a['default'])) {
                             if (is_numeric($a['default'])) {
                                 $ruleForm .= "
         " . $a['name'] . ": " . $a['default'] . ",";
@@ -1847,12 +1847,23 @@ class Plugin
         $constant = '';
         $SoftDeletes = $db['softDeletes'] ? 'use Illuminate\Database\Eloquent\SoftDeletes;' : '';
         $SoftDeletesUse = $db['softDeletes'] ? 'use SoftDeletes;' : '';
+        $get = '';
         foreach ($db['attribute'] as $a) {
             $property .= '
  * @property ' . $this->casting[$a['type']] . ' ' . $a['name'] . '';
             // 生成常量
             $annotation = explode(":", $a['annotation']);
             if (count($annotation) == 2) {
+                $get .= '
+                
+    public function get' . $this->convertUnderline($a['name']) . 'Attribute()
+    {
+        if (isset($this->attributes[\'' . $a['name'] . '\'])) {
+            if (self::$withoutAppends) {
+                return $this->attributes[\'' . $a['name'] . '\'];
+            }
+            $name = "";
+            switch ($this->attributes[\'' . $a['name'] . '\']) {';
                 $annotationValue = explode(",", $annotation[1]);
                 if (!$annotationValue[0]) {
                     throw new \Exception('表注释格式有误":"', Code::CODE_INEXISTENCE);
@@ -1869,7 +1880,17 @@ class Plugin
                     $constant .= '
     const ' . strtoupper(rtrim($db['name'], 's')) . '_' . strtoupper($a['name']) . '_' . strtoupper($annotationValueDataExplain[1]) . ' = ' . $annotationValueData[0] . '; //' . $annotation[0] . ':' . $annotationValueDataExplain[0] . '
             ';
+                    $get .= '
+                case static::' . strtoupper(rtrim($db['name'], 's')) . '_' . strtoupper($a['name']) . '_' . strtoupper($annotationValueDataExplain[1]) . ':
+                    $name = \'' . $annotationValueDataExplain[0] . '\';
+                    break;
+                    ';
                 }
+                $get .= '
+            }
+            return $name;
+        }
+    }';
             }
         }
 
@@ -1879,14 +1900,16 @@ class Plugin
             '/{{ name }}/',
             '/{{ SoftDeletes }}/',
             '/{{ SoftDeletesUse }}/',
-            '/{{ property }}/'
+            '/{{ property }}/',
+            '/{{ get }}/'
         ], [
             config('dsshop.versions'),
             $constant,
             $name,
             $SoftDeletes,
             $SoftDeletesUse,
-            $property
+            $property,
+            $get
         ], $content);
         $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
         Storage::disk('root')->put($path, $content);

@@ -29,6 +29,7 @@ class {{ name }}Controller extends Controller
      */
     public function list(Request $request)
     {
+        {{ name }}::$withoutAppends = false;
         $q = {{ name }}::query();
         $limit = $request->limit;
         if ($request->has('sort')) {
@@ -66,7 +67,6 @@ class {{ name }}Controller extends Controller
      */
     public function detail($id)
     {
-        {{ name }}::$withoutAppends = false;
         ${{ name }} = {{ name }}::find($id);
         return resReturn(1, ${{ name }});
     }
