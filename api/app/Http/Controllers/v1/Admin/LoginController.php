@@ -123,7 +123,7 @@ class LoginController extends Controller
                     'path' => $rule->pid > 0 ? lcfirst($rule->api) : '/' . lcfirst($rule->api),
                     'component' => $rule->pid > 0 ? $rule->api : 'Layout',
                     'redirect' => $rule->pid > 0 ? $rule->url : 'noredirect',
-                    'alwaysShow' => $rule->pid > 0 ? false : true,
+                    'alwaysShow' => $rule->state,
                     'name' => $rule->api,
                     'hidden' => $rule->state == 1 && array_intersect($data['roles'], $rolesArray) ? false : true,
                     'meta' => array(
