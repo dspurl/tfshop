@@ -40,6 +40,22 @@ export default {
       if (first && first.name.trim().toLocaleLowerCase() !== 'Dashboard'.toLocaleLowerCase()) {
         matched = [{ path: '/dashboard', meta: { title: 'dashboard' }}].concat(matched)
       }
+      // 增加创建、详情、保存时面包屑无列表页的问题
+      if (matched[matched.length - 1].path.indexOf('Create') !== -1 || matched[matched.length - 1].path.indexOf('Detail') !== -1 || matched[matched.length - 1].path.indexOf('Edit') !== -1) {
+        let matchedPath = ''
+        let matchedTitle = ''
+        if (matched[matched.length - 1].path.indexOf('Create') !== -1) {
+          matchedPath = matched[matched.length - 1].path.replace('Create', 'List')
+          matchedTitle = matched[matched.length - 1].meta.title.replace('创建', '') + '列表'
+        } else if (matched[matched.length - 1].path.indexOf('Detail') !== -1) {
+          matchedPath = matched[matched.length - 1].path.replace('Detail', 'List')
+          matchedTitle = matched[matched.length - 1].meta.title.replace('详情', '') + '列表'
+        } else {
+          matchedPath = matched[matched.length - 1].path.replace('Edit', 'List')
+          matchedTitle = matched[matched.length - 1].meta.title.replace('保存', '') + '列表'
+        }
+        matched.splice(matched.length - 1, 0, { path: matchedPath, meta: { title: matchedTitle }})
+      }
       this.levelList = matched
     },
     pathCompile(path) {

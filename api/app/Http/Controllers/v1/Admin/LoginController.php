@@ -16,6 +16,7 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
+
     public function index(Request $request)
     {
 
@@ -54,7 +55,7 @@ class LoginController extends Controller
             $respond = $client->post($url, ['form_params' => $params]);
             $access_token = json_decode($respond->getBody()->getContents(), true);
         }
-        $access_token['refresh_expires_in'] = config('passport.refresh_expires_in')/60/60/24;
+        $access_token['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
         $this->incrementLoginAttempts($request);
         //日志记录
         $input = $request->all();
@@ -73,7 +74,8 @@ class LoginController extends Controller
      * @param Request $request
      * @return string
      */
-    public function refresh(Request $request){
+    public function refresh(Request $request)
+    {
         $client = new Client();
         $url = request()->root() . '/oauth/token';
         $params = array_merge(config('passport.admin.refresh'), [
@@ -117,12 +119,20 @@ class LoginController extends Controller
 
             }
             if ($rule->type == 0) {
+                $activeMenu = '';
+                if (strpos($rule->api, 'Create') !== false) {
+                    $activeMenu = str_replace('Create', '', $rule->api) . 'List';
+                } else if (strpos($rule->api, 'Edit') !== false) {
+                    $activeMenu = str_replace('Edit', '', $rule->api) . 'List';
+                } else if (strpos($rule->api, 'Detail') !== false) {
+                    $activeMenu = str_replace('Detail', '', $rule->api) . 'List';
+                }
                 $asyncRouterMap[] = array(
                     'id' => $rule->id,
                     'pid' => $rule->pid,
                     'path' => $rule->pid > 0 ? lcfirst($rule->api) : '/' . lcfirst($rule->api),
                     'component' => $rule->pid > 0 ? $rule->api : 'Layout',
-                    'redirect' => $rule->pid > 0 ? $rule->url : 'noredirect',
+                    'redirect' => (strpos($rule->api, 'List') !== false || strpos($rule->api, 'Create') !== false || strpos($rule->api, 'Edit') !== false || strpos($rule->api, 'Detail') !== false) ? $rule->url : 'noredirect',
                     'alwaysShow' => $rule->state,
                     'name' => $rule->api,
                     'hidden' => $rule->state == 1 && array_intersect($data['roles'], $rolesArray) ? false : true,
@@ -131,7 +141,8 @@ class LoginController extends Controller
                         'icon' => $rule->icon,
                         'roles' => $rolesArray,
                         'noCache' => false,
-                        'breadcrumb' => true
+                        'breadcrumb' => true,
+                        'activeMenu' => $activeMenu
                     ),
                 );
             }
