@@ -10,6 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+Route::get('/sitemap.xml', 'SitemapController@index');
+Route::get('/sitemap/{id}.xml', 'SitemapController@detail');
 /*Route::get('/', function () {
     return view('welcome');
 });*/
