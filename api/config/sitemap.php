@@ -23,7 +23,7 @@ return
             'url' => 'category/list',
         ],
         [
-            'model' => 'good',
+            'model' => 'Good',
             'url' => 'product/detail',
             'connector' => '&',
             'key' => ['id'],
