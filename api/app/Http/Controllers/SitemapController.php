@@ -59,7 +59,11 @@ class SitemapController extends Controller
                 $data[$id]['sitemap_url'] = $sitemap['url'];
                 $parameter = '';
                 foreach ($sitemap['key'] as $key) {
-                    $parameter .= $sitemap['connector'] . $key . '=' . $d[$key];
+                    if ($sitemap['connector'] == '&') {
+                        $parameter .= $sitemap['connector'] . $key . '=' . $d[$key];
+                    }else{
+                        $parameter .= $sitemap['connector'] .$d[$key];
+                    }
                 }
                 if ($sitemap['connector'] == '&') {
                     $parameter = preg_replace('/&/', '?', $parameter, 1);
