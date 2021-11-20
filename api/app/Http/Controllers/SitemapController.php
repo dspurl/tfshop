@@ -27,13 +27,16 @@ class SitemapController extends Controller
         $data = [];
         foreach ($this->sitemap as $s) {
             if ($s['model']) {
-                $model = '\\App\\Models\\v1\\' . $s['model'];
+                $model = '\\App\\Models\\v'.config('dsshop.versions').'\\' . $s['model'];
                 $first = $model::orderBy('updated_at', 'desc')->first();
-                $s['updated_at'] = date("Y-m-d",strtotime($first->updated_at));
+                if($first){
+                    $s['updated_at'] = date("Y-m-d",strtotime($first->updated_at));
+                    $data[] = $s;
+                }
             } else {
                 $s['updated_at'] = date("Y-m-d");
+                $data[] = $s;
             }
-            $data[] = $s;
         }
         return response()->view('sitemap.index', ['data' => $data])->header('Content-Type', 'text/xml');
     }
@@ -49,7 +52,7 @@ class SitemapController extends Controller
     {
         $sitemap = $this->sitemap[$id];
         if ($sitemap['model']) {
-            $model = '\\App\\Models\\v1\\' . $sitemap['model'];
+            $model = '\\App\\Models\\v'.config('dsshop.versions').'\\' . $sitemap['model'];
             $where = [];
             foreach ($sitemap['where'] as $w) {
                 $where[] = [$w['column'], $w['operator'], $w['value']];
