@@ -53,7 +53,6 @@ class {{ name }}Controller extends Controller
             ${{ name }} = new {{ name }}();
             {{ attribute }}
             ${{ name }}->save();
-            return 1;
         }, 5);
         return resReturn(1, '添加成功');
     }
@@ -86,7 +85,6 @@ class {{ name }}Controller extends Controller
             ${{ name }} = {{ name }}::find($id);
             {{ attribute }}
             ${{ name }}->save();
-            return 1;
         }, 5);
         return resReturn(1, '更新成功');
     }
