@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset name="Coding Standard for PHP">
+    <description>A well crafted coding standard for PHP based on PSR 12, adapted to Laravel</description>
+
+    <!-- Import slevomat/coding-standard sniffs -->
+    <config name="installed_paths" value="../../slevomat/coding-standard,../../../slevomat/coding-standard,../vendor/slevomat/coding-standard"/>
+
+    <!-- The files and directory to include -->
+    <file>app</file>
+    <file>config</file>
+    <file>public</file>
+    <file>resources</file>
+    <file>routes</file>
+    <file>tests</file>
+
+    <!-- Exclude file/directory patterns from been sniffed -->
+    <exclude-pattern>*/bootstrap/*</exclude-pattern>
+    <exclude-pattern>*/storage/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/*.blade.php</exclude-pattern>
+
+    <!-- Set command line arguments and their values (where needed) -->
+    <arg name="colors"/>
+    <arg name="extensions" value="php"/>
+    <arg name="report" value="code"/>
+    <arg value="psv"/>
+
+    <!-- Set the memory limit to 128M -->
+    <ini name="memory_limit" value="128M"/>
+
+    <!-- Standards to use -->
+    <rule ref="PSR2"/>
+    <rule ref="PSR12"/>
+
+    <!--These are contradictory to PSR12-->
+    <rule ref="PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterSecond">
+        <severity>0</severity>
+    </rule>
+    <rule ref="Squiz.ControlStructures.ForLoopDeclaration.SpacingAfterFirst">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Include some sniffs from other standards to help solidify PSR 12 -->
+    <rule ref="Squiz.Arrays.ArrayBracketSpacing"/>
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+    <rule ref="Squiz.Classes.LowercaseClassKeywords"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopShouldBeWhileLoop"/>
+    <rule ref="Generic.CodeAnalysis.ForLoopWithTestFunctionCall"/>
+    <rule ref="Generic.CodeAnalysis.JumbledIncrementer"/>
+    <rule ref="Generic.CodeAnalysis.UnconditionalIfStatement"/>
+    <rule ref="Generic.CodeAnalysis.UnnecessaryFinalModifier"/>
+    <rule ref="Squiz.Commenting.DocCommentAlignment"/>
+    <rule ref="Squiz.Operators.ValidLogicalOperators"/>
+    <rule ref="Generic.PHP.DeprecatedFunctions"/>
+    <rule ref="Squiz.PHP.DisallowSizeFunctionsInLoops"/>
+    <rule ref="Squiz.PHP.Eval"/>
+    <rule ref="Generic.PHP.ForbiddenFunctions"/>
+    <rule ref="Squiz.PHP.NonExecutableCode"/>
+    <rule ref="Generic.PHP.NoSilencedErrors"/>
+    <rule ref="Squiz.Classes.ClassFileName">
+        <exclude-pattern>*/database/*</exclude-pattern>
+    </rule>
+    <rule ref="Squiz.Scope.MemberVarScope"/>
+    <rule ref="Squiz.Scope.StaticThisUsage"/>
+    <rule ref="Squiz.WhiteSpace.CastSpacing"/>
+    <rule ref="Squiz.WhiteSpace.LanguageConstructSpacing"/>
+    <rule ref="Squiz.WhiteSpace.LogicalOperatorSpacing"/>
+    <rule ref="Squiz.WhiteSpace.SemicolonSpacing"/>
+    <rule ref="Squiz.WhiteSpace.SuperfluousWhitespace"/>
+    <rule ref="Squiz.WhiteSpace.ScopeClosingBrace"/>
+    <rule ref="Squiz.Functions.FunctionDeclarationArgumentSpacing">
+        <properties>
+            <property name="equalsSpacing" value="1"/>
+        </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Arrays.TrailingArrayComma"/>
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility">
+        <properties>
+            <property name="fixable" type="boolean" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+    <rule ref="SlevomatCodingStandard.Classes.UnusedPrivateElements"/>
+    <rule ref="SlevomatCodingStandard.Commenting.DisallowOneLinePropertyDocComment"/>
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration">
+        <exclude-pattern>*/database/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowContinueWithoutIntegerOperandInSwitch"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.DisallowYodaComparison"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.LanguageConstructWithParentheses"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator"/>
+    <rule ref="SlevomatCodingStandard.Exceptions.DeadCatch"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation">
+        <exclude-pattern>*/tests/*</exclude-pattern>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.NamespaceDeclaration"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseSpacing"/>
+    <rule ref="SlevomatCodingStandard.PHP.ShortList"/>
+    <rule ref="SlevomatCodingStandard.PHP.UselessParentheses"/>
+    <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.LongTypeHints"/>
+    <!-- <rule ref="SlevomatCodingStandard.TypeHints.NullableTypeForNullDefaultValue"/> -->
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
+    <!-- <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/> -->
+    <rule ref="SlevomatCodingStandard.Variables.DuplicateAssignmentToVariable"/>
+
+    <!-- Relax some rules for Laravel -->
+    <rule ref="PSR1.Files.SideEffects">
+        <exclude-pattern>public/index.php</exclude-pattern>
+    </rule>
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>*/database/*</exclude-pattern>
+    </rule>
+    <rule ref="PSR12.Traits.UseDeclaration.MultipleImport">
+        <type>warning</type>
+    </rule>
+</ruleset>
