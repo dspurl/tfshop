@@ -1,0 +1,86 @@
+version: '2.3'
+volumes:
+  dsshop_redis_data:
+  dsshop_mysql_data:
+networks:
+  dsshop-network:
+    driver: bridge
+services:
+  mysql:
+    container_name: dsshop-mysql
+    restart: on-failure
+    volumes:
+      - dsshop_mysql_data:/var/lib/mysql
+    image: mysql:5.7
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      - MYSQL_ROOT_PASSWORD=123
+      - MYSQL_DATABASE=dsshop
+    ports:
+      - "3306:3306"
+    networks:
+      dsshop-network:
+        aliases:
+          - mysql.dsshop
+  redis:
+    container_name: dsshop-redis
+    restart: on-failure
+    volumes:
+      - dsshop_redis_data:/data:rw
+    image: redis:5.0.8
+    command: redis-server --appendonly yes
+    ports:
+      - "6379:6379"
+    networks:
+      dsshop-network:
+        aliases:
+          - redis.dsshop
+
+  php:
+    container_name: "dsshop-php-fpm"
+    depends_on:
+      - redis
+      - mysql
+    build:
+      context: ./docker/php-fpm/
+    volumes:
+      - ./:/var/www/html/
+      - ./docker/supervisor/conf.d:/etc/supervisor/conf.d/:rw
+    restart: on-failure
+    networks:
+      dsshop-network:
+        aliases:
+          - php-fpm.dsshop
+
+  nginx:
+    container_name: "dsshop-nginx"
+    depends_on:
+      - php
+    image: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./:/var/www/html/:rw
+      - ./docker/nginx/conf.d:/etc/nginx/conf.d/:rw
+      - ./docker/nginx/ssl:/etc/nginx/ssl/:rw
+    restart: on-failure
+    networks:
+      dsshop-network:
+        aliases:
+          - nginx.dsshop
+  web:
+    container_name: "dsshop-web"
+    build:
+      context: ./docker/web/
+    ports:
+      - "3005:3005"
+    volumes:
+      - ./web:/src/
+    # restart: on-failure
+    networks:
+      dsshop-network:
+        aliases:
+          - web.dsshop
+    stdin_open: true
+    tty: true

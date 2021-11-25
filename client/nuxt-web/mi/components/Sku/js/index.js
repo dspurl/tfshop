@@ -460,7 +460,7 @@ export default{
             addShoppingCart([...cartMap.values()],function(res){
               this.$emit('loadCart') //重载数据
             });
-            store.set(process.env.CACHE_PR + 'CartList', [...cartMnnap.values()])
+            store.set(process.env.CACHE_PR + 'CartList', [...cartMap.values()])
             $nuxt.$store.commit('setShoppingCartNumber', cartMap.size)
           }
         }

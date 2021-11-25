@@ -1,7 +1,5 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -13,6 +11,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
+
+Route::get('/sitemap.xml', 'SitemapController@index');
+Route::get('/sitemap/{id}.xml', 'SitemapController@detail');
+/*Route::get('/', function () {
     return view('welcome');
-});
+});*/
+//Auth::routes();

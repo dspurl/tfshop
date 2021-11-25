@@ -23,7 +23,7 @@ export default {
     };
     return {
       loading: true,
-      buttonLoading: true,
+      buttonLoading: false,
       total: 0,
       ruleForm: {
         indentCommodity: [],

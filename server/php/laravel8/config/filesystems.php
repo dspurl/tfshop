@@ -37,11 +37,18 @@ return [
 
         'public' => [
             'driver' => 'local',
-            'root' => storage_path('app/public'),
+            'root' => env('HOMESTEAD_WINDOWS') ? public_path('storage') : storage_path('app/public'),
             'url' => env('APP_URL').'/storage',
             'visibility' => 'public',
         ],
-
+        'plugin' => [
+            'driver' => 'local',
+            'root'   => '../../plugin',
+        ],
+        'root' => [
+            'driver' => 'local',
+            'root'   => '../../',
+        ],
         's3' => [
             'driver' => 's3',
             'key' => env('AWS_ACCESS_KEY_ID'),

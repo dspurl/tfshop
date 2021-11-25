@@ -94,7 +94,7 @@ export default {
       if(this.collect){
         collectDestroy(this.goodDetail.id)
       }else{
-        collectCreate(this.goodDetail)
+        collectCreate({id: this.goodDetail.id})
       }
       this.collect = !this.collect
     },
