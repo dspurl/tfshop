@@ -3,8 +3,8 @@
     <el-row :gutter="24">
       <el-col v-for="l in list" :span="6" :key="l.id">
         <el-card :body-style="{ padding: '0px' }" style="margin-bottom: 20px;">
-          <el-image v-if="l.type === 1" :src="l.img" :preview-src-list="listImage" lazy style="height:340px;width: 100%;"/>
-          <el-image v-else style="height:340px;width: 100%;"/>
+          <el-image v-if="l.type === 1" :src="l.img" :preview-src-list="listImage" fit="scale-down" lazy style="height:340px;width: 100%;"/>
+          <el-image v-else fit="contain" style="height:340px;width: 100%;"/>
           <div class="name">
             <div class="title">{{ l.depict }}</div>
             <div class="delete">
