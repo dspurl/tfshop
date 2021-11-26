@@ -43,11 +43,11 @@ return [
         ],
         'plugin' => [
             'driver' => 'local',
-            'root'   => '../../plugin',
+            'root'   => '../../../../plugin',
         ],
         'root' => [
             'driver' => 'local',
-            'root'   => '../../',
+            'root'   => '../../../../',
         ],
         's3' => [
             'driver' => 's3',
