@@ -30,7 +30,9 @@
       </el-table-column>
       <el-table-column label="头像" align="center">
         <template slot-scope="scope">
-          <img :src="scope.row.portrait" style="width:45px;hieght:45px;">
+          <el-avatar :size="45" :src="scope.row.portrait">
+            <img src="@/assets/admin/3ea6beec64369c2642b92c6726f1epng.png">
+          </el-avatar>
         </template>
       </el-table-column>
       <el-table-column label="角色" align="center">

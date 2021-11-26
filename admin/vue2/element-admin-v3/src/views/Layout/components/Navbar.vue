@@ -19,7 +19,9 @@
       </template>
       <el-dropdown class="avatar-container right-menu-item" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+          <el-avatar :size="40" :src="avatar">
+            <img src="@/assets/admin/3ea6beec64369c2642b92c6726f1epng.png">
+          </el-avatar>
           <!--<img src="@/assets/admin/1.gif?imageView2/1/w/80/h/80" class="user-avatar">-->
           <div style="float:right;margin-left: 5px;">{{ name }}</div>
         </div>
