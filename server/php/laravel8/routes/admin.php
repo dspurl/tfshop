@@ -77,10 +77,6 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('indent/refund/{id}', 'IndentController@refund')->name('admin.indentRefund')->middleware(['permissions:IndentRefund']); //退款
         Route::get('indent/query/{id}', 'IndentController@query')->name('admin.indentQuery')->middleware(['permissions:IndentDetail']);  //查询订单状态
         Route::post('indent/receiving', 'IndentController@receiving')->name('admin.indentReceiving')->middleware(['permissions:IndentShipment']); //延长收货时间
-        Route::get('redis', 'RedisServiceController@list')->name('admin.redisServiceList')->middleware(['permissions:RedisServiceList']);    //Redis列表
-        Route::get('redis/{name}', 'RedisServiceController@detail')->name('admin.redisServiceDetail')->middleware(['permissions:RedisServiceDetail']);    //Redis详情
-        Route::post('redis/destroy/{id}', 'RedisServiceController@destroy')->name('admin.redisServiceDestroy')->middleware(['permissions:RedisServiceDestroy']);    //删除Redis
-        Route::get('redisPanel', 'RedisServiceController@panel')->name('admin.redisPanel')->middleware(['permissions:RedisPanelList']);    //Redis面板
         Route::get('resource', 'ResourceController@list')->name('admin.resourceList')->middleware(['permissions:ResourceList']);    //资源列表
         Route::post('resource/destroy/{id}', 'ResourceController@destroy')->name('admin.resourceDestroy')->middleware(['permissions:ResourceDestroy']);    //删除资源
         Route::get('banner', 'BannerController@list')->name('admin.bannerList')->middleware(['permissions:BannerList']);    //轮播列表

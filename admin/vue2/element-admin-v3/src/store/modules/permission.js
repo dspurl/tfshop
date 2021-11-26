@@ -35,9 +35,6 @@ export const componentsMap = {
   IndentList: () => import('@/views/IndentManagement/Indent/list'),
   IndentDetail: () => import('@/views/IndentManagement/Indent/detail'),
   IndentShipment: () => import('@/views/IndentManagement/Indent/shipment'),
-  RedisService: () => import('@/views/ToolManagement/RedisService/index'),
-  RedisServiceList: () => import('@/views/ToolManagement/RedisService/list'),
-  RedisPanelList: () => import('@/views/ToolManagement/RedisService/panel'),
   Resource: () => import('@/views/ToolManagement/Resource/index'),
   ResourceList: () => import('@/views/ToolManagement/Resource/list'),
   // 轮播
