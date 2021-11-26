@@ -76,6 +76,9 @@
         </el-form-item>
         <el-form-item :label="$t('user.api')" prop="api">
           <el-input v-model="temp.api" clearable/>
+          <el-alert
+            title="配置的权限如需在菜单显示，需要末尾包含“List”，不然将无法显示"
+            type="warning"/>
         </el-form-item>
         <el-form-item label="外链" prop="url">
           <el-input v-model="temp.url" clearable/>

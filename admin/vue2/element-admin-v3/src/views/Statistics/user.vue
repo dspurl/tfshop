@@ -107,7 +107,7 @@ import PlotPie from '@/components/G2/G2Plot/Pie.vue'
 import { age_and_sex } from '@/api/statistics'
 import { getBeforeDate } from '@/utils/index'
 export default {
-  name: 'StatisticsAgeAndSex',
+  name: 'StatisticsAgeAndSexList',
   components: {
     PlotDonut,
     PlotPie

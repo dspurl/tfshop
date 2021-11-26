@@ -155,7 +155,7 @@ import { log } from '@/api/admin'
 import Pagination from '@/components/Pagination'
 import JsonViewer from 'vue-json-viewer'
 export default {
-  name: 'SystemLog',
+  name: 'AdminLogList',
   components: { Pagination, JsonViewer },
   data() {
     return {

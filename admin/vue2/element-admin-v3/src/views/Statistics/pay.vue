@@ -29,7 +29,7 @@ import StackedArea from '@/components/G2/G2Plot/StackedArea.vue'
 import { pay } from '@/api/statistics'
 import { getBeforeDate } from '@/utils/index'
 export default {
-  name: 'StatisticsVisit',
+  name: 'StatisticsVisitList',
   components: {
     StackedArea
   },

@@ -68,7 +68,7 @@ import PlotColumn from '@/components/G2/G2Plot/Column.vue'
 import { behavior, keep, source } from '@/api/statistics'
 import { getBeforeDate } from '@/utils/index'
 export default {
-  name: 'StatisticsVisit',
+  name: 'StatisticsVisitList',
   components: {
     StackedArea,
     PlotColumn

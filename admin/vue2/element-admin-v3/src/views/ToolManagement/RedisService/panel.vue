@@ -63,7 +63,7 @@
 import { panel } from '@/api/redis'
 import JsonViewer from 'vue-json-viewer'
 export default {
-  name: 'RedisPanel',
+  name: 'RedisPanelList',
   components: { JsonViewer },
   data() {
     return {

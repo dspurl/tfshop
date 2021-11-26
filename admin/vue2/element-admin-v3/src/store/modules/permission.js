@@ -5,7 +5,7 @@ export const componentsMap = {
   Dashboard: () => import('@/views/Dashboard/index'),
   Admin: () => import('@/views/UserManagement/Admin/index'),
   AdminList: () => import('@/views/UserManagement/Admin/list'),
-  AdminLog: () => import('@/views/UserManagement/Admin/log'),
+  AdminLogList: () => import('@/views/UserManagement/Admin/log'),
   Manage: () => import('@/views/UserManagement/Manage/index'),
   ManageList: () => import('@/views/UserManagement/Manage/list'),
   Member: () => import('@/views/UserManagement/Member/index'),
@@ -37,16 +37,16 @@ export const componentsMap = {
   IndentShipment: () => import('@/views/IndentManagement/Indent/shipment'),
   RedisService: () => import('@/views/ToolManagement/RedisService/index'),
   RedisServiceList: () => import('@/views/ToolManagement/RedisService/list'),
-  RedisPanel: () => import('@/views/ToolManagement/RedisService/panel'),
+  RedisPanelList: () => import('@/views/ToolManagement/RedisService/panel'),
   Resource: () => import('@/views/ToolManagement/Resource/index'),
   ResourceList: () => import('@/views/ToolManagement/Resource/list'),
   // 轮播
   Banner: () => import('@/views/ToolManagement/Banner/index'),
   BannerList: () => import('@/views/ToolManagement/Banner/list'),
   // 统计
-  StatisticsVisit: () => import('@/views/Statistics/visit'),
-  StatisticsAgeAndSex: () => import('@/views/Statistics/user'),
-  StatisticsPay: () => import('@/views/Statistics/pay'),
+  StatisticsVisitList: () => import('@/views/Statistics/visit'),
+  StatisticsAgeAndSexList: () => import('@/views/Statistics/user'),
+  StatisticsPayList: () => import('@/views/Statistics/pay'),
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
