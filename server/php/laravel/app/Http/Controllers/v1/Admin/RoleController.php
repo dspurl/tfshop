@@ -13,111 +13,36 @@ use Illuminate\Support\Facades\DB;
 
 /**
  * @group manage
- * 管理组管理
- * Class ManageController
+ * 角色管理
+ * Class RoleController
  * @package App\Http\Controllers\v1\Admin
  */
-class ManageController extends Controller
+class RoleController extends Controller
 {
     /**
      * ManageList
-     * 管理组列表
+     * 角色列表
      * @param Request $request
      * @return string
+     * @queryParam  title string 关键字
+     * @queryParam  limit int 每页显示条数
+     * @queryParam  sort string 排序
+     * @queryParam  page string 页码
      */
     public function list(Request $request)
     {
-        $q = Admin::query();
-        //查询管理员列表
-        $group = $q->where('state', Admin::ADMIN_STATA_NORMAL)->get(['id', 'name']);
-        $options = [];
-        if ($group) {
-            foreach ($group as $g) {
-                $options[] = array(
-                    'value' => $g->id,
-                    'label' => $g->name
-                );
-            }
+        $q = AuthGroup::query();
+        $limit = $request->limit;
+        if ($request->title) {
+            $q->where('introduction', 'like', '%' . $request->title . '%');
         }
-        //查询API列表
-        $auth_rule = AuthRule::orderBy('pid', 'asc')->orderBy('sort', 'asc')->orderBy('id')->get(['id', 'title', 'pid']);
-        if ($auth_rule) {
-            $auth_ruleArray = [];
-            foreach ($auth_rule as $a) {
-                $rule[$a->id] = $a->title;
-                $auth_ruleArray[$a->id] = array(
-                    'label' => $a->title,
-                    'value' => $a->id,
-                    'pid' => $a->pid,
-                    'id' => $a->id
-                );
-                $fromData[] = array(
-                    'label' => $a->title,
-                    'value' => $a->id,
-                    'pid' => $a->pid,
-                    'id' => $a->id
-                );
-            }
-        }
-        //查询管理组列表
-        $auth_groups = AuthGroup::with(['Admin' => function ($query) {
-            $query->select('id', 'name');
-        }, 'AuthRule' => function ($query) {
-            $query->select('id', 'title', 'pid');
-        }])->orderBy('id')->get(['id', 'roles', 'introduction'])->toArray();
-        foreach ($auth_groups as $id => $a) {
-            $toData = [];
-            $a['rules'] = [];
-            foreach ($a['admin'] as $groupname) {
-                $auth_groups[$id]['groupname'][] = $groupname['name'];
-                $auth_groups[$id]['group'][] = $groupname['id'];
-                $auth_groups[$id]['oldGroupValue'][] = $groupname['id'];
-                $auth_groups[$id]['oldGroup'][] = array(
-                    'label' => $groupname['name'],
-                    'value' => $groupname['id']
-                );
-            }
-            foreach ($a['auth_rule'] as $rules) {
-                $auth_groups[$id]['rules'][] = $a['rules'][] = $rules['id'];
-                $auth_groups[$id]['power'][] = $rule[$rules['id']];
-                //获取已选中数组
-                $toData[$rules['id']] = $auth_ruleArray[$rules['id']];
-            }
-
-            //获取未选中的内容
-            $fromDatas = [];
-            foreach ($fromData as $s => $f) {
-                if (!in_array($f['id'], $a['rules']) || !in_array($f['pid'], $a['rules'])) {
-                    $fromDatas[] = $f;
-                }
-            }
-            $auth_groups[$id]['fromData'] = unsetMultiKeys(array('value'), genTree($fromDatas, 'pid'));
-
-            if ($auth_groups[$id]['fromData']) {
-                foreach ($auth_groups[$id]['fromData'] as $s => $f) {
-
-                    if (!array_key_exists('children', $f)) {
-                        unset($auth_groups[$id]['fromData'][$s]);
-                    }
-                }
-                $auth_groups[$id]['fromData'] = array_values($auth_groups[$id]['fromData']);
-            }
-
-            $auth_groups[$id]['toData'] = unsetMultiKeys(array('value'), genTree($toData, 'pid'));
-
-            unset($auth_groups[$id]['users']);
-        }
-        $data['data'] = $auth_groups;
-        $data['options'] = $options;
-        $fromData = genTree($fromData, 'pid');
-        $fromData = unsetMultiKeys(array('value'), $fromData);
-        $data['fromData'] = $fromData;
-        return resReturn(1, $data);
+        $paginate = $q->paginate($limit);
+        return resReturn(1, $paginate);
     }
 
     /**
-     * ManageCreate
-     * 创建管理组
+     * RoleCreate
+     * 创建角色
      * @param SubmitManageRequest $request
      * @queryParam  roles array 权限
      * @queryParam  introduction string 角色名称
@@ -160,8 +85,8 @@ class ManageController extends Controller
     }
 
     /**
-     * ManageEdit
-     * 保存管理组
+     * RoleEdit
+     * 保存角色
      * @param SubmitManageRequest $request
      * @queryParam  id int 管理组ID
      * @queryParam  roles array 权限
@@ -211,8 +136,8 @@ class ManageController extends Controller
     }
 
     /**
-     * ManageDestroy
-     * 删除管理组
+     * RoleDestroy
+     * 删除角色
      * @param $id
      * @queryParam  id int 管理组ID
      * @return string

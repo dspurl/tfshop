@@ -30,11 +30,11 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('member', 'MemberController@list')->name('admin.memberList')->middleware(['permissions:MemberList']);  //会员列表
         Route::post('member', 'MemberController@create')->name('admin.memberCreate')->middleware(['permissions:MemberCreate']);  //创建会员
         Route::post('member/{id}', 'MemberController@edit')->name('admin.memberEdit')->middleware(['permissions:MemberEdit']);  //保存会员
-        Route::get('manage', 'ManageController@list')->name('admin.manageList')->middleware(['permissions:ManageList']);  //管理组管理
-        Route::post('manage', 'ManageController@create')->name('admin.manageCreate')->middleware(['permissions:ManageCreate']);  //创建管理组
-        Route::post('manage/{id}', 'ManageController@edit')->name('admin.manageEdit')->middleware(['permissions:ManageEdit']);  //保存管理组
-        Route::post('manage/destroy/{id}', 'ManageController@destroy')->name('admin.manageDestroy')->middleware(['permissions:ManageDestroy']);  //删除管理组
-        Route::get('power', 'PowerController@list')->name('admin.powerList')->middleware(['permissions:PowerList']);  //权限管理
+        Route::get('role', 'RoleController@list')->name('admin.role')->middleware(['permissions:Role']);  //角色管理
+        Route::post('role', 'RoleController@create')->name('admin.roleCreate')->middleware(['permissions:RoleCreate']);  //创建角色
+        Route::post('role/{id}', 'RoleController@edit')->name('admin.roleEdit')->middleware(['permissions:RoleEdit']);  //保存角色
+        Route::post('role/destroy/{id}', 'RoleController@destroy')->name('admin.roleDestroy')->middleware(['permissions:RoleDestroy']);  //删除角色
+        Route::get('power', 'PowerController@list')->name('admin.power')->middleware(['permissions:Power']);  //权限管理
         Route::post('power', 'PowerController@create')->name('admin.powerCreate')->middleware(['permissions:PowerCreate']);  //创建权限
         Route::post('power/{id}', 'PowerController@edit')->name('admin.powerEdit')->middleware(['permissions:PowerEdit']);  //保存权限
         Route::post('power/destroy/{id}', 'PowerController@destroy')->name('admin.powerDestroy')->middleware(['permissions:PowerDestroy']);  //删除权限

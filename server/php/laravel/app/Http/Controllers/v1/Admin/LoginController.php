@@ -5,6 +5,7 @@ namespace App\Http\Controllers\v1\Admin;
 use App\Code;
 use App\Models\v1\Admin;
 use App\Models\v1\AdminLog;
+use App\Models\v1\AuthGroup;
 use App\Models\v1\AuthRule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -82,15 +83,11 @@ class LoginController extends Controller
      * @param Request $request
      * @return string
      */
-    public function userInfo(Request $request)
+    public function userInfos(Request $request)
     {
         $user = auth('api')->user();
         $data['name'] = $user->name;
-        if ($user->portrait) {
-            $data['avatar'] = $user->portrait;
-        } else {
-            $data['avatar'] = request()->root() . '/storage/image/avatar/1.gif';
-        }
+        $data['avatar'] = $user->portrait;
         $group = auth('api')->user()->authGroup->toArray();
         //权限名只取一个（多个权限名称太长）
         $data['introduction'] = $group[0]['introduction'];
@@ -143,6 +140,85 @@ class LoginController extends Controller
             }
         }
         $data['asyncRouterMap'] = genTree($asyncRouterMap, 'pid');
+        return resReturn(1, $data);
+    }
+
+    /**
+     * 获取管理员信息
+     * @param Request $request
+     * @return string
+     */
+    public function userInfo(Request $request)
+    {
+        $group = auth('api')->user()->authGroup;
+        $data = [
+            'role' => [], // 角色
+            'permissions' => [], // 权限
+            'menu' => [], // 菜单
+            'userInfo' => [],   //管理员信息
+        ];
+        $user = auth('api')->user();
+        $data['userInfo'] = [
+            'userName' => $user->name,
+            'avatar' => $user->portrait
+        ];
+        $authGroupIdArray = [];
+        $permissions = [];
+        foreach ($group as $g) {
+            $authGroupIdArray[] = $g->pivot->auth_group_id;
+            $data['role'][] = $g->introduction;
+        }
+        $AuthGroup = AuthGroup::whereIn('id', $authGroupIdArray)->with(['AuthRule'])->select('id')->get();
+        foreach ($AuthGroup as $a) {
+            foreach ($a->AuthRule as $rule) {
+                if (!in_array($rule->api, $data['permissions'])) {
+                    // 获取不重复的权限
+                    $permissions[] = $rule->id;
+                    $data['permissions'][] = $rule->api;
+                }
+            }
+        }
+        $AuthRule = AuthRule::whereIn('id', $permissions)->orderBy('pid', 'ASC')->orderBy('sort', 'DESC')->get();
+        $type = '';
+        foreach ($AuthRule as $a) {
+            switch ($a->type) {
+                case AuthRule::AUTH_RULE_TYPE_MENU:
+                    $type = 'menu';
+                    break;
+                case AuthRule::AUTH_RULE_TYPE_IFRAME:
+                    $type = 'iframe';
+                    break;
+                case AuthRule::AUTH_RULE_TYPE_LINK:
+                    $type = 'link';
+                    break;
+                case AuthRule::AUTH_RULE_TYPE_BUTTON:
+                    $type = 'button';
+                    break;
+            }
+            if($a->type == AuthRule::AUTH_RULE_TYPE_BUTTON){
+                break;
+            }
+            $data['menu'][] = [
+                'id' => $a->id,
+                'pid' => $a->pid,
+                'name' => $a->api,
+                'path' => $a->path,
+                'redirect' => $a->redirect_url ? $a->redirect_url : '',
+                'component' => $a->view ? $a->view : '',
+                'meta' => [
+                    'title' => $a->title,
+                    'icon' => $a->icon,
+                    'type' => $type,
+                    'hidden' => $a->is_hidden ? true : false,
+                    'hiddenBreadcrumb' => $a->is_hidden_breadcrumb ? true : false,
+                    'color' => $a->color,
+                    'affix' => $a->is_affix ? true : false,
+                    'fullpage' => $a->is_full_page ? true : false,
+                    'active' => $a->active
+                ],
+            ];
+        }
+        $data['menu'] = genTree($data['menu'], 'pid');
         return resReturn(1, $data);
     }
 }

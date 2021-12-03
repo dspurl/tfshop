@@ -6,22 +6,51 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property mixed title
- * @property mixed api
- * @property mixed pid
- * @property int state
- * @property mixed|string url
- * @property mixed|string icon
- * @property mixed|string sort
+ * @property string title
+ * @property string api
+ * @property string path
+ * @property string active
+ * @property string redirect_url
+ * @property string view
+ * @property string icon
+ * @property string color
+ * @property int pid
+ * @property int type
+ * @property int is_hidden
+ * @property int is_hidden_breadcrumb
+ * @property int is_affix
+ * @property int is_full_page
+ * @property int sort
  */
 class AuthRule extends Model
 {
     const UPDATED_AT = null;
     const CREATED_AT = null;
-    const AUTH_RULE_STATE_ON = 1;
-    const AUTH_RULE_STATE_OFF = 0;
-    protected $appends = ['state_show'];
-    protected $fillable = ['api', 'url', 'icon', 'title', 'pid', 'state', 'sort'];
+    const AUTH_RULE_TYPE_MENU = 1;  // 类型:菜单
+    const AUTH_RULE_TYPE_IFRAME = 2;  // 类型:iframe
+    const AUTH_RULE_TYPE_LINK = 3;  // 类型:外链
+    const AUTH_RULE_TYPE_BUTTON = 4;  // 类型:按钮
+    const AUTH_RULE_IS_HIDDEN_YES = 1;  // 是否在菜单隐藏:是
+    const AUTH_RULE_IS_HIDDEN_NO = 0;  // 是否在菜单隐藏:否
+    const AUTH_RULE_IS_HIDDEN_BREADCRUMB_YES = 1;  // 是否隐藏面包屑:是
+    const AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO = 0;  // 是否在菜单隐藏:否
+    const AUTH_RULE_IS_AFFIX_YES = 1;  // 是否固定:是
+    const AUTH_RULE_IS_AFFIX_NO = 0;  // 是否固定:否
+    const AUTH_RULE_IS_FULL_PAGE_YES = 1;  // 是否整页打开路由:是
+    const AUTH_RULE_IS_FULL_PAGE_NO = 0;  // 是否整页打开路由:否
+
+    public function getIsHiddenAttribute(){
+        return $this->attributes['is_hidden'] ? true : false;
+    }
+    public function getIsHiddenBreadcrumbAttribute(){
+        return $this->attributes['is_hidden_breadcrumb'] ? true : false;
+    }
+    public function getIsAffixAttribute(){
+        return $this->attributes['is_affix'] ? true : false;
+    }
+    public function getIsFullPageAttribute(){
+        return $this->attributes['is_full_page'] ? true : false;
+    }
 
     /**
      * Prepare a date for array / JSON serialization.
@@ -34,35 +63,19 @@ class AuthRule extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    /**
-     * 数组中的属性会被展示。
-     *
-     * @var array
-     */
-//    protected $visible = ['api'];
-    /**
-     * 数组中的属性会被隐藏。
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     * @var array
-     */
-//    protected $hidden = ['password'];
-    public function AuthGroup()
+    public function parent()
     {
-        return $this->belongsToMany(AuthGroup::class, 'auth_group_auth_rules');
+        return $this->belongsTo(get_class($this), 'pid')->with('parent');
     }
 
-    //是否显示在菜单栏state_show
-    public function getStateShowAttribute()
+    public function child()
     {
-        if (isset($this->attributes['state'])) {
-            if ($this->attributes['state'] == AuthRule::AUTH_RULE_STATE_ON) {
-                return '显示';
-            } else {
-                return '隐藏';
-            }
-        }
+        return $this->hasMany(get_class($this), 'pid');
+    }
 
+    public function children()
+    {
+        return $this->child()->with('children');
     }
 
     /**

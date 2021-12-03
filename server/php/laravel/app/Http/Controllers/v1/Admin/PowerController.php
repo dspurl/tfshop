@@ -30,42 +30,10 @@ class PowerController extends Controller
      */
     public function list(Request $request)
     {
-        $q = AuthRule::query();
-        $limit = $request->limit;
-        $q->orderBy('pid', 'asc');
-        $q->orderBy('sort', 'asc');
-        $q->orderBy('id', 'asc');
-        if ($request->title) {
-            $q->where('id', $request->title)->orWhere('title', 'like', '%' . $request->title . '%')->orWhere('api', 'like', '%' . $request->title . '%');
-        }
-        if (isset($request->pid)) {
-            $q->where('pid', collect($request->pid)->last());
-        }
-        $paginate = $q->paginate($limit)->toArray();
-        $array = AuthRule::with(['AuthGroup'])->get()->toArray();
-        if ($array) {
-            foreach ($array as $id => $a) {
-                $grouping[$a['id']] = $a['title'];
-                $options[] = array(
-                    'value' => $a['id'],
-                    'label' => $a['title'],
-                    'pid' => $a['pid'],
-                    'id' => $a['id']
-                );
-            }
-        }
-        foreach ($paginate['data'] as $id => $d) {
-            $paginate['data'][$id]['pid'] = getParentClassHierarchy($d['pid'], $options);
-            if (count($paginate['data'][$id]['pid']) < 1) {
-                $paginate['data'][$id]['pid'] = [0];
-            }
-        }
-
-        $paginate['options'] = collect(genTree($options, 'pid'))->prepend(array(
-            'value' => 0,
-            'label' => '顶级分组'
-        ));
-        return resReturn(1, $paginate);
+        $AuthRule = AuthRule::where('pid', 0)->with(['children' => function ($q) {
+            $q->orderBy('sort', 'DESC')->orderBy('id', 'ASC');
+        }])->orderBy('sort', 'DESC')->get();
+        return resReturn(1, $AuthRule);
     }
 
     /**
@@ -73,27 +41,42 @@ class PowerController extends Controller
      * 创建权限
      * @param SubmitPowerRequest $request
      * @queryParam  title string 权限名称
-     * @queryParam  url string 外链
+     * @queryParam  api string 别名
+     * @queryParam  path string 路由
+     * @queryParam  active string 菜单高亮
+     * @queryParam  redirect_url string 重定向
+     * @queryParam  view string 视图
      * @queryParam  icon string 图标
-     * @queryParam  sort string 排序
-     * @queryParam  api string API
-     * @queryParam  pid int 权限组ID
-     * @queryParam  state int 显示在菜单栏：1是0否
+     * @queryParam  color string 颜色值
+     * @queryParam  pid int 父ID
+     * @queryParam  type int 类型:1=菜单-menu,2=iframe-iframe,3=外链-link
+     * @queryParam  is_hidden int 是否在菜单隐藏:1=是-yes,0=否-no
+     * @queryParam  is_hidden_breadcrumb int 是否隐藏面包屑:1=是-yes,0=否-no
+     * @queryParam  is_affix int 是否固定:1=是-yes,0=否-no
+     * @queryParam  is_full_page int 是否整页打开路由:1=是-yes,0=否-no
+     * @queryParam  sort int 排序
      * @return string
      */
     public function create(SubmitPowerRequest $request)
     {
         $authRule = new AuthRule;
         $authRule->title = $request->title;
-        $authRule->url = $request->url ? $request->url : '';
-        $authRule->icon = $request->icon ? $request->icon : '';
-        $authRule->sort = $request->sort ? $request->sort : 0;
-        $authRule->api = $request->api;
-        $pid = collect($request->pid)->last();
-        $authRule->pid = $pid > 0 ? $pid : 0;
-        $authRule->state = $request->state;
+        $authRule->api = '';
+        $authRule->path = '';
+        $authRule->active = '';
+        $authRule->redirect_url = '';
+        $authRule->view = '';
+        $authRule->icon = '';
+        $authRule->color = '';
+        $authRule->pid = $request->pid ?? 0;
+        $authRule->type = $request->type;
+        $authRule->is_hidden = AuthRule::AUTH_RULE_IS_HIDDEN_YES;
+        $authRule->is_hidden_breadcrumb = AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
+        $authRule->is_affix = AuthRule::AUTH_RULE_IS_AFFIX_NO;
+        $authRule->is_full_page = AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
+        $authRule->sort = $request->sort;
         $authRule->save();
-        return resReturn(1, '添加成功');
+        return resReturn(1, $authRule);
     }
 
     /**
@@ -104,24 +87,38 @@ class PowerController extends Controller
      * @return string
      * @queryParam  id int 权限ID
      * @queryParam  title string 权限名称
-     * @queryParam  url string 外链
+     * @queryParam  api string 别名
+     * @queryParam  path string 路由
+     * @queryParam  active string 菜单高亮
+     * @queryParam  redirect_url string 重定向
+     * @queryParam  view string 视图
      * @queryParam  icon string 图标
-     * @queryParam  sort string 排序
-     * @queryParam  api string API
-     * @queryParam  pid int 权限组ID
-     * @queryParam  state int 显示在菜单栏：1是0否
+     * @queryParam  color string 颜色值
+     * @queryParam  pid int 父ID
+     * @queryParam  type int 类型:1=菜单-menu,2=iframe-iframe,3=外链-link
+     * @queryParam  is_hidden int 是否在菜单隐藏:1=是-yes,0=否-no
+     * @queryParam  is_hidden_breadcrumb int 是否隐藏面包屑:1=是-yes,0=否-no
+     * @queryParam  is_affix int 是否固定:1=是-yes,0=否-no
+     * @queryParam  is_full_page int 是否整页打开路由:1=是-yes,0=否-no
+     * @queryParam  sort int 排序
      */
     public function edit($id, SubmitPowerRequest $request)
     {
         $authRule = AuthRule::find($id);
         $authRule->title = $request->title;
         $authRule->api = $request->api;
-        $pid = collect($request->pid)->last();
-        $authRule->pid = $pid > 0 ? $pid : 0;
-        $authRule->url = $request->url ? $request->url : '';
-        $authRule->icon = $request->icon ? $request->icon : '';
-        $authRule->sort = $request->sort ? $request->sort : 0;
-        $authRule->state = $request->state;
+        $authRule->path = $request->path ?? '';
+        $authRule->active = $request->active ?? '';
+        $authRule->redirect_url = $request->redirect_url ?? '';
+        $authRule->view = $request->view ?? '';
+        $authRule->icon = $request->icon ?? '';
+        $authRule->color = $request->color ?? '';
+        $authRule->type = $request->type;
+        $authRule->is_hidden = $request->is_hidden ? AuthRule::AUTH_RULE_IS_HIDDEN_YES : AuthRule::AUTH_RULE_IS_HIDDEN_NO;
+        $authRule->is_hidden_breadcrumb = $request->is_hidden_breadcrumb ? AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_YES : AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
+        $authRule->is_affix = $request->is_affixn ? AuthRule::AUTH_RULE_IS_AFFIX_YES : AuthRule::AUTH_RULE_IS_AFFIX_NO;
+        $authRule->is_full_page = $request->is_full_pagen ? AuthRule::AUTH_RULE_IS_FULL_PAGE_YES : AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
+        $authRule->sort = $request->sort;
         $authRule->save();
         return resReturn(1, '修改成功');
     }
@@ -129,18 +126,28 @@ class PowerController extends Controller
     /**
      * PowerDestroy
      * 删除权限
-     * @param $id
-     * @return string
+     * @param int $id
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     * @queryParam  id int 权限ID
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        DB::transaction(function () use ($id) {
-            if (!$id) {
-                return resReturn(0, '参数错误', Code::CODE_PARAMETER_WRONG);
+        DB::transaction(function () use ($id, $request) {
+            if ($id > 0) {
+                $arr = (new AuthRule())->obtainAllChildPermissions($id);
+                AuthRule::whereIn('id', $arr)->delete();
+                AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
+            } else {
+                if (!$request->has('ids')) {
+                    throw new \Exception('参数有误', Code::CODE_WRONG);
+                }
+                foreach ($request->ids as $ids) {
+                    $arr = (new AuthRule())->obtainAllChildPermissions($ids);
+                    AuthRule::whereIn('id', $arr)->delete();
+                    AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
+                }
             }
-            $arr = (new AuthRule())->obtainAllChildPermissions($id);
-            AuthRule::whereIn('id', $arr)->delete();
-            AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
         }, 5);
         return resReturn(1, '删除成功');
     }

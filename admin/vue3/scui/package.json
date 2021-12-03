@@ -1,0 +1,68 @@
+{
+	"name": "scui",
+	"version": "1.4.0",
+	"private": true,
+	"scripts": {
+		"serve": "vue-cli-service serve --mode dev",
+		"build": "vue-cli-service build --mode production --report",
+		"build:test": "vue-cli-service build --mode test --report",
+		"lint": "vue-cli-service lint"
+	},
+	"dependencies": {
+		"@element-plus/icons": "0.0.11",
+		"@tinymce/tinymce-vue": "4.0.4",
+		"axios": "0.24.0",
+		"core-js": "3.19.1",
+		"cropperjs": "1.5.12",
+		"crypto-js": "4.1.1",
+		"echarts": "5.2.2",
+		"element-plus": "1.2.0-beta.3",
+		"js-cookie": "^3.0.1",
+		"nprogress": "0.2.0",
+		"sortablejs": "1.14.0",
+		"tinymce": "5.10.1",
+		"vue": "3.2.21",
+		"vue-i18n": "9.1.9",
+		"vue-router": "4.0.12",
+		"vuedraggable": "4.0.3",
+		"vuex": "4.0.2"
+	},
+	"devDependencies": {
+		"@vue/cli-plugin-babel": "4.5.15",
+		"@vue/cli-plugin-eslint": "4.5.15",
+		"@vue/cli-service": "4.5.15",
+		"@vue/compiler-sfc": "3.2.21",
+		"babel-eslint": "10.1.0",
+		"eslint": "6.8.0",
+		"eslint-plugin-vue": "7.19.1",
+		"sass": "1.37.5",
+		"sass-loader": "10.1.1"
+	},
+	"eslintConfig": {
+		"root": true,
+		"env": {
+			"node": true
+		},
+		"globals": {
+			"APP_CONFIG": true
+		},
+		"extends": [
+			"plugin:vue/vue3-essential",
+			"eslint:recommended"
+		],
+		"parserOptions": {
+			"parser": "babel-eslint"
+		},
+		"rules": {
+			"indent": 0,
+			"no-tabs": 0,
+			"no-mixed-spaces-and-tabs": 0,
+			"vue/no-unused-components": "off"
+		}
+	},
+	"browserslist": [
+		"> 1%",
+		"last 2 versions",
+		"not dead"
+	]
+}

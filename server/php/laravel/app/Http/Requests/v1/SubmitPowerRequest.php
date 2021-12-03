@@ -36,15 +36,35 @@ class SubmitPowerRequest extends Request
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'title' => 'bail|required|string|max:30',
-                        'api' => 'nullable|unique:auth_rules,api,' . $request['id'] . '|string|max:200',
-                        'pid' => 'required|array',
+                        'title' => 'bail|required|string|max:50',
+                        'api' => 'required|unique:auth_rules,api,' . $request['id'] . '|string|max:255',
+                        'path' => 'nullable|string|max:255',
+                        'active' => 'nullable|string|max:255',
+                        'redirect_url' => 'nullable|string|max:255',
+                        'icon' => 'nullable|string|max:255',
+                        'color' => 'nullable|string|max:7',
+                        'type' => 'required|integer',
+                        'is_hidden' => 'required|boolean',
+                        'is_hidden_breadcrumb' => 'required|boolean',
+                        'is_affix' => 'required|boolean',
+                        'is_full_page' => 'required|boolean',
+                        'sort' => 'required|integer',
                     ];
                 } else {
                     return [
-                        'title' => 'bail|required|string|max:30',
-                        'api' => 'nullable|unique:auth_rules|string|max:200',
-                        'pid' => 'required|array',
+                        'title' => 'bail|required|string|max:50',
+                        'api' => 'nullable|unique:auth_rules|string|max:255',
+                        'path' => 'nullable|string|max:255',
+                        'active' => 'nullable|string|max:255',
+                        'redirect_url' => 'nullable|string|max:255',
+                        'icon' => 'nullable|string|max:255',
+                        'color' => 'nullable|string|max:7',
+                        'type' => 'required|integer',
+                        'is_hidden' => 'nullable|boolean',
+                        'is_hidden_breadcrumb' => 'nullable|boolean',
+                        'is_affix' => 'nullable|boolean',
+                        'is_full_page' => 'nullable|boolean',
+                        'sort' => 'required|integer',
                     ];
                 }
             case 'GET':
@@ -58,12 +78,11 @@ class SubmitPowerRequest extends Request
     public function messages()
     {
         return [
-            'title.required' => __('hint.error.not_null', ['specification' => __('hint.routine.permissions_name')]),
-            'title.unique' => __('hint.error.exist', ['specification' => __('hint.routine.permissions_name')]),
-            'title.max' => __('hint.error.exceed', ['specification' => __('hint.routine.permissions_name'), 'place' => 30]),
-            'api.unique' => __('hint.error.exist', ['specification' => __('hint.routine.api')]),
-            'api.max' => __('hint.error.exceed', ['specification' => __('hint.routine.api'), 'place' => 200]),
-            'pid.required' => __('hint.error.select', ['specification' => __('hint.routine.grouping')]),
+            'title.required' =>'权限名称不能为空',
+            'title.unique' => '权限名称已存在',
+            'title.max' => '权限名称不能超过50个字符',
+            'api.required' =>'别名不能为空',
+            'api.max' => '别名不能超过255个字符'
         ];
     }
 }
