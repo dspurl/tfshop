@@ -12,6 +12,7 @@
 					</el-form-item>
 					<el-form-item label="上级菜单" prop="pid">
 						<el-cascader v-model="form.pid" :options="menuOptions" :props="menuProps" :show-all-levels="false" placeholder="顶级菜单" clearable disabled></el-cascader>
+						<div class="el-form-item-msg">设为菜单的请确保有子类，不然权限将无法添加</div>
 					</el-form-item>
 					<el-form-item label="类型" prop="type">
 						<el-radio-group v-model="form.type">

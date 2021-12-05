@@ -13,20 +13,15 @@ export default {
             //表单数据
             form: {
                 id:"",
-                label: "",
-                alias: "",
-                sort: 1,
-                parentId: ""
+                roles: "",
+                introduction: ""
             },
             //验证规则
             rules: {
-                sort: [
-                    {required: true, message: '请输入排序', trigger: 'change'}
-                ],
-                label: [
+                introduction: [
                     {required: true, message: '请输入角色名称'}
                 ],
-                alias: [
+                roles: [
                     {required: true, message: '请输入角色别名'}
                 ]
             },
@@ -40,7 +35,6 @@ export default {
         }
     },
     mounted() {
-        this.getGroup()
     },
     methods: {
         //显示
@@ -49,38 +43,39 @@ export default {
             this.visible = true;
             return this
         },
-        //加载树数据
-        async getGroup(){
-            var res = await this.$API.system.role.list.get();
-            this.groups = res.data;
-        },
         //表单提交方法
         submit(){
             this.$refs.dialogForm.validate(async (valid) => {
                 if (valid) {
                     this.isSaveing = true;
-                    var res = await this.$API.demo.post.post(this.form);
-                    this.isSaveing = false;
-                    if(res.code == 200){
-                        this.$emit('success', this.form, this.mode)
-                        this.visible = false;
-                        this.$message.success("操作成功")
-                    }else{
-                        this.$alert(res.message, "提示", {type: 'error'})
+                    if (this.form.id) {
+                        try{
+                            await this.$API.role.edit.post(this.form);
+                            this.$emit('success', this.form, this.mode)
+                            this.visible = false;
+                            this.$message.success("操作成功")
+                        }finally{
+                            this.isSaveing = false;
+                        }
+                    } else {
+                        try{
+                            await this.$API.role.create.post(this.form);
+                            this.$emit('success', this.form, this.mode)
+                            this.visible = false;
+                            this.$message.success("操作成功")
+                        }finally{
+                            this.isSaveing = false;
+                        }
                     }
+                    
                 }
             })
         },
         //表单注入数据
         setData(data){
             this.form.id = data.id
-            this.form.label = data.label
-            this.form.alias = data.alias
-            this.form.sort = data.sort
-            this.form.parentId = data.parentId
-
-            //可以和上面一样单个注入，也可以像下面一样直接合并进去
-            //Object.assign(this.form, data)
+            this.form.roles = data.roles
+            this.form.introduction = data.introduction
         }
     }
 }

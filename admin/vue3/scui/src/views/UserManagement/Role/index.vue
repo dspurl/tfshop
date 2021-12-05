@@ -7,14 +7,14 @@
 				<el-button type="primary" plain :disabled="selection.length!=1" @click="permission">权限设置</el-button>
 			</div>
 			<div class="right-panel">
-				<div class="right-panel-search">
-					<el-input v-model="search.keyword" placeholder="角色名称" clearable></el-input>
+				<div class="right-panel-search" @keyup.enter="login">
+					<el-input v-model="params.keyword" placeholder="角色名称" clearable></el-input>
 					<el-button type="primary" icon="el-icon-search" @click="upsearch"></el-button>
 				</div>
 			</div>
 		</el-header>
 		<el-main class="nopadding">
-			<scTable ref="table" :apiObj="apiObj" :column="column" row-key="id" @selection-change="selectionChange">
+			<scTable ref="table" :apiObj="apiObj" :params="params" :column="column" row-key="id" @selection-change="selectionChange">
 				<el-table-column type="selection" width="50"></el-table-column>
 				<el-table-column label="#" type="index" width="50"></el-table-column>
 				<el-table-column label="操作" fixed="right" align="right" width="140">

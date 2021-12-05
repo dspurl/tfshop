@@ -37,7 +37,7 @@ class SubmitPowerRequest extends Request
                 if (Request::has('id')) {   //更新
                     return [
                         'title' => 'bail|required|string|max:50',
-                        'api' => 'required|unique:auth_rules,api,' . $request['id'] . '|string|max:255',
+                        'api' => 'required|unique:auth_rules,api,' . $request['id'] . '|alpha|max:255',
                         'path' => 'nullable|string|max:255',
                         'active' => 'nullable|string|max:255',
                         'redirect_url' => 'nullable|string|max:255',
@@ -53,7 +53,7 @@ class SubmitPowerRequest extends Request
                 } else {
                     return [
                         'title' => 'bail|required|string|max:50',
-                        'api' => 'nullable|unique:auth_rules|string|max:255',
+                        'api' => 'nullable|unique:auth_rules|alpha|max:255',
                         'path' => 'nullable|string|max:255',
                         'active' => 'nullable|string|max:255',
                         'redirect_url' => 'nullable|string|max:255',
@@ -78,10 +78,11 @@ class SubmitPowerRequest extends Request
     public function messages()
     {
         return [
-            'title.required' =>'权限名称不能为空',
+            'title.required' => '权限名称不能为空',
             'title.unique' => '权限名称已存在',
             'title.max' => '权限名称不能超过50个字符',
             'api.required' =>'别名不能为空',
+            'api.alpha' => '别名只能是字母',
             'api.max' => '别名不能超过255个字符'
         ];
     }

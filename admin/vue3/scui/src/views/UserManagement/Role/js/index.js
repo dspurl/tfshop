@@ -1,5 +1,5 @@
 import saveDialog from '../save'
-	import permissionDialog from '../components/permission'
+	import permissionDialog from '../permission'
 
 	export default {
 		name: 'role',
@@ -15,9 +15,10 @@ import saveDialog from '../save'
 				},
 				apiObj: this.$API.role.list,
 				selection: [],
-				search: {
+				params: {
 					keyword: null
 				},
+				power: [],
 				column: [
 					{
 						label: "ID",
@@ -51,7 +52,15 @@ import saveDialog from '../save'
 				]
 			}
 		},
+		mounted() {
+			this.getPower();
+		},
 		methods: {
+			//获取权限列表
+			async getPower(){
+				const res = await this.$API.power.list.get();
+				this.power = res.message
+			},
 			//添加
 			add(){
 				this.dialog.save = true
@@ -77,31 +86,36 @@ import saveDialog from '../save'
 			permission(){
 				this.dialog.permission = true
 				this.$nextTick(() => {
-					this.$refs.permissionDialog.open()
+					this.$refs.permissionDialog.open(this.selection[0].auth_rule.map(item => item.id)).setData(this.power)
 				})
 			},
 			//删除
 			async table_del(row){
-				var reqData = {id: row.id}
-				var res = await this.$API.demo.post.post(reqData);
-				if(res.code == 200){
+				const loading = this.$loading();
+				try{
+					await this.$API.role.destroy.post(row.id);
 					this.$refs.table.refresh()
 					this.$message.success("删除成功")
-				}else{
-					this.$alert(res.message, "提示", {type: 'error'})
+				}finally{
+					loading.close();
 				}
+				
 			},
 			//批量删除
 			async batch_del(){
 				this.$confirm(`确定删除选中的 ${this.selection.length} 项吗？如果删除项中含有子集将会被一并删除`, '提示', {
 					type: 'warning'
-				}).then(() => {
+				}).then(async() => {
 					const loading = this.$loading();
-					this.$refs.table.refresh()
-					loading.close();
-					this.$message.success("操作成功")
-				}).catch(() => {
-
+					try{
+						await this.$API.role.destroy.post(0,{
+							ids: this.selection.map(item => item.id)
+						});
+						this.$refs.table.refresh()
+						this.$message.success("操作成功")
+					}finally{
+						loading.close();
+					}
 				})
 			},
 			//表格选择后回调事件
@@ -110,7 +124,7 @@ import saveDialog from '../save'
 			},
 			//搜索
 			upsearch(){
-
+				this.$refs.table.refresh()
 			},
 			//根据ID获取树结构
 			filterTree(id){

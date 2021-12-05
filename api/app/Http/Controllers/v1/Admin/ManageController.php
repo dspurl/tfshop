@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
-use App\Http\Requests\v1\SubmitManageRequest;
+use App\Http\Requests\v1\SubmitRoleRequest;
 use App\Models\v1\Admin;
 use App\Models\v1\AuthGroup;
 use App\Models\v1\AuthRule;
@@ -118,13 +118,13 @@ class ManageController extends Controller
     /**
      * ManageCreate
      * 创建管理组
-     * @param SubmitManageRequest $request
+     * @param SubmitRoleRequest $request
      * @queryParam  roles array 权限
      * @queryParam  introduction string 角色名称
      * @queryParam  group array 管理员
      * @return string
      */
-    public function create(SubmitManageRequest $request)
+    public function create(SubmitRoleRequest $request)
     {
         DB::transaction(function () use ($request) {
             $authGroup = new AuthGroup;
@@ -162,14 +162,14 @@ class ManageController extends Controller
     /**
      * ManageEdit
      * 保存管理组
-     * @param SubmitManageRequest $request
+     * @param SubmitRoleRequest $request
      * @queryParam  id int 管理组ID
      * @queryParam  roles array 权限
      * @queryParam  introduction string 角色名称
      * @queryParam  group array 管理员
      * @return string
      */
-    public function edit($id,SubmitManageRequest $request)
+    public function edit($id, SubmitRoleRequest $request)
     {
         $authGroup = AuthGroup::find($id);
         DB::transaction(function () use ($request, $authGroup) {
