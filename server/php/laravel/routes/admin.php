@@ -34,10 +34,13 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('role', 'RoleController@create')->name('admin.roleCreate')->middleware(['permissions:RoleCreate']);  //创建角色
         Route::post('role/{id}', 'RoleController@edit')->name('admin.roleEdit')->middleware(['permissions:RoleEdit']);  //保存角色
         Route::post('role/destroy/{id}', 'RoleController@destroy')->name('admin.roleDestroy')->middleware(['permissions:RoleDestroy']);  //删除角色
+        Route::post('permission/{id}', 'RoleController@permission')->name('admin.permissionEdit')->middleware(['permissions:PermissionEdit']);  //保存权限
         Route::get('power', 'PowerController@list')->name('admin.power')->middleware(['permissions:Power']);  //权限管理
         Route::post('power', 'PowerController@create')->name('admin.powerCreate')->middleware(['permissions:PowerCreate']);  //创建权限
         Route::post('power/{id}', 'PowerController@edit')->name('admin.powerEdit')->middleware(['permissions:PowerEdit']);  //保存权限
         Route::post('power/destroy/{id}', 'PowerController@destroy')->name('admin.powerDestroy')->middleware(['permissions:PowerDestroy']);  //删除权限
+        Route::post('power/sort/all', 'PowerController@sort')->name('admin.powerSort')->middleware(['permissions:PowerSort']);  //权限排序
+
         Route::get('good', 'GoodController@list')->name('admin.goodList')->middleware(['permissions:GoodList']);    //商品列表
         Route::post('good', 'GoodController@create')->name('admin.goodCreate')->middleware(['permissions:GoodCreate']);    //创建商品
         Route::post('good/{id}', 'GoodController@edit')->name('admin.goodEdit')->middleware(['permissions:GoodEdit']);    //保存商品

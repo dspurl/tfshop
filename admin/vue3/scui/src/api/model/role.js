@@ -21,6 +21,13 @@ export default {
 			return await http.post(this.url + '/' + data.id, data);
 		}
 	},
+	permission: {
+		url: `${process.env.VUE_APP_API_URL}/permission`,
+		name: "保存权限",
+		post: async function(id,data={}){
+			return await http.post(this.url + '/' + id, data);
+		}
+	}, 
     destroy: {
 		url: `${process.env.VUE_APP_API_URL}/role/destroy`,
 		name: "删除角色",

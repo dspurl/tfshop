@@ -6,7 +6,7 @@
 					<el-input placeholder="输入关键字进行过滤" v-model="menuFilterText" clearable></el-input>
 				</el-header>
 				<el-main class="nopadding">
-					<el-tree ref="menu" class="menu" node-key="id" :data="menuList" :props="menuProps" draggable highlight-current :expand-on-click-node="false" check-strictly show-checkbox :filter-node-method="menuFilterNode" @node-click="menuClick" @node-drop="nodeDrop">
+					<el-tree ref="menu" class="menu" node-key="id" :data="menuList" :props="menuProps" :draggable="$AUTH('PowerSort')" highlight-current :expand-on-click-node="false" check-strictly show-checkbox :filter-node-method="menuFilterNode" @node-click="menuClick" @node-drop="nodeDrop">
 
 						<template #default="{node, data}">
 							<span class="custom-tree-node el-tree-node__label">

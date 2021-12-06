@@ -178,7 +178,7 @@ class LoginController extends Controller
                 }
             }
         }
-        $AuthRule = AuthRule::whereIn('id', $permissions)->orderBy('pid', 'ASC')->orderBy('sort', 'DESC')->get();
+        $AuthRule = AuthRule::whereIn('id', $permissions)->orderBy('pid', 'ASC')->orderBy('sort', 'ASC')->get();
         $type = '';
         foreach ($AuthRule as $a) {
             switch ($a->type) {

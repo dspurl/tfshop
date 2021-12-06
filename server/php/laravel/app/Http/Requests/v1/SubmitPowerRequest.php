@@ -37,7 +37,7 @@ class SubmitPowerRequest extends Request
                 if (Request::has('id')) {   //更新
                     return [
                         'title' => 'bail|required|string|max:50',
-                        'api' => 'required|unique:auth_rules,api,' . $request['id'] . '|alpha|max:255',
+                        'api' => 'nullable|unique:auth_rules,api,' . $request['id'] . '|alpha|max:255',
                         'path' => 'nullable|string|max:255',
                         'active' => 'nullable|string|max:255',
                         'redirect_url' => 'nullable|string|max:255',
@@ -48,7 +48,7 @@ class SubmitPowerRequest extends Request
                         'is_hidden_breadcrumb' => 'required|boolean',
                         'is_affix' => 'required|boolean',
                         'is_full_page' => 'required|boolean',
-                        'sort' => 'required|integer',
+                        'sort' => 'nullable|integer',
                     ];
                 } else {
                     return [
@@ -64,7 +64,7 @@ class SubmitPowerRequest extends Request
                         'is_hidden_breadcrumb' => 'nullable|boolean',
                         'is_affix' => 'nullable|boolean',
                         'is_full_page' => 'nullable|boolean',
-                        'sort' => 'required|integer',
+                        'sort' => 'nullable|integer',
                     ];
                 }
             case 'GET':

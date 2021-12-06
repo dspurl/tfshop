@@ -21,6 +21,13 @@ export default {
 			return await http.post(this.url + '/' + data.id, data);
 		}
 	},
+	sort: {
+		url: `${process.env.VUE_APP_API_URL}/power/sort/all`,
+		name: "权限排序",
+		post: async function(data={}){
+			return await http.post(this.url, data);
+		}
+	},
     destroy: {
 		url: `${process.env.VUE_APP_API_URL}/power/destroy`,
 		name: "删除权限",

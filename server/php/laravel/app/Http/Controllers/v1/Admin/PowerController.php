@@ -30,9 +30,7 @@ class PowerController extends Controller
      */
     public function list(Request $request)
     {
-        $AuthRule = AuthRule::where('pid', 0)->with(['children' => function ($q) {
-            $q->orderBy('sort', 'DESC')->orderBy('id', 'ASC');
-        }])->orderBy('sort', 'DESC')->get();
+        $AuthRule = AuthRule::where('pid', 0)->with(['children'])->orderBy('sort', 'ASC')->get();
         return resReturn(1, $AuthRule);
     }
 
@@ -59,6 +57,7 @@ class PowerController extends Controller
      */
     public function create(SubmitPowerRequest $request)
     {
+        $sort = AuthRule::where('pid', $request->pid)->count();
         $authRule = new AuthRule;
         $authRule->title = $request->title;
         $authRule->api = '';
@@ -68,13 +67,13 @@ class PowerController extends Controller
         $authRule->view = '';
         $authRule->icon = '';
         $authRule->color = '';
-        $authRule->pid = $request->pid ?? 0;
+        $authRule->pid = $request->pid;
         $authRule->type = $request->type;
         $authRule->is_hidden = AuthRule::AUTH_RULE_IS_HIDDEN_YES;
         $authRule->is_hidden_breadcrumb = AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
         $authRule->is_affix = AuthRule::AUTH_RULE_IS_AFFIX_NO;
         $authRule->is_full_page = AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
-        $authRule->sort = $request->sort;
+        $authRule->sort = $sort + 1;
         $authRule->save();
         return resReturn(1, $authRule);
     }
@@ -106,8 +105,9 @@ class PowerController extends Controller
     {
         $authRule = AuthRule::find($id);
         $authRule->title = $request->title;
-        $authRule->api = $request->api;
+        $authRule->api = $request->api ?? '';
         $authRule->path = $request->path ?? '';
+        $authRule->pid = $request->pid;
         $authRule->active = $request->active ?? '';
         $authRule->redirect_url = $request->redirect_url ?? '';
         $authRule->view = $request->view ?? '';
@@ -121,6 +121,60 @@ class PowerController extends Controller
         $authRule->sort = $request->sort;
         $authRule->save();
         return resReturn(1, '修改成功');
+    }
+
+    /**
+     * PowerSort
+     * 权限排序
+     * @param Request $request
+     * @return string
+     * @throws \Exception
+     * @queryParam  draggingNode array 拖拽对象
+     * @queryParam  dropNode array 释放对象
+     * @queryParam  dropType string 释放对象的位置
+     */
+    public function sort(Request $request)
+    {
+        if (!$request->has('draggingNode')) {
+            throw new \Exception('拖拽对象有误', Code::CODE_WRONG);
+        }
+        if (!$request->has('dropNode')) {
+            throw new \Exception('释放对象有误', Code::CODE_WRONG);
+        }
+        if (!$request->has('dropType')) {
+            throw new \Exception('释放对象的位置有误', Code::CODE_WRONG);
+        }
+        DB::transaction(function () use ($request) {
+            $draggingNodeData = $request->draggingNode;
+            $dropNodeData = $request->dropNode;
+            $pid = $dropNodeData['pid'];
+            if ($request->dropType == 'inner') {    // 里面
+                $draggingNodeData['sort'] = count($dropNodeData['children']);
+                $pid = $dropNodeData['id'];
+                $draggingNode = AuthRule::find($draggingNodeData['id']);
+                $draggingNode->sort = $draggingNodeData['sort'];
+                $draggingNode->pid = $pid;
+                $draggingNode->save();
+            } else {
+                $brother = AuthRule::where('pid', $dropNodeData['pid'])->where('id', '!=', $draggingNodeData['id'])->orderBy('sort', 'ASC')->get()->toArray();
+                $draggingNode = AuthRule::find($draggingNodeData['id']);
+                $draggingNode->pid = $pid;
+                $draggingNode->save();
+                // 处理排序
+                if ($request->dropType == 'before') { // 之前
+                    array_splice($brother, $dropNodeData['sort'] - 1, 0, [$draggingNode->toArray()]);
+                } else {  // 之后
+                    array_splice($brother, $dropNodeData['sort'], 0, [$draggingNode->toArray()]);
+                }
+                // 重新排序
+                foreach ($brother as $id => $b) {
+                    $AuthRule = AuthRule::find($b['id']);
+                    $AuthRule->sort = $id + 1;
+                    $AuthRule->save();
+                }
+            }
+        }, 5);
+        return resReturn(1, '排序成功');
     }
 
     /**

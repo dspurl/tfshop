@@ -70,12 +70,12 @@ class AuthRule extends Model
 
     public function child()
     {
-        return $this->hasMany(get_class($this), 'pid');
+        return $this->hasMany(get_class($this), 'pid')->orderBy('sort', 'ASC');
     }
 
     public function children()
     {
-        return $this->child()->with('children');
+        return $this->child()->with('children')->orderBy('sort', 'ASC');
     }
 
     /**

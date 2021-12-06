@@ -1,4 +1,3 @@
-let newMenuIndex = 1;
 import save from '../save'
 export default {
     name: 'Power',
@@ -48,23 +47,19 @@ export default {
         //树拖拽
         nodeDrop(draggingNode, dropNode, dropType){
             this.$refs.save.setData({})
-            let form = draggingNode.data
-            if (dropType === 'before') {    //之前
-                form.sort = dropNode.data.sort + 1
-            } else {
-                form.sort = dropNode.data.sort - 1
+            let form = {
+                draggingNode: draggingNode.data,
+                dropNode: dropNode.data,
+                dropType: dropType
             }
-            form.pid = dropNode.data.pid
-            this.$API.power.edit.post(form)
+            this.$API.power.sort.post(form)
         },
         //增加
         async add(node, data){
-            const newMenuName = "未命名" + newMenuIndex++;
             let newMenuData = {
-                pid: data ? data.id : "",
-                title: newMenuName,
-                type: 1,
-                sort: 5
+                pid: data ? data.id : 0,
+                title: '未命名',
+                type: 1
             }
             this.menuloading = true
             const res = await this.$API.power.create.post(newMenuData)

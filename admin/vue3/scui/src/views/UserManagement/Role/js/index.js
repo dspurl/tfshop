@@ -86,7 +86,7 @@ import saveDialog from '../save'
 			permission(){
 				this.dialog.permission = true
 				this.$nextTick(() => {
-					this.$refs.permissionDialog.open(this.selection[0].auth_rule.map(item => item.id)).setData(this.power)
+					this.$refs.permissionDialog.open(this.selection[0].id, this.selection[0].auth_rule.map(item => item.id)).setData(this.power)
 				})
 			},
 			//删除

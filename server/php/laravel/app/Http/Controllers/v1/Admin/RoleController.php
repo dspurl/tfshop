@@ -77,6 +77,33 @@ class RoleController extends Controller
     }
 
     /**
+     * RoleEdit
+     * 编辑权限
+     * @param $id
+     * @param Request $request
+     * @return string
+     * @throws \Exception
+     * @queryParam  id int 角色ID
+     * @queryParam  ids array 权限ID组
+     */
+    public function permission($id, Request $request)
+    {
+        if(!$request->has('ids')){
+            throw new \Exception('权限ID有误', Code::CODE_WRONG);
+        }
+        AuthGroupAuthRule::where('auth_group_id', $id)->delete();
+        // 如果子类有勾选，添加父类ID
+
+        foreach ($request->ids as $ids){
+            $AuthGroupAuthRule = new AuthGroupAuthRule();
+            $AuthGroupAuthRule->auth_group_id = $id;
+            $AuthGroupAuthRule->auth_rule_id = $ids;
+            $AuthGroupAuthRule->save();
+        }
+        return resReturn(1, '修改成功');
+    }
+
+    /**
      * RoleDestroy
      * 删除角色
      * @param $id
