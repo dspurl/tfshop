@@ -100,7 +100,7 @@ export default {
             // data.is_full_page = data.is_full_page === 1 ? true : false
             // data.is_affix = data.is_affix === 1 ? true : false
             this.form = data
-            this.form.pid = pid
+            this.form.pid = pid ?? 0
         }
     }
 }
