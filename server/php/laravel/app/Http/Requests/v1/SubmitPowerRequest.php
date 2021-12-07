@@ -78,12 +78,12 @@ class SubmitPowerRequest extends Request
     public function messages()
     {
         return [
-            'title.required' => '权限名称不能为空',
-            'title.unique' => '权限名称已存在',
-            'title.max' => '权限名称不能超过50个字符',
-            'api.required' =>'别名不能为空',
-            'api.alpha' => '别名只能是字母',
-            'api.max' => '别名不能超过255个字符'
+            'title.required' => __('hint.error.not_null',['attribute'=>__('requests.power.title')]),
+            'title.unique' => __('hint.error.exist',['attribute'=>__('requests.power.titme')]),
+            'title.max' => __('hint.error.exceed',['attribute'=>__('requests.power.title'),'place'=>50]),
+            'api.required' =>__('hint.error.not_null',['attribute'=>__('requests.power.api')]),
+            'api.alpha' => __('hint.error.alpha',['attribute'=>__('requests.power.api')]),
+            'api.max' => __('hint.error.exceed',['attribute'=>__('requests.power.api'),'place'=>255])
         ];
     }
 }

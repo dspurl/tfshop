@@ -9,26 +9,26 @@
 			<el-select v-model="lang">
 				<el-option label="简体中文" value="zh-cn"></el-option>
 				<el-option label="English" value="en"></el-option>
-				<el-option label="日本語" value="ja"></el-option>
+				<!-- <el-option label="日本語" value="ja"></el-option> -->
 			</el-select>
 		</el-form-item>
 		<el-divider></el-divider>
-		<el-form-item label="主题颜色">
+		<el-form-item :label="$t('setting.form.colorPrimary.name')">
 			<el-color-picker v-model="colorPrimary" :predefine="colorList">></el-color-picker>
 		</el-form-item>
 		<el-divider></el-divider>
-		<el-form-item label="框架布局">
-			<el-select v-model="layout" placeholder="请选择">
-				<el-option label="默认" value="default"></el-option>
-				<el-option label="通栏" value="header"></el-option>
-				<el-option label="经典" value="menu"></el-option>
-				<el-option label="功能坞" value="dock"></el-option>
+		<el-form-item :label="$t('setting.form.layout.name')">
+			<el-select v-model="layout" :placeholder="$t('setting.form.layout.name')">
+				<el-option :label="$t('setting.form.layout.default')" value="default"></el-option>
+				<el-option :label="$t('setting.form.layout.header')" value="header"></el-option>
+				<el-option :label="$t('setting.form.layout.classics')" value="menu"></el-option>
+				<el-option :label="$t('setting.form.layout.functionDock')" value="dock"></el-option>
 			</el-select>
 		</el-form-item>
-		<el-form-item label="折叠菜单">
+		<el-form-item :label="$t('setting.form.menuIsCollapse.name')">
 			<el-switch v-model="menuIsCollapse"></el-switch>
 		</el-form-item>
-		<el-form-item label="标签栏">
+		<el-form-item :label="$t('setting.form.layoutTags.name')">
 			<el-switch v-model="layoutTags"></el-switch>
 		</el-form-item>
 		<el-divider></el-divider>

@@ -31,10 +31,6 @@ export default {
                 {
                     name: 'English',
                     value: 'en',
-                },
-                {
-                    name: '日本語',
-                    value: 'ja',
                 }
             ]
         }
@@ -107,7 +103,7 @@ export default {
             this.$router.replace({
                 path: '/'
             })
-            this.$message.success("登录成功")
+            this.$message.success(this.$t('login.succeed'))
             this.islogin = false
         },
         configTheme(){

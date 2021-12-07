@@ -17,10 +17,10 @@ class AppVerify
     public function handle($request, Closure $next)
     {
         if (!$request->header('apply-secret')) {
-            return resReturn(0, '非法apply-secret', Code::CODE_INEXISTENCE);
+            return resReturn(0, __('hint.error.illegality', ['specification' => 'apply-secret']), Code::CODE_INEXISTENCE);
         }
         if (config('dsshop.applySecret') != $request->header('apply-secret')) {
-            return resReturn(0, 'API密钥有误', Code::CODE_INEXISTENCE);
+            return resReturn(0, __('hint.error.key_wrong', ['specification' => 'API']), Code::CODE_INEXISTENCE);
         }
         return $next($request);
     }

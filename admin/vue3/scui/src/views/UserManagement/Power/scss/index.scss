@@ -1,8 +1,32 @@
-.custom-tree-node {display: flex;flex: 1;align-items: center;justify-content: space-between;font-size: 14px;padding-right: 24px;height:100%;}
-.custom-tree-node .label {display: flex;align-items: center;;height: 100%;}
-.custom-tree-node .label .el-tag {margin-left: 5px;}
-.custom-tree-node .do {display: none;}
-.custom-tree-node .do i {margin-left:5px;color: #999;padding:5px;}
-.custom-tree-node .do i:hover {color: #333;}
+.custom-tree-node {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 14px;
+	padding-right: 24px;
+	height: 100%;
+}
+.custom-tree-node .label {
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
+.custom-tree-node .label .el-tag {
+	margin-left: 5px;
+}
+.custom-tree-node .do {
+	display: none;
+}
+.custom-tree-node .do i {
+	margin-left: 5px;
+	color: #999;
+	padding: 5px;
+}
+.custom-tree-node .do i:hover {
+	color: #333;
+}
 
-.custom-tree-node:hover .do {display: inline-block;}
+.custom-tree-node:hover .do {
+	display: inline-block;
+}

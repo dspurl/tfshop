@@ -19,10 +19,10 @@ class Applet
     {
         $redis = new RedisService();
         if (!$request->header('apply-secret')) {
-            return resReturn(0, '请配置applySecret', Code::CODE_MISUSE);
+            return resReturn(0, __('hint.error.configuration', ['specification' => 'applySecret']), Code::CODE_MISUSE);
         }
         if (!$redis->exists('wechat.' . $request->header('apply-secret'))) {
-            return resReturn(0, '非法applySecret', Code::CODE_INEXISTENCE);
+            return resReturn(0,  __('hint.error.illegality', ['specification' => 'applySecret']), Code::CODE_INEXISTENCE);
         }
         return $next($request);
     }

@@ -17,10 +17,10 @@ class LesseeVerify
     public function handle($request, Closure $next)
     {
         if (!$request->header('applyid')) {
-            return resReturn(0, '非法applyid', Code::CODE_INEXISTENCE);
+            return resReturn(0, __('hint.error.illegality', ['specification' => 'applyid']), Code::CODE_INEXISTENCE);
         }
         if (!$request->header('versionid')) {
-            return resReturn(0, '非法versionid', Code::CODE_INEXISTENCE);
+            return resReturn(0, __('hint.error.illegality', ['specification' => 'versionid']), Code::CODE_INEXISTENCE);
         }
         return $next($request);
     }

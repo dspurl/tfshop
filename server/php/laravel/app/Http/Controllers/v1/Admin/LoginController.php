@@ -21,10 +21,10 @@ class LoginController extends Controller
 
         $admin = Admin::query()->where('name', $request->username)->first();
         if (!$admin) {
-            return resReturn(0, '账号不存在', Code::CODE_INEXISTENCE);
+            return resReturn(0, __('hint.error.nonentity',['attribute'=>__('requests.user.name')]), Code::CODE_INEXISTENCE);
         }
         if (!Hash::check($request->password, $admin->password)) {
-            return resReturn(0, '密码错误', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.mistake',['attribute'=>__('requests.user.password')]), Code::CODE_WRONG);
         }
         $admin->last_login_at = Carbon::now()->toDateTimeString();
         $admin->save();
@@ -76,71 +76,6 @@ class LoginController extends Controller
         $respond = $client->post($url, ['form_params' => $params]);
         $access_token = json_decode($respond->getBody()->getContents(), true);
         return resReturn(1, $access_token);
-    }
-
-    /**
-     * 获取管理员信息
-     * @param Request $request
-     * @return string
-     */
-    public function userInfos(Request $request)
-    {
-        $user = auth('api')->user();
-        $data['name'] = $user->name;
-        $data['avatar'] = $user->portrait;
-        $group = auth('api')->user()->authGroup->toArray();
-        //权限名只取一个（多个权限名称太长）
-        $data['introduction'] = $group[0]['introduction'];
-        foreach ($group as $u) {
-            $data['roles'][] = $u['roles'];
-        }
-        //获取该权限组的菜单
-        $AuthRule = AuthRule::with(['AuthGroup' => function ($query) {
-            $query->select('roles');
-        }])->orderBy('pid', 'ASC')->orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
-        $data['asyncRouterMap'] = [];   //菜单
-        $data['jurisdiction'] = []; //权限列表
-        $asyncRouterMap = [];
-        foreach ($AuthRule as $id => $rule) {
-            $rolesArray = [];
-            if (count($rule->AuthGroup) > 0) {
-                foreach ($rule->AuthGroup as $group) {
-                    $rolesArray[] = $group->roles;
-                    $data['jurisdiction'][$rule->api][] = $group->roles;
-                }
-
-            }
-            if ($rule->type == 0) {
-                $activeMenu = '';
-                if (strpos($rule->api, 'Create') !== false) {
-                    $activeMenu = str_replace('Create', '', $rule->api) . 'List';
-                } else if (strpos($rule->api, 'Edit') !== false) {
-                    $activeMenu = str_replace('Edit', '', $rule->api) . 'List';
-                } else if (strpos($rule->api, 'Detail') !== false) {
-                    $activeMenu = str_replace('Detail', '', $rule->api) . 'List';
-                }
-                $asyncRouterMap[] = array(
-                    'id' => $rule->id,
-                    'pid' => $rule->pid,
-                    'path' => $rule->pid > 0 ? lcfirst($rule->api) : '/' . lcfirst($rule->api),
-                    'component' => $rule->pid > 0 ? $rule->api : 'Layout',
-                    'redirect' => (strpos($rule->api, 'List') !== false || strpos($rule->api, 'Create') !== false || strpos($rule->api, 'Edit') !== false || strpos($rule->api, 'Detail') !== false) ? $rule->url : 'noredirect',
-                    'alwaysShow' => $rule->state,
-                    'name' => $rule->api,
-                    'hidden' => $rule->state == 1 && array_intersect($data['roles'], $rolesArray) ? false : true,
-                    'meta' => array(
-                        'title' => $rule->title,
-                        'icon' => $rule->icon,
-                        'roles' => $rolesArray,
-                        'noCache' => false,
-                        'breadcrumb' => true,
-                        'activeMenu' => $activeMenu
-                    ),
-                );
-            }
-        }
-        $data['asyncRouterMap'] = genTree($asyncRouterMap, 'pid');
-        return resReturn(1, $data);
     }
 
     /**

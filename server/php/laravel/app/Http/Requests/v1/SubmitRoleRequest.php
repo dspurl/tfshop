@@ -55,13 +55,13 @@ class SubmitRoleRequest extends Request
     public function messages()
     {
         return [
-            'roles.required' => '别名不能为空',
-            'roles.alpha' => '别名只能是字母',
-            'roles.unique' => '别名已存在',
-            'roles.max' => '别名不能超过30个字符',
-            'introduction.required' => '角色名称不能为空',
-            'introduction.unique' => '角色名称已存在',
-            'introduction.max' => '角色名称不能超过80个字符',
+            'roles.required' => __('hint.error.not_null',['attribute'=>__('requests.role.roles')]),
+            'roles.alpha' => __('hint.error.alpha',['attribute'=>__('requests.role.roles')]),
+            'roles.unique' => __('hint.error.exist',['attribute'=>__('requests.role.roles')]),
+            'roles.max' => __('hint.error.exceed',['attribute'=>__('requests.role.roles'),'place'=>30]),
+            'introduction.required' => __('hint.error.not_null',['attribute'=>__('requests.role.introduction')]),
+            'introduction.unique' =>__('hint.error.exist',['attribute'=>__('requests.role.introduction')]),
+            'introduction.max' => __('hint.error.exceed',['attribute'=>__('requests.role.introduction'),'place'=>30]),
         ];
     }
 }

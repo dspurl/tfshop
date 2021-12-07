@@ -65,16 +65,16 @@ class SubmitUserRequest extends Request
     public function messages()
     {
         return [
-            'name.required' => __('hint.error.not_null',['attribute'=>__('hint.routine.username')]),
-            'name.unique' => __('hint.error.exist',['attribute'=>__('hint.routine.username')]),
-            'name.max' => __('hint.error.exceed',['attribute'=>__('hint.routine.username'),'place'=>16]),
-            'email.required' => __('hint.error.not_null',['attribute'=>__('hint.routine.email')]),
-            'email.unique' => __('hint.error.exist',['attribute'=>__('hint.routine.email')]),
-            'email.max' => __('hint.error.exceed',['attribute'=>__('hint.routine.email'),'place'=>190]),
-            'cellphone.required' => __('hint.error.not_null',['attribute'=>__('hint.routine.cellphone')]),
-            'cellphone.unique' => __('hint.error.exist',['attribute'=>__('hint.routine.cellphone')]),
-            'password.required' => __('hint.error.not_null',['attribute'=>__('hint.routine.password')]),
-            'portrait.required' => __('hint.error.uploading',['attribute'=>__('hint.routine.portrait')]),
+            'name.required' => __('hint.error.not_null',['attribute'=>__('requests.user.name')]),
+            'name.unique' => __('hint.error.exist',['attribute'=>__('requests.user.name')]),
+            'name.max' => __('hint.error.exceed',['attribute'=>__('requests.user.name'),'place'=>16]),
+            'email.required' => __('hint.error.not_null',['attribute'=>__('requests.user.email')]),
+            'email.unique' => __('hint.error.exist',['attribute'=>__('requests.user.email')]),
+            'email.max' => __('hint.error.exceed',['attribute'=>__('requests.user.email'),'place'=>190]),
+            'cellphone.required' => __('hint.error.not_null',['attribute'=>__('requests.user.cellphone')]),
+            'cellphone.unique' => __('hint.error.exist',['attribute'=>__('requests.user.cellphone')]),
+            'password.required' => __('hint.error.not_null',['attribute'=>__('requests.user.password')]),
+            'portrait.required' => __('hint.error.uploading',['attribute'=>__('requests.user.portrait')]),
         ];
     }
 

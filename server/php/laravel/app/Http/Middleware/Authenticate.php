@@ -16,7 +16,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            throw new \Exception('登录超时，请重新登录', 500);
+            throw new \Exception(__('hint.system.login_timeout'), 500);
         }
     }
 }

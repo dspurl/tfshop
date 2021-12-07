@@ -7,46 +7,49 @@ return [
     |
     |
     */
-    //常规
-    'routine' =>[
-        'user'          =>  '用户',
-        'username'      =>  '用户名',
-        'cellphone'     =>  '手机号码',
-        'password'      =>  '密码',
-        'delete'        =>  '删除',
-        'add'           =>  '添加',
-        'modification'  =>  '修改',
-        'parameter'     =>  '参数',
-        'email'         =>  '邮箱',
-        'portrait'      =>  '头像',
-        'character'     =>  '角色名称',
-        'describe'      =>  '描述',
-        'permissions'   =>  '权限',
-        'permissions_name'=>  '权限名称',
-        'api'           =>  'API',
-        'grouping'      =>  '分组',
+    // 错误提示
+    'error' => [
+        'nonentity'         =>  ':attribute不存在',
+        'falseness'         =>  ':attribute不正确',
+        'mistake'           =>  ':attribute有误',
+        'not_null'          =>  ':attribute不能为空',
+        'exist'             =>  ':attribute已存在',
+        'exceed'            =>  ':attribute不能超过:place',
+        'uploading'         =>  ':attribute必须上传',
+        'illegality'        =>  '非法:specification',
+        'distribution'      =>  '请分配:specification',
+        'configuration'     =>  '请配置:specification',
+        'select'            =>  '请选择:specification',
+        'key_wrong'         =>  ':specification密钥有误',
+        'alpha'             =>  ':attribute只能是字母',
+        'accepted'          =>  ':attribute必须是"yes"，"on"，1或true',
+        'active_url'        =>  ':attribute必须具有有效的 A 或 AAAA 记录',
+        'after'             =>  '必须是:attribute之后的值对应的日期',
+        'after_or_equal'    =>  '必须在:attribute之后或与给定的日期相同',
+        'before'            =>  '必须是:attribute之前的值对应的日期',
+        'date_equals'       =>  '必须等于给定日期',
+        'before_or_equal'   =>  '必须在:attribute之前或与给定的日期相同',
+        'alpha_dash'        =>  ':attribute只能包含字母、数字，短破折号（-）和下划线（_）',
+        'alpha_num'         =>  ':attribute只能由字母和数字组成',
+        'array'             =>  ':attribute必须是数组',
+        'between'           =>  '必须在:min和:max之间',
+        'boolean'           =>  ':attribute必须是true，false，1，0，"1"和"0"',
+        'confirmed'         =>  ':attribute必须具有匹配字段_confirmation',
+        'date'              =>  ':attribute必须是有效的日期',
+        'date_format'       =>  '必须匹配给定的 format（日期格式）',
+        'different'         =>  ':attribute必须与给定的字段field的值不同',
+        'dimensions'        =>  ':attribute必须是图片并且图片比例必须符合规则'
+
     ],
-    //错误提示
-    'error' =>[
-        'nonentity'     =>  ':attribute不存在',
-        'falseness'     =>  ':attribute不正确',
-        'mistake'       =>  ':attribute有误',
-        'not_null'      =>  ':attribute不能为空',
-        'exist'         =>  ':attribute已存在',
-        'exceed'        =>  ':attribute不能超过:place',
-        'uploading'     =>  ':attribute必须上传',
-        'distribution'  =>  '请分配:specification',
-        'select'        =>  '请选择:specification',
-    ],
-    //成功提示
-    'succeed' =>[
+    // 成功提示
+    'succeed' => [
         'win'           =>  ':attribute成功',
     ],
-    //权限提示
-    'rules' =>[
-        'config_wrong'  => '权限配置有误',
-        'account_without'=> '该账号无权限',
-        'without'       => '无权限访问',
-        'unconfigured'  => '该权限未配置',
-    ],
+    // 系统提示
+    'system' => [
+        'login_timeout'                         =>  '登录超时，请重新登录',
+        'incorrect_permission_configuration'    =>  '权限配置有误',
+        'account_has_no_permission'             =>  '该账号无权限',
+        'permission_is_not_configured'          =>  '该权限未配置',
+    ]
 ];
