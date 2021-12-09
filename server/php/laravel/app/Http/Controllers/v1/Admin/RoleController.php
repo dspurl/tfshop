@@ -45,17 +45,17 @@ class RoleController extends Controller
      * RoleCreate
      * 创建角色
      * @param SubmitRoleRequest $request
-     * @queryParam  roles array 别名
+     * @queryParam  roles string 别名
      * @queryParam  introduction string 角色名称
      * @return string
      */
     public function create(SubmitRoleRequest $request)
     {
-        $authGroup = new AuthGroup;
-        $authGroup->roles = $request->roles;
-        $authGroup->introduction = $request->introduction;
-        $authGroup->save();
-        return resReturn(1, '添加成功');
+        $AuthGroup = new AuthGroup;
+        $AuthGroup->roles = $request->roles;
+        $AuthGroup->introduction = $request->introduction;
+        $AuthGroup->save();
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.add')]));
     }
 
     /**
@@ -69,11 +69,11 @@ class RoleController extends Controller
      */
     public function edit($id, SubmitRoleRequest $request)
     {
-        $authGroup = AuthGroup::find($id);
-        $authGroup->roles = $request->roles;
-        $authGroup->introduction = $request->introduction;
-        $authGroup->save();
-        return resReturn(1, '修改成功');
+        $AuthGroup = AuthGroup::find($id);
+        $AuthGroup->roles = $request->roles;
+        $AuthGroup->introduction = $request->introduction;
+        $AuthGroup->save();
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 
     /**
@@ -89,7 +89,7 @@ class RoleController extends Controller
     public function permission($id, Request $request)
     {
         if(!$request->has('ids')){
-            throw new \Exception('权限ID有误', Code::CODE_WRONG);
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.auth_group_auth_rule.ids')]), Code::CODE_WRONG);
         }
         AuthGroupAuthRule::where('auth_group_id', $id)->delete();
         // 如果子类有勾选，添加父类ID
@@ -100,7 +100,7 @@ class RoleController extends Controller
             $AuthGroupAuthRule->auth_rule_id = $ids;
             $AuthGroupAuthRule->save();
         }
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 
     /**
@@ -108,6 +108,7 @@ class RoleController extends Controller
      * 删除角色
      * @param $id
      * @queryParam  id int 管理组ID
+     * @queryParam  ids array 管理组ID组
      * @return string
      */
     public function destroy($id, Request $request)
@@ -116,11 +117,11 @@ class RoleController extends Controller
             AuthGroup::destroy($id);
         } else {
             if (!$request->has('ids')) {
-                return resReturn(0, '请选择内容', Code::CODE_WRONG);
+                return resReturn(0, __('hint.error.select', ['attribute' => __('hint.common.content_delete')]), Code::CODE_WRONG);
             }
             AuthGroup::destroy($request->ids);
             AuthGroupAuthRule::whereIn('auth_group_id',$request->ids)->delete();
         }
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.delete')]));
     }
 }

@@ -4,8 +4,8 @@ import API from "@/api";
 
 export default {
 	apiObj: API.common.upload,
-	menuApiObj: API.common.file.menu,
-	listApiObj: API.common.file.list,
+	menuApiObj: API.resourceGroup.list,
+	listApiObj: API.resource.list,
 	successCode: 200,
 	maxSize: 30,
 	max: 99,
@@ -18,8 +18,8 @@ export default {
 	},
 	listParseData: function (res) {
 		return {
-			rows: res.data.rows,
-			total: res.data.total,
+			rows: res.message.data,
+			total: res.message.total,
 			msg: res.message,
 			code: res.code
 		}
@@ -32,7 +32,7 @@ export default {
 	},
 	menuProps: {
 		key: 'id',
-		label: 'label',
+		label: 'name',
 		children: 'children'
 	},
 	fileProps: {

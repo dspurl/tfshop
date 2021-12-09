@@ -1,5 +1,5 @@
 <template>
-	<el-dialog
+	<sc-dialog
 		:title="$t('role.rolePermissionSettings')"
 		v-model="visible"
 		:width="500"
@@ -42,7 +42,7 @@
 			<el-button @click="visible = false">{{ $t('general.cancel') }}</el-button>
 			<el-button type="primary" :loading="isSaveing" @click="submit()">{{ $t('general.save') }}</el-button>
 		</template>
-	</el-dialog>
+	</sc-dialog>
 </template>
 <style lang='scss' scoped>
 @import "./scss/permission.scss";

@@ -22,6 +22,8 @@ export default {
 		add: "Add",
 		sureDelete: "Are you sure?",
 		pleaseInput: "Please input",
+		pleaseSelect: "Please select",
+		formatWrong: "The format is wrong"
 	},
 	setting: {
 		form: {
@@ -149,6 +151,42 @@ export default {
 			},
 			roles: {
 				name: "Role Alias",
+			},
+			createdAt: {
+				name: "Created Time",
+			},
+			updatedAt: {
+				name: "Update Time",
+			},
+		},
+	},
+	resource_type: {
+		keyword: "Resource Category Name",
+		form: {
+			uuid: {
+				name: "UUID",
+			},
+			name: {
+				name: "Resource Type Name",
+			},
+			alias: {
+				name: "Resource Type Alias",
+				msg: "Only and only letters",
+			},
+			icon: {
+				name: "Resource Type Icon",
+			},
+			size: {
+				name: "Resource Type Size",
+				msg: "If this parameter is not configured, the unit is B",
+			},
+			extension: {
+				name: "Resource Type Suffix",
+				msg: "File name extension, such as PNG, can be added by press Enter",
+			},
+			specification: {
+				name: "Resource Type Specifications",
+				msg: "Image specifications, such as 150, press Enter to add, only image support",
 			},
 			createdAt: {
 				name: "Created Time",

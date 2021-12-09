@@ -21,10 +21,10 @@ class LoginController extends Controller
 
         $admin = Admin::query()->where('name', $request->username)->first();
         if (!$admin) {
-            return resReturn(0, __('hint.error.nonentity',['attribute'=>__('requests.user.name')]), Code::CODE_INEXISTENCE);
+            return resReturn(0, __('hint.error.nonentity', ['attribute' => __('requests.user.name')]), Code::CODE_INEXISTENCE);
         }
         if (!Hash::check($request->password, $admin->password)) {
-            return resReturn(0, __('hint.error.mistake',['attribute'=>__('requests.user.password')]), Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.mistake', ['attribute' => __('requests.user.password')]), Code::CODE_WRONG);
         }
         $admin->last_login_at = Carbon::now()->toDateTimeString();
         $admin->save();
@@ -130,8 +130,8 @@ class LoginController extends Controller
                     $type = 'button';
                     break;
             }
-            if($a->type == AuthRule::AUTH_RULE_TYPE_BUTTON){
-                break;
+            if ($a->type == AuthRule::AUTH_RULE_TYPE_BUTTON) {
+                continue;
             }
             $data['menu'][] = [
                 'id' => $a->id,

@@ -10,6 +10,7 @@
 |
 */
 //如果有版本控制的话，请复制以下代码，修改版本号;访问地址把v1换成设置的版本号即可
+use Illuminate\Support\Facades\Route;
 Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.versions'))->group(function () {
     // 后台API
     Route::prefix('admin')->namespace('Admin')->group(function () {
@@ -18,7 +19,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('plugin/download/{name}', 'PluginController@download')->name('admin.plugInDownload');    //插件下载
     });
     Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {
-        Route::post('uploadPictures', 'IndexController@uploadPictures')->name('admin.uploadPictures');  //上传
+        Route::post('resourceUpload', 'IndexController@resourceUpload')->name('admin.resourceUpload');  //上传
         Route::get('userInfo', 'LoginController@userInfo')->name('admin.userInfo');  //用户详情
         Route::get('index', 'IndexController@index')->name('admin.index');  //首页
         Route::get('admin', 'AdminController@list')->name('admin.adminList')->middleware(['permissions:AdminList']);  //管理员列表
@@ -80,8 +81,17 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('indent/refund/{id}', 'IndentController@refund')->name('admin.indentRefund')->middleware(['permissions:IndentRefund']); //退款
         Route::get('indent/query/{id}', 'IndentController@query')->name('admin.indentQuery')->middleware(['permissions:IndentDetail']);  //查询订单状态
         Route::post('indent/receiving', 'IndentController@receiving')->name('admin.indentReceiving')->middleware(['permissions:IndentShipment']); //延长收货时间
-        Route::get('resource', 'ResourceController@list')->name('admin.resourceList')->middleware(['permissions:ResourceList']);    //资源列表
+        Route::get('resource', 'ResourceController@list')->name('admin.resourceList')->middleware(['permissions:Resource']);    //资源列表
+        Route::post('resource', 'ResourceController@create')->name('admin.resourceCreate')->middleware(['permissions:ResourceCreate']);    //上传资源
         Route::post('resource/destroy/{id}', 'ResourceController@destroy')->name('admin.resourceDestroy')->middleware(['permissions:ResourceDestroy']);    //删除资源
+        Route::get('resource_group', 'ResourceGroupController@list')->name('admin.resourceGroupList')->middleware(['permissions:ResourceGroup']);    //资源分组
+        Route::post('resource_group', 'ResourceGroupController@create')->name('admin.resourceGroupCreate')->middleware(['permissions:ResourceGroupCreate']);    //创建资源分组
+        Route::post('resource_group/{id}', 'ResourceGroupController@edit')->name('admin.resourceGroupEdit')->middleware(['permissions:ResourceGroupEdit']);    //保存资源分组
+        Route::post('resource_group/destroy/{id}', 'ResourceGroupController@destroy')->name('admin.resourceGroupDestroy')->middleware(['permissions:ResourceGroupDestroy']);    //删除资源分组
+        Route::get('resource_type', 'ResourceTypeController@list')->name('admin.resourceType')->middleware(['permissions:ResourceType']);    //资源类型
+        Route::post('resource_type', 'ResourceTypeController@create')->name('admin.resourceTypeCreate')->middleware(['permissions:ResourceTypeCreate']);    //创建资源类型
+        Route::post('resource_type/{id}', 'ResourceTypeController@edit')->name('admin.resourceTypeEdit')->middleware(['permissions:ResourceTypeEdit']);    //保存资源类型
+        Route::post('resource_type/destroy/{id}', 'ResourceTypeController@destroy')->name('admin.resourceTypeDestroy')->middleware(['permissions:ResourceTypeDestroy']);    //删除资源类型
         Route::get('banner', 'BannerController@list')->name('admin.bannerList')->middleware(['permissions:BannerList']);    //轮播列表
         Route::post('banner', 'BannerController@create')->name('admin.bannerCreate')->middleware(['permissions:BannerCreate']);    //创建轮播
         Route::post('banner/{id}', 'BannerController@edit')->name('admin.bannerEdit')->middleware(['permissions:BannerEdit']);    //保存轮播

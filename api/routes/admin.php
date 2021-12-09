@@ -10,6 +10,8 @@
 |
 */
 //如果有版本控制的话，请复制以下代码，修改版本号;访问地址把v1换成设置的版本号即可
+use Illuminate\Support\Facades\Route;
+
 Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.versions'))->group(function () {
     // 后台API
     Route::prefix('admin')->namespace('Admin')->group(function () {

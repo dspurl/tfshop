@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers\v1\Admin;
 
+use App\Code;
 use App\Models\v1\Resource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\v1\ResourceType;
+use function EasyWeChat\Kernel\Support\str_random;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Resource
@@ -19,7 +23,7 @@ class ResourceController extends Controller
      * 资源列表
      * @param Request $request
      * @return \Illuminate\Http\Response
-     * @queryParam  name string 资源名称
+     * @queryParam  keyword string 关键字
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
@@ -33,10 +37,32 @@ class ResourceController extends Controller
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
         if ($request->name) {
-            $q->where('depict', $request->name);
+            $q->where('name', 'like', '%' . $request->keyword . '%')->orWhere('depict', 'like', '%' . $request->keyword . '%');
         }
         $paginate = $q->paginate($limit);
         return resReturn(1, $paginate);
+    }
+
+    /**
+     * ResourceCreate
+     * 上传资源
+     * @param Request $request
+     * @queryParam  name string 资源名称
+     * @return string
+     */
+    public function create(Request $request)
+    {
+        $Resource = new Resource;
+        $Resource->type = $request->type;
+        $Resource->resource_group_id = $request->resource_group_id;
+        $Resource->name = $request->name;
+        $Resource->depict = $request->depict;
+        $Resource->url = $request->url;
+        $Resource->info = $request->info;
+        $Resource->image_id = $request->image_id;
+        $Resource->image_type = $request->image_type;
+        $Resource->save();
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.add')]));
     }
 
     /**
@@ -45,12 +71,23 @@ class ResourceController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 资源ID
+     * @queryParam  ids array 资源ID组
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        $Resource = Resource::find($id);
-        resourceAutoDelete($Resource->img);
-        Resource::where('id', $id)->delete();
-        return resReturn(1, '删除成功');
+        if ($id > 0) {
+            $Resource = Resource::find($id);
+            resourceAutoDelete($Resource->url);
+            Resource::destroy($id);
+        } else {
+            if (!$request->has('ids')) {
+                return resReturn(0, __('hint.error.select', ['attribute' => __('hint.common.content_delete')]), Code::CODE_WRONG);
+            }
+            $Resource = Resource::whereIn('id', $request->ids)->get()->pluck('url');
+            foreach ($Resource as $url) {
+                resourceAutoDelete($url);
+            }
+            Resource::destroy($request->ids);
+        }
     }
 }

@@ -79,9 +79,10 @@ class SubmitPowerRequest extends Request
     {
         return [
             'title.required' => __('hint.error.not_null',['attribute'=>__('requests.power.title')]),
-            'title.unique' => __('hint.error.exist',['attribute'=>__('requests.power.titme')]),
+            'title.unique' => __('hint.error.exist',['attribute'=>__('requests.power.title')]),
             'title.max' => __('hint.error.exceed',['attribute'=>__('requests.power.title'),'place'=>50]),
             'api.required' =>__('hint.error.not_null',['attribute'=>__('requests.power.api')]),
+            'api.unique' => __('hint.error.exist',['attribute'=>__('requests.power.api')]),
             'api.alpha' => __('hint.error.alpha',['attribute'=>__('requests.power.api')]),
             'api.max' => __('hint.error.exceed',['attribute'=>__('requests.power.api'),'place'=>255])
         ];

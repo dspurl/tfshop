@@ -39,6 +39,7 @@ axios.interceptors.response.use(
 					message: "Status:404，正在请求不存在的服务器记录！"
 				});
 			} else if (error.response.status == 500) {
+				console.log('权限失效')
 				if(error.response.data.message.indexOf('The refresh token is invalid') === -1 && error.response.data.message.indexOf('Unauthenticated') === -1){
 					ElNotification.error({
 						title: '请求错误',

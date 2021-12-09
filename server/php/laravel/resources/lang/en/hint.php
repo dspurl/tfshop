@@ -7,6 +7,15 @@ return [
     |
     |
     */
+    // 常见提示
+    'common' => [
+        'add'               =>  'Add',
+        'amend'             =>  'Amend',
+        'save'              =>  'Save',
+        'sort'              =>  'Sort',
+        'delete'            =>  'Delete',
+        'content_delete'    => 'Content to delete',
+    ],
     // Error
     'error' => [
         'nonentity'         =>  ':attribute does not exist',
@@ -38,7 +47,19 @@ return [
         'date'              =>  ':attribute must be a valid date',
         'date_format'       =>  'Must match the given format (date format)',
         'different'         =>  ':attribute must be different from the value of the given field field',
-        'dimensions'        =>  ':attribute must be an image and the image proportion must conform to the rule'
+        'dimensions'        =>  ':attribute must be an image and the image proportion must conform to the rule',
+        'integer'           =>  ':attribute must be an integer',
+        'email'             =>  ':attribute must be a mailbox',
+        'filled'            =>  ':attribute cannot be empty if it exists',
+        'image'             =>  ':attribute must be an image',
+        'ip'                =>  ':attribute must be IP',
+        'ipv4'              =>  ':attribute must be an ipv4 address',
+        'ipv6'              =>  ':attribute must be an ipv6 address',
+        'ipv6'              =>  ':attribute must be an ipv6 address',
+        'numeric'           =>  ':attribute must be a numeric value',
+        'url'               =>  ':attribute must be a valid URL',
+        'uuid'              =>  ':attribute must be a valid UUID',
+        'parameter_wrong'   =>  'Parameter is wrong',
 
     ],
     // Succeed

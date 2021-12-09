@@ -21,6 +21,8 @@ export default {
 		add: "新增",
 		sureDelete: "确定删除吗？",
 		pleaseInput: "请输入",
+		pleaseSelect: "请选择",
+		formatWrong: "格式有误"
 	},
 	setting: {
 		form: {
@@ -145,6 +147,42 @@ export default {
 			},
 			roles: {
 				name: "角色别名",
+			},
+			createdAt: {
+				name: "创建时间",
+			},
+			updatedAt: {
+				name: "更新时间",
+			},
+		},
+	},
+	resource_type: {
+		keyword: "资源分类名称",
+		form: {
+			uuid: {
+				name: "uuid",
+			},
+			name: {
+				name: "资源类型名称",
+			},
+			alias: {
+				name: "资源类型别名",
+				msg: "唯一且只能是字母",
+			},
+			icon: {
+				name: "资源类型图标",
+			},
+			size: {
+				name: "资源类型大小",
+				msg: "不配置则不限制，单位B",
+			},
+			extension: {
+				name: "资源类型后缀",
+				msg: "不配置则不限制，文件后缀名，如png，回车添加",
+			},
+			specification: {
+				name: "资源类型规格",
+				msg: "图片规格，如150，回车添加，仅支持图片",
 			},
 			createdAt: {
 				name: "创建时间",

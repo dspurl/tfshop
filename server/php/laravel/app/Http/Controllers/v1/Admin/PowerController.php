@@ -24,8 +24,6 @@ class PowerController extends Controller
      * @param Request $request
      * @queryParam limit int 每页显示条数
      * @queryParam page string 页码
-     * @queryParam pid int 分组ID
-     * @queryParam title string ID、权限名称、API名称
      * @return string
      */
     public function list(Request $request)
@@ -69,7 +67,7 @@ class PowerController extends Controller
         $authRule->color = '';
         $authRule->pid = $request->pid;
         $authRule->type = $request->type;
-        $authRule->is_hidden = AuthRule::AUTH_RULE_IS_HIDDEN_YES;
+        $authRule->is_hidden = AuthRule::AUTH_RULE_IS_HIDDEN_NO;
         $authRule->is_hidden_breadcrumb = AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
         $authRule->is_affix = AuthRule::AUTH_RULE_IS_AFFIX_NO;
         $authRule->is_full_page = AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
@@ -120,7 +118,7 @@ class PowerController extends Controller
         $authRule->is_full_page = $request->is_full_pagen ? AuthRule::AUTH_RULE_IS_FULL_PAGE_YES : AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
         $authRule->sort = $request->sort;
         $authRule->save();
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 
     /**
@@ -136,13 +134,13 @@ class PowerController extends Controller
     public function sort(Request $request)
     {
         if (!$request->has('draggingNode')) {
-            throw new \Exception('拖拽对象有误', Code::CODE_WRONG);
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.power.dragging_node')]), Code::CODE_WRONG);
         }
         if (!$request->has('dropNode')) {
-            throw new \Exception('释放对象有误', Code::CODE_WRONG);
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.power.drop_node')]), Code::CODE_WRONG);
         }
         if (!$request->has('dropType')) {
-            throw new \Exception('释放对象的位置有误', Code::CODE_WRONG);
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.power.drop_type')]), Code::CODE_WRONG);
         }
         DB::transaction(function () use ($request) {
             $draggingNodeData = $request->draggingNode;
@@ -174,7 +172,7 @@ class PowerController extends Controller
                 }
             }
         }, 5);
-        return resReturn(1, '排序成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.sort')]));
     }
 
     /**
@@ -194,7 +192,7 @@ class PowerController extends Controller
                 AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
             } else {
                 if (!$request->has('ids')) {
-                    throw new \Exception('参数有误', Code::CODE_WRONG);
+                    throw new \Exception(__('hint.error.parameter_wrong'), Code::CODE_WRONG);
                 }
                 foreach ($request->ids as $ids) {
                     $arr = (new AuthRule())->obtainAllChildPermissions($ids);
@@ -203,6 +201,6 @@ class PowerController extends Controller
                 }
             }
         }, 5);
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.delete')]));
     }
 }

@@ -7,6 +7,15 @@ return [
     |
     |
     */
+    // 常见提示
+    'common' => [
+        'add'               =>  '添加',
+        'amend'             =>  '修改',
+        'save'              =>  '保存',
+        'sort'              =>  '排序',
+        'delete'            =>  '删除',
+        'content_delete'     => '要删除的内容',
+    ],
     // 错误提示
     'error' => [
         'nonentity'         =>  ':attribute不存在',
@@ -38,7 +47,20 @@ return [
         'date'              =>  ':attribute必须是有效的日期',
         'date_format'       =>  '必须匹配给定的 format（日期格式）',
         'different'         =>  ':attribute必须与给定的字段field的值不同',
-        'dimensions'        =>  ':attribute必须是图片并且图片比例必须符合规则'
+        'dimensions'        =>  ':attribute必须是图片并且图片比例必须符合规则',
+        'integer'           =>  ':attribute必须是整数',
+        'email'             =>  ':attribute必须是邮箱',
+        'filled'            =>  ':attribute存在时不能为空',
+        'image'             =>  ':attribute必须是图片',
+        'ip'                =>  ':attribute必须是ip',
+        'ipv4'              =>  ':attribute必须是ipv4地址',
+        'ipv6'              =>  ':attribute必须是ipv6地址',
+        'ipv6'              =>  ':attribute必须是ipv6地址',
+        'numeric'           =>  ':attribute必须为数值',
+        'url'               =>  ':attribute必须为有效的URL',
+        'uuid'              =>  ':attribute必须为有效的UUID',
+        'parameter_wrong'   =>  '参数有误',
+
 
     ],
     // 成功提示

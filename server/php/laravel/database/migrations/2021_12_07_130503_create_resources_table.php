@@ -16,13 +16,17 @@ class CreateResourcesTable extends Migration
     {
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger('type')->default(1)->comment('资源类型1图片2视频');
-            $table->string('depict',100)->nullable()->comment('资源描述');
-            $table->string('img',255)->comment('资源地址');
-            $table->integer('image_id')->default(0);
-            $table->string('image_type',200);
+            $table->unsignedTinyInteger('resource_type_id')->default(0)->comment('资源类型ID');
+            $table->unsignedTinyInteger('resource_group_id')->default(0)->comment('资源分组ID');
+            $table->string('name', 30)->comment('资源名称');
+            $table->string('depict', 100)->comment('资源别名');
+            $table->string('url', 255)->comment('资源地址');
+            $table->json('info')->comment('上传信息');
+            $table->unsignedBigInteger('image_id')->default(0);
+            $table->string('image_type', 200);
             $table->timestamps();
             $table->unique('id');
+            $table->softDeletes();
         });
         DB::statement("ALTER TABLE `resources` COMMENT='资源'");
     }
