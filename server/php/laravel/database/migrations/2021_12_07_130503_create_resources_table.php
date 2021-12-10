@@ -22,8 +22,6 @@ class CreateResourcesTable extends Migration
             $table->string('depict', 100)->comment('资源别名');
             $table->string('url', 255)->comment('资源地址');
             $table->json('info')->comment('上传信息');
-            $table->unsignedBigInteger('image_id')->default(0);
-            $table->string('image_type', 200);
             $table->timestamps();
             $table->unique('id');
             $table->softDeletes();

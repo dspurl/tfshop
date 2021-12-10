@@ -6,16 +6,15 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property int type   //资源类型1图片
- * @property string depict  //资源描述
- * @property  string img    //资源地址
- * @property int image_id
- * @property string image_type
+ * @property int resource_type_id
+ * @property int resource_group_id
+ * @property string name
+ * @property string depict
+ * @property string url
+ * @property array info
  */
 class Resource extends Model
 {
-    const RESOURCE_TYPE_IMG = 1; //类型：图片
-    const RESOURCE_TYPE_VIDEO = 2; //类型：视频
 
     /**
      * Prepare a date for array / JSON serialization.
@@ -28,11 +27,35 @@ class Resource extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    /**
-     * 获取所有佣有image模型
-     */
-    public function image()
+    public function getInfoAttribute()
     {
-        return $this->morphTo();
+        if (isset($this->attributes['info'])) {
+            return json_decode($this->attributes['info']);
+        } else {
+            return [];
+        }
+    }
+
+    public function setInfoAttribute($value)
+    {
+        $this->attributes['info'] = json_encode($value);
+    }
+
+    public function create($request)
+    {
+        $Resource = new Resource;
+        $Resource->resource_type_id = $request['resource_type_id'];
+        $Resource->resource_group_id = $request['resource_group_id'];
+        $Resource->name = $request['name'];
+        $Resource->depict = '';
+        $Resource->url = $request['url'];
+        $Resource->info = $request['info'];
+        $Resource->save();
+        return $Resource;
+    }
+
+    public function ResourceType()
+    {
+        return $this->belongsTo(ResourceType::class);
     }
 }

@@ -12,11 +12,8 @@ return [
     | configuration. By default PHP's "GD Library" implementation is used.
     |
     | Supported: "gd", "imagick"
-    | specification: 图片规格，修改此处后，可通过前端的specification来决定需要生成的图片规格;
     |
     */
 
-    'driver' => 'gd',
-    'specification' => env('IMAGE_SPECIFICATION', [80, 150, 200, 250, 300, 350]),
-
+    'driver' => 'gd'
 ];

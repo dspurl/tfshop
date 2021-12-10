@@ -11,9 +11,9 @@ export default {
 	max: 99,
 	uploadParseData: function (res) {
 		return {
-			id: res.data.id,
-			fileName: res.data.fileName,
-			url: res.data.src
+			id: res.message.id,
+			fileName: res.message.fileName,
+			url: res.message.url
 		}
 	},
 	listParseData: function (res) {
@@ -37,7 +37,7 @@ export default {
 	},
 	fileProps: {
 		key: 'id',
-		fileName: 'fileName',
+		fileName: 'name',
 		url: 'url'
 	},
 	files: {

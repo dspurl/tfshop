@@ -1,25 +1,30 @@
-import scFileSelect from '@/components/scFileSelect'
+import scFileSelect from "@/components/scFileSelect";
+import infoDialog from "../info";
 export default {
-    name: 'Resource',
-    components: {
-        scFileSelect
-    },
-    data() {
-        return {
-            file: '',
-            multiple: false,
-            hideUpload: false,
-            upload: '',
-            upload2: ''
-        }
-    },
-    mounted() {
-
-    },
-    methods: {
-        submit(value){
-            console.log(value)
-            this.$message("返回值请查看F12控制台console.log()")
-        }
-    }
-}
+	name: "Resource",
+	components: {
+		scFileSelect,
+		infoDialog,
+	},
+	data() {
+		return {
+			file: "",
+			multiple: false,
+			hideUpload: false,
+			info: false,
+			upload: "",
+			upload2: "",
+		};
+	},
+	mounted() {},
+	methods: {
+		detail(item) {
+			if (item) {
+                this.info = true
+				this.$nextTick(() => {
+					this.$refs.infoDialog.setData(item);
+				});
+			}
+		},
+	},
+};

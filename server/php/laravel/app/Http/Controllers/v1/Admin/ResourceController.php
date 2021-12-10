@@ -39,28 +39,25 @@ class ResourceController extends Controller
         if ($request->name) {
             $q->where('name', 'like', '%' . $request->keyword . '%')->orWhere('depict', 'like', '%' . $request->keyword . '%');
         }
-        $paginate = $q->paginate($limit);
+        $paginate = $q->with(['ResourceType'])->paginate($limit);
         return resReturn(1, $paginate);
     }
 
     /**
      * ResourceCreate
      * 上传资源
-     * @param Request $request
      * @queryParam  name string 资源名称
      * @return string
      */
-    public function create(Request $request)
+    public function create($request)
     {
         $Resource = new Resource;
-        $Resource->type = $request->type;
-        $Resource->resource_group_id = $request->resource_group_id;
-        $Resource->name = $request->name;
-        $Resource->depict = $request->depict;
-        $Resource->url = $request->url;
-        $Resource->info = $request->info;
-        $Resource->image_id = $request->image_id;
-        $Resource->image_type = $request->image_type;
+        $Resource->resource_type_id = $request['type_id'];
+        $Resource->resource_group_id = $request['group_id'];
+        $Resource->name = $request['fileName'];
+        $Resource->depict = '';
+        $Resource->url = $request['url'];
+        $Resource->info = $request['info'];
         $Resource->save();
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.add')]));
     }

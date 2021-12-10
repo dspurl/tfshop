@@ -9,16 +9,17 @@
 						:hideUpload="hideUpload"
 						:max="99"
 						uuid="e7b26940-58c4-11ec-be8a-d951fa410f9e"
-						@submit="submit"
+						@detail="detail"
 					>
-						<template #do>
-							<el-button>自定义插槽</el-button>
-						</template>
 					</sc-file-select>
 				</el-card>
 			</el-col>
 		</el-row>
 	</el-main>
+	<el-drawer v-model="info" @closed="$emit('closed')" :size="800" custom-class="drawerBG" direction="rtl" destroy-on-close>
+		<info-dialog ref="infoDialog"></info-dialog>
+	</el-drawer>
+	
 </template>
 <style lang='scss' scoped>
 @import "./scss/index.scss";

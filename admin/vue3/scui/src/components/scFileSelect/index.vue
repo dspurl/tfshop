@@ -131,7 +131,7 @@
 			</div>
 			<div class="sc-file-select__do">
 				<slot name="do"></slot>
-				<el-button type="primary" :disabled="value.length <= 0" @click="submit">确 定</el-button>
+				<el-button v-if="isSelect" type="primary" :disabled="value.length <= 0" @click="submit">确 定</el-button>
 			</div>
 		</div>
 	</div>
@@ -149,6 +149,7 @@ export default {
 		max: { type: Number, default: config.max },
 		onlyImage: { type: Boolean, default: false },
 		maxSize: { type: Number, default: config.maxSize },
+		isSelect: { type: Boolean, default: false }
 	},
 	data() {
 		return {
@@ -239,7 +240,14 @@ export default {
 				} else {
 					this.value = itemUrl
 				}
+
 			}
+			if (this.value.length > 0) {
+				this.$emit('detail', item);
+			} else {
+				this.$emit('detail', null);
+			}
+
 		},
 		submit() {
 			const value = JSON.parse(JSON.stringify(this.value))
@@ -279,7 +287,7 @@ export default {
 		},
 		uploadSuccess(res, file) {
 			this.fileList.splice(this.fileList.findIndex(f => f.uid == file.uid), 1)
-			var response = config.uploadParseData(res);
+			const response = config.uploadParseData(res);
 			this.data.unshift({
 				[this.fileProps.key]: response.id,
 				[this.fileProps.fileName]: response.fileName,
