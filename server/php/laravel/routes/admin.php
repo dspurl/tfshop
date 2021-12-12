@@ -83,6 +83,8 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('indent/receiving', 'IndentController@receiving')->name('admin.indentReceiving')->middleware(['permissions:IndentShipment']); //延长收货时间
         Route::get('resource', 'ResourceController@list')->name('admin.resourceList')->middleware(['permissions:Resource']);    //资源列表
         Route::post('resource', 'ResourceController@create')->name('admin.resourceCreate')->middleware(['permissions:ResourceCreate']);    //上传资源
+        Route::post('resource/cover/{id}', 'ResourceController@cover')->name('admin.resourceCover')->middleware(['permissions:ResourceCover']);    //资源设置封面
+        Route::post('resource/depict/{id}', 'ResourceController@depict')->name('admin.resourceDepict')->middleware(['permissions:ResourceDepict']);    //资源设置别名
         Route::post('resource/destroy/{id}', 'ResourceController@destroy')->name('admin.resourceDestroy')->middleware(['permissions:ResourceDestroy']);    //删除资源
         Route::get('resource_group', 'ResourceGroupController@list')->name('admin.resourceGroupList')->middleware(['permissions:ResourceGroup']);    //资源分组
         Route::post('resource_group', 'ResourceGroupController@create')->name('admin.resourceGroupCreate')->middleware(['permissions:ResourceGroupCreate']);    //创建资源分组

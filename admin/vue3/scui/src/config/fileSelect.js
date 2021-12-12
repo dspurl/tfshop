@@ -12,7 +12,7 @@ export default {
 	uploadParseData: function (res) {
 		return {
 			id: res.message.id,
-			fileName: res.message.fileName,
+			fileName: res.message.name,
 			url: res.message.url
 		}
 	},

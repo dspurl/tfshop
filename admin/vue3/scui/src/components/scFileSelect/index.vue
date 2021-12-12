@@ -8,9 +8,12 @@
 -->
 
 <template>
-	<div class="sc-file-select">
-		<div class="sc-file-select__side" v-loading="menuLoading">
-			<div class="sc-file-select__side-menu">
+	<el-aside width="300px" v-loading="menuLoading">
+		<el-container>
+			<!-- <el-header>
+					<el-input :placeholder="$t('general.keywordFiltering')" v-model="menuFilterText" clearable></el-input>
+			</el-header>-->
+			<el-main style="min-height: 200px;">
 				<el-tree
 					ref="group"
 					class="menu"
@@ -30,16 +33,36 @@
 						</span>
 					</template>
 				</el-tree>
-			</div>
-			<div class="sc-file-select__side-msg" v-if="multiple">
-				已选择
-				<b>{{ value.length }}</b> /
-				<b>{{ max }}</b> 项
-			</div>
-		</div>
-		<div class="sc-file-select__files" v-loading="listLoading">
-			<div class="sc-file-select__top">
-				<div class="upload" v-if="!hideUpload">
+			</el-main>
+			<!-- <el-footer style="height:51px;">
+					<el-button
+						v-auth="['PowerCreate']"
+						type="primary"
+						size="mini"
+						icon="el-icon-plus"
+						@click="add()"
+					></el-button>
+					<el-button
+						v-auth="['PowerDestroy']"
+						type="danger"
+						size="mini"
+						plain
+						icon="el-icon-delete"
+						@click="delMenu"
+					></el-button>
+					<el-button
+						size="mini"
+						plain
+						@click="refreshMenu"
+						icon="el-icon-refresh-right"
+					>{{ $t('general.refreshMenu') }}</el-button>
+			</el-footer>-->
+		</el-container>
+	</el-aside>
+	<el-container>
+		<el-main class="sc-file-select__files" v-loading="listLoading">
+			<el-row class="sc-file-select__top">
+				<el-col class="upload" v-if="!hideUpload" :lg="18">
 					<el-upload
 						class="sc-file-select__upload"
 						action
@@ -61,8 +84,8 @@
 						</el-icon>
 						大小不超过{{ maxSize }}MB
 					</span>
-				</div>
-				<div class="keyword">
+				</el-col>
+				<el-col :lg="6" class="keyword">
 					<el-input
 						v-model="keyword"
 						prefix-icon="el-icon-search"
@@ -71,8 +94,8 @@
 						@keyup.enter="search"
 						@clear="search"
 					></el-input>
-				</div>
-			</div>
+				</el-col>
+			</el-row>
 			<div class="sc-file-select__list">
 				<el-scrollbar ref="scrollbar">
 					<el-empty v-if="fileList.length == 0 && data.length == 0" description="无数据" :image-size="80"></el-empty>
@@ -86,25 +109,70 @@
 						<p>{{ file.name }}</p>
 					</div>
 					<div
-						v-for="item in data"
+						v-for="(item,index) in data"
 						:key="item[fileProps.key]"
 						class="sc-file-select__item"
 						:class="{ active: value.includes(item[fileProps.url]) }"
 						@click="select(item)"
+						v-loading="itemLoading"
 					>
 						<div class="sc-file-select__item__file">
-							<div class="sc-file-select__item__checkbox" v-if="multiple">
-								<el-icon>
-									<el-icon-check />
+							<template v-if="isSelect">
+								<div class="sc-file-select__item__checkbox" v-if="multiple">
+									<el-icon>
+										<el-icon-check />
+									</el-icon>
+								</div>
+								<div class="sc-file-select__item__select" v-else>
+									<el-icon>
+										<el-icon-check />
+									</el-icon>
+								</div>
+								<div class="sc-file-select__item__box"></div>
+							</template>
+							<div v-else class="operation-box">
+								<el-icon class="icon" @click="view(item)">
+									<el-icon-view color="#FFFFFF" />
 								</el-icon>
+								<el-popconfirm :title="$t('general.sureDelete')" @confirm="del(item, index)">
+									<template #reference>
+										<el-icon class="icon">
+											<el-icon-delete color="#FFFFFF" />
+										</el-icon>
+									</template>
+								</el-popconfirm>
 							</div>
-							<div class="sc-file-select__item__select" v-else>
-								<el-icon>
-									<el-icon-check />
-								</el-icon>
-							</div>
-							<div class="sc-file-select__item__box"></div>
 							<el-image v-if="_isImg(item[fileProps.url])" :src="item[fileProps.url]" fit="contain" lazy></el-image>
+							<el-image
+								v-else-if="_isWord(item[fileProps.url])"
+								:src="require('@/assets/file/WORD.png')"
+								fit="scale-down"
+								lazy
+							></el-image>
+							<el-image
+								v-else-if="_isPdf(item[fileProps.url])"
+								:src="require('@/assets/file/PDF.png')"
+								fit="scale-down"
+								lazy
+							></el-image>
+							<el-image
+								v-else-if="_isExcl(item[fileProps.url])"
+								:src="require('@/assets/file/ECEL.png')"
+								fit="scale-down"
+								lazy
+							></el-image>
+							<el-image
+								v-else-if="_isTxt(item[fileProps.url])"
+								:src="require('@/assets/file/TXT.png')"
+								fit="scale-down"
+								lazy
+							></el-image>
+							<el-image
+								v-else-if="_isVideo(item[fileProps.url])"
+								:src="require('@/assets/file/VIDEO.png')"
+								fit="scale-down"
+								lazy
+							></el-image>
 							<div v-else class="item-file item-file-doc">
 								<i
 									v-if="files[_getExt(item[fileProps.url])]"
@@ -131,10 +199,15 @@
 			</div>
 			<div class="sc-file-select__do">
 				<slot name="do"></slot>
-				<el-button v-if="isSelect" type="primary" :disabled="value.length <= 0" @click="submit">确 定</el-button>
+				<el-button
+					v-if="isSelect"
+					type="primary"
+					:disabled="value.length <= 0"
+					@click="submit(item)"
+				>确 定</el-button>
 			</div>
-		</div>
-	</div>
+		</el-main>
+	</el-container>
 </template>
 
 <script>
@@ -161,10 +234,12 @@ export default {
 			menu: [],
 			menuId: '',
 			value: this.multiple ? [] : '',
+			itemData: this.multiple ? [] : {},
 			fileList: [],
 			accept: this.onlyImage ? "image/gif, image/jpeg, image/png" : "",
 			listLoading: false,
 			menuLoading: false,
+			itemLoading: false,
 			treeProps: config.menuProps,
 			fileProps: config.fileProps,
 			files: config.files
@@ -204,6 +279,7 @@ export default {
 			if (this.onlyImage) {
 				reqData.type = 'image'
 			}
+			reqData.uuid = this.uuid
 			var res = await config.listApiObj.get(reqData)
 			var parseData = config.listParseData(res)
 			this.data = parseData.rows
@@ -230,29 +306,29 @@ export default {
 			const itemUrl = item[this.fileProps.url]
 			if (this.multiple) {
 				if (this.value.includes(itemUrl)) {
-					this.value.splice(this.value.findIndex(f => f == itemUrl), 1)
+					const index = this.value.findIndex(f => f == itemUrl)
+					this.value.splice(index, 1)
+					this.itemData.splice(index, 1)
 				} else {
 					this.value.push(itemUrl)
+					this.itemData.push(item)
 				}
 			} else {
 				if (this.value.includes(itemUrl)) {
 					this.value = ''
+					this.itemData = {}
 				} else {
 					this.value = itemUrl
+					this.itemData = item
 				}
 
 			}
-			if (this.value.length > 0) {
-				this.$emit('detail', item);
-			} else {
-				this.$emit('detail', null);
-			}
-
 		},
 		submit() {
 			const value = JSON.parse(JSON.stringify(this.value))
 			this.$emit('update:modelValue', value);
 			this.$emit('submit', value);
+			this.$emit('succeed', this.itemData);
 		},
 		//上传处理
 		uploadChange(file, fileList) {
@@ -288,6 +364,7 @@ export default {
 		uploadSuccess(res, file) {
 			this.fileList.splice(this.fileList.findIndex(f => f.uid == file.uid), 1)
 			const response = config.uploadParseData(res);
+			console.log('response', response)
 			this.data.unshift({
 				[this.fileProps.key]: response.id,
 				[this.fileProps.fileName]: response.fileName,
@@ -305,27 +382,82 @@ export default {
 		},
 		//内置函数
 		_isImg(fileUrl) {
-			const imgExt = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
+			const ext = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
 			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
-			return imgExt.indexOf(fileExt) != -1
+			return ext.indexOf(fileExt) != -1
+		},
+		_isPdf(fileUrl) {
+			const ext = ['.pdf']
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
+			return ext.indexOf(fileExt) != -1
+		},
+		_isVideo(fileUrl) {
+			const ext = ['.mp4', '.rmvb', '.mkv', '.avi']
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
+			return ext.indexOf(fileExt) != -1
+		},
+		_isWord(fileUrl) {
+			const ext = ['.doc', '.docx']
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
+			return ext.indexOf(fileExt) != -1
+		},
+		_isExcl(fileUrl) {
+			const ext = ['.xls', '.xlsx']
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
+			return ext.indexOf(fileExt) != -1
+		},
+		_isTxt(fileUrl) {
+			const ext = ['.txt']
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
+			return ext.indexOf(fileExt) != -1
 		},
 		_getExt(fileUrl) {
 			return fileUrl.substring(fileUrl.lastIndexOf(".") + 1)
+		},
+		view(item) {
+			this.$emit('view', item);
+		},
+		async del(item, index) {
+			this.itemLoading = true
+			try {
+				await this.$API.resource.destroy.post(item.id);
+				this.$message.success(this.$t("general.deleteSuccessfully"));
+				this.data.splice(index, 1)
+			} finally {
+				this.itemLoading = false
+			}
 		}
 	}
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .sc-file-select {
 	display: flex;
 }
 .sc-file-select__files {
 	flex: 1;
+	background: #fff;
 }
 
 .sc-file-select__list {
 	height: 400px;
+}
+.operation-box {
+	background: rgba(0, 0, 0, 0.6);
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 2;
+	display: none;
+	align-items: center;
+	justify-content: center;
+	.icon {
+		margin: 0 5px;
+		font-size: 18px;
+	}
 }
 .sc-file-select__item {
 	display: inline-block;
@@ -333,6 +465,11 @@ export default {
 	margin: 0 15px 25px 0;
 	width: 110px;
 	cursor: pointer;
+	&:hover {
+		.operation-box {
+			display: flex;
+		}
+	}
 }
 .sc-file-select__item__file {
 	width: 110px;
@@ -476,6 +613,9 @@ export default {
 	margin-bottom: 15px;
 	display: flex;
 	justify-content: space-between;
+	.upload {
+		margin-bottom: 10px;
+	}
 }
 .sc-file-select__upload {
 	display: inline-block;

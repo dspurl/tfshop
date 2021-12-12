@@ -18,7 +18,7 @@ export default {
 	},
 	mounted() {},
 	methods: {
-		detail(item) {
+		view(item) {
 			if (item) {
                 this.info = true
 				this.$nextTick(() => {

@@ -7,8 +7,6 @@ use App\Models\v1\Resource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\v1\ResourceType;
-use function EasyWeChat\Kernel\Support\str_random;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * Resource
@@ -27,6 +25,7 @@ class ResourceController extends Controller
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
+     * @queryParam  uuid string 资源类型
      */
     public function list(Request $request)
     {
@@ -36,10 +35,15 @@ class ResourceController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
-        if ($request->name) {
+        if ($request->uuid) {
+            $ResourceType = ResourceType::where('uuid', $request->uuid)->first();
+            $q->whereIn('info->extension', $ResourceType->extension);
+        }
+        if ($request->keyword) {
             $q->where('name', 'like', '%' . $request->keyword . '%')->orWhere('depict', 'like', '%' . $request->keyword . '%');
         }
-        $paginate = $q->with(['ResourceType'])->paginate($limit);
+        $q->orderBy('id', 'DESC');
+        $paginate = $q->with(['ResourceType','Resource'])->paginate($limit);
         return resReturn(1, $paginate);
     }
 
@@ -51,7 +55,7 @@ class ResourceController extends Controller
      */
     public function create($request)
     {
-        $Resource = new Resource;
+        $Resource = new Resource();
         $Resource->resource_type_id = $request['type_id'];
         $Resource->resource_group_id = $request['group_id'];
         $Resource->name = $request['fileName'];
@@ -60,6 +64,38 @@ class ResourceController extends Controller
         $Resource->info = $request['info'];
         $Resource->save();
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.add')]));
+    }
+
+     /**
+     * ResourceCover
+     * 资源设置封面
+     * @param Request $request
+     * @queryParam  id int 资源ID
+     * @queryParam  resource_id int 关联资源ID 
+     * @return string
+     */
+    public function cover($id, Request $request)
+    {
+        $Resource = Resource::find($id);
+        $Resource->resource_id = $request->resource_id;
+        $Resource->save();
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
+    }
+
+    /**
+     * ResourceDepict
+     * 资源设置别名
+     * @param Request $request
+     * @queryParam  id int 资源ID
+     * @queryParam  resource_id int 关联资源ID 
+     * @return string
+     */
+    public function depict($id, Request $request)
+    {
+        $Resource = Resource::find($id);
+        $Resource->depict = $request->depict;
+        $Resource->save();
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 
     /**

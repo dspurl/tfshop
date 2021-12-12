@@ -38,8 +38,7 @@ class Controller extends BaseController
             'extension' => $file->extension(),
             'size' => $file->getSize(),
             'type'  => $file->getClientMimeType(),
-            'originalName' => $file->getClientOriginalName(),
-            "size" => $file->getSize()
+            'originalName' => $file->getClientOriginalName()
         ];
         if (count($ResourceType->extension) != 0 && !in_array($info['extension'], $ResourceType->extension)) {
             return resReturn(0, '文件格式有误', Code::CODE_PARAMETER_WRONG);
@@ -109,7 +108,7 @@ class Controller extends BaseController
         $data['url'] = request()->root() . '/storage/' . $pathName . $data['fileName'];
         $data['id'] = '';
         // 多规格图片处理，只有配置了资源格式规格(图片)的才处理
-        if (count($ResourceType->specification) > 0) {
+        if (count($ResourceType->specification) > 0 && in_array($ResourceType->extension, array('gif', 'jpg', 'jpeg', 'bmp', 'png'))) {
             $specification = $ResourceType->specification;
             rsort($specification);
             $realBasePath = public_path() . '/storage/';

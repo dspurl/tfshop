@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int resource_type_id
  * @property int resource_group_id
+ * @property int resource_id
  * @property string name
  * @property string depict
  * @property string url
@@ -57,5 +58,10 @@ class Resource extends Model
     public function ResourceType()
     {
         return $this->belongsTo(ResourceType::class);
+    }
+
+    public function Resource()
+    {
+        return $this->belongsTo(Resource::class);
     }
 }

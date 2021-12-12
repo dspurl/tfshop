@@ -76,6 +76,8 @@ return [
         'indentReceiving' => '延长收货时间',
         'resourceList' => '资源列表',
         'resourceCreate' => '创建资源',
+        'resourceCover' => '资源设置封面',
+        'resourceDepict' => '资源设置别名',
         'resourceDestroy' => '删除资源',
         'resourceGroupList' => '资源分组列表',
         'resourceGroupCreate' => '创建资源分组',

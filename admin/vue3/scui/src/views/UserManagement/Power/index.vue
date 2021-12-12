@@ -5,7 +5,7 @@
 				<el-header>
 					<el-input :placeholder="$t('general.keywordFiltering')" v-model="menuFilterText" clearable></el-input>
 				</el-header>
-				<el-main class="nopadding">
+				<el-main style="min-height: 200px;">
 					<el-tree
 						ref="menu"
 						class="menu"
