@@ -35,11 +35,11 @@ class SubmitResourceGroupRequest extends Request
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'name' => 'required|unique:resource_groups,name,' . $request['id'] . '|string|max:20',
+                        'name' => 'required|string|max:20',
                     ];
                 } else {
                     return [
-                        'name' => 'required|unique:resource_groups|string|max:20',
+                        'name' => 'required|string|max:20',
                     ];
                 }
             case 'GET':
@@ -53,7 +53,6 @@ class SubmitResourceGroupRequest extends Request
     {
         return [
             'name.required' => __('hint.error.not_null', ['attribute' => __('requests.resource_group.name')]),
-            'name.unique' => __('hint.error.exist', ['attribute' => __('requests.resource_group.name')]),
             'name.max' => __('hint.error.exceed', ['attribute' => __('requests.resource_group.name'), 'place' => 20]),
         ];
     }

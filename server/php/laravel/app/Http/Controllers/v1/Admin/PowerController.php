@@ -56,24 +56,24 @@ class PowerController extends Controller
     public function create(SubmitPowerRequest $request)
     {
         $sort = AuthRule::where('pid', $request->pid)->count();
-        $authRule = new AuthRule;
-        $authRule->title = $request->title;
-        $authRule->api = '';
-        $authRule->path = '';
-        $authRule->active = '';
-        $authRule->redirect_url = '';
-        $authRule->view = '';
-        $authRule->icon = '';
-        $authRule->color = '';
-        $authRule->pid = $request->pid;
-        $authRule->type = $request->type;
-        $authRule->is_hidden = AuthRule::AUTH_RULE_IS_HIDDEN_NO;
-        $authRule->is_hidden_breadcrumb = AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
-        $authRule->is_affix = AuthRule::AUTH_RULE_IS_AFFIX_NO;
-        $authRule->is_full_page = AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
-        $authRule->sort = $sort + 1;
-        $authRule->save();
-        return resReturn(1, $authRule);
+        $AuthRule = new AuthRule;
+        $AuthRule->title = $request->title;
+        $AuthRule->api = '';
+        $AuthRule->path = '';
+        $AuthRule->active = '';
+        $AuthRule->redirect_url = '';
+        $AuthRule->view = '';
+        $AuthRule->icon = '';
+        $AuthRule->color = '';
+        $AuthRule->pid = $request->pid;
+        $AuthRule->type = $request->type;
+        $AuthRule->is_hidden = AuthRule::AUTH_RULE_IS_HIDDEN_NO;
+        $AuthRule->is_hidden_breadcrumb = AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
+        $AuthRule->is_affix = AuthRule::AUTH_RULE_IS_AFFIX_NO;
+        $AuthRule->is_full_page = AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
+        $AuthRule->sort = $sort + 1;
+        $AuthRule->save();
+        return resReturn(1, $AuthRule);
     }
 
     /**
@@ -101,23 +101,23 @@ class PowerController extends Controller
      */
     public function edit($id, SubmitPowerRequest $request)
     {
-        $authRule = AuthRule::find($id);
-        $authRule->title = $request->title;
-        $authRule->api = $request->api ?? '';
-        $authRule->path = $request->path ?? '';
-        $authRule->pid = $request->pid;
-        $authRule->active = $request->active ?? '';
-        $authRule->redirect_url = $request->redirect_url ?? '';
-        $authRule->view = $request->view ?? '';
-        $authRule->icon = $request->icon ?? '';
-        $authRule->color = $request->color ?? '';
-        $authRule->type = $request->type;
-        $authRule->is_hidden = $request->is_hidden ? AuthRule::AUTH_RULE_IS_HIDDEN_YES : AuthRule::AUTH_RULE_IS_HIDDEN_NO;
-        $authRule->is_hidden_breadcrumb = $request->is_hidden_breadcrumb ? AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_YES : AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
-        $authRule->is_affix = $request->is_affixn ? AuthRule::AUTH_RULE_IS_AFFIX_YES : AuthRule::AUTH_RULE_IS_AFFIX_NO;
-        $authRule->is_full_page = $request->is_full_pagen ? AuthRule::AUTH_RULE_IS_FULL_PAGE_YES : AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
-        $authRule->sort = $request->sort;
-        $authRule->save();
+        $AuthRule = AuthRule::find($id);
+        $AuthRule->title = $request->title;
+        $AuthRule->api = $request->api ?? '';
+        $AuthRule->path = $request->path ?? '';
+        $AuthRule->pid = $request->pid;
+        $AuthRule->active = $request->active ?? '';
+        $AuthRule->redirect_url = $request->redirect_url ?? '';
+        $AuthRule->view = $request->view ?? '';
+        $AuthRule->icon = $request->icon ?? '';
+        $AuthRule->color = $request->color ?? '';
+        $AuthRule->type = $request->type;
+        $AuthRule->is_hidden = $request->is_hidden ? AuthRule::AUTH_RULE_IS_HIDDEN_YES : AuthRule::AUTH_RULE_IS_HIDDEN_NO;
+        $AuthRule->is_hidden_breadcrumb = $request->is_hidden_breadcrumb ? AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_YES : AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
+        $AuthRule->is_affix = $request->is_affixn ? AuthRule::AUTH_RULE_IS_AFFIX_YES : AuthRule::AUTH_RULE_IS_AFFIX_NO;
+        $AuthRule->is_full_page = $request->is_full_pagen ? AuthRule::AUTH_RULE_IS_FULL_PAGE_YES : AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
+        $AuthRule->sort = $request->sort;
+        $AuthRule->save();
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 

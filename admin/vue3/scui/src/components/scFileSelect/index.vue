@@ -8,33 +8,43 @@
 -->
 
 <template>
-	<el-aside width="300px" v-loading="menuLoading">
-		<el-container>
-			<!-- <el-header>
-					<el-input :placeholder="$t('general.keywordFiltering')" v-model="menuFilterText" clearable></el-input>
-			</el-header>-->
-			<el-main style="min-height: 200px;">
-				<el-tree
-					ref="group"
-					class="menu"
-					:data="menu"
-					:node-key="treeProps.key"
-					:props="treeProps"
-					:current-node-key="menu.length > 0 ? menu[0][treeProps.key] : ''"
-					highlight-current
-					@node-click="groupClick"
-				>
-					<template #default="{ node }">
-						<span class="el-tree-node__label">
-							<el-icon class="icon">
-								<el-icon-folder />
-							</el-icon>
-							{{ node.label }}
-						</span>
-					</template>
-				</el-tree>
-			</el-main>
-			<!-- <el-footer style="height:51px;">
+	<el-container>
+		<el-aside width="300px" v-loading="menuLoading">
+			<el-container>
+				<el-main style="min-height: 200px;">
+					<el-tree
+						ref="menu"
+						class="menu"
+						node-key="treeProps.key"
+						:data="menu"
+						:props="treeProps"
+						:draggable="$AUTH('PowerSort')"
+						highlight-current
+						:expand-on-click-node="false"
+						check-strictly
+						:show-checkbox="!isSelect"
+						@node-click="groupClick"
+						@node-drop="nodeDrop"
+						@node-contextmenu="openMenu"
+					>
+						<template #default="{ node, data }">
+							<span class="custom-tree-node el-tree-node__label">
+								<span class="label">
+									<el-icon class="icon">
+										<el-icon-folder />
+									</el-icon>
+									{{ node.label }}
+								</span>
+								<span class="do">
+									<el-icon v-auth="['PowerCreate']" @click.stop="add(node, data)">
+										<el-icon-plus />
+									</el-icon>
+								</span>
+							</span>
+						</template>
+					</el-tree>
+				</el-main>
+				<el-footer v-if="!isSelect" style="height:51px;">
 					<el-button
 						v-auth="['PowerCreate']"
 						type="primary"
@@ -50,170 +60,211 @@
 						icon="el-icon-delete"
 						@click="delMenu"
 					></el-button>
-					<el-button
-						size="mini"
-						plain
-						@click="refreshMenu"
-						icon="el-icon-refresh-right"
-					>{{ $t('general.refreshMenu') }}</el-button>
-			</el-footer>-->
-		</el-container>
-	</el-aside>
-	<el-container>
-		<el-main class="sc-file-select__files" v-loading="listLoading">
-			<el-row class="sc-file-select__top">
-				<el-col class="upload" v-if="!hideUpload" :lg="18">
-					<el-upload
-						class="sc-file-select__upload"
-						action
-						multiple
-						:show-file-list="false"
-						:accept="accept"
-						:on-change="uploadChange"
-						:before-upload="uploadBefore"
-						:on-progress="uploadProcess"
-						:on-success="uploadSuccess"
-						:on-error="uploadError"
-						:http-request="uploadRequest"
-					>
-						<el-button type="primary" icon="el-icon-upload">本地上传</el-button>
-					</el-upload>
-					<span class="tips">
-						<el-icon>
-							<el-icon-warning />
-						</el-icon>
-						大小不超过{{ maxSize }}MB
-					</span>
-				</el-col>
-				<el-col :lg="6" class="keyword">
-					<el-input
-						v-model="keyword"
-						prefix-icon="el-icon-search"
-						placeholder="文件名搜索"
-						clearable
-						@keyup.enter="search"
-						@clear="search"
-					></el-input>
-				</el-col>
-			</el-row>
-			<div class="sc-file-select__list">
-				<el-scrollbar ref="scrollbar">
-					<el-empty v-if="fileList.length == 0 && data.length == 0" description="无数据" :image-size="80"></el-empty>
-					<div v-for="(file, index) in fileList" :key="index" class="sc-file-select__item">
-						<div class="sc-file-select__item__file">
-							<div class="sc-file-select__item__upload">
-								<el-progress type="circle" :percentage="file.progress" :width="70"></el-progress>
+				</el-footer>
+			</el-container>
+			<sc-contextmenu ref="contextmenu" @command="handleCommand">
+				<sc-contextmenu-item command="r" title="重命名"></sc-contextmenu-item>
+			</sc-contextmenu>
+		</el-aside>
+		<el-container>
+			<el-main class="sc-file-select__files" v-loading="listLoading">
+				<el-row class="sc-file-select__top">
+					<el-col class="upload" v-if="!hideUpload" :lg="18">
+						<el-upload
+							class="sc-file-select__upload"
+							action
+							multiple
+							:show-file-list="false"
+							:accept="accept"
+							:on-change="uploadChange"
+							:before-upload="uploadBefore"
+							:on-progress="uploadProcess"
+							:on-success="uploadSuccess"
+							:on-error="uploadError"
+							:http-request="uploadRequest"
+						>
+							<el-button type="primary" icon="el-icon-upload">本地上传</el-button>
+						</el-upload>
+						<el-button
+							:type="!isOperation ? 'success' : 'info'"
+							@click="isOperation = !isOperation"
+						>{{ isOperation ? '预览' : '编辑' }}</el-button>
+						<span class="tips">
+							<el-icon>
+								<el-icon-warning />
+							</el-icon>
+							大小不超过{{ maxSize }}MB
+						</span>
+					</el-col>
+					<el-col :lg="6" class="keyword">
+						<el-input
+							v-model="keyword"
+							prefix-icon="el-icon-search"
+							placeholder="文件名搜索"
+							clearable
+							@keyup.enter="search"
+							@clear="search"
+						></el-input>
+					</el-col>
+				</el-row>
+				<div class="sc-file-select__list">
+					<el-scrollbar ref="scrollbar">
+						<el-empty v-if="fileList.length == 0 && data.length == 0" description="无数据" :image-size="80"></el-empty>
+						<div v-for="(file, index) in fileList" :key="index" class="sc-file-select__item">
+							<div class="sc-file-select__item__file">
+								<div class="sc-file-select__item__upload">
+									<el-progress type="circle" :percentage="file.progress" :width="70"></el-progress>
+								</div>
+								<el-image :src="file.tempImg" fit="contain"></el-image>
 							</div>
-							<el-image :src="file.tempImg" fit="contain"></el-image>
+							<p>{{ file.name }}</p>
 						</div>
-						<p>{{ file.name }}</p>
-					</div>
-					<div
-						v-for="(item,index) in data"
-						:key="item[fileProps.key]"
-						class="sc-file-select__item"
-						:class="{ active: value.includes(item[fileProps.url]) }"
-						@click="select(item)"
-						v-loading="itemLoading"
-					>
-						<div class="sc-file-select__item__file">
-							<template v-if="isSelect">
-								<div class="sc-file-select__item__checkbox" v-if="multiple">
-									<el-icon>
-										<el-icon-check />
-									</el-icon>
-								</div>
-								<div class="sc-file-select__item__select" v-else>
-									<el-icon>
-										<el-icon-check />
-									</el-icon>
-								</div>
-								<div class="sc-file-select__item__box"></div>
-							</template>
-							<div v-else class="operation-box">
-								<el-icon class="icon" @click="view(item)">
-									<el-icon-view color="#FFFFFF" />
-								</el-icon>
-								<el-popconfirm :title="$t('general.sureDelete')" @confirm="del(item, index)">
-									<template #reference>
-										<el-icon class="icon">
-											<el-icon-delete color="#FFFFFF" />
+						<div
+							v-for="(item,index) in data"
+							:key="item[fileProps.key]"
+							class="sc-file-select__item"
+							:class="{ active: value.includes(item[fileProps.url]) }"
+							@click="select(item)"
+							v-loading="itemLoading"
+						>
+							<div class="sc-file-select__item__file">
+								<template v-if="isSelect || isOperation">
+									<div class="sc-file-select__item__checkbox" v-if="multiple">
+										<el-icon>
+											<el-icon-check />
 										</el-icon>
-									</template>
-								</el-popconfirm>
+									</div>
+									<div class="sc-file-select__item__select" v-else>
+										<el-icon>
+											<el-icon-check />
+										</el-icon>
+									</div>
+									<div class="sc-file-select__item__box"></div>
+								</template>
+								<div v-else class="operation-box">
+									<el-icon class="icon" @click="view(item)">
+										<el-icon-view color="#FFFFFF" />
+									</el-icon>
+									<el-popconfirm :title="$t('general.sureDelete')" @confirm="del(item, index)">
+										<template #reference>
+											<el-icon class="icon">
+												<el-icon-delete color="#FFFFFF" />
+											</el-icon>
+										</template>
+									</el-popconfirm>
+								</div>
+								<el-image v-if="_isImg(item[fileProps.url])" :src="item[fileProps.url]" fit="contain" lazy></el-image>
+								<el-image
+									v-else-if="_isWord(item[fileProps.url])"
+									:src="require('@/assets/file/WORD.png')"
+									fit="scale-down"
+									lazy
+								></el-image>
+								<el-image
+									v-else-if="_isPdf(item[fileProps.url])"
+									:src="require('@/assets/file/PDF.png')"
+									fit="scale-down"
+									lazy
+								></el-image>
+								<el-image
+									v-else-if="_isExcl(item[fileProps.url])"
+									:src="require('@/assets/file/ECEL.png')"
+									fit="scale-down"
+									lazy
+								></el-image>
+								<el-image
+									v-else-if="_isTxt(item[fileProps.url])"
+									:src="require('@/assets/file/TXT.png')"
+									fit="scale-down"
+									lazy
+								></el-image>
+								<el-image
+									v-else-if="_isVideo(item[fileProps.url])"
+									:src="require('@/assets/file/VIDEO.png')"
+									fit="scale-down"
+									lazy
+								></el-image>
+								<div v-else class="item-file item-file-doc">
+									<i
+										v-if="files[_getExt(item[fileProps.url])]"
+										:class="files[_getExt(item[fileProps.url])].icon"
+										:style="{ color: files[_getExt(item[fileProps.url])].color }"
+									></i>
+									<i v-else class="sc-icon-file-list-fill" style="color: #999;"></i>
+								</div>
 							</div>
-							<el-image v-if="_isImg(item[fileProps.url])" :src="item[fileProps.url]" fit="contain" lazy></el-image>
-							<el-image
-								v-else-if="_isWord(item[fileProps.url])"
-								:src="require('@/assets/file/WORD.png')"
-								fit="scale-down"
-								lazy
-							></el-image>
-							<el-image
-								v-else-if="_isPdf(item[fileProps.url])"
-								:src="require('@/assets/file/PDF.png')"
-								fit="scale-down"
-								lazy
-							></el-image>
-							<el-image
-								v-else-if="_isExcl(item[fileProps.url])"
-								:src="require('@/assets/file/ECEL.png')"
-								fit="scale-down"
-								lazy
-							></el-image>
-							<el-image
-								v-else-if="_isTxt(item[fileProps.url])"
-								:src="require('@/assets/file/TXT.png')"
-								fit="scale-down"
-								lazy
-							></el-image>
-							<el-image
-								v-else-if="_isVideo(item[fileProps.url])"
-								:src="require('@/assets/file/VIDEO.png')"
-								fit="scale-down"
-								lazy
-							></el-image>
-							<div v-else class="item-file item-file-doc">
-								<i
-									v-if="files[_getExt(item[fileProps.url])]"
-									:class="files[_getExt(item[fileProps.url])].icon"
-									:style="{ color: files[_getExt(item[fileProps.url])].color }"
-								></i>
-								<i v-else class="sc-icon-file-list-fill" style="color: #999;"></i>
-							</div>
+							<p :title="item[fileProps.fileName]">{{ item[fileProps.fileName] }}</p>
 						</div>
-						<p :title="item[fileProps.fileName]">{{ item[fileProps.fileName] }}</p>
-					</div>
-				</el-scrollbar>
-			</div>
-			<div class="sc-file-select__pagination">
-				<el-pagination
-					small
-					background
-					layout="prev, pager, next"
-					:total="total"
-					:page-size="pageSize"
-					v-model:currentPage="currentPage"
-					@current-change="reload"
-				></el-pagination>
-			</div>
-			<div class="sc-file-select__do">
-				<slot name="do"></slot>
-				<el-button
-					v-if="isSelect"
-					type="primary"
-					:disabled="value.length <= 0"
-					@click="submit(item)"
-				>确 定</el-button>
-			</div>
-		</el-main>
+					</el-scrollbar>
+				</div>
+				<div class="sc-file-select__pagination">
+					<el-pagination
+						small
+						background
+						layout="prev, pager, next"
+						:total="total"
+						:page-size="pageSize"
+						v-model:currentPage="currentPage"
+						@current-change="reload"
+					></el-pagination>
+				</div>
+				<div class="sc-file-select__do">
+					<slot name="do"></slot>
+					<el-button
+						v-if="isSelect"
+						type="primary"
+						:disabled="value.length <= 0"
+						@click="submit(item)"
+					>确 定</el-button>
+					<template v-else>
+						<template v-if="isOperation">
+							<el-button
+								:loading="buttonLoading"
+								type="primary"
+								:disabled="value.length <= 0"
+								@click="dialogVisible = true"
+							>分组</el-button>
+							<el-popconfirm :title="$t('general.sureDelete')" @confirm="remove">
+								<template #reference>
+									<el-button :loading="buttonLoading" type="danger" :disabled="value.length <= 0">删除</el-button>
+								</template>
+							</el-popconfirm>
+						</template>
+					</template>
+				</div>
+			</el-main>
+		</el-container>
+		<el-dialog
+			title="分组"
+			v-model="dialogVisible"
+			:width="200"
+			destroy-on-close
+			:close-on-click-modal="false"
+			center
+		>
+			<el-cascader
+				v-model="groupData"
+				:options="menu"
+				:props="{ checkStrictly: true, label: 'name', value: 'id' }"
+				clearable
+			></el-cascader>
+			<template #footer>
+				<el-button @click="dialogVisible = false">取 消</el-button>
+				<el-button type="primary" @click="saveGroup()" :loading="buttonLoading">保 存</el-button>
+			</template>
+		</el-dialog>
 	</el-container>
 </template>
 
 <script>
 import config from "@/config/fileSelect"
-
+import ScContextmenu from '@/components/scContextmenu'
+import ScContextmenuItem from '@/components/scContextmenu/item'
 export default {
+	components: {
+		ScContextmenu,
+		ScContextmenuItem
+	},
 	props: {
 		modelValue: null,
 		hideUpload: { type: Boolean, default: false },
@@ -232,14 +283,19 @@ export default {
 			currentPage: 1,
 			data: [],
 			menu: [],
+			menuData: {},
 			menuId: '',
 			value: this.multiple ? [] : '',
 			itemData: this.multiple ? [] : {},
 			fileList: [],
+			groupData: [],
 			accept: this.onlyImage ? "image/gif, image/jpeg, image/png" : "",
 			listLoading: false,
 			menuLoading: false,
 			itemLoading: false,
+			isOperation: false,
+			buttonLoading: false,
+			dialogVisible: false,
 			treeProps: config.menuProps,
 			fileProps: config.fileProps,
 			files: config.files
@@ -259,11 +315,12 @@ export default {
 		//获取分类数据
 		async getMenu() {
 			this.menuLoading = true
-			var res = await config.menuApiObj.get()
+			var res = await this.$API.resourceGroup.list.get()
 			this.menu = res.message
 			this.menu.unshift({
 				name: '未分组',
-				id: 0
+				id: 0,
+				disabled: true
 			})
 			this.menuLoading = false
 		},
@@ -293,6 +350,105 @@ export default {
 			this.currentPage = 1
 			this.keyword = null
 			this.getData()
+		},
+		//树拖拽
+		nodeDrop(draggingNode, dropNode, dropType) {
+			let form = {
+				draggingNode: draggingNode.data,
+				dropNode: dropNode.data,
+				dropType: dropType,
+			};
+			this.$API.resourceGroup.sort.post(form);
+		},
+		//增加
+		async add(node, data) {
+			let newMenuData = {
+				pid: data ? data.id : 0,
+				name: "新建分组"
+			};
+			this.menuloading = true;
+			const res = await this.$API.resourceGroup.create.post(newMenuData);
+			this.menuloading = false;
+			newMenuData = res.message;
+
+			this.$refs.menu.append(newMenuData, node);
+			this.$refs.menu.setCurrentKey(newMenuData.id);
+		},
+		//右击菜单
+		openMenu(event, data) {
+			this.row = null
+			this.menuData = data
+			if (data.id !== 0) {
+				this.$refs.contextmenu.openMenu(event)
+			}
+		},
+		//右击点击菜单
+		handleCommand(command) {
+			if (command == 'r') {	//重命名
+				this.$prompt("重命名", "提示", {
+					confirmButtonText: "确定",
+					cancelButtonText: "取消",
+					inputValue: this.menuData.name
+				})
+					.then(({ value }) => {
+						this.$API.resourceGroup.edit.post(this.menuData.id, { name: value });
+						this.menuData.name = value
+						this.$message.success(this.$t("general.operateSuccessfully"));
+					})
+			}
+		},
+		//删除菜单
+		async delMenu() {
+			const CheckedNodes = this.$refs.menu.getCheckedNodes();
+			if (CheckedNodes.length == 0) {
+				this.$message.warning(this.$t("general.selectDelete"));
+				return false;
+			}
+
+			const confirm = await this.$confirm(
+				this.$t("general.confirmDeleteMenu"),
+				this.$t("general.hint"),
+				{
+					type: "warning",
+					confirmButtonText: this.$t("general.delete"),
+					confirmButtonClass: "el-button--danger",
+				}
+			).catch(() => { });
+			if (confirm != "confirm") {
+				return false;
+			}
+
+			this.menuloading = true;
+			const reqData = {
+				ids: CheckedNodes.map((item) => item.id),
+			};
+			try {
+				await this.$API.resourceGroup.destroy.post(0, reqData);
+				CheckedNodes.forEach((item) => {
+					this.$refs.menu.remove(item);
+				});
+			} finally {
+				this.menuloading = false;
+			}
+		},
+		//删除资源
+		async remove() {
+			const reqData = {
+				ids: this.itemData.map((item) => item.id),
+			};
+			this.buttonLoading = true
+			try {
+				await this.$API.resource.destroy.post(0, reqData);
+				this.$message.success(this.$t("general.deleteSuccessfully"));
+				this.getData()
+			} finally {
+				this.buttonLoading = false;
+			}
+		},
+		//分组
+		async saveGroup() {
+			console.log('itemData', this.itemData)
+			console.log('groupData', this.groupData)
 		},
 		//分页刷新表格
 		reload() {
@@ -619,6 +775,7 @@ export default {
 }
 .sc-file-select__upload {
 	display: inline-block;
+	margin-right: 10px;
 }
 .sc-file-select__top .tips {
 	font-size: 12px;
@@ -637,5 +794,37 @@ export default {
 
 .sc-file-select__do {
 	text-align: right;
+}
+.custom-tree-node {
+	display: flex;
+	flex: 1;
+	align-items: center;
+	justify-content: space-between;
+	font-size: 14px;
+	padding-right: 24px;
+	height: 100%;
+}
+.custom-tree-node .label {
+	display: flex;
+	align-items: center;
+	height: 100%;
+}
+.custom-tree-node .label .el-tag {
+	margin-left: 5px;
+}
+.custom-tree-node .do {
+	display: none;
+}
+.custom-tree-node .do i {
+	margin-left: 5px;
+	color: #999;
+	padding: 5px;
+}
+.custom-tree-node .do i:hover {
+	color: #333;
+}
+
+.custom-tree-node:hover .do {
+	display: inline-block;
 }
 </style>

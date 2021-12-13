@@ -17,8 +17,15 @@ export default {
 	edit: {
 		url: `${process.env.VUE_APP_API_URL}/resource_group`,
 		name: "保存资源分组",
+		post: async function(id,data={}){
+			return await http.post(this.url + '/' + id, data);
+		}
+	},
+	sort: {
+		url: `${process.env.VUE_APP_API_URL}/resource_group/sort/all`,
+		name: "资源分组排序",
 		post: async function(data={}){
-			return await http.post(this.url + '/' + data.id, data);
+			return await http.post(this.url, data);
 		}
 	},
     destroy: {

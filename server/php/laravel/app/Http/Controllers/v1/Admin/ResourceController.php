@@ -23,6 +23,7 @@ class ResourceController extends Controller
      * @return \Illuminate\Http\Response
      * @queryParam  keyword string 关键字
      * @queryParam  limit int 每页显示条数
+     * @queryParam  groupId int 分组ID
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
      * @queryParam  uuid string 资源类型
@@ -39,11 +40,14 @@ class ResourceController extends Controller
             $ResourceType = ResourceType::where('uuid', $request->uuid)->first();
             $q->whereIn('info->extension', $ResourceType->extension);
         }
+        if ($request->groupId) {
+            $q->where('resource_group_id', $request->groupId);
+        }
         if ($request->keyword) {
             $q->where('name', 'like', '%' . $request->keyword . '%')->orWhere('depict', 'like', '%' . $request->keyword . '%');
         }
         $q->orderBy('id', 'DESC');
-        $paginate = $q->with(['ResourceType','Resource'])->paginate($limit);
+        $paginate = $q->with(['ResourceType', 'Resource'])->paginate($limit);
         return resReturn(1, $paginate);
     }
 
@@ -66,7 +70,7 @@ class ResourceController extends Controller
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.add')]));
     }
 
-     /**
+    /**
      * ResourceCover
      * 资源设置封面
      * @param Request $request
@@ -95,6 +99,25 @@ class ResourceController extends Controller
         $Resource = Resource::find($id);
         $Resource->depict = $request->depict;
         $Resource->save();
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
+    }
+
+    /**
+     * ResourceGroup
+     * 资源设置分组
+     * @param Request $request
+     * @queryParam  id int 资源ID
+     * @queryParam  resource_id int 关联资源ID 
+     * @return string
+     */
+    public function group(Request $request)
+    {
+        if(!$request->has('resource_group_id')){
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.power.dragging_node')]), Code::CODE_WRONG);
+        }
+        if(!$request->has('resource')){
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.power.dragging_node')]), Code::CODE_WRONG);
+        }
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 

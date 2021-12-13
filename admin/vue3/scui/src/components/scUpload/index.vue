@@ -54,24 +54,38 @@
 				</slot>
 			</el-upload>
 		</div>
-		<el-dialog title="剪裁" v-model="cropperDialogVisible" :width="580" destroy-on-close>
+		<el-dialog
+			title="剪裁"
+			v-model="cropperDialogVisible"
+			:width="580"
+			destroy-on-close
+			:close-on-click-modal="false"
+		>
 			<sc-cropper :src="cropperImg" :compress="compress" :aspectRatio="aspectRatio" ref="cropper"></sc-cropper>
 			<template #footer>
 				<el-button @click="cropperDialogVisible = false">取 消</el-button>
 				<el-button type="primary" @click="cropperSave">确 定</el-button>
 			</template>
 		</el-dialog>
-		<el-dialog title="打开" v-model="fileSelectDialogVisible" :width="880" destroy-on-close>
-			<sc-file-select
-				:uuid="uuid"
-				:isSelect="true"
-				@submit="fileSelectSubmit"
-				@succeed="fileSelectSucceed"
-			>
-				<template #do>
-					<el-button @click="fileSelectDialogVisible = false">取 消</el-button>
-				</template>
-			</sc-file-select>
+		<el-dialog
+			title="打开"
+			v-model="fileSelectDialogVisible"
+			:width="880"
+			destroy-on-close
+			:close-on-click-modal="false"
+		>
+			<el-container>
+				<sc-file-select
+					:uuid="uuid"
+					:isSelect="true"
+					@submit="fileSelectSubmit"
+					@succeed="fileSelectSucceed"
+				>
+					<template #do>
+						<el-button @click="fileSelectDialogVisible = false">取 消</el-button>
+					</template>
+				</sc-file-select>
+			</el-container>
 		</el-dialog>
 		<span style="display:none!important">
 			<el-input v-model="img"></el-input>

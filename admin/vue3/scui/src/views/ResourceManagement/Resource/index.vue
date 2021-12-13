@@ -1,6 +1,5 @@
 <template>
-	<el-container>
-		<sc-file-select
+	<sc-file-select
 			v-model="file"
 			:multiple="multiple"
 			:hideUpload="hideUpload"
@@ -8,11 +7,10 @@
 			uuid="e7b26940-58c4-11ec-be8a-d951fa410f9e"
 			@view="view"
 		></sc-file-select>
-	</el-container>
 	<el-drawer
 		v-model="info"
 		@closed="$emit('closed')"
-		:size="800"
+		:size="400"
 		custom-class="drawerBG"
 		direction="rtl"
 		destroy-on-close

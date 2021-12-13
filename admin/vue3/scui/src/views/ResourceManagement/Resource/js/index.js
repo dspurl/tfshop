@@ -9,7 +9,7 @@ export default {
 	data() {
 		return {
 			file: "",
-			multiple: false,
+			multiple: true,
 			hideUpload: false,
 			info: false,
 			upload: "",

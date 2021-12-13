@@ -65,7 +65,13 @@
 				</div>
 			</el-upload>
 		</div>
-		<el-dialog title="打开" v-model="fileSelectDialogVisible" :width="880" destroy-on-close>
+		<el-dialog
+			title="打开"
+			v-model="fileSelectDialogVisible"
+			:width="880"
+			destroy-on-close
+			:close-on-click-modal="false"
+		>
 			<sc-file-select
 				:uuid="uuid"
 				:isSelect="true"

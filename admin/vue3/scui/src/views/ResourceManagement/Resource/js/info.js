@@ -2,70 +2,83 @@ import dsVideo from "@/components/dsVideo";
 export default {
 	name: "ResourceInfo",
 	components: {
-		dsVideo
+		dsVideo,
 	},
 	data() {
 		return {
 			data: {
 				info: {},
 				resource: {
-					url: ''
-				}
+					url: "",
+				},
 			},
-			loading: true
+			loading: true,
 		};
 	},
-	mounted() { },
+	mounted() {},
 	methods: {
 		//表单注入数据
 		setData(data) {
-			this.loading = true
+			this.loading = true;
 			if (!data.resource) {
-				data.resource = { url: '' }
+				data.resource = { url: "" };
 			}
 			Object.assign(this.data, data);
-			this.loading = false
+			this.loading = false;
 		},
 		//封面上传成功
 		cover(e) {
 			this.$API.resource.cover.post(this.data.id, { resource_id: e.id });
-			this.$message.success(
-				this.$t("general.operateSuccessfully")
-			);
+			this.$message.success(this.$t("general.operateSuccessfully"));
 		},
 		//封面删除
-		coverDel(){
+		coverDel() {
 			this.$API.resource.cover.post(this.data.id, { resource_id: 0 });
 		},
+		//别名
+		open() {
+			this.$prompt("请输入别名", "提示", {
+				confirmButtonText: "确定",
+				cancelButtonText: "取消",
+			})
+				.then(({ value }) => {
+					this.$API.resource.depict.post(this.data.id, { depict: value });
+					this.data.depict = value
+					this.$message.success(this.$t("general.operateSuccessfully"));
+				})
+				.catch(() => {
+					
+				});
+		},
 		_isImg(fileUrl) {
-			const ext = ['.jpg', '.jpeg', '.png', '.gif', '.bmp']
-			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
-			return ext.indexOf(fileExt) != -1
+			const ext = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."));
+			return ext.indexOf(fileExt) != -1;
 		},
 		_isPdf(fileUrl) {
-			const ext = ['.pdf']
-			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
-			return ext.indexOf(fileExt) != -1
+			const ext = [".pdf"];
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."));
+			return ext.indexOf(fileExt) != -1;
 		},
 		_isVideo(fileUrl) {
-			const ext = ['.mp4', '.rmvb', '.mkv', '.avi']
-			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
-			return ext.indexOf(fileExt) != -1
+			const ext = [".mp4", ".rmvb", ".mkv", ".avi"];
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."));
+			return ext.indexOf(fileExt) != -1;
 		},
 		_isWord(fileUrl) {
-			const ext = ['.doc', '.docx']
-			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
-			return ext.indexOf(fileExt) != -1
+			const ext = [".doc", ".docx"];
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."));
+			return ext.indexOf(fileExt) != -1;
 		},
 		_isExcl(fileUrl) {
-			const ext = ['.xls', '.xlsx']
-			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
-			return ext.indexOf(fileExt) != -1
+			const ext = [".xls", ".xlsx"];
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."));
+			return ext.indexOf(fileExt) != -1;
 		},
 		_isTxt(fileUrl) {
-			const ext = ['.txt']
-			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."))
-			return ext.indexOf(fileExt) != -1
-		}
+			const ext = [".txt"];
+			const fileExt = fileUrl.substring(fileUrl.lastIndexOf("."));
+			return ext.indexOf(fileExt) != -1;
+		},
 	},
 };
