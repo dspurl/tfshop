@@ -17,15 +17,15 @@ class CreateResourceTypesTable extends Migration
         Schema::create('resource_types', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->uuid('uuid');
-            $table->string('name', 20)->comment('资源类型名称');
-            $table->string('alias', 20)->comment('资源类型别名');
-            $table->string('icon', 80)->comment('资源类型图标');
-            $table->unsignedInteger('size')->default(0)->comment('资源类型大小');
-            $table->json('extension')->comment('资源类型后缀');
-            $table->json('specification')->comment('资源类型规格');
+            $table->string('name', 20)->comment(__('migrations.resource_type.name'));
+            $table->string('alias', 20)->comment(__('migrations.resource_type.alias'));
+            $table->string('icon', 80)->comment(__('migrations.resource_type.icon'));
+            $table->unsignedInteger('size')->default(0)->comment(__('migrations.resource_type.size'));
+            $table->json('extension')->comment(__('migrations.resource_type.extension'));
+            $table->json('specification')->comment(__('migrations.resource_type.specification'));
             $table->timestamps();
         });
-        DB::statement("ALTER TABLE `resource_types` COMMENT='资源类型'");
+        DB::statement("ALTER TABLE `resource_types` COMMENT='" . __('migrations.resource_type.table_name') . "'");
     }
 
     /**

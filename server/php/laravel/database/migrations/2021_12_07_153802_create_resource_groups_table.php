@@ -16,12 +16,12 @@ class CreateResourceGroupsTable extends Migration
     {
         Schema::create('resource_groups', function (Blueprint $table) {
             $table->smallIncrements('id');
-            $table->unsignedSmallInteger('pid')->default('0')->comment('父ID');
-            $table->string('name', 20)->comment('资源分组名称');
-            $table->unsignedTinyInteger('sort')->default('1')->comment('排序');
+            $table->unsignedSmallInteger('pid')->default('0')->comment(__('migrations.resource_group.pid'));
+            $table->string('name', 20)->comment(__('migrations.resource_group.name'));
+            $table->unsignedTinyInteger('sort')->default('1')->comment(__('migrations.resource_group.sort'));
             $table->timestamps();
         });
-        DB::statement("ALTER TABLE `resource_groups` COMMENT='资源分组'");
+        DB::statement("ALTER TABLE `resource_groups` COMMENT='" . __('migrations.resource_group.table_name') . "'");
     }
 
     /**

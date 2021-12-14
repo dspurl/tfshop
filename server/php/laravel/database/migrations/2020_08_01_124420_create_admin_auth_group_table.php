@@ -14,8 +14,8 @@ class CreateAdminAuthGroupTable extends Migration
     public function up()
     {
         Schema::create('admin_auth_group', function (Blueprint $table) {
-            $table->bigInteger('admin_id')->index()->comment('权限组ID');
-            $table->bigInteger('auth_group_id')->index()->comment('权限ID');
+            $table->bigInteger('admin_id')->index()->comment(__('migrations.admin_auth_group.admin_id'));
+            $table->bigInteger('auth_group_id')->index()->comment(__('migrations.admin_auth_group.auth_group_id'));
         });
     }
 

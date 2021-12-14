@@ -35,6 +35,10 @@ class RoleController extends Controller
         if ($request->has('keyword')) {
             $q->where('introduction', 'like', '%' . $request->keyword . '%');
         }
+        if ($request->has('sort')) {
+            $sortFormatConversion = sortFormatConversion($request->sort);
+            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
         $paginate = $q->with(['AuthRule'=>function($q){
             $q->where('type','!=',AuthRule::AUTH_RULE_TYPE_MENU);
         }])->paginate($limit);

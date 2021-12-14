@@ -12,15 +12,16 @@ use Laravel\Passport\HasApiTokens;
  * @property string name
  * @property string email
  * @property string portrait
- * @property string last_login_at
- * @property int type
+ * @property string real_name
+ * @property int state
  * @property int cellphone
+ * @property int user_id
  */
 class Admin extends Authenticatable
 {
     use HasApiTokens, Notifiable;
     const ADMIN_STATA_NORMAL = 1; //正常
-    const ADMIN_STATA_FORBID = 2; //禁止访问
+    const ADMIN_STATA_FORBID = 2; //禁止
 
     /**
      * Prepare a date for array / JSON serialization.

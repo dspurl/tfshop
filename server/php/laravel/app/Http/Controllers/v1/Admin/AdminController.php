@@ -7,7 +7,6 @@ use App\Http\Requests\v1\SubmitAdminRequest;
 use App\Models\v1\Admin;
 use App\Models\v1\AdminLog;
 use App\Models\v1\AuthGroup;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
@@ -55,25 +54,28 @@ class AdminController extends Controller
      * AdminCreate
      * 创建管理员
      * @param SubmitAdminRequest $request
-     * @queryParam  name string 管理员账号
-     * @queryParam  email string 邮箱地址
-     * @queryParam  cellphone int 手机号
-     * @queryParam  portrait string 头像地址
-     * @queryParam  password string 密码
+     * @queryParam  user_id int __('migrations.admin.user_id')
+     * @queryParam  name string __('migrations.admin.name')
+     * @queryParam  real_name string __('migrations.admin.real_name')
+     * @queryParam  email string __('migrations.admin.email')
+     * @queryParam  cellphone int __('migrations.admin.cellphone')
+     * @queryParam  password string __('migrations.admin.password')
+     * @queryParam  portrait int __('migrations.admin.portrait')
+     * @queryParam  state int __('migrations.admin.state')
      * @return string
      */
     public function create(SubmitAdminRequest $request)
     {
         $Admin = new Admin;
         $Admin->name = $request->name;
+        $Admin->real_name = $request->real_name;
         $Admin->email = $request->email;
         $Admin->cellphone = $request->cellphone;
         $Admin->portrait = imgPathShift('portrait', $request->portrait);
-        $Admin->last_login_at = Carbon::now()->toDateTimeString();
         $Admin->password = bcrypt($request->password);
+        $Admin->state = $request->state;
         $Admin->save();
         return resReturn(1, '添加成功');
-
     }
 
     /**

@@ -16,18 +16,18 @@ class CreateResourcesTable extends Migration
     {
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
-            $table->unsignedTinyInteger('resource_type_id')->default(0)->comment('资源类型ID');
-            $table->unsignedTinyInteger('resource_group_id')->default(0)->comment('资源分组ID');
-            $table->unsignedBidInteger('resource_id')->default(0)->comment('关联资源ID');
-            $table->string('name', 30)->comment('资源名称');
-            $table->string('depict', 100)->comment('资源别名');
-            $table->string('url', 255)->comment('资源地址');
-            $table->json('info')->comment('上传信息');
+            $table->unsignedTinyInteger('resource_type_id')->default(0)->comment(__('migrations.resource.resource_type_id'));
+            $table->unsignedTinyInteger('resource_group_id')->default(0)->comment(__('migrations.resource.resource_group_id'));
+            $table->unsignedBigInteger('resource_id')->default(0)->comment(__('migrations.resource.resource_id'));
+            $table->string('name', 30)->comment(__('migrations.resource.name'));
+            $table->string('depict', 100)->comment(__('migrations.resource.depict'));
+            $table->string('url', 255)->comment(__('migrations.resource.url'));
+            $table->json('info')->comment(__('migrations.resource.info'));
             $table->timestamps();
             $table->unique('id');
             $table->softDeletes();
         });
-        DB::statement("ALTER TABLE `resources` COMMENT='资源'");
+        DB::statement("ALTER TABLE `resources` COMMENT='" . __('migrations.resource.table_name') . "'");
     }
 
     /**

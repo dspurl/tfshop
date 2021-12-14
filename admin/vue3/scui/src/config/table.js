@@ -18,7 +18,7 @@ export default {
 		page: 'page',					//规定当前分页字段
 		pageSize: 'limit',			//规定一页条数字段
 		prop: 'prop',					//规定排序字段名字段
-		order: 'order'					//规定排序规格字段
+		order: 'sort'					//规定排序规格字段
 	},
 	/**
 	 * 自定义列保存处理

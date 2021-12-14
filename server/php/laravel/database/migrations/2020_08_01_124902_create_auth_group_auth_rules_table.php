@@ -18,7 +18,6 @@ class CreateAuthGroupAuthRulesTable extends Migration
             $table->bigInteger('auth_group_id')->index();
             $table->bigInteger('auth_rule_id');
         });
-        DB::statement("ALTER TABLE `auth_group_auth_rules` COMMENT='权限组-权限关联表'");
     }
 
     /**
