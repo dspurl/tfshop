@@ -28,6 +28,10 @@ return [
     'auth_group_auth_rule' => [
         'ids'                       => 'Authorization ID'
     ],
+    'resource' => [
+        'resource_group_id'         => 'Resource Group ID',
+        'ids'                       => 'Resource ID',
+    ],
     'resource_group' => [
         'name'                      => 'Resource Group Name',
     ],

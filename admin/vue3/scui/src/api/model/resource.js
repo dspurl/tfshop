@@ -28,6 +28,13 @@ export default {
 			return await http.post(this.url + '/' + id, data);
 		}
 	},
+	group: {
+		url: `${process.env.VUE_APP_API_URL}/resource/group`,
+		name: "资源设置分组",
+		post: async function (data = {}) {
+			return await http.post(this.url, data);
+		}
+	},
 	destroy: {
 		url: `${process.env.VUE_APP_API_URL}/resource/destroy`,
 		name: "删除资源",

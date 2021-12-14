@@ -40,8 +40,10 @@ class ResourceController extends Controller
             $ResourceType = ResourceType::where('uuid', $request->uuid)->first();
             $q->whereIn('info->extension', $ResourceType->extension);
         }
-        if ($request->groupId) {
-            $q->where('resource_group_id', $request->groupId);
+        if ($request->has('groupId')) {
+            if ($request->groupId != -1) {
+                $q->where('resource_group_id', $request->groupId);
+            }
         }
         if ($request->keyword) {
             $q->where('name', 'like', '%' . $request->keyword . '%')->orWhere('depict', 'like', '%' . $request->keyword . '%');
@@ -112,12 +114,13 @@ class ResourceController extends Controller
      */
     public function group(Request $request)
     {
-        if(!$request->has('resource_group_id')){
-            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.power.dragging_node')]), Code::CODE_WRONG);
+        if (!$request->has('resource_group_id')) {
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.resource.resource_group_id')]), Code::CODE_WRONG);
         }
-        if(!$request->has('resource')){
-            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.power.dragging_node')]), Code::CODE_WRONG);
+        if (!$request->has('ids')) {
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.resource.ids')]), Code::CODE_WRONG);
         }
+        Resource::whereIn('id', $request->ids)->update(['resource_group_id' => $request->resource_group_id]);
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 

@@ -28,6 +28,10 @@ return [
     'auth_group_auth_rule' => [
         'ids'                       => '权限ID'
     ],
+    'resource' => [
+        'resource_group_id'         => '资源分组ID',
+        'ids'                       => '资源ID',
+    ],
     'resource_group' => [
         'name'                      => '资源分组名称',
     ],

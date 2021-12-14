@@ -37,18 +37,25 @@ export default {
 		},
 		//别名
 		open() {
-			this.$prompt("请输入别名", "提示", {
-				confirmButtonText: "确定",
-				cancelButtonText: "取消",
-			})
+			this.$prompt(
+				this.$t("general.pleaseInput") +
+					this.$t("resource.form.depict.name"),
+				this.$t("general.hint"),
+				{
+					confirmButtonText: this.$t("general.confirm"),
+					cancelButtonText: this.$t("general.cancel"),
+				}
+			)
 				.then(({ value }) => {
-					this.$API.resource.depict.post(this.data.id, { depict: value });
-					this.data.depict = value
-					this.$message.success(this.$t("general.operateSuccessfully"));
+					this.$API.resource.depict.post(this.data.id, {
+						depict: value,
+					});
+					this.data.depict = value;
+					this.$message.success(
+						this.$t("general.operateSuccessfully")
+					);
 				})
-				.catch(() => {
-					
-				});
+				.catch(() => {});
 		},
 		_isImg(fileUrl) {
 			const ext = [".jpg", ".jpeg", ".png", ".gif", ".bmp"];

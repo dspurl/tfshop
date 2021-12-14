@@ -7,7 +7,7 @@ export default {
 	menuApiObj: API.resourceGroup.list,
 	listApiObj: API.resource.list,
 	successCode: 200,
-	maxSize: 30,
+	maxSize: 20,
 	max: 99,
 	uploadParseData: function (res) {
 		return {

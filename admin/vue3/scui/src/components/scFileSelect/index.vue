@@ -5,11 +5,12 @@
  * @Date: 2021年10月11日16:01:40
  * @LastEditors:
  * @LastEditTime:
+ * 结合dsshop已做修改，以dsshop文档为准
 -->
 
 <template>
 	<el-container>
-		<el-aside width="300px" v-loading="menuLoading">
+		<el-aside width="300px" v-if="$AUTH('ResourceGroup')" v-loading="menuLoading">
 			<el-container>
 				<el-main style="min-height: 200px;">
 					<el-tree
@@ -18,7 +19,7 @@
 						node-key="treeProps.key"
 						:data="menu"
 						:props="treeProps"
-						:draggable="$AUTH('PowerSort')"
+						:draggable="$AUTH('ResourceGroupSort')"
 						highlight-current
 						:expand-on-click-node="false"
 						check-strictly
@@ -36,7 +37,7 @@
 									{{ node.label }}
 								</span>
 								<span class="do">
-									<el-icon v-auth="['PowerCreate']" @click.stop="add(node, data)">
+									<el-icon v-auth="['ResourceGroupCreate']" @click.stop="add(node, data)">
 										<el-icon-plus />
 									</el-icon>
 								</span>
@@ -46,24 +47,25 @@
 				</el-main>
 				<el-footer v-if="!isSelect" style="height:51px;">
 					<el-button
-						v-auth="['PowerCreate']"
+						v-auth="['ResourceGroupCreate']"
 						type="primary"
 						size="mini"
 						icon="el-icon-plus"
 						@click="add()"
 					></el-button>
 					<el-button
-						v-auth="['PowerDestroy']"
+						v-auth="['ResourceGroupDestroy']"
 						type="danger"
 						size="mini"
 						plain
 						icon="el-icon-delete"
 						@click="delMenu"
 					></el-button>
+					<el-button @click="allClick">{{ $t('file_select.allResources') }}</el-button>
 				</el-footer>
 			</el-container>
 			<sc-contextmenu ref="contextmenu" @command="handleCommand">
-				<sc-contextmenu-item command="r" title="重命名"></sc-contextmenu-item>
+				<sc-contextmenu-item command="r" :title="$t('general.rename')"></sc-contextmenu-item>
 			</sc-contextmenu>
 		</el-aside>
 		<el-container>
@@ -83,24 +85,29 @@
 							:on-error="uploadError"
 							:http-request="uploadRequest"
 						>
-							<el-button type="primary" icon="el-icon-upload">本地上传</el-button>
+							<el-button
+								v-auth="['ResourceCreate']"
+								type="primary"
+								icon="el-icon-upload"
+							>{{ $t('file_select.localUpload') }}</el-button>
 						</el-upload>
 						<el-button
+							v-auth="['ResourceGroups', 'ResourceDestroy']"
 							:type="!isOperation ? 'success' : 'info'"
 							@click="isOperation = !isOperation"
-						>{{ isOperation ? '预览' : '编辑' }}</el-button>
+						>{{ isOperation ? $t('general.preview') : $t('general.edit') }}</el-button>
 						<span class="tips">
 							<el-icon>
 								<el-icon-warning />
 							</el-icon>
-							大小不超过{{ maxSize }}MB
+							{{ $t('file_select.most') }}{{ maxSize }}MB
 						</span>
 					</el-col>
 					<el-col :lg="6" class="keyword">
 						<el-input
 							v-model="keyword"
 							prefix-icon="el-icon-search"
-							placeholder="文件名搜索"
+							:placeholder="$t('file_select.search')"
 							clearable
 							@keyup.enter="search"
 							@clear="search"
@@ -109,7 +116,11 @@
 				</el-row>
 				<div class="sc-file-select__list">
 					<el-scrollbar ref="scrollbar">
-						<el-empty v-if="fileList.length == 0 && data.length == 0" description="无数据" :image-size="80"></el-empty>
+						<el-empty
+							v-if="fileList.length == 0 && data.length == 0"
+							:description="$t('general.noData')"
+							:image-size="80"
+						></el-empty>
 						<div v-for="(file, index) in fileList" :key="index" class="sc-file-select__item">
 							<div class="sc-file-select__item__file">
 								<div class="sc-file-select__item__upload">
@@ -148,7 +159,7 @@
 									<el-popconfirm :title="$t('general.sureDelete')" @confirm="del(item, index)">
 										<template #reference>
 											<el-icon class="icon">
-												<el-icon-delete color="#FFFFFF" />
+												<el-icon-delete v-auth="['ResourceDestroy']" color="#FFFFFF" />
 											</el-icon>
 										</template>
 									</el-popconfirm>
@@ -215,18 +226,24 @@
 						type="primary"
 						:disabled="value.length <= 0"
 						@click="submit(item)"
-					>确 定</el-button>
+					>{{ $t('general.confirm') }}</el-button>
 					<template v-else>
 						<template v-if="isOperation">
 							<el-button
+								v-auth="['ResourceGroups']"
 								:loading="buttonLoading"
 								type="primary"
 								:disabled="value.length <= 0"
 								@click="dialogVisible = true"
-							>分组</el-button>
+							>{{ $t('file_select.group') }}</el-button>
 							<el-popconfirm :title="$t('general.sureDelete')" @confirm="remove">
 								<template #reference>
-									<el-button :loading="buttonLoading" type="danger" :disabled="value.length <= 0">删除</el-button>
+									<el-button
+										v-auth="['ResourceDestroy']"
+										:loading="buttonLoading"
+										type="danger"
+										:disabled="value.length <= 0"
+									>{{ $t('general.delete') }}</el-button>
 								</template>
 							</el-popconfirm>
 						</template>
@@ -235,7 +252,7 @@
 			</el-main>
 		</el-container>
 		<el-dialog
-			title="分组"
+			:title="$t('file_select.group')"
 			v-model="dialogVisible"
 			:width="200"
 			destroy-on-close
@@ -249,8 +266,8 @@
 				clearable
 			></el-cascader>
 			<template #footer>
-				<el-button @click="dialogVisible = false">取 消</el-button>
-				<el-button type="primary" @click="saveGroup()" :loading="buttonLoading">保 存</el-button>
+				<el-button @click="dialogVisible = false">{{ $t('general.cancel') }}</el-button>
+				<el-button type="primary" @click="saveGroup()" :loading="buttonLoading">{{ $t('general.save') }}</el-button>
 			</template>
 		</el-dialog>
 	</el-container>
@@ -284,7 +301,7 @@ export default {
 			data: [],
 			menu: [],
 			menuData: {},
-			menuId: '',
+			menuId: -1,
 			value: this.multiple ? [] : '',
 			itemData: this.multiple ? [] : {},
 			fileList: [],
@@ -318,7 +335,7 @@ export default {
 			var res = await this.$API.resourceGroup.list.get()
 			this.menu = res.message
 			this.menu.unshift({
-				name: '未分组',
+				name: this.$t('file_select.noGroup'),
 				id: 0,
 				disabled: true
 			})
@@ -344,6 +361,13 @@ export default {
 			this.listLoading = false
 			this.$refs.scrollbar.setScrollTop(0)
 		},
+		//所有资源
+		allClick() {
+			this.menuId = -1
+			this.currentPage = 1
+			this.keyword = null
+			this.getData()
+		},
 		//树点击事件
 		groupClick(data) {
 			this.menuId = data.id
@@ -364,7 +388,7 @@ export default {
 		async add(node, data) {
 			let newMenuData = {
 				pid: data ? data.id : 0,
-				name: "新建分组"
+				name: this.$t('file_select.newGrouping')
 			};
 			this.menuloading = true;
 			const res = await this.$API.resourceGroup.create.post(newMenuData);
@@ -378,16 +402,16 @@ export default {
 		openMenu(event, data) {
 			this.row = null
 			this.menuData = data
-			if (data.id !== 0) {
+			if (data.id !== 0 && this.$AUTH('ResourceGroupEdit')) {
 				this.$refs.contextmenu.openMenu(event)
 			}
 		},
 		//右击点击菜单
 		handleCommand(command) {
 			if (command == 'r') {	//重命名
-				this.$prompt("重命名", "提示", {
-					confirmButtonText: "确定",
-					cancelButtonText: "取消",
+				this.$prompt(this.$t('general.rename'), this.$t('general.hint'), {
+					confirmButtonText: this.$t('general.confirm'),
+					cancelButtonText: this.$t('general.cancel'),
 					inputValue: this.menuData.name
 				})
 					.then(({ value }) => {
@@ -440,6 +464,8 @@ export default {
 			try {
 				await this.$API.resource.destroy.post(0, reqData);
 				this.$message.success(this.$t("general.deleteSuccessfully"));
+				this.value = []
+				this.itemData = []
 				this.getData()
 			} finally {
 				this.buttonLoading = false;
@@ -447,8 +473,21 @@ export default {
 		},
 		//分组
 		async saveGroup() {
-			console.log('itemData', this.itemData)
-			console.log('groupData', this.groupData)
+			const reqData = {
+				ids: this.itemData.map((item) => item.id),
+				resource_group_id: this.groupData[this.groupData.length - 1]
+			};
+			this.buttonLoading = true
+			try {
+				await this.$API.resource.group.post(reqData);
+				this.dialogVisible = false
+				this.$message.success(this.$t("general.operateSuccessfully"));
+				this.value = []
+				this.itemData = []
+				this.getData()
+			} finally {
+				this.buttonLoading = false;
+			}
 		},
 		//分页刷新表格
 		reload() {
@@ -494,7 +533,7 @@ export default {
 		uploadBefore(file) {
 			const maxSize = file.size / 1024 / 1024 < this.maxSize;
 			if (!maxSize) {
-				this.$message.warning(`上传文件大小不能超过 ${this.maxSize}MB!`);
+				this.$message.warning(`${this.$t('file_select.most')} ${this.maxSize}MB!`);
 				return false;
 			}
 		},
@@ -532,7 +571,7 @@ export default {
 		},
 		uploadError(err) {
 			this.$notify.error({
-				title: '上传文件错误',
+				title: this.$t('file_select.error'),
 				message: err
 			})
 		},

@@ -85,10 +85,12 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('resource', 'ResourceController@create')->name('admin.resourceCreate')->middleware(['permissions:ResourceCreate']);    //上传资源
         Route::post('resource/cover/{id}', 'ResourceController@cover')->name('admin.resourceCover')->middleware(['permissions:ResourceCover']);    //资源设置封面
         Route::post('resource/depict/{id}', 'ResourceController@depict')->name('admin.resourceDepict')->middleware(['permissions:ResourceDepict']);    //资源设置别名
+        Route::post('resource/group', 'ResourceController@group')->name('admin.resourceGroups')->middleware(['permissions:ResourceGroups']);    //资源设置分组
         Route::post('resource/destroy/{id}', 'ResourceController@destroy')->name('admin.resourceDestroy')->middleware(['permissions:ResourceDestroy']);    //删除资源
         Route::get('resource_group', 'ResourceGroupController@list')->name('admin.resourceGroupList')->middleware(['permissions:ResourceGroup']);    //资源分组
         Route::post('resource_group', 'ResourceGroupController@create')->name('admin.resourceGroupCreate')->middleware(['permissions:ResourceGroupCreate']);    //创建资源分组
         Route::post('resource_group/{id}', 'ResourceGroupController@edit')->name('admin.resourceGroupEdit')->middleware(['permissions:ResourceGroupEdit']);    //保存资源分组
+        Route::post('resource_group/sort/all', 'ResourceGroupController@sort')->name('admin.resourceGroupSort')->middleware(['permissions:ResourceGroupSort']);  //资源分组排序        
         Route::post('resource_group/destroy/{id}', 'ResourceGroupController@destroy')->name('admin.resourceGroupDestroy')->middleware(['permissions:ResourceGroupDestroy']);    //删除资源分组
         Route::get('resource_type', 'ResourceTypeController@list')->name('admin.resourceType')->middleware(['permissions:ResourceType']);    //资源类型
         Route::post('resource_type', 'ResourceTypeController@create')->name('admin.resourceTypeCreate')->middleware(['permissions:ResourceTypeCreate']);    //创建资源类型

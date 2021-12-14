@@ -67,12 +67,12 @@ class ResourceGroupController extends Controller
     /**
      * ResourceGroupSort
      * 资源分组排序
-     * @param SubmitResourceGroupRequest $request
+     * @param Request $request
      * @queryParam  id int 资源分组ID
      * @queryParam  name string 资源分组名称
      * @return string
      */
-    public function sort(SubmitResourceGroupRequest $request)
+    public function sort(Request $request)
     {
         if (!$request->has('draggingNode')) {
             throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.power.dragging_node')]), Code::CODE_WRONG);
@@ -113,6 +113,7 @@ class ResourceGroupController extends Controller
                 }
             }
         }, 5);
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.sort')]));
     }
 
     /**

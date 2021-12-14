@@ -8,6 +8,7 @@
 			@view="view"
 		></sc-file-select>
 	<el-drawer
+		v-auth="['ResourceView']"
 		v-model="info"
 		@closed="$emit('closed')"
 		:size="400"
