@@ -36,7 +36,6 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->configureRateLimiting();
-
         $this->mapAdminRoutes();
         $this->mapAppRoutes();
         $this->mapPluginRoutes();

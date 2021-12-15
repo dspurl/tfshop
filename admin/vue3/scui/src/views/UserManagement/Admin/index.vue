@@ -69,21 +69,6 @@
 			</scTable>
 		</el-main>
 	</el-container>
-
-	<save-dialog
-		v-if="dialog.save"
-		ref="saveDialog"
-		@success="handleSaveSuccess"
-		@closed="dialog.save = false"
-		:close-on-click-modal="false"
-	></save-dialog>
-
-	<permission-dialog
-		v-if="dialog.permission"
-		ref="permissionDialog"
-		@closed="dialog.permission = false"
-		:close-on-click-modal="false"
-	></permission-dialog>
 </template>
 <style lang='scss' scoped>
 @import "./scss/index.scss";

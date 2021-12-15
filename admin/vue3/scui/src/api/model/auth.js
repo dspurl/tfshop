@@ -7,6 +7,13 @@ export default {
 			return await http.post(this.url, data);
 		}
 	},
+	logout: {
+		url: `${process.env.VUE_APP_API_URL}/logout`,
+		name: "登出",
+		post: async function(data={}){
+			return await http.post(this.url, data);
+		}
+	},
 	refreshToken: {
 		url: `${process.env.VUE_APP_API_URL}/refreshToken`,
 		name: "token刷新",

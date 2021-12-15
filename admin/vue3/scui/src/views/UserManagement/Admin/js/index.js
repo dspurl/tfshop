@@ -1,11 +1,7 @@
-import saveDialog from "../save";
-import permissionDialog from "../permission";
 
 export default {
 	name: "Role",
 	components: {
-		saveDialog,
-		permissionDialog,
 	},
 	data() {
 		return {

@@ -26,8 +26,8 @@ class LoginController extends Controller
         if (!Hash::check($request->password, $admin->password)) {
             return resReturn(0, __('hint.error.mistake', ['attribute' => __('requests.user.password')]), Code::CODE_WRONG);
         }
-        $admin->last_login_at = Carbon::now()->toDateTimeString();
-        $admin->save();
+        // $admin->last_login_at = Carbon::now()->toDateTimeString();
+        // $admin->save();
         $access_token = '';
         if ($request->type == 1) {  //首次登录获取token
             $client = new Client();
@@ -155,5 +155,23 @@ class LoginController extends Controller
         }
         $data['menu'] = genTree($data['menu'], 'pid');
         return resReturn(1, $data);
+    }
+
+    /**
+     * 登出
+     * Logout
+     * @param Request $request
+     * @return string
+     */
+    public function logout(Request $request)
+    {
+        $log = new AdminLog();
+        $log->admin_id = auth('api')->user()->id;
+        $log->path = $request->path();
+        $log->method = $request->method();
+        $log->ip = $request->ip();
+        $log->input = json_encode($request->all(), JSON_UNESCAPED_UNICODE);
+        $log->save();
+        return resReturn(1, 'ok');
     }
 }

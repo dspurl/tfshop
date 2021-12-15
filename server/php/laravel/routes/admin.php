@@ -19,6 +19,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('plugin/download/{name}', 'PluginController@download')->name('admin.plugInDownload');    //插件下载
     });
     Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {
+        Route::post('logout', 'LoginController@logout')->name('admin.logout');  //登出
         Route::post('resourceUpload', 'IndexController@resourceUpload')->name('admin.resourceUpload');  //上传
         Route::get('userInfo', 'LoginController@userInfo')->name('admin.userInfo');  //用户详情
         Route::get('index', 'IndexController@index')->name('admin.index');  //首页

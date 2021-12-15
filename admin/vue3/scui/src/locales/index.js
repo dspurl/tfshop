@@ -7,7 +7,7 @@ import zh_cn from './lang/zh-cn.js'
 import en from './lang/en.js'
 
 const messages = {
-	'zh-cn': {
+	'cn': {
 		el: el_zh_cn,
 		...zh_cn
 	},
@@ -19,7 +19,7 @@ const messages = {
 
 const i18n = createI18n({
 	locale: tool.data.get("APP_LANG") || process.env.VUE_APP_LANG,
-	fallbackLocale: 'zh-cn',
+	fallbackLocale: 'cn',
 	globalInjection: true,
 	messages,
 })

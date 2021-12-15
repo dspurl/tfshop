@@ -50,6 +50,20 @@ export default {
 			},
 		},
 	},
+	request: {
+		error: '请求错误',
+		unknownError: '未知错误',
+		noResponse: '无响应',
+		reLogin: {
+			title: '确定登出',
+			info: '长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录',
+			confirmButtonText: '重新登录',
+			cancelButtonText: '取消'
+
+		},
+		404: '正在请求不存在的服务器记录！',
+		500: '服务器发生错误！',
+	},
 	login: {
 		slogan: "高性能 / 精致 / 优雅",
 		describe: "基于Vue3 + Element-Plus 的中后台前端解决方案。",

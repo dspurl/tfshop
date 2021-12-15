@@ -51,6 +51,20 @@ export default {
 			},
 		},
 	},
+	request: {
+		error: 'Request error',
+		unknownError: 'Unknown error',
+		noResponse: 'no response',
+		reLogin: {
+			title: 'Confirm quit',
+			info: 'Long time no operation, you have been logged out, you can cancel to continue to stay in the page, or log in again',
+			confirmButtonText: 'Re Login',
+			cancelButtonText: 'Cancel'
+
+		},
+		404: 'Requesting a nonexistent server record!',
+		500: 'Server error!',
+	},
 	login: {
 		slogan: "High performance / delicate / grace",
 		describe:

@@ -10,6 +10,7 @@ return [
     */
     'admin' => [
         'login' => '登录',
+        'logout' => '登出',
         'resourceUpload' => '上传',
         'refreshToken' => '刷新token',
         'plugInDownload' => '插件下载',

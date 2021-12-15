@@ -7,7 +7,7 @@
 		</el-form-item>
 		<el-form-item :label="$t('user.language')">
 			<el-select v-model="lang">
-				<el-option label="简体中文" value="zh-cn"></el-option>
+				<el-option label="简体中文" value="cn"></el-option>
 				<el-option label="English" value="en"></el-option>
 				<!-- <el-option label="日本語" value="ja"></el-option> -->
 			</el-select>

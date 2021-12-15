@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import { removeToken } from '@/utils/auth'
 	export default {
 		data(){
 			return {
@@ -128,7 +129,21 @@
 						type: 'warning',
 						confirmButtonText: '退出',
 						confirmButtonClass: 'el-button--danger'
-					}).then(() => {
+					}).then(async () => {
+						await this.$API.auth.logout.post()
+						this.$TOOL.data.remove("TOKEN")
+						this.$TOOL.data.remove("USER_INFO")
+						this.$TOOL.data.remove("MENU")
+						this.$TOOL.data.remove("PERMISSIONS")
+						this.$TOOL.data.remove("APP_LANG")
+						this.$TOOL.data.remove("grid")
+						this.$store.commit("clearViewTags")
+						this.$store.commit("clearKeepLive")
+						this.$store.commit("clearIframeList")
+						removeToken('access_token')
+						removeToken('expires_in')
+						removeToken('refresh_token')
+						removeToken('token_type')
 						this.$router.replace({path: '/login'});
 					}).catch(() => {
 						//取消退出
