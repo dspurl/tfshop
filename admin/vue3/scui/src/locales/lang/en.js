@@ -54,7 +54,7 @@ export default {
 	request: {
 		error: 'Request error',
 		unknownError: 'Unknown error',
-		noResponse: 'no response',
+		noResponse: 'Request server is not responding!',
 		reLogin: {
 			title: 'Confirm quit',
 			info: 'Long time no operation, you have been logged out, you can cancel to continue to stay in the page, or log in again',

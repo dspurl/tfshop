@@ -7,6 +7,7 @@ import systemRouter from './systemRouter';
 import userRoutes from '@/config/route';
 import {beforeEach, afterEach} from './scrollBehavior';
 import { getToken, setToken } from '@/utils/auth'
+import i18n from "@/locales";
 import api from '@/api'
 
 //系统路由
@@ -48,16 +49,20 @@ router.beforeEach(async (to, from, next) => {
 				setToken('token_type', refreshToken.message.token_type)
 			} catch (error) {
 				ElMessageBox.confirm(
-					'长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录',
-					'确定登出',
+					i18n.global.tc("request.reLogin.info"),
+					i18n.global.tc("request.reLogin.title"),
 					{
-						confirmButtonText: '重新登录',
-						cancelButtonText: '取消',
+						confirmButtonText: i18n.global.tc(
+							"request.reLogin.confirmButtonText"
+						),
+						cancelButtonText: i18n.global.tc(
+							"request.reLogin.cancelButtonText"
+						),
 						type: 'warning',
 					}
 				)
 				.then(() => {
-					router.replace({path: '/login'});
+					router.go(0);
 				})
 				return false
 			}
@@ -72,11 +77,9 @@ router.beforeEach(async (to, from, next) => {
 		next();
 		return false;
 	}
-
+	
 	if(!token){
-		next({
-			path: '/login'
-		});
+		next(`/login?redirect=${to.path}`)
 		return false;
 	}
 

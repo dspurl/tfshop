@@ -23,7 +23,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('resourceUpload', 'IndexController@resourceUpload')->name('admin.resourceUpload');  //上传
         Route::get('userInfo', 'LoginController@userInfo')->name('admin.userInfo');  //用户详情
         Route::get('index', 'IndexController@index')->name('admin.index');  //首页
-        Route::get('admin', 'AdminController@list')->name('admin.adminList')->middleware(['permissions:AdminList']);  //管理员列表
+        Route::get('admin', 'AdminController@list')->name('admin.adminList')->middleware(['permissions:Admin']);  //管理员列表
         Route::post('admin', 'AdminController@create')->name('admin.adminCreate')->middleware(['permissions:AdminCreate']);  //创建管理员
         Route::post('admin/{id}', 'AdminController@edit')->name('admin.adminEdit')->middleware(['permissions:AdminEdit']);  //保存管理员
         Route::post('admin/password/all', 'AdminController@password')->name('admin.adminPassword')->middleware(['permissions:AdminPassword']);  //管理员重置密码

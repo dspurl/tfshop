@@ -32,9 +32,9 @@
 				:apiObj="apiObj"
 				:params="params"
 				:column="column"
-				:stripe=true
-				:remoteSort=true
-				:highlightCurrentRow=true
+				stripe
+				remoteSort
+				highlightCurrentRow
 				row-key="id"
 				@selection-change="selectionChange"
 			>

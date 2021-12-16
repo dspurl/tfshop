@@ -53,7 +53,7 @@ export default {
 	request: {
 		error: '请求错误',
 		unknownError: '未知错误',
-		noResponse: '无响应',
+		noResponse: '请求服务器无响应！',
 		reLogin: {
 			title: '确定登出',
 			info: '长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录',

@@ -144,7 +144,7 @@ import { removeToken } from '@/utils/auth'
 						removeToken('expires_in')
 						removeToken('refresh_token')
 						removeToken('token_type')
-						this.$router.replace({path: '/login'});
+						this.$router.go(0)
 					}).catch(() => {
 						//取消退出
 					})

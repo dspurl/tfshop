@@ -2,6 +2,7 @@ import axios from "axios";
 import { ElNotification, ElMessageBox } from "element-plus";
 import { getToken, removeToken } from "@/utils/auth";
 import router from "@/router";
+import i18n from "@/locales";
 import tool from "@/utils/tool";
 
 axios.defaults.baseURL = "";
@@ -15,11 +16,10 @@ axios.interceptors.request.use(
 		if (token) {
 			config.headers[process.env.VUE_APP_TOKEN_NAME] =
 				getToken("token_type") + " " + getToken("access_token");
-			
 		}
 		config.headers["lang"] = tool.data.get("APP_LANG")
-				? tool.data.get("APP_LANG")
-				: process.env.VUE_APP_LANG;
+			? tool.data.get("APP_LANG")
+			: process.env.VUE_APP_LANG;
 		if (
 			process.env.VUE_APP_REQUEST_CACHE !== "true" &&
 			config.method == "get"
@@ -44,8 +44,8 @@ axios.interceptors.response.use(
 		if (error.response) {
 			if (error.response.status == 404) {
 				ElNotification.error({
-					title: this.$t('request.error'),
-					message: `Status:404，this.$t('request.404')`,
+					title: i18n.global.tc("request.error"),
+					message: `Status:404，i18n.global.tc('request.404')`,
 				});
 			} else if (error.response.status == 500) {
 				console.log("权限失效");
@@ -57,10 +57,10 @@ axios.interceptors.response.use(
 						-1
 				) {
 					ElNotification.error({
-						title: this.$t('request.error'),
+						title: i18n.global.tc("request.error"),
 						message:
 							error.response.data.message ||
-							`Status:500，${this.$t('request.500')}`,
+							`Status:500，${i18n.global.tc("request.500")}`,
 					});
 				}
 			} else if (error.response.status == 401) {
@@ -70,51 +70,56 @@ axios.interceptors.response.use(
 				) {
 					// to re-login
 					ElMessageBox.confirm(
-						this.$t('request.reLogin.info'),
-						this.$t('request.reLogin.title'),
+						i18n.global.tc("request.reLogin.info"),
+						i18n.global.tc("request.reLogin.title"),
 						{
-							confirmButtonText: this.$t('request.reLogin.confirmButtonText'),
-							cancelButtonText: this.$t('request.reLogin.cancelButtonText'),
+							confirmButtonText: i18n.global.tc(
+								"request.reLogin.confirmButtonText"
+							),
+							cancelButtonText: i18n.global.tc(
+								"request.reLogin.cancelButtonText"
+							),
 							type: "warning",
 						}
 					)
 						.then(() => {
-							this.$TOOL.data.remove("TOKEN")
-							this.$TOOL.data.remove("USER_INFO")
-							this.$TOOL.data.remove("MENU")
-							this.$TOOL.data.remove("PERMISSIONS")
-							this.$TOOL.data.remove("APP_LANG")
-							this.$TOOL.data.remove("grid")
-							this.$store.commit("clearViewTags")
-							this.$store.commit("clearKeepLive")
-							this.$store.commit("clearIframeList")
-							removeToken('access_token')
-							removeToken('expires_in')
-							removeToken('refresh_token')
-							removeToken('token_type')
-							router.replace({ path: "/login" });
+							tool.data.remove("TOKEN");
+							tool.data.remove("USER_INFO");
+							tool.data.remove("MENU");
+							tool.data.remove("PERMISSIONS");
+							tool.data.remove("APP_LANG");
+							tool.data.remove("grid");
+							removeToken("access_token");
+							removeToken("expires_in");
+							removeToken("refresh_token");
+							removeToken("token_type");
+							router.go(0);
 						})
 						.catch(() => {});
 				} else {
 					ElNotification.error({
-						title: this.$t('request.error'),
+						title: i18n.global.tc("request.error"),
 						message:
 							error.response.data.message ||
-							`Status:${error.response.status}，${this.$t('request.unknownError')}！`,
+							`Status:${error.response.status}，${i18n.global.tc(
+								"request.unknownError"
+							)}！`,
 					});
 				}
 			} else {
 				ElNotification.error({
-					title: this.$t('request.error'),
+					title: i18n.global.tc("request.error"),
 					message:
 						error.response.data.message ||
-						`Status:${error.response.status}，${this.$t('request.unknownError')}！`,
+						`Status:${error.response.status}，${i18n.global.tc(
+							"request.unknownError"
+						)}！`,
 				});
 			}
 		} else {
 			ElNotification.error({
-				title: this.$t('request.error'),
-				message: "请求服务器无响应！",
+				title: i18n.global.tc("request.error"),
+				message: i18n.global.tc("request.noResponse"),
 			});
 		}
 		return Promise.reject(error.response);

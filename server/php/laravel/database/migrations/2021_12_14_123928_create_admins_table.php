@@ -22,7 +22,7 @@ class CreateAdminsTable extends Migration
             $table->string('email', 255)->comment(__('migrations.admin.email'));
             $table->char('cellphone', 11)->comment(__('migrations.admin.cellphone'));
             $table->string('password', 255)->comment(__('migrations.admin.password'));
-            $table->string('portrait', 255)->nullable()->comment(__('migrations.admin.portrait'));
+            $table->string('portrait', 20)->nullable()->comment(__('migrations.admin.portrait'));
             $table->unsignedInteger('state')->default(1)->comment(__('migrations.admin.state'));
             $table->timestamps();
             $table->unique('id');
