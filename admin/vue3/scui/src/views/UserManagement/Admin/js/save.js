@@ -1,4 +1,8 @@
+import scIconSelect from "@/components/scIconSelect";
 export default {
+	components: {
+		scIconSelect,
+	},
 	emits: ["success", "closed"],
 	data() {
 		return {
@@ -13,16 +17,15 @@ export default {
 			//表单数据
 			form: {
 				id: "",
-				userName: "",
-				avatar: "",
+				real_name: "",
+				portrait: "",
 				name: "",
-				group: "",
+				state: 1,
+				auth_group: [],
 			},
 			//验证规则
 			rules: {
-				avatar: [{ required: true, message: "请上传头像" }],
-				userName: [{ required: true, message: "请输入登录账号" }],
-				name: [{ required: true, message: "请输入真实姓名" }],
+				name: [{ required: true, message: "请输入登录账号" }],
 				password: [
 					{ required: true, message: "请输入登录密码" },
 					{
@@ -48,19 +51,18 @@ export default {
 						},
 					},
 				],
-				group: [{ required: true, message: "请选择所属角色" }],
 			},
 			//所需数据选项
 			groups: [],
 			groupsProps: {
 				value: "id",
+				label: "introduction",
 				multiple: true,
-				checkStrictly: true,
 			},
 		};
 	},
 	mounted() {
-		this.getGroup();
+		// this.getGroup();
 	},
 	methods: {
 		//显示
@@ -70,23 +72,40 @@ export default {
 			return this;
 		},
 		//加载树数据
-		async getGroup() {
-			var res = await this.$API.system.role.list.get();
-			this.groups = res.data;
+		getGroup(data) {
+			// var res = await this.$API.role.list.get({ all: true });
+			this.groups = data.filter((x) => {
+				return x.id;
+			});
+			return this;
 		},
 		//表单提交方法
 		submit() {
 			this.$refs.dialogForm.validate(async (valid) => {
 				if (valid) {
 					this.isSaveing = true;
-					var res = await this.$API.demo.post.post(this.form);
-					this.isSaveing = false;
-					if (res.code == 200) {
-						this.$emit("success", this.form, this.mode);
-						this.visible = false;
-						this.$message.success("操作成功");
+					if (this.form.id) {
+						try {
+							await this.$API.admin.edit.post(this.form);
+							this.$emit("success", this.form, this.mode);
+							this.visible = false;
+							this.$message.success(
+								this.$t("general.operateSuccessfully")
+							);
+						} finally {
+							this.isSaveing = false;
+						}
 					} else {
-						this.$alert(res.message, "提示", { type: "error" });
+						try {
+							await this.$API.admin.create.post(this.form);
+							this.$emit("success", this.form, this.mode);
+							this.visible = false;
+							this.$message.success(
+								this.$t("general.operateSuccessfully")
+							);
+						} finally {
+							this.isSaveing = false;
+						}
 					}
 				} else {
 					return false;
@@ -95,14 +114,8 @@ export default {
 		},
 		//表单注入数据
 		setData(data) {
-			this.form.id = data.id;
-			this.form.userName = data.userName;
-			this.form.avatar = data.avatar;
-			this.form.name = data.name;
-			this.form.group = data.group;
-
-			//可以和上面一样单个注入，也可以像下面一样直接合并进去
-			//Object.assign(this.form, data)
+			Object.assign(this.form, data);
+			this.form.auth_group = data.auth_group.map((item) => item.id);
 		},
 	},
 };

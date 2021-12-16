@@ -30,18 +30,22 @@ class RoleController extends Controller
      */
     public function list(Request $request)
     {
-        $q = AuthGroup::query();
-        $limit = $request->limit;
-        if ($request->has('keyword')) {
-            $q->where('introduction', 'like', '%' . $request->keyword . '%');
+        if ($request->has('all')) {
+            $paginate = AuthGroup::get();
+        } else {
+            $q = AuthGroup::query();
+            $limit = $request->limit;
+            if ($request->has('keyword')) {
+                $q->where('introduction', 'like', '%' . $request->keyword . '%');
+            }
+            if ($request->has('sort')) {
+                $sortFormatConversion = sortFormatConversion($request->sort);
+                $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+            }
+            $paginate = $q->with(['AuthRule' => function ($q) {
+                $q->where('type', '!=', AuthRule::AUTH_RULE_TYPE_MENU);
+            }])->paginate($limit);
         }
-        if ($request->has('sort')) {
-            $sortFormatConversion = sortFormatConversion($request->sort);
-            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
-        }
-        $paginate = $q->with(['AuthRule'=>function($q){
-            $q->where('type','!=',AuthRule::AUTH_RULE_TYPE_MENU);
-        }])->paginate($limit);
         return resReturn(1, $paginate);
     }
 
@@ -92,13 +96,13 @@ class RoleController extends Controller
      */
     public function permission($id, Request $request)
     {
-        if(!$request->has('ids')){
+        if (!$request->has('ids')) {
             throw new \Exception(__('hint.error.mistake', ['attribute' => __('requests.auth_group_auth_rule.ids')]), Code::CODE_WRONG);
         }
         AuthGroupAuthRule::where('auth_group_id', $id)->delete();
         // 如果子类有勾选，添加父类ID
 
-        foreach ($request->ids as $ids){
+        foreach ($request->ids as $ids) {
             $AuthGroupAuthRule = new AuthGroupAuthRule();
             $AuthGroupAuthRule->auth_group_id = $id;
             $AuthGroupAuthRule->auth_rule_id = $ids;
@@ -124,7 +128,7 @@ class RoleController extends Controller
                 return resReturn(0, __('hint.error.select', ['attribute' => __('hint.common.content_delete')]), Code::CODE_WRONG);
             }
             AuthGroup::destroy($request->ids);
-            AuthGroupAuthRule::whereIn('auth_group_id',$request->ids)->delete();
+            AuthGroupAuthRule::whereIn('auth_group_id', $request->ids)->delete();
         }
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.delete')]));
     }

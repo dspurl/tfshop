@@ -9,6 +9,7 @@ use App\Models\v1\AdminLog;
 use App\Models\v1\AuthGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\v1\AdminAuthGroup;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -38,15 +39,20 @@ class AdminController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
-        if ($request->has('authGroup')) {
-            if ($request->authGroup > 0) {
-                $q->leftJoin('admin_auth_group', 'admin_auth_group.admin_id', '=', 'admins.id');
-                $q->where('admin_auth_group.auth_group_id', $request->authGroup);
+        if ($request->has('state')) {
+            if ($request->state) {
+                $q->where('state', $request->state);
+            }
+        }
+        if ($request->has('portrait')) {
+            if ($request->portrait) {
+                $q->where('portrait', '!=', NULL);
+            } else {
+                $q->where('portrait', NULL);
             }
         }
         $q->queryTitle($request->title);
         $paginate = $q->with('AuthGroup')->paginate($limit);
-        Admin::role($paginate);
         return resReturn(1, $paginate);
     }
 
@@ -68,19 +74,27 @@ class AdminController extends Controller
     {
         $Admin = new Admin;
         $Admin->name = $request->name;
-        $Admin->real_name = $request->real_name;
-        $Admin->email = $request->email;
-        $Admin->cellphone = $request->cellphone;
-        $Admin->portrait = imgPathShift('portrait', $request->portrait);
+        $Admin->real_name = $request->real_name ?? '';
+        $Admin->email = $request->email ?? '';
+        $Admin->cellphone = $request->cellphone ?? '';
+        $Admin->portrait = $request->portrait ?? '';
         $Admin->password = bcrypt($request->password);
-        $Admin->state = $request->state;
+        $Admin->state = $request->state == Admin::ADMIN_STATA_NORMAL ? Admin::ADMIN_STATA_NORMAL : Admin::ADMIN_STATA_FORBID;
         $Admin->save();
+        if ($request->has('auth_group')) {
+            foreach ($request->auth_group as $authGroup) {
+                $AdminAuthGroup = new AdminAuthGroup();
+                $AdminAuthGroup->admin_id = $Admin->id;
+                $AdminAuthGroup->auth_group_id = $authGroup;
+                $AdminAuthGroup->save();
+            }
+        }
         return resReturn(1, '添加成功');
     }
 
     /**
      * AdminEdit
-     * 保存管理员/密码
+     * 保存管理员
      * @param $id
      * @param SubmitAdminRequest $request
      * @queryParam  id int 管理员ID
@@ -94,13 +108,40 @@ class AdminController extends Controller
     public function edit($id, SubmitAdminRequest $request)
     {
         $Admin = Admin::find($id);
-        if ($request->password) {  //修改密码
-            $Admin->password = bcrypt($request->password);
+        $Admin->real_name = $request->real_name ?? '';
+        $Admin->email = $request->email ?? '';
+        $Admin->cellphone = $request->cellphone ?? '';
+        $Admin->portrait = $request->portrait ?? '';
+        $Admin->state = $request->state == Admin::ADMIN_STATA_NORMAL ? Admin::ADMIN_STATA_NORMAL : Admin::ADMIN_STATA_FORBID;
+        $Admin->save();
+        if ($request->has('auth_group')) {
+            AdminAuthGroup::where('admin_id', $Admin->id)->delete();
+            foreach ($request->auth_group as $authGroup) {
+                $AdminAuthGroup = new AdminAuthGroup();
+                $AdminAuthGroup->admin_id = $Admin->id;
+                $AdminAuthGroup->auth_group_id = $authGroup;
+                $AdminAuthGroup->save();
+            }
         }
-        $Admin->name = $request->name;
-        $Admin->cellphone = $request->cellphone;
-        $Admin->email = $request->email;
-        $Admin->portrait = imgPathShift('portrait', $request->portrait);
+        return resReturn(1, '修改成功');
+    }
+
+    /**
+     * AdminPasswork
+     * 修改管理员密码
+     * @param $id
+     * @param Request $request
+     * @queryParam  id int 管理员ID
+     * @queryParam  password string 新密码
+     * @return string
+     */
+    public function password($id, Request $request)
+    {
+        if ($request->has('password')) {
+            return resReturn(0, '请输入密码', Code::CODE_PARAMETER_WRONG);
+        }
+        $Admin = Admin::find($id);
+        $Admin->password = bcrypt($request->password);
         $Admin->save();
         return resReturn(1, '修改成功');
     }

@@ -48,7 +48,6 @@ axios.interceptors.response.use(
 					message: `Status:404，i18n.global.tc('request.404')`,
 				});
 			} else if (error.response.status == 500) {
-				console.log("权限失效");
 				if (
 					error.response.data.message.indexOf(
 						"The refresh token is invalid"
@@ -62,6 +61,34 @@ axios.interceptors.response.use(
 							error.response.data.message ||
 							`Status:500，${i18n.global.tc("request.500")}`,
 					});
+				} else {
+					ElMessageBox.confirm(
+						i18n.global.tc("request.reLogin.info"),
+						i18n.global.tc("request.reLogin.title"),
+						{
+							confirmButtonText: i18n.global.tc(
+								"request.reLogin.confirmButtonText"
+							),
+							cancelButtonText: i18n.global.tc(
+								"request.reLogin.cancelButtonText"
+							),
+							type: "warning",
+						}
+					)
+						.then(() => {
+							tool.data.remove("TOKEN");
+							tool.data.remove("USER_INFO");
+							tool.data.remove("MENU");
+							tool.data.remove("PERMISSIONS");
+							tool.data.remove("APP_LANG");
+							tool.data.remove("grid");
+							removeToken("access_token");
+							removeToken("expires_in");
+							removeToken("refresh_token");
+							removeToken("token_type");
+							router.go(0);
+						})
+						.catch(() => {});
 				}
 			} else if (error.response.status == 401) {
 				if (

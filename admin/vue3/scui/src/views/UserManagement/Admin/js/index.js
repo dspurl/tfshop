@@ -34,13 +34,18 @@ export default {
 					width: "80",
 					columnKey: "filterPortrait",
 					filters: [
-						{ text: "已上传", value: "1" },
-						{ text: "未上传", value: "0" },
+						{ text: "已上传", value: 1 },
+						{ text: "未上传", value: 0 },
 					],
 				},
 				{
 					label: "账号",
 					prop: "name",
+					width: "150",
+				},
+				{
+					label: "关联用户",
+					prop: "user_id",
 					width: "150",
 				},
 				{
@@ -50,7 +55,7 @@ export default {
 				},
 				{
 					label: "所属角色",
-					prop: "real_name",
+					prop: "auth_group",
 					width: "150",
 				},
 				{
@@ -62,6 +67,16 @@ export default {
 					label: "手机",
 					prop: "cellphone",
 					width: "150",
+				},
+				{
+					label: "状态",
+					prop: "state",
+					width: "60",
+					columnKey: "filterState",
+					filters: [
+						{ text: "允许访问", value: 1 },
+						{ text: "禁止访问", value: 2 },
+					],
 				},
 				{
 					label: "加入时间",
@@ -82,6 +97,97 @@ export default {
 					sortable: true,
 				},
 			],
+			params: {
+				filter: {},
+				limit: 10,
+			},
+			options: [
+				{
+					label: "ID",
+					value: "id",
+					type: "text",
+				},
+				{
+					label: "头像",
+					value: "portrait",
+					type: "select",
+					extend: {
+						multiple: true,
+						data: [
+							{
+								label: "已上传",
+								value: 1,
+							},
+							{
+								label: "未上传",
+								value: 0,
+							},
+						],
+					},
+				},
+				{
+					label: "账号",
+					value: "name",
+					type: "text",
+				},
+				{
+					label: "真实姓名",
+					value: "real_name",
+					type: "text",
+				},
+				{
+					label: "所属角色",
+					value: "auth_group",
+					type: "select",
+					extend: {
+						multiple: true,
+						data: [],
+					},
+				},
+				{
+					label: "邮箱",
+					value: "email",
+					type: "text",
+				},
+				{
+					label: "手机",
+					value: "cellphone",
+					type: "text",
+				},
+				{
+					label: "状态",
+					value: "state",
+					type: "select",
+					extend: {
+						multiple: true,
+						data: [
+							{
+								label: "允许访问",
+								value: 1,
+							},
+							{
+								label: "禁止访问",
+								value: 2,
+							},
+						],
+					},
+				},
+				{
+					label: "加入时间",
+					value: "created_at",
+					type: "daterange",
+				},
+				{
+					label: "最后登录时间",
+					value: "updated_at",
+					type: "daterange",
+				},
+				{
+					label: "最后操作时间",
+					value: "updated_at",
+					type: "daterange",
+				},
+			],
 		};
 	},
 	watch: {
@@ -97,21 +203,27 @@ export default {
 		add() {
 			this.dialog.save = true;
 			this.$nextTick(() => {
-				this.$refs.saveDialog.open();
+				this.$refs.saveDialog.open().getGroup(this.group);
 			});
 		},
 		//编辑
 		table_edit(row) {
 			this.dialog.save = true;
 			this.$nextTick(() => {
-				this.$refs.saveDialog.open("edit").setData(row);
+				this.$refs.saveDialog
+					.open("edit")
+					.getGroup(this.group)
+					.setData(row);
 			});
 		},
 		//查看
 		table_show(row) {
 			this.dialog.save = true;
 			this.$nextTick(() => {
-				this.$refs.saveDialog.open("show").setData(row);
+				this.$refs.saveDialog
+					.open("show")
+					.getGroup(this.group)
+					.setData(row);
 			});
 		},
 		//删除
@@ -156,11 +268,20 @@ export default {
 		//加载树数据
 		async getGroup() {
 			this.showGrouploading = true;
-			var res = await this.$API.role.list.get();
+			var res = await this.$API.role.list.get({ all: true });
 			this.showGrouploading = false;
 			var allNode = { id: "", introduction: "所有" };
-			res.message.data.unshift(allNode);
-			this.group = res.message.data;
+			res.message.unshift(allNode);
+			this.group = res.message;
+			this.options[4].extend.data = [];
+			res.message.forEach((item) => {
+				if(item.id){
+					this.options[4].extend.data.push({
+						label: item.introduction,
+						value: item.id
+					});
+				}
+			});
 		},
 		//树过滤
 		groupFilterNode(value, data) {
@@ -181,15 +302,15 @@ export default {
 		//本地更新数据
 		handleSuccess(data, mode) {
 			if (mode == "add") {
-				data.id = new Date().getTime();
-				this.$refs.table.tableData.unshift(data);
+				this.$refs.table.upData();
 			} else if (mode == "edit") {
-				this.$refs.table.tableData
-					.filter((item) => item.id === data.id)
-					.forEach((item) => {
-						Object.assign(item, data);
-					});
+				this.$refs.table.upData();
 			}
+		},
+		//过滤
+		change(data) {
+			this.params.filter = data
+			this.$refs.table.refresh();
 		},
 	},
 };

@@ -17,8 +17,8 @@ class CreateAdminsTable extends Migration
         Schema::create('admins', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->unsignedBigInteger('user_id')->default(0)->index()->comment(__('migrations.admin.user_id'));
-            $table->string('name', 30)->comment(__('migrations.admin.name'));
-            $table->string('real_name', 30)->comment(__('migrations.admin.real_name'));
+            $table->string('name', 50)->comment(__('migrations.admin.name'));
+            $table->string('real_name', 75)->comment(__('migrations.admin.real_name'));
             $table->string('email', 255)->comment(__('migrations.admin.email'));
             $table->char('cellphone', 11)->comment(__('migrations.admin.cellphone'));
             $table->string('password', 255)->comment(__('migrations.admin.password'));

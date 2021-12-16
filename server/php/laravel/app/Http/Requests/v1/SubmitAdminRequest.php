@@ -22,10 +22,9 @@ class SubmitAdminRequest extends Request
             case 'POST':
                 return true;
             case 'GET':
-            default:
-            {
-                return false;
-            }
+            default: {
+                    return false;
+                }
         }
     }
 
@@ -41,25 +40,26 @@ class SubmitAdminRequest extends Request
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'name' => 'required|unique:admins,name,' . $request['id'] . '|string|max:30',
-                        'email' => 'required|email|max:255',
-                        'cellphone' => 'required|unique:admins,cellphone,' . $request['id'] . '|mobile|max:11',
-                        'portrait' => 'required|string|max:255',
+                        'name' => 'nullable|unique:admins,name,' . $request['id'] . '|string|max:30',
+                        'real_name' => 'nullable|string|max:75',
+                        'email' => 'nullable|email|max:255',
+                        'cellphone' => 'nullable|mobile|max:11',
+                        'portrait' => 'nullable|string|max:50',
                     ];
                 } else {
                     return [
                         'name' => 'required|unique:admins|string|max:30',
-                        'email' => 'required|email|max:255',
-                        'cellphone' => 'required|unique:admins|mobile|max:11',
-                        'portrait' => 'required|string|max:255',
+                        'real_name' => 'nullable|string|max:75',
+                        'email' => 'nullable|email|max:255',
+                        'cellphone' => 'nullable|mobile|max:11',
+                        'portrait' => 'nullable|string|max:50',
                         'password' => 'required|string|max:255',
                     ];
                 }
             case 'GET':
-            default:
-            {
-                return [];
-            }
+            default: {
+                    return [];
+                }
         }
     }
 
@@ -69,14 +69,12 @@ class SubmitAdminRequest extends Request
             'name.required' => '管理员账号不能为空',
             'name.unique' => '管理员账号已存在',
             'name.max' => '管理员账号长度不能超过30位',
-            'email.required' => '邮箱不能为空',
-            'cellphone.required' => '手机号不能为空',
+            'email.email' => '邮箱格式错误',
+            'email.email' => '邮箱格式错误',
+            'cellphone.mobile' => '手机格式错误',
             'cellphone.max' => '手机号长度不能超过11位',
-            'cellphone.unique' => '手机号已存在',
-            'portrait.required' => '头像不能为空',
-            'password.required' => '密码不能为空',
+            'portrait.max' => '头像长度不能超过50位',
+            'password.required' => '管理员密码不能为空',
         ];
     }
-
-
 }

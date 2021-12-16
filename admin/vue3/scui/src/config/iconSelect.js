@@ -286,6 +286,31 @@ export default {
 			]
 		},
 		{
+			name: '头像',
+			icons: [
+				'sc-icon-avatar-man01',
+				'sc-icon-avatar-man02',
+				'sc-icon-avatar-man03',
+				'sc-icon-avatar-man04',
+				'sc-icon-avatar-man05',
+				'sc-icon-avatar-man06',
+				'sc-icon-avatar-man07',
+				'sc-icon-avatar-man08',
+				'sc-icon-avatar-man09',
+				'sc-icon-avatar-man10',
+				'sc-icon-avatar-woman01',
+				'sc-icon-avatar-woman02',
+				'sc-icon-avatar-woman03',
+				'sc-icon-avatar-woman04',
+				'sc-icon-avatar-woman05',
+				'sc-icon-avatar-woman06',
+				'sc-icon-avatar-woman07',
+				'sc-icon-avatar-woman08',
+				'sc-icon-avatar-woman09',
+				'sc-icon-avatar-woman10',
+			]
+		},
+		{
 			name: '扩展',
 			icons: [
 				'sc-icon-vue',
