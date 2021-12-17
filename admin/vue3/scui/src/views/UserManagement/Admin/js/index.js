@@ -1,14 +1,17 @@
 import saveDialog from "../save";
+import passwordDialog from "../password";
 
 export default {
 	name: "Admin",
 	components: {
 		saveDialog,
+		passwordDialog
 	},
 	data() {
 		return {
 			dialog: {
 				save: false,
+				password: false
 			},
 			showGrouploading: false,
 			props: {
@@ -19,7 +22,7 @@ export default {
 			apiObj: this.$API.admin.list,
 			selection: [],
 			search: {
-				name: null,
+				keyword: null,
 			},
 			column: [
 				{
@@ -98,7 +101,7 @@ export default {
 				},
 			],
 			params: {
-				filter: {},
+				filter: null,
 				limit: 10,
 			},
 			options: [
@@ -204,6 +207,13 @@ export default {
 			this.dialog.save = true;
 			this.$nextTick(() => {
 				this.$refs.saveDialog.open().getGroup(this.group);
+			});
+		},
+		//修改密码
+		password(){
+			this.dialog.password = true;
+			this.$nextTick(() => {
+				this.$refs.passwordDialog.open().setData(this.selection[0]);
 			});
 		},
 		//编辑

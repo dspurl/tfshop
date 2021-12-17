@@ -15,15 +15,15 @@
 		<template v-else>
 			<el-empty v-if="myFilter.length<=0" :image-size="100">
 				<template #description>
-					<h2>没有常用的过滤</h2>
-					<p style="margin-top: 10px;max-width: 300px;">常用过滤可以将多个过滤条件保存为一个集合，方便下次进行相同条件的过滤</p>
+					<h2>{{$t('filterBar.common.no.title')}}</h2>
+					<p style="margin-top: 10px;max-width: 300px;">{{$t('filterBar.common.no.explain')}}</p>
 				</template>
 			</el-empty>
 			<ul v-else class="sc-filter-my-list">
-				<h2>我的常用过滤</h2>
+				<h2>{{$t('filterBar.common.title')}}</h2>
 				<li v-for="(item, index) in myFilter" :key="index" @click="selectMyfilter(item)">
 					<label>{{item.title}}</label>
-					<el-popconfirm title="确认删除此常用过滤吗？" @confirm="closeMyfilter(item, index)">
+					<el-popconfirm :title="$t('filterBar.common.del')" @confirm="closeMyfilter(item, index)">
 						<template #reference>
 							<el-icon class="del" @click.stop="()=>{}"><el-icon-delete /></el-icon>
 						</template>
@@ -41,6 +41,7 @@
 	export default {
 		props: {
 			filterName: { type: String, default: "" },
+			filterAuthRule:  { type: String, default: "" },
 			data: { type: Object, default: () => {} }
 		},
 		data() {
@@ -69,7 +70,7 @@
 			//删除常用过滤
 			async closeMyfilter(item, index){
 				try {
-					var del = await config.delMy(this.filterName)
+					var del = await config.delMy(item.id)
 				}catch (error) {
 					return false
 				}
@@ -77,13 +78,13 @@
 					return false
 				}
 				this.myFilter.splice(index, 1)
-				this.$message.success('删除常用成功')
+				this.$message.success(this.$t('general.deleteSuccessfully'))
 			},
 			//远程获取我的常用
 			async getMyfilter(){
 				this.loading = true
 				try {
-					this.myFilter = await config.getMy(this.filterName)
+					this.myFilter = await config.getMy(this.filterAuthRule)
 				}catch (error) {
 					return false
 				}

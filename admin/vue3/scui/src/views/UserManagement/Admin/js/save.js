@@ -62,21 +62,12 @@ export default {
 		};
 	},
 	mounted() {
-		// this.getGroup();
 	},
 	methods: {
 		//显示
 		open(mode = "add") {
 			this.mode = mode;
 			this.visible = true;
-			return this;
-		},
-		//加载树数据
-		getGroup(data) {
-			// var res = await this.$API.role.list.get({ all: true });
-			this.groups = data.filter((x) => {
-				return x.id;
-			});
 			return this;
 		},
 		//表单提交方法

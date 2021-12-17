@@ -29,6 +29,7 @@ export default {
 		nothing: "Nothing",
 		noData: "No Data",
 		rename: "Rename",
+		ack: "Enter your keywords and press Enter to confirm",
 	},
 	setting: {
 		form: {
@@ -51,20 +52,72 @@ export default {
 			},
 		},
 	},
-	request: {
-		error: 'Request error',
-		unknownError: 'Unknown error',
-		noResponse: 'Request server is not responding!',
-		reLogin: {
-			title: 'Confirm quit',
-			info: 'Long time no operation, you have been logged out, you can cancel to continue to stay in the page, or log in again',
-			confirmButtonText: 'Re Login',
-			cancelButtonText: 'Cancel'
-
+	config: {
+		filterBar: {
+			operator: {
+				eq: "Equal",
+				neq: "Not equal",
+				gt: "Greater",
+				gte: "Great than or equal",
+				lt: "Less than",
+				le: "Less than or equal to",
+				include: "Include",
+				notinclude: "Not include",
+			},
 		},
-		404: 'Requesting a nonexistent server record!',
-		500: 'Server error!',
 	},
+	request: {
+		error: "Request error",
+		unknownError: "Unknown error",
+		noResponse: "Request server is not responding!",
+		reLogin: {
+			title: "Confirm quit",
+			info: "Long time no operation, you have been logged out, you can cancel to continue to stay in the page, or log in again",
+			confirmButtonText: "Re Login",
+			cancelButtonText: "Cancel",
+		},
+		404: "Requesting a nonexistent server record!",
+		500: "Server error!",
+	},
+	form: {
+		date: "Date",
+		startDate: "Start date",
+		endDate: "End date",
+	},
+	filterBar: {
+		common: {
+			title: "My usual filter",
+			no: {
+				title: "There is no common filter",
+				explain:
+					"Common filtering can save multiple filtering conditions as a set, facilitating the filtering of the same conditions next time",
+			},
+			del: "Are you sure to remove this common filter?",
+		},
+		index: {
+			title: "Filter",
+			project: "Each filter",
+			conditionTitle: "Setting filter Conditions",
+			conditionNoData:
+				"There is no default filter criterion, click Add Filter",
+			field: "Filter fields",
+			operator: "Operator",
+			add: "Adding filter items",
+			immediately: "Filter immediately",
+			saveMy: "Save as common (this account)",
+			saveAll: "Save as common (all accounts)",
+			empty: "Empty filter",
+			nothing: "No filter item",
+			prompt: {
+				title: "Common filter name",
+				inputTitle: "Save as common",
+				inputPlaceholder: "Enter a common filter name with high recognition",
+				inputErrorMessage: "The name cannot be empty",
+			},
+			succeed: "Common Use saved Successfully",
+		},
+	},
+
 	login: {
 		slogan: "High performance / delicate / grace",
 		describe:
@@ -244,5 +297,12 @@ export default {
 				name: "Update Time",
 			},
 		},
+	},
+	admin: {
+		button: {
+			password: "Reset the password",
+		},
+		FilterBarName: "Administrator Filtering",
+		search: "Account number/real name/mobile phone",
 	},
 };

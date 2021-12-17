@@ -34,13 +34,6 @@ class Admin extends Authenticatable
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function scopeQueryTitle($query, $title)
-    {
-        if ($title) {
-            return $query->where('id', $title)->orWhere('name', 'like', '%' . $title . '%');
-        }
-    }
-
     // 角色
     protected function role($db)
     {

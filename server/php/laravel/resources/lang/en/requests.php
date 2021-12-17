@@ -45,5 +45,11 @@ return [
     ],
     'resource_upload' => [
         'uuid'                      => 'UUID'
-    ]
+    ],
+    'admin_filter' => [
+        'title'                     => 'Filter name',
+        'auth_rule_id'              => 'Filter permissions',
+        'type'                      => 'Type',
+        'data'                      => 'Filter condition'
+    ],
 ];

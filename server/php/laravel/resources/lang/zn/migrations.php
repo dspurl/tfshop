@@ -65,4 +65,11 @@ return [
         'extension'                 => '资源类型后缀',
         'specification'             => '资源类型规格',
     ],
+    'admin_filter' => [
+        'table_name'                => '过滤器',
+        'admin_id'                  => '管理员ID',
+        'auth_rule_id'              => '过滤器对应权限',
+        'title'                     => '过滤器名称',
+        'data'                      => '过滤器条件'
+    ],
 ];

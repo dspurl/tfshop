@@ -7,6 +7,7 @@ use App\Http\Requests\v1\SubmitResourceUploadRequest;
 use App\Models\v1\Resource;
 use App\Models\v1\ResourceType;
 
+use http\Exception;
 use function EasyWeChat\Kernel\Support\str_random;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
@@ -23,6 +24,10 @@ class Controller extends BaseController
      * 资源上传
      * Resource upload
      * @param SubmitResourceUploadRequest $request
+     * @return string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function resourceUpload(SubmitResourceUploadRequest $request)
     {
@@ -37,7 +42,7 @@ class Controller extends BaseController
         $info = [
             'extension' => $file->extension(),
             'size' => $file->getSize(),
-            'type'  => $file->getClientMimeType(),
+            'type' => $file->getClientMimeType(),
             'originalName' => $file->getClientOriginalName()
         ];
         if (count($ResourceType->extension) != 0 && !in_array($info['extension'], $ResourceType->extension)) {
@@ -90,16 +95,20 @@ class Controller extends BaseController
     /**
      * 本地资源处理
      * Resource upload
-     * @param SubmitResourceUploadRequest $request
+     * @param $file
+     * @param $pathName
+     * @param $randFileName
+     * @param $ResourceType
+     * @return mixed
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     protected function localResourceHandling($file, $pathName, $randFileName, $ResourceType)
     {
         $info = [
             'extension' => $file->extension(),
             'size' => $file->getSize(),
-            'type'  => $file->getClientMimeType(),
+            'type' => $file->getClientMimeType(),
             'originalName' => $file->getClientOriginalName(),
-            "size" => $file->getSize()
         ];
         $data['fileName'] = $randFileName . '.' . $info['extension'];
         $files = file_get_contents($file->getRealPath());
@@ -119,5 +128,46 @@ class Controller extends BaseController
             }
         }
         return $data;
+    }
+
+    /**
+     * 自定义条件筛选
+     * Custom filter criteria
+     * @param $q
+     * @param $filter
+     * @return mixed
+     * @throws \Exception
+     */
+    protected function customFilterCriteria($q, $filter)
+    {
+        $filter = json_decode($filter, true);
+        if (!is_array($filter)) {
+            throw new \Exception('请求的filter格式有误', Code::CODE_WRONG);
+        }
+        foreach ($filter as $id => $f) {
+            $value = explode('|', $f);
+            if (count($value) === 1) {
+                throw new \Exception('缺少分割符|', Code::CODE_WRONG);
+            }
+            switch ($value[1]) {
+                case '=':
+                    $q->where($id, $value[0]);
+                    break;
+                case '!=':
+                case '>':
+                case '>=':
+                case '<':
+                case '<=':
+                    $q->where($id, $value[1], $value[0]);
+                    break;
+                case 'include':
+                    $q->where($id, 'like', "%$value[0]%");
+                    break;
+                case 'notinclude':
+                    $q->where($id, 'not like', "%$value[0]%");
+                    break;
+            }
+        }
+        return $q;
     }
 }

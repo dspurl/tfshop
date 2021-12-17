@@ -77,7 +77,7 @@ class ResourceController extends Controller
      * 资源设置封面
      * @param Request $request
      * @queryParam  id int 资源ID
-     * @queryParam  resource_id int 关联资源ID 
+     * @queryParam  resource_id int 关联资源ID
      * @return string
      */
     public function cover($id, Request $request)
@@ -93,7 +93,7 @@ class ResourceController extends Controller
      * 资源设置别名
      * @param Request $request
      * @queryParam  id int 资源ID
-     * @queryParam  resource_id int 关联资源ID 
+     * @queryParam  resource_id int 关联资源ID
      * @return string
      */
     public function depict($id, Request $request)
@@ -108,9 +108,10 @@ class ResourceController extends Controller
      * ResourceGroup
      * 资源设置分组
      * @param Request $request
-     * @queryParam  id int 资源ID
-     * @queryParam  resource_id int 关联资源ID 
      * @return string
+     * @throws \Exception
+     * @queryParam  id int 资源ID
+     * @queryParam  resource_id int 关联资源ID
      */
     public function group(Request $request)
     {

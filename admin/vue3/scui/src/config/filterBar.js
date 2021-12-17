@@ -1,74 +1,81 @@
+import API from "@/api";
+import i18n from "@/locales";
 export default {
 	//运算符
 	operator: [
 		{
-			label: '等于',
-			value: '=',
+			label: i18n.global.tc('config.filterBar.operator.eq'),
+			value: "=",
 		},
 		{
-			label: '不等于',
-			value: '!=',
+			label: i18n.global.tc('config.filterBar.operator.neq'),
+			value: "!=",
 		},
 		{
-			label: '大于',
-			value: '>',
+			label: i18n.global.tc('config.filterBar.operator.gt'),
+			value: ">",
 		},
 		{
-			label: '大于等于',
-			value: '>=',
+			label: i18n.global.tc('config.filterBar.operator.gte'),
+			value: ">=",
 		},
 		{
-			label: '小于',
-			value: '<',
+			label: i18n.global.tc('config.filterBar.operator.lt'),
+			value: "<",
 		},
 		{
-			label: '小于等于',
-			value: '<=',
+			label: i18n.global.tc('config.filterBar.operator.le'),
+			value: "<=",
 		},
 		{
-			label: '包含',
-			value: 'include',
+			label: i18n.global.tc('config.filterBar.operator.include'),
+			value: "include",
 		},
 		{
-			label: '不包含',
-			value: 'notinclude',
-		}
+			label: i18n.global.tc('config.filterBar.operator.notinclude'),
+			value: "notinclude",
+		},
 	],
 	//过滤结果运算符的分隔符
-	separator: '|',
+	separator: "|",
 	//获取我的常用
-	getMy: function (name) {
-		return new Promise((resolve) => {
-			console.log(`这里可以根据${name}参数请求接口`)
-			var list = []
-			setTimeout(()=>{
-				resolve(list)
-			},500)
-		})
+	async getMy(authRule) {
+		let list = [];
+		const res = await API.adminFilter.list.get({
+			authRule: authRule,
+		});
+		list = res.message;
+		return list;
 	},
 	/**
-	 * 常用保存处理 返回resolve后继续操作
-	 * @name scFilterBar组件的props->filterName
+	 * 常用保存处理
+	 * @authRule 权限别名
 	 * @obj 过滤项整理好的对象
+	 * @type 类型 my:该账号 all:所有账号
 	 */
-	saveMy: function (name, obj) {
-		return new Promise((resolve) => {
-			console.log(name, obj)
-			setTimeout(()=>{
-				resolve(true)
-			},500)
-		})
+	async saveMy(authRule, obj, type) {
+		if (obj.id) {
+			await API.adminFilter.edit.post({
+				id: obj.id,
+				title: obj.title,
+				data: obj.filterObj,
+			});
+		} else {
+			await API.adminFilter.create.post({
+				title: obj.title,
+				data: obj.filterObj,
+				type: type,
+				authRule: authRule,
+			});
+		}
+		return true;
 	},
 	/**
-	 * 常用删除处理 返回resolve后继续操作
+	 * 常用删除处理
 	 * @name scFilterBar组件的props->filterName
 	 */
-	delMy: function (name) {
-		return new Promise((resolve) => {
-			console.log(name)
-			setTimeout(()=>{
-				resolve(true)
-			},500)
-		})
-	}
-}
+	async delMy(id) {
+		await API.adminFilter.destroy.post(id);
+		return true;
+	},
+};

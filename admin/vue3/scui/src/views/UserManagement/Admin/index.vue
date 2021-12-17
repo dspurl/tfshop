@@ -3,7 +3,7 @@
 		<el-aside width="200px" v-loading="showGrouploading">
 			<el-container>
 				<el-header>
-					<el-input placeholder="输入关键字进行过滤" v-model="groupFilterText" clearable></el-input>
+					<el-input :placeholder="$t('general.keywordFiltering')" v-model="groupFilterText" clearable></el-input>
 				</el-header>
 				<el-main class="nopadding">
 					<el-tree
@@ -32,12 +32,18 @@
 						:disabled="selection.length == 0"
 						@click="batch_del"
 					></el-button>
-					<el-button type="primary" plain :disabled="selection.length !== 1">密码重置</el-button>
-					<scFilterBar style="margin-left:10px;" :options="options" @filterChange="change"></scFilterBar>
+					<el-button @click="password" type="primary" plain :disabled="selection.length !== 1">{{$t('admin.button.password')}}</el-button>
+					<scFilterBar
+						style="margin-left:10px;"
+						:filterName="$t('admin.FilterBarName')"
+						filterAuthRule="Admin"
+						:options="options"
+						@filterChange="change"
+					></scFilterBar>
 				</div>
 				<div class="right-panel">
 					<div class="right-panel-search">
-						<el-input v-model="search.name" placeholder="账号 / 真实姓名 / 手机" clearable></el-input>
+						<el-input v-model="search.keyword" :placeholder="$t('admin.search')" clearable></el-input>
 						<el-button type="primary" icon="el-icon-search" @click="upsearch"></el-button>
 					</div>
 				</div>
@@ -72,13 +78,13 @@
 							<sc-status-indicator v-if="scope.row.state == '2'" pulse type="danger"></sc-status-indicator>
 						</template>
 					</template>
-					<el-table-column label="操作" fixed="right" align="right" width="150">
+					<el-table-column :label="$t('general.operation')" fixed="right" align="right" width="150">
 						<template #default="scope">
-							<el-button type="text" size="small" @click="table_show(scope.row, scope.$index)">查看</el-button>
-							<el-button type="text" size="small" @click="table_edit(scope.row, scope.$index)">编辑</el-button>
-							<el-popconfirm title="确定删除吗？" @confirm="table_del(scope.row, scope.$index)">
+							<el-button type="text" size="small" @click="table_show(scope.row, scope.$index)">{{$t('general.view')}}</el-button>
+							<el-button type="text" size="small" @click="table_edit(scope.row, scope.$index)">{{$t('general.edit')}}</el-button>
+							<el-popconfirm :title="$t('general.sureDelete')" @confirm="table_del(scope.row, scope.$index)">
 								<template #reference>
-									<el-button type="text" size="small">删除</el-button>
+									<el-button type="text" size="small">{{$t('general.delete')}}</el-button>
 								</template>
 							</el-popconfirm>
 						</template>
@@ -95,6 +101,12 @@
 		@closed="dialog.save = false"
 		:close-on-click-modal="false"
 	></save-dialog>
+	<password-dialog
+		v-if="dialog.password"
+		ref="passwordDialog"
+		@closed="dialog.password = false"
+		:close-on-click-modal="false"
+	></password-dialog>
 </template>
 <style lang='scss' scoped>
 @import "./scss/index.scss";

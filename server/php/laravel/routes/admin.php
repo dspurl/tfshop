@@ -26,9 +26,12 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('admin', 'AdminController@list')->name('admin.adminList')->middleware(['permissions:Admin']);  //管理员列表
         Route::post('admin', 'AdminController@create')->name('admin.adminCreate')->middleware(['permissions:AdminCreate']);  //创建管理员
         Route::post('admin/{id}', 'AdminController@edit')->name('admin.adminEdit')->middleware(['permissions:AdminEdit']);  //保存管理员
-        Route::post('admin/password/all', 'AdminController@password')->name('admin.adminPassword')->middleware(['permissions:AdminPassword']);  //管理员重置密码
+        Route::post('admin/password/{id}', 'AdminController@password')->name('admin.adminPassword')->middleware(['permissions:AdminPassword']);  //管理员重置密码
         Route::post('admin/destroy/{id}', 'AdminController@destroy')->name('admin.adminDestroy')->middleware(['permissions:AdminDestroy']); //删除管理员
-        Route::get('authGroup', 'AdminController@getAuthGroupList')->name('admin.authGroupList')->middleware(['permissions:AdminList']);  //管理权限列表
+        Route::get('adminFilter', 'AdminFilterController@list')->name('admin.adminFilterList')->middleware(['permissions:AdminFilter']);  //管理员过滤器列表
+        Route::post('adminFilter', 'AdminFilterController@create')->name('admin.adminFilterCreate')->middleware(['permissions:AdminFilterCreate']);  //创建管理员过滤器
+        Route::post('adminFilter/{id}', 'AdminFilterController@edit')->name('admin.adminFilterEdit')->middleware(['permissions:AdminFilterEdit']);  //保存管理员过滤器
+        Route::post('adminFilter/destroy/{id}', 'AdminFilterController@destroy')->name('admin.adminFilterDestroy')->middleware(['permissions:AdminFilterDestroy']); //删除管理员过滤器
         Route::get('admin/log', 'AdminController@log')->name('admin.adminLog')->middleware(['permissions:AdminLogList']);  //管理员操作日志
         Route::get('member', 'MemberController@list')->name('admin.memberList')->middleware(['permissions:MemberList']);  //会员列表
         Route::post('member', 'MemberController@create')->name('admin.memberCreate')->middleware(['permissions:MemberCreate']);  //创建会员
@@ -43,7 +46,6 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('power/{id}', 'PowerController@edit')->name('admin.powerEdit')->middleware(['permissions:PowerEdit']);  //保存权限
         Route::post('power/destroy/{id}', 'PowerController@destroy')->name('admin.powerDestroy')->middleware(['permissions:PowerDestroy']);  //删除权限
         Route::post('power/sort/all', 'PowerController@sort')->name('admin.powerSort')->middleware(['permissions:PowerSort']);  //权限排序
-
         Route::get('good', 'GoodController@list')->name('admin.goodList')->middleware(['permissions:GoodList']);    //商品列表
         Route::post('good', 'GoodController@create')->name('admin.goodCreate')->middleware(['permissions:GoodCreate']);    //创建商品
         Route::post('good/{id}', 'GoodController@edit')->name('admin.goodEdit')->middleware(['permissions:GoodEdit']);    //保存商品
@@ -92,7 +94,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('resource_group', 'ResourceGroupController@list')->name('admin.resourceGroupList')->middleware(['permissions:ResourceGroup']);    //资源分组
         Route::post('resource_group', 'ResourceGroupController@create')->name('admin.resourceGroupCreate')->middleware(['permissions:ResourceGroupCreate']);    //创建资源分组
         Route::post('resource_group/{id}', 'ResourceGroupController@edit')->name('admin.resourceGroupEdit')->middleware(['permissions:ResourceGroupEdit']);    //保存资源分组
-        Route::post('resource_group/sort/all', 'ResourceGroupController@sort')->name('admin.resourceGroupSort')->middleware(['permissions:ResourceGroupSort']);  //资源分组排序        
+        Route::post('resource_group/sort/all', 'ResourceGroupController@sort')->name('admin.resourceGroupSort')->middleware(['permissions:ResourceGroupSort']);  //资源分组排序
         Route::post('resource_group/destroy/{id}', 'ResourceGroupController@destroy')->name('admin.resourceGroupDestroy')->middleware(['permissions:ResourceGroupDestroy']);    //删除资源分组
         Route::get('resource_type', 'ResourceTypeController@list')->name('admin.resourceType')->middleware(['permissions:ResourceType']);    //资源类型
         Route::post('resource_type', 'ResourceTypeController@create')->name('admin.resourceTypeCreate')->middleware(['permissions:ResourceTypeCreate']);    //创建资源类型

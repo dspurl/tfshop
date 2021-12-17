@@ -21,6 +21,13 @@ export default {
 			return await http.post(this.url + '/' + data.id, data);
 		}
 	},
+	password: {
+		url: `${process.env.VUE_APP_API_URL}/admin`,
+		name: "管理员重置密码",
+		post: async function(data={}){
+			return await http.post(this.url + '/password/' + data.id, data);
+		}
+	},
     destroy: {
 		url: `${process.env.VUE_APP_API_URL}/admin/destroy`,
 		name: "删除管理员",

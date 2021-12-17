@@ -158,7 +158,7 @@ function getParentClassHierarchyData($pid, $options, &$return = array())
             continue;
         }
     }
-//    $return = genTree($return);
+    //    $return = genTree($return);
     return $return;
 }
 
@@ -232,7 +232,6 @@ function imgPathShift($new, $img)
         } else {
             return $img['0'];
         }
-
     } else {
         $path = 'storage/temporary/';
         $img = explode($path, $img);
@@ -251,7 +250,6 @@ function imgPathShift($new, $img)
         } else {
             return $img['0'];
         }
-
     }
 }
 
@@ -367,15 +365,15 @@ function sortFormatConversion($sortOriginal)
  */
 function time_diff($date)
 {
-    $t = strtotime($date) - time();//单位"秒"
+    $t = strtotime($date) - time(); //单位"秒"
     $arr = [];
-    $day = intval($t / 86400);//天
+    $day = intval($t / 86400); //天
     $arr['day'] = $day;
-    $hour = intval((($t / 86400) - $day) * 24);//小时
+    $hour = intval((($t / 86400) - $day) * 24); //小时
     $arr['hour'] = $hour;
-    $minute = intval((((($t / 86400) - $day) * 24) - $hour) * 60);//分钟
+    $minute = intval((((($t / 86400) - $day) * 24) - $hour) * 60); //分钟
     $arr['minute'] = $minute;
-    $second = intval(((((((($t / 86400) - $day) * 24) - $hour) * 60) - $minute) * 60));//秒
+    $second = intval(((((((($t / 86400) - $day) * 24) - $hour) * 60) - $minute) * 60)); //秒
     $arr['second'] = $second;
     return $arr;
 }

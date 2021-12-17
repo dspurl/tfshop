@@ -5,12 +5,9 @@ namespace App\Http\Controllers\v1\Admin;
 use App\Code;
 use App\Http\Requests\v1\SubmitAdminRequest;
 use App\Models\v1\Admin;
-use App\Models\v1\AdminLog;
-use App\Models\v1\AuthGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\v1\AdminAuthGroup;
-use Illuminate\Support\Facades\Storage;
 
 /**
  * @group admin
@@ -24,34 +21,45 @@ class AdminController extends Controller
      * AdminList
      * 管理员列表
      * @param Request $request
+     * @return string
+     * @throws \Exception
      * @queryParam  title string 管理员账号
      * @queryParam  authGroup string 管理组ID
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
-     * @return string
      */
     public function list(Request $request)
     {
         $q = Admin::query();
         $limit = $request->limit;
-        if ($request->has('sort')) {
-            $sortFormatConversion = sortFormatConversion($request->sort);
-            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
-        }
-        if ($request->has('state')) {
-            if ($request->state) {
-                $q->where('state', $request->state);
+        if ($request->has('filter')) {
+            $this->customFilterCriteria($q, $request->filter);
+        } else {
+            if ($request->has('sort')) {
+                $sortFormatConversion = sortFormatConversion($request->sort);
+                $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+            }
+            if ($request->has('state')) {
+                if ($request->state) {
+                    $q->where('state', $request->state);
+                }
+            }
+            if ($request->has('portrait')) {
+                if ($request->portrait) {
+                    $q->where('portrait', '!=', NULL);
+                } else {
+                    $q->where('portrait', NULL);
+                }
+            }
+            if ($request->has('keyword')) {
+                $q->where(function ($q1) use ($request) {
+                    $q1->orWhere('name', 'like', "%$request->keyword%")
+                        ->orWhere('real_name', 'like', "%$request->keyword%")
+                        ->orWhere('cellphone', 'like', "%$request->keyword%");
+                });
             }
         }
-        if ($request->has('portrait')) {
-            if ($request->portrait) {
-                $q->where('portrait', '!=', NULL);
-            } else {
-                $q->where('portrait', NULL);
-            }
-        }
-        $q->queryTitle($request->title);
         $paginate = $q->with('AuthGroup')->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -137,7 +145,7 @@ class AdminController extends Controller
      */
     public function password($id, Request $request)
     {
-        if ($request->has('password')) {
+        if (!$request->has('password')) {
             return resReturn(0, '请输入密码', Code::CODE_PARAMETER_WRONG);
         }
         $Admin = Admin::find($id);
@@ -153,46 +161,18 @@ class AdminController extends Controller
      * @queryParam  id int 管理员ID
      * @return string
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        if (!$id) {
-            return resReturn(0, '参数错误', Code::CODE_PARAMETER_WRONG);
+        if ($id > 0) {
+            Admin::destroy($id);
+            AdminAuthGroup::where('admin_id', $id)->delete();
+        } else {
+            if (!$request->has('ids')) {
+                return resReturn(0, __('hint.error.select', ['attribute' => __('hint.common.content_delete')]), Code::CODE_WRONG);
+            }
+            Admin::destroy($request->ids);
+            AdminAuthGroup::whereIn('admin_id', $request->ids)->delete();
         }
-        $Admin = Admin::find($id);
-        Storage::delete('public/image/avatar/' . $Admin->portrait);    //删除头像
-        $Admin->delete();
-        return resReturn(1, '删除成功');
-    }
-
-    /**
-     * Display a listing of the auth group.
-     *
-     * @param  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function getAuthGroupList(Request $request)
-    {
-        $q = AuthGroup::query();
-        $res = $q->get();
-        return resReturn(1, $res);
-    }
-
-    /**
-     * Display a listing of the Syslog.
-     *
-     * @param  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function log(Request $request)
-    {
-        AdminLog::$withoutAppends = false;
-        $q = AdminLog::query();
-        if ($request->name) {
-            $q->where('name', $request->name);
-        }
-        $limit = $request->limit;
-        $q->orderBy('id', 'DESC');
-        $paginate = $q->paginate($limit);
-        return resReturn(1, $paginate);
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.delete')]));
     }
 }

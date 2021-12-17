@@ -65,4 +65,11 @@ return [
         'extension'                 => 'Resource type suffix',
         'specification'             => 'Resource type specifications',
     ],
+    'admin_filter' => [
+        'table_name'                => 'Filter',
+        'admin_id'                  => 'Administrator ID',
+        'auth_rule_id'              => 'Filter permissions',
+        'title'                     => 'Filter name',
+        'data'                      => 'Filter condition'
+    ],
 ];

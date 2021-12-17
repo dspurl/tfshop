@@ -28,6 +28,7 @@ export default {
 		nothing: "无",
 		noData: "无数据",
 		rename: "重命名",
+		ack: "输入关键词后按回车确认",
 	},
 	setting: {
 		form: {
@@ -50,19 +51,69 @@ export default {
 			},
 		},
 	},
-	request: {
-		error: '请求错误',
-		unknownError: '未知错误',
-		noResponse: '请求服务器无响应！',
-		reLogin: {
-			title: '确定登出',
-			info: '长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录',
-			confirmButtonText: '重新登录',
-			cancelButtonText: '取消'
-
+	config: {
+		filterBar: {
+			operator: {
+				eq: "等于",
+				neq: "不等于",
+				gt: "大于",
+				gte: "大于等于",
+				lt: "小于",
+				le: "小于等于",
+				include: "包含",
+				notinclude: "不包含",
+			},
 		},
-		404: '正在请求不存在的服务器记录！',
-		500: '服务器发生错误！',
+	},
+	request: {
+		error: "请求错误",
+		unknownError: "未知错误",
+		noResponse: "请求服务器无响应！",
+		reLogin: {
+			title: "确定登出",
+			info: "长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录",
+			confirmButtonText: "重新登录",
+			cancelButtonText: "取消",
+		},
+		404: "正在请求不存在的服务器记录！",
+		500: "服务器发生错误！",
+	},
+	form: {
+		date: "日期",
+		startDate: "开始日期",
+		endDate: "结束日期",
+	},
+	filterBar: {
+		common: {
+			title: "我的常用过滤",
+			no: {
+				title: "没有常用的过滤",
+				explain:
+					"常用过滤可以将多个过滤条件保存为一个集合，方便下次进行相同条件的过滤",
+			},
+			del: "确认删除此常用过滤吗？",
+		},
+		index: {
+			title: "过滤器",
+			project: "过滤项",
+			conditionTitle: "设置过滤条件",
+			conditionNoData: "没有默认过滤条件，请点击增加过滤项",
+			field: "过滤字段",
+			operator: "运算符",
+			add: "增加过滤项",
+			immediately: "立即过滤",
+			saveMy: "另存为常用(本账号)",
+			saveAll: "另存为常用(所有账号)",
+			empty: "清空过滤",
+			nothing: "无过滤项",
+			prompt: {
+				title: "常用过滤名称",
+				inputTitle: "另存为常用",
+				inputPlaceholder: "请输入识别度较高的常用过滤名称",
+				inputErrorMessage: "名称不能为空",
+			},
+			succeed: "保存常用成功",
+		},
 	},
 	login: {
 		slogan: "高性能 / 精致 / 优雅",
@@ -240,5 +291,12 @@ export default {
 				name: "更新时间",
 			},
 		},
+	},
+	admin: {
+		button: {
+			password: "密码重置",
+		},
+		FilterBarName: "管理员筛选",
+		search: "账号 / 真实姓名 / 手机",
 	},
 };

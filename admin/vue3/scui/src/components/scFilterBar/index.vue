@@ -15,22 +15,22 @@
 			</el-badge>
 		</slot>
 
-		<el-drawer title="过滤器" v-model="drawer" :size="650" append-to-body>
+		<el-drawer :title="$t('filterBar.index.title')" v-model="drawer" :size="650" append-to-body>
 			<el-container v-loading="saveLoading">
 				<el-main style="padding:0">
 					<el-tabs class="root">
 						<el-tab-pane lazy>
 							<template #label>
-								<div class="tabs-label">过滤项</div>
+								<div class="tabs-label">{{ $t('filterBar.index.project') }}</div>
 							</template>
 							<el-scrollbar>
 								<el-main class="nopadding">
 									<div class="sc-filter-main">
-										<h2>设置过滤条件</h2>
-										<div v-if="filter.length <= 0" class="nodata">没有默认过滤条件，请点击增加过滤项</div>
+										<h2>{{ $t('filterBar.index.conditionTitle') }}</h2>
+										<div v-if="filter.length <= 0" class="nodata">{{ $t('filterBar.index.conditionNoData') }}</div>
 										<table v-else>
 											<colgroup>
-												<col/>
+												<col />
 												<col />
 												<col v-if="showOperator" />
 												<col />
@@ -44,13 +44,13 @@
 													<py-select
 														v-model="item.field"
 														:options="fields"
-														placeholder="过滤字段"
+														:placeholder="$t('filterBar.index.field')"
 														filterable
 														@change="fieldChange(item)"
 													></py-select>
 												</td>
 												<td v-if="showOperator">
-													<el-select v-model="item.operator" placeholder="运算符">
+													<el-select v-model="item.operator" :placeholder="$t('filterBar.index.operator')">
 														<el-option
 															v-for="ope in item.field.operators || operator"
 															:key="ope.value"
@@ -60,18 +60,23 @@
 													</el-select>
 												</td>
 												<td>
-													<el-input v-if="!item.field.type" v-model="item.value" placeholder="请选择过滤字段" disabled></el-input>
+													<el-input
+														v-if="!item.field.type"
+														v-model="item.value"
+														:placeholder="$t('general.pleaseSelect') + ' ' + $t('filterBar.index.field')"
+														disabled
+													></el-input>
 													<!-- 输入框 -->
 													<el-input
 														v-if="item.field.type == 'text'"
 														v-model="item.value"
-														:placeholder="item.field.placeholder || '请输入'"
+														:placeholder="item.field.placeholder || $t('general.pleaseInput')"
 													></el-input>
 													<!-- 下拉框 -->
 													<el-select
 														v-if="item.field.type == 'select'"
 														v-model="item.value"
-														:placeholder="item.field.placeholder || '请选择'"
+														:placeholder="item.field.placeholder || $t('general.pleaseSelect')"
 														filterable
 														:multiple="item.field.extend.multiple"
 														:loading="item.selectLoading"
@@ -92,7 +97,7 @@
 														v-model="item.value"
 														type="date"
 														value-format="YYYY-MM-DD"
-														:placeholder="item.field.placeholder || '请选择日期'"
+														:placeholder="item.field.placeholder || ($t('general.pleaseSelect') + ' ' + $t('form.date'))"
 														style="width: 100%;"
 													></el-date-picker>
 													<!-- 日期范围 -->
@@ -101,8 +106,8 @@
 														v-model="item.value"
 														type="daterange"
 														value-format="YYYY-MM-DD HH:mm:ss"
-														start-placeholder="开始日期"
-														end-placeholder="结束日期"
+														:start-placeholder="$t('form.startDate')"
+														:end-placeholder="$t('form.endDate')"
 														style="width: 100%;"
 													></el-date-picker>
 													<!-- 日期时间 -->
@@ -111,7 +116,7 @@
 														v-model="item.value"
 														type="datetime"
 														value-format="YYYY-MM-DD HH:mm:ss"
-														:placeholder="item.field.placeholder || '请选择日期'"
+														:placeholder="item.field.placeholder || ($t('general.pleaseSelect') + ' ' + $t('form.date'))"
 														style="width: 100%;"
 													></el-date-picker>
 													<!-- 日期时间范围 -->
@@ -120,8 +125,8 @@
 														v-model="item.value"
 														type="datetimerange"
 														value-format="YYYY-MM-DD HH:mm:ss"
-														start-placeholder="开始日期"
-														end-placeholder="结束日期"
+														:start-placeholder="$t('form.startDate')"
+														:end-placeholder="$t('form.endDate')"
 														style="width: 100%;"
 													></el-date-picker>
 													<!-- 开关 -->
@@ -139,8 +144,8 @@
 														filterable
 														allow-create
 														default-first-option
-														no-data-text="输入关键词后按回车确认"
-														:placeholder="item.field.placeholder || '请输入'"
+														:no-data-text="$t('general.ack')"
+														:placeholder="item.field.placeholder || $t('general.pleaseInput')"
 													></el-select>
 												</td>
 												<td>
@@ -150,25 +155,51 @@
 												</td>
 											</tr>
 										</table>
-										<el-button type="text" icon="el-icon-plus" @click="addFilter">增加过滤项</el-button>
+										<el-button
+											type="text"
+											icon="el-icon-plus"
+											@click="addFilter"
+										>{{ $t('filterBar.index.add') }}</el-button>
 									</div>
 								</el-main>
 							</el-scrollbar>
 						</el-tab-pane>
 						<el-tab-pane lazy>
 							<template #label>
-								<div class="tabs-label">常用</div>
+								<div class="tabs-label">{{ $t('filterBar.common.title') }}</div>
 							</template>
 							<el-scrollbar>
-								<my ref="my" :data="myFilter" :filterName="filterName" @selectMyfilter="selectMyfilter"></my>
+								<my
+									ref="my"
+									:data="myFilter"
+									:filterName="filterName"
+									:filterAuthRule="filterAuthRule"
+									@selectMyfilter="selectMyfilter"
+								></my>
 							</el-scrollbar>
 						</el-tab-pane>
 					</el-tabs>
 				</el-main>
 				<el-footer>
-					<el-button type="primary" @click="ok" :disabled="filter.length <= 0">立即过滤</el-button>
-					<el-button type="primary" plain @click="saveMy" :disabled="filter.length <= 0">另存为常用</el-button>
-					<el-button @click="clear">清空过滤</el-button>
+					<el-button
+						type="primary"
+						@click="ok"
+						:disabled="filter.length <= 0"
+					>{{ $t('filterBar.index.immediately') }}</el-button>
+					<el-button v-if="data.id" type="primary" plain @click="saveMy('my')">{{ $t("general.save") }}</el-button>
+					<el-button
+						type="primary"
+						plain
+						@click="saveMy('my')"
+						:disabled="filter.length <= 0"
+					>{{ $t('filterBar.index.saveMy') }}</el-button>
+					<el-button
+						type="primary"
+						plain
+						@click="saveMy('all')"
+						:disabled="filter.length <= 0"
+					>{{ $t('filterBar.index.saveAll') }}</el-button>
+					<el-button @click="clear">{{ $t('filterBar.index.empty') }}</el-button>
 				</el-footer>
 			</el-container>
 		</el-drawer>
@@ -188,6 +219,7 @@ export default {
 	},
 	props: {
 		filterName: { type: String, default: "" },
+		filterAuthRule: { type: String, default: "" },
 		showOperator: { type: Boolean, default: true },
 		options: { type: Object, default: () => { } }
 	},
@@ -199,7 +231,10 @@ export default {
 			filter: [],
 			myFilter: [],
 			filterObjLength: 0,
-			saveLoading: false
+			saveLoading: false,
+			data: {
+				id: ''
+			}
 		}
 	},
 	computed: {
@@ -231,7 +266,7 @@ export default {
 		//增加过滤项
 		addFilter() {
 			if (this.fields.length <= 0) {
-				this.$message.warning('无过滤项');
+				this.$message.warning(this.$t('filterBar.index.enothingmpty'));
 				return false
 			}
 			const filterNum = this.fields[this.filter.length] || this.fields[0]
@@ -289,7 +324,7 @@ export default {
 			//常用过滤回显当前过滤项
 			this.filter = []
 			this.fields.forEach((field) => {
-				var filterValue = item.filterObj[field.value]
+				var filterValue = item.data[field.value]
 				if (filterValue) {
 					var operator = filterValue.split("|")[1]
 					var value = filterValue.split("|")[0]
@@ -305,8 +340,9 @@ export default {
 					})
 				}
 			})
-			this.filterObjLength = Object.keys(item.filterObj).length
-			this.$emit('filterChange', item.filterObj)
+			this.filterObjLength = Object.keys(item.data).length
+			this.$emit('filterChange', item.data)
+			this.data = item
 			this.drawer = false
 		},
 		//立即过滤
@@ -316,20 +352,24 @@ export default {
 			this.drawer = false
 		},
 		//保存常用
-		saveMy() {
-			this.$prompt('常用过滤名称', '另存为常用', {
-				inputPlaceholder: '请输入识别度较高的常用过滤名称',
+		saveMy(type) {
+			this.$prompt(this.$t('filterBar.index.prompt.title'), this.$t('filterBar.index.prompt.inputTitle'), {
+				inputPlaceholder: this.$t('filterBar.index.prompt.inputPlaceholder'),
 				inputPattern: /\S/,
-				inputErrorMessage: '名称不能为空'
+				inputErrorMessage: this.$t('filterBar.index.prompt.inputErrorMessage'),
+				inputValue: this.data.id ? this.data.title : ''
 			})
 				.then(async ({ value }) => {
 					this.saveLoading = true
-					const saveObj = {
+					let saveObj = {
 						title: value,
 						filterObj: this.filterObj
 					}
+					if (this.data.id) {
+						saveObj.id = this.data.id
+					}
 					try {
-						var save = await config.saveMy(this.filterName, saveObj)
+						var save = await config.saveMy(this.filterAuthRule, saveObj, type)
 					} catch (error) {
 						this.saveLoading = false
 						console.log(error);
@@ -338,9 +378,14 @@ export default {
 					if (!save) {
 						return false
 					}
+					if (this.data.id) {
+						this.$message.success(`${this.filterName} ${this.$t("general.saveSuccessfully")}`)
+						this.$refs.my.getMyfilter()
+					} else {
+						this.myFilter.push(saveObj)
+						this.$message.success(`${this.filterName} ${this.$t("filterBar.index.succeed")}`)
+					}
 
-					this.myFilter.push(saveObj)
-					this.$message.success(`${this.filterName} 保存常用成功`)
 					this.saveLoading = false
 				})
 				.catch(() => {

@@ -45,5 +45,11 @@ return [
     ],
     'resource_upload' => [
         'uuid'                      => 'UUID'
-    ]
+    ],
+    'admin_filter' => [
+        'title'                     => '过滤器名称',
+        'auth_rule_id'              => '过滤器对应权限',
+        'type'                      => '类型',
+        'data'                      => '过滤器条件'
+    ],
 ];

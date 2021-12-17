@@ -42,13 +42,14 @@ class ResourceTypeController extends Controller
      * ResourceTypeCreate
      * 创建资源类型
      * @param SubmitResourceTypeRequest $request
+     * @return string
+     * @throws \Exception
      * @queryParam  name string 资源分组名称
      * @queryParam  alias string 资源类型别名
      * @queryParam  icon string 资源类型图标
      * @queryParam  icon string 资源类型大小
      * @queryParam  extension array 资源类型后缀
      * @queryParam  specification array 资源类型规格
-     * @return string
      */
     public function create(SubmitResourceTypeRequest $request)
     {

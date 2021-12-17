@@ -68,9 +68,10 @@ class ResourceGroupController extends Controller
      * ResourceGroupSort
      * 资源分组排序
      * @param Request $request
+     * @return string
+     * @throws \Exception
      * @queryParam  id int 资源分组ID
      * @queryParam  name string 资源分组名称
-     * @return string
      */
     public function sort(Request $request)
     {
