@@ -46,10 +46,20 @@ return [
     'resource_upload' => [
         'uuid'                      => 'UUID'
     ],
+    'admin' => [
+        'name'                      => 'Administrator',
+        'email'                     => 'Email',
+        'cellphone'                 => 'Cellphone',
+        'portrait'                  => 'Portrait',
+        'password'                  => 'Administrator password',
+    ],
     'admin_filter' => [
         'title'                     => 'Filter name',
         'auth_rule_id'              => 'Filter permissions',
         'type'                      => 'Type',
         'data'                      => 'Filter condition'
+    ],
+    'auth_group' => [
+        'undistributed'             => 'Undistributed',
     ],
 ];

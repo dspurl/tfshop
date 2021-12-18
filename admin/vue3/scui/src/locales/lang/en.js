@@ -7,6 +7,7 @@ export default {
 		delete: "Delete",
 		deleteSuccessfully: "Delete Successfully",
 		confirmDeleteMenu: "Are you sure to delete the selected menu?",
+		confirmDeleteProject: "Are you sure to delete the selected {length} item?",
 		deleteSelectedAndChild:
 			"Are you sure to delete the selected {Number} item?Delete items that contain subsets will be deleted altogether",
 		hint: "Hint",
@@ -19,17 +20,18 @@ export default {
 		cancel: "Cancel",
 		operation: "Operation",
 		view: "View",
-		edit: "Edit",
+		edit: "Edit {msg}",
 		preview: "Preview",
-		add: "Add ",
+		add: "Add {msg}",
 		sureDelete: "Are you sure?",
-		pleaseInput: "Please input ",
-		pleaseSelect: "Please select ",
+		pleaseInput: "Please input {msg}",
+		pleaseSelect: "Please select {msg}",
 		formatWrong: "The format is wrong",
 		nothing: "Nothing",
 		noData: "No Data",
 		rename: "Rename",
 		ack: "Enter your keywords and press Enter to confirm",
+		all: "All",
 	},
 	setting: {
 		form: {
@@ -83,6 +85,11 @@ export default {
 		date: "Date",
 		startDate: "Start date",
 		endDate: "End date",
+		password: {
+			title: "Please enter your login password",
+			title2: "Please enter your password again",
+			inconformity: "The two passwords are inconsistent!"
+		}
 	},
 	filterBar: {
 		common: {
@@ -304,5 +311,63 @@ export default {
 		},
 		FilterBarName: "Administrator Filtering",
 		search: "Account number/real name/mobile phone",
+		passwordName: "Change password",
+		password: "New password",
+		password2: "Confirm password",
+		user: "User",
+		form: {
+			name: {
+				name: "Account",
+				placeholder: "Log in to the system",
+				msg: "An account cannot be modified after being created",
+			},
+			portrait: {
+				name: "Portrait",
+				label: {
+					already: "have uploaded",
+					no: "No upload"
+				}
+			},
+			real_name: {
+				name: "Real name",
+				placeholder: "Please enter your full real name",
+			},
+			email: {
+				name: "Email",
+				placeholder: "Used to receive email notifications",
+			},
+			cellphone: {
+				name: "Cellphone",
+				placeholder: "Used to receive SMS notification",
+			},
+			password: {
+				name: "Login password",
+			},
+			password2: {
+				name: "Confirm password",
+			},
+			auth_group: {
+				name: "Subordinate role",
+			},
+			relevance: {
+				name: "Associated with the user",
+			},
+			state: {
+				name: "State",
+				label: {
+					normal: "Allow",
+					forbid: "No Access"
+				}
+			},
+			created_at: {
+				name: "Add time",
+			},
+			login_at: {
+				name: "Private Date lastlogintime",
+			},
+			updated_at: {
+				name: "Last operating time",
+			},
+		}
 	},
 };

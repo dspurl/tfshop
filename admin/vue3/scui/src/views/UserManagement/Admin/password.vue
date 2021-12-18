@@ -1,6 +1,6 @@
 <template>
 	<sc-dialog
-		title="修改密码"
+		:title="$t('admin.passwordName')"
 		v-model="visible"
 		:width="500"
 		destroy-on-close
@@ -13,16 +13,16 @@
 			label-width="100px"
 			label-position="right"
 		>
-			<el-form-item label="新密码" prop="password">
+			<el-form-item :label="$t('admin.password')" prop="password">
 				<el-input type="password" v-model="form.password" clearable show-password></el-input>
 			</el-form-item>
-			<el-form-item label="确认密码" prop="password2">
+			<el-form-item :label="$t('admin.password2')" prop="password2">
 				<el-input type="password" v-model="form.password2" clearable show-password></el-input>
 			</el-form-item>
 		</el-form>
 		<template #footer>
-			<el-button @click="visible = false">取 消</el-button>
-			<el-button type="primary" :loading="isSaveing" @click="submit()">保 存</el-button>
+			<el-button @click="visible = false">{{$t('general.cancel')}}</el-button>
+			<el-button type="primary" :loading="isSaveing" @click="submit()">{{$t('general.save')}}</el-button>
 		</template>
 	</sc-dialog>
 </template>

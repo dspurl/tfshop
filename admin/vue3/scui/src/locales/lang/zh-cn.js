@@ -7,6 +7,7 @@ export default {
 		delete: "删除",
 		deleteSuccessfully: "删除成功",
 		confirmDeleteMenu: "确认删除已选择的菜单吗？",
+		confirmDeleteProject: "确定删除选中的 {length} 项吗？",
 		deleteSelectedAndChild:
 			"确定删除选中的 {Number} 项吗？如果删除项中含有子集将会被一并删除",
 		hint: "提示",
@@ -18,17 +19,18 @@ export default {
 		cancel: "取消",
 		operation: "操作",
 		view: "查看",
-		edit: "编辑",
+		edit: "编辑{msg}",
 		preview: "预览",
-		add: "新增",
+		add: "新增{msg}",
 		sureDelete: "确定删除吗？",
-		pleaseInput: "请输入",
-		pleaseSelect: "请选择",
+		pleaseInput: "请输入{msg}",
+		pleaseSelect: "请选择{msg}",
 		formatWrong: "格式有误",
 		nothing: "无",
 		noData: "无数据",
 		rename: "重命名",
 		ack: "输入关键词后按回车确认",
+		all: "所有",
 	},
 	setting: {
 		form: {
@@ -82,6 +84,11 @@ export default {
 		date: "日期",
 		startDate: "开始日期",
 		endDate: "结束日期",
+		password: {
+			title: "请输入登录密码",
+			title2: "请再次输入密码",
+			inconformity: "两次输入密码不一致!"
+		}
 	},
 	filterBar: {
 		common: {
@@ -298,5 +305,63 @@ export default {
 		},
 		FilterBarName: "管理员筛选",
 		search: "账号 / 真实姓名 / 手机",
+		passwordName: "修改密码",
+		password: "新密码",
+		password2: "确认密码",
+		user: "用户",
+		form: {
+			name: {
+				name: "账号",
+				placeholder: "用于登录系统",
+				msg: "账号创建后无法修改",
+			},
+			portrait: {
+				name: "头像",
+				label: {
+					already: "已上传",
+					no: "未上传"
+				}
+			},
+			real_name: {
+				name: "真实姓名",
+				placeholder: "请输入完整的真实姓名",
+			},
+			email: {
+				name: "邮箱",
+				placeholder: "用于接收邮件通知",
+			},
+			cellphone: {
+				name: "手机",
+				placeholder: "用于接收短信通知",
+			},
+			password: {
+				name: "登录密码",
+			},
+			password2: {
+				name: "确认密码",
+			},
+			auth_group: {
+				name: "所属角色",
+			},
+			relevance: {
+				name: "关联用户",
+			},
+			state: {
+				name: "状态",
+				label: {
+					normal: "允许访问",
+					forbid: "禁止访问"
+				}
+			},
+			created_at: {
+				name: "加入时间",
+			},
+			login_at: {
+				name: "最后登录时间",
+			},
+			updated_at: {
+				name: "最后操作时间",
+			},
+		}
 	},
 };

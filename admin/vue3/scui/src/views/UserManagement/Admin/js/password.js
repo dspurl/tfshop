@@ -12,7 +12,7 @@ export default {
 			//验证规则
 			rules: {
 				password: [
-					{ required: true, message: "请输入登录密码" },
+					{ required: true, message: this.$t('form.password.title') },
 					{
 						validator: (rule, value, callback) => {
 							if (this.form.password2 !== "") {
@@ -25,11 +25,11 @@ export default {
 					},
 				],
 				password2: [
-					{ required: true, message: "请再次输入密码" },
+					{ required: true, message: this.$t('form.password.title2') },
 					{
 						validator: (rule, value, callback) => {
 							if (value !== this.form.password) {
-								callback(new Error("两次输入密码不一致!"));
+								callback(new Error(this.$t('form.password.inconformity')));
 							} else {
 								callback();
 							}

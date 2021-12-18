@@ -46,10 +46,20 @@ return [
     'resource_upload' => [
         'uuid'                      => 'UUID'
     ],
+    'admin' => [
+        'name'                      => '管理员',
+        'email'                     => '邮箱',
+        'cellphone'                 => '手机号',
+        'portrait'                  => '头像',
+        'password'                  => '管理员密码',
+    ],
     'admin_filter' => [
         'title'                     => '过滤器名称',
         'auth_rule_id'              => '过滤器对应权限',
         'type'                      => '类型',
         'data'                      => '过滤器条件'
+    ],
+    'auth_group' => [
+        'undistributed'             => '未分配',
     ],
 ];

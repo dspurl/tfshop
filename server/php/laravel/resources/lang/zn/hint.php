@@ -29,6 +29,7 @@ return [
         'distribution'      =>  '请分配:specification',
         'configuration'     =>  '请配置:specification',
         'select'            =>  '请选择:specification',
+        'input'             =>  '请输入:specification',
         'key_wrong'         =>  ':specification密钥有误',
         'alpha'             =>  ':attribute只能是字母',
         'accepted'          =>  ':attribute必须是"yes"，"on"，1或true',
@@ -59,6 +60,7 @@ return [
         'numeric'           =>  ':attribute必须为数值',
         'url'               =>  ':attribute必须为有效的URL',
         'uuid'              =>  ':attribute必须为有效的UUID',
+        'mobile'            =>  ':attribute必须为有效的手机号',
         'parameter_wrong'   =>  '参数有误',
 
 

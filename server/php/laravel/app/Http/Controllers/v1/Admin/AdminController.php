@@ -97,7 +97,7 @@ class AdminController extends Controller
                 $AdminAuthGroup->save();
             }
         }
-        return resReturn(1, '添加成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.add')]));
     }
 
     /**
@@ -131,7 +131,7 @@ class AdminController extends Controller
                 $AdminAuthGroup->save();
             }
         }
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 
     /**
@@ -146,12 +146,12 @@ class AdminController extends Controller
     public function password($id, Request $request)
     {
         if (!$request->has('password')) {
-            return resReturn(0, '请输入密码', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('hint.error.input', ['attribute' => __('requests.admin.password')]), Code::CODE_PARAMETER_WRONG);
         }
         $Admin = Admin::find($id);
         $Admin->password = bcrypt($request->password);
         $Admin->save();
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('hint.common.amend')]));
     }
 
     /**

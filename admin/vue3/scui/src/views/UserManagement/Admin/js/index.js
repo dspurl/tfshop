@@ -28,73 +28,73 @@ export default {
 				{
 					label: "ID",
 					prop: "id",
-					width: "100",
+					width: "80",
 					sortable: true,
 				},
 				{
-					label: "头像",
+					label: this.$t('admin.form.portrait.name'),
 					prop: "portrait",
 					width: "80",
 					columnKey: "filterPortrait",
 					filters: [
-						{ text: "已上传", value: 1 },
-						{ text: "未上传", value: 0 },
+						{ text: this.$t('admin.form.portrait.label.already'), value: 1 },
+						{ text: this.$t('admin.form.portrait.label.no'), value: 0 },
 					],
 				},
 				{
-					label: "账号",
+					label: this.$t('admin.form.name.name'),
 					prop: "name",
 					width: "150",
 				},
 				{
-					label: "关联用户",
+					label: this.$t('admin.form.relevance.name'),
 					prop: "user_id",
 					width: "150",
 				},
 				{
-					label: "真实姓名",
+					label: this.$t('admin.form.real_name.name'),
 					prop: "real_name",
 					width: "150",
 				},
 				{
-					label: "所属角色",
+					label: this.$t('admin.form.auth_group.name'),
 					prop: "auth_group",
 					width: "150",
 				},
 				{
-					label: "邮箱",
+					label: this.$t('admin.form.email.name'),
 					prop: "email",
 					width: "150",
 				},
 				{
-					label: "手机",
+					label: this.$t('admin.form.cellphone.name'),
 					prop: "cellphone",
 					width: "150",
 				},
 				{
-					label: "状态",
+					label: this.$t('admin.form.state.name'),
 					prop: "state",
 					width: "60",
 					columnKey: "filterState",
 					filters: [
-						{ text: "允许访问", value: 1 },
-						{ text: "禁止访问", value: 2 },
+						{ text: this.$t('admin.form.state.label.normal'), value: 1 },
+						{ text: this.$t('admin.form.state.label.forbid'), value: 2 },
 					],
 				},
 				{
-					label: "加入时间",
+					label: this.$t('admin.form.created_at.name'),
 					prop: "created_at",
 					width: "150",
 					sortable: true,
 				},
 				{
-					label: "最后登录时间",
+					label: this.$t('admin.form.login_at.name'),
 					prop: "updated_at",
 					width: "150",
 					sortable: true,
 				},
 				{
-					label: "最后操作时间",
+					label: this.$t('admin.form.updated_at.name'),
 					prop: "updated_at",
 					width: "150",
 					sortable: true,
@@ -111,35 +111,35 @@ export default {
 					type: "text",
 				},
 				{
-					label: "头像",
+					label: this.$t('admin.form.portrait.name'),
 					value: "portrait",
 					type: "select",
 					extend: {
 						multiple: true,
 						data: [
 							{
-								label: "已上传",
+								label: this.$t('admin.form.portrait.label.already'),
 								value: 1,
 							},
 							{
-								label: "未上传",
+								label: this.$t('admin.form.portrait.label.no'),
 								value: 0,
 							},
 						],
 					},
 				},
 				{
-					label: "账号",
+					label: this.$t('admin.form.name.name'),
 					value: "name",
 					type: "text",
 				},
 				{
-					label: "真实姓名",
+					label: this.$t('admin.form.real_name.name'),
 					value: "real_name",
 					type: "text",
 				},
 				{
-					label: "所属角色",
+					label: this.$t('admin.form.auth_group.name'),
 					value: "auth_group",
 					type: "select",
 					extend: {
@@ -148,45 +148,45 @@ export default {
 					},
 				},
 				{
-					label: "邮箱",
+					label: this.$t('admin.form.email.name'),
 					value: "email",
 					type: "text",
 				},
 				{
-					label: "手机",
+					label: this.$t('admin.form.cellphone.name'),
 					value: "cellphone",
 					type: "text",
 				},
 				{
-					label: "状态",
+					label: this.$t('admin.form.state.name'),
 					value: "state",
 					type: "select",
 					extend: {
 						multiple: true,
 						data: [
 							{
-								label: "允许访问",
+								label: this.$t('admin.form.state.label.normal'),
 								value: 1,
 							},
 							{
-								label: "禁止访问",
+								label: this.$t('admin.form.state.label.forbid'),
 								value: 2,
 							},
 						],
 					},
 				},
 				{
-					label: "加入时间",
+					label: this.$t('admin.form.created_at.name'),
 					value: "created_at",
 					type: "daterange",
 				},
 				{
-					label: "最后登录时间",
+					label: this.$t('admin.form.login_at.name'),
 					value: "updated_at",
 					type: "daterange",
 				},
 				{
-					label: "最后操作时间",
+					label: this.$t('admin.form.updated_at.name'),
 					value: "updated_at",
 					type: "daterange",
 				},
@@ -243,16 +243,16 @@ export default {
 			if (res.code == 200) {
 				//这里选择刷新整个表格 OR 插入/编辑现有表格数据
 				this.$refs.table.tableData.splice(index, 1);
-				this.$message.success("删除成功");
+				this.$message.success(this.$t('general.deleteSuccessfully'));
 			} else {
-				this.$alert(res.message, "提示", { type: "error" });
+				this.$alert(res.message, this.$t('general.hint'), { type: "error" });
 			}
 		},
 		//批量删除
 		async batch_del() {
 			this.$confirm(
-				`确定删除选中的 ${this.selection.length} 项吗？`,
-				"提示",
+				this.$t('general.confirmDeleteProject',{length:this.selection.length}),
+				this.$t('general.hint'),
 				{
 					type: "warning",
 				}
@@ -267,7 +267,7 @@ export default {
 						});
 					});
 					loading.close();
-					this.$message.success("操作成功");
+					this.$message.success(this.$t('general.operateSuccessfully'));
 				})
 				.catch(() => {});
 		},
@@ -280,7 +280,7 @@ export default {
 			this.showGrouploading = true;
 			var res = await this.$API.role.list.get({ all: true });
 			this.showGrouploading = false;
-			var allNode = { id: "", introduction: "所有" };
+			var allNode = { id: "", introduction: this.$t('general.all') };
 			res.message.unshift(allNode);
 			this.group = res.message;
 			this.options[4].extend.data = [];

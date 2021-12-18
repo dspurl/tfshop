@@ -66,15 +66,14 @@ class SubmitAdminRequest extends Request
     public function messages()
     {
         return [
-            'name.required' => '管理员账号不能为空',
-            'name.unique' => '管理员账号已存在',
-            'name.max' => '管理员账号长度不能超过30位',
-            'email.email' => '邮箱格式错误',
-            'email.email' => '邮箱格式错误',
-            'cellphone.mobile' => '手机格式错误',
-            'cellphone.max' => '手机号长度不能超过11位',
-            'portrait.max' => '头像长度不能超过50位',
-            'password.required' => '管理员密码不能为空',
+            'name.required' => __('hint.error.not_null', ['attribute' => __('requests.admin.name')]),
+            'name.unique' => __('hint.error.exist', ['attribute' => __('requests.admin.name')]),
+            'name.max' => __('hint.error.exceed', ['attribute' => __('requests.admin.name'), 'place' => 30]),
+            'email.email' => __('hint.error.email', ['attribute' => __('requests.admin.email')]),
+            'cellphone.mobile' => __('hint.error.mobile', ['attribute' => __('requests.admin.cellphone')]),
+            'cellphone.max' => __('hint.error.exceed', ['attribute' => __('requests.admin.cellphone'), 'place' => 11]),
+            'portrait.max' => __('hint.error.exceed', ['attribute' => __('requests.admin.portrait'), 'place' => 50]),
+            'password.required' => __('hint.error.not_null', ['attribute' => __('requests.admin.password')]),
         ];
     }
 }

@@ -43,7 +43,7 @@ class Admin extends Authenticatable
                     $data->group = $auth_group['introduction'] . ' ';
                 }
             } else {
-                $data->group = '未分配';
+                $data->group = __('requests.auth_group.undistributed');
             }
         }
     }

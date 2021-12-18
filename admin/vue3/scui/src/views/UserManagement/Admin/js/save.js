@@ -8,9 +8,9 @@ export default {
 		return {
 			mode: "add",
 			titleMap: {
-				add: "新增用户",
-				edit: "编辑用户",
-				show: "查看",
+				add: this.$t('general.add',{msg: this.$t('admin.user')}),
+				edit: this.$t('general.edit',{msg: this.$t('admin.user')}),
+				show: this.$t('general.view'),
 			},
 			visible: false,
 			isSaveing: false,
@@ -25,9 +25,9 @@ export default {
 			},
 			//验证规则
 			rules: {
-				name: [{ required: true, message: "请输入登录账号" }],
+				name: [{ required: true, message: this.$t('general.pleaseInput',{msg:this.$t('admin.form.name.name')}) }],
 				password: [
-					{ required: true, message: "请输入登录密码" },
+					{ required: true, message: this.$t('general.pleaseInput',{msg:this.$t('admin.form.password.name')}) },
 					{
 						validator: (rule, value, callback) => {
 							if (this.form.password2 !== "") {
@@ -40,11 +40,11 @@ export default {
 					},
 				],
 				password2: [
-					{ required: true, message: "请再次输入密码" },
+					{ required: true, message: this.$t('form.password.title2') },
 					{
 						validator: (rule, value, callback) => {
 							if (value !== this.form.password) {
-								callback(new Error("两次输入密码不一致!"));
+								callback(new Error(this.$t('form.password.inconformity')));
 							} else {
 								callback();
 							}
@@ -68,6 +68,13 @@ export default {
 		open(mode = "add") {
 			this.mode = mode;
 			this.visible = true;
+			return this;
+		},
+		//加载树数据
+		getGroup(data) {
+			this.groups = data.filter((x) => {
+				return x.id;
+			});
 			return this;
 		},
 		//表单提交方法
