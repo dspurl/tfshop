@@ -6,12 +6,15 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property mixed nickname
  * @property int admin_id
+ * @property array header
+ * @property string name
  * @property string path
+ * @property string url
  * @property string method
  * @property string ip
- * @property string input
+ * @property array param
+ * @property array response
  */
 class AdminLog extends Model
 {
@@ -28,17 +31,45 @@ class AdminLog extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    /**
-     * 提交的数据
-     * @return void
-     */
-    public function getInputAttribute()
-    {
-        if (!self::$withoutAppends) {
-            return json_decode($this->attributes['input']);
-        } else {
-            return $this->attributes['input'];
-        }
+    public function getHeaderAttribute()
+{
+    if (isset($this->attributes['header'])) {
+        return json_decode($this->attributes['header']);
+    } else {
+        return [];
+    }
+}
 
+    public function setHeaderAttribute($value)
+    {
+        $this->attributes['header'] = json_encode($value, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getParamAttribute()
+    {
+        if (isset($this->attributes['param'])) {
+            return json_decode($this->attributes['param']);
+        } else {
+            return [];
+        }
+    }
+
+    public function setParamAttribute($value)
+    {
+        $this->attributes['param'] = json_encode($value, JSON_UNESCAPED_UNICODE);
+    }
+
+    public function getResponseAttribute()
+    {
+        if (isset($this->attributes['response'])) {
+            return json_decode($this->attributes['response']);
+        } else {
+            return [];
+        }
+    }
+
+    public function setResponseAttribute($value)
+    {
+        $this->attributes['response'] = json_encode($value, JSON_UNESCAPED_UNICODE);
     }
 }

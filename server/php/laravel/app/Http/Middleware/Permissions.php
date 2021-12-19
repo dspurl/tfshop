@@ -35,17 +35,17 @@ class Permissions
         if ($authRule) {
             $count = AuthGroupAuthRule::where('auth_rule_id', $authRule->id)->whereIn('auth_group_id', $authGroup)->count();
             if ($count > 0) { //判断是否拥有该权限
-                //记录
-                if ('GET' != $request->method() && 'OPTIONS' != $request->method()) {
-                    $input = $request->all();
-                    $log = new AdminLog();
-                    $log->admin_id = auth('api')->user()->id;
-                    $log->path = $request->path();
-                    $log->method = $request->method();
-                    $log->ip = $request->ip();
-                    $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
-                    $log->save();   # 记录日志
-                }
+                $response = $next($request);
+                $AdminLog = new AdminLog();
+                $AdminLog->admin_id = auth('api')->user()->id;
+                $AdminLog->header = $request->header();
+                $AdminLog->path = $request->path();
+                $AdminLog->url = $request->fullUrl();
+                $AdminLog->method = $request->method();
+                $AdminLog->ip = $request->ip();
+                $AdminLog->param = $request->all();
+                $AdminLog->response = $response->getContent();
+                $AdminLog->save();
                 return $next($request);
             } else {
                 return resReturn(0, __('hint.system.account_has_no_permission'), Code::CODE_NO_ACCESS);

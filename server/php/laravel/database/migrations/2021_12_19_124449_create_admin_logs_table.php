@@ -16,11 +16,15 @@ class CreateAdminLogsTable extends Migration
     {
         Schema::create('admin_logs', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('admin_id')->index()->comment('管理员ID');
+            $table->unsignedSmallInteger('admin_id')->default(0)->index()->comment('管理员ID');
+            $table->json('header')->comment('请求头');
+            $table->string('name', 255)->comment('路由别名');
             $table->string('path', 255)->comment('路径');
+            $table->string('url', 255)->comment('请求url');
             $table->string('method', 10)->comment('请求方法');
-            $table->ipAddress('ip')->comment('IP');
-            $table->text('input')->comment('提交的数据');
+            $table->ipAddress('ip')->comment('客户端IP');
+            $table->json('param')->comment('请求参数');
+            $table->json('response')->comment('响应结果');
             $table->timestamps();
             $table->unique('id');
         });

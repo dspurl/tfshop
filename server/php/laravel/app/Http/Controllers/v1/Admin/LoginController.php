@@ -26,8 +26,6 @@ class LoginController extends Controller
         if (!Hash::check($request->password, $admin->password)) {
             return resReturn(0, __('hint.error.mistake', ['attribute' => __('requests.user.password')]), Code::CODE_WRONG);
         }
-        // $admin->last_login_at = Carbon::now()->toDateTimeString();
-        // $admin->save();
         $access_token = '';
         if ($request->type == 1) {  //首次登录获取token
             $client = new Client();
@@ -48,15 +46,6 @@ class LoginController extends Controller
             $access_token = json_decode($respond->getBody()->getContents(), true);
         }
         $access_token['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
-        //日志记录
-        $input = $request->all();
-        $log = new AdminLog();
-        $log->admin_id = $admin->id;
-        $log->path = $request->path();
-        $log->method = $request->method();
-        $log->ip = $request->ip();
-        $log->input = json_encode($input, JSON_UNESCAPED_UNICODE);
-        $log->save();   # 记录日志
         return resReturn(1, $access_token);
     }
 
@@ -165,13 +154,6 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $log = new AdminLog();
-        $log->admin_id = auth('api')->user()->id;
-        $log->path = $request->path();
-        $log->method = $request->method();
-        $log->ip = $request->ip();
-        $log->input = json_encode($request->all(), JSON_UNESCAPED_UNICODE);
-        $log->save();
         return resReturn(1, 'ok');
     }
 }
