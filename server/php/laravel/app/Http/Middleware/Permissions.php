@@ -35,17 +35,6 @@ class Permissions
         if ($authRule) {
             $count = AuthGroupAuthRule::where('auth_rule_id', $authRule->id)->whereIn('auth_group_id', $authGroup)->count();
             if ($count > 0) { //判断是否拥有该权限
-                $response = $next($request);
-                $AdminLog = new AdminLog();
-                $AdminLog->admin_id = auth('api')->user()->id;
-                $AdminLog->header = $request->header();
-                $AdminLog->path = $request->path();
-                $AdminLog->url = $request->fullUrl();
-                $AdminLog->method = $request->method();
-                $AdminLog->ip = $request->ip();
-                $AdminLog->param = $request->all();
-                $AdminLog->response = $response->getContent();
-                $AdminLog->save();
                 return $next($request);
             } else {
                 return resReturn(0, __('hint.system.account_has_no_permission'), Code::CODE_NO_ACCESS);
@@ -53,7 +42,5 @@ class Permissions
         } else {
             return resReturn(0, __('hint.system.permission_is_not_configured'), Code::CODE_NO_ACCESS);
         }
-
-
     }
 }

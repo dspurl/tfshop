@@ -30,7 +30,7 @@ class Log
             $AdminLog = new AdminLog();
             $AdminLog->admin_id = $id;
             $AdminLog->header = $request->header();
-            $AdminLog->name = $request->route()->getName();
+            $AdminLog->name = $request->route()->getName() ?? '';
             $AdminLog->path = $request->path();
             $AdminLog->url = $request->fullUrl();
             $AdminLog->method = $request->method();
