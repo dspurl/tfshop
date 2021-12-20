@@ -10,6 +10,8 @@ import App from './App.vue'
 import VideoPlayer from 'vue-video-player/src'
 import 'vue-video-player/src/custom-theme.css'
 import 'video.js/dist/video-js.css'
+import JsonViewer from 'vue-json-viewer'
+import 'vue-json-viewer/style.css'
 
 const app = createApp(App);
 
@@ -19,6 +21,7 @@ app.use(ElementPlus, {size: 'small'});
 app.use(i18n);
 app.use(scui);
 app.use(VideoPlayer)
+app.use(JsonViewer)
 
 //挂载app
 app.mount('#app');

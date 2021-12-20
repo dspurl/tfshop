@@ -42,7 +42,8 @@
 			disabled: { type: Boolean, default: false },
 			tableWidth: {type: Number, default: 400},
 			mode: { type: String, default: "popover" },
-			props: { type: Object, default: () => {} }
+			props: { type: Object, default: () => {} },
+			pageSize: {type: Number, default: config.pageSize},
 		},
 		data() {
 			return {
@@ -50,7 +51,6 @@
 				keyword: null,
 				defaultValue: [],
 				tableData: [],
-				pageSize: config.pageSize,
 				total: 0,
 				currentPage: 1,
 				defaultProps: {

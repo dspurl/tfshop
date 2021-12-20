@@ -31,6 +31,8 @@ export default {
 		rename: "重命名",
 		ack: "输入关键词后按回车确认",
 		all: "所有",
+		copy: "复制",
+		copying: "复制中",
 	},
 	setting: {
 		form: {
@@ -364,4 +366,41 @@ export default {
 			},
 		}
 	},
+	adminLog: {
+		FilterBarName: "管理员日志筛选",
+		infoName: "日志详情",
+		form: {
+			admin: {
+				name: "用户",
+			},
+			header: {
+				name: "请求头",
+			},
+			name: {
+				name: "日志名",
+			},
+			path: {
+				name: "路径",
+			},
+			url: {
+				name: "请求url",
+			},
+			method: {
+				name: "请求方法",
+				label: {
+					get: "GET",
+					post: "POST"
+				}
+			},
+			ip: {
+				name: "客户端IP",
+			},
+			param: {
+				name: "请求参数",
+			},
+			created_at: {
+				name: "响应时间",
+			},
+		}
+	}
 };

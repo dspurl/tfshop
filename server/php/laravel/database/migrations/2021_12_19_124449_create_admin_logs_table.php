@@ -24,7 +24,6 @@ class CreateAdminLogsTable extends Migration
             $table->string('method', 10)->comment('请求方法');
             $table->ipAddress('ip')->comment('客户端IP');
             $table->json('param')->comment('请求参数');
-            $table->json('response')->comment('响应结果');
             $table->timestamps();
             $table->unique('id');
         });

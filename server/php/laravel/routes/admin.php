@@ -32,10 +32,11 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('adminFilter', 'AdminFilterController@create')->name('admin.adminFilterCreate')->middleware(['permissions:AdminFilterCreate']);  //创建管理员过滤器
         Route::post('adminFilter/{id}', 'AdminFilterController@edit')->name('admin.adminFilterEdit')->middleware(['permissions:AdminFilterEdit']);  //保存管理员过滤器
         Route::post('adminFilter/destroy/{id}', 'AdminFilterController@destroy')->name('admin.adminFilterDestroy')->middleware(['permissions:AdminFilterDestroy']); //删除管理员过滤器
-        Route::get('admin/log', 'AdminController@log')->name('admin.adminLog')->middleware(['permissions:AdminLogList']);  //管理员操作日志
-        Route::get('member', 'MemberController@list')->name('admin.memberList')->middleware(['permissions:MemberList']);  //会员列表
-        Route::post('member', 'MemberController@create')->name('admin.memberCreate')->middleware(['permissions:MemberCreate']);  //创建会员
-        Route::post('member/{id}', 'MemberController@edit')->name('admin.memberEdit')->middleware(['permissions:MemberEdit']);  //保存会员
+        Route::get('adminLog', 'AdminLogController@list')->name('admin.adminLog')->middleware(['permissions:AdminLog']);  //管理员日志列表
+        Route::get('user', 'UserController@list')->name('admin.userList')->middleware(['permissions:User']);  //会员列表
+        Route::post('user', 'UserController@create')->name('admin.userCreate')->middleware(['permissions:UserCreate']);  //创建会员
+        Route::post('user/{id}', 'UserController@edit')->name('admin.userEdit')->middleware(['permissions:UserEdit']);  //保存会员
+
         Route::get('role', 'RoleController@list')->name('admin.role')->middleware(['permissions:Role']);  //角色管理
         Route::post('role', 'RoleController@create')->name('admin.roleCreate')->middleware(['permissions:RoleCreate']);  //创建角色
         Route::post('role/{id}', 'RoleController@edit')->name('admin.roleEdit')->middleware(['permissions:RoleEdit']);  //保存角色

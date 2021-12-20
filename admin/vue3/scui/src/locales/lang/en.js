@@ -32,6 +32,8 @@ export default {
 		rename: "Rename",
 		ack: "Enter your keywords and press Enter to confirm",
 		all: "All",
+		copy: "Copy",
+		copying: "Copying",
 	},
 	setting: {
 		form: {
@@ -370,4 +372,41 @@ export default {
 			},
 		}
 	},
+	adminLog: {
+		FilterBarName: "Filtering Administrator logs",
+		infoName: "Log details",
+		form: {
+			admin: {
+				name: "User",
+			},
+			header: {
+				name: "Request header",
+			},
+			name: {
+				name: "Name",
+			},
+			path: {
+				name: "path",
+			},
+			url: {
+				name: "Request URL",
+			},
+			method: {
+				name: "Request method",
+				label: {
+					get: "GET",
+					post: "POST"
+				}
+			},
+			ip: {
+				name: "Client IP",
+			},
+			param: {
+				name: "Required parameter",
+			},
+			created_at: {
+				name: "Response time",
+			},
+		}
+	}
 };

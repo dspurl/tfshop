@@ -14,7 +14,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property string method
  * @property string ip
  * @property array param
- * @property array response
  */
 class AdminLog extends Model
 {
@@ -32,17 +31,17 @@ class AdminLog extends Model
     }
 
     public function getHeaderAttribute()
-{
-    if (isset($this->attributes['header'])) {
-        return json_decode($this->attributes['header']);
-    } else {
-        return [];
+    {
+        if (isset($this->attributes['header'])) {
+            return json_decode($this->attributes['header']);
+        } else {
+            return [];
+        }
     }
-}
 
     public function setHeaderAttribute($value)
     {
-        $this->attributes['header'] = json_encode($value, JSON_UNESCAPED_UNICODE);
+        $this->attributes['header'] = json_encode($value);
     }
 
     public function getParamAttribute()
@@ -56,7 +55,7 @@ class AdminLog extends Model
 
     public function setParamAttribute($value)
     {
-        $this->attributes['param'] = json_encode($value, JSON_UNESCAPED_UNICODE);
+        $this->attributes['param'] = json_encode($value);
     }
 
     public function getResponseAttribute()
@@ -68,8 +67,15 @@ class AdminLog extends Model
         }
     }
 
-    public function setResponseAttribute($value)
+    public function getNameAttribute()
     {
-        $this->attributes['response'] = json_encode($value, JSON_UNESCAPED_UNICODE);
+        if (isset($this->attributes['name'])) {
+            return __("route." . $this->attributes['name']);
+        }
+    }
+
+    public function Admin()
+    {
+        return $this->belongsTo(Admin::class);
     }
 }

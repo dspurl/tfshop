@@ -36,7 +36,6 @@ class Log
             $AdminLog->method = $request->method();
             $AdminLog->ip = $request->ip();
             $AdminLog->param = $request->all();
-            $AdminLog->response = $response->getContent();
             $AdminLog->save();
         } else if (strpos($request->route()->getName(), 'client.') !== false) {
             $UserLog = new UserLog();
@@ -48,7 +47,6 @@ class Log
             $UserLog->method = $request->method();
             $UserLog->ip = $request->ip();
             $UserLog->param = $request->all();
-            $UserLog->response = $response->getContent();
             $UserLog->save();
         }
         return $next($request);

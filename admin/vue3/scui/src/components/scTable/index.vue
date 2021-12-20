@@ -107,6 +107,7 @@ export default {
 		hidePagination: { type: Boolean, default: false },
 		hideDo: { type: Boolean, default: false },
 		paginationLayout: { type: String, default: "total, prev, pager, next, jumper" },
+		pageSize: {type: Number, default: config.pageSize},
 	},
 	watch: {
 		//监听从props里拿到值了
@@ -129,7 +130,6 @@ export default {
 			emptyText: "暂无数据",
 			toggleIndex: 0,
 			tableData: [],
-			pageSize: config.pageSize,
 			total: 0,
 			currentPage: 1,
 			prop: null,

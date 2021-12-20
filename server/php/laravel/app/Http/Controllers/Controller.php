@@ -131,8 +131,8 @@ class Controller extends BaseController
     }
 
     /**
-     * 自定义条件筛选
-     * Custom filter criteria
+     * 自定义条件筛选，支持关联表查询
+     * Custom filter criteria, support associated table query
      * @param $q
      * @param $filter
      * @return mixed
@@ -149,23 +149,52 @@ class Controller extends BaseController
             if (count($value) === 1) {
                 throw new \Exception('缺少分割符|', Code::CODE_WRONG);
             }
-            switch ($value[1]) {
-                case '=':
-                    $q->where($id, $value[0]);
-                    break;
-                case '!=':
-                case '>':
-                case '>=':
-                case '<':
-                case '<=':
-                    $q->where($id, $value[1], $value[0]);
-                    break;
-                case 'include':
-                    $q->where($id, 'like', "%$value[0]%");
-                    break;
-                case 'notinclude':
-                    $q->where($id, 'not like', "%$value[0]%");
-                    break;
+            // 关联查询
+            if (strpos($id, '.') !== false) {
+                $join = explode('.', $id);
+                $condition = $join[count($join) - 1];   //获取字段名
+
+                unset($join[count($join) - 1]); //删除字段名
+                $nest = implode($join, '.');    //获取嵌套的关联表名
+                $q->whereHas($nest, function ($query) use ($condition, $value) {
+                    switch ($value[1]) {
+                        case '=':
+                            $query->where($condition, $value[0]);
+                            break;
+                        case '!=':
+                        case '>':
+                        case '>=':
+                        case '<':
+                        case '<=':
+                            $query->where($condition, $value[1], $value[0]);
+                            break;
+                        case 'include':
+                            $query->where($condition, 'like', "%$value[0]%");
+                            break;
+                        case 'notinclude':
+                            $query->where($condition, 'not like', "%$value[0]%");
+                            break;
+                    }
+                });
+            } else {
+                switch ($value[1]) {
+                    case '=':
+                        $q->where($id, $value[0]);
+                        break;
+                    case '!=':
+                    case '>':
+                    case '>=':
+                    case '<':
+                    case '<=':
+                        $q->where($id, $value[1], $value[0]);
+                        break;
+                    case 'include':
+                        $q->where($id, 'like', "%$value[0]%");
+                        break;
+                    case 'notinclude':
+                        $q->where($id, 'not like', "%$value[0]%");
+                        break;
+                }
             }
         }
         return $q;

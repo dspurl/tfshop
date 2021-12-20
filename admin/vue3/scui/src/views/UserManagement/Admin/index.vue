@@ -24,15 +24,22 @@
 		<el-container>
 			<el-header>
 				<div class="left-panel">
-					<el-button type="primary" icon="el-icon-plus" @click="add"></el-button>
+					<el-button v-auth="['AdminCreate']" type="primary" icon="el-icon-plus" @click="add"></el-button>
 					<el-button
+						v-auth="['AdminDestroy']"
 						type="danger"
 						plain
 						icon="el-icon-delete"
 						:disabled="selection.length == 0"
 						@click="batch_del"
 					></el-button>
-					<el-button @click="password" type="primary" plain :disabled="selection.length !== 1">{{$t('admin.button.password')}}</el-button>
+					<el-button
+						v-auth="['AdminPassword']"
+						@click="password"
+						type="primary"
+						plain
+						:disabled="selection.length !== 1"
+					>{{ $t('admin.button.password') }}</el-button>
 					<scFilterBar
 						style="margin-left:10px;"
 						:filterName="$t('admin.FilterBarName')"
@@ -80,11 +87,24 @@
 					</template>
 					<el-table-column :label="$t('general.operation')" fixed="right" align="right" width="150">
 						<template #default="scope">
-							<el-button type="text" size="small" @click="table_show(scope.row, scope.$index)">{{$t('general.view')}}</el-button>
-							<el-button type="text" size="small" @click="table_edit(scope.row, scope.$index)">{{$t('general.edit')}}</el-button>
-							<el-popconfirm :title="$t('general.sureDelete')" @confirm="table_del(scope.row, scope.$index)">
+							<el-button
+								type="text"
+								size="small"
+								v-auth="['AdminView']"
+								@click="table_show(scope.row, scope.$index)"
+							>{{ $t('general.view') }}</el-button>
+							<el-button
+								type="text"
+								size="small"
+								v-auth="['AdminEdit']"
+								@click="table_edit(scope.row, scope.$index)"
+							>{{ $t('general.edit') }}</el-button>
+							<el-popconfirm
+								:title="$t('general.sureDelete')"
+								@confirm="table_del(scope.row, scope.$index)"
+							>
 								<template #reference>
-									<el-button type="text" size="small">{{$t('general.delete')}}</el-button>
+									<el-button v-auth="['AdminDestroy']" type="text" size="small">{{ $t('general.delete') }}</el-button>
 								</template>
 							</el-popconfirm>
 						</template>
@@ -95,6 +115,7 @@
 	</el-container>
 
 	<save-dialog
+		v-auth="['AdminCreate', 'AdminEdit']"
 		v-if="dialog.save"
 		ref="saveDialog"
 		@success="handleSuccess"
@@ -102,6 +123,7 @@
 		:close-on-click-modal="false"
 	></save-dialog>
 	<password-dialog
+		v-auth="['AdminPassword']"
 		v-if="dialog.password"
 		ref="passwordDialog"
 		@closed="dialog.password = false"

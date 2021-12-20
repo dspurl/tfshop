@@ -30,7 +30,6 @@ class Permissions
         foreach ($users as $u) {
             $authGroup[] = $u['id'];
         }
-        $rules = array();
         $authRule = AuthRule::where('api', $role)->first(['id']);
         if ($authRule) {
             $count = AuthGroupAuthRule::where('auth_rule_id', $authRule->id)->whereIn('auth_group_id', $authGroup)->count();

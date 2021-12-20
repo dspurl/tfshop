@@ -102,7 +102,7 @@ export default {
 			],
 			params: {
 				filter: null,
-				limit: 10,
+				limit: 20,
 			},
 			options: [
 				{
