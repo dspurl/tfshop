@@ -23,7 +23,6 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \App\Http\Middleware\EnableCrossRequestMiddleware::class,
         \App\Http\Middleware\Lang::class,
-        \App\Http\Middleware\Log::class,
     ];
 
     /**
@@ -71,5 +70,6 @@ class Kernel extends HttpKernel
         'lessee' => \App\Http\Middleware\LesseeVerify::class,
         'appverify' => \App\Http\Middleware\AppVerify::class,
         'wechat.oauth' => \Overtrue\LaravelWeChat\Middleware\OAuthAuthenticate::class,
+        'log' => \App\Http\Middleware\Log::class,
     ];
 }

@@ -20,7 +20,6 @@ class Log
     public function handle(Request $request, Closure $next)
     {
         $id = 0;
-        $response = $next($request);
         if (auth('api')->user()) {
             $id = auth('api')->user()->id;
         } else if (auth('web')->user()) {

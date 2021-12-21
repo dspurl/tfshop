@@ -123,5 +123,9 @@ export default {
 			this.$router.go(0);
 			loading.close();
 		},
+		// 刷新列表
+		refresh(){
+			this.getMenu();
+		}
 	},
 };

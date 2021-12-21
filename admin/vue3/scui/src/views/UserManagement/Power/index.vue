@@ -55,6 +55,13 @@
 						@click="refreshMenu"
 						icon="el-icon-refresh-right"
 					>{{ $t('general.refreshMenu') }}</el-button>
+					<el-button
+						circle
+						size="mini"
+						plain
+						icon="el-icon-refresh"
+						@click="refresh"
+					></el-button>
 				</el-footer>
 			</el-container>
 		</el-aside>

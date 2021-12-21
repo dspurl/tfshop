@@ -2,7 +2,7 @@
 	<el-card shadow="hover" header="版本信息">
 		<div style="height: 210px;text-align: center;">
 			<img src="img/ver.svg" style="height:140px"/>
-			<h2 style="margin-top: 15px;">SCUI {{$ENV.VUE_APP_CORE_VER}}</h2>
+			<h2 style="margin-top: 15px;">SCUI {{$ENV.VUE_APP_VER}}</h2>
 			<p style="margin-top: 5px;">最新版本 {{ver}}</p>
 		</div>
 		<div style="margin-top: 20px;">

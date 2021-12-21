@@ -26,6 +26,7 @@ export default {
     },
     mounted() {
         this.$emit('on-mounted')
+        console.log('allComps', allComps)
     },
     computed: {
         allCompsList(){

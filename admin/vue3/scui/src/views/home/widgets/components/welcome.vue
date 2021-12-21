@@ -12,15 +12,16 @@
 				</div>
 				<div class="tips-item">
 					<div class="tips-item-icon"><el-icon><el-icon-promotion/></el-icon></div>
-					<div class="tips-item-message">在提高前端算力、减少带宽请求和代码执行力上多次优化，并且持续着。</div>
+					<div class="tips-item-message">在提高在提高开发效率，减少重复代码书写量，并且持续着。</div>
 				</div>
 				<div class="tips-item">
 					<div class="tips-item-icon"><el-icon><el-icon-milk-tea/></el-icon></div>
-					<div class="tips-item-message">项目目的：让前端工作更快乐</div>
+					<div class="tips-item-message">项目目的：让项目更快上线，更容易维护，更容易扩展。</div>
 				</div>
 			</div>
 			<div class="actions">
-				<el-button type="primary" icon="el-icon-check" size="medium" @click="godoc">文档</el-button>
+				<el-button type="primary" icon="el-icon-check" size="medium" @click="goGiteeDoc">Gitee文档</el-button>
+				<el-button type="primary" icon="el-icon-check" size="medium" @click="goGitHubDoc">GitHub文档</el-button>
 			</div>
 		</div>
 	</el-card>
@@ -37,8 +38,11 @@
 			}
 		},
 		methods: {
-			godoc(){
-				window.open("https://lolicode.gitee.io/scui-doc/")
+			goGiteeDoc(){
+				window.open("https://dspurl.github.io/dsshop")
+			},
+			goGitHubDoc(){
+				window.open("https://dswjcms_purl.gitee.io/dsshop")
 			}
 		}
 	}
