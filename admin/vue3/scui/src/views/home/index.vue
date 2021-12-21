@@ -19,7 +19,7 @@
 	const widgets = defineAsyncComponent(() => import('./widgets'));
 
 	export default {
-		name: "dashboard",
+		name: "Dashboard",
 		components: {
 			work,
 			widgets

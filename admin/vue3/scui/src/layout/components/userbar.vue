@@ -41,7 +41,8 @@
 		</div>
 		<el-dropdown class="user panel-item" trigger="click" @command="handleUser">
 			<div class="user-avatar">
-				<el-avatar :size="30">{{ userNameF }}</el-avatar>
+				<el-avatar :size="30" v-if="userAvatar" :icon="userAvatar"></el-avatar>
+				<el-avatar :size="30" v-else>{{ userNameF }}</el-avatar>
 				<label>{{ userName }}</label>
 				<el-icon class="el-icon--right"><el-icon-arrow-down /></el-icon>
 			</div>
@@ -63,6 +64,7 @@ import { removeToken } from '@/utils/auth'
 			return {
 				userName: "",
 				userNameF: "",
+				userAvatar: "",
 				msg: false,
 				msgList: [
 					{
@@ -98,6 +100,7 @@ import { removeToken } from '@/utils/auth'
 		created() {
 			var userInfo = this.$TOOL.data.get("USER_INFO");
 			this.userName = userInfo.userName;
+			this.userAvatar = userInfo.avatar
 			this.userNameF = this.userName.substring(0,1);
 		},
 		methods: {
