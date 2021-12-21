@@ -39,7 +39,7 @@ router.beforeEach(async (to, from, next) => {
 		? `${to.meta.title} - ${process.env.VUE_APP_NAME}`
 		: `${process.env.VUE_APP_NAME}`;
 
-	let token = getToken("access_token");
+	const token = getToken("access_token");
 	if (getToken("expires_in") && to.path !== "/login") {
 		if (new Date().getTime() >= getToken("expires_in") - 300 * 1000) {
 			// token失效前5分钟会自动刷新token

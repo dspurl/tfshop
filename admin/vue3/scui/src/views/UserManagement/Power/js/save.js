@@ -105,8 +105,10 @@ export default {
 		async save() {
 			this.loading = true;
 			try {
-				await this.$API.power.edit.post(this.form);
-				this.$message.success(this.$t("general.saveSuccessfully"));
+				const data = await this.$API.power.edit.post(this.form);
+				if (data) {
+					this.$message.success(this.$t("general.saveSuccessfully"));
+				}
 			} finally {
 				this.loading = false;
 			}

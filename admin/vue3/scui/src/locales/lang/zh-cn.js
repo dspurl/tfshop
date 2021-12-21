@@ -79,6 +79,9 @@ export default {
 			confirmButtonText: "重新登录",
 			cancelButtonText: "取消",
 		},
+		reRefresh: {
+			info: "您的TOKEN已失效，现已更新，请重新提交",
+		},
 		404: "正在请求不存在的服务器记录！",
 		500: "服务器发生错误！",
 	},

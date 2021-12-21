@@ -80,6 +80,9 @@ export default {
 			confirmButtonText: "Re Login",
 			cancelButtonText: "Cancel",
 		},
+		reRefresh: {
+			info: "Your TOKEN is invalid, it has been updated, please resubmit",
+		},
 		404: "Requesting a nonexistent server record!",
 		500: "Server error!",
 	},

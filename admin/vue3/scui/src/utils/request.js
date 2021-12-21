@@ -1,9 +1,10 @@
 import axios from "axios";
 import { ElNotification, ElMessageBox } from "element-plus";
-import { getToken, removeToken } from "@/utils/auth";
+import { getToken, setToken, removeToken } from "@/utils/auth";
 import router from "@/router";
 import i18n from "@/locales";
 import tool from "@/utils/tool";
+import api from "@/api";
 
 axios.defaults.baseURL = "";
 
@@ -45,7 +46,7 @@ axios.interceptors.response.use(
 			if (error.response.status == 404) {
 				ElNotification.error({
 					title: i18n.global.tc("request.error"),
-					message: `Status:404，i18n.global.tc('request.404')`,
+					message: `Status:404，${i18n.global.tc("request.404")}`,
 				});
 			} else if (error.response.status == 500) {
 				if (
@@ -62,20 +63,51 @@ axios.interceptors.response.use(
 							`Status:500，${i18n.global.tc("request.500")}`,
 					});
 				} else {
-					ElMessageBox.confirm(
-						i18n.global.tc("request.reLogin.info"),
-						i18n.global.tc("request.reLogin.title"),
-						{
-							confirmButtonText: i18n.global.tc(
-								"request.reLogin.confirmButtonText"
-							),
-							cancelButtonText: i18n.global.tc(
-								"request.reLogin.cancelButtonText"
-							),
-							type: "warning",
-						}
-					)
-						.then(() => {
+					if (
+						error.response.data.message.indexOf(
+							"Unauthenticated"
+						) !== -1
+					) {
+						api.auth.refreshToken
+							.post({
+								refresh_token: getToken("refresh_token"),
+							})
+							.then((res) => {
+								ElNotification.error({
+									title: i18n.global.tc("request.error"),
+									message: i18n.global.tc(
+										"request.reRefresh.info"
+									),
+								});
+								setToken(
+									"access_token",
+									res.message.access_token
+								);
+								setToken(
+									"expires_in",
+									new Date().getTime() +
+										res.message.expires_in * 1000
+								);
+								setToken(
+									"refresh_token",
+									res.message.refresh_token
+								);
+								setToken("token_type", res.message.token_type);
+							});
+					} else {
+						ElMessageBox.confirm(
+							i18n.global.tc("request.reLogin.info"),
+							i18n.global.tc("request.reLogin.title"),
+							{
+								confirmButtonText: i18n.global.tc(
+									"request.reLogin.confirmButtonText"
+								),
+								cancelButtonText: i18n.global.tc(
+									"request.reLogin.cancelButtonText"
+								),
+								type: "warning",
+							}
+						).then(() => {
 							tool.data.remove("TOKEN");
 							tool.data.remove("USER_INFO");
 							tool.data.remove("MENU");
@@ -87,9 +119,10 @@ axios.interceptors.response.use(
 							removeToken("refresh_token");
 							removeToken("token_type");
 							router.go(0);
-						})
-						.catch(() => {});
+						});
+					}
 				}
+				return false;
 			} else if (error.response.status == 401) {
 				if (
 					error.response.data.message.code === 50002 ||
