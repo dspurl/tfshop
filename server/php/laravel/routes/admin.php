@@ -105,7 +105,7 @@ Route::prefix('v' . config('dsshop.versions'))->middleware(['log'])->namespace('
         Route::post('banner', 'BannerController@create')->name('admin.bannerCreate')->middleware(['permissions:BannerCreate']);    //创建轮播
         Route::post('banner/{id}', 'BannerController@edit')->name('admin.bannerEdit')->middleware(['permissions:BannerEdit']);    //保存轮播
         Route::post('banner/destroy/{id}', 'BannerController@destroy')->name('admin.bannerDestroy')->middleware(['permissions:BannerDestroy']);    //删除轮播
-        Route::get('plugin', 'PluginController@list')->name('admin.plugInList')->middleware(['permissions:PlugInList']);    //插件列表
+        Route::get('plugin', 'PluginController@list')->name('admin.plugInList')->middleware(['permissions:PlugIn']);    //插件列表
         Route::post('plugin', 'PluginController@create')->name('admin.plugInCreate')->middleware(['permissions:PlugInCreate']);    //创建插件
         Route::post('plugin/{name}', 'PluginController@edit')->name('admin.plugInEdit')->middleware(['permissions:PlugInEdit']);    //保存插件
         Route::get('plugin/{name}', 'PluginController@details')->name('admin.plugInDetails')->middleware(['permissions:PlugInEdit']);    //插件详情

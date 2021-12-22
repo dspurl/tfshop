@@ -44,8 +44,8 @@
 		</el-main>
 	</el-container>
 
-	<el-drawer v-auth="['AdminLogView']" v-model="infoDrawer" :title="$t('adminLog.infoName')" :size="600" destroy-on-close>
-		<info ref="info"></info>
+	<el-drawer v-model="infoDrawer" :title="$t('adminLog.infoName')" :size="600" destroy-on-close>
+		<info v-auth="['AdminLogView']" ref="info"></info>
 	</el-drawer>
 </template>
 <style lang='scss' scoped>
