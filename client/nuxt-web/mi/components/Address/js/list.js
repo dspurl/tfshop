@@ -20,6 +20,7 @@ export default{
       }
     };
     return {
+      src: 'https://apis.map.qq.com/tools/locpicker?search=1&type=1&key='+process.env.IBS_KEY+'&referer=myapp', // https://lbs.qq.com
       restaurants: [],
       buttonLoading: false,
       loading: false,
@@ -40,10 +41,8 @@ export default{
           { required: true, message: '请输入姓名', trigger: 'blur' },
         ],
         cellphone: [
+          { required: true, message: '请输入手机号', trigger: 'blur' },
           { validator: validateCellphone, trigger: 'blur' }
-        ],
-        location: [
-          { required: true, message: '请输入地址', trigger: 'blur' },
         ],
         house: [
           { required: true, message: '请输入门牌号', trigger: 'blur' },
@@ -51,18 +50,10 @@ export default{
       }
     };
   },
-  watch: {
-    /*getList(newVal) {
-      this.$emit('getList', newVal)
-      this.getLists = this.getList
-      if(!this.update){
-        this.loadData()
-      }
-    },*/
-
-  },
+  watch: {},
   mounted() {
     this.getList()
+    window.addEventListener('message', this.handleSelect)
   },
   methods:{
     async getList(){
@@ -113,6 +104,9 @@ export default{
               this.buttonLoading = false
             })
           }else{
+            if(!this.ruleForm.longitude){
+              this.$message.error('请选择地址');
+            }
             create(this.ruleForm).then(response => {
               this.buttonLoading = false
               this.centerDialogVisible = false
@@ -194,36 +188,14 @@ export default{
       }
       this.centerDialogVisible = true
     },
-    querySearch(queryString, cb) {
-      let restaurants = this.restaurants;
-      $nuxt.$axios
-        .get(process.env.IBS_URL + '/place/text',{
-          params: {
-            keywords: queryString,
-            key: process.env.IBS_KEY
-          }
-        })
-        .then((response) => {
-          if(response.data.info === 'OK'){
-            restaurants = response.data.pois
-            restaurants.forEach(item=>{
-              item.value = item.name
-            })
-            this.restaurants = restaurants
-          }else{
-            console.log('没有查询结果')
-          }
-        }).catch((response) => {
-        console.log('response',response)
-      })
-      this.$forceUpdate()
-      cb(restaurants);
-    },
-    handleSelect(item) {
-      const location = item.location.split(",")
-      this.ruleForm.address = item.address
-      this.ruleForm.longitude = location[0]
-      this.ruleForm.latitude = location[1]
+    handleSelect(event) {
+      const loc = event.data;
+      if (loc && loc.module === 'locationPicker') {//防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
+        this.ruleForm.location = loc.poiname
+        this.ruleForm.address = loc.poiaddress
+        this.ruleForm.longitude = loc.latlng.lng
+        this.ruleForm.latitude = loc.latlng.lat
+      }
     }
   },
 }
