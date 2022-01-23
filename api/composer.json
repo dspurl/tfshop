@@ -20,7 +20,7 @@
         "iidestiny/laravel-filesystem-oss": "^1.2",
         "intervention/image": "^2.5",
         "johnlui/aliyun-oss": "~2.0",
-        "laravel/framework": "^7.30.4",
+        "laravel/framework": "^7.30.6",
         "laravel/passport": "~9.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^2.0",
