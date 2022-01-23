@@ -3,7 +3,7 @@
 </p>
 <p align="center">
   <a href="https://github.com/laravel/framework">
-    <img src="https://img.shields.io/badge/laravel-7.30.4-brightgreen.svg" alt="laravel">
+    <img src="https://img.shields.io/badge/laravel-7.30.6-brightgreen.svg" alt="laravel">
   </a>
   <a href="https://github.com/vuejs/vue">
     <img src="https://img.shields.io/badge/vue-2.5.17-brightgreen.svg" alt="vue">
@@ -71,7 +71,7 @@ DSSHOP是一套多终端商城解决方案，它采用前后端分离，后端�
 要求
 ------------
  - php >= 7.4
- - laravel = 7.22.4
+ - laravel = 7.22.6
  - mysql >= 5.7
  - vue = 2.5.17
 
