@@ -74,15 +74,7 @@ DSSHOP是一套多终端商城解决方案，它采用前后端分离，后端�
  - laravel = 7.22.6
  - mysql >= 5.7
  - vue = 2.5.17
-
-## 傻瓜式安装**（从2.1.0开始不再支持）**
-> 5步快速搭建属于自己的DSSHOP商城
->
-> 安装包在环境满足的前提下，可不用写一行代码，即可搭建完整个项目(包括微信小程序、H5和后台)
->
-> 优点：搭建方便，无需懂代码，全程引导安装；缺点：项目压缩编译，二开不友好
->
-> 如需要二开，或深入学习的话，推荐使用命令行安装
+ - node= 14.18.3
 
 <p><a href="https://dspurl.github.io/dsshop/guide/getting-started.html#%E5%82%BB%E7%93%9C%E5%BC%8F%E5%AE%89%E8%A3%85%E5%8C%85">点击查阅详细步骤</a></p>
 
@@ -125,22 +117,21 @@ php artisan passport:client --password
 # 修改.env，添加OAuth认证信息
 PASSPORT_WEB_ID="生成的Client ID"
 PASSPORT_WEB_SECRET="生成的 Client secret"
-
+# 搭建网站
+#进入client/nuxt-web/mi目录
+npm install
+npm run dev
 # 搭建后台
 #进入admin/vue2/element-admin-v3目录
-#不要在linux下执行，会报错，推荐windows
-npm install 
+npm install
 #admin/config/dev.env.js or prod.env.js修改自己的api地址
 BASE_API: '"http://172.27.16.1/api/v1/admin/"',  //172.27.16.1是window主机的局域网IP
-
 npm run dev
 # 默认后台账号、密码
 admin
 admin
-
 # 搭建H5
-cd ../client/uni-app/mix-mall
-npm install 
+#进入client/uni-app/mix-mall
 # HBuilder X导入client/uni-app/mix-mall目录
 # client/uni-app/mix-mall/utils/config.js修改服务器地址
 # 修改`BaseURL`为API访问地址

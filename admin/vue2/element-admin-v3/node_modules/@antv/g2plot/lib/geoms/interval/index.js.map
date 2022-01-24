@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../src/geoms/interval/index.ts"],"names":[],"mappings":";;;AAAA,wDAAoC;AAEpC,kBAAe;IACb,IAAI,EAAE,cAAc;CACrB,CAAC","sourcesContent":["import IntervalParser from './main';\n\nexport default {\n  main: IntervalParser,\n};\n"]}

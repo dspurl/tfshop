@@ -1,0 +1,1 @@
+{"version":3,"file":"index.js","sourceRoot":"","sources":["../../../../src/plots/treemap/interaction/index.ts"],"names":[],"mappings":"AAAA,OAAO,oBAAoB,MAAM,aAAa,CAAC;AAE/C,MAAM,CAAC,IAAM,eAAe,GAAG;IAC7B,SAAS,EAAE,oBAAoB;CAChC,CAAC","sourcesContent":["import DrillDownInteraction from './drillDown';\n\nexport const INTERACTION_MAP = {\n  drilldown: DrillDownInteraction,\n};\n"]}

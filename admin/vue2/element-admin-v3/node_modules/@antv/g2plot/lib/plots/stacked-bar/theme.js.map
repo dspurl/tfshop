@@ -1,0 +1,1 @@
+{"version":3,"file":"theme.js","sourceRoot":"","sources":["../../../src/plots/stacked-bar/theme.ts"],"names":[],"mappings":";;AAAA,qCAA4C;AAC5C,sCAAiD;AAEjD,qBAAa,CAAC,YAAY,EAAE,yBAAiB,CAAC,CAAC","sourcesContent":["import { registerTheme } from '../../theme';\nimport { DEFAULT_BAR_THEME } from '../bar/theme';\n\nregisterTheme('stackedBar', DEFAULT_BAR_THEME);\n"]}

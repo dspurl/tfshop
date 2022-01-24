@@ -1,0 +1,191 @@
+import { each, clone, deepMix } from '@antv/util';
+import { groupTransform, transform } from '../../../util/g-util';
+var ulMatrix = [1, 0, 0, 0, 1, 0, 0, 0, 1];
+var duration = 400;
+var easing = 'easeQuadInOut';
+export function drillingDown(target, view, callback) {
+    var rect = getRect(target);
+    var range = getRange(view);
+    var xRatio = range.width / rect.width;
+    var yRatio = range.height / rect.height;
+    var offsetX = (range.minX - rect.minX) * xRatio;
+    var offsetY = (range.minY - rect.minY) * yRatio;
+    var transformMatrix = transform([
+        ['s', xRatio, yRatio],
+        ['t', offsetX, offsetY],
+    ]);
+    var geometry = view.geometries[0];
+    hideLabel(geometry);
+    var tem_container = view.backgroundGroup.addGroup();
+    tem_container.set('zIndex', -100);
+    tem_container.setClip({
+        type: 'rect',
+        attrs: {
+            x: range.minX,
+            y: range.minY,
+            width: range.width,
+            height: range.height,
+        },
+    });
+    var tem_shapes = getTemShapes(geometry, tem_container);
+    geometry.container.set('visible', false);
+    view.canvas.draw();
+    callback();
+    window.setTimeout(function () {
+        each(tem_shapes, function (shape, index) {
+            if (index === 0) {
+                shape.animate({ matrix: transformMatrix }, duration, easing, function () {
+                    tem_container.remove();
+                    view.canvas.draw();
+                });
+            }
+            else {
+                shape.animate(transform, duration);
+            }
+        });
+        geometry = view.geometries[0];
+        hideLabel(geometry);
+        var shapes = geometry.getShapes();
+        each(shapes, function (shape) {
+            shape.attr('opacity', 0);
+            shape.animate({
+                opacity: 1,
+            }, duration, easing);
+        });
+        var container = geometry.container;
+        container.stopAnimate();
+        container.set('visible', true);
+        container.attr('matrix', clone(ulMatrix));
+        groupTransform(container, [
+            ['s', rect.width / range.width, rect.height / range.height],
+            ['t', rect.minX, rect.minY],
+        ]);
+        var matrix = clone(ulMatrix);
+        geometry.container.animate({
+            matrix: matrix,
+        }, duration, easing, function () {
+            showLabel(geometry);
+        });
+        view.canvas.draw();
+    }, 16);
+}
+function getTemShapes(geometry, container) {
+    var shapes = geometry.getShapes();
+    var tem_shapes = [];
+    each(shapes, function (shape) {
+        var s = container.addShape('path', {
+            attrs: deepMix({}, shape.attrs, { capture: false }),
+        });
+        tem_shapes.push(s);
+    });
+    return tem_shapes;
+}
+export function rollingUp(name, view, callback) {
+    var geometry = view.geometries[0];
+    hideLabel(geometry);
+    var container = geometry.container;
+    container.attr('matrix', clone(ulMatrix));
+    var tem_container = view.backgroundGroup.addGroup();
+    tem_container.set('zIndex', -100);
+    var tem_shapes = getTemShapes(geometry, tem_container);
+    container.set('visible', false);
+    view.canvas.draw();
+    callback();
+    geometry = view.geometries[0];
+    hideLabel(geometry);
+    container = geometry.container;
+    var shape = findShapeByName(geometry.getShapes(), name); //根据name获得上一级shape
+    var rect = getRect(shape);
+    var range = getRange(view);
+    var containerParent = container.get('parent');
+    if (!containerParent.get('clipShape')) {
+        container.setClip({
+            type: 'rect',
+            attrs: {
+                x: range.minX,
+                y: range.minY,
+                width: range.width,
+                height: range.height,
+            },
+        });
+    }
+    shrinkTemp(tem_container, tem_shapes, rect, range);
+    var xRatio = range.width / rect.width;
+    var yRatio = range.height / rect.height;
+    var offsetX = (range.minX - rect.minX) * xRatio;
+    var offsetY = (range.minY - rect.minY) * yRatio;
+    var transformMatrix = transform([
+        ['s', xRatio, yRatio],
+        ['t', offsetX, offsetY],
+    ]);
+    container.setMatrix(transformMatrix);
+    container.set('visible', true);
+    container.animate({
+        matrix: ulMatrix,
+    }, duration, easing, function () {
+        showLabel(geometry);
+    });
+}
+function findShapeByName(shapes, n) {
+    var shape;
+    each(shapes, function (s) {
+        var name = s.get('origin').data.name;
+        if (name === n) {
+            shape = s;
+        }
+    });
+    return shape;
+}
+function getRange(view) {
+    var viewRange = view.coordinateBBox;
+    var range = {
+        minX: viewRange.minX,
+        minY: viewRange.minY,
+        centerX: (viewRange.maxX - viewRange.minX) / 2,
+        centerY: (viewRange.maxY - viewRange.minY) / 2,
+        width: viewRange.width,
+        height: viewRange.height,
+    };
+    return range;
+}
+function getRect(shape) {
+    var path = shape.attr('path');
+    var x0 = path[0][1];
+    var y1 = path[0][2];
+    var x1 = path[1][1];
+    var y0 = path[2][2];
+    var rect = {
+        minX: x0,
+        minY: y0,
+        centerX: (x1 - x0) / 2,
+        centerY: (y1 - y0) / 2,
+        width: Math.abs(x1 - x0),
+        height: Math.abs(y1 - y0),
+    };
+    return rect;
+}
+function shrinkTemp(container, shapes, rect, range) {
+    var xRatio = rect.width / range.width;
+    var yRatio = rect.height / range.height;
+    var transformMatrix = transform([
+        ['s', xRatio, yRatio],
+        ['t', rect.minX, rect.minY],
+    ]);
+    container.animate({ matrix: transformMatrix }, duration, easing, function () {
+        container.remove();
+    });
+    each(shapes, function (shape) {
+        shape.animate({
+            opacity: 0,
+        }, duration, easing);
+    });
+}
+function hideLabel(geometry) {
+    var labelContainer = geometry.labelsContainer;
+    labelContainer.set('visible', false);
+}
+function showLabel(geometry) {
+    var labelContainer = geometry.labelsContainer;
+    labelContainer.set('visible', true);
+}
+//# sourceMappingURL=animation.js.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"theme.js","sourceRoot":"","sources":["../../../src/plots/grouped-column/theme.ts"],"names":[],"mappings":";;AAAA,qCAA4C;AAC5C,yCAAuD;AAEvD,qBAAa,CAAC,eAAe,EAAE,4BAAoB,CAAC,CAAC","sourcesContent":["import { registerTheme } from '../../theme';\nimport { DEFAULT_COLUMN_THEME } from '../column/theme';\n\nregisterTheme('groupedColumn', DEFAULT_COLUMN_THEME);\n"]}

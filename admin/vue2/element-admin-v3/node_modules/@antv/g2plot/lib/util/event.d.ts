@@ -1,0 +1,12 @@
+import ViewLayer from '../base/view-layer';
+import { LooseMap } from '../interface/types';
+declare type IEventmap = LooseMap<string>;
+declare type Handler = (...__: any[]) => {};
+declare const CANVAS_EVENT_MAP: IEventmap;
+declare const LAYER_EVENT_MAP: IEventmap;
+declare const EVENT_MAP: IEventmap;
+declare function onEvent(layer: ViewLayer, eventName: string, handler: Handler): void;
+export declare function getEventMap(map: any): IEventmap;
+export declare function getRegionEventMap(prefix: any, eventList: any): IEventmap;
+export declare function getMobileEventMap(): IEventmap;
+export { IEventmap, EVENT_MAP, CANVAS_EVENT_MAP, LAYER_EVENT_MAP, onEvent };

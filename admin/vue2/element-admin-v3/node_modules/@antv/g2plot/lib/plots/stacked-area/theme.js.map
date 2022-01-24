@@ -1,0 +1,1 @@
+{"version":3,"file":"theme.js","sourceRoot":"","sources":["../../../src/plots/stacked-area/theme.ts"],"names":[],"mappings":";;AAAA,qCAA4C;AAC5C,uCAAmD;AAEnD,qBAAa,CAAC,aAAa,EAAE,0BAAkB,CAAC,CAAC","sourcesContent":["import { registerTheme } from '../../theme';\nimport { DEFAULT_AREA_THEME } from '../area/theme';\n\nregisterTheme('stackedArea', DEFAULT_AREA_THEME);\n"]}

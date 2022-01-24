@@ -1,0 +1,18 @@
+import { registerTheme } from '../../theme';
+var BAR_ACTIVE_STYLE = function (style) {
+    var opacity = style.opacity || 1;
+    return { opacity: opacity * 0.5 };
+};
+var BAR_DISABLE_STYLE = function (style) {
+    var opacity = style.opacity || 1;
+    return { opacity: opacity * 0.5 };
+};
+registerTheme('funnel', {
+    columnStyle: {
+        normal: {},
+        active: BAR_ACTIVE_STYLE,
+        disable: BAR_DISABLE_STYLE,
+        selected: { lineWidth: 1, stroke: 'black' },
+    },
+});
+//# sourceMappingURL=theme.js.map

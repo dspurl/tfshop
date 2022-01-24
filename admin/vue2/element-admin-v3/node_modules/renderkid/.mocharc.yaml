@@ -1,0 +1,5 @@
+require: 'coffeescript/register'
+recursive: true
+reporter: 'spec'
+ui: 'bdd'
+timeout: 20000

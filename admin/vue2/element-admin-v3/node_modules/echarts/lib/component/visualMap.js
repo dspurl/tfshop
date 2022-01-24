@@ -1,0 +1,3 @@
+require("./visualMapContinuous");
+
+require("./visualMapPiecewise");
