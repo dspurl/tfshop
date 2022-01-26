@@ -43,7 +43,7 @@
           <div v-if="ruleForm.longitude">{{ruleForm.location}}({{ruleForm.address}})</div>
           <div v-else>请在地图中选择地址</div>
           <iframe v-if="ruleForm.longitude" class="iframe" height="500" frameborder=0 :src="`${src}&coord=${ruleForm.latitude},${ruleForm.longitude}`"></iframe>
-          <iframe else class="iframe" height="500" frameborder=0 :src="src"></iframe>
+          <iframe v-else class="iframe" height="500" frameborder=0 :src="src"></iframe>
         </el-form-item>
         <el-form-item label="门牌号" prop="house">
           <el-input v-model="ruleForm.house" clearable maxlength="80" placeholder="请输入门牌号"></el-input>
