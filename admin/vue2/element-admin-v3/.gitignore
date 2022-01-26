@@ -4,6 +4,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 **/*.log
+node_modules/.cache
 
 test/unit/coverage
 test/e2e/reports

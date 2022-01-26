@@ -1,3 +1,4 @@
 config/dev.env.js
 .hbuilderx
 unpackage
+node_modules/.cache
