@@ -28,7 +28,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('admin/{id}', 'AdminController@edit')->name('admin.adminEdit')->middleware(['permissions:AdminEdit']);  //保存管理员/密码
         Route::post('admin/destroy/{id}', 'AdminController@destroy')->name('admin.adminDestroy')->middleware(['permissions:AdminDestroy']); //删除管理员
         Route::get('authGroup', 'AdminController@getAuthGroupList')->name('admin.authGroupList')->middleware(['permissions:AdminList']);  //管理权限列表
-        Route::get('admin/log', 'AdminController@log')->name('admin.adminLog')->middleware(['permissions:AdminLog']);  //管理员操作日志
+        Route::get('admin/log', 'AdminController@log')->name('admin.adminLog')->middleware(['permissions:AdminLogList']);  //管理员操作日志
         Route::get('member', 'MemberController@list')->name('admin.memberList')->middleware(['permissions:MemberList']);  //会员列表
         Route::post('member', 'MemberController@create')->name('admin.memberCreate')->middleware(['permissions:MemberCreate']);  //创建会员
         Route::post('member/{id}', 'MemberController@edit')->name('admin.memberEdit')->middleware(['permissions:MemberEdit']);  //保存会员
@@ -105,10 +105,10 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('plugin/diff/{name}', 'PluginController@diff')->name('admin.plugInDiff')->middleware(['permissions:PlugInList']);    //获取冲突文件列表
         Route::post('plugin/conflictResolution/{name}', 'PluginController@conflictResolution')->name('admin.plugInConflictResolution')->middleware(['permissions:PlugInList']);    //冲突处理
         Route::get('plugin/installList/all', 'PluginController@installPluginList')->name('admin.installPlugInList')->middleware(['permissions:PlugInList']);    //获取安装的插件列表
-        Route::get('statistic/behavior', 'StatisticsController@behavior')->name('admin.behavior')->middleware(['permissions:StatisticsVisit']);    //使用分析
-        Route::get('statistic/keep', 'StatisticsController@keep')->name('admin.keep')->middleware(['permissions:StatisticsVisit']);    //留存趋势
-        Route::get('statistic/source', 'StatisticsController@source')->name('admin.source')->middleware(['permissions:StatisticsVisit']);    //来源分析
-        Route::get('statistic/age_and_sex', 'StatisticsController@ageAndSex')->name('admin.StatisticsAgeAndSex')->middleware(['permissions:StatisticsAgeAndSex']);    //年龄和性别
-        Route::get('statistic/pay', 'StatisticsController@pay')->name('admin.statisticsPay')->middleware(['permissions:StatisticsPay']);    //交易分析
+        Route::get('statistic/behavior', 'StatisticsController@behavior')->name('admin.behavior')->middleware(['permissions:StatisticsVisitList']);    //使用分析
+        Route::get('statistic/keep', 'StatisticsController@keep')->name('admin.keep')->middleware(['permissions:StatisticsVisitList']);    //留存趋势
+        Route::get('statistic/source', 'StatisticsController@source')->name('admin.source')->middleware(['permissions:StatisticsVisitList']);    //来源分析
+        Route::get('statistic/age_and_sex', 'StatisticsController@ageAndSex')->name('admin.StatisticsAgeAndSex')->middleware(['permissions:StatisticsAgeAndSexList']);    //年龄和性别
+        Route::get('statistic/pay', 'StatisticsController@pay')->name('admin.statisticsPay')->middleware(['permissions:StatisticsPayList']);    //交易分析
     });
 });
