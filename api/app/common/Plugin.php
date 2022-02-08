@@ -1350,7 +1350,7 @@ class Plugin
                                 }
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-radio-group v-model="ruleForm.' . $a['name'] . '" placeholder="请选择'.$annotation.'">';
+        <el-radio-group v-model="ruleForm.' . $a['name'] . '" placeholder="请选择' . $annotation . '">';
 
                                 foreach ($annotationParameterList as $apList) {
                                     $radioLabel = explode("=", $apList);
@@ -1378,7 +1378,7 @@ class Plugin
                             case 'bigInteger':
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入'.$annotation.'" clearable/>
+        <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入' . $annotation . '" clearable/>
       </el-form-item>';
                                 $rules .= "
         " . $a['name'] . ": [
@@ -1408,7 +1408,7 @@ class Plugin
         ],";
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入'.$annotation.'" clearable/>
+        <el-input v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入' . $annotation . '" clearable/>
       </el-form-item>';
                                 break;
                             case 'text':
@@ -1416,7 +1416,7 @@ class Plugin
                             case 'longText':
                                 $detail .= '
       <el-form-item label="' . $annotation . '" prop="' . $a['name'] . '" style="width:400px;">
-        <el-input :rows="2" v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入'.$annotation.'" type="textarea" clearable/>
+        <el-input :rows="2" v-model="ruleForm.' . $a['name'] . '"' . ($a['length'] > 0 ? ' maxlength="' . $a['length'] . '"' : '') . ' placeholder="请输入' . $annotation . '" type="textarea" clearable/>
       </el-form-item>';
                                 $rules .= "
         " . $a['name'] . ": [
@@ -1845,6 +1845,12 @@ class Plugin
         $content = Storage::disk('root')->get($controller);
         $property = '';
         $constant = '';
+        if ($db['timestamps'] == 1) {
+            $timestamps = '';
+        } else {
+            $timestamps = 'const UPDATED_AT = null;
+    const CREATED_AT = null;';
+        }
         $SoftDeletes = $db['softDeletes'] ? 'use Illuminate\Database\Eloquent\SoftDeletes;' : '';
         $SoftDeletesUse = $db['softDeletes'] ? 'use SoftDeletes;' : '';
         $get = '';
@@ -1901,7 +1907,8 @@ class Plugin
             '/{{ SoftDeletes }}/',
             '/{{ SoftDeletesUse }}/',
             '/{{ property }}/',
-            '/{{ get }}/'
+            '/{{ get }}/',
+            '/{{ timestamps }}/'
         ], [
             config('dsshop.versions'),
             $constant,
@@ -1909,7 +1916,8 @@ class Plugin
             $SoftDeletes,
             $SoftDeletesUse,
             $property,
-            $get
+            $get,
+            $timestamps
         ], $content);
         $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
         Storage::disk('root')->put($path, $content);
@@ -1939,7 +1947,7 @@ class Plugin
         $queryParam = '';
         if ($type === 'admin') {
             foreach ($db['attribute'] as $a) {
-                if($a['name'] != 'id'){
+                if ($a['name'] != 'id') {
                     $attribute .= '
             $' . $this->convertUnderline(rtrim($db['name'], 's')) . '->' . $a['name'] . ' = $request->' . $a['name'] . ';';
                     $queryParam .= '
