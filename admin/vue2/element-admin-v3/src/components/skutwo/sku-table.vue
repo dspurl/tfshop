@@ -152,9 +152,15 @@ import { getToken } from '@/utils/auth'
       this.data = JSON.parse(JSON.stringify(this.data))
     },
     // 父组件调用，修改统一数据
-    _setInput(name, value) {
+    _setInput(name, value, index, option_value) {
       this.data.map(item => {
-        item[name] = value
+        if (name === 'img') {
+          if (item.product_sku[index].value === option_value) {
+            item[name] = value
+          }
+        } else {
+          item[name] = value
+        }
       })
       this.data = JSON.parse(JSON.stringify(this.data))
     },

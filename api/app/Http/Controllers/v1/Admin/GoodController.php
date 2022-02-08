@@ -407,10 +407,13 @@ class GoodController extends Controller
                     $GoodSku->save();
                     $GoodSkuAll[] = $GoodSku->id;
                     if (array_key_exists("img", $good_sku) && $good_sku['img']) {
-                        if (array_key_exists("resources", $good_sku)) {
-                            $Resource = Resource::find($good_sku['resources']['id']);
-                            if ($good_sku['img'] != $Resource->img) {
-                                imgPathDelete('good', $Resource->img);
+                        $OriginalResource = Resource::where('image_type', 'App\Models\v1\GoodSku')->where('image_id', $good_sku['id'])->first();
+                        if ($OriginalResource) {
+                            $Resource = Resource::find($OriginalResource->id);
+                            $count = Resource::where('img', $Resource->img)->count();
+                            // 当有其它sku商品在用图片时不进行删除
+                            if ($good_sku['img'] != $Resource->img && $count <= 1) {
+                                imgPathDelete('product_sku', $Resource->img);
                             }
                         } else {
                             $Resource = new Resource();

@@ -1,4 +1,8 @@
 <style lang="sass" scoped>
+.popover
+  display: flex
+  .upload
+    margin-left: 5px
 .sku_container
   margin-bottom: 30px
   font-size: 12px
@@ -93,11 +97,15 @@
             span.label 规格值：
             el-popover(
               placement="bottom"
-              width="120"
+              width="200"
               trigger="click"
               v-for="(option, option_index) in spec.leaf" :key="option_index"
             )
-              el-input(v-model.trim="option.value" style="width: 110px;")
+              .popover
+                el-input(v-model.trim="option.value" style="width: 110px;")
+                avatar-image.upload(:file="option.file" :imgData="imgData" @getFile="e => getFile(e, index, option_index)" :height="36" :width="36")
+                el-tooltip(effect="dark" content="统一设置该规格图片，最新上传的将替换旧的图片" placement="top-start")
+                  i.el-icon-question
               .sku_item(slot="reference")
                 span.remove(@click.stop="delOption(index, option_index)") ×
                 .text {{option.value}}
@@ -150,10 +158,12 @@ import Component from 'vue-class-component'
 import SkuTable from './sku-table'
 import { createUniqueString, uniqueArr } from '../../utils'
 import { param2Data } from './sku2param'
+import AvatarImage from '@/components/Upload/AvatarImage'
 
 @Component({
   components: {
-    SkuTable
+    SkuTable,
+    AvatarImage
   }
 })
 class EditSku extends Vue {
@@ -167,6 +177,7 @@ class EditSku extends Vue {
     price: null,
     inventory: null
   }
+  imgData = { type: 1, size: 1024 * 1024 * 2, specification: [80, 150, 200, 250, 300, 350] }
 
   get disabled() {
     return (
@@ -221,8 +232,14 @@ class EditSku extends Vue {
     this.specification[spec_index].leaf.splice(option_index, 1)
   }
 
-  updateUnifiedInput(e, name) {
-    this.$refs.SkuTable._setInput(name, e)
+  updateUnifiedInput(e, name, index, option_value) {
+    this.$refs.SkuTable._setInput(name, e, index, option_value)
+  }
+
+  getFile(res, index, option_index) {
+    this.specification[index].leaf[option_index].file = res.response
+    this.$forceUpdate()
+    this.updateUnifiedInput(res.response, 'img', index, this.specification[index].leaf[option_index].value)
   }
 }
 

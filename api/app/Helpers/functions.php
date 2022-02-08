@@ -237,6 +237,10 @@ function imgPathShift($new, $img)
         $path = 'storage/temporary/';
         $img = explode($path, $img);
         if (count($img) == 2) {
+            // 如果已移动的图片，则直接返回图片地址
+            if (!Storage::exists('public/temporary/' . $img['1']) && Storage::exists('public/image/' . $new . '/' . $img['1'])) {
+                return request()->root() . '/storage/image/' . $new . '/' . $img['1'];
+            }
             Storage::move('public/temporary/' . $img['1'], 'public/image/' . $new . '/' . $img['1']);
             //拷贝不同规格的图片
             $imageSpecification = config('image.specification');
