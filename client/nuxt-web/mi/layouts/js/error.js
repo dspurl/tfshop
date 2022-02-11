@@ -1,7 +1,7 @@
 export default {
   head () {
     return {
-      title:'您访问的页面出错了-'  + process.env.APP_NAME,
+      title:'网站正在维护中-'  + process.env.APP_NAME,
     }
   },
   methods: {

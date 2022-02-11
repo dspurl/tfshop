@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
@@ -36,6 +37,7 @@ class RouteServiceProvider extends ServiceProvider
     public function map()
     {
 //        $this->mapApiRoutes();
+        $this->down();
         $this->mapAdminRoutes();
         $this->mapAppRoutes();
         $this->mapPluginRoutes();
@@ -44,7 +46,17 @@ class RouteServiceProvider extends ServiceProvider
             'uses' => '\Laravel\Passport\Http\Controllers\AccessTokenController@issueToken',
             'middleware' => 'throttle:600,1',
         ]);
-        
+
+    }
+
+    /**
+     * 维护拦截
+     * @throws \Exception
+     */
+    protected function down(){
+        if(config('dsshop.down')){
+            throw new \Exception('维护中', Response::HTTP_SERVICE_UNAVAILABLE);
+        }
     }
 
     /**
