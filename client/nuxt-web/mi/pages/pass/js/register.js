@@ -60,6 +60,10 @@ export default {
   methods: {
     // 获取验证码
     getCode(){
+      if(!this.ruleForm.cellphone){
+        this.$message.error('请输入手机号');
+        return false
+      }
       const that = this;
       cellphoneCode(this.ruleForm).then(response => {
         // 开始倒计时
