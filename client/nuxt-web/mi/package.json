@@ -34,7 +34,7 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^27.0.6",
     "jest": "^27.0.6",
-    "node-sass": "^6.0.1",
+    "node-sass": "^7.0.0",
     "sass-loader": "^10.1.1",
     "video.js": "^7.15.4",
     "vue-jest": "^3.0.4"
