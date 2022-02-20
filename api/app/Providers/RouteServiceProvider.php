@@ -33,6 +33,7 @@ class RouteServiceProvider extends ServiceProvider
      * Define the routes for the application.
      *
      * @return void
+     * @throws \Exception
      */
     public function map()
     {
