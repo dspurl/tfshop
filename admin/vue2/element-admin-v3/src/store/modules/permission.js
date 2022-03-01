@@ -34,7 +34,6 @@ export const componentsMap = {
   Indent: () => import('@/views/IndentManagement/Indent/index'),
   IndentList: () => import('@/views/IndentManagement/Indent/list'),
   IndentDetail: () => import('@/views/IndentManagement/Indent/detail'),
-  IndentShipment: () => import('@/views/IndentManagement/Indent/shipment'),
   Resource: () => import('@/views/ToolManagement/Resource/index'),
   ResourceList: () => import('@/views/ToolManagement/Resource/list'),
   // 轮播

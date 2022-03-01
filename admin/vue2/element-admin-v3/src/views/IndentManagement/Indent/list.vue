@@ -129,7 +129,7 @@
               <el-button type="warning" icon="el-icon-tickets" circle/>
             </el-tooltip>
           </router-link>
-          <router-link v-permission="$store.jurisdiction.IndentShipment" v-if="scope.row.state === 2" :to="{ path: 'indentShipment', query: { id: scope.row.id }}">
+          <router-link v-permission="$store.jurisdiction.IndentShipment" v-if="scope.row.state === 2" :to="{ path: 'indentDetail', query: { id: scope.row.id }}">
             <el-tooltip class="item" effect="dark" content="发货" placement="top-start">
               <el-button type="primary" icon="el-icon-truck" circle/>
             </el-tooltip>
