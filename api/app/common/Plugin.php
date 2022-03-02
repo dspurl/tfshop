@@ -101,7 +101,7 @@ class Plugin
      */
     public function getOnLinePlugin()
     {
-        $client = new Client();
+        $client = new Client(['verify' => false]);
         $url = config('dsshop.marketUrl') . '/api/v1/app/market';
         $params = [
             'version' => config('dsshop.appVersion')
@@ -147,8 +147,12 @@ class Plugin
             }
             return $list['message'];
         } catch (RequestException $e) {
-            $list = json_decode($e->getResponse()->getBody()->getContents(), true);
-            throw new \Exception($list['message'], Code::CODE_WRONG);
+            if ($e->getResponse()) {
+                $list = json_decode($e->getResponse()->getBody()->getContents(), true);
+                throw new \Exception($list['message'], Code::CODE_WRONG);
+            } else {
+                throw new \Exception($e, Code::CODE_WRONG);
+            }
         }
     }
 
@@ -161,13 +165,10 @@ class Plugin
      */
     public function updatePack($code, $request)
     {
-        if (PHP_OS != 'Linux') {
-            throw new \Exception('您的操作系统不支持在线安装', Code::CODE_FORBIDDEN);
-        }
         if (!$request->has('img') || !$request->has('author') || !$request->has('author_url') || !$request->has('portrait') || !$request->has('category')) {
             throw new \Exception('插件配置信息不完整', Code::CODE_WRONG);
         }
-        $client = new Client();
+        $client = new Client(['verify' => false]);
         $url = config('dsshop.marketUrl') . '/api/v1/app/market/download/' . $code;
         $params = [
             'suffix' => $request->suffix ? true : false
@@ -180,30 +181,32 @@ class Plugin
             $respond = $client->get($url, ['query' => $params, 'headers' => $headers]);
             // 下载远程作品到临时目录
             if ($request->suffix) {
-                Storage::disk('plugin')->put('/temporary/' . $code . '/dsshop.json', $respond->getBody()->getContents());
+                Storage::disk('plugin')->put('temporary/' . $code . '/dsshop.json', $respond->getBody()->getContents());
             } else {
-                Storage::disk('plugin')->put('/temporary/' . $code . '.zip', $respond->getBody()->getContents());
+                Storage::disk('plugin')->put('temporary/' . $code . '.zip', $respond->getBody()->getContents());
             }
             $temporary_path = str_replace("api", "plugin/temporary", base_path());
-            $plugin_apth = str_replace("api", "plugin", base_path());
             $shell_exec = '';
             if (!$request->suffix) {
                 $shell_exec .= shell_exec('cd ' . $temporary_path . ' && unzip ' . $code . '.zip -d ' . $code . '/');
-                $config = json_decode(Storage::disk('plugin')->get('/temporary/' . $code . '/dsshop.json'), true);
+                $config = json_decode(Storage::disk('plugin')->get('temporary/' . $code . '/dsshop.json'), true);
                 //修改插件信息
                 $config['img'] = $request->img;
                 $config['author'] = $request->author;
                 $config['author_url'] = $request->author_url;
                 $config['portrait'] = $request->portrait;
                 $config['category'] = $request->category;
-                Storage::disk('plugin')->put('/temporary/' . $code . '/dsshop.json', json_encode($config));
-                $shell_exec .= shell_exec("rm -rf $plugin_apth/list/" . $config['abbreviation'] . " && mkdir " . $plugin_apth . "/list/" . $config['abbreviation'] . " && mv " . $temporary_path . "/" . $code . "/* " . $plugin_apth . "/list/" . $config['abbreviation'] . " && rm -rf " . $temporary_path . "/" . $code . " && rm -rf " . $temporary_path . "/" . $code . ".zip");
+                Storage::disk('plugin')->put('temporary/' . $code . '/dsshop.json', json_encode($config));
+                Storage::disk('plugin')->deleteDirectory("list/" . $config['abbreviation']);
+                Storage::disk('plugin')->move("temporary/". $code, "list/" . $config['abbreviation']);
+                Storage::disk('plugin')->delete("temporary/".$code . ".zip");
             } else {
-                $config = json_decode(Storage::disk('plugin')->get('/temporary/' . $code . '/dsshop.json'), true);
-                if (!Storage::disk('plugin')->exists("/list/" . $config['abbreviation'])) {
+                $config = json_decode(Storage::disk('plugin')->get('temporary/' . $code . '/dsshop.json'), true);
+                if (!Storage::disk('plugin')->exists("list/" . $config['abbreviation'])) {
                     throw new \Exception('请先进行安装插件', Code::CODE_WRONG);
                 }
-                $shell_exec .= shell_exec("mv " . $temporary_path . "/" . $code . "/* " . $plugin_apth . "/list/" . $config['abbreviation'] . " && rm -rf " . $temporary_path . "/" . $code);
+                Storage::disk('plugin')->move("temporary/". $code, "list/" . $config['abbreviation']);
+                Storage::disk('plugin')->delete("temporary/".$code);
             }
             return $shell_exec;
         } catch (RequestException $e) {

@@ -5,7 +5,7 @@
       <el-menu-item index="2">市场</el-menu-item>
     </el-menu>
     <div v-if="listQuery.activeIndex === '2' && total === 0" class="tip">
-      <p>您还没有正确配置开发者密钥，<el-link :underline="false" href="https://dsshoping.dswjcms.com/article/detail?id=38" type="primary" target="_blank">查看帮助</el-link> </p>
+      <p>您还没有正确配置开发者密钥，<el-link :underline="false" href="https://dsshoping.dswjcms.com/article/detail/38.html" type="primary" target="_blank">查看帮助</el-link> </p>
     </div>
     <div class="filter-container">
       <div class="condition"/>
