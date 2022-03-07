@@ -198,15 +198,15 @@ class Plugin
                 $config['category'] = $request->category;
                 Storage::disk('plugin')->put('temporary/' . $code . '/dsshop.json', json_encode($config));
                 Storage::disk('plugin')->deleteDirectory("list/" . $config['abbreviation']);
-                Storage::disk('plugin')->move("temporary/". $code, "list/" . $config['abbreviation']);
-                Storage::disk('plugin')->delete("temporary/".$code . ".zip");
+                Storage::disk('plugin')->move("temporary/" . $code, "list/" . $config['abbreviation']);
+                Storage::disk('plugin')->delete("temporary/" . $code . ".zip");
             } else {
                 $config = json_decode(Storage::disk('plugin')->get('temporary/' . $code . '/dsshop.json'), true);
                 if (!Storage::disk('plugin')->exists("list/" . $config['abbreviation'])) {
                     throw new \Exception('请先进行安装插件', Code::CODE_WRONG);
                 }
-                Storage::disk('plugin')->move("temporary/". $code, "list/" . $config['abbreviation']);
-                Storage::disk('plugin')->delete("temporary/".$code);
+                Storage::disk('plugin')->move("temporary/" . $code, "list/" . $config['abbreviation']);
+                Storage::disk('plugin')->delete("temporary/" . $code);
             }
             return $shell_exec;
         } catch (RequestException $e) {
@@ -360,7 +360,7 @@ class Plugin
                     }
                 }
             }
-//            Artisan::call('migrate');   //暂不支持创建插件自动生成数据表，因插件中的数据库功能并不完善，无法实现通过后台操作完全取代代码
+            //            Artisan::call('migrate');   //暂不支持创建插件自动生成数据表，因插件中的数据库功能并不完善，无法实现通过后台操作完全取代代码
         }
         $this->createRoutes($request);
         return '创建成功';
@@ -741,7 +741,7 @@ class Plugin
             $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
             $abbreviation = ucwords($name);
             if ($path['db']) {
-//                Artisan::call('migrate:rollback');
+                //                Artisan::call('migrate:rollback');
                 foreach ($path['db'] as $db) {
                     $names = $this->convertUnderline(rtrim($db['name'], 's'));
                     $n = $this->convertUnderline(rtrim($db['name'], 's'), true);
@@ -815,7 +815,7 @@ class Plugin
         if (count($routes['packagingJurisdiction']) > 0) {
             $this->uninstallJurisdiction($routes['packagingJurisdiction']);
         }
-//        Artisan::call('migrate:rollback');
+        //        Artisan::call('migrate:rollback');
         //去除API路由
         $targetPath = '/api/routes/plugin.php';
         $file_get_contents = Storage::disk('root')->get($targetPath);
@@ -1145,13 +1145,17 @@ class Plugin
             $routeName = explode('app', $p);
             if (count($routeName) != 2) {
                 $routeName = explode('admin', $p);
+                $route .= "
+        '" . 'admin' . preg_replace('/\/{(.*?)}/', '', $routeName[1]) . "',
+            ";
+            } else {
+                $route .= "
+        '" . 'app' . preg_replace('/\/{(.*?)}/', '', $routeName[1]) . "',
+            ";
             }
             if (count($routeName) != 2) {
                 throw new \Exception('可执行路由格式错误', Code::CODE_INEXISTENCE);
             }
-            $route .= "
-        '" . 'app' . preg_replace('/\/{(.*?)}/', '', $routeName[1]) . "',
-            ";
             unset($routeName);
         }
         $content = Storage::disk('root')->get($controller);
@@ -1270,8 +1274,6 @@ class Plugin
                 unset($path);
             }
         }
-
-
     }
 
     /**
@@ -1435,14 +1437,11 @@ class Plugin
                                 $ruleForm .= "
         " . $a['name'] . ": '" . $a['default'] . "',";
                             }
-
                         } else {
                             $ruleForm .= "
         " . $a['name'] . ": '',";
                         }
-
                     }
-
                 }
             }
         }
@@ -2124,7 +2123,6 @@ class Plugin
             if (!Storage::disk('root')->exists($to)) {
                 Storage::disk('root')->copy($from, $to);
             }
-
         }
     }
 
