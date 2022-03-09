@@ -497,6 +497,7 @@ class Plugin
                 'describe' => $path['describe'],
                 'versions' => $path['versions'],
                 'author' => $path['author'],
+                'relyOn' => $path['relyOn'],
             ];
             $disk->put($newPluginPath . '/dsshop.json', json_encode($json));
             $disk->put($newPluginPath . '/README.md', $path['instructions']);
@@ -554,8 +555,8 @@ class Plugin
         $dsshop = json_decode(Storage::disk('root')->get($dsshop), true);
         $routes = json_decode(Storage::disk('root')->get($routes), true);
         // 依赖插件
-        if (array_key_exists('relyOn', $routes)) {
-            foreach ($routes['relyOn'] as $relyOn) {
+        if (array_key_exists('relyOn', $dsshop)) {
+            foreach ($dsshop['relyOn'] as $relyOn) {
                 // 不存在依赖插件且设置了必须安装依赖插件时
                 if (!$this->has($relyOn['name']) && $this->has($relyOn['must'])) {
                     throw new \Exception('请先安装' . $relyOn['name'] . '插件', Code::CODE_WRONG);
