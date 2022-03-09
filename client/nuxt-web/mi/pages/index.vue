@@ -42,7 +42,7 @@
     <div class="recommend container">
       <div class="title">为你推荐</div>
       <div class="list">
-        <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
+        <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: `/product/detail/${item.id}`}">
           <el-card class="card" shadow="hover">
             <el-image
               class="image"
@@ -75,10 +75,10 @@
     <div class="recommend container" v-for="(fitem, findex) in recommendCategoryList" :key="findex">
       <div class="title-box">
         <div class="min-title">{{fitem.name}}</div>
-        <NuxtLink class="more" :to="{ path: '/product/list', query: { pid: fitem.id, title: fitem.name }}">查看更多>></NuxtLink>
+        <NuxtLink class="more" :to="{ path: `/product/list/${fitem.id}`, query: { title: fitem.name }}">查看更多>></NuxtLink>
       </div>
       <div class="list">
-        <NuxtLink class="li" v-for="(item, index) in recommendGoodList[findex]" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
+        <NuxtLink class="li" v-for="(item, index) in recommendGoodList[findex]" :key="index" :to="{ path: `/product/detail/${item.id}`}">
           <el-card class="card" shadow="hover">
             <el-image
               class="image"

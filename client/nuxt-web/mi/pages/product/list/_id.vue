@@ -28,7 +28,7 @@
       </div>
       <div class="product-list container" v-loading="loading">
         <div class="list">
-          <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: '/product/detail', query: { id: item.id }}">
+          <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: `/product/detail/${item.id}`}">
             <el-card class="card" shadow="hover">
               <el-image
                 class="image"
@@ -64,10 +64,10 @@
 </template>
 
 <style lang='scss' scoped>
-  @import "./scss/list";
+  @import "./scss/_id";
 </style>
 
 <script>
-import js from './js/list'
+import js from './js/_id'
 export default js
 </script>

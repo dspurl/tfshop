@@ -87,10 +87,10 @@
 </style>
 
 <style lang='scss' scoped>
-  @import "./scss/detail";
+  @import "./scss/_id";
 </style>
 
 <script>
-import js from './js/detail'
+import js from './js/_id'
 export default js
 </script>

@@ -11,13 +11,13 @@ export default {
   },
   async asyncData (ctx) {
     try {
-      const { query } = ctx;
+      const { query, params } = ctx;
       const listQuery={
         limit: 20,
         page: 1,
         sort: '',
-        category_id: query.pid,
-        title: query.pid ? '': query.title
+        category_id: params.id,
+        title: params.id ? '': query.title
       };
       let [goodData] = await Promise.all([
         getGoodList(listQuery)

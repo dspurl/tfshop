@@ -56,7 +56,7 @@
           align="center"
           width="100">
           <template slot-scope="scope">
-            <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}">
+            <NuxtLink :to="{ path: `/product/detail/${scope.row.good_id}`}">
               <el-image
                 class="image"
                 :src="scope.row.img | smallImage(80)"
@@ -67,7 +67,7 @@
         <el-table-column
           label="商品名称">
           <template slot-scope="scope">
-            <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}">
+            <NuxtLink :to="{ path: `/product/detail/${scope.row.good_id}`}">
               <p>{{scope.row.name}}</p>
               <p class="specification">{{scope.row.specification}}</p>
             </NuxtLink>

@@ -6,7 +6,7 @@
         <div class="list">
           <div class="li" v-for="(item, index) in collectList" :key="index">
             <el-card class="card" shadow="never">
-              <NuxtLink :to="{ path: '/product/detail', query: { id: item.good_id }}">
+              <NuxtLink :to="{ path: `/product/detail/${item.good_id}`}">
                 <el-image
                   class="image"
                   :src="item.good.resources.img | smallImage(200)"

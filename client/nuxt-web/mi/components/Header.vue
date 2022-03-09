@@ -53,12 +53,12 @@
                 <template v-if="shoppingCart.length > 0">
                   <div class="cart-list">
                     <div class="cart-li" v-for="(item, index) in shoppingCart" :key="index">
-                      <NuxtLink class="image" :to="{ path: '/product/detail', query: { id: item.good_id }}">
+                      <NuxtLink class="image" :to="{ path: `/product/detail/${item.good_id}`}">
                       <el-image
                         :src="item.img"
                         fit="scale-down"/>
                       </NuxtLink>
-                      <NuxtLink :to="{ path: '/product/detail', query: { id: item.good_id }}" class="title">
+                      <NuxtLink :to="{ path: `/product/detail/${item.good_id}`}" class="title">
                         {{item.name}}
                       </NuxtLink>
                       <div class="price">{{item.price}}元 × {{item.number}}</div>

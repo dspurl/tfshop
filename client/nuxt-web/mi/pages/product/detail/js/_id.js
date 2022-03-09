@@ -22,9 +22,9 @@ export default {
   },
   async asyncData (ctx) {
     try {
-      const { query } = ctx;
+      const { params } = ctx;
       let [ goodDetailData ] = await Promise.all([
-        detail(query.id)
+        detail(params.id)
       ]);
       let resources_many = [];
       let resources_many_img = [];
