@@ -149,7 +149,7 @@ class GoodIndent extends Model
             } else {
                 $return = $this->attributes['total'] / 100;
             }
-            return $return > 0 ? $return : '';
+            return $return > 0 ? $return : 0;
         }
     }
 
