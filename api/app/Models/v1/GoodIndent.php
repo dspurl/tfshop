@@ -166,7 +166,7 @@ class GoodIndent extends Model
             } else {
                 $return = $this->attributes['refund_money'] / 100;
             }
-            return $return > 0 ? $return : '';
+            return $return > 0 ? $return : 0;
         }
     }
 
@@ -183,7 +183,7 @@ class GoodIndent extends Model
             } else {
                 $return = $this->attributes['carriage'] / 100;
             }
-            return $return > 0 ? $return : '';
+            return $return > 0 ? $return : 0;
         }
     }
 
