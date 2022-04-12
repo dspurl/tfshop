@@ -101,6 +101,7 @@ return [
         'source' => '来源分析',
         'StatisticsAgeAndSex' => '年龄和性别',
         'statisticsPay' => '交易分析',
+        'verifyPlugin' => '验证插件是否安装',
         // admin插件
     ],
     'client' => [
@@ -112,6 +113,7 @@ return [
         'emailCode' => '获取邮箱验证码',
         'login' => '登录',
         'refreshToken' => '刷新token',
+        'verifyPlugin' => '验证插件是否安装',
         'register' => '注册',
         'findPassword' => '找回密码',
         'miniLogin' => '小程序换取openid',

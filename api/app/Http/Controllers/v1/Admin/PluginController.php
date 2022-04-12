@@ -269,4 +269,18 @@ class PluginController extends Controller
         }
         return resReturn(1, (new Plugin())->conflictResolution($name, $request));
     }
+
+    /**
+     * Verify that the plug-in is installed
+     * 验证插件是否安装
+     * @param $name // 插件名称
+     * @return string
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    public function verify($name){
+        if(!$name){
+            return resReturn(0, '插件名称有误', Code::CODE_MISUSE);
+        }
+        return resReturn(1, (new Plugin())->hasAll($name));
+    }
 }

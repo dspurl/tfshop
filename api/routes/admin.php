@@ -18,6 +18,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('login', 'LoginController@index')->name('admin.login');  //登录
         Route::post('refreshToken', 'LoginController@refresh')->name('admin.refreshToken');  //刷新token
         Route::get('plugin/download/{name}', 'PluginController@download')->name('admin.plugInDownload');    //插件下载
+        Route::post('verifyPlugin/{id}', 'PluginController@verify')->name('admin.verifyPlugin');   //验证插件是否安装
     });
     Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {
         Route::post('uploadPictures', 'IndexController@uploadPictures')->name('admin.uploadPictures');  //上传

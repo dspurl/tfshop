@@ -17,6 +17,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::any('paymentNotify', 'AppController@paymentNotify')->name('client.paymentNotify');    //支付回调
         Route::any('refundNotify', 'AppController@refundNotify')->name('client.refundNotify');    //退款回调
         Route::post('refreshToken', 'LoginController@refresh')->name('client.refreshToken');  //刷新token
+        Route::post('verifyPlugin/{id}', 'PluginController@verify')->name('client.verifyPlugin');   //验证插件是否安装
     });
     // 需要secret验证
     Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
