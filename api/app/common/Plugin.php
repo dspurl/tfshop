@@ -536,10 +536,11 @@ class Plugin
     /**
      * 安装和更新插件
      * @param $name //插件简称
+     * @param $template //是否安装模板
      * @return string
      * @throws \Exception
      */
-    public function autoPlugin($name)
+    public function autoPlugin($name, $template = false)
     {
         $path = $this->pluginListPath . '/' . $name;
         $dsshop = $path . '/dsshop.json';
@@ -569,13 +570,13 @@ class Plugin
         $this->fileDeployment($path . '/api/requests', '/api/app/Http/Requests/v' . config('dsshop.versions'));
         $this->fileDeployment($path . '/api/observers', '/api/app/Observers');
         $this->fileDeployment($path . '/database', '/api/database/migrations');
-        if (count($routes['adminTemplate']) > 0) {
+        if (count($routes['adminTemplate']) > 0 && $template) {
             foreach ($routes['adminTemplate'] as $admin) {
                 $this->fileDeployment($path . '/' . $admin . '/api', '/' . $admin . '/src/api');
                 $this->fileDeployment($path . '/' . $admin . '/views', '/' . $admin . '/src/views/ToolManagement');
             }
         }
-        if (count($routes['clientTemplate']) > 0) {
+        if (count($routes['clientTemplate']) > 0 && $template) {
             foreach ($routes['clientTemplate'] as $client) {
                 $this->fileDeployment($path . '/' . $client, '/' . $client);
             }
@@ -618,7 +619,7 @@ class Plugin
             unset($file_get_contents);
         }
         // permission
-        if (array_key_exists('permission', $routes)) {
+        if (array_key_exists('permission', $routes) && $template) {
             if (count($routes['adminTemplate']) > 0) {
                 foreach ($routes['adminTemplate'] as $admin) {
                     $targetPath = '/' . $admin . '/src/store/modules/permission.js';
@@ -793,10 +794,11 @@ class Plugin
     /**
      * 卸载插件
      * @param string $name //组件名称
+     * @param $template //是否安装模板
      * @return string
      * @throws \Exception
      */
-    public function autoUninstall($name)
+    public function autoUninstall($name, $template = false)
     {
         $names = $this->convertUnderline($name);
         $path = $this->pluginListPath . '/' . $name;
@@ -855,7 +857,7 @@ class Plugin
         $this->fileUninstall($path . '/api/requests', '/api/app/Http/Requests/v' . config('dsshop.versions'));
         $this->fileUninstall($path . '/api/observers', '/api/app/Observers');
         $this->fileUninstall($path . '/database', '/api/database/migrations');
-        if (count($routes['adminTemplate']) > 0) {
+        if ($template && count($routes['adminTemplate']) > 0) {
             foreach ($routes['adminTemplate'] as $c) {
                 //去除后台路由
                 $targetPath = '/' . $c . '/src/store/modules/permission.js';
@@ -872,7 +874,7 @@ class Plugin
                 }
             }
         }
-        if (count($routes['clientTemplate']) > 0) {
+        if ($template && count($routes['clientTemplate']) > 0) {
             foreach ($routes['clientTemplate'] as $c) {
                 Storage::disk('root')->deleteDirectory('/' . $c . '/pages/' . $names);
                 Storage::disk('root')->deleteDirectory('/' . $c . '/pages/user/' . $names);
@@ -1864,7 +1866,7 @@ class Plugin
             $annotation = explode(":", $a['annotation']);
             if (count($annotation) == 2) {
                 $get .= '
-                
+
     public function get' . $this->convertUnderline($a['name']) . 'Attribute()
     {
         if (isset($this->attributes[\'' . $a['name'] . '\'])) {
@@ -2182,6 +2184,28 @@ class Plugin
         $dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
         $dsshop = collect($dsshop)->pluck('name')->toArray();
         return in_array($name, $dsshop);
+    }
+
+    /**
+     * 插件是否安装(支持多个)
+     * @param $name // 插件名
+     * @return array
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \Exception
+     */
+    public function hasAll($name)
+    {
+        if (!Storage::disk('root')->exists($this->pluginPath . '/dsshop.json')) {
+            throw new \Exception('缺少dsshop.json文件', Code::CODE_INEXISTENCE);
+        }
+        $dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
+        $dsshop = collect($dsshop)->pluck('name')->toArray();
+        $nameAll = explode(",", $name);
+        $return = [];
+        foreach ($nameAll as $n) {
+            $return[$n] = in_array($n, $dsshop);
+        }
+        return $return;
     }
 
     /**
