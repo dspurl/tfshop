@@ -31,8 +31,13 @@
 					<text class="num" v-else>0.00</text>
 					<text>余额</text>
 				</view>
-				<view class="tj-item">
-					<text class="num">0</text>
+				<view v-if="verify.integral" class="tj-item">
+					<text class="num">{{user.integral ? user.integral.available : 0}}</text>
+					<text>积分</text>
+				</view>
+				<!-- 优惠券按钮 -->
+				<view v-if="verify.coupon" class="tj-item" @click="navTo('/pages/coupon/list?state=1')">
+					<text class="num">{{userCouponCount}}</text>
 					<text>优惠券</text>
 				</view>
 			</view>
@@ -54,7 +59,20 @@
 					<text class="yticon icon-yishouhuo"><text v-if="quantity.waitforreceiving" class="cu-tag badge">{{quantity.waitforreceiving}}</text></text>
 					<text>待收货</text>
 				</view>
+				<view v-if="verify.comment" class="order-item" @click="navTo('/pages/indent/list?state=4')" hover-class="common-hover"  :hover-stay-time="50">
+					<text class="yticon icon-yishouhuo"><text v-if="quantity.remainEvaluated" class="cu-tag badge">{{quantity.remainEvaluated}}</text></text>
+					<text>待评价</text>
+				</view>
 			</view>
+			<!-- 抽奖活动-->
+			<scroll-view v-if="integralDrawList.length" scroll-x class="integral-draw-list">
+				<view v-for="(item,index) in integralDrawList" :key="index" class="item" @click="navTo(`/pages/user/integralDraw/index?id=${item.id}`)" hover-class="none">
+					<view v-if="item.type === 1" class="dsshop ds-turntable" :class="{failure: item.is_hidden === 0}"></view>
+					<view v-else-if="item.type === 2" class="dsshop ds-sudoku" :class="{failure: item.is_hidden === 0}"></view>
+					<view v-else class="dsshop ds-slot_machine" :class="{failure: item.is_hidden === 0}"></view>
+					<view class="name">{{item.name}}</view>
+				</view>
+			</scroll-view>
 			<!-- 浏览历史 -->
 			<view class="history-section icon">
 				<view class="sec-header">
@@ -65,9 +83,13 @@
 					<image v-for="(item, index) in browseList" :key="index" @click="navTo('/pages/product/detail?id=' + item.good_id)" :src="item.good.resources.img | smallImage" mode="aspectFill" lazy-load></image>
 				</scroll-view>
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="账单" @eventClick="navTo('/pages/finance/bill')"></list-cell>
+				<list-cell v-if="verify.integral" icon="icon-iconfontweixin" iconColor="#54b4ef" title="积分明细" @eventClick="navTo('/pages/integral/index')"></list-cell>
+				<list-cell v-if="verify.integralDraw" icon="icon-iconfontweixin" iconColor="#E6A23C" title="中奖记录" @eventClick="navTo('/pages/user/integralDraw/log')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" @eventClick="navTo('/pages/user/collect')" title="我的收藏"></list-cell>
 				<list-cell icon="icon-comment" iconColor="#e07472" title="通知" :tips="noticeNumber ? noticeNumber : null" @eventClick="navTo('/pages/notice/notice')"></list-cell>
+				<list-cell v-if="verify.article" icon="icon-xiaoxi" iconColor="#9789f7" title="帮助中心" @eventClick="navToNoValidation('/pages/article/column')"></list-cell>
+				<list-cell v-if="verify.distribution" icon="icon-share" iconColor="#9789f7" @eventClick="navTo('/pages/distribution/share')" title="分享" tips="邀请好友赢10元奖励"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="设置" @eventClick="navTo('/pages/set/set')"></list-cell>
 			</view>
 		</view>
@@ -81,6 +103,10 @@
 	import User from '../../api/user';
 	import GoodIndent from '../../api/goodIndent';
 	import Notification from '../../api/notification'
+	import {count as couponCount} from '@/api/coupon'
+    import {getList} from '@/api/integralDraw'
+    import "./integralDraw/scss/icon.css"
+    import {verifyPlugin} from '@/api/plugin'
     import {  
         mapState 
     } from 'vuex';  
@@ -101,7 +127,18 @@
 					all: 0,
 					obligation: 0,
 					waitdeliver: 0,
-					waitforreceiving: 0
+					waitforreceiving: 0,
+					remainEvaluated: 0
+				},
+				userCouponCount: 0,
+				integralDrawList: [],
+				verify: {
+					coupon: false,
+					comment: false,
+					integralDraw: false,
+					integral: false,
+					article: false,
+					distribution: false
 				}
 			}
 		},
@@ -109,11 +146,18 @@
 			
 		},
 		onShow(){
+			this.getVerifyPlugin()
 			if(this.hasLogin){
 				this.getUser()
 				this.browse()
 				this.noticeConut()
 				this.getQuantity()
+				if(this.verify.coupon){
+					this.getUserCouponCount()
+				}
+				if(this.verify.integralDraw){
+					this.getIntegralDraw()
+				}
 			} else {
 				this.browseList = []
 				this.user = {}
@@ -122,7 +166,8 @@
 					all: 0,
 					obligation: 0,
 					waitdeliver: 0,
-					waitforreceiving: 0
+					waitforreceiving: 0,
+					remainEvaluated: 0
 				}
 			}
 			
@@ -151,6 +196,12 @@
 			...mapState(['hasLogin','userInfo'])
 		},
         methods: {
+			getVerifyPlugin(){
+				const that = this
+				verifyPlugin(['coupon','comment','integral','integralDraw','article','distribution'],function(res){
+					that.verify = res
+				})
+			},
 			getUser(){
 				const that = this
 				User.detail(function(res){
@@ -176,6 +227,16 @@
 				const that = this
 				GoodIndent.quantity(function(res){
 					that.quantity = res
+				})
+			},
+			async getIntegralDraw(){
+				let that = this
+				await getList({
+					limit: 10,
+					page: 1,
+					sort: '-created_at'
+				},function(res){
+					that.integralDrawList = res.data
 				})
 			},
 			navTo(url){
@@ -229,6 +290,13 @@
 				this.moving = false;
 				this.coverTransition = 'transform 0.3s cubic-bezier(.21,1.93,.53,.64)';
 				this.coverTransform = 'translateY(0px)';
+			},
+			// 可用优惠券数量
+			getUserCouponCount(){
+				const that = this
+				couponCount(function(res){
+					that.userCouponCount = res
+				})
 			}
         }  
     }  
@@ -409,6 +477,32 @@
 				height: 160upx;
 				margin-right: 20upx;
 				border-radius: 10upx;
+			}
+		}
+	}
+	.integral-draw-list{
+		white-space: nowrap;
+		padding: 30rpx 30rpx;
+		background: #FFFFFF;
+		margin-top:20rpx;
+		border-radius: 10rpx;
+		.item{
+			display:inline-block;
+			width: 200rpx;
+			margin-right: 20rpx;
+			text-align: center;
+			.dsshop{
+				font-size: 100rpx;
+				&.failure{
+					filter: grayscale(100%);
+				}
+			}
+			.name{
+				font-size: 28rpx;
+				margin-top:10rpx;
+				overflow: hidden;
+				text-overflow:ellipsis;
+				white-space: nowrap;
 			}
 		}
 	}

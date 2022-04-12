@@ -198,6 +198,11 @@ class EditSku extends Vue {
     this.productSkus = Object.freeze(productSkus)
   }
 
+  // 设置产品参数模板
+  _setSpecification(data) {
+    this.specification = data
+  }
+
   // 父组件调用，获取 sku-table 的数据
   _getData() {
     return this.$refs.SkuTable.data

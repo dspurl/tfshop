@@ -1,0 +1,21 @@
+.box{
+  padding-top:20px;
+  .details{
+    padding-bottom: 10px;
+  }
+  .imgList{
+    .img{
+      border: 2px solid #f2f2f2;
+      padding: 2px;
+      width: 80px;
+      height: 80px;
+      margin-right: 5px;
+    }
+  }
+  .time{
+    color: #ccc;
+  }
+  .reply{
+    color: $font-color-main;
+  }
+}

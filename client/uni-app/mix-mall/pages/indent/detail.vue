@@ -59,16 +59,24 @@
 				<text class="cell-tit clamp">商品金额</text>
 				<text class="cell-tip">￥{{ total | 1000 }}</text>
 			</view>
-			<view class="yt-list-cell b-b">
+			<view class="yt-list-cell b-b" v-if="!indentList.integral_draw_log">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">
 					<block v-if="indentList.carriage > 0">{{ indentList.carriage | 1000 }}</block>
 					<block v-else>免运费</block>
 				</text>
 			</view>
+			<view class="yt-list-cell b-b" v-if="indentList.coupon_money>0">
+				<text class="cell-tit clamp">优惠金额</text>
+				<text class="cell-tip red">-￥{{indentList.coupon_money/100}}</text>
+			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">实付款</text>
 				<text class="cell-tip">{{ indentList.total | 1000 }}</text>
+			</view>
+			<view class="yt-list-cell b-b" v-if="indentList.integralPrice">
+				<text class="cell-tit clamp">积分抵扣：</text>
+				<text class="text-red">-{{ indentList.integralPrice | 1000 }}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">订单号</text>
@@ -84,12 +92,19 @@
 				<text class="cell-tit clamp">订单自动收货时间</text>
 				<text class="cell-tip" style="color: #fa436a;">{{ indentList.receiving_time }}</text>
 			</view>
+			<view v-if="indentList.integral_draw_log" class="yt-list-cell b-b winning-information">
+				<text class="name">中奖信息</text>
+				<navigator :url="`/pages/user/integralDraw/index?id=${indentList.integral_draw_log.integral_draw.id}`" hover-class="none">
+					<text class="content">参与{{indentList.integral_draw_log.integral_draw.name}}获得:({{indentList.integral_draw_log.integral_prize.name}})</text>
+				</navigator>
+			</view>
 		</view>
 		<!-- 底部 -->
-		<view v-if="indentList.state === 1 || indentList.state === 3" class="footer">
+		<view v-if="indentList.state === 1 || indentList.state === 3 || indentList.state === 10" class="footer">
 			<view class="price-content"></view>
 			<navigator v-if="indentList.state === 1" :url="'/pages/money/pay?id=' + indentList.id" hover-class="none" class="submit">立即支付</navigator>
 			<view v-else-if="indentList.state === 3" class="submit" @click="confirmReceipt(indentList)">确认收货</view>
+			<view v-else-if="indentList.state === 10" class="submit" @click="goScore(indentList)">立即评价</view>
 		</view>
 	</view>
 </template>
@@ -166,7 +181,18 @@ export default {
 				that.getList()
 			})
 		},
-		stopPrevent() {}
+		stopPrevent() {},
+		// 评价
+		goScore(item){
+			uni.navigateTo({
+				url: `/pages/comment/score?id=${item.id}`
+			})
+		},
+		//评价成功后回调
+		refreshOderList(){
+			// 需要重新加载
+			this.getList()
+		}
 	}
 };
 </script>
@@ -474,6 +500,15 @@ page {
 		color: #fff;
 		font-size: 32upx;
 		background-color: $base-color;
+	}
+}
+.winning-information{
+	.name{
+		width: 300rpx;
+		color: #909399;
+	}
+	.content{
+		flex:1;
 	}
 }
 </style>

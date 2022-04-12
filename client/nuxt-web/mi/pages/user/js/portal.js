@@ -1,6 +1,7 @@
 import {getList as getBrowseList} from '@/api/browse'
 import {detail as getUserDetail} from '@/api/user'
 import {quantity} from '@/api/goodIndent'
+import {verifyPlugin} from '@/api/plugin'
 export default {
   layout: 'user',
   head () {
@@ -8,8 +9,23 @@ export default {
       title: '个人中心',
     }
   },
+  async asyncData (ctx) {
+    try {
+      let [ verifyPluginData ] = await Promise.all([
+        verifyPlugin(['integral','comment']),
+      ]);
+      return {
+        isIntegral: verifyPluginData.integral,
+        isComment: verifyPluginData.comment
+      }
+    } catch(err) {
+      ctx.$errorHandler(err)
+    }
+  },
   data() {
     return {
+      isIntegral: false,
+      isComment: false,
       loading: true,
       user:{},
       browseList: [],

@@ -52,8 +52,35 @@
 					<text class="yticon icon-you"></text>
 				</view>
 			</block>
+			<!-- 优惠券按钮 -->
+			<view v-if="verify.coupon" class="c-row b-b" @click="changeShow(true)">
+				<text class="tit">优惠券</text>
+				<text class="con t-r red"></text>
+				<text class="yticon icon-you"></text>
+			</view>
+			<!-- 优惠券-模态层弹窗  -->
+			<coupon v-if="verify.coupon" :getList="couponList" :show="couponShow" @changeShow="changeShow"/>
 		</view>
-
+		<!-- 评价 -->
+		<view class="eva-section" v-if="verify.comment">
+			<view class="e-header">
+				<text class="tit">评价</text>
+				<text>({{commentTotal}})</text>
+				<navigator hover-class="none" class="tip" :url="'/pages/comment/list?id='+ id">查看全部</navigator>
+				<text class="yticon icon-you"></text>
+			</view>
+			<view class="eva-box" v-for="(item,index) in commentList" :key="index">
+				<image class="portrait" :src="item.comment.portrait || '/static/missing-face.png'"  mode="aspectFill" lazy-load></image>
+				<view class="right">
+					<text class="name">{{item.comment.name}}</text>
+					<text class="con">{{item.comment.details}}</text>
+					<view class="bot">
+						<text class="attr">购买类型：<span v-for="(ite,ind) in item.good_sku.product_sku" :key="ind" class="padding-right-xs">{{ite.value}}</span></text>
+						<text class="time">{{item.comment.created_at.split(' ')[0]}}</text>
+					</view>
+				</view>
+			</view>
+		</view>
 		<view class="detail-desc">
 			<view class="d-header"><text>图文详情</text></view>
 			<u-parse :content="getList.details" lazyLoad/>
@@ -102,6 +129,10 @@ import { param2Data } from '@/components/sku/sku2param';
 import sku from '@/components/sku';
 import Browse from '../../api/browse';
 import Collect from '../../api/collect';
+import {good as commentGood} from '@/api/comment'
+import coupon from '../coupon/components/index.vue'
+import { getList as couponList } from '@/api/coupon'
+import {verifyPlugin} from '@/api/plugin'
 import {
 		mapState,
 		mapMutations
@@ -110,7 +141,8 @@ export default {
 	components: {
 		share,
 		sku,
-		uParse
+		uParse,
+		coupon
 	},
 	data() {
 		return {
@@ -130,15 +162,21 @@ export default {
 			resources_many: [],
 			video: '',
 			index: 0,
-			buy: false
+			buy: false,
+			commentList: [],
+			commentTotal:0,
+			couponList: [],
+			couponShow: false,
+			verify: {
+				coupon: false,
+				comment: false
+			}
 		};
 	},
 	async onLoad(options) {
 		let id = options.id;
-		if (id) {
-			this.id = id;
-			this.loadData(id);
-		}
+		this.id = id;
+		this.getVerifyPlugin()
 	},
 	computed:{
 		...mapState(['hasLogin'])
@@ -147,6 +185,23 @@ export default {
 		this.videoContext = uni.createVideoContext('myVideo')
 	},
 	methods: {
+		getVerifyPlugin(){
+			const that = this
+			verifyPlugin(['coupon','comment'],function(res){
+				that.verify = res
+				if (that.id) {
+					that.loadData(that.id);
+					if(that.verify.comment){
+						that.goodEvaluate()
+					}
+				}
+				if (that.hasLogin){
+					if(that.verify.coupon){
+						that.getCoupon()
+					}
+				}
+			})
+		},
 		//获取详情
 		async loadData(id) {
 			// 商品详情
@@ -260,7 +315,52 @@ export default {
 		purchasePattern(data) {
 			this.specificationDefaultDisplay = data;
 		},
-		stopPrevent() {}
+		stopPrevent() {},
+		// 获取评价列表
+		goodEvaluate(){
+			const that = this
+			commentGood({
+				limit: 2,
+				page: 1,
+				good_id:this.id,
+				sort:'-created_at'
+			},function(res){
+				if(res.total>0){
+					that.commentList = res.data
+					that.commentTotal = res.total
+				}
+			})
+		},
+		// 优惠券显示隐藏
+		changeShow(val){
+			if (!this.hasLogin){
+				this.$api.msg('请先登录')
+				return false
+			}
+			this.couponShow = val
+		},
+		// 获取优惠券列表
+		getCoupon(){
+			const that = this
+			couponList({}, function(res) {
+				that.couponList = []
+				res.data.forEach(item=>{
+					let data = {
+						id: item.id,
+						money: item.cost/100,
+						title: item.explain,
+						type: item.type,
+						time: item.start_time.split(' ')[0].replace(/-/g,".") + "-" + item.end_time.split(' ')[0].replace(/-/g,"."),
+					}
+					if(item.limit_get && item.user_coupon_count >= item.limit_get){
+						data.state = "2"
+					} else{
+						data.state = "1"
+					}
+					that.couponList.push(data)
+				})
+			})
+		}
 	}
 };
 </script>

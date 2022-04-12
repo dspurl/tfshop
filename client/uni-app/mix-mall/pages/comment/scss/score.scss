@@ -1,0 +1,67 @@
+page, .content{
+		background: $page-color-base;
+		height: 100%;
+	}
+	.height45{
+		height: 120upx;
+		display: flex;
+	}
+	.add-btn{
+		position: fixed;
+		left: 30upx;
+		right: 30upx;
+		bottom: 16upx;
+		z-index: 95;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 690upx;
+		height: 80upx;
+		font-size: 32upx;
+		color: #fff;
+		background-color: $base-color;
+		border-radius: 10upx;
+		box-shadow: 1px 2px 5px rgba(219, 63, 96, 0.4);		
+	}
+	.anonymity{
+		padding-left: 30upx;
+		position: relative;
+		top:4upx;
+	}
+	/* 单条商品 */
+	.goods-box-single{
+		background-color: #FFFFFF;
+		display: flex;
+		padding: 20upx 30upx;
+		.goods-img{
+			display: block;
+			width: 120upx;
+			height: 120upx;
+		}
+		.right{
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			padding: 0 30upx 0 24upx;
+			overflow: hidden;
+			.title{
+				font-size: $font-base + 2upx;
+				color: $font-color-dark;
+				line-height: 1;
+			}
+			.attr-box{
+				font-size: $font-sm + 2upx;
+				color: $font-color-light;
+				padding: 10upx 12upx;
+			}
+			.price{
+				font-size: $font-base + 2upx;
+				color: $font-color-dark;
+				&:before{
+					content: '￥';
+					font-size: $font-sm;
+					margin: 0 2upx 0 8upx;
+				}
+			}
+		}
+	}

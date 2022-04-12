@@ -112,7 +112,7 @@
             :value="index"/>
         </el-select>
       </el-form-item>
-      <sku ref="SkuDemo"/>
+      <sku v-show="skuShow" ref="SkuDemo"/>
       <h3>详情</h3>
       <el-form-item label="详情" prop="details">
         <tinymce
@@ -247,6 +247,7 @@ import tinymce from '@/components/tinymce5'
 import Sku from '@/components/skutwo'
 import 'video.js/dist/video-js.css'
 import { videoPlayer } from 'vue-video-player'
+import { verifyPlugin } from '@/api/plugin'
 export default {
   name: 'GoodDetail',
   components: {
@@ -271,6 +272,7 @@ export default {
       callback()
     }
     return {
+      skuShow: false,
       formLoading: false,
       dialogFormVisible: false,
       // 视频播放
@@ -391,8 +393,17 @@ export default {
       this.id = this.$route.query.id
     }
     this.getList()
+    this.getVerifyPlugin()
   },
   methods: {
+    getVerifyPlugin() {
+      verifyPlugin(['description']).then(response => {
+        this.isDescription = response.data.description
+        if (!this.isDescription) {
+          this.skuShow = true
+        }
+      })
+    },
     getList() {
       this.loading = true
       detail(this.id ? this.id : 0, { category: getToken('applyCategory') }).then(response => {
@@ -547,6 +558,19 @@ export default {
           }
           this.goods_brand = []
           this.good_attribute = []
+          // 设置产品参数
+          if (!this.isEdit && this.isDescription) {
+            const specificationData = []
+            response.data.good_parameter_group.forEach(function(item) {
+              specificationData.push({
+                id: item.id,
+                value: item.value,
+                leaf: item.good_parameter
+              })
+            })
+            this.$refs.SkuDemo._setSpecification(specificationData)
+            this.skuShow = true
+          }
           const that = this
           if (response.data.specification_on.length > 0) {
             this.good_attribute = response.data.specification_on

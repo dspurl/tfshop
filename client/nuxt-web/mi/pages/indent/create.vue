@@ -67,6 +67,7 @@
             </el-input>
           </el-form-item>
         </el-form>
+        <coupon v-if="!ruleForm.integral_draw_log_id && verify.coupon" :money="total" @select="calcTotal"></coupon>
         <div class="count-detail">
           <div class="bill-item">
             <div class="bill-name">商品件数：</div>
@@ -76,21 +77,39 @@
             <div class="bill-name">商品总价：</div>
             <div class="bill-money">{{total | thousands}}元</div>
           </div>
-          <div class="bill-item">
+          <div class="bill-item" v-if="!ruleForm.integral_draw_log_id">
+            <div class="bill-name">优惠金额：</div>
+            <div class="bill-money">-{{couponMoney | thousands}}元</div>
+          </div>
+          <div class="bill-item" v-if="!ruleForm.integral_draw_log_id">
             <div class="bill-name">运费：</div>
             <div class="bill-money">{{ruleForm.carriage | thousands}}元</div>
           </div>
+          <div class="bill-item" v-if="integral.deductible && integral.available">
+            <div class="bill-name">
+              <el-popover
+                placement="top-start"
+                width="200"
+                trigger="hover"
+                :content="`你有个${integral.available}，可用${integral.deductible}个`">
+                <i slot="reference" class="integrall-popover el-icon-warning-outline"></i>
+              </el-popover>
+              使用<el-input-number class="input-number" v-model="ruleForm.integral" controls-position="right" @change="numberIntegral" :min="0" :max="integral.deductible > integral.available ? integral.available : integral.deductible"></el-input-number>积分抵扣{{ integralPrice }}元：</div>
+            <div class="bill-money">-{{ integralPrice }}元</div>
+          </div>
+          <div></div>
           <div class="bill-item" style="margin-top:10px;">
             <div class="bill-name">
               <div class="name">应付总额：</div>
-              <div class="price">{{(ruleForm.carriage+total) | thousands}}</div>
+              <div class="price" v-if="ruleForm.integral_draw_log_id">0.00</div>
+              <div class="price" v-else>{{(((ruleForm.carriage+total-couponMoney)*100-integralPrice*100)/100) | thousands}}</div>
               <div class="unit">元</div>
             </div>
           </div>
         </div>
         <el-divider></el-divider>
         <div class="operation">
-          <el-button plain @click="go" :loading="buttonLoading">返回购物车</el-button>
+          <el-button v-if="!ruleForm.integral_draw_log_id" plain @click="go" :loading="buttonLoading">返回购物车</el-button>
           <el-button type="danger" @click="submit" :loading="buttonLoading">去结算</el-button>
         </div>
       </div>

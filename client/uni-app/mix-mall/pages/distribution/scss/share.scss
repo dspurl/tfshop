@@ -1,0 +1,125 @@
+.content{
+		.poster{
+			position: fixed;
+			top: 0;
+			left: 0;
+		}
+		.title{
+			font-size: 50upx;
+			text-align: center;
+			line-height: 120upx;
+		}
+		.describe{
+			line-height: 60upx;
+		}
+		.img{
+			display: flex;
+			justify-content: center;
+			margin-top:40upx;
+			text-align: center;
+			image{
+				width: 80%;
+			}
+		}
+		.sub{
+			.cu-btn{
+				width: 80%;
+				line-height: 80upx;
+				height: 80upx;
+			}
+		}
+		.flow{
+			position: relative;
+			width: 100%;
+			.text-gray{
+				padding-left:20upx;
+				padding-right:20upx;
+			}
+			.ll{
+				text-align: center;
+				float:left;
+				font-size: 24upx;
+				.icon{
+					line-height: 80upx;
+				}
+				.name{
+					line-height: 60upx;
+				}
+				.icon-box{
+					text-align: center;
+					line-height: 80upx;
+					width: 80upx;
+					height:80upx;
+					border-radius: 50%;
+					span{
+						font-size: 36upx;
+					}
+				}
+			}
+		}
+		.hideCanvasView {
+			position: relative;
+		}
+		
+		.hideCanvas {
+			position: fixed;
+			top: -99999upx;
+			left: -99999upx;
+			z-index: -99999;
+		}
+		.flex_row_c_c {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+		}
+		
+		.modalView {
+			width: 100%;
+			height: 100%;
+			position: fixed;
+			top: 0;
+			left: 0;
+			opacity: 0;
+			background: rgba(0, 0, 0, 0.6);
+			transition: all .3s ease-in-out;
+			pointer-events: none;
+			backface-visibility: hidden;
+			z-index: 999;
+		}
+		.modalView.show {
+			opacity: 1;
+			transform: scale(1);
+			pointer-events: auto;
+		}
+		.flex_column {
+			display: flex;
+			flex-direction: column;
+			width: 600upx;
+		}
+		
+		.backgroundColor-white {
+			background-color: white;
+		}
+		
+		.border_radius_10px {
+			border-radius: 10px;
+		}
+		
+		.padding1vh {
+			padding: 1vh;
+		}
+		
+		.posterImage {
+			width: 100%;
+		}
+		
+		.flex_row {
+			display: flex;
+			flex-direction: row;
+		}
+		
+		.marginTop2vh {
+			margin-top: 2vh;
+		}
+	}

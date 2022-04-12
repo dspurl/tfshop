@@ -1,3 +1,4 @@
+import {verifyPlugin} from '@/api/plugin'
 export default {
   middleware: 'auth',
   data() {
@@ -33,7 +34,7 @@ export default {
     }
   },
   mounted() {
-    this.setMenuActive($nuxt.$route.path)
+    this.getMenuList();
   },
   watch: {
     $route: {
@@ -44,6 +45,29 @@ export default {
     }
   },
   methods: {
+    async getMenuList(){
+      let [ verifyPluginData ] = await Promise.all([
+        verifyPlugin(['coupon', 'integral', 'integralDraw']),
+      ]);
+      if(verifyPluginData.coupon){
+        this.menuList[0].children.push({ name: '我的优惠券', path: '/user/coupon/list', active: false})
+      }
+      if(verifyPluginData.integral){
+        this.menuList.push({
+          name: '积分管理',
+          children: [
+            { name: '积分明细', path: '/user/integral/list', active: false }
+          ]
+        })
+        if(verifyPluginData.integralDraw){
+          this.menuList[3].children.push(
+            { name: '积分抽奖', path: '/user/integralDraw/list', active: false },
+            { name: '中奖记录', path: '/user/integralDraw/log', active: false }
+          )
+        }
+      }
+      this.setMenuActive($nuxt.$route.path)
+    },
     setMenuActive(path) {
       for (let i = 0; i < this.menuList.length; i++) {
         if(this.menuList[i].children.length>0){

@@ -1,4 +1,5 @@
 import { getList, cancel, destroy, receipt } from '@/api/goodIndent'
+import {verifyPlugin} from '@/api/plugin'
 export default {
   layout: 'user',
   head () {
@@ -13,12 +14,25 @@ export default {
       loading: false,
       goodIndentList: [],
       total: 0,
+      isComment: false,
       listQuery: {
         limit: 10,
         page: 1,
         index: '0',
         sort: '-created_at',
       }
+    }
+  },
+  async asyncData (ctx) {
+    try {
+      let [ verifyPluginData ] = await Promise.all([
+        verifyPlugin(['comment']),
+      ]);
+      return {
+        isComment: verifyPluginData.comment
+      }
+    } catch(err) {
+      ctx.$errorHandler(err)
     }
   },
   mounted() {

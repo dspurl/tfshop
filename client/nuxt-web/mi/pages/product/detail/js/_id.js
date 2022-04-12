@@ -3,10 +3,16 @@ import {create as collectCreate, destroy as collectDestroy, detail as getCollect
 import sku from '@/components/Sku'
 import VueVideo from '@/components/VueVideo'
 import 'video.js/dist/video-js.css'
+import Comment from '@/pages/comment/list'
+import {good} from '@/api/comment'
+import coupon from '@/pages/coupon/components'
+import {verifyPlugin} from '@/api/plugin'
 export default {
   components: {
     sku,
-    VueVideo
+    VueVideo,
+    Comment,
+    coupon
   },
   data() {
     return {
@@ -17,14 +23,18 @@ export default {
       resources_many: [],
       resources_many_img: [],
       collect: 0,
-      poster: ''
+      poster: '',
+      commentTotal: 0,
+      isComment: false,
+      isCoupon: false
     }
   },
   async asyncData (ctx) {
     try {
       const { params } = ctx;
-      let [ goodDetailData ] = await Promise.all([
-        detail(params.id)
+      let [ goodDetailData, verifyPluginData ] = await Promise.all([
+        detail(params.id),
+        verifyPlugin(['coupon','comment']),
       ]);
       let resources_many = [];
       let resources_many_img = [];
@@ -47,7 +57,9 @@ export default {
         goodDetail: goodDetailData,
         resources_many: resources_many,
         resources_many_img: resources_many_img,
-        poster: poster
+        poster: poster,
+        isCoupon: verifyPluginData.coupon,
+        isComment: verifyPluginData.comment,
       }
     } catch(err) {
       ctx.$errorHandler(err)
@@ -67,6 +79,9 @@ export default {
     if($nuxt.$store.state.hasLogin){
       this.getCollect()
     }
+    if(this.isComment){
+      this.getCommentTotal()
+    }
   },
   methods: {
     //选择后返回的数据
@@ -81,7 +96,7 @@ export default {
       this.$refs.sku.cart(state)
     },
     getCollect(){
-      getCollectDetail($nuxt.$route.query.id).then(response => {
+      getCollectDetail($nuxt.$route.params.id).then(response => {
         this.collect = response
       })
     },
@@ -94,7 +109,7 @@ export default {
       if(this.collect){
         collectDestroy(this.goodDetail.id)
       }else{
-        collectCreate({id: this.goodDetail.id})
+        collectCreate(this.goodDetail)
       }
       this.collect = !this.collect
     },
@@ -105,6 +120,17 @@ export default {
       setTimeout(()=>{
         this.tabLoading = false
       },1000)
+    },
+    // 获取评价总数
+    getCommentTotal(){
+      good({
+        limit: 1,
+        page: 1,
+        good_id:$nuxt.$route.params.id,
+        sort:'-created_at'
+      }).then(response => {
+        this.commentTotal = response.total
+      })
     }
   }
 }

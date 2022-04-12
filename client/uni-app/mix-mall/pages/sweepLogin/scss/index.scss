@@ -1,0 +1,31 @@
+page{
+	background-color: #FFFFFF;
+}
+.content{
+	text-align: center;
+	padding-top: 200rpx;
+	.portrait{
+		margin: 0 auto;
+		width: 160rpx;
+		height: 160rpx;
+		border:5rpx solid #fff;
+		border-radius: 50%;
+	}
+	.username{
+		font-size: 30rpx;
+		font-weight: bold;
+		padding-top: 40rpx;
+	}
+	.explain{
+		font-size: 24rpx;
+		color: #999999;
+		padding-top: 20rpx;
+	}
+	.button{
+		margin-top:80rpx;
+		width: 300rpx;
+	}
+	.cancel{
+		margin-top:40rpx;
+	}
+}

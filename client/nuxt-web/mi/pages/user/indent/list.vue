@@ -7,6 +7,7 @@
         <el-tab-pane label="待支付" name="1"></el-tab-pane>
         <el-tab-pane label="待发货" name="2"></el-tab-pane>
         <el-tab-pane label="待收货" name="3"></el-tab-pane>
+        <el-tab-pane v-if="isComment" label="待评价" name="10"></el-tab-pane>
       </el-tabs>
       <div class="indent-list" v-loading="loading">
         <div class="navigation">
@@ -54,6 +55,7 @@
                 <NuxtLink :to="{ path: '/money/pay', query: { id: item.id }}" v-if="item.state === 1"><div class="button"><el-button type="danger" size="mini" round>立即付款</el-button></div></NuxtLink>
                 <div v-if="item.state === 3" class="button"><el-button :loading="buttonLoading" type="danger" size="mini" round @click="confirmReceipt(item)">确认收货</el-button></div>
                 <div v-if="item.state === 1" class="button"><el-button :loading="buttonLoading" size="mini" round @click="cancelOrder(item)">取消订单</el-button></div>
+                <NuxtLink :to="{ path: '/comment/score', query: { id: item.id }}" v-if="item.state === 10"><div class="button"><el-button type="danger" size="mini" round>立即评价</el-button></div></NuxtLink>
               </div>
             </div>
           </div>

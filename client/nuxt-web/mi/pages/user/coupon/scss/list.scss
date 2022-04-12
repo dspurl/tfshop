@@ -1,0 +1,85 @@
+.list{
+  display: flex;
+  flex-wrap: wrap;
+  .li{
+    position: relative;
+    width: 25%;
+    padding: 0 10px 10px 0;
+    .top{
+      background-color: #c3c3c3;
+      color: #ffffff;
+      text-align: center;
+      padding: 20px 10px 10px 10px;
+      border-bottom-width: 2px;
+      border-bottom-style: dashed;
+      border-bottom-color: #F5F5F5;
+      .money{
+        line-height: 45px;
+        font-size: 40px;
+        font-weight: bold;
+        span{
+          font-size: 20px;
+        }
+      }
+      .name{
+        font-size: 12px;
+      }
+      .time{
+        padding-top:20px;
+        font-size: 12px;
+        color: #868686;
+      }
+    }
+    .top.on{
+      background-color: #74d2d4;
+      .time{
+        padding-top:20px;
+        font-size: 12px;
+        color: #197f81;
+      }
+    }
+    .explain{
+      background-color: #F5F5F5;
+      padding:10px;
+      position: relative;
+      height:150px;
+      .dl{
+        display: flex;
+        font-size: 12px;
+        color: #999;
+        line-height: 25px;
+        .dt{
+          padding-right: 10px;
+          color: #666;
+        }
+      }
+      .button{
+        margin: 20px 0 20px 0;
+        text-align: center;
+      }
+      .icon{
+
+      }
+      .iconfont{
+        position: absolute;
+        right: 10px;
+        bottom: 10px;
+        color: #999;
+      }
+      .icon-yiguoqi{
+        font-size: 45px;
+      }
+      .icon-yishiyong{
+        font-size: 50px;
+      }
+    }
+  }
+}
+.operation{
+  margin-top:20px;
+  display: flex;
+  .pagination{
+    margin-left:5px;
+    padding:0 0;
+  }
+}

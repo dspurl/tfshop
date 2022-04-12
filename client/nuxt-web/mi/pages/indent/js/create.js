@@ -1,9 +1,14 @@
 import addressList from '@/components/Address/list'
 import { freight } from '@/api/shipping'
 import { create, addShoppingCart } from '@/api/goodIndent'
+import coupon from '@/pages/coupon/components/use'
+import { getDetail } from '@/api/integralCommodity'
+import {good} from '@/api/integralDrawLog'
+import {verifyPlugin} from '@/api/plugin'
 export default {
   components: {
-    addressList
+    addressList,
+    coupon
   },
   layout: 'cart',
   middleware: 'auth',
@@ -29,23 +34,54 @@ export default {
         indentCommodity: [],
         address: {},
         remark: '',
-        carriage: 0
+        carriage: 0,
+        user_coupon_id: 0,
+        integral: 0,
+        integral_draw_log_id: 0
+      },
+      couponMoney: 0,
+      integralPrice: 0,
+      integral: {
+        available: 0,
+        deductible: 0,
+        parities: 0
       },
       rules: {
         remark: [
           { validator: validateRemark, trigger: 'blur' }
         ],
+      },
+      verify: {
+        coupon: false
       }
+    }
+  },
+  async asyncData (ctx) {
+    try {
+      let [ verifyPluginData ] = await Promise.all([
+        verifyPlugin(['coupon']),
+      ]);
+      return {
+        verify: verifyPluginData
+      }
+    } catch(err) {
+      ctx.$errorHandler(err)
     }
   },
   mounted() {
     $nuxt.$store.commit('setCartTitle', '确认订单');
-    this.getList()
+    if ($nuxt.$route.query.integral_draw_log_id) {
+      this.ruleForm.integral_draw_log_id = $nuxt.$route.query.integral_draw_log_id
+      this.getIntegralDrawGoodList()
+    } else {
+      this.getList()
+    }
   },
   methods: {
     async getList(){
       let specification = null
       this.ruleForm.indentCommodity = Object.values(this.store.get(process.env.CACHE_PR + 'OrderList'))
+      const data = []
       this.ruleForm.indentCommodity.forEach(item=>{
         this.total+= item.price * item.number
         if(item.good_sku){
@@ -58,8 +94,39 @@ export default {
             }
           });
           item.specification = specification.substr(0, specification.length - 1);
+          data.push({
+            ids: item.good_id,
+            price: item.good_sku.price,
+            skuIds: item.good_sku_id
+          })
         }
       })
+      this.getDetailData(data)
+    },
+    //中奖奖品订单
+    getIntegralDrawGoodList() {
+      const data = []
+      good(this.ruleForm.integral_draw_log_id).then(item => {
+        let specification = null
+        this.ruleForm.indentCommodity = item
+        this.ruleForm.indentCommodity.forEach(item => {
+          this.total += item.price * item.number
+          item.product_sku.forEach(item2 => {
+            if (specification) {
+              specification += item2.value + ';';
+            } else {
+              specification = item2.value + ';';
+            }
+          });
+          item.specification = specification.substr(0, specification.length - 1);
+          data.push({
+            ids: item.good_id,
+            price: item.price,
+            skuIds: item.good_sku_id
+          })
+        })
+      })
+      this.getDetailData(data)
     },
     // 选择的地址
     selectedAddress(res){
@@ -99,6 +166,32 @@ export default {
     },
     go(){
       $nuxt.$router.go(-1)
+    },
+    // 选择优惠券
+    calcTotal(item){
+      if(item){
+        this.couponMoney = item.cost
+        this.ruleForm.user_coupon_id = item.id
+      }
+    },
+    // 获取积分商品信息
+    getDetailData(row) {
+      getDetail(row).then(response => {
+        this.integral.available = response.available
+        this.integral.deductible = response.deductible
+        this.integral.parities = response.parities
+        if (this.integral.available >= this.integral.deductible) {
+          this.ruleForm.integral = this.integral.deductible
+          this.integralPrice = this.integral.deductible * this.integral.parities * 100 / 100
+        } else {
+          this.ruleForm.integral = this.integral.available
+          this.integralPrice = this.integral.available * this.integral.parities * 100 / 100
+        }
+      })
+    },
+    // 自定义积分
+    numberIntegral(value) {
+      this.integralPrice = value * this.integral.parities * 100 / 100
     }
   }
 }

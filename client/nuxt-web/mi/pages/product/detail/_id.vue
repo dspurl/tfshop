@@ -57,7 +57,9 @@
             <el-button type="danger" plain @click="buy(true)">立即购买</el-button>
             <el-button type="danger" @click="buy(false)">加入购物车</el-button>
             <el-button type="info" :class="{'product-detail-on' : collect}" icon="el-icon-star-off" @click="toCollect">收藏</el-button>
+            <coupon v-if="isCoupon"></coupon>
           </div>
+          <el-tag v-if="goodDetail.integral_commodity_count" type="warning" style="margin-top:20px;">可积分抵扣</el-tag>
         </div>
       </div>
     </div>
@@ -66,14 +68,16 @@
     <div class="product-box">
       <div class="tab">
         <span :class="{on:tab === 1}" @click="cutTab(1)">商品详情</span>
-<!--        <el-divider direction="vertical"></el-divider>-->
-<!--        <span :class="{on:tab === 2}" @click="cutTab(2)">商品规格</span>-->
+        <template v-if="isComment">
+          <el-divider direction="vertical"></el-divider>
+          <span :class="{on:tab === 2}" @click="cutTab(2)">评价({{commentTotal}})</span>
+        </template>
       </div>
       <div class="detail-box">
         <div class="container" v-loading="tabLoading">
           <div v-if="tab === 1" v-html="goodDetail.details"></div>
           <div v-else-if="tab === 2">
-
+            <Comment v-if="isComment"></Comment>
           </div>
         </div>
       </div>

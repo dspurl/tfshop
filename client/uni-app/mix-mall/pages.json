@@ -240,6 +240,97 @@
 				"navigationBarTitleText": "商品列表"
 			}
 		}
+		// 栏目文章_s
+		,{
+			"path": "pages/article/column",
+			"style": {
+				"navigationBarTitleText": "栏目"
+			}
+		},{
+			"path": "pages/article/detail",
+			"style": {
+				"navigationBarTitleText": "获取中"
+			}
+		},{
+			"path": "pages/article/index",
+			"style": {
+				"navigationBarTitleText": "获取中"
+			}
+		}
+		// 栏目文章_e
+		// 评价_s
+		,{
+			"path": "pages/comment/score",
+			"style": {
+				"navigationBarTitleText": "评价",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		}
+		, {
+			"path": "pages/comment/list",
+			"style": {
+				"navigationBarTitleText": "评价列表",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50
+			}
+		}
+		// 评价_e
+		// 分销_s
+		,{
+			"path": "pages/distribution/share",
+				"style": {
+					"enablePullDownRefresh": true,
+						"navigationBarTitleText": "邀请好友"
+				}
+		}
+		// 分销_e
+		// 优惠券_s
+		, {
+			"path": "pages/coupon/list",
+			"style": {
+				"navigationBarTitleText": "优惠券",
+				"app-plus": {
+					"bounce": "none"
+				}
+			}
+		}
+		// 优惠券_e
+		// 扫码登录_s
+		,{
+			"path": "pages/sweepLogin/index",
+			"style": {
+				"navigationBarTitleText": "扫码登录"
+			}
+		}
+		// 扫码登录_e
+		// 积分_s
+		,{
+			"path": "pages/integral/index",
+			"style": {
+				"enablePullDownRefresh": true,
+				"navigationBarTitleText": "积分明细"
+			}
+		}
+		// 积分_e
+		// 积分抽奖_s
+		,{
+			"path": "pages/user/integralDraw/index",
+			"style": {
+				"navigationBarTitleText": "抽奖详情",
+				"navigationStyle": "custom"
+			}
+		}
+		,{
+			"path": "pages/user/integralDraw/log",
+			"style": {
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50,
+				"navigationBarTitleText": "中奖记录"
+			}
+		}
+		// 积分抽奖_e
 		// 插件列表
 	],
 	"globalStyle": {

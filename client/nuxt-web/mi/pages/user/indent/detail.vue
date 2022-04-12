@@ -26,7 +26,7 @@
             <div class="chunk">配货</div>
             <div class="name"></div>
           </div>
-          <div :class="{on:indent.state === 5}">
+          <div :class="{on:indent.state === 5 || indent.state === 11}">
             <div class="chunk">交易成功</div>
             <div class="name"></div>
           </div>
@@ -147,6 +147,17 @@
           <div class="name">备注：</div>
           <div class="value">{{indent.remark ? indent.remark : '无'}}</div>
         </div>
+        <div class="li" v-if="indent.integral_draw_log">
+          <div class="name">中奖信息：</div>
+          <div class="value">
+            参与
+            <NuxtLink :to="{ path: `/user/integralDraw?id=${indent.integral_draw_log.integral_draw.id}`}">
+              {{indent.integral_draw_log.integral_draw.name}}
+            </NuxtLink>
+              抽奖获得奖品：({{indent.integral_draw_log.integral_prize.name}})
+
+          </div>
+        </div>
       </div>
       <el-divider></el-divider>
       <div class="right">
@@ -154,10 +165,18 @@
           <div class="name">商品总价：</div>
           <div class="value">{{total | thousands}}元</div>
         </div>
-        <div class="li">
+        <div class="li" v-if="indent.coupon_money">
+          <div class="name">优惠金额：</div>
+          <div class="value">-{{indent.coupon_money/100 | thousands}}元</div>
+        </div>
+        <div class="li" v-if="!indent.integral_draw_log">
           <div class="name">运费：</div>
           <div class="value" v-if="indent.carriage>0">{{indent.carriage | thousands}}元</div>
           <div class="value" v-else>免运费</div>
+        </div>
+        <div class="li" v-if="indent.integralPrice">
+          <div class="name">积分抵扣：</div>
+          <div class="value">-{{indent.integralPrice | thousands}}元</div>
         </div>
         <div class="li">
           <div class="name">应付金额：</div>

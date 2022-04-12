@@ -6,7 +6,7 @@ export default {
     height: '2px'
   },
   server: {
-    port: 3005, // default: 3000
+    port: 3002, // default: 3000
     host: '0.0.0.0', // 本地需要测试pwa的话，改成localhost,
     // host: 'localhost',
   },
@@ -51,7 +51,9 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: "shortcut icon", href: "/favicon.ico" },
-      { rel: "apple-touch-icon", href: "/favicon.ico" }
+      { rel: "apple-touch-icon", href: "/favicon.ico" },
+      { rel: "stylesheet", href: "//at.alicdn.com/t/font_2655595_egx5erq394.css" },
+      { rel: 'stylesheet', href: '//at.alicdn.com/t/font_3269515_fy5dzldrd39.css'}
     ]
   },
 
@@ -73,7 +75,8 @@ export default {
     '@/plugins/store',
     '@/plugins/global',
     '@/plugins/vue-moment',
-    { src: '@/plugins/videoPlayer.js', ssr: false }
+    { src: '@/plugins/videoPlayer.js', ssr: false },
+    '@/plugins/lucky-canvas.js',
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

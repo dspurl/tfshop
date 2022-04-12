@@ -158,6 +158,19 @@
             title="关联品牌后，该分类下将显示该品牌"
             type="warning"/>
         </el-form-item>
+        <el-form-item v-if="isComment" label="产品参数" prop="parameter">
+          <el-select v-model="temp.parameter" multiple placeholder="请选择">
+            <el-option
+              v-for="item in parameterList"
+              :key="item.id"
+              :label="item.value"
+              :value="item.id"/>
+          </el-select>
+          <el-alert
+            style="margin-top: 5px;"
+            title="添加产品参数后，在选择该分类时，自动获取所选产品参数"
+            type="warning"/>
+        </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :loading="formLoading" @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
@@ -206,6 +219,8 @@ import { getList, create, edit, destroy } from '@/api/category'
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
+import { getList as goodParameterGroupList } from '@/api/goodParameterGroup'
+import { verifyPlugin } from '@/api/plugin'
 
 export default {
   name: 'CategoryList',
@@ -254,10 +269,12 @@ export default {
         attribute: [],
         brand: [],
         sort: 5,
-        is_recommend: 0
+        is_recommend: 0,
+        parameter: []
       },
       dialogFormVisible: false,
       dialogStatus: '',
+      isDescription: false,
       adminRules: {
         name: [
           { required: true, message: '类目名称必须填写', trigger: 'blur' }
@@ -269,13 +286,23 @@ export default {
           { required: true, message: '状态必须填写', trigger: 'blur' }
         ]
       },
-      downloadLoading: false
+      downloadLoading: false,
+      parameterList: []
     }
   },
   created() {
     this.getList()
+    this.getVerifyPlugin()
   },
   methods: {
+    getVerifyPlugin() {
+      verifyPlugin(['description']).then(response => {
+        this.isDescription = response.data.description
+        if (this.isDescription) {
+          this.getGoodParameterGroupList()
+        }
+      })
+    },
     getList() {
       this.listLoading = true
       getList(this.listQuery).then(response => {
@@ -298,6 +325,12 @@ export default {
             key: res.id
           })
         })
+      })
+    },
+    // 获取产品参数列表
+    getGoodParameterGroupList() {
+      goodParameterGroupList({ is_hide: 0 }).then(response => {
+        this.parameterList = response.data.data
       })
     },
     handleFilter() {
@@ -325,7 +358,8 @@ export default {
         attribute: [],
         brand: [],
         sort: 5,
-        is_recommend: 0
+        is_recommend: 0,
+        parameter: []
       }
     },
     handleCreate(row = null) {

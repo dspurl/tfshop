@@ -1,0 +1,40 @@
+.coupon{
+  display: flex;
+  justify-content:flex-end;
+  .tag{
+    line-height: 30px;
+    cursor:pointer;
+    border: 1px dashed $font-color-main;
+    color: $font-color-main;
+    text-align: center;
+    padding: 0 10px 0 10px;
+  }
+}
+.ul{
+  .li{
+    padding:10px;
+    display: flex;
+    align-items: flex-start;
+    .money{
+      color: $font-color-main;
+      width: 70px;
+      text-align: center;
+      border: 1px dashed $font-color-main;
+      line-height: 25px;
+      padding: 0 10px 0 10px;
+      margin: 5px 10px 5px 0;
+    }
+    .explain{
+      width: 220px;
+      padding-right: 10px;
+      .name{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .button{
+      margin-top:8px;
+    }
+  }
+}

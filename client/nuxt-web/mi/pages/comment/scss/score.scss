@@ -1,0 +1,20 @@
+.specification{
+  color: #999999;
+}
+.top{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-top:20px;
+}
+.ruleForm{
+  .table{
+    margin-bottom: 20px;
+  }
+  .rate{
+    margin-top:10px;
+  }
+}
+.right{
+  text-align: right;
+}

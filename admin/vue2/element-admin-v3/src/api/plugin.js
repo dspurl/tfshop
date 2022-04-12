@@ -121,3 +121,9 @@ export function installList() {
   })
 }
 
+export function verifyPlugin(name) {
+  return request({
+    url: 'verifyPlugin/' + name,
+    method: 'POST'
+  })
+}

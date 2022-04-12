@@ -1,0 +1,27 @@
+.breadcrumb{
+  margin-top:20px;
+  margin-bottom: 20px;
+}
+.box{
+  background-color: #ffffff;
+  padding:40px;
+  margin-bottom: 30px;
+  min-height: 600px;
+  .title{
+    font-weight: bold;
+    font-size: 22px;
+    line-height: 25px;
+    padding-bottom: 30px;
+    padding-top:10px;
+  }
+  .content{
+    font-size: 16px;
+    line-height: 20px;
+  }
+  .time{
+    font-size: 16px;
+    padding-top:20px;
+    text-align: right;
+    color: #757575;
+  }
+}

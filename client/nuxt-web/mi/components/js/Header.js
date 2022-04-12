@@ -12,7 +12,7 @@ export default {
     return {
       navList: [
         { name: '首页', path: '/' },
-        { name: '全部分类', path: '/category/list' }
+        { name: '全部分类', path: '/category/list' },
       ],
       shoppingCart: [],
       cartOriginalList: [],

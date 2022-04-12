@@ -1,0 +1,38 @@
+.tag{
+  margin-left:10px;
+  width: 80px;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 14px;
+  border-style: dashed;
+  cursor:pointer;
+}
+.ul{
+  .li{
+    padding:10px;
+    display: flex;
+    align-items: flex-start;
+    .money{
+      color: $font-color-main;
+      width: 70px;
+      text-align: center;
+      border: 1px dashed $font-color-main;
+      line-height: 25px;
+      padding: 0 10px 0 10px;
+      margin: 5px 10px 5px 0;
+    }
+    .explain{
+      width: 220px;
+      padding-right: 10px;
+      .name{
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    .button{
+      margin-top:8px;
+    }
+  }
+}
