@@ -37,7 +37,7 @@
         </div>
       </div>
       <div class="li" v-if="isComment">
-        <div class="icon bg-olive"><i class="iconfont icon-youhuiquan"></i></div>
+        <div class="icon bg-olive"><i class="iconfont dsshop-daipingjia"></i></div>
         <div class="describe">
           <div class="name">待评价的订单：<span>{{ quantity.remainEvaluated ? quantity.remainEvaluated : 0 }}</span></div>
           <NuxtLink class="link" :to="{ path: '/user/indent/list', query: { index: 10 }}">查看待评价订单 ></NuxtLink>
