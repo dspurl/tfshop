@@ -158,7 +158,7 @@
             title="关联品牌后，该分类下将显示该品牌"
             type="warning"/>
         </el-form-item>
-        <el-form-item v-if="isComment" label="产品参数" prop="parameter">
+        <el-form-item v-if="isDescription" label="产品参数" prop="parameter">
           <el-select v-model="temp.parameter" multiple placeholder="请选择">
             <el-option
               v-for="item in parameterList"
