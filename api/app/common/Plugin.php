@@ -584,7 +584,9 @@ class Plugin
         // 关联的文件
         if (count($routes['relevance']) > 0) {
             foreach ($routes['relevance'] as $relevance) {
-                $this->fileConflictHandling($path . $relevance, $relevance, $name);
+                if (strstr('api', $relevance) || $template) {
+                    $this->fileConflictHandling($path . $relevance, $relevance, $name);
+                }
             }
         }
         // 添加路由
