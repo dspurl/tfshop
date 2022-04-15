@@ -88,6 +88,7 @@ export default {
         {
           background: '#ffffff',
           borderRadius: '10px',
+		  fonts: [{text: item.name, fontSize: '24rpx', lineClamp: 1, top: '120rpx'}],
           imgs: [{
             width: '60%',
             top: '10px',

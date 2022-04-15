@@ -96,18 +96,18 @@ export default {
 
       this.prizes.push({
         x: grid[index].x, y: grid[index].y, imgs: [{
-          src: require('../assets/grid.png'),
+          src: 'https://dsshop.dswjcms.com/h5/static/integralDraw/grid.png',
           top: '12rpx',
           width: '140rpx',
           height: '140rpx'
         }, {
           src: src,
           width: '50%',
-          top: '15rpx'
+          top: '20rpx'
         }],
         fonts: [{
           text: item.name,
-          top: '100rpx',
+          top: '105rpx',
           fontSize: '20rpx',
           lengthLimit: '80%',
           lineClamp: 2

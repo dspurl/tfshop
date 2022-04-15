@@ -147,30 +147,6 @@
 		},
 		onShow(){
 			this.getVerifyPlugin()
-			if(this.hasLogin){
-				this.getUser()
-				this.browse()
-				this.noticeConut()
-				this.getQuantity()
-				if(this.verify.coupon){
-					this.getUserCouponCount()
-				}
-				if(this.verify.integralDraw){
-					this.getIntegralDraw()
-				}
-			} else {
-				this.browseList = []
-				this.user = {}
-				this.noticeNumber = null
-				this.quantity = {
-					all: 0,
-					obligation: 0,
-					waitdeliver: 0,
-					waitforreceiving: 0,
-					remainEvaluated: 0
-				}
-			}
-			
 		},
 		// #ifndef MP
 		onNavigationBarButtonTap(e) {
@@ -200,6 +176,29 @@
 				const that = this
 				verifyPlugin(['coupon','comment','integral','integralDraw','article','distribution'],function(res){
 					that.verify = res
+					if(that.hasLogin){
+						that.getUser()
+						that.browse()
+						that.noticeConut()
+						that.getQuantity()
+						if(that.verify.coupon){
+							that.getUserCouponCount()
+						}
+						if(that.verify.integralDraw){
+							that.getIntegralDraw()
+						}
+					} else {
+						that.browseList = []
+						that.user = {}
+						that.noticeNumber = null
+						that.quantity = {
+							all: 0,
+							obligation: 0,
+							waitdeliver: 0,
+							waitforreceiving: 0,
+							remainEvaluated: 0
+						}
+					}
 				})
 			},
 			getUser(){

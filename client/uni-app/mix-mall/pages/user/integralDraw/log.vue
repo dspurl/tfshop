@@ -63,14 +63,6 @@
 			this.loginCheck()
 			this.loadData()
 		},
-		computed: {
-			startDate() {
-				return this.getDate('start');
-			},
-			endDate() {
-				return this.getDate('end');
-			}
-		},
 		methods: {
 			...mapMutations(['loginCheck']),
 			//获取订单列表

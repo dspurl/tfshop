@@ -39,7 +39,7 @@
     border-radius: 2rpx;
     box-sizing: border-box;
     width: 500rpx;
-    margin: 20vh auto 10rpx;
+    margin: 30vh auto 10rpx;
     background: url('../assets/result_bg.png') no-repeat;
     background-size: 100%;
     height: 600rpx;
