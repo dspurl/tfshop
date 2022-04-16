@@ -65,6 +65,7 @@
 				</view>
 			</view>
 			<!-- 抽奖活动-->
+			<!-- #ifndef APP-PLUS -->
 			<scroll-view v-if="integralDrawList.length" scroll-x class="integral-draw-list">
 				<view v-for="(item,index) in integralDrawList" :key="index" class="item" @click="navTo(`/pages/user/integralDraw/index?id=${item.id}`)" hover-class="none">
 					<view v-if="item.type === 1" class="dsshop ds-turntable" :class="{failure: item.is_hidden === 0}"></view>
@@ -73,6 +74,7 @@
 					<view class="name">{{item.name}}</view>
 				</view>
 			</scroll-view>
+			<!-- #endif -->
 			<!-- 浏览历史 -->
 			<view class="history-section icon">
 				<view class="sec-header">
@@ -83,13 +85,13 @@
 					<image v-for="(item, index) in browseList" :key="index" @click="navTo('/pages/product/detail?id=' + item.good_id)" :src="item.good.resources.img | smallImage" mode="aspectFill" lazy-load></image>
 				</scroll-view>
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" title="账单" @eventClick="navTo('/pages/finance/bill')"></list-cell>
-				<list-cell v-if="verify.integral" icon="icon-iconfontweixin" iconColor="#54b4ef" title="积分明细" @eventClick="navTo('/pages/integral/index')"></list-cell>
-				<list-cell v-if="verify.integralDraw" icon="icon-iconfontweixin" iconColor="#E6A23C" title="中奖记录" @eventClick="navTo('/pages/user/integralDraw/log')"></list-cell>
+				<list-cell v-show="verify.integral" icon="icon-iconfontweixin" iconColor="#54b4ef" title="积分明细" @eventClick="navTo('/pages/integral/index')"></list-cell>
+				<list-cell v-show="verify.integralDraw" icon="icon-iconfontweixin" iconColor="#E6A23C" title="中奖记录" @eventClick="navTo('/pages/user/integralDraw/log')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" title="地址管理" @eventClick="navTo('/pages/address/address')"></list-cell>
 				<list-cell icon="icon-shoucang_xuanzhongzhuangtai" iconColor="#54b4ef" @eventClick="navTo('/pages/user/collect')" title="我的收藏"></list-cell>
 				<list-cell icon="icon-comment" iconColor="#e07472" title="通知" :tips="noticeNumber ? noticeNumber : null" @eventClick="navTo('/pages/notice/notice')"></list-cell>
-				<list-cell v-if="verify.article" icon="icon-xiaoxi" iconColor="#9789f7" title="帮助中心" @eventClick="navToNoValidation('/pages/article/column')"></list-cell>
-				<list-cell v-if="verify.distribution" icon="icon-share" iconColor="#9789f7" @eventClick="navTo('/pages/distribution/share')" title="分享" tips="邀请好友赢10元奖励"></list-cell>
+				<list-cell v-show="verify.article" icon="icon-xiaoxi" iconColor="#9789f7" title="帮助中心" @eventClick="navToNoValidation('/pages/article/column')"></list-cell>
+				<list-cell v-show="verify.distribution" icon="icon-share" iconColor="#9789f7" @eventClick="navTo('/pages/distribution/share')" title="分享" tips="邀请好友赢10元奖励"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" title="设置" @eventClick="navTo('/pages/set/set')"></list-cell>
 			</view>
 		</view>
@@ -105,7 +107,6 @@
 	import Notification from '../../api/notification'
 	import {count as couponCount} from '@/api/coupon'
     import {getList} from '@/api/integralDraw'
-    import "./integralDraw/scss/icon.css"
     import {verifyPlugin} from '@/api/plugin'
     import {  
         mapState 
@@ -301,6 +302,7 @@
     }  
 </script>  
 <style lang='scss'>
+	@import './integralDraw/scss/icon.css';
 	%flex-center {
 	 display:flex;
 	 flex-direction: column;
