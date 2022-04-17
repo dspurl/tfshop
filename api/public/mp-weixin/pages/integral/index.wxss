@@ -1,0 +1,1 @@
+page{background-color:#f7f7f7;padding-bottom:30rpx}.sticky-box{display:flex;position:-webkit-sticky;position:sticky;top:0;z-index:99;flex-direction:row;width:100%}.sticky-box .cu-list{width:100%}.cu-avatar .avatar-text{font-size:18px}

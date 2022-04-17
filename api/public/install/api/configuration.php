@@ -12,11 +12,6 @@ foreach ($post as $key=>$value){
     }else{
         $contents.=strtoupper($key).'='.$value.PHP_EOL;
     }
-    if($key== 'app_url'){   //修改微信小程序地址
-        $vendor=file_get_contents("../../mp-weixin/common/vendor.js");
-        $vendor = str_replace('window.location.protocol+"//"+window.location.host','"'.$value.'"',$vendor);
-        file_put_contents("../../mp-weixin/common/vendor.js",$vendor);
-    }
     if($key=='wechat_mini_program_appid' && $value){   //修改微信小程序appid
         $project=file_get_contents("../../mp-weixin/project.config.json");
         $project = str_replace('miniweixinappid',$value,$project);

@@ -1,0 +1,1 @@
+<audio class="{{[node.classStr]}}" style="{{(node.styleStr)}}" id="{{node.attr.id}}" src="{{node.attr.src}}" loop="{{node.attr.loop}}" poster="{{node.attr.poster}}" name="{{node.attr.name}}" author="{{node.attr.author}}" controls="{{true}}"></audio>

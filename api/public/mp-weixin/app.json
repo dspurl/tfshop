@@ -1,0 +1,90 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/product/detail",
+    "pages/set/set",
+    "pages/set/message",
+    "pages/set/about",
+    "pages/set/cancel",
+    "pages/userinfo/userinfo",
+    "pages/userinfo/email",
+    "pages/cart/cart",
+    "pages/public/login",
+    "pages/public/register",
+    "pages/public/findPassword",
+    "pages/public/subscribe",
+    "pages/user/user",
+    "pages/user/collect",
+    "pages/detail/detail",
+    "pages/indent/list",
+    "pages/money/money",
+    "pages/indent/create",
+    "pages/indent/detail",
+    "pages/address/address",
+    "pages/address/addressManage",
+    "pages/finance/bill",
+    "pages/finance/bill_show",
+    "pages/money/pay",
+    "pages/money/paySuccess",
+    "pages/notice/notice",
+    "pages/category/category",
+    "pages/product/list",
+    "pages/article/column",
+    "pages/article/detail",
+    "pages/article/index",
+    "pages/comment/score",
+    "pages/comment/list",
+    "pages/distribution/share",
+    "pages/coupon/list",
+    "pages/sweepLogin/index",
+    "pages/integral/index",
+    "pages/user/integralDraw/index",
+    "pages/user/integralDraw/log"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "Dsshop",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "backgroundColor": "#f8f8f8"
+  },
+  "tabBar": {
+    "color": "#C0C4CC",
+    "selectedColor": "#fa436a",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/tab-home.png",
+        "selectedIconPath": "static/tab-home-current.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/category/category",
+        "iconPath": "static/tab-cate.png",
+        "selectedIconPath": "static/tab-cate-current.png",
+        "text": "分类"
+      },
+      {
+        "pagePath": "pages/cart/cart",
+        "iconPath": "static/tab-cart.png",
+        "selectedIconPath": "static/tab-cart-current.png",
+        "text": "购物车"
+      },
+      {
+        "pagePath": "pages/user/user",
+        "iconPath": "static/tab-my.png",
+        "selectedIconPath": "static/tab-my-current.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于位置接口的效果展示"
+    }
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap.json"
+}

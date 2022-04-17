@@ -1,0 +1,55 @@
+{
+  "name": "DSSHOP",
+  "short_name": "DSSHOP",
+  "description": "免费开源可商用，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端",
+  "icons": [
+    {
+      "src": "/_nuxt/icons/icon_64x64.2973cb.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/_nuxt/icons/icon_120x120.2973cb.png",
+      "sizes": "120x120",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/_nuxt/icons/icon_144x144.2973cb.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/_nuxt/icons/icon_152x152.2973cb.png",
+      "sizes": "152x152",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/_nuxt/icons/icon_192x192.2973cb.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/_nuxt/icons/icon_384x384.2973cb.png",
+      "sizes": "384x384",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/_nuxt/icons/icon_512x512.2973cb.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/?standalone=true",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#fff",
+  "lang": "zh-CN",
+  "scope": "/"
+}

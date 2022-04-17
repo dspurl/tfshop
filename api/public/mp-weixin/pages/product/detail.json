@@ -1,0 +1,9 @@
+{
+  "navigationBarTitleText": "详情展示",
+  "usingComponents": {
+    "share": "/components/share",
+    "sku": "/components/sku/index",
+    "u-parse": "/components/gaoyia-parse/parse",
+    "coupon": "/pages/coupon/components/index"
+  }
+}
