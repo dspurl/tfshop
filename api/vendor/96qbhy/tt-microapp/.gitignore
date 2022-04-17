@@ -1,0 +1,5 @@
+vendor
+/*.php
+composer.lock
+.idea
+.DS_Store

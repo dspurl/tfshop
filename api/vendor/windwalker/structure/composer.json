@@ -1,0 +1,34 @@
+{
+    "name": "windwalker/structure",
+    "type": "windwalker-package",
+    "description": "Windwalker Structure package",
+    "keywords": ["windwalker", "framework", "structure"],
+    "homepage": "https://github.com/ventoviro/windwalker-structure",
+    "license": "LGPL-2.0-or-later",
+    "require": {
+        "php": ">=7.1.3"
+    },
+    "require-dev": {
+        "windwalker/test": "~3.0",
+        "symfony/yaml": "^4.0||^5.0",
+        "laktak/hjson": "^2.1",
+        "yosymfony/toml": "^1.0",
+        "ext-json": "*"
+    },
+    "minimum-stability": "beta",
+    "suggest": {
+        "symfony/yaml": "Install 3.* if you require YAML support.",
+        "laktak/hjson": "Install ~2.0 if you require HJSON support.",
+        "yosymfony/toml": "Install ~1.0 if you require TOML support."
+    },
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Structure\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    }
+}

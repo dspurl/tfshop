@@ -1,0 +1,2 @@
+<?xml version="1.0"?>
+<structure><node name="flower" type="string">sakura</node><node name="olive" type="string">peace</node><node name="pos1" type="array"><node name="sunflower" type="string">love</node></node><node name="pos2" type="array"><node name="cornflower" type="string">elegant</node></node><node name="array" type="array"><node name="0" type="string">A</node><node name="1" type="string">B</node><node name="2" type="string">C</node></node></structure>

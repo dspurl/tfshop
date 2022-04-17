@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" colors="false"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	strict="true"
+	syntaxCheck="true"
+	>
+	<php>
+		<ini name="error_reporting" value="-1" />
+
+		<const name="WINDWALKER_TEST_DB_DSN_MYSQL"      value="host=localhost;dbname=windwalker_test;user=root;pass=;prefix=ww_" />
+		<!--<const name="WINDWALKER_TEST_DB_DSN_POSTGRESQL" value="host=localhost;dbname=windwalker_test;user=root;pass=ut1234;prefix=ww_" />-->
+		<!--<const name="WINDWALKER_TEST_DB_DSN_ORACLE"     value="host=localhost;port=5432;dbname=windwalker_test;user=root;pass=ut1234;prefix=ww_" />-->
+		<!--<const name="WINDWALKER_TEST_DB_DSN_MSSQL"      value="host=localhost;port=1521;dbname=windwalker_test;user=root;pass=ut1234;prefix=ww_" />-->
+		<!--<const name="WINDWALKER_TEST_DB_DSN_SQLITE"     value="host=localhost;dbname=windwalker_test;user=root;pass=ut1234;prefix=ww_" />-->
+	</php>
+	<testsuites>
+		<testsuite name="Unit">
+			<directory>Test</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>

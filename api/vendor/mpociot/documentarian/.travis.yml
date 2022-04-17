@@ -1,0 +1,18 @@
+language: php
+
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+
+before_script:
+  - travis_retry composer self-update
+  - travis_retry composer install --prefer-source --no-interaction
+
+script:
+  - vendor/bin/phpunit --coverage-clover=coverage.xml
+
+before_install:
+  - pip install --user codecov
+after_success:
+  - codecov

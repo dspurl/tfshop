@@ -2140,33 +2140,40 @@ class Plugin
      */
     protected function fileConflictHandling($from, $to, $name)
     {
+        $pluginPath = $this->pluginListPath . '/' . $name;
+        $diffPath = $pluginPath . '/diff.json';
+        $diff = [];
+        if (Storage::disk('root')->exists($diffPath)) {
+            $diff = json_decode(Storage::disk('root')->get($diffPath), true);
+        }
+
         if (PHP_OS != 'Linux') {
-            if (Storage::disk('root')->exists($to)) {
-                Storage::disk('root')->delete($to);
+            $path = str_replace("\api", "", base_path());
+            $to = str_replace("/", "\\", $to);
+            $from = str_replace("/", "\\", $from);
+            $shellExec = shell_exec("fc $path$to $path$from");
+            // 中文乱码处理
+            if (strstr($shellExec, 'FC:')) {
+                $shellExec = '';
+            } else {
+                $shellExec = 'WINDOWS不显示冲突详情，请通过比对软件自行解决';
             }
-            $this->copyProcessing($from, $to);
         } else {
-            $pluginPath = $this->pluginListPath . '/' . $name;
-            $diffPath = $pluginPath . '/diff.json';
-            $diff = [];
-            if (Storage::disk('root')->exists($diffPath)) {
-                $diff = json_decode(Storage::disk('root')->get($diffPath), true);
-            }
             $path = str_replace("/api", "", base_path());
             $shellExec = shell_exec("diff -u $path$to $path$from");
-            // 存在冲突
-            if ($shellExec) {
-                $diff[$path . $to] = [
-                    'state' => 0,
-                    'from' => $path . $from,
-                    'to' => $path . $to,
-                    'details' => $shellExec,
-                ];
-                Storage::disk('root')->put($diffPath, json_encode($diff));
-            } else {
-                if (!Storage::disk('root')->exists($to)) {
-                    $this->copyProcessing($from, $to);
-                }
+        }
+        // 存在冲突
+        if ($shellExec) {
+            $diff[$path . $to] = [
+                'state' => 0,
+                'from' => $path . $from,
+                'to' => $path . $to,
+                'details' => $shellExec,
+            ];
+            Storage::disk('root')->put($diffPath, json_encode($diff));
+        } else {
+            if (!Storage::disk('root')->exists($to)) {
+                $this->copyProcessing($from, $to);
             }
         }
     }

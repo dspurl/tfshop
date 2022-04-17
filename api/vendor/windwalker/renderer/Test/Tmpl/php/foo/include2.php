@@ -1,0 +1,11 @@
+<?php declare(strict_types=1);
+/**
+ * Part of Windwalker project.
+ *
+ * @copyright  Copyright (C) 2019 LYRASOFT.
+ * @license    LGPL-2.0-or-later
+ */
+
+?>
+<h1>BAR</h1>
+<?php echo $this->load('foo/include3'); ?>

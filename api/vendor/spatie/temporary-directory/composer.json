@@ -1,0 +1,41 @@
+{
+    "name": "spatie/temporary-directory",
+    "description": "Easily create, use and destroy temporary directories",
+    "keywords": [
+        "spatie",
+        "php",
+        "temporary-directory"
+    ],
+    "homepage": "https://github.com/spatie/temporary-directory",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Vanderbist",
+            "email": "alex@spatie.be",
+            "homepage": "https://spatie.be",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.2|^8.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0|^9.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Spatie\\TemporaryDirectory\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Spatie\\TemporaryDirectory\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+  }
+}

@@ -1,0 +1,34 @@
+{
+    "name": "iidestiny/flysystem-oss",
+    "description": "Flysystem adapter for the Oss storage.",
+    "keywords": [
+        "Laravel",
+        "oss",
+        "alioss",
+        "阿里oss"
+    ],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "iidestiny",
+            "email": "iidestiny@vip.qq.com"
+        }
+    ],
+    "require": {
+        "ext-json": "*",
+        "php": "^7.0",
+        "league/flysystem": "^1.0",
+        "aliyuncs/oss-sdk-php": "^2.3",
+        "nesbot/carbon": "^1.24.1 || ^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Iidestiny\\Flysystem\\Oss\\": "src"
+        }
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.2",
+        "phpunit/phpunit": "^6.5",
+        "symfony/var-dumper": "^3.4"
+    }
+}

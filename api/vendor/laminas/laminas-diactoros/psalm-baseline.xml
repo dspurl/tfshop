@@ -1,0 +1,1421 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="4.7.0@d4377c0baf3ffbf0b1ec6998e8d1be2a40971005">
+  <file src="src/CallbackStream.php">
+    <MixedAssignment occurrences="1">
+      <code>$contents</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Exception/DeserializationException.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>$previous-&gt;getCode()</code>
+      <code>$previous-&gt;getCode()</code>
+    </InvalidScalarArgument>
+  </file>
+  <file src="src/Exception/InvalidStreamPointerPositionException.php">
+    <MissingParamType occurrences="1">
+      <code>$code</code>
+    </MissingParamType>
+    <MixedArgument occurrences="1">
+      <code>$code</code>
+    </MixedArgument>
+  </file>
+  <file src="src/Exception/UploadedFileAlreadyMovedException.php">
+    <MissingParamType occurrences="1">
+      <code>$code</code>
+    </MissingParamType>
+    <MixedArgument occurrences="1">
+      <code>$code</code>
+    </MixedArgument>
+  </file>
+  <file src="src/MessageTrait.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>is_string($version)</code>
+    </DocblockTypeContradiction>
+    <MissingParamType occurrences="1">
+      <code>$stream</code>
+    </MissingParamType>
+    <MixedArgumentTypeCoercion occurrences="2">
+      <code>$header</code>
+      <code>$header</code>
+    </MixedArgumentTypeCoercion>
+    <MixedAssignment occurrences="1">
+      <code>$value</code>
+    </MixedAssignment>
+    <MixedPropertyTypeCoercion occurrences="3">
+      <code>$headerNames</code>
+      <code>$headers</code>
+      <code>$new-&gt;headers</code>
+    </MixedPropertyTypeCoercion>
+    <ParamNameMismatch occurrences="2">
+      <code>$header</code>
+      <code>$header</code>
+    </ParamNameMismatch>
+    <PropertyTypeCoercion occurrences="2">
+      <code>$new-&gt;headerNames</code>
+      <code>$new-&gt;headers</code>
+    </PropertyTypeCoercion>
+  </file>
+  <file src="src/PhpInputStream.php">
+    <MissingParamType occurrences="1">
+      <code>$maxLength</code>
+    </MissingParamType>
+    <MixedArgument occurrences="1">
+      <code>$maxLength</code>
+    </MixedArgument>
+    <PossiblyNullArgument occurrences="1">
+      <code>$this-&gt;resource</code>
+    </PossiblyNullArgument>
+    <PropertyNotSetInConstructor occurrences="1">
+      <code>PhpInputStream</code>
+    </PropertyNotSetInConstructor>
+  </file>
+  <file src="src/RelativeStream.php">
+    <PossiblyNullOperand occurrences="1">
+      <code>$this-&gt;decoratedStream-&gt;getSize()</code>
+    </PossiblyNullOperand>
+  </file>
+  <file src="src/Request/ArraySerializer.php">
+    <LessSpecificReturnStatement occurrences="1"/>
+    <MixedArgument occurrences="6">
+      <code>$headers</code>
+      <code>$method</code>
+      <code>$protocolVersion</code>
+      <code>$requestTarget</code>
+      <code>$uri</code>
+      <code>self::getValueFromKey($serializedRequest, 'body')</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="5">
+      <code>$headers</code>
+      <code>$method</code>
+      <code>$protocolVersion</code>
+      <code>$requestTarget</code>
+      <code>$uri</code>
+    </MixedAssignment>
+    <MoreSpecificReturnType occurrences="1">
+      <code>Request</code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/Request/Serializer.php">
+    <LessSpecificReturnStatement occurrences="1"/>
+    <MixedArgument occurrences="5">
+      <code>$body</code>
+      <code>$headers</code>
+      <code>$method</code>
+      <code>$requestTarget</code>
+      <code>$version</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$request-&gt;getHeaders()</code>
+    </MixedArgumentTypeCoercion>
+    <MoreSpecificReturnType occurrences="1">
+      <code>Request</code>
+    </MoreSpecificReturnType>
+  </file>
+  <file src="src/RequestTrait.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>is_string($method)</code>
+    </DocblockTypeContradiction>
+    <LessSpecificImplementedReturnType occurrences="3">
+      <code>RequestInterface</code>
+      <code>RequestInterface</code>
+      <code>RequestInterface</code>
+    </LessSpecificImplementedReturnType>
+    <MoreSpecificImplementedParamType occurrences="1">
+      <code>$requestTarget</code>
+    </MoreSpecificImplementedParamType>
+    <PossiblyNullOperand occurrences="2">
+      <code>$this-&gt;uri-&gt;getPort()</code>
+      <code>$uri-&gt;getPort()</code>
+    </PossiblyNullOperand>
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>$uri === null</code>
+    </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="src/Response.php">
+    <DocblockTypeContradiction occurrences="5">
+      <code>! is_numeric($code)</code>
+      <code>gettype($code)</code>
+      <code>is_float($code)</code>
+      <code>is_string($reasonPhrase)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="2">
+      <code>static::MAX_STATUS_CODE_VALUE</code>
+      <code>static::MIN_STATUS_CODE_VALUE</code>
+    </MixedArgument>
+    <RedundantCastGivenDocblockType occurrences="1">
+      <code>(int) $code</code>
+    </RedundantCastGivenDocblockType>
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>is_scalar($code)</code>
+    </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="src/Response/ArraySerializer.php">
+    <MixedArgument occurrences="5">
+      <code>$headers</code>
+      <code>$protocolVersion</code>
+      <code>$reasonPhrase</code>
+      <code>$statusCode</code>
+      <code>self::getValueFromKey($serializedResponse, 'body')</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="4">
+      <code>$headers</code>
+      <code>$protocolVersion</code>
+      <code>$reasonPhrase</code>
+      <code>$statusCode</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Response/EmptyResponse.php">
+    <UnsafeInstantiation occurrences="1">
+      <code>new static(204, $headers)</code>
+    </UnsafeInstantiation>
+  </file>
+  <file src="src/Response/HtmlResponse.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>is_string($html)</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Response/InjectContentTypeTrait.php">
+    <MissingClosureParamType occurrences="2">
+      <code>$carry</code>
+      <code>$item</code>
+    </MissingClosureParamType>
+    <MixedArgument occurrences="1">
+      <code>$item</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$hasContentType</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/Response/JsonResponse.php">
+    <UnusedFunctionCall occurrences="1">
+      <code>json_encode</code>
+    </UnusedFunctionCall>
+  </file>
+  <file src="src/Response/RedirectResponse.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_string($uri) &amp;&amp; ! $uri instanceof UriInterface</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Response/Serializer.php">
+    <MixedArgument occurrences="5">
+      <code>$body</code>
+      <code>$headers</code>
+      <code>$reasonPhrase</code>
+      <code>$status</code>
+      <code>$version</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="1">
+      <code>$response-&gt;getHeaders()</code>
+    </MixedArgumentTypeCoercion>
+    <RedundantCast occurrences="1">
+      <code>(int) $status</code>
+    </RedundantCast>
+  </file>
+  <file src="src/Response/TextResponse.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>is_string($text)</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/Response/XmlResponse.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>is_string($xml)</code>
+    </DocblockTypeContradiction>
+  </file>
+  <file src="src/ServerRequest.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_array($data) &amp;&amp; ! is_object($data) &amp;&amp; null !== $data</code>
+    </DocblockTypeContradiction>
+    <ParamNameMismatch occurrences="2">
+      <code>$attribute</code>
+      <code>$attribute</code>
+    </ParamNameMismatch>
+  </file>
+  <file src="src/ServerRequestFactory.php">
+    <MixedArgument occurrences="1">
+      <code>$headers['cookie']</code>
+    </MixedArgument>
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>is_callable(self::$apacheRequestHeaders)</code>
+    </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="src/Stream.php">
+    <InvalidArgument occurrences="1"/>
+    <MissingClosureParamType occurrences="1">
+      <code>$e</code>
+    </MissingClosureParamType>
+    <MixedInferredReturnType occurrences="2">
+      <code>?int</code>
+      <code>bool</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>$stats['size']</code>
+    </MixedReturnStatement>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$resource</code>
+    </PossiblyInvalidArgument>
+    <PossiblyInvalidPropertyAssignmentValue occurrences="1">
+      <code>$resource</code>
+    </PossiblyInvalidPropertyAssignmentValue>
+    <PossiblyNullArgument occurrences="4">
+      <code>$resource</code>
+      <code>$this-&gt;resource</code>
+      <code>$this-&gt;resource</code>
+      <code>$this-&gt;resource</code>
+    </PossiblyNullArgument>
+    <PropertyNotSetInConstructor occurrences="1">
+      <code>$stream</code>
+    </PropertyNotSetInConstructor>
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>is_resource($resource)</code>
+    </RedundantConditionGivenDocblockType>
+    <UndefinedClass occurrences="1">
+      <code>\GdImage</code>
+    </UndefinedClass>
+  </file>
+  <file src="src/StreamFactory.php">
+    <ParamNameMismatch occurrences="1">
+      <code>$file</code>
+    </ParamNameMismatch>
+  </file>
+  <file src="src/UploadedFile.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>! is_string($targetPath)</code>
+    </DocblockTypeContradiction>
+    <PossiblyNullArgument occurrences="1">
+      <code>$this-&gt;file</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/UploadedFileFactory.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$stream</code>
+    </ImplicitToStringCast>
+    <PossiblyNullArgument occurrences="1">
+      <code>$size</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Uri.php">
+    <DocblockTypeContradiction occurrences="10">
+      <code>! is_numeric($port)</code>
+      <code>is_float($port)</code>
+      <code>is_object($port)</code>
+      <code>is_string($fragment)</code>
+      <code>is_string($host)</code>
+      <code>is_string($path)</code>
+      <code>is_string($query)</code>
+      <code>is_string($scheme)</code>
+      <code>is_string($user)</code>
+      <code>null !== $password &amp;&amp; ! is_string($password)</code>
+    </DocblockTypeContradiction>
+    <MixedArgument occurrences="5">
+      <code>$key</code>
+      <code>$key</code>
+      <code>$matches[0]</code>
+      <code>$port</code>
+      <code>$value</code>
+    </MixedArgument>
+    <PossiblyNullOperand occurrences="1">
+      <code>$this-&gt;port</code>
+    </PossiblyNullOperand>
+    <RedundantCastGivenDocblockType occurrences="1">
+      <code>(int) $port</code>
+    </RedundantCastGivenDocblockType>
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>gettype($port)</code>
+    </RedundantConditionGivenDocblockType>
+  </file>
+  <file src="src/functions/create_uploaded_file.legacy.php">
+    <MixedArgument occurrences="1">
+      <code>func_get_args()</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/create_uploaded_file.php">
+    <MixedArgument occurrences="4">
+      <code>$spec['error']</code>
+      <code>$spec['name'] ?? null</code>
+      <code>$spec['tmp_name']</code>
+      <code>$spec['type'] ?? null</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/marshal_headers_from_sapi.legacy.php">
+    <MixedArgument occurrences="1">
+      <code>func_get_args()</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/marshal_headers_from_sapi.php">
+    <MixedAssignment occurrences="3">
+      <code>$headers[$name]</code>
+      <code>$headers[$name]</code>
+      <code>$value</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/functions/marshal_method_from_sapi.legacy.php">
+    <MixedArgument occurrences="1">
+      <code>func_get_args()</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/marshal_method_from_sapi.php">
+    <MixedInferredReturnType occurrences="1">
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1">
+      <code>$server['REQUEST_METHOD'] ?? 'GET'</code>
+    </MixedReturnStatement>
+  </file>
+  <file src="src/functions/marshal_protocol_version_from_sapi.legacy.php">
+    <MixedArgument occurrences="1">
+      <code>func_get_args()</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/marshal_protocol_version_from_sapi.php">
+    <MixedArgument occurrences="1">
+      <code>$server['SERVER_PROTOCOL']</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/marshal_uri_from_sapi.legacy.php">
+    <MixedArgument occurrences="1">
+      <code>func_get_args()</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/marshal_uri_from_sapi.php">
+    <MissingClosureParamType occurrences="3">
+      <code>$default</code>
+      <code>$host</code>
+      <code>$https</code>
+    </MissingClosureParamType>
+    <MissingClosureReturnType occurrences="2">
+      <code>function ($host) {</code>
+      <code>function (string $name, array $headers, $default = null) {</code>
+    </MissingClosureReturnType>
+    <MixedArgument occurrences="8">
+      <code>$getHeaderFromArray('x-forwarded-proto', $headers, '')</code>
+      <code>$host</code>
+      <code>$host</code>
+      <code>$host</code>
+      <code>$host</code>
+      <code>$port</code>
+      <code>$requestUri</code>
+      <code>$server['QUERY_STRING']</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="5">
+      <code>$host</code>
+      <code>$iisUrlRewritten</code>
+      <code>$origPathInfo</code>
+      <code>$unencodedUrl</code>
+      <code>$value</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="2">
+      <code>array</code>
+      <code>string</code>
+    </MixedInferredReturnType>
+    <MixedOperand occurrences="1">
+      <code>$server['SERVER_ADDR']</code>
+    </MixedOperand>
+    <MixedReturnStatement occurrences="3">
+      <code>$defaults</code>
+      <code>$origPathInfo</code>
+      <code>$unencodedUrl</code>
+    </MixedReturnStatement>
+    <PossiblyFalseOperand occurrences="1">
+      <code>strrpos($host, ':')</code>
+    </PossiblyFalseOperand>
+  </file>
+  <file src="src/functions/normalize_server.legacy.php">
+    <MixedArgument occurrences="1">
+      <code>func_get_args()</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/normalize_server.php">
+    <MixedArrayAccess occurrences="2">
+      <code>$apacheRequestHeaders['Authorization']</code>
+      <code>$apacheRequestHeaders['authorization']</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="3">
+      <code>$apacheRequestHeaders</code>
+      <code>$server['HTTP_AUTHORIZATION']</code>
+      <code>$server['HTTP_AUTHORIZATION']</code>
+    </MixedAssignment>
+  </file>
+  <file src="src/functions/normalize_uploaded_files.legacy.php">
+    <MixedArgument occurrences="1">
+      <code>func_get_args()</code>
+    </MixedArgument>
+  </file>
+  <file src="src/functions/normalize_uploaded_files.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>$normalized</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>UploadedFileInterface[]</code>
+    </InvalidReturnType>
+    <MixedAssignment occurrences="3">
+      <code>$normalized[$key]</code>
+      <code>$value</code>
+      <code>$value</code>
+    </MixedAssignment>
+    <MixedFunctionCall occurrences="2"/>
+    <MixedInferredReturnType occurrences="1">
+      <code>array</code>
+    </MixedInferredReturnType>
+    <MixedReturnStatement occurrences="1"/>
+  </file>
+  <file src="src/functions/parse_cookie_header.legacy.php">
+    <MissingParamType occurrences="1">
+      <code>$cookieHeader</code>
+    </MissingParamType>
+    <MixedArgument occurrences="1">
+      <code>func_get_args()</code>
+    </MixedArgument>
+  </file>
+  <file src="test/CallbackStreamTest.php">
+    <MissingClosureReturnType occurrences="1">
+      <code>function () {</code>
+    </MissingClosureReturnType>
+    <MissingParamType occurrences="2">
+      <code>$callback</code>
+      <code>$expected</code>
+    </MissingParamType>
+    <MixedArgument occurrences="1">
+      <code>$callback</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="2">
+      <code>$ret</code>
+      <code>$ret</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="1">
+      <code>array</code>
+    </MixedInferredReturnType>
+  </file>
+  <file src="test/HeaderSecurityTest.php">
+    <MissingParamType occurrences="5">
+      <code>$assertion</code>
+      <code>$expected</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="6">
+      <code>assertValues</code>
+      <code>getFilterValues</code>
+      <code>testAssertValidRaisesExceptionForInvalidValue</code>
+      <code>testFiltersValuesPerRfc7230</code>
+      <code>testValidatesValuesPerRfc7230</code>
+      <code>validateValues</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="2">
+      <code>$value</code>
+      <code>$value</code>
+    </MixedArgument>
+  </file>
+  <file src="test/Integration/UploadedFileTest.php">
+    <ImplicitToStringCast occurrences="1">
+      <code>$stream</code>
+    </ImplicitToStringCast>
+    <PossiblyNullArgument occurrences="1">
+      <code>$stream-&gt;getSize()</code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="test/MessageTraitTest.php">
+    <MissingParamType occurrences="11">
+      <code>$name</code>
+      <code>$name</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$version</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="36">
+      <code>headersWithInjectionVectors</code>
+      <code>invalidArrayHeaderValues</code>
+      <code>invalidGeneralHeaderValues</code>
+      <code>invalidHeaderValueTypes</code>
+      <code>invalidHeaderValues</code>
+      <code>invalidProtocolVersionProvider</code>
+      <code>numericHeaderValuesProvider</code>
+      <code>testAddHeaderAppendsToExistingHeader</code>
+      <code>testBodyMutatorReturnsCloneWithChanges</code>
+      <code>testCanRemoveHeaders</code>
+      <code>testDoesNotAllowCRLFInjectionWhenCallingWithAddedHeader</code>
+      <code>testDoesNotAllowCRLFInjectionWhenCallingWithHeader</code>
+      <code>testGetHeaderLineReturnsEmptyStringWhenHeaderDoesNotExist</code>
+      <code>testGetHeaderLineReturnsHeaderValueAsCommaConcatenatedString</code>
+      <code>testGetHeaderReturnsAnEmptyArrayWhenHeaderDoesNotExist</code>
+      <code>testGetHeaderReturnsHeaderValueAsArray</code>
+      <code>testGetHeadersKeepsHeaderCaseSensitivity</code>
+      <code>testGetHeadersReturnsCaseWithWhichHeaderFirstRegistered</code>
+      <code>testHasHeaderReturnsFalseIfHeaderIsNotPresent</code>
+      <code>testHasHeaderReturnsTrueIfHeaderIsPresent</code>
+      <code>testHeaderRemovalIsCaseInsensitive</code>
+      <code>testHeadersInitialization</code>
+      <code>testProtocolHasAcceptableDefault</code>
+      <code>testProtocolMutatorReturnsCloneWithChanges</code>
+      <code>testUsesStreamProvidedInConstructorAsBody</code>
+      <code>testWithAddedHeaderAllowsHeaderContinuations</code>
+      <code>testWithAddedHeaderRaisesExceptionForNonStringNonArrayValue</code>
+      <code>testWithHeaderAllowsHeaderContinuations</code>
+      <code>testWithHeaderRaisesExceptionForInvalidNestedHeaderValue</code>
+      <code>testWithHeaderRaisesExceptionForInvalidValueType</code>
+      <code>testWithHeaderReplacesDifferentCapitalization</code>
+      <code>testWithHeaderShouldAllowIntegersAndFloats</code>
+      <code>testWithHeaderShouldRaiseExceptionForInvalidHeaderScalarValues</code>
+      <code>testWithHeaderShouldRaiseExceptionForInvalidHeaderValuesInArrays</code>
+      <code>testWithProtocolVersionRaisesExceptionForInvalidVersion</code>
+      <code>testWithoutHeaderDoesNothingIfHeaderDoesNotExist</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="9">
+      <code>$name</code>
+      <code>$name</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$value</code>
+      <code>$version</code>
+    </MixedArgument>
+    <MixedArgumentTypeCoercion occurrences="3">
+      <code>[ $value ]</code>
+      <code>[ $value ]</code>
+      <code>[ $value ]</code>
+    </MixedArgumentTypeCoercion>
+    <MixedArrayAssignment occurrences="1">
+      <code>$values['array']</code>
+    </MixedArrayAssignment>
+    <MixedAssignment occurrences="1">
+      <code>$values</code>
+    </MixedAssignment>
+  </file>
+  <file src="test/PhpInputStreamTest.php">
+    <MissingParamType occurrences="2">
+      <code>$message</code>
+      <code>$test</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="8">
+      <code>assertStreamContents</code>
+      <code>getFileContents</code>
+      <code>testCanReadStreamIteratively</code>
+      <code>testCastingToStringReturnsFullContentsRegardlesOfPriorReads</code>
+      <code>testGetContentsReturnCacheWhenReachedEof</code>
+      <code>testGetContentsReturnsRemainingContentsOfStream</code>
+      <code>testMultipleCastsToStringReturnSameContentsEvenIfReadsOccur</code>
+      <code>testStreamIsNeverWritable</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="2">
+      <code>$contents</code>
+      <code>$message</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="2">
+      <code>$content</code>
+      <code>$contents</code>
+    </MixedAssignment>
+  </file>
+  <file src="test/RelativeStreamTest.php">
+    <DocblockTypeContradiction occurrences="1">
+      <code>assertSame</code>
+    </DocblockTypeContradiction>
+    <MissingReturnType occurrences="18">
+      <code>testCanReadContentFromNotSeekableResource</code>
+      <code>testClose</code>
+      <code>testDetach</code>
+      <code>testGetContents</code>
+      <code>testGetContentsRaisesExceptionWhenPointerIsBehindOffset</code>
+      <code>testGetMetadata</code>
+      <code>testGetSize</code>
+      <code>testIsReadable</code>
+      <code>testIsSeekable</code>
+      <code>testIsWritable</code>
+      <code>testRead</code>
+      <code>testReadRaisesExceptionWhenPointerIsBehindOffset</code>
+      <code>testRewind</code>
+      <code>testSeek</code>
+      <code>testTell</code>
+      <code>testToString</code>
+      <code>testWrite</code>
+      <code>testWriteRaisesExceptionWhenPointerIsBehindOffset</code>
+    </MissingReturnType>
+  </file>
+  <file src="test/Request/ArraySerializerTest.php">
+    <MissingReturnType occurrences="3">
+      <code>testDeserializeFromArray</code>
+      <code>testMissingBodyParamInSerializedRequestThrowsException</code>
+      <code>testSerializeToArray</code>
+    </MissingReturnType>
+  </file>
+  <file src="test/Request/SerializerTest.php">
+    <MissingClosureReturnType occurrences="1">
+      <code>function () use ($payload) {</code>
+    </MissingClosureReturnType>
+    <MissingParamType occurrences="10">
+      <code>$exceptionMessage</code>
+      <code>$expectations</code>
+      <code>$expectations</code>
+      <code>$line</code>
+      <code>$line</code>
+      <code>$line</code>
+      <code>$message</code>
+      <code>$requestTarget</code>
+      <code>$requestTarget</code>
+      <code>$text</code>
+    </MissingParamType>
+    <MixedArgument occurrences="3">
+      <code>$exceptionMessage</code>
+      <code>$message</code>
+      <code>$text</code>
+    </MixedArgument>
+    <MixedArrayOffset occurrences="1">
+      <code>$payload[$i++]</code>
+    </MixedArrayOffset>
+    <MixedAssignment occurrences="5">
+      <code>$expect</code>
+      <code>$expect</code>
+      <code>$i</code>
+      <code>$method</code>
+      <code>$method</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="5">
+      <code>array</code>
+      <code>array</code>
+      <code>array</code>
+      <code>array</code>
+      <code>array</code>
+    </MixedInferredReturnType>
+    <MixedOperand occurrences="4">
+      <code>$i</code>
+      <code>$line</code>
+      <code>$line</code>
+      <code>$line</code>
+    </MixedOperand>
+  </file>
+  <file src="test/RequestTest.php">
+    <DuplicateArrayKey occurrences="1">
+      <code>'UNLOCK'    =&gt; ['UNLOCK']</code>
+    </DuplicateArrayKey>
+    <InvalidArgument occurrences="1">
+      <code>['TOTALLY INVALID']</code>
+    </InvalidArgument>
+    <MissingParamType occurrences="12">
+      <code>$body</code>
+      <code>$contains</code>
+      <code>$expected</code>
+      <code>$headers</code>
+      <code>$hostKey</code>
+      <code>$method</code>
+      <code>$method</code>
+      <code>$method</code>
+      <code>$request</code>
+      <code>$requestTarget</code>
+      <code>$uri</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="48">
+      <code>customRequestMethods</code>
+      <code>headersWithInjectionVectors</code>
+      <code>hostHeaderKeys</code>
+      <code>invalidHeaderTypes</code>
+      <code>invalidMethod</code>
+      <code>invalidRequestBody</code>
+      <code>invalidRequestMethod</code>
+      <code>invalidRequestUri</code>
+      <code>requestsWithUri</code>
+      <code>testAllowsCustomRequestMethodsThatFollowSpec</code>
+      <code>testCanProvideARequestTarget</code>
+      <code>testConstructorCanAcceptAllMessageParts</code>
+      <code>testConstructorRaisesExceptionForHeadersWithCRLFVectors</code>
+      <code>testConstructorRaisesExceptionForInvalidBody</code>
+      <code>testConstructorRaisesExceptionForInvalidHeaders</code>
+      <code>testConstructorRaisesExceptionForInvalidMethod</code>
+      <code>testConstructorRaisesExceptionForInvalidStream</code>
+      <code>testConstructorRaisesExceptionForInvalidUri</code>
+      <code>testDefaultStreamIsWritable</code>
+      <code>testGetHeadersContainsHostHeaderIfUriWithHostIsDeleted</code>
+      <code>testGetHeadersContainsHostHeaderIfUriWithHostIsPresent</code>
+      <code>testGetHeadersContainsNoHostHeaderIfNoUriPresent</code>
+      <code>testGetHeadersContainsNoHostHeaderIfUriDoesNotContainHost</code>
+      <code>testGetHostHeaderLineReturnsEmptyStringIfNoUriPresent</code>
+      <code>testGetHostHeaderLineReturnsEmptyStringIfUriDoesNotContainHost</code>
+      <code>testGetHostHeaderLineReturnsUriHostWhenPresent</code>
+      <code>testGetHostHeaderReturnsEmptyArrayIfNoUriPresent</code>
+      <code>testGetHostHeaderReturnsEmptyArrayIfUriDoesNotContainHost</code>
+      <code>testGetHostHeaderReturnsUriHostWhenHostHeaderDeleted</code>
+      <code>testGetHostHeaderReturnsUriHostWhenPresent</code>
+      <code>testHostHeaderNotSetFromUriOnCreationIfHostHeaderSpecified</code>
+      <code>testHostHeaderSetFromUriOnCreationIfNoHostHeaderSpecified</code>
+      <code>testHostHeaderUpdatesToUriHostAndPortWhenPreserveHostDisabledAndNonStandardPort</code>
+      <code>testMethodIsGetByDefault</code>
+      <code>testMethodMutatorReturnsCloneWithChangedMethod</code>
+      <code>testNotPassingPreserveHostFlagWhenUpdatingUriWithoutHostDoesNotUpdateHostHeader</code>
+      <code>testPassingPreserveHostFlagWhenUpdatingUriDoesNotUpdateHostHeader</code>
+      <code>testRequestTargetCannotContainWhitespace</code>
+      <code>testRequestTargetDoesNotCacheBetweenInstances</code>
+      <code>testRequestTargetIsSlashWhenNoUriPresent</code>
+      <code>testRequestTargetIsSlashWhenUriHasNoPathOrQuery</code>
+      <code>testReturnsRequestTargetWhenUriIsPresent</code>
+      <code>testReturnsUnpopulatedUriByDefault</code>
+      <code>testSettingNewUriResetsRequestTarget</code>
+      <code>testWithInvalidMethod</code>
+      <code>testWithUriAndNoPreserveHostWillOverwriteHostHeaderRegardlessOfOriginalCase</code>
+      <code>testWithUriReturnsNewInstanceWithNewUri</code>
+      <code>validRequestTargets</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="10">
+      <code>$body</code>
+      <code>$contains</code>
+      <code>$headers</code>
+      <code>$hostKey</code>
+      <code>$hostKey</code>
+      <code>$method</code>
+      <code>$method</code>
+      <code>$method</code>
+      <code>$requestTarget</code>
+      <code>$uri</code>
+    </MixedArgument>
+    <MixedMethodCall occurrences="1">
+      <code>getRequestTarget</code>
+    </MixedMethodCall>
+  </file>
+  <file src="test/Response/ArraySerializerTest.php">
+    <MissingReturnType occurrences="5">
+      <code>createResponse</code>
+      <code>createSerializedResponse</code>
+      <code>testDeserializeFromArray</code>
+      <code>testMissingBodyParamInSerializedRequestThrowsException</code>
+      <code>testSerializeToArray</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="4">
+      <code>$response</code>
+      <code>$response</code>
+      <code>$serializedRequest</code>
+      <code>$serializedResponse</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="1">
+      <code>$serializedRequest['body']</code>
+    </MixedArrayAccess>
+    <MixedAssignment occurrences="4">
+      <code>$response</code>
+      <code>$response</code>
+      <code>$serializedRequest</code>
+      <code>$serializedResponse</code>
+    </MixedAssignment>
+  </file>
+  <file src="test/Response/EmptyResponseTest.php">
+    <MissingReturnType occurrences="2">
+      <code>testConstructor</code>
+      <code>testHeaderConstructor</code>
+    </MissingReturnType>
+  </file>
+  <file src="test/Response/HtmlResponseTest.php">
+    <MissingParamType occurrences="1">
+      <code>$body</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="7">
+      <code>invalidHtmlContent</code>
+      <code>testAllowsStreamsForResponseBody</code>
+      <code>testConstructorAcceptsHtmlString</code>
+      <code>testConstructorAllowsPassingHeaders</code>
+      <code>testConstructorAllowsPassingStatus</code>
+      <code>testConstructorRewindsBodyStream</code>
+      <code>testRaisesExceptionforNonStringNonStreamBodyContent</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="1">
+      <code>$body</code>
+    </MixedArgument>
+  </file>
+  <file src="test/Response/JsonResponseTest.php">
+    <MissingParamType occurrences="2">
+      <code>$value</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="15">
+      <code>scalarValuesForJSON</code>
+      <code>testCanProvideAlternateContentTypeViaHeadersPassedToConstructor</code>
+      <code>testCanProvideStatusCodeToConstructor</code>
+      <code>testConstructorAcceptsDataAndCreatesJsonEncodedMessageBody</code>
+      <code>testConstructorRewindsBodyStream</code>
+      <code>testEncodingOptionsGetter</code>
+      <code>testJsonErrorHandlingOfBadEmbeddedData</code>
+      <code>testJsonErrorHandlingOfResources</code>
+      <code>testModifyingThePayloadDoesntMutateResponseInstance</code>
+      <code>testPayloadGetter</code>
+      <code>testScalarValuePassedToConstructorJsonEncodesDirectly</code>
+      <code>testUsesSaneDefaultJsonEncodingFlags</code>
+      <code>testWithEncodingOptions</code>
+      <code>testWithPayload</code>
+      <code>valuesToJsonEncode</code>
+    </MissingReturnType>
+  </file>
+  <file src="test/Response/RedirectResponseTest.php">
+    <MissingParamType occurrences="1">
+      <code>$uri</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="6">
+      <code>invalidUris</code>
+      <code>testConstructorAcceptsStringUriAndProduces302ResponseWithLocationHeader</code>
+      <code>testConstructorAcceptsUriInstanceAndProduces302ResponseWithLocationHeader</code>
+      <code>testConstructorAllowsSpecifyingAlternateStatusCode</code>
+      <code>testConstructorAllowsSpecifyingHeaders</code>
+      <code>testConstructorRaisesExceptionOnInvalidUri</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="1">
+      <code>$uri</code>
+    </MixedArgument>
+  </file>
+  <file src="test/Response/SerializerTest.php">
+    <MissingParamType occurrences="3">
+      <code>$exceptionMessage</code>
+      <code>$message</code>
+      <code>$text</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="17">
+      <code>headersWithContinuationLines</code>
+      <code>messagesWithInvalidHeaders</code>
+      <code>testCanDeserializeBasicResponse</code>
+      <code>testCanDeserializeResponseWithHeaderContinuations</code>
+      <code>testCanDeserializeResponseWithMultipleHeadersOfSameName</code>
+      <code>testCanDeserializeResponseWithoutBody</code>
+      <code>testCanDeserializeResponseWithoutHeadersButContainingBody</code>
+      <code>testCanDeserializeResponseWithoutHeadersOrBody</code>
+      <code>testDeserializationRaisesExceptionForInvalidStatusLine</code>
+      <code>testDeserializationRaisesExceptionForMalformedHeaders</code>
+      <code>testDeserializeCorrectlyCastsStatusCodeToInteger</code>
+      <code>testFromStreamThrowsExceptionWhenStreamIsNotReadable</code>
+      <code>testFromStreamThrowsExceptionWhenStreamIsNotSeekable</code>
+      <code>testOmitsReasonPhraseFromStatusLineIfEmpty</code>
+      <code>testSerializesBasicResponse</code>
+      <code>testSerializesMultipleHeadersCorrectly</code>
+      <code>testSerializesResponseWithoutBodyCorrectly</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="3">
+      <code>$exceptionMessage</code>
+      <code>$message</code>
+      <code>$text</code>
+    </MixedArgument>
+  </file>
+  <file src="test/Response/TextResponseTest.php">
+    <MissingParamType occurrences="1">
+      <code>$body</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="7">
+      <code>invalidContent</code>
+      <code>testAllowsStreamsForResponseBody</code>
+      <code>testConstructorAcceptsBodyAsString</code>
+      <code>testConstructorAllowsPassingHeaders</code>
+      <code>testConstructorAllowsPassingStatus</code>
+      <code>testConstructorRewindsBodyStream</code>
+      <code>testRaisesExceptionforNonStringNonStreamBodyContent</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="1">
+      <code>$body</code>
+    </MixedArgument>
+  </file>
+  <file src="test/Response/XmlResponseTest.php">
+    <MissingParamType occurrences="1">
+      <code>$body</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="7">
+      <code>invalidContent</code>
+      <code>testAllowsStreamsForResponseBody</code>
+      <code>testConstructorAcceptsBodyAsString</code>
+      <code>testConstructorAllowsPassingHeaders</code>
+      <code>testConstructorAllowsPassingStatus</code>
+      <code>testConstructorRewindsBodyStream</code>
+      <code>testRaisesExceptionforNonStringNonStreamBodyContent</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="1">
+      <code>$body</code>
+    </MixedArgument>
+  </file>
+  <file src="test/ResponseTest.php">
+    <InvalidArgument occurrences="1">
+      <code>[ 'TOTALLY INVALID' ]</code>
+    </InvalidArgument>
+    <MissingParamType occurrences="9">
+      <code>$body</code>
+      <code>$code</code>
+      <code>$code</code>
+      <code>$code</code>
+      <code>$contains</code>
+      <code>$headers</code>
+      <code>$invalidReasonPhrase</code>
+      <code>$reasonPhrase</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="21">
+      <code>headersWithInjectionVectors</code>
+      <code>ianaCodesReasonPhrasesProvider</code>
+      <code>invalidHeaderTypes</code>
+      <code>invalidReasonPhrases</code>
+      <code>invalidResponseBody</code>
+      <code>invalidStatusCodes</code>
+      <code>testCanSetCustomReasonPhrase</code>
+      <code>testCannotSetInvalidStatusCode</code>
+      <code>testConstructorCanAcceptAllMessageParts</code>
+      <code>testConstructorRaisesExceptionForHeadersWithCRLFVectors</code>
+      <code>testConstructorRaisesExceptionForInvalidBody</code>
+      <code>testConstructorRaisesExceptionForInvalidHeaders</code>
+      <code>testConstructorRaisesExceptionForInvalidStream</code>
+      <code>testCreateWithValidStatusCodes</code>
+      <code>testReasonPhraseCanBeEmpty</code>
+      <code>testReasonPhraseDefaultsAgainstIana</code>
+      <code>testReasonPhraseDefaultsToStandards</code>
+      <code>testStatusCodeIs200ByDefault</code>
+      <code>testStatusCodeMutatorReturnsCloneWithChanges</code>
+      <code>testWithStatusRaisesAnExceptionForNonStringReasonPhrases</code>
+      <code>validStatusCodes</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="7">
+      <code>$body</code>
+      <code>$code</code>
+      <code>$code</code>
+      <code>$code</code>
+      <code>$contains</code>
+      <code>$headers</code>
+      <code>$invalidReasonPhrase</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$responseCode</code>
+    </MixedAssignment>
+    <PossiblyInvalidArgument occurrences="1">
+      <code>$response</code>
+    </PossiblyInvalidArgument>
+    <RedundantConditionGivenDocblockType occurrences="1">
+      <code>assertIsInt</code>
+    </RedundantConditionGivenDocblockType>
+    <StringIncrement occurrences="1">
+      <code>$value</code>
+    </StringIncrement>
+  </file>
+  <file src="test/ServerRequestFactoryTest.php">
+    <InvalidArgument occurrences="1">
+      <code>$normalizedFiles['fooFiles']</code>
+    </InvalidArgument>
+    <MissingParamType occurrences="2">
+      <code>$expected</code>
+      <code>$protocol</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="39">
+      <code>cookieHeaderValues</code>
+      <code>marshalProtocolVersionProvider</code>
+      <code>testCanCreateServerRequestViaFromGlobalsMethod</code>
+      <code>testCookieHeaderVariations</code>
+      <code>testCreateFromGlobalsShouldNotPreserveKeysWhenCreatedWithAnEmptyValue</code>
+      <code>testCreateFromGlobalsShouldPreserveKeysWhenCreatedWithAZeroValue</code>
+      <code>testFromGlobalsUsesCookieHeaderInsteadOfCookieSuperGlobal</code>
+      <code>testFromGlobalsUsesCookieSuperGlobalWhenCookieHeaderIsNotSet</code>
+      <code>testMarshalHostAndPortReturnsEmptyValuesIfNoHostHeaderAndNoServerName</code>
+      <code>testMarshalHostAndPortReturnsServerAddrForHostIfPresentAndHostIsIpv6Address</code>
+      <code>testMarshalHostAndPortReturnsServerNameForHostIfServerAddrPresentButHostIsNotIpv6Address</code>
+      <code>testMarshalHostAndPortReturnsServerNameForHostWhenPresent</code>
+      <code>testMarshalHostAndPortReturnsServerPortForPortWhenPresentWithServerName</code>
+      <code>testMarshalHostAndPortUsesHostHeaderWhenPresent</code>
+      <code>testMarshalHostAndPortWillDetectPortInHostHeaderWhenPresent</code>
+      <code>testMarshalHostAndPortWillDetectPortInIpv6StyleHost</code>
+      <code>testMarshalInvalidHeadersStrippedFromServerArray</code>
+      <code>testMarshalProtocolReturnsDefaultValueIfHeaderIsNotPresent</code>
+      <code>testMarshalProtocolVersionReturnsHttpVersions</code>
+      <code>testMarshalProtocolVersionRisesExceptionIfVersionIsNotRecognized</code>
+      <code>testMarshalRequestUriFallsBackToRoot</code>
+      <code>testMarshalRequestUriPrefersRequestUriServerParamWhenXOriginalUrlButNoXRewriteUrlPresent</code>
+      <code>testMarshalRequestUriStripsSchemeHostAndPortInformationWhenPresent</code>
+      <code>testMarshalRequestUriUsesIISUnencodedUrlValueIfPresentAndUrlWasRewritten</code>
+      <code>testMarshalRequestUriUsesOrigPathInfoIfPresent</code>
+      <code>testMarshalUriDetectsHttpsSchemeFromServerValue</code>
+      <code>testMarshalUriDetectsHttpsSchemeFromXForwardedProtoValue</code>
+      <code>testMarshalUriInjectsFragmentFromServer</code>
+      <code>testMarshalUriInjectsQueryStringFromServer</code>
+      <code>testMarshalUriStripsQueryStringFromRequestUri</code>
+      <code>testMarshalUriUsesHttpSchemeIfHttpsServerValueEqualsOff</code>
+      <code>testMarshalsExpectedHeadersFromServerArray</code>
+      <code>testMarshalsVariablesPrefixedByApacheFromServerArray</code>
+      <code>testNormalizeFilesReturnsOnlyActualFilesWhenOriginalFilesContainsNestedAssociativeArrays</code>
+      <code>testNormalizeServerReturnsArrayUnalteredIfApacheHeadersDoNotContainAuthorization</code>
+      <code>testNormalizeServerUsesLowerCaseAuthorizationHeaderFromApacheWhenPresent</code>
+      <code>testNormalizeServerUsesMixedCaseAuthorizationHeaderFromApacheWhenPresent</code>
+      <code>testReturnsServerValueUnchangedIfHttpAuthorizationHeaderIsPresent</code>
+      <code>testServerRequestFactoryHasAWritableEmptyBody</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="1">
+      <code>$data</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="2">
+      <code>$data</code>
+      <code>$param</code>
+    </MixedAssignment>
+    <MixedInferredReturnType occurrences="2">
+      <code>array</code>
+      <code>iterable</code>
+    </MixedInferredReturnType>
+  </file>
+  <file src="test/ServerRequestTest.php">
+    <InvalidArgument occurrences="1">
+      <code>$parsedBody</code>
+    </InvalidArgument>
+    <MissingParamType occurrences="3">
+      <code>$methodReturned</code>
+      <code>$parameterMethod</code>
+      <code>$request</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="21">
+      <code>provideMethods</code>
+      <code>testAllowsRemovingAttributeWithNullValue</code>
+      <code>testAllowsRemovingNonExistentAttribute</code>
+      <code>testAttributeMutatorReturnsCloneWithChanges</code>
+      <code>testAttributesAreEmptyByDefault</code>
+      <code>testCookieParamsAreAnEmptyArrayAtInitialization</code>
+      <code>testCookiesAreEmptyByDefault</code>
+      <code>testCookiesMutatorReturnsCloneWithChanges</code>
+      <code>testNestedUploadedFiles</code>
+      <code>testParsedBodyIsEmptyByDefault</code>
+      <code>testParsedBodyIsNullAtInitialization</code>
+      <code>testParsedBodyMutatorReturnsCloneWithChanges</code>
+      <code>testQueryParamsAreAnEmptyArrayAtInitialization</code>
+      <code>testQueryParamsAreEmptyByDefault</code>
+      <code>testQueryParamsMutatorReturnsCloneWithChanges</code>
+      <code>testRemovingAttributeReturnsCloneWithoutAttribute</code>
+      <code>testServerParamsAreEmptyByDefault</code>
+      <code>testSingleAttributesWhenEmptyByDefault</code>
+      <code>testTryToAddInvalidUploadedFiles</code>
+      <code>testUploadedFilesAreEmptyByDefault</code>
+      <code>testUsesProvidedConstructorArguments</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="1">
+      <code>$parameterMethod</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$new</code>
+    </MixedAssignment>
+    <MixedMethodCall occurrences="2">
+      <code>getAttribute</code>
+      <code>withoutAttribute</code>
+    </MixedMethodCall>
+  </file>
+  <file src="test/StreamTest.php">
+    <DeprecatedMethod occurrences="1">
+      <code>setMethods</code>
+    </DeprecatedMethod>
+    <InvalidArgument occurrences="1">
+      <code>['  THIS WILL NOT WORK  ']</code>
+    </InvalidArgument>
+    <MissingParamType occurrences="7">
+      <code>$fileShouldExist</code>
+      <code>$fileShouldExist</code>
+      <code>$flag</code>
+      <code>$flag</code>
+      <code>$mode</code>
+      <code>$mode</code>
+      <code>$resource</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$tmpnam</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="52">
+      <code>findNonExistentTempName</code>
+      <code>getResourceFor67</code>
+      <code>invalidResources</code>
+      <code>provideDataForIsReadable</code>
+      <code>provideDataForIsWritable</code>
+      <code>testAttachWithInvalidStringResourceRaisesException</code>
+      <code>testAttachWithNonStringNonResourceRaisesException</code>
+      <code>testAttachWithResourceAttachesResource</code>
+      <code>testAttachWithStringRepresentingResourceCreatesAndAttachesResource</code>
+      <code>testCanInstantiateWithGDResource</code>
+      <code>testCanInstantiateWithStreamIdentifier</code>
+      <code>testCanInstantiteWithStreamResource</code>
+      <code>testCanReadContentFromNotSeekableResource</code>
+      <code>testCloseClosesResource</code>
+      <code>testCloseDoesNothingAfterDetach</code>
+      <code>testCloseUnsetsResource</code>
+      <code>testDetachReturnsResource</code>
+      <code>testEofReportsFalseWhenNotAtEndOfStream</code>
+      <code>testEofReportsTrueWhenAtEndOfStream</code>
+      <code>testEofReportsTrueWhenStreamIsDetached</code>
+      <code>testGetContentsRisesExceptionIfStreamIsNotReadable</code>
+      <code>testGetContentsShouldGetFullStreamContents</code>
+      <code>testGetContentsShouldReturnStreamContentsFromCurrentPointer</code>
+      <code>testGetMetadataReturnsAllMetadataWhenNoKeyPresent</code>
+      <code>testGetMetadataReturnsDataForSpecifiedKey</code>
+      <code>testGetMetadataReturnsNullIfNoDataExistsForKey</code>
+      <code>testGetSizeReturnsStreamSize</code>
+      <code>testIsReadableReturnsCorrectFlagForMode</code>
+      <code>testIsReadableReturnsFalseIfStreamIsNotReadable</code>
+      <code>testIsReadableReturnsFalseWhenStreamIsDetached</code>
+      <code>testIsSeekableReturnsFalseForDetachedStreams</code>
+      <code>testIsSeekableReturnsTrueForReadableStreams</code>
+      <code>testIsWritableReturnsCorrectFlagForMode</code>
+      <code>testIsWritableReturnsFalseIfStreamIsNotWritable</code>
+      <code>testIsWritableReturnsFalseWhenStreamIsDetached</code>
+      <code>testIsWritableReturnsTrueForWritableMemoryStream</code>
+      <code>testPassingInvalidStreamResourceToConstructorRaisesException</code>
+      <code>testRaisesExceptionOnAttachForNonStreamResources</code>
+      <code>testRaisesExceptionOnConstructionForNonStreamResources</code>
+      <code>testReadRaisesExceptionWhenStreamIsDetached</code>
+      <code>testReadReturnsEmptyStringWhenAtEndOfFile</code>
+      <code>testRewindResetsToStartOfStream</code>
+      <code>testSeekAdvancesToGivenOffsetOfStream</code>
+      <code>testSeekRaisesExceptionWhenStreamIsDetached</code>
+      <code>testSizeReportsNullForPhpInputStreams</code>
+      <code>testSizeReportsNullWhenNoResourcePresent</code>
+      <code>testStringSerializationReturnsEmptyStringWhenStreamIsNotReadable</code>
+      <code>testTellRaisesExceptionIfResourceIsDetached</code>
+      <code>testTellReportsCurrentPositionInResource</code>
+      <code>testToStringRetrievesFullContentsOfStream</code>
+      <code>testWriteRaisesExceptionWhenStreamIsDetached</code>
+      <code>testWriteRaisesExceptionWhenStreamIsNotWritable</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="9">
+      <code>$mode</code>
+      <code>$mode</code>
+      <code>$resource</code>
+      <code>$resource</code>
+      <code>$resource</code>
+      <code>$this-&gt;tmpnam</code>
+      <code>$this-&gt;tmpnam</code>
+      <code>$this-&gt;tmpnam</code>
+      <code>$this-&gt;tmpnam</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="3">
+      <code>$resource</code>
+      <code>$resource</code>
+      <code>$test</code>
+    </MixedAssignment>
+  </file>
+  <file src="test/TestAsset/HeaderStack.php">
+    <MissingReturnType occurrences="2">
+      <code>push</code>
+      <code>reset</code>
+    </MissingReturnType>
+  </file>
+  <file src="test/UploadedFileTest.php">
+    <ImplicitToStringCast occurrences="5">
+      <code>$stream</code>
+      <code>$stream</code>
+      <code>$stream</code>
+      <code>$stream</code>
+      <code>$stream</code>
+    </ImplicitToStringCast>
+    <MissingParamType occurrences="6">
+      <code>$path</code>
+      <code>$status</code>
+      <code>$status</code>
+      <code>$status</code>
+      <code>$status</code>
+      <code>$streamOrFile</code>
+    </MissingParamType>
+    <MissingPropertyType occurrences="1">
+      <code>$tmpFile</code>
+    </MissingPropertyType>
+    <MissingReturnType occurrences="24">
+      <code>errorConstantsAndMessages</code>
+      <code>invalidErrorStatuses</code>
+      <code>invalidMovePaths</code>
+      <code>invalidStreams</code>
+      <code>nonOkErrorStatus</code>
+      <code>testCannotRetrieveStreamAfterMove</code>
+      <code>testConstructorDoesNotRaiseExceptionForInvalidStreamWhenErrorStatusPresent</code>
+      <code>testGetStreamRaisesExceptionWhenErrorStatusPresent</code>
+      <code>testGetStreamRaisesExceptionWithAppropriateMessageWhenUploadErrorDetected</code>
+      <code>testGetStreamReturnsOriginalStreamObject</code>
+      <code>testGetStreamReturnsStreamForFile</code>
+      <code>testGetStreamReturnsWrappedPhpStream</code>
+      <code>testMoveCannotBeCalledMoreThanOnce</code>
+      <code>testMoveRaisesExceptionForInvalidPath</code>
+      <code>testMoveToCreatesStreamIfOnlyAFilenameWasProvided</code>
+      <code>testMoveToRaisesExceptionWhenErrorStatusPresent</code>
+      <code>testMoveToRaisesExceptionWithAppropriateMessageWhenUploadErrorDetected</code>
+      <code>testMovesFileToDesignatedPath</code>
+      <code>testRaisesExceptionOnInvalidErrorStatus</code>
+      <code>testRaisesExceptionOnInvalidStreamOrFile</code>
+      <code>testValidClientFilename</code>
+      <code>testValidClientMediaType</code>
+      <code>testValidNullClientFilename</code>
+      <code>testValidSize</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="6">
+      <code>$path</code>
+      <code>$status</code>
+      <code>$status</code>
+      <code>$status</code>
+      <code>$status</code>
+      <code>$streamOrFile</code>
+    </MixedArgument>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;tmpfile</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="test/UriTest.php">
+    <InvalidScalarArgument occurrences="2">
+      <code>'3001'</code>
+      <code>1</code>
+    </InvalidScalarArgument>
+    <MissingParamType occurrences="25">
+      <code>$credential</code>
+      <code>$expected</code>
+      <code>$expected</code>
+      <code>$expected</code>
+      <code>$expected</code>
+      <code>$method</code>
+      <code>$method</code>
+      <code>$path</code>
+      <code>$port</code>
+      <code>$port</code>
+      <code>$port</code>
+      <code>$query</code>
+      <code>$query</code>
+      <code>$query</code>
+      <code>$result</code>
+      <code>$result</code>
+      <code>$scheme</code>
+      <code>$scheme</code>
+      <code>$scheme</code>
+      <code>$url</code>
+      <code>$url</code>
+      <code>$url</code>
+      <code>$user</code>
+      <code>$value</code>
+      <code>$value</code>
+    </MissingParamType>
+    <MissingReturnType occurrences="68">
+      <code>authorityInfo</code>
+      <code>invalidPaths</code>
+      <code>invalidPorts</code>
+      <code>invalidQueryStrings</code>
+      <code>invalidSchemes</code>
+      <code>invalidStringComponentValues</code>
+      <code>mutations</code>
+      <code>queryStringsForEncoding</code>
+      <code>standardSchemePortCombinations</code>
+      <code>testAuthorityIsPrefixedByDoubleSlashIfPresent</code>
+      <code>testAuthorityOmitsPortForStandardSchemePortCombinations</code>
+      <code>testCanEmitOriginFormUrl</code>
+      <code>testCanSerializeToString</code>
+      <code>testConstructWithUnsupportedSchemeRaisesAnException</code>
+      <code>testConstructorRaisesExceptionForSeriouslyMalformedURI</code>
+      <code>testConstructorSetsAllProperties</code>
+      <code>testESchemeStripsOffDelimiter</code>
+      <code>testEmptyPathOnOriginFormRemainsAnEmptyPath</code>
+      <code>testEncodeFragmentPrefixIfPresent</code>
+      <code>testFragmentIsNotDoubleEncoded</code>
+      <code>testFragmentIsProperlyEncoded</code>
+      <code>testHostIsLowercase</code>
+      <code>testHostIsLowercaseWhenIsSetViwWithHost</code>
+      <code>testMutatingSchemeStripsOffDelimiter</code>
+      <code>testMutatingWithUnsupportedSchemeRaisesAnException</code>
+      <code>testMutationResetsUriStringPropertyInClone</code>
+      <code>testPassingInvalidValueToWithMethodRaisesException</code>
+      <code>testPathDoesNotBecomeDoubleEncoded</code>
+      <code>testPathIsNotPrefixedWithSlashIfSetWithoutOne</code>
+      <code>testPathIsProperlyEncoded</code>
+      <code>testPathNotSlashPrefixedIsEmittedWithSlashDelimiterWhenUriIsCastToString</code>
+      <code>testProperlyTrimsLeadingSlashesToPreventXSS</code>
+      <code>testQueryIsNotDoubleEncoded</code>
+      <code>testQueryIsProperlyEncoded</code>
+      <code>testReservedCharsInPathUnencoded</code>
+      <code>testRetrievingAuthorityReturnsExpectedValues</code>
+      <code>testSettingEmptyPathOnAbsoluteUriReturnsAnEmptyPath</code>
+      <code>testStringRepresentationOfAbsoluteUriWithNoPathSetsAnEmptyPath</code>
+      <code>testStringRepresentationOfOriginFormWithNoPathRetainsEmptyPath</code>
+      <code>testStripsQueryPrefixIfPresent</code>
+      <code>testUriDistinguishZeroFromEmptyString</code>
+      <code>testUriDoesNotAppendColonToHostIfPortIsEmpty</code>
+      <code>testUtf8Path</code>
+      <code>testUtf8Query</code>
+      <code>testUtf8Uri</code>
+      <code>testWithFragmentReturnsNewInstanceWithProvidedFragment</code>
+      <code>testWithFragmentReturnsSameInstanceWithProvidedFragmentSameAsBefore</code>
+      <code>testWithHostReturnsNewInstanceWithProvidedHost</code>
+      <code>testWithHostReturnsSameInstanceWithProvidedHostIsSameAsBefore</code>
+      <code>testWithPathRaisesExceptionForInvalidPaths</code>
+      <code>testWithPathReturnsNewInstanceWithProvidedPath</code>
+      <code>testWithPathReturnsSameInstanceWithProvidedPathSameAsBefore</code>
+      <code>testWithPortRaisesExceptionForInvalidPorts</code>
+      <code>testWithPortReturnsNewInstanceWithProvidedPort</code>
+      <code>testWithPortReturnsSameInstanceWithProvidedPortIsSameAsBefore</code>
+      <code>testWithQueryRaisesExceptionForInvalidQueryStrings</code>
+      <code>testWithQueryReturnsNewInstanceWithProvidedQuery</code>
+      <code>testWithSchemeReturnsNewInstanceWithNewScheme</code>
+      <code>testWithSchemeReturnsSameInstanceWithSameScheme</code>
+      <code>testWithUserInfoEncodesUsernameAndPassword</code>
+      <code>testWithUserInfoReturnsNewInstanceWithProvidedUser</code>
+      <code>testWithUserInfoReturnsNewInstanceWithProvidedUserAndPassword</code>
+      <code>testWithUserInfoReturnsSameInstanceIfUserAndPasswordAreSameAsBefore</code>
+      <code>testWithUserInfoThrowExceptionIfPasswordIsNotString</code>
+      <code>userInfoProvider</code>
+      <code>utf8PathsDataProvider</code>
+      <code>utf8QueryStringsDataProvider</code>
+      <code>validPorts</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="15">
+      <code>$credential</code>
+      <code>$expected</code>
+      <code>$path</code>
+      <code>$port</code>
+      <code>$port</code>
+      <code>$port</code>
+      <code>$query</code>
+      <code>$query</code>
+      <code>$scheme</code>
+      <code>$scheme</code>
+      <code>$test</code>
+      <code>$url</code>
+      <code>$url</code>
+      <code>$url</code>
+      <code>$user</code>
+    </MixedArgument>
+    <MixedAssignment occurrences="1">
+      <code>$test</code>
+    </MixedAssignment>
+    <MixedOperand occurrences="2">
+      <code>$port</code>
+      <code>$scheme</code>
+    </MixedOperand>
+  </file>
+  <file src="test/functions/MarshalUriFromSapiTest.php">
+    <MixedInferredReturnType occurrences="2">
+      <code>array</code>
+      <code>array</code>
+    </MixedInferredReturnType>
+  </file>
+  <file src="test/functions/NormalizeUploadedFilesTest.php">
+    <MissingReturnType occurrences="4">
+      <code>testCreatesUploadedFileFromFlatFileSpecification</code>
+      <code>testTraversesDenormalizedNestedTreeOfIndicesToExtractUploadedFiles</code>
+      <code>testTraversesNestedFileSpecificationContainingNumericIndicesToExtractUploadedFiles</code>
+      <code>testTraversesNestedFileSpecificationToExtractUploadedFile</code>
+    </MissingReturnType>
+    <MixedArgument occurrences="2">
+      <code>$normalised['my-form']['details']['avatars']</code>
+      <code>$normalised['slide-shows'][0]['slides']</code>
+    </MixedArgument>
+    <MixedArrayAccess occurrences="8">
+      <code>$normalised['my-form']['details']['avatar']</code>
+      <code>$normalised['my-form']['details']['avatars']</code>
+      <code>$normalised['my-form']['details']['avatars']</code>
+      <code>$normalised['my-form']['details']['avatars']</code>
+      <code>$normalised['my-form']['details']['avatars']</code>
+      <code>$normalised['slide-shows'][0]['slides']</code>
+      <code>$normalised['slide-shows'][0]['slides']</code>
+      <code>$normalised['slide-shows'][0]['slides']</code>
+    </MixedArrayAccess>
+    <MixedMethodCall occurrences="6">
+      <code>getClientFilename</code>
+      <code>getClientFilename</code>
+      <code>getClientFilename</code>
+      <code>getClientFilename</code>
+      <code>getClientFilename</code>
+      <code>getClientFilename</code>
+    </MixedMethodCall>
+    <UndefinedInterfaceMethod occurrences="8">
+      <code>$normalised['my-form']</code>
+      <code>$normalised['my-form']</code>
+      <code>$normalised['my-form']</code>
+      <code>$normalised['my-form']</code>
+      <code>$normalised['my-form']</code>
+      <code>$normalised['slide-shows']</code>
+      <code>$normalised['slide-shows']</code>
+      <code>$normalised['slide-shows']</code>
+    </UndefinedInterfaceMethod>
+  </file>
+</files>

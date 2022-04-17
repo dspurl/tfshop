@@ -1,0 +1,45 @@
+{
+    "name": "96qbhy/tt-microapp",
+    "description": "字节跳动小程序sdk",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "qbhy",
+            "email": "96qbhy@gmail.com"
+        }
+    ],
+    "require": {
+        "hanson/foundation-sdk": "^4.0",
+        "ext-json": "*",
+        "php": ">=7.1",
+        "ext-openssl": "*",
+        "ext-curl": "*",
+        "ext-redis": "*"
+    },
+    "require-dev": {
+        "hyperf/utils": "^1.1"
+    },
+    "suggest": {
+        "96qbhy/alipay": "dev-master",
+        "hyperf/guzzle": "^1.1",
+        "hyperf/di": "^1.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Qbhy\\TtMicroApp\\": "src/"
+        },
+        "files": [
+            "src/Support/helper.php"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Qbhy\\TtMicroApp\\LaravelServiceProvider"
+            ]
+        },
+        "hyperf": {
+            "config": "Qbhy\\TtMicroApp\\ConfigProvider"
+        }
+    }
+}

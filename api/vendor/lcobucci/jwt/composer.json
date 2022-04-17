@@ -1,0 +1,60 @@
+{
+    "name": "lcobucci/jwt",
+    "type": "library",
+    "description": "A simple library to work with JSON Web Token and JSON Web Signature",
+    "keywords": [
+        "JWT",
+        "JWS"
+    ],
+    "license": [
+        "BSD-3-Clause"
+    ],
+    "authors": [
+        {
+            "name": "Luís Cobucci",
+            "email": "lcobucci@gmail.com",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": "^7.4 || ^8.0",
+        "ext-hash": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-sodium": "*",
+        "lcobucci/clock": "^2.0"
+    },
+    "require-dev": {
+        "infection/infection": "^0.21",
+        "lcobucci/coding-standard": "^6.0",
+        "mikey179/vfsstream": "^1.6.7",
+        "phpbench/phpbench": "^1.0@alpha",
+        "phpstan/extension-installer": "^1.0",
+        "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan-deprecation-rules": "^0.12",
+        "phpstan/phpstan-phpunit": "^0.12",
+        "phpstan/phpstan-strict-rules": "^0.12",
+        "phpunit/php-invoker": "^3.1",
+        "phpunit/phpunit": "^9.5"
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Lcobucci\\JWT\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Lcobucci\\JWT\\": [
+                "test/_keys",
+                "test/unit",
+                "test/performance"
+            ],
+            "Lcobucci\\JWT\\FunctionalTests\\": "test/functional"
+        }
+    }
+}

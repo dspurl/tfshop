@@ -1,0 +1,18 @@
+language: php
+
+sudo: false
+dist: trusty
+
+php:
+  - 7.1
+  - 7.2
+  - 7.3
+
+before_install:
+  - composer global require phpunit/phpunit ^7.0
+
+before_script:
+  - composer update --dev
+
+script:
+  - /home/travis/.config/composer/vendor/bin/phpunit --configuration phpunit.travis.xml

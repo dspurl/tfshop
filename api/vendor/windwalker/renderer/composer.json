@@ -1,0 +1,38 @@
+{
+    "name": "windwalker/renderer",
+    "type": "windwalker-package",
+    "description": "Windwalker Renderer package",
+    "keywords": ["windwalker", "framework", "renderer"],
+    "homepage": "https://github.com/ventoviro/windwalker-renderer",
+    "license": "LGPL-2.0-or-later",
+    "require": {
+        "php": ">=7.1.3",
+        "windwalker/structure": "~3.0"
+    },
+    "require-dev": {
+        "windwalker/test": "~3.0",
+        "windwalker/dom": "~3.0",
+        "windwalker/filesystem": "~3.0",
+        "twig/twig": "1.*",
+        "illuminate/view": "5.2.*",
+        "mustache/mustache": "2.*",
+        "league/plates": "3.*"
+    },
+    "suggest": {
+        "league/plates": "Install 3.* if you require Plates template engine.",
+        "illuminate/view": "Install 5.* if you require Laravel Blade engine.",
+        "twig/twig": "Install 1.* if you require Twig engine.",
+        "mustache/mustache": "Install 2.* if you require Mustache engine."
+    },
+    "minimum-stability": "beta",
+    "autoload": {
+        "psr-4": {
+            "Windwalker\\Renderer\\": ""
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "3.x-dev"
+        }
+    }
+}

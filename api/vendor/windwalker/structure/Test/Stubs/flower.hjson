@@ -1,0 +1,49 @@
+{
+  flower: "sakura"
+
+  // Live demo.
+  // Type either into the Hjson or JSON input
+  // to convert to the other format.
+  // Reload to reset.
+
+  # comments are useful
+  # specify rate in requests/second
+  "rate": 1000
+
+  // maybe you prefer js style comments
+  /* or if you feel old fashioned */
+
+  # key names do not need to be placed in quotes
+  key: "value"
+
+  # you don't need quotes for strings
+  text: look ma, no quotes!
+
+  # note that for quoteless strings everything up
+  # to the next line is part of the string!
+
+  # commas are optional
+  commas:
+  {
+    one: 1
+    two: 2
+  }
+
+  # trailing commas are allowed
+  trailing:
+  {
+    one: 1,
+    two: 2,
+  }
+
+  # multiline string
+  haiku:
+    '''
+    JSON I love you.
+    But you strangle my expression.
+    This is so much better.
+    '''
+
+  # Obviously you can always use standard JSON syntax as well:
+  favNumbers: [ 1, 2, 3, 6, 42 ]
+}

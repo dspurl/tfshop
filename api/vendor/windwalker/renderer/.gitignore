@@ -1,0 +1,11 @@
+# Development system files #
+.*
+!/.gitignore
+!/.travis.yml
+
+# Composer #
+vendor/*
+composer.lock
+
+# Test #
+phpunit.xml
