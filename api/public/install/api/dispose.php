@@ -64,6 +64,7 @@ switch ($_GET['step']) {
         break;
     case 2: //第二步：添加demo数据
         $shell .= sellCode('php artisan generate:sql');
+        $shell .= sellCode('php artisan storage:link');
         $return = [
             'code' => 1,
             'step' => 3,
