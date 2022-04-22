@@ -24,7 +24,9 @@ export default {
       },
       cartActive: false,
       userActive: false,
-      user:{},
+      user:{
+        cellphone: ''
+      },
       rules: {
         keyword: [
           { validator: validateRemark, trigger: 'blur' }
