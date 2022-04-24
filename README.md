@@ -25,8 +25,7 @@
 <p>master分支为稳定版本，推荐大多数用户下载，new分支为新版本，随时会有更新，未进行测试验收，不推荐用户使用</p>
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
 <p>项目更新已趋于稳定，不会做大的修改，一般更新节奏为1-2个月更新一次，以修复BUG和优化功能，开发插件为主</p>
-<p>已验证版本(经测试后可以正常安装的版本):2.4.0</p>
-<p>当前版本2.4.0</p>
+<p>当前版本3.0.0</p>
 
 介绍
 ------------
@@ -56,9 +55,9 @@ DSSHOP是一套多终端商城解决方案，它采用前后端分离，后端�
 
 演示
 ------------
-- 后台演示地址：<a href="https://dsshop.dswjcms.com/admin">https://dsshop.dswjcms.com/admin</a> 用户名：admin 密码: admin
+- 后台演示地址：<a href="https://dsshop.dswjcms.com/admin">https://dsshop.dswjcms.com/admin</a>
 - 网站演示地址：<a href="https://dsshop.dswjcms.com">https://dsshop.dswjcms.com</a>
-- h5、小程序、安卓演示
+- 小程序、h5、安卓演示（演示包含付费插件，开源以下载后功能为准）
 <table>
     <tr>
     	<td><img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg"></td>
@@ -67,6 +66,26 @@ DSSHOP是一套多终端商城解决方案，它采用前后端分离，后端�
     </tr>
 </table>
 
+兼容
+------------
+<table>
+    <tr>
+    	<th>网站</th>
+        <th>管理后台</th>
+        <th>H5</th>
+        <th>小程序</th>
+        <th>APP</th>
+        <th>桌面</th>
+    </tr>
+    <tr>
+        <td>支持（nuxt服务器渲染，SEO更友好）</td>
+        <td>支持(基于vue-element-admin)</td>   
+        <td>支持(uni-app)</td>
+        <td>支持(除微信小程序外，其它的需要自行做兼容处理)</td>
+        <td>支持(uni-app)</td>
+        <td>支持(PWA)</td>
+    </tr>
+</table>
 
 要求
 ------------
@@ -82,62 +101,20 @@ DSSHOP是一套多终端商城解决方案，它采用前后端分离，后端�
 
 
 
-docker命令行安装(其它安装方式见文档)
+傻瓜式一键安装(其它安装方式见文档)
 ------------
 
 ```shell
 git clone https://gitee.com/dswjcms/dsshop.git
 cd dsshop
-# 安装环境
-docker-compose up -d
-# 安装后端
-docker-compose exec php bash
-composer install
-cp .env.docker .env
-# 如有修改过docker-compose.yml，如数据库密码，请自行修改.env文件
-php artisan migrate
-# 加载demo数据(demo和pure二选一)
-php artisan generate:sql
-# 加载纯净数据
-# php artisan generate:sql pure
-php artisan storage:link
-# 生成APP_KEY
-php artisan key:generate
-# 生成oauth文件
-php artisan passport:keys
-# 创建密码授权管理端
-php artisan passport:client --password
-# 选择`admins`
-# 修改.env，添加OAuth认证信息
-PASSPORT_CLIENT_ID="生成的Client ID"
-PASSPORT_CLIENT_SECRET="生成的 Client secret"
-# 创建密码授权客户端
-php artisan passport:client --password
-# 选择`users`
-# 修改.env，添加OAuth认证信息
-PASSPORT_WEB_ID="生成的Client ID"
-PASSPORT_WEB_SECRET="生成的 Client secret"
-# 搭建网站
-#进入client/nuxt-web/mi目录
+# 配置伪静态(这里不做介绍，参考laravel)，最终能通过访问dsshop.test(这里必须可以通过dsshop.test访问，不然无法安装)访问到dsshop/public目录
+# 运行安装引导
+访问：http://dsshop.test/install
+# 填写必要信息后，即可完成安装，安装只包括后台、h5、小程序
+# 小程序可以直接用小程序开发工具打开dsshop/api/public/mp-weixin,打包好后的小程序无法使用地址配置的选择地址功能
+# 网站需要进入dsshop/api/public/web并执行
 npm install
-npm run dev
-# 搭建后台
-#进入admin/vue2/element-admin-v3目录
-npm install
-#admin/config/dev.env.js or prod.env.js修改自己的api地址
-BASE_API: '"http://172.27.16.1/api/v1/admin/"',  //172.27.16.1是window主机的局域网IP
-npm run dev
-# 默认后台账号、密码
-admin
-admin
-# 搭建H5
-#进入client/uni-app/mix-mall
-# HBuilder X导入client/uni-app/mix-mall目录
-# client/uni-app/mix-mall/utils/config.js修改服务器地址
-# 修改`BaseURL`为API访问地址
-# `secret`有个默认密钥，如需自定义，只需在`.env`中配置`PROJECT_KEY`
-# HBuilder X可以通过浏览器、微信小程序运行项目，也可以直接发布项目，但需要配置账号，具体请参考HBuilder X
-
+npm start
 ```
 常见错误
 ------------
@@ -152,12 +129,15 @@ admin
 官方插件
 ------------
 > 插件可定制开发，也可自行开发，项目内置插件开发功能
-<p>优惠券</p>
-<p>评价</p>
-<p>栏目文章</p>
-<p>分销功能</p>
-
-
+<p>优惠券(免费)</p>
+<p>评价(免费)</p>
+<p>栏目文章(免费)</p>
+<p>分销功能(免费)</p>
+<p>产品参数模板(付费)</p>
+<p>扫码登录(付费)</p>
+<p>积分(付费)</p>
+<p>积分商城(付费)</p>
+<p>积分抽奖【大转盘、九宫格、老虎机】(付费)</p>
 
 功能介绍
 ------------
@@ -200,11 +180,11 @@ admin
 - [vue-element-admin V3.*](https://github.com/PanJiaChen/vue-element-admin/blob/tag/3.11.0/README.zh-CN.md "vue-element-admin")
 - [element](https://element.eleme.cn/ "element")
 
-
-加入我们
+版权说明
 ------------
-- 有问题可以直接discussions，请详细说明问题，如果你不习惯用discussions，也可以通过issue。
-- dsshop交流群，微信扫码进群
-<p align="center">
-  <img src="https://dspurl.github.io/image/12.png" width="150">
-</p>
+- 通过官网创建的应用可享受免费用于商业运营，创建的应用仅用于学习，商用需授权！！！
+
+联系我们
+------------
+- 开源项目可能存在BUG，如发现问题，可通过Github的issue进行提交，请根据提问格式提问，不符合的一律不回答。
+- 有商业服务需求的，请通过官网联系在线客服，有专人对接
