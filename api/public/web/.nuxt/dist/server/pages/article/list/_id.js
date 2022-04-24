@@ -757,7 +757,7 @@ function pv(id) {
       meta: [{
         hid: 'index',
         name: this.data.column.name + '-' + "DSSHOP商城-跨终端商城解决方案",
-        content: this.data.column.keywords ? this.data.column.keywords : "商城网店系统|商城|网店|免费商城|免费网店"
+        content: this.data.column.keywords ? this.data.column.keywords : "商城网店系统,商城,网店,免费商城,免费网店"
       }, {
         hid: 'description',
         name: 'description',

@@ -2249,7 +2249,7 @@ __webpack_require__.r(__webpack_exports__);
       meta: [{
         hid: 'index',
         name: this.goodDetail.name + '-' + "DSSHOP商城-跨终端商城解决方案",
-        content: this.goodDetail.keywords ? this.goodDetail.keywords : "商城网店系统|商城|网店|免费商城|免费网店"
+        content: this.goodDetail.keywords ? this.goodDetail.keywords : "商城网店系统,商城,网店,免费商城,免费网店"
       }, {
         hid: 'description',
         name: 'description',
@@ -2257,7 +2257,7 @@ __webpack_require__.r(__webpack_exports__);
       }, {
         hid: 'keywords',
         name: 'keywords',
-        content: this.goodDetail.keywords ? this.goodDetail.keywords : "商城网店系统|商城|网店|免费商城|免费网店"
+        content: this.goodDetail.keywords ? this.goodDetail.keywords : "商城网店系统,商城,网店,免费商城,免费网店"
       }]
     };
   },

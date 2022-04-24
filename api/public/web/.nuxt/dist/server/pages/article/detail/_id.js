@@ -251,7 +251,7 @@ var article = __webpack_require__(254);
       meta: [{
         hid: 'index',
         name: this.data.name + '-' + "DSSHOP商城-跨终端商城解决方案",
-        content: this.data.keywords ? this.data.keywords : "商城网店系统|商城|网店|免费商城|免费网店"
+        content: this.data.keywords ? this.data.keywords : "商城网店系统,商城,网店,免费商城,免费网店"
       }, {
         hid: 'description',
         name: 'description',

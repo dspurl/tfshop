@@ -38,7 +38,8 @@
     "disableUseStrict": false,
     "showES6CompileOption": false,
     "useCompilerPlugins": false,
-    "ignoreUploadUnusedFiles": true
+    "ignoreUploadUnusedFiles": true,
+    "minifyWXML": true
   },
   "compileType": "miniprogram",
   "libVersion": "",

@@ -145,6 +145,7 @@ import Banner from '../../api/banner'
 				await Banner.getList({
 					limit: 5,
 					type: 0,
+					state: 0,
 					sort: '+sort'
 				},function(res){
 					that.carouselList = res.data
@@ -154,6 +155,7 @@ import Banner from '../../api/banner'
 				await Banner.getList({
 					type: 1,
 					limit: 1,
+					state: 0,
 					sort: '+sort'
 				},function(res){
 					that.adData = res.data[0]

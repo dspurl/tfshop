@@ -48944,7 +48944,9 @@ __webpack_require__.r(__webpack_exports__);
       },
       cartActive: false,
       userActive: false,
-      user: {},
+      user: {
+        cellphone: ''
+      },
       rules: {
         keyword: [{
           validator: validateRemark,
@@ -59872,7 +59874,7 @@ async function setContext(app, context) {
         "APP_NAME": "DSSHOP商城-跨终端商城解决方案",
         "APP_SHORT_NAME": "DSSHOP",
         "APP_DESCRIPTION": "免费开源可商用，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端",
-        "APP_KEYWORD": "商城网店系统|商城|网店|免费商城|免费网店",
+        "APP_KEYWORD": "商城网店系统,商城,网店,免费商城,免费网店",
         "APP_ICP": "浙ICP备110120119（本站为演示站，不出售任何商品，商品信息来源于网络）",
         "API_URL_BROWSER": "http://dsshop.test/api/v1/app/",
         "API_URL": "http://dsshop.test/api/v1/app/",
@@ -62198,23 +62200,23 @@ const components = {
   MiniHeader: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 153)).then(c => wrapFunctional(c.default || c)),
   VueVideo: () => __webpack_require__.e(/* import() | components/vue-video */ 14).then(__webpack_require__.bind(null, 235)).then(c => wrapFunctional(c.default || c)),
   AddressList: () => __webpack_require__.e(/* import() | components/address-list */ 2).then(__webpack_require__.bind(null, 192)).then(c => wrapFunctional(c.default || c)),
-  Pagination: () => __webpack_require__.e(/* import() | components/pagination */ 4).then(__webpack_require__.bind(null, 174)).then(c => wrapFunctional(c.default || c)),
   JsCartHeader: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 66)).then(c => wrapFunctional(c.default || c)),
   JsFooter: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 67)).then(c => wrapFunctional(c.default || c)),
   JsHeader: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 68)).then(c => wrapFunctional(c.default || c)),
   JsMiniFooter: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 70)).then(c => wrapFunctional(c.default || c)),
   JsMiniHeader: () => Promise.resolve(/* import() */).then(__webpack_require__.t.bind(null, 69, 7)).then(c => wrapFunctional(c.default || c)),
   JsVueVideo: () => __webpack_require__.e(/* import() | components/js-vue-video */ 3).then(__webpack_require__.bind(null, 210)).then(c => wrapFunctional(c.default || c)),
+  Pagination: () => __webpack_require__.e(/* import() | components/pagination */ 4).then(__webpack_require__.bind(null, 174)).then(c => wrapFunctional(c.default || c)),
+  UploadAvatarImage: () => __webpack_require__.e(/* import() | components/upload-avatar-image */ 10).then(__webpack_require__.bind(null, 430)).then(c => wrapFunctional(c.default || c)),
+  UploadInsertImage: () => __webpack_require__.e(/* import() | components/upload-insert-image */ 11).then(__webpack_require__.bind(null, 431)).then(c => wrapFunctional(c.default || c)),
   Sku: () => __webpack_require__.e(/* import() | components/sku */ 6).then(__webpack_require__.bind(null, 234)).then(c => wrapFunctional(c.default || c)),
   Sku2param: () => __webpack_require__.e(/* import() | components/sku2param */ 9).then(__webpack_require__.bind(null, 201)).then(c => wrapFunctional(c.default || c)),
   SkuUtils: () => __webpack_require__.e(/* import() | components/sku-utils */ 8).then(__webpack_require__.bind(null, 191)).then(c => wrapFunctional(c.default || c)),
-  UploadAvatarImage: () => __webpack_require__.e(/* import() | components/upload-avatar-image */ 10).then(__webpack_require__.bind(null, 430)).then(c => wrapFunctional(c.default || c)),
-  UploadInsertImage: () => __webpack_require__.e(/* import() | components/upload-insert-image */ 11).then(__webpack_require__.bind(null, 431)).then(c => wrapFunctional(c.default || c)),
   AddressJsList: () => __webpack_require__.e(/* import() | components/address-js-list */ 1).then(__webpack_require__.bind(null, 190)).then(c => wrapFunctional(c.default || c)),
   PaginationJs: () => __webpack_require__.e(/* import() | components/pagination-js */ 5).then(__webpack_require__.bind(null, 171)).then(c => wrapFunctional(c.default || c)),
-  SkuJs: () => __webpack_require__.e(/* import() | components/sku-js */ 7).then(__webpack_require__.bind(null, 209)).then(c => wrapFunctional(c.default || c)),
   UploadJsAvatarImage: () => __webpack_require__.e(/* import() | components/upload-js-avatar-image */ 12).then(__webpack_require__.bind(null, 310)).then(c => wrapFunctional(c.default || c)),
-  UploadJsInsertImage: () => __webpack_require__.e(/* import() | components/upload-js-insert-image */ 13).then(__webpack_require__.bind(null, 312)).then(c => wrapFunctional(c.default || c))
+  UploadJsInsertImage: () => __webpack_require__.e(/* import() | components/upload-js-insert-image */ 13).then(__webpack_require__.bind(null, 312)).then(c => wrapFunctional(c.default || c)),
+  SkuJs: () => __webpack_require__.e(/* import() | components/sku-js */ 7).then(__webpack_require__.bind(null, 209)).then(c => wrapFunctional(c.default || c))
 };
 
 for (const name in components) {
@@ -62755,7 +62757,7 @@ async function createApp(ssrContext, config = {}) {
       }, {
         "hid": "index",
         "name": "DSSHOP商城-跨终端商城解决方案",
-        "content": "商城网店系统|商城|网店|免费商城|免费网店"
+        "content": "商城网店系统,商城,网店,免费商城,免费网店"
       }, {
         "name": "viewport",
         "content": "width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"
@@ -62766,7 +62768,7 @@ async function createApp(ssrContext, config = {}) {
       }, {
         "hid": "keywords",
         "name": "keywords",
-        "content": "商城网店系统|商城|网店|免费商城|免费网店"
+        "content": "商城网店系统,商城,网店,免费商城,免费网店"
       }],
       "link": [{
         "rel": "icon",

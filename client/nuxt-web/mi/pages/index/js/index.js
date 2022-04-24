@@ -24,6 +24,7 @@ export default {
         bannerList({
           limit: 5,
           type: 0,
+          state: 0,
           sort: '+sort'
         }),
         goodCategory({
@@ -33,6 +34,9 @@ export default {
           is_recommend: 1
         }),
       ])
+      bannerData.data.forEach(item=>{
+        item.url = item.url ? item.url.replace('?id=','/') : ''
+      })
       return {
         goodList: goodData.data,
         bannerList: bannerData.data,
@@ -88,9 +92,11 @@ export default {
       bannerList({
         limit: 1,
         type: 1,
+        state: 0,
         sort: '+sort'
       }).then(response => {
         this.banner = response.data[0]
+        this.banner.url = this.banner.url ? this.banner.url.replace('?id=','/') : ''
       })
     }
   }

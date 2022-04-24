@@ -81,12 +81,16 @@ function getList(query) {
       }), getList({
         limit: 5,
         type: 0,
+        state: 0,
         sort: '+sort'
       }), Object(good["c" /* goodCategory */])({
         tree: true
       }), Object(good["c" /* goodCategory */])({
         is_recommend: 1
       })]);
+      bannerData.data.forEach(item => {
+        item.url = item.url ? item.url.replace('?id=', '/') : '';
+      });
       return {
         goodList: goodData.data,
         bannerList: bannerData.data,
@@ -150,9 +154,11 @@ function getList(query) {
       getList({
         limit: 1,
         type: 1,
+        state: 0,
         sort: '+sort'
       }).then(response => {
         this.banner = response.data[0];
+        this.banner.url = this.banner.url ? this.banner.url.replace('?id=', '/') : '';
       });
     }
 
