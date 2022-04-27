@@ -11,21 +11,34 @@
 			<text class="cell-tit">隐私政策</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
+		<view class="service" v-if="service.id">
+			<button class="cu-btn round lg bg-red" @click="goService()">
+				<text class="cuIcon-servicefill"></text>
+				联系客服
+			</button>
+		</view>
 	</view>
 </template>
 
 <script>
+	import {config} from '@/api/service'
 	import {  
 	    mapMutations  
 	} from 'vuex';
 	export default {
 		data() {
 			return {
-				
+				service: {
+					url: '',
+					id: ''
+				}
 			};
 		},
 		onShow(){
 			this.loginCheck()
+		},
+		onLoad(){
+			this.getConfig()
 		},
 		methods:{
 			...mapMutations(['loginCheck']),
@@ -33,6 +46,28 @@
 				uni.navigateTo({
 					url
 				})  
+			},
+			// 获取客服配置
+			getConfig(){
+				const that = this
+				config({},function(res){
+					that.service = res
+				})
+			},
+			// 弹出客服
+			goService(){
+				// #ifdef H5
+				window.location.href = this.service.url
+				// #endif
+				// #ifdef MP-WEIXIN
+				wx.openCustomerServiceChat({
+				  extInfo: {url: this.service.url},
+				  corpId: this.service.id,
+				  success(res) {
+					  console.log('res', res)
+				  }
+				})
+				// #endif
 			}
 		}
 	}
@@ -41,6 +76,13 @@
 <style lang='scss'>
 	page{
 		background: $page-color-base;
+	}
+	.service{
+		text-align: center;
+		margin-top: 30rpx;
+		.cu-btn.lg{
+			padding: 0 80rpx;
+		}
 	}
 	.logo{
 		justify-content: center;

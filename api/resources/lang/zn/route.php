@@ -161,6 +161,7 @@ return [
         'notificationDetail' => '通知详情',
         'changeCellphone' => '更换手机号',
         'amendPassword' => '修改密码',
+        'serviceConfig' => '获取客服配置',
         // client插件
     ]
 ];

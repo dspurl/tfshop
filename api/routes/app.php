@@ -78,5 +78,6 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::get('notification/detail/{id}', 'NotificationController@detail')->name('client.notificationDetail');    //通知详情
         Route::post('changeCellphone', 'AppController@changeCellphone')->name('client.changeCellphone');    //更换手机号
         Route::post('amendPassword', 'LoginController@amendPassword')->name('client.amendPassword');    //修改密码
+        Route::get('serviceConfig', 'ServiceController@config')->name('client.serviceConfig');    //获取客服配置
     });
 });
