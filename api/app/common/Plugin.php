@@ -1306,7 +1306,7 @@ class Plugin
                 $this->createFile('list.client.' . $structure[1] . '.ds', [], [], $pages . '/' . $name . '/list.vue');
                 $this->createFile('list.client.' . $structure[1] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/list.js');
                 Storage::disk('root')->put($pages . '/' . $name . '/scss/list.scss', '');
-                $this->createFile('detail.client.' . $structure[1] . '.ds', [], [], $pages . '/' . $name . '/detail.vue');
+                $this->createFile('detail.client.' . $structure[1] . '.ds', [], [], $pages . '/' . $name . '/Detail.vue');
                 $this->createFile('detail.client.' . $structure[1] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/detail.js');
                 Storage::disk('root')->put($pages . '/' . $name . '/scss/detail.scss', '');
                 $this->createFile('api.client.' . $structure[1] . '.ds', ['/{{ name }}/'], [$name], $path . '/api/' . $name . '.js');
@@ -1460,7 +1460,7 @@ class Plugin
         // 生成edit模板
         $this->createFile('edit.admin.ds', ['/{{ name }}/'], [$name], $path . '/edit.vue');
         // 生成detail模板
-        $this->createFile('detail.admin.ds', ['/{{ detail }}/'], [$detail], $path . '/components/detail.vue');
+        $this->createFile('detail.admin.ds', ['/{{ detail }}/'], [$detail], $path . '/components/Detail.vue');
         $this->createFile('detail.admin.js.ds', ['/{{ name }}/', '/{{ ruleForm }}/', '/{{ rules }}/', '/{{ api }}/'], [$name, rtrim($ruleForm, ','), rtrim($rules, ','), $api], $path . '/js/detail.js');
     }
 
