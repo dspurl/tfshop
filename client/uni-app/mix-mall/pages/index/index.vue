@@ -76,6 +76,28 @@
 		<view class="ad-1">
 			<image v-if="adData.resources" :src="adData.resources.img" mode="scaleToFill" lazy-load  @click="navTo(adData.url)"></image>
 		</view>
+		<!-- 秒杀 -->
+		<view class="seckill-section m-t" v-if="isSeckill && seckill.length">
+			<navigator url="../seckill/list" hover-class="none" class="s-header">
+				<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
+				<text class="tip">{{seckillActiveTime}}点场</text>
+				<count-down-time :time="seckillTime" @end="endSeckillTime()"></count-down-time>
+				<text class="yticon icon-you"></text>
+			</navigator>
+			<scroll-view class="floor-list" scroll-x>
+				<view class="scoll-wrapper">
+					<view 
+						v-for="(item, index) in seckill" :key="index"
+						class="floor-item"
+						@click="navToSeckillPage(item)"
+					>
+						<image :src="item.resources.img | smallImage(250)" mode="aspectFill"></image>
+						<text class="title clamp">{{item.name}}</text>
+						<text class="price">￥{{item.price[0] | 1000}}</text>
+					</view>
+				</view>
+			</scroll-view>
+		</view>
 		<!-- 为你推荐 -->
 		<view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
@@ -106,8 +128,14 @@
 <script>
 import Good from '../../api/good'
 import Banner from '../../api/banner'
+import moment from 'moment'
+import {getList as seckillList} from '@/api/seckill'
+import CountDownTime from '@/pages/seckill/components/CountDownTime';
+import {verifyPlugin} from '@/api/plugin'
 	export default {
-
+		components: {
+			CountDownTime
+		},
 		data() {
 			return {
 				modalName: null,
@@ -119,7 +147,11 @@ import Banner from '../../api/banner'
 				carouselList: [],
 				goodsList: [],
 				adData: {},
-				ctegory:[]
+				ctegory:[],
+				isSeckill: false,
+				seckill: [],
+				seckillTime: 0,
+				seckillActiveTime: ''
 			};
 		},
 
@@ -134,6 +166,7 @@ import Banner from '../../api/banner'
 		},
 		onShow(){
 			getApp().showDsshopCartNumber()
+			this.getVerifyPlugin()
 		},
 		methods: {
 			/**
@@ -195,6 +228,13 @@ import Banner from '../../api/banner'
 					url: `/pages/product/detail?id=${id}`
 				})
 			},
+			// 秒杀详情页
+			navToSeckillPage(item) {
+				let id = item.good_id;
+				uni.navigateTo({
+					url: `/pages/product/detail?id=${id}`
+				})
+			},
 			//跳转
 			navTo(url){
 				if(url){
@@ -216,6 +256,37 @@ import Banner from '../../api/banner'
 				uni.setStorageSync('applyDsshopGuidanceMy', true)
 			},
 			// #endif
+			getVerifyPlugin(){
+				const that = this
+				verifyPlugin(['seckill'],function(res){
+					if(res.seckill){
+						that.isSeckill = true
+						that.getSeckill()
+					}
+				})
+			},
+			// 获取秒杀列表
+			getSeckill(){
+				let time = moment().format('YYYY-MM-DD HH:00:00')
+				let that = this
+				if(moment().format('HH')%2 !== 0){
+					time = moment().subtract(1, 'hour').format('YYYY-MM-DD HH:00:00')
+				}
+				this.seckillActiveTime = moment(time, "YYYY-MM-DD HH:00:00").format('HH')
+				this.seckillTime = (moment(time, "YYYY-MM-DD HH:00:00").add(2, 'hour')-moment().valueOf())/1000
+				seckillList({
+					limit: 10,
+					time: time,
+					sort: '-id',
+					state: 1
+				},function(res){
+					that.seckill = res.data
+				})
+			},
+			// 秒杀倒计时结束
+			endSeckillTime() {
+			    this.getSeckill()
+			}
 		},
 		// #ifndef MP
 		// 标题栏input搜索框点击

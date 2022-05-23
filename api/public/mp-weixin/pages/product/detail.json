@@ -4,6 +4,7 @@
     "share": "/components/share",
     "sku": "/components/sku/index",
     "u-parse": "/components/gaoyia-parse/parse",
-    "coupon": "/pages/coupon/components/index"
+    "coupon": "/pages/coupon/components/index",
+    "count-down-time": "/pages/seckill/components/CountDownTime"
   }
 }

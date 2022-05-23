@@ -52,14 +52,16 @@ export default {
         ],
       },
       verify: {
-        coupon: false
-      }
+        coupon: false,
+        seckill: false
+      },
+      isSeckill: false
     }
   },
   async asyncData (ctx) {
     try {
       let [ verifyPluginData ] = await Promise.all([
-        verifyPlugin(['coupon']),
+        verifyPlugin(['coupon','integral','integralCommodity', 'seckill']),
       ]);
       return {
         verify: verifyPluginData
@@ -82,8 +84,12 @@ export default {
       let specification = null
       this.ruleForm.indentCommodity = Object.values(this.store.get(process.env.CACHE_PR + 'OrderList'))
       const data = []
+      let seckill = false
       this.ruleForm.indentCommodity.forEach(item=>{
         this.total+= item.price * item.number
+        if(this.verify.seckill){
+          seckill = item.good.seckill
+        }
         if(item.good_sku){
           specification = null;
           item.good_sku.product_sku.forEach(item2 => {
@@ -101,7 +107,12 @@ export default {
           })
         }
       })
-      this.getDetailData(data)
+      if(this.verify.seckill && seckill){
+        this.isSeckill = true
+      }
+      if(this.verify.integralCommodity) {
+        this.getDetailData(data)
+      }
     },
     //中奖奖品订单
     getIntegralDrawGoodList() {

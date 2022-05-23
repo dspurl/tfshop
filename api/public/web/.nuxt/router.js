@@ -17,6 +17,7 @@ const _122824c4 = () => interopDefault(import('..\\pages\\money\\success.vue' /*
 const _52acd0a0 = () => interopDefault(import('..\\pages\\pass\\findPassword.vue' /* webpackChunkName: "pages/pass/findPassword" */))
 const _90b15126 = () => interopDefault(import('..\\pages\\pass\\login.vue' /* webpackChunkName: "pages/pass/login" */))
 const _8df02362 = () => interopDefault(import('..\\pages\\pass\\register.vue' /* webpackChunkName: "pages/pass/register" */))
+const _1a5929fc = () => interopDefault(import('..\\pages\\seckill\\list.vue' /* webpackChunkName: "pages/seckill/list" */))
 const _a53b5c04 = () => interopDefault(import('..\\pages\\user\\address.vue' /* webpackChunkName: "pages/user/address" */))
 const _ed78ff40 = () => interopDefault(import('..\\pages\\user\\cancel.vue' /* webpackChunkName: "pages/user/cancel" */))
 const _310bf6d6 = () => interopDefault(import('..\\pages\\user\\cellphone.vue' /* webpackChunkName: "pages/user/cellphone" */))
@@ -43,6 +44,8 @@ const _505742fa = () => interopDefault(import('..\\pages\\money\\js\\success.js'
 const _7d7cf746 = () => interopDefault(import('..\\pages\\pass\\js\\findPassword.js' /* webpackChunkName: "pages/pass/js/findPassword" */))
 const _868ae3ea = () => interopDefault(import('..\\pages\\pass\\js\\login.js' /* webpackChunkName: "pages/pass/js/login" */))
 const _03c1ab37 = () => interopDefault(import('..\\pages\\pass\\js\\register.js' /* webpackChunkName: "pages/pass/js/register" */))
+const _7de3c294 = () => interopDefault(import('..\\pages\\seckill\\components\\CountDownTime.vue' /* webpackChunkName: "pages/seckill/components/CountDownTime" */))
+const _1779a8b8 = () => interopDefault(import('..\\pages\\seckill\\js\\list.js' /* webpackChunkName: "pages/seckill/js/list" */))
 const _2256c0a0 = () => interopDefault(import('..\\pages\\user\\coupon\\components\\index.vue' /* webpackChunkName: "pages/user/coupon/components/index" */))
 const _91e16bac = () => interopDefault(import('..\\pages\\user\\coupon\\list.vue' /* webpackChunkName: "pages/user/coupon/list" */))
 const _009411fc = () => interopDefault(import('..\\pages\\user\\finance\\list.vue' /* webpackChunkName: "pages/user/finance/list" */))
@@ -150,6 +153,10 @@ export const routerOptions = {
     component: _8df02362,
     name: "pass-register"
   }, {
+    path: "/seckill/list",
+    component: _1a5929fc,
+    name: "seckill-list"
+  }, {
     path: "/user/address",
     component: _a53b5c04,
     name: "user-address"
@@ -253,6 +260,14 @@ export const routerOptions = {
     path: "/pass/js/register",
     component: _03c1ab37,
     name: "pass-js-register"
+  }, {
+    path: "/seckill/components/CountDownTime",
+    component: _7de3c294,
+    name: "seckill-components-CountDownTime"
+  }, {
+    path: "/seckill/js/list",
+    component: _1779a8b8,
+    name: "seckill-js-list"
   }, {
     path: "/user/coupon/components",
     component: _2256c0a0,

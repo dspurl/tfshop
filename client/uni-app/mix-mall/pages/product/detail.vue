@@ -13,8 +13,34 @@
 				</swiper-item>
 			</swiper>
 		</view>
-
-		<view class="introduce-section">
+		<!-- 秒杀 -->
+		<view class="seckill-box" v-if="isSeckill"  :class="{'active': getList.state === 1}">
+			<view class="info">
+				<view class="price-box">
+					<view class="name">秒杀价</view>
+					<view class="price"><span>¥</span>
+						<template v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</template>
+						<template v-else-if="getList.price_show.length === 1">{{ getList.price_show[0] }}</template>
+					</view>
+				</view>
+				<view class="original-box">
+					<view class="name" v-if="getList.state === 1">即将恢复¥
+						<template v-if="getList.market_price_show.length > 1">{{ getList.market_price_show[1] }}</template>
+						<template v-else-if="getList.market_price_show.length === 1">{{ getList.market_price_show[0] }}</template>
+					</view>
+					<view v-else class="name">
+						即将开始
+					</view>
+				</view>
+			</view>
+			<view class="countdown-box">
+				<view class="triangle"></view>
+				<view class="name"><text class="cuIcon-countdown"></text>限时秒杀</view>
+				<count-down-time :time="getList.seckillTime" @end="endTime()"></count-down-time>
+			</view>
+		</view>
+		<view v-if="isSeckill" class="seckill-abstract">{{getList.abstract}}</view>
+		<view class="introduce-section" v-if="!isSeckill">
 			<text class="title">{{ getList.name }}</text>
 			<view class="price-box" v-if="inventoryFlag">
 				<text class="price-tip">¥</text>
@@ -28,7 +54,6 @@
 				</template>
 			</view>
 			<view class="bot-row">
-				<!-- <text>销量: {{getList.sales}}</text> -->
 				<text>库存: {{ getList.inventory_show }}</text>
 				<text>销量: {{ getList.sales}}</text>
 			</view>
@@ -44,7 +69,7 @@
 				</view>
 			</block>
 			<block v-else>
-				<view v-if="specificationDefaultDisplay" class="c-row b-b" @click="toggleSpec(true)">
+				<view v-if="specificationDefaultDisplay && !isSeckill" class="c-row b-b" @click="toggleSpec(true)">
 					<text class="tit">购买类型</text>
 					<view class="con">
 						<text class="selected-text">{{ specificationDefaultDisplay }}</text>
@@ -53,7 +78,7 @@
 				</view>
 			</block>
 			<!-- 优惠券按钮 -->
-			<view v-if="verify.coupon" class="c-row b-b" @click="changeShow(true)">
+			<view v-if="verify.coupon && !isSeckill" class="c-row b-b" @click="changeShow(true)">
 				<text class="tit">优惠券</text>
 				<text class="con t-r red"></text>
 				<text class="yticon icon-you"></text>
@@ -104,6 +129,10 @@
 				<button type="primary" class=" action-btn no-border buy-now-btn" disabled>立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>加入购物车</button>
 			</view>
+			<view class="action-btn-group" v-else-if="isSeckill">
+				<button type="primary" class=" action-btn no-border buy-now-btn" :disabled="getList.state === 0" @click="toggleSpec(true)">立即购买</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>加入购物车</button>
+			</view>
 			<view class="action-btn-group" v-else>
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec(false)">加入购物车</button>
@@ -113,7 +142,7 @@
 		<!-- 规格-模态层弹窗 -->
 		<view class="popup spec" :class="specClass" @touchmove.stop.prevent="stopPrevent" @click="toggleSpec">
 			<view class="mask"></view>
-			<view class="layer attr-content" @click.stop="stopPrevent"><sku :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku></view>
+			<view class="layer attr-content" @click.stop="stopPrevent"><sku ref="sku" :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku></view>
 		</view>
 		<!-- 已删除或还未发布-->
 		<view v-if="getList.is_delete || getList.is_show !== 1" class="sold-out padding-sm">商品已经下架了~</view>
@@ -133,6 +162,9 @@ import {good as commentGood} from '@/api/comment'
 import coupon from '../coupon/components/index.vue'
 import { getList as couponList } from '@/api/coupon'
 import {verifyPlugin} from '@/api/plugin'
+import CountDownTime from '@/pages/seckill/components/CountDownTime';
+import {detail as seckillDetail} from '@/api/seckill'
+import moment from 'moment'
 import {
 		mapState,
 		mapMutations
@@ -142,7 +174,8 @@ export default {
 		share,
 		sku,
 		uParse,
-		coupon
+		coupon,
+		CountDownTime
 	},
 	data() {
 		return {
@@ -169,8 +202,10 @@ export default {
 			couponShow: false,
 			verify: {
 				coupon: false,
-				comment: false
-			}
+				comment: false,
+				seckill: false
+			},
+			isSeckill: false
 		};
 	},
 	async onLoad(options) {
@@ -187,7 +222,7 @@ export default {
 	methods: {
 		getVerifyPlugin(){
 			const that = this
-			verifyPlugin(['coupon','comment'],function(res){
+			verifyPlugin(['coupon','comment','seckill'],function(res){
 				that.verify = res
 				if (that.id) {
 					that.loadData(that.id);
@@ -206,7 +241,7 @@ export default {
 		async loadData(id) {
 			// 商品详情
 			const that = this;
-			await Good.detail(id, {}, function(res) {
+			await Good.detail(id, {}, async function(res) {
 				if (res.resources_many.length > 0) {
 					res.resources_many.forEach((item,index)=>{
 						if(item.depict.indexOf('_video') !== -1){
@@ -221,6 +256,62 @@ export default {
 					})
 				}
 				that.getList = res
+				// 秒杀
+				if(that.verify.seckill){
+					await seckillDetail(id,{},function(response){
+						if(response){
+							that.isSeckill = true
+							that.getList.name = response.name
+							that.getList.abstract = response.abstract
+							that.getList.details = response.details
+							that.getList.state = response.state
+							that.getList.resources_many = response.resources_many
+							that.getList.seckill_time = response.time
+							that.getList.seckill = true
+							that.getList.seckill_id = response.id // 秒杀ID
+							that.getList.price_show = response.price_show
+							that.getList.market_price_show = response.market_price_show
+							if(response.state){
+								that.getList.seckillTime = (moment(response.end_time).valueOf()-moment().valueOf())/1000
+							}else{
+								that.getList.seckillTime = (moment(response.time).valueOf()-moment().valueOf())/1000
+							}
+							const good_sku = JSON.parse(JSON.stringify(that.getList.good_sku))
+							let seckill_sku = {}
+							that.getList.good_sku = []
+							good_sku.forEach(item =>{
+								seckill_sku = response.seckill_sku.find(items => items.good_sku_id === item.id)
+								if(seckill_sku){
+									item.market_price = seckill_sku.price /100  // 售价
+									item.price = seckill_sku.seckill_price /100 // 原价
+									item.resources = seckill_sku.resources // sku图片
+									item.seckill_sku_id = seckill_sku.id // 秒杀SKU ID
+									item.inventory = seckill_sku.residue_limit // 库存
+									// 判断秒杀是不限制用户购买量
+									if(response.is_purchase_number === 1) {
+										that.getList.purchase_number = response.purchase_number
+									}
+									that.getList.good_sku.push(item)
+								}
+							})
+							that.resources_many = []
+							if (res.resources_many.length > 0) {
+								res.resources_many.forEach((item,index)=>{
+									if(item.depict.indexOf('_video') !== -1){
+										item.type = 'video'
+										that.resources_many.unshift(item)
+									} else if(item.depict.indexOf('_poster') !== -1){
+										that.poster = item.img
+									} else {
+										item.type = 'img'
+										that.resources_many.push(item)
+									}
+								})
+							}
+							that.$refs.sku._setData(that.getList.good_sku)
+						}
+					})
+				}
 				if(that.getList.good_sku.length<=0){
 					that.inventoryFlag = false
 				}
@@ -360,6 +451,10 @@ export default {
 					that.couponList.push(data)
 				})
 			})
+		},
+		// 秒杀倒计时结束
+		endTime(){
+		  this.getVerifyPlugin()
 		}
 	}
 };
@@ -445,6 +540,89 @@ page {
 			flex: 1;
 		}
 	}
+}
+/* 秒杀 */
+.seckill-box{
+	display: flex;
+	.info{
+		background: #E4E7ED;
+		flex: 1;
+		padding: 10rpx 30rpx;
+		.price-box{
+			display: flex;
+			color: #fa524c;
+			margin-bottom: 10rpx;
+			.name{
+				font-size: 24rpx;
+				position: relative;
+				top: 10rpx;
+				margin-right: 8rpx;
+			}
+			.price{
+				span{
+					font-size:24rpx;
+				}
+				font-size: 40rpx;
+				font-weight: bold;
+			}
+		}
+		.original-box{
+			.name{
+				font-size:24rpx;
+				color: #666;
+			}
+		}
+	}
+	.countdown-box{
+		background: #d7dae1;
+		padding: 10rpx 30rpx;
+		position: relative;
+		.name{
+			margin-bottom: 10rpx;
+		}
+		.triangle{
+			position: absolute;
+			top: 45rpx;
+			left: -15rpx;
+			width: 0;
+			height: 0;
+			border-top: 10rpx solid transparent;
+			border-right: 15rpx solid #d7dae1;
+			border-bottom: 10rpx solid transparent;
+		}
+		.cuIcon-countdown{
+			font-size: 40rpx;
+			position: relative;
+			top: 2rpx;
+		}
+		font-size: 30rpx;
+	}
+	&.active{
+		.info{
+			background: #f42e90;
+			.price-box{
+				color: #fff;
+			}
+			.original-box{
+				.name{
+					font-size:24rpx;
+					color:#e8e0e0;
+				}
+			}
+		}
+		.countdown-box{
+			background: #fbbd08;
+			.triangle{
+				border-right: 15rpx solid #fbbd08;
+			}
+		}
+	}
+}
+.seckill-abstract{
+	background:#fa524c;
+	color: #fff;
+	font-size: 24rpx;
+	padding: 10rpx 30rpx;
 }
 /* 分享 */
 .share-section {

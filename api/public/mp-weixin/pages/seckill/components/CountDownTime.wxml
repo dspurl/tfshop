@@ -1,0 +1,1 @@
+<view class="background-box _div data-v-d6672682"><block wx:if="{{days>0}}"><view class="background _div data-v-d6672682">{{days}}</view>天</block><view class="background _div data-v-d6672682">{{$root.g0}}</view>:<view class="background _div data-v-d6672682">{{$root.g1}}</view>:<view class="background _div data-v-d6672682">{{$root.g2}}</view></view>

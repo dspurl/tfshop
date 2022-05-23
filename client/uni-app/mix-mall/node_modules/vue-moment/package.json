@@ -1,0 +1,76 @@
+{
+  "name": "vue-moment",
+  "version": "4.1.0",
+  "description": "Handy Moment.js filters for your Vue.js project",
+  "main": "dist/vue-moment.js",
+  "scripts": {
+    "test": "jest",
+    "eslint": "eslint *.js",
+    "build": "yarn bili --input vue-moment.js --plugins babel --format umd,es,cjs,umd-min"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/brockpetrie/vue-moment.git"
+  },
+  "keywords": [
+    "vue",
+    "custom",
+    "date",
+    "time",
+    "filter",
+    "moment",
+    "moment.js"
+  ],
+  "author": "brockpetrie",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/brockpetrie/vue-moment/issues"
+  },
+  "homepage": "https://github.com/brockpetrie/vue-moment#readme",
+  "dependencies": {
+    "moment": "^2.19.2"
+  },
+  "peerDependencies": {
+    "vue": ">=1.x.x"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.3",
+    "babel-jest": "^21.2.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "bili": "^2.1.2",
+    "eslint": "^4.12.1",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-loader": "^1.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.5.1",
+    "jest": "^21.2.1",
+    "jest-cli": "^21.2.1",
+    "jest-serializer-vue": "^0.2.0",
+    "jest-vue": "^0.8.1",
+    "moment-timezone": "^0.5.14",
+    "pre-commit": "^1.2.2",
+    "rollup-plugin-babel": "^3.0.4",
+    "vue": "^2.5.2"
+  },
+  "pre-commit": "eslint",
+  "jest": {
+    "moduleFileExtensions": [
+      "js",
+      "vue"
+    ],
+    "moduleNameMapper": {
+      "^@/(.*)$": "<rootDir>/$1"
+    },
+    "transform": {
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest",
+      ".*\\.(vue)$": "<rootDir>/node_modules/jest-vue"
+    },
+    "snapshotSerializers": [
+      "<rootDir>/node_modules/jest-serializer-vue"
+    ],
+    "mapCoverage": true
+  }
+}

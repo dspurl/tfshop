@@ -147,12 +147,11 @@
 					return
 				}
 				value = +value;
-				if (value > this.max) {
+				if (value >= this.max) {
 					value = this.max;
 				} else if (value < this.min) {
 					value = this.min
 				}
-
 				this.inputValue = value
 			}
 		}

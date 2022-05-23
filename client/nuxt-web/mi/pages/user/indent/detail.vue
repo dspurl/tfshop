@@ -6,7 +6,7 @@
       <div class="top">
         <div class="order-number">订单号：{{indent.identification}}</div>
         <div class="operation">
-          <div v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini">取消订单</el-button></div>
+          <div style="margin-bottom: 5px;" v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini">取消订单</el-button></div>
           <NuxtLink :to="{ path: '/money/pay', query: { id: indent.id }}" v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini" type="danger">立即付款</el-button></NuxtLink>
           <div v-if="indent.state === 3"><el-button :loading="buttonLoading" size="mini" type="danger" @click="confirmReceipt()">确认收货</el-button></div>
         </div>

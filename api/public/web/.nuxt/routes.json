@@ -80,6 +80,12 @@
     "chunkName": "pages/pass/register"
   },
   {
+    "name": "seckill-list",
+    "path": "/seckill/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\seckill\\\\list.vue",
+    "chunkName": "pages/seckill/list"
+  },
+  {
     "name": "user-address",
     "path": "/user/address",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\address.vue",
@@ -234,6 +240,18 @@
     "path": "/pass/js/register",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\register.js",
     "chunkName": "pages/pass/js/register"
+  },
+  {
+    "name": "seckill-components-CountDownTime",
+    "path": "/seckill/components/CountDownTime",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\seckill\\\\components\\\\CountDownTime.vue",
+    "chunkName": "pages/seckill/components/CountDownTime"
+  },
+  {
+    "name": "seckill-js-list",
+    "path": "/seckill/js/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\seckill\\\\js\\\\list.js",
+    "chunkName": "pages/seckill/js/list"
   },
   {
     "name": "user-coupon-components",

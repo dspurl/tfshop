@@ -50,6 +50,16 @@
     display: flex;
     justify-content:flex-end;
   }
+  .tag-box{
+    display: flex;
+    .seckill-tag{
+      background: #fa524c;
+      color: #ffffff;
+      border-radius: 5px;
+      font-size: 12px;
+      padding: 0 5px;
+    }
+  }
 }
 .integrall-popover{
   position: relative;

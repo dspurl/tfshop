@@ -31,7 +31,7 @@
     <div class="purchase-quantity">
       <div class="name">购买数量</div>
       <div class="quantity">
-        <el-input-number v-model="cartGood.number>specificationDefaultDisplay.inventory_show?specificationDefaultDisplay.inventory_show:cartGood.number" @change="numberChange" :min="1" :max="specificationDefaultDisplay.inventory_show"></el-input-number>
+        <el-input-number v-model="cartGood.number>specificationDefaultDisplay.inventory_show?specificationDefaultDisplay.inventory_show:cartGood.number" @change="numberChange" :min="1" :max="getLists.purchase_number ? getLists.purchase_number : specificationDefaultDisplay.inventory_show"></el-input-number>
       </div>
       <div class="inventory">件 (库存：{{specificationDefaultDisplay.inventory_show}}件)</div>
     </div>

@@ -1,7 +1,7 @@
 exports.ids = [53,54];
 exports.modules = {
 
-/***/ 178:
+/***/ 179:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33,12 +33,12 @@ function goodCategory(query) {
 
 /***/ }),
 
-/***/ 305:
+/***/ 310:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_good__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(178);
+/* harmony import */ var _api_good__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(179);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data() {
@@ -129,13 +129,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 308:
+/***/ 313:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(390);
+var content = __webpack_require__(398);
 if(content.__esModule) content = content.default;
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
@@ -147,26 +147,26 @@ module.exports.__inject__ = function (context) {
 
 /***/ }),
 
-/***/ 388:
+/***/ 396:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "img/no-goods.b1692b5.png";
 
 /***/ }),
 
-/***/ 389:
+/***/ 397:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_id_vue_vue_type_style_index_0_id_da3c70c4_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(308);
+/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_id_vue_vue_type_style_index_0_id_da3c70c4_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(313);
 /* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_id_vue_vue_type_style_index_0_id_da3c70c4_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_id_vue_vue_type_style_index_0_id_da3c70c4_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_id_vue_vue_type_style_index_0_id_da3c70c4_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_id_vue_vue_type_style_index_0_id_da3c70c4_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ 390:
+/***/ 398:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
@@ -180,7 +180,7 @@ module.exports = ___CSS_LOADER_EXPORT___;
 
 /***/ }),
 
-/***/ 428:
+/***/ 437:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -188,14 +188,14 @@ module.exports = ___CSS_LOADER_EXPORT___;
 __webpack_require__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/@nuxt/components/dist/loader.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./pages/product/list/_id.vue?vue&type=template&id=da3c70c4&scoped=true&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"box"},[_c('el-breadcrumb',{staticClass:"breadcrumb container",attrs:{"separator":"/"}},[_c('el-breadcrumb-item',[_c('NuxtLink',{attrs:{"to":{ path: '/' }}},[_vm._v("\n        首页\n      ")])],1),_vm._v(" "),(_vm.listQuery.pid)?_c('el-breadcrumb-item',[_vm._v("商品分类")]):_c('el-breadcrumb-item',[_vm._v("搜索结果")]),_vm._v(" "),_c('el-breadcrumb-item',[_vm._v(_vm._s(_vm.title))])],1),_vm._ssrNode(" "),(_vm.total)?_vm._ssrNode("<div data-v-da3c70c4>","</div>",[_vm._ssrNode("<div class=\"screen-box\" data-v-da3c70c4>","</div>",[_vm._ssrNode("<div class=\"screen container\" data-v-da3c70c4>","</div>",[_c('el-link',{class:{on: !_vm.listQuery.sort},attrs:{"underline":false},on:{"click":function($event){return _vm.tabClick()}}},[_vm._v("综合")]),_vm._ssrNode(" "),_c('el-divider',{staticClass:"divider",attrs:{"direction":"vertical"}}),_vm._ssrNode(" "),_c('el-link',{class:{on: _vm.listQuery.sort === '-sales'},attrs:{"underline":false},on:{"click":function($event){return _vm.tabClick('sales')}}},[_vm._v("销量")]),_vm._ssrNode(" "),_c('el-divider',{staticClass:"divider",attrs:{"direction":"vertical"}}),_vm._ssrNode(" "),_c('el-link',{staticClass:"f-sort",attrs:{"underline":false},on:{"click":function($event){return _vm.tabClick('order_price')}}},[_c('span',{staticClass:"fs-tit"},[_vm._v("价格")]),_vm._v(" "),_c('em',{staticClass:"fs-up"},[_c('i',{staticClass:"up el-icon-caret-top",class:{on: _vm.listQuery.sort === '+order_price'}}),_vm._v(" "),_c('i',{staticClass:"below el-icon-caret-bottom",class:{on: _vm.listQuery.sort === '-order_price'}})])])],2)]),_vm._ssrNode(" "),_c('div',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],staticClass:"product-list container"},[_vm._ssrNode("<div class=\"list\" data-v-da3c70c4>","</div>",_vm._l((_vm.goodList),function(item,index){return _c('NuxtLink',{key:index,staticClass:"li",attrs:{"to":{ path: ("/product/detail/" + (item.id))}}},[_c('el-card',{staticClass:"card",attrs:{"shadow":"hover"}},[_c('el-image',{staticClass:"image",attrs:{"src":_vm._f("smallImage")(item.resources.img,200),"fit":"cover","lazy":""}}),_vm._v(" "),_c('div',{staticClass:"name"},[_vm._v(_vm._s(item.name))]),_vm._v(" "),_c('div',{staticClass:"price"},[_c('div',{staticClass:"symbol"},[_vm._v("¥")]),_vm._v(" "),_c('div',{staticClass:"value"},[_vm._v(_vm._s(_vm._f("thousands")(item.order_price)))])])],1)],1)}),1)]),_vm._ssrNode(" "),_vm._ssrNode("<div class=\"operation container\" data-v-da3c70c4>","</div>",[_c('el-pagination',{attrs:{"current-page":_vm.listQuery.page,"page-sizes":[10, 20, 30, 40],"page-size":_vm.listQuery.limit,"layout":"total, sizes, prev, pager, next, jumper","total":_vm.total},on:{"size-change":_vm.handleSizeChange,"current-change":_vm.handleCurrentChange}})],1)],2):_vm._ssrNode(("<div class=\"no-goods\" data-v-da3c70c4><img"+(_vm._ssrAttr("src",__webpack_require__(388)))+" data-v-da3c70c4> "+((_vm.listQuery.pid)?("<div data-v-da3c70c4>"+_vm._ssrEscape("抱歉，“"+_vm._s(_vm.title)+"”分类下暂无商品，换个分类搜搜吧")+"</div>"):("<div data-v-da3c70c4>"+_vm._ssrEscape("抱歉，没有找到商品“"+_vm._s(_vm.title)+"”，换个词搜搜吧")+"</div>"))+"</div>"))],2)}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"box"},[_c('el-breadcrumb',{staticClass:"breadcrumb container",attrs:{"separator":"/"}},[_c('el-breadcrumb-item',[_c('NuxtLink',{attrs:{"to":{ path: '/' }}},[_vm._v("\n        首页\n      ")])],1),_vm._v(" "),(_vm.listQuery.pid)?_c('el-breadcrumb-item',[_vm._v("商品分类")]):_c('el-breadcrumb-item',[_vm._v("搜索结果")]),_vm._v(" "),_c('el-breadcrumb-item',[_vm._v(_vm._s(_vm.title))])],1),_vm._ssrNode(" "),(_vm.total)?_vm._ssrNode("<div data-v-da3c70c4>","</div>",[_vm._ssrNode("<div class=\"screen-box\" data-v-da3c70c4>","</div>",[_vm._ssrNode("<div class=\"screen container\" data-v-da3c70c4>","</div>",[_c('el-link',{class:{on: !_vm.listQuery.sort},attrs:{"underline":false},on:{"click":function($event){return _vm.tabClick()}}},[_vm._v("综合")]),_vm._ssrNode(" "),_c('el-divider',{staticClass:"divider",attrs:{"direction":"vertical"}}),_vm._ssrNode(" "),_c('el-link',{class:{on: _vm.listQuery.sort === '-sales'},attrs:{"underline":false},on:{"click":function($event){return _vm.tabClick('sales')}}},[_vm._v("销量")]),_vm._ssrNode(" "),_c('el-divider',{staticClass:"divider",attrs:{"direction":"vertical"}}),_vm._ssrNode(" "),_c('el-link',{staticClass:"f-sort",attrs:{"underline":false},on:{"click":function($event){return _vm.tabClick('order_price')}}},[_c('span',{staticClass:"fs-tit"},[_vm._v("价格")]),_vm._v(" "),_c('em',{staticClass:"fs-up"},[_c('i',{staticClass:"up el-icon-caret-top",class:{on: _vm.listQuery.sort === '+order_price'}}),_vm._v(" "),_c('i',{staticClass:"below el-icon-caret-bottom",class:{on: _vm.listQuery.sort === '-order_price'}})])])],2)]),_vm._ssrNode(" "),_c('div',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],staticClass:"product-list container"},[_vm._ssrNode("<div class=\"list\" data-v-da3c70c4>","</div>",_vm._l((_vm.goodList),function(item,index){return _c('NuxtLink',{key:index,staticClass:"li",attrs:{"to":{ path: ("/product/detail/" + (item.id))}}},[_c('el-card',{staticClass:"card",attrs:{"shadow":"hover"}},[_c('el-image',{staticClass:"image",attrs:{"src":_vm._f("smallImage")(item.resources.img,200),"fit":"cover","lazy":""}}),_vm._v(" "),_c('div',{staticClass:"name"},[_vm._v(_vm._s(item.name))]),_vm._v(" "),_c('div',{staticClass:"price"},[_c('div',{staticClass:"symbol"},[_vm._v("¥")]),_vm._v(" "),_c('div',{staticClass:"value"},[_vm._v(_vm._s(_vm._f("thousands")(item.order_price)))])])],1)],1)}),1)]),_vm._ssrNode(" "),_vm._ssrNode("<div class=\"operation container\" data-v-da3c70c4>","</div>",[_c('el-pagination',{attrs:{"current-page":_vm.listQuery.page,"page-sizes":[10, 20, 30, 40],"page-size":_vm.listQuery.limit,"layout":"total, sizes, prev, pager, next, jumper","total":_vm.total},on:{"size-change":_vm.handleSizeChange,"current-change":_vm.handleCurrentChange}})],1)],2):_vm._ssrNode(("<div class=\"no-goods\" data-v-da3c70c4><img"+(_vm._ssrAttr("src",__webpack_require__(396)))+" data-v-da3c70c4> "+((_vm.listQuery.pid)?("<div data-v-da3c70c4>"+_vm._ssrEscape("抱歉，“"+_vm._s(_vm.title)+"”分类下暂无商品，换个分类搜搜吧")+"</div>"):("<div data-v-da3c70c4>"+_vm._ssrEscape("抱歉，没有找到商品“"+_vm._s(_vm.title)+"”，换个词搜搜吧")+"</div>"))+"</div>"))],2)}
 var staticRenderFns = []
 
 
 // CONCATENATED MODULE: ./pages/product/list/_id.vue?vue&type=template&id=da3c70c4&scoped=true&
 
 // EXTERNAL MODULE: ./pages/product/list/js/_id.js
-var _id = __webpack_require__(305);
+var _id = __webpack_require__(310);
 
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib??ref--2-0!./node_modules/@nuxt/components/dist/loader.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./pages/product/list/_id.vue?vue&type=script&lang=js&
 //
@@ -280,7 +280,7 @@ var componentNormalizer = __webpack_require__(1);
 
 function injectStyles (context) {
   
-  var style0 = __webpack_require__(389)
+  var style0 = __webpack_require__(397)
 if (style0.__inject__) style0.__inject__(context)
 
 }

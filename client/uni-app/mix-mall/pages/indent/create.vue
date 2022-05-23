@@ -26,6 +26,7 @@
 			<view class="g-item padding-top-sm" v-for="(item,index) in goodList" :key="index">
 				<image :src="item.img | smallImage" lazy-load></image>
 				<view class="right">
+					<view class="tag-box" v-if="isSeckill"><view class="seckill-tag">限时秒杀</view></view>
 					<text class="title clamp">{{item.name}}</text>
 					<text class="spec">{{item.specification}}</text>
 					<view class="price-box">
@@ -42,7 +43,7 @@
 				<text class="cell-tip">￥{{total | 1000}}</text>
 			</view>
 			<!-- 优惠明细 -->
-			<view class="yt-list" v-if="couponMoney">
+			<view class="yt-list" v-if="couponMoney && !isSeckill">
 				<view class="yt-list-cell b-b" @click="toggleMask('show')">
 					<view class="cell-icon">
 						券
@@ -70,7 +71,7 @@
 					</block>
 				</text>
 			</view>
-			<template v-if="integral.deductible && integral.available && !data.integral_draw_log_id">
+			<template v-if="integral.deductible && integral.available && !data.integral_draw_log_id && !isSeckill">
 				<view class="integral-box">
 					<view class="left">使用<input class="input" v-model.number="data.integral" type="number" @input="numberIntegral"></input>积分：</view>
 					<view class="right">-￥{{integralPrice}}元</view>
@@ -157,8 +158,10 @@
 				verify: {
 					coupon: false,
 					integral: false,
-					integralCommodity: false
-				}
+					integralCommodity: false,
+					seckill: false
+				},
+				isSeckill: false
 			}
 		},
 		onLoad(option){
@@ -176,7 +179,7 @@
 			...mapMutations(['loginCheck']),
 			getVerifyPlugin(option){
 				const that = this
-				verifyPlugin(['coupon','integral','integralCommodity'],function(res){
+				verifyPlugin(['coupon','integral','integralCommodity','seckill'],function(res){
 					that.verify = res
 					that.loginCheck()
 					if(option.integral_draw_log_id){
@@ -329,15 +332,26 @@
 			calcTotal(){
 				let list = this.goodList
 				let total = 0
+				let seckill = false
 				for(var k in list){
+					if(this.verify.seckill){
+					  seckill = list[k].good.seckill
+					}
 					total += list[k].price * list[k].number
+				}
+				if(this.verify.seckill && seckill){
+					this.isSeckill = true
 				}
 				this.total = Number(total.toFixed(2))
 			},
 			//计算实付金额
 			outPocketTotal(){
 				let outPocket = 0
-				outPocket = outPocket + this.total + this.carriage  - this.couponMoney - this.integralPrice
+				if(this.verify.seckill){
+					outPocket = outPocket + this.total + this.carriage
+				}else{
+					outPocket = outPocket + this.total + this.carriage  - this.couponMoney - this.integralPrice
+				}
 				this.outPocket = Number(outPocket.toFixed(2))
 			},
 			stopPrevent(){},
@@ -556,6 +570,16 @@
 				flex: 1;
 				padding-left: 24upx;
 				overflow: hidden;
+				.tag-box{
+					display: flex;
+					.seckill-tag{
+						background: #fa524c;
+						color: #ffffff;
+						border-radius: 10rpx;
+						font-size: 24rpx;
+						padding: 0 10rpx;
+					}
+			  }
 			}
 
 			.title {

@@ -39,7 +39,8 @@
     "pages/sweepLogin/index",
     "pages/integral/index",
     "pages/user/integralDraw/index",
-    "pages/user/integralDraw/log"
+    "pages/user/integralDraw/log",
+    "pages/seckill/list"
   ],
   "subPackages": [],
   "window": {

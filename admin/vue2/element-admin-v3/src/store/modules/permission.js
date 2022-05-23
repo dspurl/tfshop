@@ -99,6 +99,12 @@ export const componentsMap = {
   IntegralDrawLog: () => import('@/views/ToolManagement/IntegralDraw/IntegralDrawLog/index'),
   IntegralDrawLogList: () => import('@/views/ToolManagement/IntegralDraw/IntegralDrawLog/list'),
   // 积分抽奖_e
+  // 秒杀_s
+  Seckill: () => import('@/views/ToolManagement/Seckill/Seckill/index'),
+  SeckillList: () => import('@/views/ToolManagement/Seckill/Seckill/list'),
+  SeckillCreate: () => import('@/views/ToolManagement/Seckill/Seckill/create'),
+  SeckillEdit: () => import('@/views/ToolManagement/Seckill/Seckill/edit'),
+  // 秒杀_e
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),

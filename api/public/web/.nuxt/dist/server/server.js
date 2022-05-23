@@ -43,7 +43,7 @@ module.exports =
 /******/
 /******/ 		// "0" is the signal for "already loaded"
 /******/ 		if(installedChunks[chunkId] !== 0) {
-/******/ 			var chunk = require("./" + ({"1":"components/address-js-list","2":"components/address-list","3":"components/js-vue-video","4":"components/pagination","5":"components/pagination-js","6":"components/sku","7":"components/sku-js","8":"components/sku-utils","9":"components/sku2param","10":"components/upload-avatar-image","11":"components/upload-insert-image","12":"components/upload-js-avatar-image","13":"components/upload-js-insert-image","14":"components/vue-video","15":"pages/article/components/defaultArticle","16":"pages/article/components/defaultColumn","17":"pages/article/components/defaultColumnDetail","18":"pages/article/detail/_id","19":"pages/article/js/defaultArticle","20":"pages/article/js/defaultColumn","21":"pages/article/js/defaultColumnDetail","22":"pages/article/list/_id","23":"pages/cart","24":"pages/cart/js/index","25":"pages/category/js/list","26":"pages/category/list","27":"pages/comment/js/list","28":"pages/comment/js/score","29":"pages/comment/list","30":"pages/comment/score","31":"pages/coupon/components/index","32":"pages/coupon/components/js/index","33":"pages/coupon/components/js/use","34":"pages/coupon/components/use","35":"pages/coupon/js/list","36":"pages/coupon/list","37":"pages/indent/create","38":"pages/indent/js/create","39":"pages/index","40":"pages/index/js/index","41":"pages/money/js/pay","42":"pages/money/js/success","43":"pages/money/pay","44":"pages/money/success","45":"pages/pass/findPassword","46":"pages/pass/js/findPassword","47":"pages/pass/js/login","48":"pages/pass/js/register","49":"pages/pass/login","50":"pages/pass/register","51":"pages/product/detail/_id","52":"pages/product/detail/js/_id","53":"pages/product/list/_id","54":"pages/product/list/js/_id","55":"pages/user/address","56":"pages/user/cancel","57":"pages/user/cellphone","58":"pages/user/collect","59":"pages/user/coupon/components/coolc-coupon","60":"pages/user/coupon/components/index","61":"pages/user/coupon/js/list","62":"pages/user/coupon/list","63":"pages/user/finance/js/list","64":"pages/user/finance/list","65":"pages/user/indent/detail","66":"pages/user/indent/js/detail","67":"pages/user/indent/js/list","68":"pages/user/indent/list","69":"pages/user/integral/js/list","70":"pages/user/integral/list","71":"pages/user/integralDraw/components/dsLuckyGrid","72":"pages/user/integralDraw/components/dsLuckyWheel","73":"pages/user/integralDraw/components/dsSlotMachine","74":"pages/user/integralDraw/components/winningResults","75":"pages/user/integralDraw/index","76":"pages/user/integralDraw/js/index","77":"pages/user/integralDraw/js/list","78":"pages/user/integralDraw/js/log","79":"pages/user/integralDraw/list","80":"pages/user/integralDraw/log","81":"pages/user/js/address","82":"pages/user/js/cancel","83":"pages/user/js/cellphone","84":"pages/user/js/collect","85":"pages/user/js/password","86":"pages/user/js/portal","87":"pages/user/js/userinfo","88":"pages/user/notice/detail","89":"pages/user/notice/js/detail","90":"pages/user/notice/js/list","91":"pages/user/notice/list","92":"pages/user/password","93":"pages/user/portal","94":"pages/user/userinfo"}[chunkId]||chunkId) + ".js");
+/******/ 			var chunk = require("./" + ({"1":"components/address-js-list","2":"components/address-list","3":"components/js-vue-video","4":"components/pagination","5":"components/pagination-js","6":"components/sku","7":"components/sku-js","8":"components/sku-utils","9":"components/sku2param","10":"components/upload-avatar-image","11":"components/upload-insert-image","12":"components/upload-js-avatar-image","13":"components/upload-js-insert-image","14":"components/vue-video","15":"pages/article/components/defaultArticle","16":"pages/article/components/defaultColumn","17":"pages/article/components/defaultColumnDetail","18":"pages/article/detail/_id","19":"pages/article/js/defaultArticle","20":"pages/article/js/defaultColumn","21":"pages/article/js/defaultColumnDetail","22":"pages/article/list/_id","23":"pages/cart","24":"pages/cart/js/index","25":"pages/category/js/list","26":"pages/category/list","27":"pages/comment/js/list","28":"pages/comment/js/score","29":"pages/comment/list","30":"pages/comment/score","31":"pages/coupon/components/index","32":"pages/coupon/components/js/index","33":"pages/coupon/components/js/use","34":"pages/coupon/components/use","35":"pages/coupon/js/list","36":"pages/coupon/list","37":"pages/indent/create","38":"pages/indent/js/create","39":"pages/index","40":"pages/index/js/index","41":"pages/money/js/pay","42":"pages/money/js/success","43":"pages/money/pay","44":"pages/money/success","45":"pages/pass/findPassword","46":"pages/pass/js/findPassword","47":"pages/pass/js/login","48":"pages/pass/js/register","49":"pages/pass/login","50":"pages/pass/register","51":"pages/product/detail/_id","52":"pages/product/detail/js/_id","53":"pages/product/list/_id","54":"pages/product/list/js/_id","55":"pages/seckill/components/CountDownTime","56":"pages/seckill/js/list","57":"pages/seckill/list","58":"pages/user/address","59":"pages/user/cancel","60":"pages/user/cellphone","61":"pages/user/collect","62":"pages/user/coupon/components/coolc-coupon","63":"pages/user/coupon/components/index","64":"pages/user/coupon/js/list","65":"pages/user/coupon/list","66":"pages/user/finance/js/list","67":"pages/user/finance/list","68":"pages/user/indent/detail","69":"pages/user/indent/js/detail","70":"pages/user/indent/js/list","71":"pages/user/indent/list","72":"pages/user/integral/js/list","73":"pages/user/integral/list","74":"pages/user/integralDraw/components/dsLuckyGrid","75":"pages/user/integralDraw/components/dsLuckyWheel","76":"pages/user/integralDraw/components/dsSlotMachine","77":"pages/user/integralDraw/components/winningResults","78":"pages/user/integralDraw/index","79":"pages/user/integralDraw/js/index","80":"pages/user/integralDraw/js/list","81":"pages/user/integralDraw/js/log","82":"pages/user/integralDraw/list","83":"pages/user/integralDraw/log","84":"pages/user/js/address","85":"pages/user/js/cancel","86":"pages/user/js/cellphone","87":"pages/user/js/collect","88":"pages/user/js/password","89":"pages/user/js/portal","90":"pages/user/js/userinfo","91":"pages/user/notice/detail","92":"pages/user/notice/js/detail","93":"pages/user/notice/js/list","94":"pages/user/notice/list","95":"pages/user/password","96":"pages/user/portal","97":"pages/user/userinfo"}[chunkId]||chunkId) + ".js");
 /******/ 			var moreModules = chunk.modules, chunkIds = chunk.ids;
 /******/ 			for(var moduleId in moreModules) {
 /******/ 				modules[moduleId] = moreModules[moduleId];
@@ -45958,6 +45958,21 @@ module.exports = require("vue-router");
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return verifyPlugin; });
+/* harmony import */ var _plugins_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+
+function verifyPlugin(id) {
+  return Object(_plugins_request__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])({
+    url: 'verifyPlugin/' + id,
+    method: 'POST'
+  });
+}
+
+/***/ }),
+/* 38 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "f", function() { return login; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "g", function() { return refreshToken; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return cellphoneCode; });
@@ -46046,7 +46061,7 @@ function register(data) {
 }
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -46084,21 +46099,6 @@ module.exports = function (url, options) {
 
   return url;
 };
-
-/***/ }),
-/* 39 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return verifyPlugin; });
-/* harmony import */ var _plugins_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-
-function verifyPlugin(id) {
-  return Object(_plugins_request__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])({
-    url: 'verifyPlugin/' + id,
-    method: 'POST'
-  });
-}
 
 /***/ }),
 /* 40 */
@@ -49388,7 +49388,7 @@ __webpack_require__(4).default("7f914dc6", content, true)
 
 // Imports
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(3);
-var ___CSS_LOADER_GET_URL_IMPORT___ = __webpack_require__(38);
+var ___CSS_LOADER_GET_URL_IMPORT___ = __webpack_require__(39);
 var ___CSS_LOADER_URL_IMPORT_0___ = __webpack_require__(87);
 var ___CSS_LOADER_URL_IMPORT_1___ = __webpack_require__(88);
 var ___CSS_LOADER_EXPORT___ = ___CSS_LOADER_API_IMPORT___(false);
@@ -59614,7 +59614,7 @@ __webpack_require__(4).default("726ea2a4", content, true)
 
 // Imports
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(3);
-var ___CSS_LOADER_GET_URL_IMPORT___ = __webpack_require__(38);
+var ___CSS_LOADER_GET_URL_IMPORT___ = __webpack_require__(39);
 var ___CSS_LOADER_URL_IMPORT_0___ = __webpack_require__(148);
 var ___CSS_LOADER_URL_IMPORT_1___ = __webpack_require__(149);
 var ___CSS_LOADER_EXPORT___ = ___CSS_LOADER_API_IMPORT___(false);
@@ -59881,7 +59881,7 @@ async function setContext(app, context) {
         "H5_URL": "http://localhost:8082/h5",
         "PROJECT_KEY": "base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM=",
         "CACHE_PR": "DSSHOP-PC-",
-        "IBS_KEY": ""
+        "IBS_KEY": "BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC"
       }
     }; // Only set once
 
@@ -60464,165 +60464,171 @@ function shouldScrollToTop(route) {
 
 
 
-const _1353fe3b = () => interopDefault(__webpack_require__.e(/* import() | pages/cart */ 23).then(__webpack_require__.bind(null, 398)));
+const _1353fe3b = () => interopDefault(__webpack_require__.e(/* import() | pages/cart */ 23).then(__webpack_require__.bind(null, 406)));
 
-const _7080fe5e = () => interopDefault(__webpack_require__.e(/* import() | pages/cart/js/index */ 24).then(__webpack_require__.bind(null, 255)));
+const _7080fe5e = () => interopDefault(__webpack_require__.e(/* import() | pages/cart/js/index */ 24).then(__webpack_require__.bind(null, 258)));
 
-const _98bb4012 = () => interopDefault(__webpack_require__.e(/* import() | pages/category/list */ 26).then(__webpack_require__.bind(null, 399)));
+const _98bb4012 = () => interopDefault(__webpack_require__.e(/* import() | pages/category/list */ 26).then(__webpack_require__.bind(null, 407)));
 
-const _0a9a939c = () => interopDefault(__webpack_require__.e(/* import() | pages/comment/list */ 29).then(__webpack_require__.bind(null, 239)));
+const _0a9a939c = () => interopDefault(__webpack_require__.e(/* import() | pages/comment/list */ 29).then(__webpack_require__.bind(null, 242)));
 
-const _261fc5ae = () => interopDefault(__webpack_require__.e(/* import() | pages/comment/score */ 30).then(__webpack_require__.bind(null, 400)));
+const _261fc5ae = () => interopDefault(__webpack_require__.e(/* import() | pages/comment/score */ 30).then(__webpack_require__.bind(null, 408)));
 
-const _70a27b0b = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/components/index */ 31).then(__webpack_require__.bind(null, 240)));
+const _70a27b0b = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/components/index */ 31).then(__webpack_require__.bind(null, 243)));
 
-const _f9640442 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/list */ 36).then(__webpack_require__.bind(null, 401)));
+const _f9640442 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/list */ 36).then(__webpack_require__.bind(null, 409)));
 
-const _e9236efa = () => interopDefault(__webpack_require__.e(/* import() | pages/indent/create */ 37).then(__webpack_require__.bind(null, 402)));
+const _e9236efa = () => interopDefault(__webpack_require__.e(/* import() | pages/indent/create */ 37).then(__webpack_require__.bind(null, 410)));
 
-const _035b857a = () => interopDefault(__webpack_require__.e(/* import() | pages/money/pay */ 43).then(__webpack_require__.bind(null, 403)));
+const _035b857a = () => interopDefault(__webpack_require__.e(/* import() | pages/money/pay */ 43).then(__webpack_require__.bind(null, 411)));
 
-const _122824c4 = () => interopDefault(__webpack_require__.e(/* import() | pages/money/success */ 44).then(__webpack_require__.bind(null, 404)));
+const _122824c4 = () => interopDefault(__webpack_require__.e(/* import() | pages/money/success */ 44).then(__webpack_require__.bind(null, 412)));
 
-const _52acd0a0 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/findPassword */ 45).then(__webpack_require__.bind(null, 405)));
+const _52acd0a0 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/findPassword */ 45).then(__webpack_require__.bind(null, 413)));
 
-const _90b15126 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/login */ 49).then(__webpack_require__.bind(null, 406)));
+const _90b15126 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/login */ 49).then(__webpack_require__.bind(null, 414)));
 
-const _8df02362 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/register */ 50).then(__webpack_require__.bind(null, 407)));
+const _8df02362 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/register */ 50).then(__webpack_require__.bind(null, 415)));
 
-const _a53b5c04 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/address */ 55).then(__webpack_require__.bind(null, 408)));
+const _1a5929fc = () => interopDefault(__webpack_require__.e(/* import() | pages/seckill/list */ 57).then(__webpack_require__.bind(null, 416)));
 
-const _ed78ff40 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/cancel */ 56).then(__webpack_require__.bind(null, 409)));
+const _a53b5c04 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/address */ 58).then(__webpack_require__.bind(null, 417)));
 
-const _310bf6d6 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/cellphone */ 57).then(__webpack_require__.bind(null, 410)));
+const _ed78ff40 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/cancel */ 59).then(__webpack_require__.bind(null, 418)));
 
-const _6df08c34 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/collect */ 58).then(__webpack_require__.bind(null, 411)));
+const _310bf6d6 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/cellphone */ 60).then(__webpack_require__.bind(null, 419)));
 
-const _23ad0368 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/index */ 75).then(__webpack_require__.bind(null, 412)));
+const _6df08c34 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/collect */ 61).then(__webpack_require__.bind(null, 420)));
 
-const _13943881 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/password */ 92).then(__webpack_require__.bind(null, 413)));
+const _23ad0368 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/index */ 78).then(__webpack_require__.bind(null, 421)));
 
-const _28b79152 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/portal */ 93).then(__webpack_require__.bind(null, 414)));
+const _13943881 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/password */ 95).then(__webpack_require__.bind(null, 422)));
 
-const _6a7adc42 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/userinfo */ 94).then(__webpack_require__.bind(null, 415)));
+const _28b79152 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/portal */ 96).then(__webpack_require__.bind(null, 423)));
 
-const _3dfb1ab6 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/components/defaultArticle */ 15).then(__webpack_require__.bind(null, 314)));
+const _6a7adc42 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/userinfo */ 97).then(__webpack_require__.bind(null, 424)));
 
-const _7a9b7fc6 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/components/defaultColumn */ 16).then(__webpack_require__.bind(null, 315)));
+const _3dfb1ab6 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/components/defaultArticle */ 15).then(__webpack_require__.bind(null, 319)));
 
-const _c15c6d92 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/components/defaultColumnDetail */ 17).then(__webpack_require__.bind(null, 316)));
+const _7a9b7fc6 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/components/defaultColumn */ 16).then(__webpack_require__.bind(null, 320)));
 
-const _1e271e06 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/js/defaultArticle */ 19).then(__webpack_require__.bind(null, 236)));
+const _c15c6d92 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/components/defaultColumnDetail */ 17).then(__webpack_require__.bind(null, 321)));
 
-const _dd7fd508 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/js/defaultColumn */ 20).then(__webpack_require__.bind(null, 237)));
+const _1e271e06 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/js/defaultArticle */ 19).then(__webpack_require__.bind(null, 239)));
 
-const _8afb10aa = () => interopDefault(__webpack_require__.e(/* import() | pages/article/js/defaultColumnDetail */ 21).then(__webpack_require__.bind(null, 238)));
+const _dd7fd508 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/js/defaultColumn */ 20).then(__webpack_require__.bind(null, 240)));
 
-const _480f168f = () => interopDefault(__webpack_require__.e(/* import() | pages/category/js/list */ 25).then(__webpack_require__.bind(null, 257)));
+const _8afb10aa = () => interopDefault(__webpack_require__.e(/* import() | pages/article/js/defaultColumnDetail */ 21).then(__webpack_require__.bind(null, 241)));
 
-const _0e31d274 = () => interopDefault(__webpack_require__.e(/* import() | pages/comment/js/list */ 27).then(__webpack_require__.bind(null, 206)));
+const _480f168f = () => interopDefault(__webpack_require__.e(/* import() | pages/category/js/list */ 25).then(__webpack_require__.bind(null, 260)));
 
-const _4af3dfaa = () => interopDefault(__webpack_require__.e(/* import() | pages/comment/js/score */ 28).then(__webpack_require__.bind(null, 259)));
+const _0e31d274 = () => interopDefault(__webpack_require__.e(/* import() | pages/comment/js/list */ 27).then(__webpack_require__.bind(null, 209)));
 
-const _f15f9da6 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/components/js/index */ 32).then(__webpack_require__.bind(null, 207)));
+const _4af3dfaa = () => interopDefault(__webpack_require__.e(/* import() | pages/comment/js/score */ 28).then(__webpack_require__.bind(null, 262)));
 
-const _7d016980 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/components/use */ 34).then(__webpack_require__.bind(null, 241)));
+const _f15f9da6 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/components/js/index */ 32).then(__webpack_require__.bind(null, 210)));
 
-const _1c4bcfa7 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/js/list */ 35).then(__webpack_require__.bind(null, 261)));
+const _7d016980 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/components/use */ 34).then(__webpack_require__.bind(null, 244)));
 
-const _2be5cc7a = () => interopDefault(__webpack_require__.e(/* import() | pages/indent/js/create */ 38).then(__webpack_require__.bind(null, 318)));
+const _1c4bcfa7 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/js/list */ 35).then(__webpack_require__.bind(null, 264)));
 
-const _08edb735 = () => interopDefault(__webpack_require__.e(/* import() | pages/money/js/pay */ 41).then(__webpack_require__.bind(null, 319)));
+const _2be5cc7a = () => interopDefault(__webpack_require__.e(/* import() | pages/indent/js/create */ 38).then(__webpack_require__.bind(null, 323)));
 
-const _505742fa = () => interopDefault(__webpack_require__.e(/* import() | pages/money/js/success */ 42).then(__webpack_require__.bind(null, 265)));
+const _08edb735 = () => interopDefault(__webpack_require__.e(/* import() | pages/money/js/pay */ 41).then(__webpack_require__.bind(null, 324)));
 
-const _7d7cf746 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/js/findPassword */ 46).then(__webpack_require__.bind(null, 267)));
+const _505742fa = () => interopDefault(__webpack_require__.e(/* import() | pages/money/js/success */ 42).then(__webpack_require__.bind(null, 268)));
 
-const _868ae3ea = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/js/login */ 47).then(__webpack_require__.bind(null, 320)));
+const _7d7cf746 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/js/findPassword */ 46).then(__webpack_require__.bind(null, 270)));
 
-const _03c1ab37 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/js/register */ 48).then(__webpack_require__.bind(null, 270)));
+const _868ae3ea = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/js/login */ 47).then(__webpack_require__.bind(null, 325)));
 
-const _2256c0a0 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/coupon/components/index */ 60).then(__webpack_require__.bind(null, 416)));
+const _03c1ab37 = () => interopDefault(__webpack_require__.e(/* import() | pages/pass/js/register */ 48).then(__webpack_require__.bind(null, 273)));
 
-const _91e16bac = () => interopDefault(__webpack_require__.e(/* import() | pages/user/coupon/list */ 62).then(__webpack_require__.bind(null, 417)));
+const _7de3c294 = () => interopDefault(__webpack_require__.e(/* import() | pages/seckill/components/CountDownTime */ 55).then(__webpack_require__.bind(null, 187)));
 
-const _009411fc = () => interopDefault(__webpack_require__.e(/* import() | pages/user/finance/list */ 64).then(__webpack_require__.bind(null, 418)));
+const _1779a8b8 = () => interopDefault(__webpack_require__.e(/* import() | pages/seckill/js/list */ 56).then(__webpack_require__.bind(null, 275)));
 
-const _44ac72e3 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/indent/detail */ 65).then(__webpack_require__.bind(null, 419)));
+const _2256c0a0 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/coupon/components/index */ 63).then(__webpack_require__.bind(null, 425)));
 
-const _462419a0 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/indent/list */ 68).then(__webpack_require__.bind(null, 420)));
+const _91e16bac = () => interopDefault(__webpack_require__.e(/* import() | pages/user/coupon/list */ 65).then(__webpack_require__.bind(null, 426)));
 
-const _696d5cb0 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integral/list */ 70).then(__webpack_require__.bind(null, 421)));
+const _009411fc = () => interopDefault(__webpack_require__.e(/* import() | pages/user/finance/list */ 67).then(__webpack_require__.bind(null, 427)));
 
-const _49e3da4c = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/js/index */ 76).then(__webpack_require__.bind(null, 280)));
+const _44ac72e3 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/indent/detail */ 68).then(__webpack_require__.bind(null, 428)));
 
-const _7688f7d8 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/list */ 79).then(__webpack_require__.bind(null, 422)));
+const _462419a0 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/indent/list */ 71).then(__webpack_require__.bind(null, 429)));
 
-const _b719ff84 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/log */ 80).then(__webpack_require__.bind(null, 423)));
+const _696d5cb0 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integral/list */ 73).then(__webpack_require__.bind(null, 430)));
 
-const _1e9ed21a = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/address */ 81).then(__webpack_require__.bind(null, 272)));
+const _49e3da4c = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/js/index */ 79).then(__webpack_require__.bind(null, 285)));
 
-const _2d78ac74 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/cancel */ 82).then(__webpack_require__.bind(null, 274)));
+const _7688f7d8 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/list */ 82).then(__webpack_require__.bind(null, 431)));
 
-const _26b977fc = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/cellphone */ 83).then(__webpack_require__.bind(null, 276)));
+const _b719ff84 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/log */ 83).then(__webpack_require__.bind(null, 432)));
 
-const _66e57924 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/collect */ 84).then(__webpack_require__.bind(null, 278)));
+const _1e9ed21a = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/address */ 84).then(__webpack_require__.bind(null, 277)));
 
-const _5b0f9fc5 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/password */ 85).then(__webpack_require__.bind(null, 282)));
+const _2d78ac74 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/cancel */ 85).then(__webpack_require__.bind(null, 279)));
 
-const _0f70b294 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/portal */ 86).then(__webpack_require__.bind(null, 321)));
+const _26b977fc = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/cellphone */ 86).then(__webpack_require__.bind(null, 281)));
 
-const _0621a2a7 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/userinfo */ 87).then(__webpack_require__.bind(null, 285)));
+const _66e57924 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/collect */ 87).then(__webpack_require__.bind(null, 283)));
 
-const _3e86370f = () => interopDefault(__webpack_require__.e(/* import() | pages/user/notice/detail */ 88).then(__webpack_require__.bind(null, 424)));
+const _5b0f9fc5 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/password */ 88).then(__webpack_require__.bind(null, 287)));
 
-const _6882d25c = () => interopDefault(__webpack_require__.e(/* import() | pages/user/notice/list */ 91).then(__webpack_require__.bind(null, 425)));
+const _0f70b294 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/portal */ 89).then(__webpack_require__.bind(null, 326)));
 
-const _60d00e58 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/components/js/use */ 33).then(__webpack_require__.bind(null, 208)));
+const _0621a2a7 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/js/userinfo */ 90).then(__webpack_require__.bind(null, 290)));
 
-const _5eb08a3b = () => interopDefault(__webpack_require__.e(/* import() | pages/user/coupon/components/coolc-coupon */ 59).then(__webpack_require__.bind(null, 317)));
+const _3e86370f = () => interopDefault(__webpack_require__.e(/* import() | pages/user/notice/detail */ 91).then(__webpack_require__.bind(null, 433)));
 
-const _30cdc908 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/coupon/js/list */ 61).then(__webpack_require__.bind(null, 288)));
+const _6882d25c = () => interopDefault(__webpack_require__.e(/* import() | pages/user/notice/list */ 94).then(__webpack_require__.bind(null, 434)));
 
-const _63c51fa4 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/finance/js/list */ 63).then(__webpack_require__.bind(null, 322)));
+const _60d00e58 = () => interopDefault(__webpack_require__.e(/* import() | pages/coupon/components/js/use */ 33).then(__webpack_require__.bind(null, 211)));
 
-const _7df190e3 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/indent/js/detail */ 66).then(__webpack_require__.bind(null, 291)));
+const _5eb08a3b = () => interopDefault(__webpack_require__.e(/* import() | pages/user/coupon/components/coolc-coupon */ 62).then(__webpack_require__.bind(null, 322)));
 
-const _4c5ee694 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/indent/js/list */ 67).then(__webpack_require__.bind(null, 293)));
+const _30cdc908 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/coupon/js/list */ 64).then(__webpack_require__.bind(null, 293)));
 
-const _8e329994 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integral/js/list */ 69).then(__webpack_require__.bind(null, 323)));
+const _63c51fa4 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/finance/js/list */ 66).then(__webpack_require__.bind(null, 327)));
 
-const _2410bd23 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/components/dsLuckyGrid */ 71).then(__webpack_require__.bind(null, 243)));
+const _7df190e3 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/indent/js/detail */ 69).then(__webpack_require__.bind(null, 296)));
 
-const _76320264 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/components/dsLuckyWheel */ 72).then(__webpack_require__.bind(null, 242)));
+const _4c5ee694 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/indent/js/list */ 70).then(__webpack_require__.bind(null, 298)));
 
-const _21546304 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/components/dsSlotMachine */ 73).then(__webpack_require__.bind(null, 244)));
+const _8e329994 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integral/js/list */ 72).then(__webpack_require__.bind(null, 328)));
 
-const _20d1305c = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/components/winningResults */ 74).then(__webpack_require__.bind(null, 181)));
+const _2410bd23 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/components/dsLuckyGrid */ 74).then(__webpack_require__.bind(null, 246)));
 
-const _04c0a152 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/js/list */ 77).then(__webpack_require__.bind(null, 296)));
+const _76320264 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/components/dsLuckyWheel */ 75).then(__webpack_require__.bind(null, 245)));
 
-const _f6d33f4c = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/js/log */ 78).then(__webpack_require__.bind(null, 298)));
+const _21546304 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/components/dsSlotMachine */ 76).then(__webpack_require__.bind(null, 247)));
 
-const _3ab56592 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/notice/js/detail */ 89).then(__webpack_require__.bind(null, 300)));
+const _20d1305c = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/components/winningResults */ 77).then(__webpack_require__.bind(null, 182)));
 
-const _1b2f4e0a = () => interopDefault(__webpack_require__.e(/* import() | pages/user/notice/js/list */ 90).then(__webpack_require__.bind(null, 302)));
+const _04c0a152 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/js/list */ 80).then(__webpack_require__.bind(null, 301)));
 
-const _924cb4ba = () => interopDefault(__webpack_require__.e(/* import() | pages/product/detail/js/_id */ 52).then(__webpack_require__.bind(null, 304)));
+const _f6d33f4c = () => interopDefault(__webpack_require__.e(/* import() | pages/user/integralDraw/js/log */ 81).then(__webpack_require__.bind(null, 303)));
 
-const _047db520 = () => interopDefault(__webpack_require__.e(/* import() | pages/product/list/js/_id */ 54).then(__webpack_require__.bind(null, 305)));
+const _3ab56592 = () => interopDefault(__webpack_require__.e(/* import() | pages/user/notice/js/detail */ 92).then(__webpack_require__.bind(null, 305)));
 
-const _5fd82924 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/detail/_id */ 18).then(__webpack_require__.bind(null, 426)));
+const _1b2f4e0a = () => interopDefault(__webpack_require__.e(/* import() | pages/user/notice/js/list */ 93).then(__webpack_require__.bind(null, 307)));
 
-const _39702901 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/list/_id */ 22).then(__webpack_require__.bind(null, 397)));
+const _924cb4ba = () => interopDefault(__webpack_require__.e(/* import() | pages/product/detail/js/_id */ 52).then(__webpack_require__.bind(null, 309)));
 
-const _4781bc95 = () => interopDefault(__webpack_require__.e(/* import() | pages/product/detail/_id */ 51).then(__webpack_require__.bind(null, 427)));
+const _047db520 = () => interopDefault(__webpack_require__.e(/* import() | pages/product/list/js/_id */ 54).then(__webpack_require__.bind(null, 310)));
 
-const _76c3d030 = () => interopDefault(__webpack_require__.e(/* import() | pages/product/list/_id */ 53).then(__webpack_require__.bind(null, 428)));
+const _5fd82924 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/detail/_id */ 18).then(__webpack_require__.bind(null, 435)));
 
-const _1cf7d247 = () => interopDefault(__webpack_require__.e(/* import() | pages/index */ 39).then(__webpack_require__.bind(null, 429)));
+const _39702901 = () => interopDefault(__webpack_require__.e(/* import() | pages/article/list/_id */ 22).then(__webpack_require__.bind(null, 405)));
 
-const _7f3a9446 = () => interopDefault(__webpack_require__.e(/* import() | pages/index/js/index */ 40).then(__webpack_require__.bind(null, 324)));
+const _4781bc95 = () => interopDefault(__webpack_require__.e(/* import() | pages/product/detail/_id */ 51).then(__webpack_require__.bind(null, 436)));
+
+const _76c3d030 = () => interopDefault(__webpack_require__.e(/* import() | pages/product/list/_id */ 53).then(__webpack_require__.bind(null, 437)));
+
+const _1cf7d247 = () => interopDefault(__webpack_require__.e(/* import() | pages/index */ 39).then(__webpack_require__.bind(null, 438)));
+
+const _7f3a9446 = () => interopDefault(__webpack_require__.e(/* import() | pages/index/js/index */ 40).then(__webpack_require__.bind(null, 329)));
 
 const emptyFn = () => {};
 
@@ -60686,6 +60692,10 @@ const routerOptions = {
     path: "/pass/register",
     component: _8df02362,
     name: "pass-register"
+  }, {
+    path: "/seckill/list",
+    component: _1a5929fc,
+    name: "seckill-list"
   }, {
     path: "/user/address",
     component: _a53b5c04,
@@ -60790,6 +60800,14 @@ const routerOptions = {
     path: "/pass/js/register",
     component: _03c1ab37,
     name: "pass-js-register"
+  }, {
+    path: "/seckill/components/CountDownTime",
+    component: _7de3c294,
+    name: "seckill-components-CountDownTime"
+  }, {
+    path: "/seckill/js/list",
+    component: _1779a8b8,
+    name: "seckill-js-list"
   }, {
     path: "/user/coupon/components",
     component: _2256c0a0,
@@ -61645,7 +61663,7 @@ var login = __webpack_require__(20);
 var login_default = /*#__PURE__*/__webpack_require__.n(login);
 
 // EXTERNAL MODULE: ./api/plugin.js
-var api_plugin = __webpack_require__(39);
+var api_plugin = __webpack_require__(37);
 
 // CONCATENATED MODULE: ./layouts/js/user.js
 
@@ -62198,25 +62216,25 @@ const components = {
   Header: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 63)).then(c => wrapFunctional(c.default || c)),
   MiniFooter: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 154)).then(c => wrapFunctional(c.default || c)),
   MiniHeader: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 153)).then(c => wrapFunctional(c.default || c)),
-  VueVideo: () => __webpack_require__.e(/* import() | components/vue-video */ 14).then(__webpack_require__.bind(null, 235)).then(c => wrapFunctional(c.default || c)),
-  AddressList: () => __webpack_require__.e(/* import() | components/address-list */ 2).then(__webpack_require__.bind(null, 192)).then(c => wrapFunctional(c.default || c)),
+  VueVideo: () => __webpack_require__.e(/* import() | components/vue-video */ 14).then(__webpack_require__.bind(null, 238)).then(c => wrapFunctional(c.default || c)),
+  AddressList: () => __webpack_require__.e(/* import() | components/address-list */ 2).then(__webpack_require__.bind(null, 195)).then(c => wrapFunctional(c.default || c)),
   JsCartHeader: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 66)).then(c => wrapFunctional(c.default || c)),
   JsFooter: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 67)).then(c => wrapFunctional(c.default || c)),
   JsHeader: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 68)).then(c => wrapFunctional(c.default || c)),
   JsMiniFooter: () => Promise.resolve(/* import() */).then(__webpack_require__.bind(null, 70)).then(c => wrapFunctional(c.default || c)),
   JsMiniHeader: () => Promise.resolve(/* import() */).then(__webpack_require__.t.bind(null, 69, 7)).then(c => wrapFunctional(c.default || c)),
-  JsVueVideo: () => __webpack_require__.e(/* import() | components/js-vue-video */ 3).then(__webpack_require__.bind(null, 210)).then(c => wrapFunctional(c.default || c)),
-  Pagination: () => __webpack_require__.e(/* import() | components/pagination */ 4).then(__webpack_require__.bind(null, 174)).then(c => wrapFunctional(c.default || c)),
-  UploadAvatarImage: () => __webpack_require__.e(/* import() | components/upload-avatar-image */ 10).then(__webpack_require__.bind(null, 430)).then(c => wrapFunctional(c.default || c)),
-  UploadInsertImage: () => __webpack_require__.e(/* import() | components/upload-insert-image */ 11).then(__webpack_require__.bind(null, 431)).then(c => wrapFunctional(c.default || c)),
-  Sku: () => __webpack_require__.e(/* import() | components/sku */ 6).then(__webpack_require__.bind(null, 234)).then(c => wrapFunctional(c.default || c)),
-  Sku2param: () => __webpack_require__.e(/* import() | components/sku2param */ 9).then(__webpack_require__.bind(null, 201)).then(c => wrapFunctional(c.default || c)),
-  SkuUtils: () => __webpack_require__.e(/* import() | components/sku-utils */ 8).then(__webpack_require__.bind(null, 191)).then(c => wrapFunctional(c.default || c)),
-  AddressJsList: () => __webpack_require__.e(/* import() | components/address-js-list */ 1).then(__webpack_require__.bind(null, 190)).then(c => wrapFunctional(c.default || c)),
-  PaginationJs: () => __webpack_require__.e(/* import() | components/pagination-js */ 5).then(__webpack_require__.bind(null, 171)).then(c => wrapFunctional(c.default || c)),
-  UploadJsAvatarImage: () => __webpack_require__.e(/* import() | components/upload-js-avatar-image */ 12).then(__webpack_require__.bind(null, 310)).then(c => wrapFunctional(c.default || c)),
-  UploadJsInsertImage: () => __webpack_require__.e(/* import() | components/upload-js-insert-image */ 13).then(__webpack_require__.bind(null, 312)).then(c => wrapFunctional(c.default || c)),
-  SkuJs: () => __webpack_require__.e(/* import() | components/sku-js */ 7).then(__webpack_require__.bind(null, 209)).then(c => wrapFunctional(c.default || c))
+  JsVueVideo: () => __webpack_require__.e(/* import() | components/js-vue-video */ 3).then(__webpack_require__.bind(null, 213)).then(c => wrapFunctional(c.default || c)),
+  Pagination: () => __webpack_require__.e(/* import() | components/pagination */ 4).then(__webpack_require__.bind(null, 175)).then(c => wrapFunctional(c.default || c)),
+  Sku: () => __webpack_require__.e(/* import() | components/sku */ 6).then(__webpack_require__.bind(null, 237)).then(c => wrapFunctional(c.default || c)),
+  Sku2param: () => __webpack_require__.e(/* import() | components/sku2param */ 9).then(__webpack_require__.bind(null, 204)).then(c => wrapFunctional(c.default || c)),
+  SkuUtils: () => __webpack_require__.e(/* import() | components/sku-utils */ 8).then(__webpack_require__.bind(null, 194)).then(c => wrapFunctional(c.default || c)),
+  UploadAvatarImage: () => __webpack_require__.e(/* import() | components/upload-avatar-image */ 10).then(__webpack_require__.bind(null, 439)).then(c => wrapFunctional(c.default || c)),
+  UploadInsertImage: () => __webpack_require__.e(/* import() | components/upload-insert-image */ 11).then(__webpack_require__.bind(null, 440)).then(c => wrapFunctional(c.default || c)),
+  AddressJsList: () => __webpack_require__.e(/* import() | components/address-js-list */ 1).then(__webpack_require__.bind(null, 193)).then(c => wrapFunctional(c.default || c)),
+  SkuJs: () => __webpack_require__.e(/* import() | components/sku-js */ 7).then(__webpack_require__.bind(null, 212)).then(c => wrapFunctional(c.default || c)),
+  UploadJsAvatarImage: () => __webpack_require__.e(/* import() | components/upload-js-avatar-image */ 12).then(__webpack_require__.bind(null, 315)).then(c => wrapFunctional(c.default || c)),
+  UploadJsInsertImage: () => __webpack_require__.e(/* import() | components/upload-js-insert-image */ 13).then(__webpack_require__.bind(null, 317)).then(c => wrapFunctional(c.default || c)),
+  PaginationJs: () => __webpack_require__.e(/* import() | components/pagination-js */ 5).then(__webpack_require__.bind(null, 172)).then(c => wrapFunctional(c.default || c))
 };
 
 for (const name in components) {
@@ -62513,7 +62531,7 @@ var meta = __webpack_require__(72);
 var auth = __webpack_require__(5);
 
 // EXTERNAL MODULE: ./api/login.js
-var api_login = __webpack_require__(37);
+var api_login = __webpack_require__(38);
 
 // CONCATENATED MODULE: ./plugins/route.js
 
@@ -63596,88 +63614,94 @@ var component = Object(componentNormalizer["a" /* default */])(
 /* 155 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.delete-all.js");
+module.exports = require("moment");
 
 /***/ }),
 /* 156 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.every.js");
+module.exports = require("core-js/modules/esnext.map.delete-all.js");
 
 /***/ }),
 /* 157 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.filter.js");
+module.exports = require("core-js/modules/esnext.map.every.js");
 
 /***/ }),
 /* 158 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.find.js");
+module.exports = require("core-js/modules/esnext.map.filter.js");
 
 /***/ }),
 /* 159 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.find-key.js");
+module.exports = require("core-js/modules/esnext.map.find.js");
 
 /***/ }),
 /* 160 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.includes.js");
+module.exports = require("core-js/modules/esnext.map.find-key.js");
 
 /***/ }),
 /* 161 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.key-of.js");
+module.exports = require("core-js/modules/esnext.map.includes.js");
 
 /***/ }),
 /* 162 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.map-keys.js");
+module.exports = require("core-js/modules/esnext.map.key-of.js");
 
 /***/ }),
 /* 163 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.map-values.js");
+module.exports = require("core-js/modules/esnext.map.map-keys.js");
 
 /***/ }),
 /* 164 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.merge.js");
+module.exports = require("core-js/modules/esnext.map.map-values.js");
 
 /***/ }),
 /* 165 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.reduce.js");
+module.exports = require("core-js/modules/esnext.map.merge.js");
 
 /***/ }),
 /* 166 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.some.js");
+module.exports = require("core-js/modules/esnext.map.reduce.js");
 
 /***/ }),
 /* 167 */
 /***/ (function(module, exports) {
 
-module.exports = require("core-js/modules/esnext.map.update.js");
+module.exports = require("core-js/modules/esnext.map.some.js");
 
 /***/ }),
 /* 168 */
 /***/ (function(module, exports) {
 
-module.exports = require("@chenfengyuan/vue-countdown");
+module.exports = require("core-js/modules/esnext.map.update.js");
 
 /***/ }),
 /* 169 */
+/***/ (function(module, exports) {
+
+module.exports = require("@chenfengyuan/vue-countdown");
+
+/***/ }),
+/* 170 */
 /***/ (function(module, exports) {
 
 module.exports = require("@chenfengyuan/vue-qrcode");

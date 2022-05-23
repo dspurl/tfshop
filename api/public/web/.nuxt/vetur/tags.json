@@ -41,12 +41,6 @@
   "Pagination": {
     "description": "Auto imported from components/Pagination/index.vue"
   },
-  "UploadAvatarImage": {
-    "description": "Auto imported from components/Upload/AvatarImage.vue"
-  },
-  "UploadInsertImage": {
-    "description": "Auto imported from components/Upload/InsertImage.vue"
-  },
   "Sku": {
     "description": "Auto imported from components/Sku/index.vue"
   },
@@ -56,11 +50,17 @@
   "SkuUtils": {
     "description": "Auto imported from components/Sku/utils.js"
   },
+  "UploadAvatarImage": {
+    "description": "Auto imported from components/Upload/AvatarImage.vue"
+  },
+  "UploadInsertImage": {
+    "description": "Auto imported from components/Upload/InsertImage.vue"
+  },
   "AddressJsList": {
     "description": "Auto imported from components/Address/js/list.js"
   },
-  "PaginationJs": {
-    "description": "Auto imported from components/Pagination/js/index.js"
+  "SkuJs": {
+    "description": "Auto imported from components/Sku/js/index.js"
   },
   "UploadJsAvatarImage": {
     "description": "Auto imported from components/Upload/js/avatarImage.js"
@@ -68,7 +68,7 @@
   "UploadJsInsertImage": {
     "description": "Auto imported from components/Upload/js/insertImage.js"
   },
-  "SkuJs": {
-    "description": "Auto imported from components/Sku/js/index.js"
+  "PaginationJs": {
+    "description": "Auto imported from components/Pagination/js/index.js"
   }
 }

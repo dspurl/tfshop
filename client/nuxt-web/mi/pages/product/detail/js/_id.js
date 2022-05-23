@@ -7,12 +7,16 @@ import Comment from '@/pages/comment/list'
 import {good} from '@/api/comment'
 import coupon from '@/pages/coupon/components'
 import {verifyPlugin} from '@/api/plugin'
+import {detail as seckillDetail} from '@/api/seckill'
+import CountDownTime from '@/pages/seckill/components/CountDownTime';
+import moment from 'moment'
 export default {
   components: {
     sku,
     VueVideo,
     Comment,
-    coupon
+    coupon,
+    CountDownTime
   },
   data() {
     return {
@@ -25,8 +29,10 @@ export default {
       collect: 0,
       poster: '',
       commentTotal: 0,
+      seckillActive: false,
       isComment: false,
-      isCoupon: false
+      isCoupon: false,
+      isSeckill: false
     }
   },
   async asyncData (ctx) {
@@ -34,8 +40,49 @@ export default {
       const { params } = ctx;
       let [ goodDetailData, verifyPluginData ] = await Promise.all([
         detail(params.id),
-        verifyPlugin(['coupon','comment']),
+        verifyPlugin(['coupon','comment', 'seckill']),
       ]);
+      // 秒杀
+      if(verifyPluginData.seckill){
+        var isSeckill = false
+        await seckillDetail(params.id).then(response => {
+          if(response){
+            isSeckill = true
+            goodDetailData.name = response.name
+            goodDetailData.abstract = response.abstract
+            goodDetailData.details = response.details
+            goodDetailData.state = response.state
+            goodDetailData.resources_many = response.resources_many
+            goodDetailData.seckill_time = response.time
+            goodDetailData.seckill = true
+            goodDetailData.price_show = response.price_show
+            goodDetailData.seckill_id = response.id // 秒杀ID
+            if(response.state){
+              goodDetailData.seckillTime = (moment(response.end_time).valueOf()-moment().valueOf())/1000
+            }else{
+              goodDetailData.seckillTime = (moment(response.time).valueOf()-moment().valueOf())/1000
+            }
+            const good_sku = JSON.parse(JSON.stringify(goodDetailData.good_sku))
+            let seckill_sku = {}
+            goodDetailData.good_sku = []
+            good_sku.forEach(item =>{
+              seckill_sku = response.seckill_sku.find(items => items.good_sku_id === item.id)
+              if(seckill_sku){
+                item.market_price = seckill_sku.price /100  // 售价
+                item.price = seckill_sku.seckill_price /100 // 原价
+                item.resources = seckill_sku.resources // sku图片
+                item.seckill_sku_id = seckill_sku.id // 秒杀SKU ID
+                item.inventory = seckill_sku.residue_limit // 库存
+                // 判断秒杀是不限制用户购买量
+                if(response.is_purchase_number === 1) {
+                  goodDetailData.purchase_number = response.purchase_number
+                }
+                goodDetailData.good_sku.push(item)
+              }
+            })
+          }
+        })
+      }
       let resources_many = [];
       let resources_many_img = [];
       let poster;
@@ -60,6 +107,7 @@ export default {
         poster: poster,
         isCoupon: verifyPluginData.coupon,
         isComment: verifyPluginData.comment,
+        isSeckill: isSeckill,
       }
     } catch(err) {
       ctx.$errorHandler(err)
@@ -131,6 +179,10 @@ export default {
       }).then(response => {
         this.commentTotal = response.total
       })
+    },
+    // 秒杀倒计时结束
+    endTime(){
+      this.$router.go(0)
     }
   }
 }

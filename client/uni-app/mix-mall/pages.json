@@ -331,6 +331,16 @@
 			}
 		}
 		// 积分抽奖_e
+		// 秒杀_s
+		,{
+			"path": "pages/seckill/list",
+			"style": {
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50,
+				"navigationBarTitleText": "限时秒杀"
+			}
+		}
+		// 秒杀_e
 		// 插件列表
 	],
 	"globalStyle": {

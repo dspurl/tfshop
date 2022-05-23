@@ -20,7 +20,7 @@
 							<text class="cuIcon-unfold"></text>
 						</view>
 						<view class="text-gray text-sm">
-							<text class="padding-right">支出￥{{expend}}</text><text>收入￥{{income}}</text>
+							<text class="padding-right">支出{{expend}}</text><text>收入{{income}}</text>
 						</view>
 					</view>
 				</view>

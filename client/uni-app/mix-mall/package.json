@@ -16,6 +16,7 @@
     "@lucky-canvas/uni": "^0.0.10",
     "jspdf": "^2.3.1",
     "jweixin-module": "^1.6.0",
-    "vue-clipboard2": "^0.3.1"
+    "vue-clipboard2": "^0.3.1",
+    "vue-moment": "^4.1.0"
   }
 }

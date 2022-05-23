@@ -1,6 +1,13 @@
 import {getList as getGoodList, goodCategory} from '@/api/good'
 import {getList as bannerList} from '@/api/banner'
+import moment from 'moment'
+import CountDownTime from '@/pages/seckill/components/CountDownTime';
+import {getList as seckillList} from '@/api/seckill'
+import {verifyPlugin} from '@/api/plugin'
 export default {
+  components: {
+    CountDownTime
+  },
   data() {
     return {
       categoryStyle: 0,
@@ -12,11 +19,21 @@ export default {
       categorySublevel:[],
       recommendCategoryList: [],
       recommendGoodList: [],
+      isSeckill: false,
+      seckill: [],
+      seckillTime: 0,
+      seckillActiveTime: '',
+      seckillLoading: false
     }
   },
   async asyncData (ctx) {
     try {
-      let [goodData, bannerData, categoryData, recommendCategoryData] = await Promise.all([
+      let time = moment().format('YYYY-MM-DD HH:00:00')
+      if(moment().format('HH')%2 !== 0){
+        time = moment().subtract(1, 'hour').format('YYYY-MM-DD HH:00:00')
+      }
+      let endTime = (moment(time, "YYYY-MM-DD HH:00:00").add(2, 'hour')-moment().valueOf())/1000
+      let [goodData, bannerData, categoryData, recommendCategoryData, verifyPluginData] = await Promise.all([
         getGoodList({
           limit: 10,
           is_recommend: 1
@@ -33,6 +50,7 @@ export default {
         goodCategory({
           is_recommend: 1
         }),
+        verifyPlugin(['seckill'])
       ])
       bannerData.data.forEach(item=>{
         item.url = item.url ? item.url.replace('?id=','/') : ''
@@ -41,7 +59,10 @@ export default {
         goodList: goodData.data,
         bannerList: bannerData.data,
         categoryList: categoryData,
-        recommendCategoryList: recommendCategoryData
+        recommendCategoryList: recommendCategoryData,
+        seckillActiveTime: moment(time, "YYYY-MM-DD HH:00:00").format('HH:00'),
+        seckillTime: endTime,
+        isSeckill: verifyPluginData.seckill,
       }
     } catch(err) {
       ctx.$errorHandler(err)
@@ -50,6 +71,9 @@ export default {
   mounted() {
     this.categoryGood();
     this.getBanner()
+    if(this.isSeckill){
+      this.endSeckillTime()
+    }
   },
   methods: {
     // 分类切换
@@ -97,6 +121,26 @@ export default {
       }).then(response => {
         this.banner = response.data[0]
         this.banner.url = this.banner.url ? this.banner.url.replace('?id=','/') : ''
+      })
+    },
+    // 秒杀倒计时结束
+    endSeckillTime() {
+      this.seckillLoading = true
+      let time = moment().format('YYYY-MM-DD HH:00:00')
+      if(moment().format('HH')%2 !== 0){
+        time = moment().subtract(1, 'hour').format('YYYY-MM-DD HH:00:00')
+      }
+      this.seckillActiveTime = moment(time, "YYYY-MM-DD HH:00:00").format('HH:00')
+      this.seckillTime = (moment(time, "YYYY-MM-DD HH:00:00").add(2, 'hour')-moment().valueOf())/1000
+      seckillList({
+        limit: 5,
+        time: time,
+        sort: '-id',
+        state: 1
+      }).then(response => {
+        this.seckill = response.data
+      }).finally(()=>{
+        this.seckillLoading = false
       })
     }
   }

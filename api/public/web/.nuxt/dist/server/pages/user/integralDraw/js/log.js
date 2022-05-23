@@ -1,7 +1,7 @@
-exports.ids = [78];
+exports.ids = [81];
 exports.modules = {
 
-/***/ 186:
+/***/ 188:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25,12 +25,12 @@ function good(id) {
 
 /***/ }),
 
-/***/ 298:
+/***/ 303:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_integralDrawLog__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(186);
+/* harmony import */ var _api_integralDrawLog__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(188);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'user',

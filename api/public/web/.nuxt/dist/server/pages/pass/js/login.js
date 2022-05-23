@@ -1,7 +1,7 @@
 exports.ids = [47];
 exports.modules = {
 
-/***/ 320:
+/***/ 325:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9,7 +9,7 @@ exports.modules = {
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./api/login.js
-var login = __webpack_require__(37);
+var login = __webpack_require__(38);
 
 // EXTERNAL MODULE: ./plugins/request.js
 var request = __webpack_require__(2);
@@ -44,7 +44,7 @@ function index(data) {
   });
 }
 // EXTERNAL MODULE: ./api/plugin.js
-var api_plugin = __webpack_require__(39);
+var api_plugin = __webpack_require__(37);
 
 // EXTERNAL MODULE: external "vuex"
 var external_vuex_ = __webpack_require__(13);
