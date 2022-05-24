@@ -3,6 +3,7 @@ namespace App\Providers;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\PaymentLog;
 use App\Models\v1\User;
+use App\Observers\GoodIndent\ConfirmReceiptSalesProcessingObserver;
 use App\Observers\GoodIndent\CreateIndentCommodityObserver;
 use App\Observers\GoodIndent\CreateIndentLocationObserver;
 use App\Observers\GoodIndent\EscrowRefundObserver;
@@ -51,6 +52,7 @@ class AppServiceProvider extends ServiceProvider
         GoodIndent::observe(ShipmentNotificationObserver::class);
         GoodIndent::observe(RefundNotificationObserver::class);
         GoodIndent::observe(EscrowRefundObserver::class);
+        GoodIndent::observe(ConfirmReceiptSalesProcessingObserver::class);
         PaymentLog::observe(GoodIndentPaymentCreateObserver::class);
         PaymentLog::observe(GoodIndentPaymentSucceedObserver::class);
         PaymentLog::observe(GoodIndentRefundObserver::class);
