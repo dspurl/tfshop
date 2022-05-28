@@ -70,7 +70,7 @@ class GoodController extends Controller
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
         }, 'goodSku' => function ($q) {
-            $q->select('good_id', 'price', 'inventory');
+            $q->select('good_id', 'price', 'inventory', 'cost_price');
         }, 'category'])->paginate($limit);
         if ($paginate) {
             foreach ($paginate as $id => $p) {
