@@ -33,6 +33,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class GoodIndent extends Model
 {
     use SoftDeletes;
+
     const GOOD_INDENT_STATE_PAY = 1; //状态：待付款
     const GOOD_INDENT_STATE_DELIVER = 2; //状态：待发货
     const GOOD_INDENT_STATE_TAKE = 3; //状态：待收货
@@ -46,6 +47,7 @@ class GoodIndent extends Model
     const GOOD_INDENT_REFUND_WAY_BACK = 1; //退款方式：原路退回
     const GOOD_INDENT_IS_AUTOMATIC_RECEIVING_YES = 1; //自动发货：是
     const GOOD_INDENT_IS_AUTOMATIC_RECEIVING_NO = 0; //自动发货：否
+    const GOOD_INDENT_TYPE_COMMON = 0; //普通订单
     public static $withoutAppends = true;
     protected $appends = ['state_show'];
 

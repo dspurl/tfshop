@@ -11,6 +11,9 @@
         <el-menu-item index="7">已退款</el-menu-item>
       </el-menu>
       <br>
+      <el-radio-group v-model="listQuery.type" size="small" style="margin-bottom: 10px;" @change="handleFilter">
+        <el-radio-button v-for="(item, index) in type" :key="index" :label="item.value">{{ item.label }}</el-radio-button>
+      </el-radio-group>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="订单信息">
           <el-input v-model="listQuery.title" placeholder="订单号、收货人等" clearable/>
@@ -224,9 +227,14 @@ export default {
         page: 1,
         limit: 10,
         sort: '-id',
-        activeIndex: '0'
+        activeIndex: '0',
+        type: 0
       },
-      temp: {}
+      temp: {},
+      type: [{
+        label: '普通订单',
+        value: 0
+      }]
     }
   },
   created() {

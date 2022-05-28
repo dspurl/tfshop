@@ -46,6 +46,9 @@ class IndentController extends Controller
                 $q->where('state', $request->activeIndex);
             }
         }
+        if ($request->has('type')) {
+            $q->where('type', $request->type);
+        }
         if ($request->title) {
             $q->where(function ($q1) use ($request) {
                 $q1->orWhere('identification', $request->title)

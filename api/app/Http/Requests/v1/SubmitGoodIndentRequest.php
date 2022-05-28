@@ -35,6 +35,7 @@ class SubmitGoodIndentRequest extends Request
         {
             case 'POST':
                 return [
+                    'type' => 'nullable|integer',
                     'address' => 'required|array',
                     'carriage' => 'required|numeric',
                     'indentCommodity' => 'required|array',

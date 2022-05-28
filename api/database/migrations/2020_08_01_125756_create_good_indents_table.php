@@ -18,7 +18,8 @@ class CreateGoodIndentsTable extends Migration
             $table->id();
             $table->bigInteger('user_id')->default(0)->index()->comment('用户ID');
             $table->string('consignee', 30)->nullable()->comment('收货人名称');
-            $table->tinyInteger('state')->default(1)->comment('状态：1待付款2待发货3待收货4已失效5已完成6已取消7已退款8退款处理中');
+            $table->unsignedTinyInteger('type')->default(0)->comment('类型:0=普通订单-common,1=秒杀订单-seckill,2=拼团订单-group_purchase');
+            $table->tinyInteger('state')->default(1)->comment('状态:1待付款2待发货3待收货4已失效5已完成6已取消7已退款8退款处理中9退款失败10待评价11已评价12待成团');
             $table->integer('total')->default(0)->comment('订单总金额');
             $table->string('identification', 50)->comment('订单标识');
             $table->integer('carriage')->default(0)->comment('运费');
