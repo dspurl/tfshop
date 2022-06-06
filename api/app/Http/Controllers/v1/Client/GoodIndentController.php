@@ -307,7 +307,6 @@ class GoodIndentController extends Controller
         if ($GoodIndent) {
             foreach ($GoodIndent as $indent) {
                 if ($indent->deleted_at == null) {
-                    $return['all'] += 1;
                     if ($indent->state == GoodIndent::GOOD_INDENT_STATE_PAY) {
                         $return['obligation'] += 1;
                     } else if ($indent->state == GoodIndent::GOOD_INDENT_STATE_DELIVER) {
