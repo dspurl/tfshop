@@ -115,7 +115,7 @@
 						v-for="(item, index) in groupPurchase" :key="index"
 						v-if="index%2 === 0"
 					>
-						<view class="g-item left" @click="navToGroupPurchasePage(item)">
+						<navigator :url="`/pages/product/detail?id=${item.good_id}`" hover-class="none" class="g-item left">
 							<image :src="item.resources.img | smallImage(250)" mode="aspectFill"></image>
 							<view class="t-box">
 								<text class="title clamp">{{item.name}}</text>
@@ -130,25 +130,26 @@
 								  	</view>
 									<text>{{item.number}}人成团</text>
 								</view>
-							</view>
-							            
-						</view>
-						<view class="g-item right" v-if="groupPurchase[index+1]" @click="navToGroupPurchasePage(groupPurchase[index+1])">
-							<image :src="groupPurchase[index+1].resources.img" mode="aspectFill"></image>
-							<view class="t-box">
-								<text class="title clamp">{{groupPurchase[index+1].name}}</text>
-								<view class="price-box">
-									<text class="price">￥{{groupPurchase[index+1].price | 1000}}</text> 
-									<text class="m-price">￥{{groupPurchase[index+1].originalPrice | 1000}}</text> 
+							</view>          
+						</navigator>
+						<template v-if="groupPurchase[index+1]">
+							<navigator :url="`/pages/product/detail?id=${groupPurchase[index+1].good_id}`" hover-class="none" class="g-item right">
+								<image :src="groupPurchase[index+1].resources.img" mode="aspectFill"></image>
+								<view class="t-box">
+									<text class="title clamp">{{groupPurchase[index+1].name}}</text>
+									<view class="price-box">
+										<text class="price">￥{{groupPurchase[index+1].price | 1000}}</text> 
+										<text class="m-price">￥{{groupPurchase[index+1].originalPrice | 1000}}</text> 
+									</view>
+									<view class="pro-box">
+									  	<view class="progress-box">
+									  		<progress :percent="groupPurchase[index+1].progress" activeColor="#fa436a" active stroke-width="6" />
+									  	</view>
+										<text>{{groupPurchase[index+1].number}}人成团</text>
+									</view>
 								</view>
-								<view class="pro-box">
-								  	<view class="progress-box">
-								  		<progress :percent="groupPurchase[index+1].progress" activeColor="#fa436a" active stroke-width="6" />
-								  	</view>
-									<text>{{groupPurchase[index+1].number}}人成团</text>
-								</view>
-							</view>
-						</view>
+							</navigator>
+						</template>
 					</swiper-item>
 			
 				</swiper>
@@ -289,13 +290,6 @@ import {verifyPlugin} from '@/api/plugin'
 			},
 			// 秒杀详情页
 			navToSeckillPage(item) {
-				let id = item.good_id;
-				uni.navigateTo({
-					url: `/pages/product/detail?id=${id}`
-				})
-			},
-			// 拼团详情页
-			navToGroupPurchasePage(item) {
 				let id = item.good_id;
 				uni.navigateTo({
 					url: `/pages/product/detail?id=${id}`

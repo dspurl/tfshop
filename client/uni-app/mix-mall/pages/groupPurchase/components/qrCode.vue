@@ -9,8 +9,8 @@
 			</view>
 			<view class="padding-xl bg-white text-center" @click.stop="stopPrevent">
 				<view class="image">
-					<image v-if="img" :src="img" mode="widthFix" lazy-load></image>
-					<view class="">长按可分享给好友</view>
+					<image @click="previewImage" v-if="img" :src="img" mode="widthFix" lazy-load></image>
+					<view class="">点击二维码进行分享</view>
 				</view>
 			</view>
 		</view>
@@ -59,6 +59,15 @@ export default{
 			this.modalShow = false
 		},
 		stopPrevent() {},
+		previewImage(){
+			uni.previewImage({
+				urls: [this.img],
+				longPressActions: {
+					success: function(data) {},
+					fail: function(err) {}
+				}
+			});
+		}
 	}
 }
 </script>
