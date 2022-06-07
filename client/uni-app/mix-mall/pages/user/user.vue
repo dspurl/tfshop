@@ -51,6 +51,10 @@
 					<text class="yticon icon-daifukuan"><text v-if="quantity.obligation" class="cu-tag badge">{{quantity.obligation}}</text></text>
 					<text>待付款</text>
 				</view>
+				<view v-if="verify.groupPurchase" class="order-item" @click="navTo('/pages/indent/list?state=12')" hover-class="common-hover"  :hover-stay-time="50">
+					<text class="yticon icon-share"><text v-if="quantity.share" class="cu-tag badge">{{quantity.share}}</text></text>
+					<text>待成团</text>
+				</view>
 				<view class="order-item" @click="navTo('/pages/indent/list?state=2')" hover-class="common-hover"  :hover-stay-time="50">
 					<text class="yticon icon-gouwuche_"><text v-if="quantity.waitdeliver" class="cu-tag badge">{{quantity.waitdeliver}}</text></text>
 					<text>待发货</text>
@@ -129,7 +133,8 @@
 					obligation: 0,
 					waitdeliver: 0,
 					waitforreceiving: 0,
-					remainEvaluated: 0
+					remainEvaluated: 0,
+					share: 0
 				},
 				userCouponCount: 0,
 				integralDrawList: [],
@@ -139,7 +144,8 @@
 					integralDraw: false,
 					integral: false,
 					article: false,
-					distribution: false
+					distribution: false,
+					groupPurchase: false
 				}
 			}
 		},
@@ -175,7 +181,7 @@
         methods: {
 			getVerifyPlugin(){
 				const that = this
-				verifyPlugin(['coupon','comment','integral','integralDraw','article','distribution'],function(res){
+				verifyPlugin(['coupon','comment','integral','integralDraw','article','distribution','groupPurchase'],function(res){
 					that.verify = res
 					if(that.hasLogin){
 						that.getUser()

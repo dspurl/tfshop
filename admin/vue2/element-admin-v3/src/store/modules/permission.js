@@ -105,6 +105,12 @@ export const componentsMap = {
   SeckillCreate: () => import('@/views/ToolManagement/Seckill/Seckill/create'),
   SeckillEdit: () => import('@/views/ToolManagement/Seckill/Seckill/edit'),
   // 秒杀_e
+  // 拼团_s
+  GroupPurchase: () => import('@/views/ToolManagement/GroupPurchase/index'),
+  GroupPurchaseList: () => import('@/views/ToolManagement/GroupPurchase/list'),
+  GroupPurchaseCreate: () => import('@/views/ToolManagement/GroupPurchase/create'),
+  GroupPurchaseEdit: () => import('@/views/ToolManagement/GroupPurchase/edit'),
+  // 拼团_e
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),

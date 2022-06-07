@@ -98,7 +98,8 @@
 				jweixin:null,
 				modalName: null,
 				jweixin:null,
-				user: {}
+				user: {},
+				paySuccess: `/pages/money/paySuccess`
 			};
 		},
 		computed: {
@@ -133,9 +134,13 @@
 				const that = this
 				GoodIndent.pay(this.id,function(res){
 					that.orderInfo = res
+					// 如果是拼团，设置跳转位置
+					if(that.orderInfo.type === 2){
+						that.paySuccess = that.paySuccess+'?state=12'
+					}
 					if(res.state !== 1 && res.state !== 4){
 						uni.redirectTo({
-							url: '/pages/money/paySuccess'
+							url: that.paySuccess
 						})
 					}
 				})
@@ -185,14 +190,14 @@
 								  })
 								} else if (res.cancel) {
 								  uni.redirectTo({
-									url: '/pages/money/paySuccess'
+									url: that.paySuccess
 								  })
 								}
 							  }
 							})
 						}else{
 							uni.redirectTo({
-								url: '/pages/money/paySuccess'
+								url: that.paySuccess
 							})
 						}
 					})
@@ -214,7 +219,7 @@
 							  paySign: res.msg.paySign,
 							  success: function (res) {
 								uni.redirectTo({
-									url: '/pages/money/paySuccess'
+									url: that.paySuccess
 								})
 							  },
 								fail(res) {
@@ -264,14 +269,14 @@
 							  	      })
 							  	    } else if (res.cancel) {
 							  	      uni.redirectTo({
-							  	      	url: '/pages/money/paySuccess'
+							  	      	url: that.paySuccess
 							  	      })
 							  	    }
 							  	  }
 							  	})
 							  }else{
 							  	uni.redirectTo({
-							  		url: '/pages/money/paySuccess'
+							  		url: that.paySuccess
 							  	})
 							  }
 							},

@@ -1,10 +1,10 @@
-import { detail, create, edit } from '@/api/seckill'
+import { detail, create, edit } from '@/api/groupPurchase'
 import SaveDialog from '../components/Good'
 import { getToken } from '@/utils/auth'
 import AvatarImage from '@/components/Upload/AvatarImage'
 import tinymce from '@/components/tinymce5'
 export default {
-  name: 'SeckillDetail',
+  name: 'GroupPurchaseDetail',
   components: { SaveDialog, AvatarImage, tinymce },
   props: {
     isEdit: {
@@ -42,13 +42,17 @@ export default {
         img: '',
         name: '',
         imgList: [],
-        seckill_sku: [],
+        group_purchase_sku: [],
         abstract: '',
         details: '',
-        is_inventory: 0,
+        number: 2,
+        number_max: 4,
+        aging: 24,
         is_show: 1,
         is_purchase_number: 0,
-        purchase_number: ''
+        purchase_number: '',
+        sort: 5,
+        is_recommend: 0
       },
       dialogStatus: 'create',
       imgProgress: false,
@@ -69,11 +73,26 @@ export default {
         details: [
           { required: true, message: '请输入详情', trigger: 'blur' }
         ],
-        is_inventory: [
-          { required: true, message: '请选择减库存方式', trigger: 'change' }
-        ],
         is_show: [
           { required: true, message: '请选择是否上架', trigger: 'change' }
+        ],
+        purchase_number: [
+          { required: true, message: '请输入购买数量', trigger: 'blur' }
+        ],
+        number: [
+          { required: true, message: '请输入拼团人数', trigger: 'blur' }
+        ],
+        aging: [
+          { required: true, message: '请输入拼团时效', trigger: 'blur' }
+        ],
+        state: [
+          { required: true, message: '请选择拼团状态', trigger: 'change' }
+        ],
+        sort: [
+          { required: true, message: '请输入排序', trigger: 'blur' }
+        ],
+        is_recommend: [
+          { required: true, message: '请选择是否推荐', trigger: 'change' }
         ]
       }
     }
@@ -99,7 +118,7 @@ export default {
         this.ruleForm = response.data
         this.ruleForm.imgList = []
         response.data.resources_many.forEach(item => {
-          if (item.depict === 'seckill_zimg') {
+          if (item.depict === 'group_purchase_zimg') {
             this.ruleForm.img = item.img
             this.ruleForm.img_id = item.id
           } else {
@@ -108,31 +127,31 @@ export default {
             this.ruleForm.imgList.push(item)
           }
         })
-        const seckillSku = JSON.parse(JSON.stringify(response.data.seckill_sku))
-        this.ruleForm.seckill_sku = this.ruleForm.good_sku
-        this.ruleForm.seckill_sku.forEach(item => {
-          const seckill_sku = seckillSku.find(res => res.good_sku_id === item.id)
-          if (seckill_sku) {
-            item.seckill_price = seckill_sku.seckill_price
-            item.good_sku_id = seckill_sku.good_sku_id
-            item.limit = seckill_sku.limit
-            item.residue_limit = seckill_sku.residue_limit
-            item.img = seckill_sku.resources ? seckill_sku.resources.img : ''
-            item.img_id = seckill_sku.resources ? seckill_sku.resources.id : ''
-            item.seckill_sku_id = seckill_sku.id
+        const groupPurchaseSku = JSON.parse(JSON.stringify(response.data.group_purchase_sku))
+        this.ruleForm.group_purchase_sku = this.ruleForm.good_sku
+        this.ruleForm.group_purchase_sku.forEach(item => {
+          const group_purchase_sku = groupPurchaseSku.find(res => res.good_sku_id === item.id)
+          if (group_purchase_sku) {
+            item.group_purchase_price = group_purchase_sku.group_purchase_price
+            item.good_sku_id = group_purchase_sku.good_sku_id
+            item.limit = group_purchase_sku.limit
+            item.residue_limit = group_purchase_sku.residue_limit
+            item.img = group_purchase_sku.resources ? group_purchase_sku.resources.img : ''
+            item.img_id = group_purchase_sku.resources ? group_purchase_sku.resources.id : ''
+            item.group_purchase_sku_id = group_purchase_sku.id
           } else {
-            item.seckill_price = item.price
+            item.group_purchase_price = item.price
             item.good_sku_id = item.id
             item.limit = 0
-            item.seckill_sku_id = 0
+            item.group_purchase_sku_id = 0
             item.img = item.resources ? item.resources.img : ''
             item.img_id = item.resources ? item.resources.id : ''
           }
         })
         this.$nextTick(() => {
-          this.ruleForm.seckill_sku.forEach(item => {
-            const seckill_sku = seckillSku.find(res => res.good_sku_id === item.id)
-            if (seckill_sku) {
+          this.ruleForm.group_purchase_sku.forEach(item => {
+            const group_purchase_sku = groupPurchaseSku.find(res => res.good_sku_id === item.id)
+            if (group_purchase_sku) {
               this.$refs.multipleTable.toggleRowSelection(item)
             }
           })
@@ -173,7 +192,7 @@ export default {
         }
       }
       const ruleForm = this.ruleForm
-      ruleForm.seckill_sku = this.multipleSelection
+      ruleForm.group_purchase_sku = this.multipleSelection
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           create(ruleForm).then(() => {
@@ -212,7 +231,7 @@ export default {
         }
       }
       const ruleForm = this.ruleForm
-      ruleForm.seckill_sku = this.multipleSelection
+      ruleForm.group_purchase_sku = this.multipleSelection
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           edit(ruleForm).then(() => {
@@ -238,13 +257,13 @@ export default {
       this.ruleForm.img = res.img
       this.ruleForm.name = res.name
       this.ruleForm.imgList = res.imgList
-      this.ruleForm.seckill_sku = res.good_sku
+      this.ruleForm.group_purchase_sku = res.good_sku
       this.ruleForm.details = res.details
-      this.ruleForm.seckill_sku.forEach(res => {
-        res.seckill_price = res.price
+      this.ruleForm.group_purchase_sku.forEach(res => {
+        res.group_purchase_price = res.price
         res.good_sku_id = res.id
         res.limit = 0
-        res.seckill_sku_id = 0
+        res.group_purchase_sku_id = 0
       })
       this.ruleForm = JSON.parse(JSON.stringify(this.ruleForm))
     },
@@ -307,7 +326,7 @@ export default {
       this.ruleForm.imgList = fileList
     },
     getFile(res, index) {
-      this.ruleForm.seckill_sku[index].img = res.response
+      this.ruleForm.group_purchase_sku[index].img = res.response
     },
     handleSelectionChange(val) {
       this.multipleSelection = val

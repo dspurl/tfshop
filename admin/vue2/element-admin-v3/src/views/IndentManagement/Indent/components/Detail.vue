@@ -92,6 +92,47 @@
         </el-table-column>
       </el-table>
     </el-card>
+    <!-- 拼团信息 -->
+    <el-card shadow="always" style="margin-top: 25px">
+      <div slot="header" class="clearfix">
+        <span>拼团信息</span>
+      </div>
+      <el-table
+        :data="groupPurchaseInfo"
+        border
+        style="width: 100%">
+        <el-table-column label="团长" align="left">
+          <template slot-scope="scope">
+            <span>{{ scope.row.group_purchase_foreman.my_user.cellphone }} / {{ scope.row.group_purchase_foreman.user_id }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="开团时间" align="left">
+          <template slot-scope="scope">
+            <span>{{ scope.row.group_purchase_foreman.created_at }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="拼团人数" align="left">
+          <template slot-scope="scope">
+            <span>{{ scope.row.group_purchase_foreman.number }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="最大可拼团人数" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.group_purchase_foreman.number_max }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="几人参加" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.group_purchase_foreman.user.length }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.group_purchase_foreman.state }}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-card>
     <!-- 在线支付记录 -->
     <el-card shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
@@ -412,6 +453,8 @@
 <script>
 import { detail, shipment, refund, query, dhl, receiving } from '@/api/indent'
 import { getList } from '@/api/dhl'
+import { verifyPlugin } from '@/api/plugin'
+import { info as getGroupPurchaseInfo } from '@/api/groupPurchase'
 import printJS from 'print-js'
 export default {
   name: 'IndentListDetails',
@@ -466,7 +509,8 @@ export default {
         refund_integral: '',
         integralDeduction: ''
       },
-      dhl: []
+      dhl: [],
+      groupPurchaseInfo: []
     }
   },
   created() {
@@ -521,7 +565,18 @@ export default {
             that.queryNumber(element)
           }
         })
+        this.getVerifyPlugin()
         this.listLoading = false
+      })
+    },
+    getVerifyPlugin() {
+      verifyPlugin(['groupPurchase']).then(response => {
+        const groupPurchase = response.data.groupPurchase
+        if (groupPurchase && this.list.type === 2) {
+          getGroupPurchaseInfo(this.list.id).then(res => {
+            this.groupPurchaseInfo = res.data
+          })
+        }
       })
     },
     getDhl() {

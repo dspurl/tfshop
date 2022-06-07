@@ -98,6 +98,62 @@
 				</view>
 			</scroll-view>
 		</view>
+		<!-- 拼团 -->
+		<view v-if="isGroupPurchase && groupPurchase.length">
+			<navigator url="../groupPurchase/list" hover-class="none" class="f-header m-t">
+				<image src="/static/temp/h1.png"></image>
+				<view class="tit-box">
+					<text class="tit">精品团购</text>
+					<text class="tit2">Boutique Group Buying</text>
+				</view>
+				<text class="yticon icon-you"></text>
+			</navigator>
+			<view class="group-section">
+				<swiper class="g-swiper" :duration="500">
+					<swiper-item
+						class="g-swiper-item"
+						v-for="(item, index) in groupPurchase" :key="index"
+						v-if="index%2 === 0"
+					>
+						<view class="g-item left" @click="navToGroupPurchasePage(item)">
+							<image :src="item.resources.img | smallImage(250)" mode="aspectFill"></image>
+							<view class="t-box">
+								<text class="title clamp">{{item.name}}</text>
+								<view class="price-box">
+									<text class="price">￥{{item.price[0] | 1000}}</text> 
+									<text class="m-price">￥{{item.originalPrice[0] | 1000}}</text> 
+								</view>
+								
+								<view class="pro-box">
+								  	<view class="progress-box">
+								  		<progress :percent="item.progress" activeColor="#fa436a" active stroke-width="6" />
+								  	</view>
+									<text>{{item.number}}人成团</text>
+								</view>
+							</view>
+							            
+						</view>
+						<view class="g-item right" v-if="groupPurchase[index+1]" @click="navToGroupPurchasePage(groupPurchase[index+1])">
+							<image :src="groupPurchase[index+1].resources.img" mode="aspectFill"></image>
+							<view class="t-box">
+								<text class="title clamp">{{groupPurchase[index+1].name}}</text>
+								<view class="price-box">
+									<text class="price">￥{{groupPurchase[index+1].price | 1000}}</text> 
+									<text class="m-price">￥{{groupPurchase[index+1].originalPrice | 1000}}</text> 
+								</view>
+								<view class="pro-box">
+								  	<view class="progress-box">
+								  		<progress :percent="groupPurchase[index+1].progress" activeColor="#fa436a" active stroke-width="6" />
+								  	</view>
+									<text>{{groupPurchase[index+1].number}}人成团</text>
+								</view>
+							</view>
+						</view>
+					</swiper-item>
+			
+				</swiper>
+			</view>
+		</view>
 		<!-- 为你推荐 -->
 		<view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
@@ -130,6 +186,7 @@ import Good from '../../api/good'
 import Banner from '../../api/banner'
 import moment from 'moment'
 import {getList as seckillList} from '@/api/seckill'
+import {getList as groupPurchaseList} from '@/api/groupPurchase'
 import CountDownTime from '@/pages/seckill/components/CountDownTime';
 import {verifyPlugin} from '@/api/plugin'
 	export default {
@@ -151,7 +208,9 @@ import {verifyPlugin} from '@/api/plugin'
 				isSeckill: false,
 				seckill: [],
 				seckillTime: 0,
-				seckillActiveTime: ''
+				seckillActiveTime: '',
+				isGroupPurchase: false,
+				groupPurchase: []
 			};
 		},
 
@@ -235,6 +294,13 @@ import {verifyPlugin} from '@/api/plugin'
 					url: `/pages/product/detail?id=${id}`
 				})
 			},
+			// 拼团详情页
+			navToGroupPurchasePage(item) {
+				let id = item.good_id;
+				uni.navigateTo({
+					url: `/pages/product/detail?id=${id}`
+				})
+			},
 			//跳转
 			navTo(url){
 				if(url){
@@ -258,11 +324,25 @@ import {verifyPlugin} from '@/api/plugin'
 			// #endif
 			getVerifyPlugin(){
 				const that = this
-				verifyPlugin(['seckill'],function(res){
+				verifyPlugin(['seckill','groupPurchase'],function(res){
 					if(res.seckill){
 						that.isSeckill = true
 						that.getSeckill()
 					}
+					if(res.groupPurchase){
+						that.isGroupPurchase = true
+						that.getGroupPurchase()
+					}
+				})
+			},
+			// 获取拼团列表
+			getGroupPurchase(){
+				let that = this
+				groupPurchaseList({
+					limit: 10,
+					state: 1
+				},function(res){
+					that.groupPurchase = res.data
 				})
 			},
 			// 获取秒杀列表
@@ -564,7 +644,7 @@ import {verifyPlugin} from '@/api/plugin'
 	.group-section{
 		background: #fff;
 		.g-swiper{
-			height: 650upx;
+			height: 480upx;
 			padding-bottom: 30upx;
 		}
 		.g-swiper-item{
@@ -583,14 +663,14 @@ import {verifyPlugin} from '@/api/plugin'
 			overflow:hidden;
 		}
 		.left{
-			flex: 1.2;
+			flex: 1;
 			margin-right: 24upx;
 			.t-box{
 				padding-top: 20upx;
 			}
 		}
 		.right{
-			flex: 0.8;
+			flex: 1;
 			flex-direction: column-reverse;
 			.t-box{
 				padding-bottom: 20upx;

@@ -40,6 +40,8 @@
 			>
 				<image :src="item.img  | smallImage" lazy-load></image>
 				<view class="right">
+					<view class="tag-box" v-if="indentList.type === 1"><view class="seckill-tag">限时秒杀</view></view>
+					<view class="tag-box" v-else-if="indentList.type === 2"><view class="group-purchase-tag">拼单</view></view>
 					<text class="title clamp">{{ item.name }}</text>
 					<text class="spec">{{ item.specification }}</text>
 					<view class="price-box">
@@ -88,6 +90,25 @@
 				<text class="cell-tit clamp">订单状态</text>
 				<text class="cell-tip">{{ indentList.state_show }}</text>
 			</view>
+			<!-- 拼团-->
+			<template v-if="indentList.type === 2">
+				<view class="yt-list-cell b-b" v-if="groupPurchaseForeman.number">
+					<text class="cell-tit clamp">成团人数</text>
+					<text class="cell-tip">{{groupPurchaseForeman.number}}</text>
+				</view>
+				<view class="yt-list-cell b-b" v-if="groupPurchaseForeman.end_time">
+					<text class="cell-tit clamp">成团结束时间</text>
+					<text class="cell-tip">{{groupPurchaseForeman.end_time}}</text>
+				</view>
+				<view class="yt-list-cell b-b" v-if="groupPurchaseForeman.user">
+					<text class="cell-tit clamp">拼团用户</text>
+					<text class="cell-tip">
+						<view class="cu-avatar-group">
+							<view v-for="(item,index) in groupPurchaseForeman.user" :key="index" class="cu-avatar round" :style="[{ backgroundImage:'url('+(item.portrait ? item.portrait : require('@/static/missing-face.png'))+')' }]"></view>
+						</view>
+					</text>
+				</view>
+			</template>
 			<view class="yt-list-cell b-b" v-if="indentList.receiving_time">
 				<text class="cell-tit clamp">订单自动收货时间</text>
 				<text class="cell-tip" style="color: #fa436a;">{{ indentList.receiving_time }}</text>
@@ -99,12 +120,15 @@
 				</navigator>
 			</view>
 		</view>
+		<!-- 拼团分享-->
+		<foreman-qr-code v-if="indentList.state === 12" :sid="indentList.goods_list[0].id" :show="foremanShow" @changeShow="changeShow"></foreman-qr-code>
 		<!-- 底部 -->
-		<view v-if="indentList.state === 1 || indentList.state === 3 || indentList.state === 10" class="footer">
+		<view v-if="indentList.state === 1 || indentList.state === 3 || indentList.state === 10 || indentList.state === 12" class="footer">
 			<view class="price-content"></view>
 			<navigator v-if="indentList.state === 1" :url="'/pages/money/pay?id=' + indentList.id" hover-class="none" class="submit">立即支付</navigator>
 			<view v-else-if="indentList.state === 3" class="submit" @click="confirmReceipt(indentList)">确认收货</view>
 			<view v-else-if="indentList.state === 10" class="submit" @click="goScore(indentList)">立即评价</view>
+			<view v-else-if="indentList.state === 12" class="submit" @click="goForemanScore()">邀请拼单</view>
 		</view>
 	</view>
 </template>
@@ -112,7 +136,12 @@
 <script>
 import GoodIndent from '../../api/goodIndent';
 import {mapMutations} from 'vuex'
+import {indent} from '@/api/groupPurchase'
+import ForemanQrCode from '@/pages/groupPurchase/components/qrCode'
 export default {
+	components: {
+		ForemanQrCode
+	},
 	data() {
 		return {
 			id: '',
@@ -123,7 +152,14 @@ export default {
 			total: 0,
 			outPocket: 0,
 			order: [],
-			onError: null
+			onError: null,
+			groupPurchaseForeman: {
+				end_time: 0,
+				number: 0,
+				user:[]
+			},
+			modalName: 'groupPurchase',
+			foremanShow: false
 		};
 	},
 	onLoad(option) {
@@ -158,6 +194,9 @@ export default {
 				}
 				that.indentList = res;
 				that.calcTotal();
+				if(that.indentList.type === 2){
+					that.getGroupPurchase()
+				}
 			});
 		},
 		//计算总价
@@ -192,7 +231,24 @@ export default {
 		refreshOderList(){
 			// 需要重新加载
 			this.getList()
-		}
+		},
+		// 获取拼团信息
+		getGroupPurchase(){
+			const that = this
+			indent(this.indentList.id,function(res){
+				that.groupPurchaseForeman = res
+			})
+		},
+		hideModal(e) {
+			this.modalName = null
+		},
+		// 拼团分享
+		goForemanScore(){
+			this.foremanShow = true
+		},
+		changeShow(val){
+			this.foremanShow = val
+		},
 	}
 };
 </script>
@@ -308,6 +364,23 @@ page {
 			flex: 1;
 			padding-left: 24upx;
 			overflow: hidden;
+			.tag-box{
+				display: flex;
+				.seckill-tag{
+					background: #fa524c;
+					color: #ffffff;
+					border-radius: 10rpx;
+					font-size: 24rpx;
+					padding: 0 10rpx;
+				}
+				.group-purchase-tag{
+					background: #D1478E;
+					color: #ffffff;
+					border-radius: 10rpx;
+					font-size: 24rpx;
+					padding: 0 10rpx;
+				}
+			}
 		}
 
 		.title {

@@ -4,79 +4,67 @@
 			<view 
 				v-for="(item, index) in navList" :key="index" 
 				class="nav-item" 
-				:class="{current: tabCurrentIndex == index}"
-				@click="tabClick(index)"
+				:class="{current: tabCurrentIndex == item.state}"
+				@click="tabClick(item.state)"
 			>
 				{{item.text}}
 			</view>
 		</view>
-		<swiper :current="tabCurrentIndex" class="swiper-box" duration="300" :disable-touch="true">
-			<swiper-item class="tab-content" v-for="(tabItem,tabIndex) in navList" :key="tabIndex">
-				<scroll-view 
-					class="list-scroll-content" 
-					scroll-y
-					@scrolltolower="loadData"
-				>
-					<!-- 空白页 -->
-					<empty v-if="tabItem.loaded === true && tabItem.orderList.length === 0"></empty>
-					
-					<!-- 订单列表 -->
-					<view 
-						v-for="(item,index) in tabItem.orderList" :key="index"
-						class="order-item"
-					>
-						<view class="i-top b-b">
-							<text class="time">{{item.created_at}}</text>
-							<text class="state" :class="item.class">{{item.state_show}}</text>
-							<text
-								v-if="item.state===4 || item.state===5 || item.state===6 || item.state===7"
-								class="del-btn yticon icon-iconfontshanchu1"
-								@tap="deleteOrder(index)"
-							></text>
-						</view>
-						<view @tap="goShowOrder(item)">
-								<view 
-								class="goods-box-single"
-								v-for="(goodsItem, goodsIndex) in item.goods_list" :key="goodsIndex"
-							>
-								<image class="goods-img" :src="goodsItem.img | smallImage" mode="aspectFill" lazy-load></image>
-								<view class="right">
-									<text class="title clamp">{{goodsItem.name}}</text>
-									<text class="attr-box clamp">{{goodsItem.specification}}</text>
-									<text><text class="text-red text-price padding-right">{{goodsItem.price}}</text><text>x {{goodsItem.number}}</text></text>
-								</view>
-							</view>
-							<view class="price-box" v-if="item.remark">{{item.remark}}</view>
-							<view class="price-box">
-								共
-								<text class="num">{{item.goods_list.length}}</text>
-								件商品
-								订单总额
-								<text class="num">{{item.total | 1000}}</text>
-								元
+		<!-- 列表-->
+		<view class="list-scroll-content">
+			<view class="order-item" v-for="(item,index) in list" :key="index">
+				<view class="i-top b-b">
+					<text class="time">{{item.created_at}}</text>
+					<text class="state" :class="item.class">{{item.state_show}}</text>
+					<text
+						v-if="item.state===4 || item.state===5 || item.state===6 || item.state===7"
+						class="del-btn yticon icon-iconfontshanchu1"
+						@tap="deleteOrder(index)"
+					></text>
+				</view>
+				<view>
+					<view v-for="(goodsItem, goodsIndex) in item.goods_list" :key="goodsIndex">
+						<view @tap="goShowOrder(item)" class="goods-box-single">
+							<image class="goods-img" :src="goodsItem.img | smallImage" mode="aspectFill" lazy-load></image>
+							<view class="right">
+								<text class="title clamp">{{goodsItem.name}}</text>
+								<text class="attr-box clamp">{{goodsItem.specification}}</text>
+								<text><text class="text-red text-price padding-right">{{goodsItem.price}}</text><text>x {{goodsItem.number}}</text></text>
 							</view>
 						</view>
-						<view class="action-box b-t">
-							<block v-if="item.state === 1">
-								<button class="action-btn" @tap="cancelOrder(item)">取消订单</button>
-							</block>
-							<block v-if="item.state === 1">
-								<button class="action-btn recom" @tap="goPay(item)">立即支付</button>
-							</block>
-							<block v-if="item.state === 3">
-								<button class="action-btn recom" @tap="confirmReceipt(item)">确认收货</button>
-							</block>
-							<block v-if="item.state === 10">
-								<button class="action-btn recom" @tap="goScore(item)">立即评价</button>
-							</block>
+						<view v-if="item.state === 12" class="action-box b-t">
+								<button class="action-btn recom" @tap="goForemanScore()">邀请拼单</button>
+								<!-- 拼团分享-->
+								<foreman-qr-code :sid="goodsItem.id" :show="foremanShow" @changeShow="changeShow"></foreman-qr-code>
 						</view>
 					</view>
-					 
-					<uni-load-more :status="tabItem.loadingType"></uni-load-more>
-					
-				</scroll-view>
-			</swiper-item>
-		</swiper>
+					<view class="price-box" v-if="item.remark">{{item.remark}}</view>
+					<view class="price-box">
+						共
+						<text class="num">{{item.goods_list.length}}</text>
+						件商品
+						订单总额
+						<text class="num">{{item.total | 1000}}</text>
+						元
+					</view>
+				</view>
+				<view class="action-box b-t">
+					<block v-if="item.state === 1">
+						<button class="action-btn" @tap="cancelOrder(item)">取消订单</button>
+					</block>
+					<block v-if="item.state === 1">
+						<button class="action-btn recom" @tap="goPay(item)">立即支付</button>
+					</block>
+					<block v-if="item.state === 3">
+						<button class="action-btn recom" @tap="confirmReceipt(item)">确认收货</button>
+					</block>
+					<block v-if="item.state === 10">
+						<button class="action-btn recom" @tap="goScore(item)">立即评价</button>
+					</block>
+				</view>
+			</view>
+			<uni-load-more :status="loadingType"></uni-load-more>
+		</view>
 	</view>
 </template> 
 
@@ -85,119 +73,109 @@
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import empty from "@/components/empty";
 	import GoodIndent from '../../api/goodIndent'
+	import {verifyPlugin} from '@/api/plugin'
+	import ForemanQrCode from '@/pages/groupPurchase/components/qrCode'
 	export default {
 		components: {
 			uniLoadMore,
-			empty
+			empty,
+			ForemanQrCode
 		},
 		data() {
-			const currentDate = this.getDate({
-				format: true
-			})
 			return {
 				CustomBar: 0,
 				tabCurrentIndex: 0,
 				page:1,
 				modalName: '',
-				details: {
-					startTime: currentDate,
-					endTime: currentDate
-				},
 				swiperTab: false,
+				loadingType: false,
+				list: [],
 				navList: [{
 						state: 0,
-						text: '全部',
-						loadingType: 'more',
-						orderList: []
+						text: '全部'
 					},
 					{
 						state: 1,
-						text: '待付款',
-						loadingType: 'more',
-						orderList: []
+						text: '待付款'
 					},
 					{
 						state: 2,
-						text: '待发货',
-						loadingType: 'more',
-						orderList: []
+						text: '待发货'
 					},
 					{
 						state: 3,
-						text: '待收货',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 10,
-						text: '待评价',
-						loadingType: 'more',
-						orderList: []
+						text: '待收货'
 					}
 				],
+				foremanShow: false
 			};
 		},
 		
 		onLoad: function(options) {
-			this.tabCurrentIndex = options.state;
+			if(options.state){
+				this.tabCurrentIndex = options.state
+			}
+			this.getVerifyPlugin()
 		},
 		onShow(){
 			this.loginCheck()
 			this.loadData()
 		},
 		computed: {
-			startDate() {
-				return this.getDate('start');
-			},
-			endDate() {
-				return this.getDate('end');
-			}
+			
 		},
 		methods: {
 			...mapMutations(['loginCheck']),
+			//设置导航
+			getVerifyPlugin(){
+				const that = this
+				verifyPlugin(['comment','groupPurchase'],function(res){
+					if(res.comment){
+						that.navList.push({
+							state: 10,
+							text: '待评价'
+						})
+					}
+					if(res.groupPurchase){
+						that.navList.splice(2, 0, {
+							state: 12,
+							text: '待成团'
+						})
+					}
+				})
+			},
 			//获取订单列表
-			async loadData(source,search){
-				//这里是将订单挂载到tab列表下
-				let index = this.tabCurrentIndex;
-				let navItem = this.navList[index];
-				let state = navItem.state;
-				if(source === 'tabChange' || !source){
-					navItem.loadingType = 'more'
-					navItem.orderList = []
+			async loadData(type='add', loading) {
+				// 下拉刷新
+				if(type === 'refresh'){
+					this.page = 1
+					this.list = [];
+				}
+				//没有更多直接返回
+				if(type === 'add'){
+					if(this.loadingType === 'nomore'){
+						return;
+					}
+					this.loadingType = 'loading';
+				}else{
+					this.loadingType = 'more'
 				}
 				
-				if(navItem.loadingType === 'loading'){
-					//防止重复加载
-					return;
-				}
-				if(navItem.loadingType === 'noMore'){
-					//无更多数据时跳出
-					return;
-				}
-				// #ifndef MP-ALIPAY
-				navItem.loadingType = 'loading'
-				// #endif
-				var orderList = []
-				let that =this
+				const that =this
 				await GoodIndent.getList({
 					limit: 5,
-					page: this.page,
-					index: state,
-					sort: '+created_at',
-					startTime: this.details.startTime,
-					endTime: this.details.endTime,
-					search: search
-					
+					page: that.page,
+					index: this.tabCurrentIndex,
+					sort: '+created_at'
 				},function(res){
-					orderList = res.data
+					that.list = that.list.concat(res.data)
 					if (res.last_page > that.page){
 						that.page ++
-						//判断是否还有数据， 有改为 more， 没有改为noMore
-						that.$set(navItem, 'loadingType', 'more');
+						that.loadingType  = 'more'
 					} else {
-						that.$set(navItem, 'loadingType', 'noMore');
+						that.loadingType  = 'nomore'
 					}
-					orderList.forEach(item=>{
+					that.list.forEach(item=>{
 						switch(item.state){
 							case 1:
 							item.class= 'text-orange'
@@ -223,22 +201,26 @@
 								})
 								items.specification = items.specification.substr(0,items.specification.length-1)
 							}
-							
 						})
-						navItem.orderList.push(item);
 					})
-					//loaded新字段用于表示数据加载完毕，如果为空可以显示空白页
-					that.$set(navItem, 'loaded', true);
-					that.swiperTab = true
 				})
 				
-			}, 
+				if(type === 'refresh'){
+					that.loading = false
+					setTimeout(function() {
+						that.loading = true
+					}, 500)
+					if(loading == 1){
+						uni.hideLoading()
+					}else{
+						uni.stopPullDownRefresh();
+					}
+				}
+			},
 			//顶部tab点击
 			tabClick(index){
-				this.swiperTab = false
 				this.tabCurrentIndex = index
-				this.page = 1
-				this.loadData('tabChange')
+				this.loadData('refresh')
 			},
 			//删除订单
 			deleteOrder(index){
@@ -280,135 +262,17 @@
 				})
 				
 			},
-
-			//订单状态文字和颜色
-			orderStateExp(state){
-				let stateTip = '',
-					stateTipColor = '#fa436a';
-				switch(+state){
-					case 1:
-						stateTip = '待付款'; break;
-					case 2:
-						stateTip = '待发货'; break;
-						stateTipColor = '#909399';
-						break;
-						
-					//更多自定义
-				}
-				return {stateTip, stateTipColor};
-			},
-			//编辑
-			goOrder(res){
-				uni.navigateTo({
-					url: `/pages/indent/create?id=${res.id}`
-				})
-			},
 			//订单展示
 			goShowOrder(res){
 				uni.navigateTo({
 					url: `/pages/indent/detail?id=${res.id}`
 				})
 			},
-			//关闭订单后重新加载
-			refreshOderList(){
-				this.navList= [{
-						state: 0,
-						text: '全部',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 1,
-						text: '待付款',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 2,
-						text: '待发货',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 3,
-						text: '待收货',
-						loadingType: 'more',
-						orderList: []
-					},
-					// {
-					// 	state: 4,
-					// 	text: '待评价',
-					// 	loadingType: 'more',
-					// 	orderList: []
-					// },
-					// {
-					// 	state: 5,
-					// 	text: '售后',
-					// 	loadingType: 'more',
-					// 	orderList: []
-					// }
-				]
-				this.page = 1
-				this.loadData()
-			},
 			showModal(e) {
 				this.modalName = e.currentTarget.dataset.target
 			},
 			hideModal(e) {
 				this.modalName = null
-			},
-			getDate(type) {
-				const date = new Date();
-				let year = date.getFullYear();
-				let month = date.getMonth() + 1;
-				let day = date.getDate();
-	
-				if (type === 'start') {
-					year = year - 60;
-				} else if (type === 'end') {
-					year = year + 2;
-				}
-				month = month > 9 ? month : '0' + month;;
-				day = day > 9 ? day : '0' + day;
-				return `${year}-${month}-${day}`;
-			},
-			bindDateChange: function(e) {
-				if (e.target.dataset.type == 1) {
-					this.details.startTime = e.target.value
-				} else {
-					this.details.endTime = e.target.value
-				}
-				
-			},
-			// 搜索
-			getSearch(){
-				this.navList= [{
-						state: 0,
-						text: '全部',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 1,
-						text: '待付款',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 2,
-						text: '待发货',
-						loadingType: 'more',
-						orderList: []
-					},
-					{
-						state: 3,
-						text: '待收货',
-						loadingType: 'more',
-						orderList: []
-					},
-				]
-				this.hideModal()
-				this.loadData(null,1)
 			},
 			confirmReceipt(item){
 				const that = this
@@ -426,6 +290,14 @@
 				})
 				
 			},
+			//下拉刷新
+			onPullDownRefresh(){
+				this.loadData('refresh');
+			},
+			//加载更多
+			onReachBottom(){
+				this.loadData();
+			},
 			// 评价
 			goScore(item){
 				uni.navigateTo({
@@ -435,8 +307,15 @@
 			//评价成功后回调
 			refreshOderList(){
 				// 需要重新加载
-				this.loadData()
-			}
+				this.loadData('refresh')
+			},
+			// 拼团分享
+			goForemanScore(){
+				this.foremanShow = true
+			},
+			changeShow(val){
+				this.foremanShow = val
+			},
 		},
 	}
 </script>

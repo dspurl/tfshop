@@ -167,6 +167,8 @@
 			"path": "pages/indent/list",
 			"style": {
 				"navigationBarTitleText": "我的订单",
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50,
 				"app-plus": {
 					"bounce": "none"
 				}
@@ -341,6 +343,16 @@
 			}
 		}
 		// 秒杀_e
+		// 拼团_s
+		,{
+			"path": "pages/groupPurchase/list",
+			"style": {
+				"enablePullDownRefresh": true,
+				"onReachBottomDistance": 50,
+				"navigationBarTitleText": "精品团购"
+			}
+		}
+		// 拼团_e
 		// 插件列表
 	],
 	"globalStyle": {

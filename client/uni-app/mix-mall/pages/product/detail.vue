@@ -14,33 +14,113 @@
 			</swiper>
 		</view>
 		<!-- 秒杀 -->
-		<view class="seckill-box" v-if="isSeckill"  :class="{'active': getList.state === 1}">
-			<view class="info">
-				<view class="price-box">
-					<view class="name">秒杀价</view>
-					<view class="price"><span>¥</span>
-						<template v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</template>
-						<template v-else-if="getList.price_show.length === 1">{{ getList.price_show[0] }}</template>
+		<template v-if="isSeckill">
+			<view class="seckill-box" :class="{'active': getList.state === 1}">
+				<view class="info">
+					<view class="price-box">
+						<view class="name">秒杀价</view>
+						<view class="price"><span>¥</span>
+							<template v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</template>
+							<template v-else-if="getList.price_show.length === 1">{{ getList.price_show[0] }}</template>
+						</view>
+					</view>
+					<view class="original-box">
+						<view class="name" v-if="getList.state === 1">即将恢复¥
+							<template v-if="getList.market_price_show.length > 1">{{ getList.market_price_show[1] }}</template>
+							<template v-else-if="getList.market_price_show.length === 1">{{ getList.market_price_show[0] }}</template>
+						</view>
+						<view v-else class="name">
+							即将开始
+						</view>
 					</view>
 				</view>
-				<view class="original-box">
-					<view class="name" v-if="getList.state === 1">即将恢复¥
-						<template v-if="getList.market_price_show.length > 1">{{ getList.market_price_show[1] }}</template>
-						<template v-else-if="getList.market_price_show.length === 1">{{ getList.market_price_show[0] }}</template>
-					</view>
-					<view v-else class="name">
-						即将开始
-					</view>
+				<view class="countdown-box">
+					<view class="triangle"></view>
+					<view class="name"><text class="cuIcon-countdown"></text>限时秒杀</view>
+					<count-down-time :time="getList.seckillTime" @end="endTime()"></count-down-time>
 				</view>
 			</view>
-			<view class="countdown-box">
-				<view class="triangle"></view>
-				<view class="name"><text class="cuIcon-countdown"></text>限时秒杀</view>
-				<count-down-time :time="getList.seckillTime" @end="endTime()"></count-down-time>
+			<view class="seckill-abstract">{{getList.abstract}}</view>
+		</template>
+		
+		<!-- 拼团-->
+		<template v-else-if="isGroupPurchase">
+			<view class="group-purchase-box" :class="{'active': getList.state === 1}">
+				<view class="info">
+					<view class="price-box">
+						<view class="name">拼单价</view>
+						<view class="price"><span>¥</span>
+							<template v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</template>
+							<template v-else-if="getList.price_show.length === 1">{{ getList.price_show[0] }}</template>
+						</view>
+					</view>
+					<view class="original-box">
+						<view class="name" v-if="getList.state === 1">即将恢复¥
+							<template v-if="getList.market_price_show.length > 1">{{ getList.market_price_show[1] }}</template>
+							<template v-else-if="getList.market_price_show.length === 1">{{ getList.market_price_show[0] }}</template>
+						</view>
+						<view v-else class="name">
+							即将开始
+						</view>
+					</view>
+				</view>
+				<view class="countdown-box">
+					<view class="triangle"></view>
+					<view class="name"><text class="cuIcon-friend"></text>{{getList.group_purchase_number}}人成团</view>
+					<count-down-time :time="getList.groupPurchaseTime" @end="endTime()"></count-down-time>
+				</view>
 			</view>
-		</view>
-		<view v-if="isSeckill" class="seckill-abstract">{{getList.abstract}}</view>
-		<view class="introduce-section" v-if="!isSeckill">
+			<view class="group-purchase-abstract">{{getList.abstract}}</view>
+			<!-- 拼团负责人列表 -->
+			<template v-if="foremanTotal > 0">
+				<view class="foreman-box">
+					<view class="title-box">
+						<view class="title">这些人刚刚拼单成功，可参与拼单</view>
+						<view v-if="foremanTotal > 2" class="more" @click="setModal('foreman')">查看更多<text class="cuIcon-right"></text></view>
+					</view>
+					<view class="foreman-list" v-for="(item,index) in foremanList" :key="index">
+						<template v-if="index < 2">
+							<view class="user-box">
+								<view class="cu-avatar-group">
+									<view v-for="(item2,index2) in item.user" :key="index2" class="cu-avatar round" :style="[{ backgroundImage:'url('+(item2.portrait ? item2.portrait : require('@/static/missing-face.png'))+')' }]"></view>
+								</view>
+								<view class="username"><span v-for="(item2,index2) in item.user" :key="index2">{{item2.nickname}}<template v-if="index2+1 < item.user.length">,</template></span></view>
+							</view>
+							<view class="residue">
+								<button class="cu-btn bg-pink" @click="toggleSpec(true, item.id)">去拼单</button>
+							</view>
+						</template>
+					</view>
+				</view>
+				<!-- 更多-->
+				<view class="cu-modal" :class="modalName=='foreman'?'show':''">
+					<view class="cu-dialog">
+						<view class="cu-bar bg-white justify-end">
+							<view class="content">可参与的拼团</view>
+							<view class="action">
+								<text class="cuIcon-close text-red" @tap="hideModal"></text>
+							</view>
+						</view>
+						<view class="foreman-box" style="height: 400rpx;overflow-y: auto;">
+							<view class="foreman-list" v-for="(item,index) in foremanList" :key="index">
+								<template v-if="index < 2">
+									<view class="user-box">
+										<view class="cu-avatar-group">
+											<view v-for="(item2,index2) in item.user" :key="index2" class="cu-avatar round sm" :style="[{ backgroundImage:'url('+(item2.portrait ? item2.portrait : require('@/static/missing-face.png'))+')' }]"></view>
+										</view>
+										<view class="username"><span v-for="(item2,index2) in item.user" :key="index2">{{item2.nickname}}<template v-if="index2+1 < item.user.length">,</template></span></view>
+									</view>
+									<view class="residue">
+										<button class="cu-btn bg-pink sm" @click="toggleSpec(true, item.id)">去拼单</button>
+									</view>
+								</template>
+							</view>
+						</view>
+					</view>
+				</view>
+			</template>
+		</template>
+		<view class="introduce-section" v-if="!isSeckill && !isGroupPurchase">
 			<text class="title">{{ getList.name }}</text>
 			<view class="price-box" v-if="inventoryFlag">
 				<text class="price-tip">¥</text>
@@ -69,7 +149,7 @@
 				</view>
 			</block>
 			<block v-else>
-				<view v-if="specificationDefaultDisplay && !isSeckill" class="c-row b-b" @click="toggleSpec(true)">
+				<view v-if="specificationDefaultDisplay && !isSeckill && !isGroupPurchase" class="c-row b-b" @click="toggleSpec(true)">
 					<text class="tit">购买类型</text>
 					<view class="con">
 						<text class="selected-text">{{ specificationDefaultDisplay }}</text>
@@ -78,7 +158,7 @@
 				</view>
 			</block>
 			<!-- 优惠券按钮 -->
-			<view v-if="verify.coupon && !isSeckill" class="c-row b-b" @click="changeShow(true)">
+			<view v-if="verify.coupon && !isSeckill && !isGroupPurchase" class="c-row b-b" @click="changeShow(true)">
 				<text class="tit">优惠券</text>
 				<text class="con t-r red"></text>
 				<text class="yticon icon-you"></text>
@@ -133,6 +213,10 @@
 				<button type="primary" class=" action-btn no-border buy-now-btn" :disabled="getList.state === 0" @click="toggleSpec(true)">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>加入购物车</button>
 			</view>
+			<view class="action-btn-group" v-else-if="isGroupPurchase">
+				<button type="primary" class=" action-btn no-border buy-now-btn" :disabled="getList.state === 0" @click="toggleSpec(true, -1)">发起拼单</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>加入购物车</button>
+			</view>
 			<view class="action-btn-group" v-else>
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec(false)">加入购物车</button>
@@ -147,6 +231,30 @@
 		<!-- 已删除或还未发布-->
 		<view v-if="getList.is_delete || getList.is_show !== 1" class="sold-out padding-sm">商品已经下架了~</view>
 		<view v-if="inventoryFlag == false" class="sold-out padding-sm">商品已经售完了~</view>
+		<!-- 拼团分享 -->
+		<view class="cu-modal" :class="modalName=='foremanShare'?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">拼单</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
+					</view>
+				</view>
+				<view class="padding-xl foreman-share-box">
+					<template v-if="foremanShare.id">
+						<view class="cu-avatar round xl" :style="[{ backgroundImage:'url('+(foremanShare.portrait ? foremanShare.portrait : require('@/static/missing-face.png'))+')' }]">
+							<view class="cu-tag badge">拼主</view>
+						</view>
+						<view class="name">{{foremanShare.nickname}}</view>
+						<view class="time">{{foremanShare.created_at}}发起拼单</view>
+						<button class="cu-btn bg-pink" @click="toggleSpec(true, foremanShare.id)">立即拼单</button>
+					</template>
+					<template v-else>
+						<view class="msg">拼单邀请已失效</view>
+					</template>
+				</view>
+			</view>
+		</view>
 	</view>
 </template>
 
@@ -164,6 +272,7 @@ import { getList as couponList } from '@/api/coupon'
 import {verifyPlugin} from '@/api/plugin'
 import CountDownTime from '@/pages/seckill/components/CountDownTime';
 import {detail as seckillDetail} from '@/api/seckill'
+import {detail as groupPurchaseDetail, foreman} from '@/api/groupPurchase'
 import moment from 'moment'
 import {
 		mapState,
@@ -203,14 +312,24 @@ export default {
 			verify: {
 				coupon: false,
 				comment: false,
-				seckill: false
+				seckill: false,
+				groupPurchase: false
 			},
-			isSeckill: false
+			isSeckill: false,
+			isGroupPurchase: false,
+			foremanList: [],
+			foremanTotal: 0,
+			modalName: '',
+			gfid: 0,
+			foremanShare: {}
 		};
 	},
 	async onLoad(options) {
 		let id = options.id;
 		this.id = id;
+		if(options.gfid){
+			this.gfid = options.gfid
+		}
 		this.getVerifyPlugin()
 	},
 	computed:{
@@ -222,7 +341,7 @@ export default {
 	methods: {
 		getVerifyPlugin(){
 			const that = this
-			verifyPlugin(['coupon','comment','seckill'],function(res){
+			verifyPlugin(['coupon','comment','seckill','groupPurchase'],function(res){
 				that.verify = res
 				if (that.id) {
 					that.loadData(that.id);
@@ -309,6 +428,71 @@ export default {
 								})
 							}
 							that.$refs.sku._setData(that.getList.good_sku)
+						}else{
+							if(that.verify.groupPurchase){
+								// 拼团
+								groupPurchaseDetail(id,{},function(response){
+									if(response){
+										that.isGroupPurchase = true
+										that.getList.name = response.name
+										that.getList.abstract = response.abstract
+										that.getList.details = response.details
+										that.getList.state = response.state
+										that.getList.resources_many = response.resources_many
+										that.getList.group_purchase_time = response.time
+										that.getList.group_purchase = true
+										that.getList.group_purchase_id = response.id // 拼团ID
+										that.getList.group_purchase_number = response.number	// 拼团人数
+										that.getList.price_show = response.price_show
+										that.getList.market_price_show = response.market_price_show
+										if(response.state){
+											that.getList.groupPurchaseTime = (moment(response.end_time).valueOf()-moment().valueOf())/1000
+										}else{
+											that.getList.groupPurchaseTime = (moment(response.time).valueOf()-moment().valueOf())/1000
+										}
+										const good_sku = JSON.parse(JSON.stringify(that.getList.good_sku))
+										let group_purchase_sku = {}
+										that.getList.good_sku = []
+										good_sku.forEach(item =>{
+											group_purchase_sku = response.group_purchase_sku.find(items => items.good_sku_id === item.id)
+											if(group_purchase_sku){
+												item.market_price = group_purchase_sku.price /100  // 售价
+												item.price = group_purchase_sku.group_purchase_price /100 // 原价
+												item.resources = group_purchase_sku.resources // sku图片
+												item.group_purchase_sku_id = group_purchase_sku.id // 秒杀SKU ID
+												item.inventory = group_purchase_sku.residue_limit // 库存
+												that.getList.good_sku.push(item)
+											}
+										})
+										that.resources_many = []
+										if (res.resources_many.length > 0) {
+											res.resources_many.forEach((item,index)=>{
+												if(item.depict.indexOf('_video') !== -1){
+													item.type = 'video'
+													that.resources_many.unshift(item)
+												} else if(item.depict.indexOf('_poster') !== -1){
+													that.poster = item.img
+												} else {
+													item.type = 'img'
+													that.resources_many.push(item)
+												}
+											})
+										}
+										that.$refs.sku._setData(that.getList.good_sku)
+										// 获取拼团负责人列表
+										foreman(response.id,function(responses){
+											that.foremanList = responses.data
+											if(that.gfid){
+												that.modalName = 'foremanShare'
+												that.foremanShare = that.foremanList.find(item => item.id == that.gfid)
+												that.foremanShare = that.foremanShare ? that.foremanShare : {}
+											}
+											that.foremanTotal = responses.total
+										})
+							
+									}
+								})
+							}
 						}
 					})
 				}
@@ -366,10 +550,15 @@ export default {
 			});
 		},
 		//规格弹窗开关
-		toggleSpec(state) {
+		toggleSpec(state, gropuPurchaseId) {
 			if (!this.hasLogin && state === true){
 				this.$api.msg('请先登录')
 				return false
+			}
+			// 拼团
+			if (gropuPurchaseId){
+				this.getList.gropuPurchaseId = gropuPurchaseId
+				this.modalName = null
 			}
 			if (typeof state === 'boolean'){
 				this.buy=state
@@ -454,8 +643,14 @@ export default {
 		},
 		// 秒杀倒计时结束
 		endTime(){
-		  this.getVerifyPlugin()
-		}
+		  this.loadData()
+		},
+		setModal(name) {
+			this.modalName = name
+		},
+		hideModal(e) {
+			this.modalName = null
+		},
 	}
 };
 </script>
@@ -590,10 +785,9 @@ page {
 			border-right: 15rpx solid #d7dae1;
 			border-bottom: 10rpx solid transparent;
 		}
-		.cuIcon-countdown{
+		.cuIcon-friend{
 			font-size: 40rpx;
 			position: relative;
-			top: 2rpx;
 		}
 		font-size: 30rpx;
 	}
@@ -623,6 +817,143 @@ page {
 	color: #fff;
 	font-size: 24rpx;
 	padding: 10rpx 30rpx;
+}
+/* 拼团 */
+.group-purchase-box{
+	display: flex;
+	.info{
+		background: #E4E7ED;
+		flex: 1;
+		padding: 10rpx 30rpx;
+		.price-box{
+			display: flex;
+			color: #fa524c;
+			margin-bottom: 10rpx;
+			.name{
+				font-size: 24rpx;
+				position: relative;
+				top: 10rpx;
+				margin-right: 8rpx;
+			}
+			.price{
+				span{
+					font-size:24rpx;
+				}
+				font-size: 40rpx;
+				font-weight: bold;
+			}
+		}
+		.original-box{
+			.name{
+				font-size:24rpx;
+				color: #666;
+			}
+		}
+	}
+	.countdown-box{
+		background: #d7dae1;
+		padding: 10rpx 30rpx;
+		position: relative;
+		.name{
+			margin-bottom: 10rpx;
+		}
+		.triangle{
+			position: absolute;
+			top: 45rpx;
+			left: -15rpx;
+			width: 0;
+			height: 0;
+			border-top: 10rpx solid transparent;
+			border-right: 15rpx solid #d7dae1;
+			border-bottom: 10rpx solid transparent;
+		}
+		.cuIcon-countdown{
+			font-size: 40rpx;
+			position: relative;
+			top: 2rpx;
+		}
+		font-size: 30rpx;
+	}
+	&.active{
+		.info{
+			background: #D1478E;
+			.price-box{
+				color: #fff;
+			}
+			.original-box{
+				.name{
+					font-size:24rpx;
+					color:#e8e0e0;
+				}
+			}
+		}
+		.countdown-box{
+			background: #5BBAB4;
+			.triangle{
+				border-right: 15rpx solid #5BBAB4;
+			}
+		}
+	}
+}
+.group-purchase-abstract{
+	background:#835867;
+	color: #fff;
+	font-size: 24rpx;
+	padding: 10rpx 30rpx;
+}
+.foreman-box{
+	background-color: #fff;
+	margin: 20rpx 0;
+	.title-box{
+		display: flex;
+		padding: 10rpx 30rpx;
+		border-bottom: 1px solid #F2F6FC;
+		.title{
+			flex:1;
+		}
+		.more{
+			color: #aaaaaa;
+		}
+	}
+	.foreman-list{
+		display: flex;
+		align-items:center;
+		padding: 20rpx 30rpx 20rpx 10rpx;
+		border-bottom: 1px solid #F2F6FC;
+		.user-box{
+			flex: 1;
+			display: flex;
+			align-items:center;
+			min-width:0;
+			.username{
+				margin-left: 10rpx;
+				overflow: hidden;
+				text-overflow:ellipsis;
+				white-space: nowrap;
+				width: 260rpx;
+			}
+		}
+		.residue{
+			display: flex;
+			align-items:center;
+		}
+	}
+}
+.foreman-share-box{
+	.name{
+		margin: 10rpx 0;
+	}
+	.time{
+		color: #aaaaaa;
+		margin-bottom: 20rpx;
+	}
+	.msg{
+		color: #aaaaaa;
+		margin-top: 10rpx;
+	}
+}
+.cu-modal{
+	z-index: 100;
 }
 /* 分享 */
 .share-section {
