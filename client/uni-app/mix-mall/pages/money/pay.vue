@@ -282,6 +282,7 @@
 							},
 							fail(res) {
 								that.$api.msg('支付失败，请重新支付')
+								that.getList()
 							}
 						})
 						
