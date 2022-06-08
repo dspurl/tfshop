@@ -679,10 +679,10 @@ class Plugin
         if (array_key_exists('routeLangAdmin', $routes) || array_key_exists('routeLangClient', $routes)) {
             $targetPath = '/api/resources/lang/zn/route.php';
             $file_get_contents = Storage::disk('root')->get($targetPath);
+            //去除已存在的插件代码
+            $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             if (array_key_exists('routeLangAdmin', $routes)) {
-                //去除已存在的插件代码
-                $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
-                $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
                 // 添加新的插件代码
                 $file_get_contents = str_replace("admin插件", $dsshop['name'] . "_s
     " . $routes['routeLangAdmin'] . "
@@ -690,9 +690,6 @@ class Plugin
         // admin插件", $file_get_contents);
             }
             if (array_key_exists('routeLangClient', $routes)) {
-                //去除已存在的插件代码
-                $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
-                $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
                 // 添加新的插件代码
                 $file_get_contents = str_replace("client插件", $dsshop['name'] . "_s
     " . $routes['routeLangClient'] . "
