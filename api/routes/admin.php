@@ -42,6 +42,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('power/{id}', 'PowerController@edit')->name('admin.powerEdit')->middleware(['permissions:PowerEdit']);  //保存权限
         Route::post('power/destroy/{id}', 'PowerController@destroy')->name('admin.powerDestroy')->middleware(['permissions:PowerDestroy']);  //删除权限
         Route::get('good', 'GoodController@list')->name('admin.goodList')->middleware(['permissions:GoodList']);    //商品列表
+        Route::get('goodCount', 'GoodController@count')->name('admin.goodCount')->middleware(['permissions:GoodList']);    //商品统计
         Route::post('good', 'GoodController@create')->name('admin.goodCreate')->middleware(['permissions:GoodCreate']);    //创建商品
         Route::post('good/{id}', 'GoodController@edit')->name('admin.goodEdit')->middleware(['permissions:GoodEdit']);    //保存商品
         Route::post('good/destroy/{id}', 'GoodController@destroy')->name('admin.goodDestroy')->middleware(['permissions:GoodDestroy']);    //删除商品

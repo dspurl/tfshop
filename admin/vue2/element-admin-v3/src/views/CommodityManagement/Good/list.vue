@@ -2,9 +2,11 @@
   <div class="app-container">
     <div class="filter-container">
       <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
-        <el-menu-item index="1">全部商品</el-menu-item>
-        <el-menu-item index="2">出售中</el-menu-item>
-        <el-menu-item index="3">仓库中</el-menu-item>
+        <el-menu-item index="1">全部商品({{ goodCount.all }})</el-menu-item>
+        <el-menu-item index="2">出售中({{ goodCount.sell }})</el-menu-item>
+        <el-menu-item index="3">仓库中({{ goodCount.warehouse }})</el-menu-item>
+        <el-menu-item index="4">低库存({{ goodCount.lowInventory }})</el-menu-item>
+        <el-menu-item index="5">已售完({{ goodCount.sellOut }})</el-menu-item>
       </el-menu>
       <br>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
@@ -43,12 +45,12 @@
         type="selection"
         width="55"
         fixed="left"/>
-      <el-table-column label="编号" sortable="custom" prop="id" fixed="left" width="80">
+      <el-table-column label="编号" sortable="custom" prop="id" width="80">
         <template slot-scope="scope">
           <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.id }}" target="_blank" style="width:300px;"> {{ scope.row.id }}</router-link>
         </template>
       </el-table-column>
-      <el-table-column label="图片" width="100">
+      <el-table-column label="图片" width="150">
         <template slot-scope="scope">
           <el-image :src="scope.row.resources.img | smallImage(150)" :preview-src-list="[ scope.row.resources.img ]" style="width:80px;height:80px;"/>
         </template>
@@ -64,47 +66,47 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="分类">
+      <el-table-column label="分类" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.category ? scope.row.category.name : '无' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="货号">
+      <el-table-column label="货号" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.number }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="库存">
+      <el-table-column label="库存" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.inventory_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="销量" sortable="custom" prop="sales">
+      <el-table-column label="销量" sortable="custom" prop="sales" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.sales }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" sortable="custom" prop="is_show">
+      <el-table-column label="状态" sortable="custom" prop="is_show" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.putaway_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="减库存方式" sortable="custom" prop="is_inventory">
+      <el-table-column label="减库存方式" sortable="custom" prop="is_inventory" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.is_inventory_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否推荐" sortable="custom" prop="is_recommend">
+      <el-table-column label="是否推荐" sortable="custom" prop="is_recommend" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.is_recommend === 1 ? '是' : '否' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上架时间" sortable="custom" prop="time">
+      <el-table-column label="上架时间" sortable="custom" prop="time" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.time ? scope.row.time : '未发布' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" sortable="custom" prop="updated_at">
+      <el-table-column label="更新时间" sortable="custom" prop="updated_at" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.updated_at }}</span>
         </template>
@@ -198,7 +200,7 @@
 </style>
 
 <script>
-import { getList, destroy, state } from '@/api/good'
+import { getList, destroy, state, count } from '@/api/good'
 import { getList as getCateList } from '@/api/category'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
@@ -209,6 +211,13 @@ export default {
   data() {
     return {
       formLoading: false,
+      goodCount: {
+        all: 0,
+        sell: 0,
+        warehouse: 0,
+        lowInventory: 0,
+        sellOut: 0
+      },
       actionurl: process.env.BASE_API + 'uploadPictures',
       imgHeaders: {
         Authorization: getToken('token_type') + ' ' + getToken('access_token')
@@ -266,6 +275,7 @@ export default {
   },
   created() {
     this.getList()
+    this.getGoodCount()
     this.getCateList()
   },
   methods: {
@@ -275,6 +285,11 @@ export default {
         this.list = response.data.data
         this.total = response.data.total
         this.listLoading = false
+      })
+    },
+    getGoodCount() {
+      count().then(response => {
+        this.goodCount = response.data
       })
     },
     getCateList() {

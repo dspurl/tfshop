@@ -7,6 +7,12 @@ export function getList(query) {
     params: query
   })
 }
+export function count() {
+  return request({
+    url: 'goodCount',
+    method: 'GET'
+  })
+}
 
 export function create(data) {
   data = Qs.parse(data)

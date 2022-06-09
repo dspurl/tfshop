@@ -21,6 +21,7 @@ export default {
   data() {
     return {
       tab: 1,
+      inventoryFlag: true, //true有货; false 无货
       tabLoading: false,
       goodDetail: {},
       specificationDefaultDisplay: {},
@@ -38,10 +39,14 @@ export default {
   async asyncData (ctx) {
     try {
       const { params } = ctx;
+      let inventoryFlag = false
       let [ goodDetailData, verifyPluginData ] = await Promise.all([
         detail(params.id),
         verifyPlugin(['coupon','comment', 'seckill']),
       ]);
+      if(goodDetailData.inventory_show > 0){
+        inventoryFlag = true
+      }
       // 秒杀
       if(verifyPluginData.seckill){
         var isSeckill = false
@@ -101,6 +106,7 @@ export default {
         })
       }
       return {
+        inventoryFlag: inventoryFlag,
         goodDetail: goodDetailData,
         resources_many: resources_many,
         resources_many_img: resources_many_img,

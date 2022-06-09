@@ -33,6 +33,7 @@ return [
         'powerEdit' => '保存权限',
         'powerDestroy' => '删除权限',
         'goodList' => '商品列表',
+        'goodCount' => '商品统计',
         'goodCreate' => '创建商品',
         'goodEdit' => '保存商品',
         'goodDestroy' => '删除商品',

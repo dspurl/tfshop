@@ -46,6 +46,14 @@ class GoodController extends Controller
                 $q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
             } else if ($request->activeIndex == 3) {
                 $q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
+            } else if ($request->activeIndex == 4) {
+                $q->whereHas('goodSku', function ($query) {
+                    $query->groupBy('id')->having('inventory', '<', 10);
+                });
+            } else if ($request->activeIndex == 5) {
+                $q->whereHas('goodSku', function ($query) {
+                    $query->groupBy('id')->having('inventory', 0);
+                });
             }
 
         }
@@ -82,6 +90,26 @@ class GoodController extends Controller
             }
         }
         return resReturn(1, $paginate);
+    }
+
+    /**
+     * GoodCount
+     * 商品统计
+     */
+    public function count()
+    {
+        $count = [
+            'all' => Good::count(), //全部
+            'sell' => Good::where('is_show', Good::GOOD_SHOW_PUTAWAY)->count(),    //出售
+            'warehouse' => Good::where('is_show', Good::GOOD_SHOW_ENTREPOT)->count(),   //仓库
+            'lowInventory' => Good::whereHas('goodSku', function ($query) {
+                $query->groupBy('id')->having('inventory', '<', 10);
+            })->count(),    //低库存
+            'sellOut' => Good::whereHas('goodSku', function ($query) {
+                $query->groupBy('id')->having('inventory', 0);
+            })->count(), //已售完
+        ];
+        return resReturn(1, $count);
     }
 
     /**

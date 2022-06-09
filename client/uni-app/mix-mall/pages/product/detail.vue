@@ -229,7 +229,7 @@
 			<view class="layer attr-content" @click.stop="stopPrevent"><sku ref="sku" :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku></view>
 		</view>
 		<!-- 已删除或还未发布-->
-		<view v-if="getList.is_delete || getList.is_show !== 1" class="sold-out padding-sm">商品已经下架了~</view>
+		<view v-if="getList.is_show === 0" class="sold-out padding-sm">商品已经下架了~</view>
 		<view v-if="inventoryFlag == false" class="sold-out padding-sm">商品已经售完了~</view>
 		<!-- 拼团分享 -->
 		<view class="cu-modal" :class="modalName=='foremanShare'?'show':''">
