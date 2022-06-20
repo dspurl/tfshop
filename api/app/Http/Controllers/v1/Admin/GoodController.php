@@ -6,6 +6,7 @@ use App\Code;
 use App\Http\Requests\v1\SubmitGoodRequest;
 use App\Models\v1\Brand;
 use App\Models\v1\Freight;
+use App\Models\v1\GoodCode;
 use App\Models\v1\GoodSku;
 use App\Models\v1\GoodSpecification;
 use App\Models\v1\Resource;
@@ -119,6 +120,7 @@ class GoodController extends Controller
      * @return \Illuminate\Http\Response
      * @queryParam  name string 商品名称
      * @queryParam  number string 货号
+     * @queryParam  type int    类型
      * @queryParam  freight_id int    运费模板ID
      * @queryParam  category_id int 分类ID
      * @queryParam  brand_id int 品牌ID
@@ -160,7 +162,10 @@ class GoodController extends Controller
                 $Good->category_id = $request->category_id;
             }
             $Good->number = $request->number;
-            $Good->freight_id = $request->freight_id;
+            $Good->type = $request->type;
+            if ($Good->type == Good::GOOD_TYPE_COMMON) {
+                $Good->freight_id = $request->freight_id;
+            }
             $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
             $Good->is_inventory = $request->is_inventory;
             $Good->keywords = $request->keywords;
@@ -243,7 +248,30 @@ class GoodController extends Controller
                     $GoodSku->price = $good_sku['price'];
                     $GoodSku->inventory = $good_sku['inventory'];
                     $GoodSku->product_sku = $good_sku['product_sku'];
+                    // 卡密
+                    if ($Good->type == Good::GOOD_TYPE_KEYS) {
+                        if (!array_key_exists("good_code", $good_sku)) {
+                            throw new \Exception('未配置卡密', Code::CODE_WRONG);
+                        }
+                        if (!array_key_exists("code_type", $good_sku)) {
+                            throw new \Exception('未配置卡密类型', Code::CODE_WRONG);
+                        }
+                        if (count($good_sku['good_code']) > 1 && $good_sku['inventory'] > count($good_sku['good_code'])) {
+                            throw new \Exception('卡密数量必须大于等于库存', Code::CODE_WRONG);
+                        }
+                        $GoodSku->code_type = $good_sku['code_type'];
+                        $GoodSku->is_fixed = $good_sku['is_fixed'];
+                    }
                     $GoodSku->save();
+                    if ($Good->type == Good::GOOD_TYPE_KEYS) {
+                        foreach ($good_sku['good_code'] as $g) {
+                            $GoodCode = new GoodCode();
+                            $GoodCode->good_sku_id = $GoodSku->id;
+                            $GoodCode->name = $g['name'];
+                            $GoodCode->code = $g['code'];
+                            $GoodCode->save();
+                        }
+                    }
                     if (array_key_exists("img", $good_sku)) {
                         $Resource = new Resource();
                         $Resource->type = Resource::RESOURCE_TYPE_IMG;
@@ -251,6 +279,24 @@ class GoodController extends Controller
                         $Resource->image_id = $GoodSku->id;
                         $Resource->image_type = 'App\Models\v1\GoodSku';
                         $Resource->img = imgPathShift('product_sku', $good_sku['img']);
+                        $Resource->save();
+                    }
+                    // 下载商品
+                    if ($Good->type == Good::GOOD_TYPE_DOWNLOAD) {
+                        // 处理下载商品
+                        if (!array_key_exists("file", $good_sku)) {
+                            throw new \Exception('请上传文件', Code::CODE_WRONG);
+                        }
+                        if (!array_key_exists("file_name", $good_sku)) {
+                            throw new \Exception('上传文件有误', Code::CODE_WRONG);
+                        }
+                        $Resource = new Resource();
+                        $Resource->type = Resource::RESOURCE_TYPE_FILE;
+                        $Resource->name = $good_sku['file_name'];
+                        $Resource->depict = 'product_sku_file';
+                        $Resource->image_id = $GoodSku->id;
+                        $Resource->image_type = 'App\Models\v1\GoodSku';
+                        $Resource->img = filePathShift('productSku', $good_sku['file']);
                         $Resource->save();
                     }
                 }
@@ -275,6 +321,7 @@ class GoodController extends Controller
      * @queryParam  id int 商品ID
      * @queryParam  name string 商品名称
      * @queryParam  number string 货号
+     * @queryParam  type int    类型
      * @queryParam  freight_id int    运费模板ID
      * @queryParam  category_id int 分类ID
      * @queryParam  brand_id int 品牌ID
@@ -315,7 +362,10 @@ class GoodController extends Controller
             }
             $Good->name = $request->name;
             $Good->number = $request->number;
-            $Good->freight_id = $request->freight_id;
+            $Good->type = $request->type;
+            if ($Good->type == Good::GOOD_TYPE_COMMON) {
+                $Good->freight_id = $request->freight_id;
+            }
             $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
             $Good->is_inventory = $request->is_inventory;
             $Good->keywords = $request->keywords;
@@ -432,7 +482,37 @@ class GoodController extends Controller
                     $GoodSku->price = $good_sku['price'];
                     $GoodSku->inventory = $good_sku['inventory'];
                     $GoodSku->product_sku = $good_sku['product_sku'];
+                    // 卡密
+                    if ($Good->type == Good::GOOD_TYPE_KEYS) {
+                        if (!array_key_exists("good_code", $good_sku)) {
+                            throw new \Exception('未配置卡密', Code::CODE_WRONG);
+                        }
+                        if (!array_key_exists("code_type", $good_sku)) {
+                            throw new \Exception('未配置卡密类型', Code::CODE_WRONG);
+                        }
+                        if (count($good_sku['good_code']) > 1 && $good_sku['inventory'] > count($good_sku['good_code'])) {
+                            throw new \Exception('卡密数量必须大于等于库存', Code::CODE_WRONG);
+                        }
+                        $GoodSku->code_type = $good_sku['code_type'];
+                        $GoodSku->is_fixed = $good_sku['is_fixed'];
+                    }
                     $GoodSku->save();
+                    $GoodCodeAll = [];
+                    if ($Good->type == Good::GOOD_TYPE_KEYS) {
+                        foreach ($good_sku['good_code'] as $g) {
+                            if (array_key_exists("id", $g)) {
+                                $GoodCode = GoodCode::find($g['id']);
+                            } else {
+                                $GoodCode = new GoodCode();
+                                $GoodCode->good_sku_id = $GoodSku->id;
+                            }
+                            $GoodCode->name = $g['name'];
+                            $GoodCode->code = $g['code'];
+                            $GoodCode->save();
+                            $GoodCodeAll[] = $GoodCode->id;
+                        }
+                        GoodCode::where('good_sku_id', $GoodSku->id)->whereNotIn('id', $GoodCodeAll)->delete();
+                    }
                     $GoodSkuAll[] = $GoodSku->id;
                     if (array_key_exists("img", $good_sku) && $good_sku['img']) {
                         $OriginalResource = Resource::where('image_type', 'App\Models\v1\GoodSku')->where('image_id', $good_sku['id'])->first();
@@ -453,6 +533,28 @@ class GoodController extends Controller
                         $Resource->img = imgPathShift('product_sku', $good_sku['img']);
                         $Resource->save();
                         $ResourceAll[] = $Resource->id;
+                    }
+                    // 下载商品
+                    if ($Good->type == Good::GOOD_TYPE_DOWNLOAD) {
+                        // 处理下载商品
+                        if (!array_key_exists("file", $good_sku)) {
+                            throw new \Exception('请上传文件', Code::CODE_WRONG);
+                        }
+                        if (!array_key_exists("file_name", $good_sku)) {
+                            throw new \Exception('上传文件有误', Code::CODE_WRONG);
+                        }
+                        if(array_key_exists('file_id',$good_sku)){
+                            $Resource = Resource::find($good_sku['file_id']);
+                        }else{
+                            $Resource = new Resource();
+                            $Resource->type = Resource::RESOURCE_TYPE_FILE;
+                            $Resource->image_id = $GoodSku->id;
+                            $Resource->image_type = 'App\Models\v1\GoodSku';
+                            $Resource->depict = 'product_sku_file';
+                        }
+                        $Resource->name = $good_sku['file_name'];
+                        $Resource->img = filePathShift('productSku', $good_sku['file']);
+                        $Resource->save();
                     }
                 }
                 $Good->order_price = $order_price;
@@ -485,13 +587,21 @@ class GoodController extends Controller
         $return['goods'] = [];
         if ($id) {
             $Good = Good::with(['resourcesMany', 'goodSpecificationOld', 'brand', 'goodSku' => function ($q) {
-                $q->with('resources');
+                $q->with('resourcesMany', 'GoodCode');
             }])->find($id);
             if ($Good->goodSku) {
                 foreach ($Good->goodSku as $id => $goodSku) {
                     $Good->goodSku[$id]->img = '';
-                    if ($goodSku->resources) {
-                        $Good->goodSku[$id]->img = $goodSku->resources->img;
+                    if ($goodSku->resourcesMany) {
+                        foreach ($goodSku->resourcesMany as $resourcesMany) {
+                            if ($resourcesMany->depict == 'product_sku_file') {
+                                $Good->goodSku[$id]->file = $resourcesMany->img;
+                                $Good->goodSku[$id]->file_id = $resourcesMany->id;
+                                $Good->goodSku[$id]->file_name = $resourcesMany->name;
+                            } else {
+                                $Good->goodSku[$id]->img = $resourcesMany->img;
+                            }
+                        }
                     }
                 }
             }

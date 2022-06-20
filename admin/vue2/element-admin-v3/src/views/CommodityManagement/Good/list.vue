@@ -50,6 +50,11 @@
           <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.id }}" target="_blank" style="width:300px;"> {{ scope.row.id }}</router-link>
         </template>
       </el-table-column>
+      <el-table-column label="商品类型" sortable="custom" prop="type" width="120">
+        <template slot-scope="scope">
+          {{ scope.row.type }}
+        </template>
+      </el-table-column>
       <el-table-column label="图片" width="150">
         <template slot-scope="scope">
           <el-image :src="scope.row.resources.img | smallImage(150)" :preview-src-list="[ scope.row.resources.img ]" style="width:80px;height:80px;"/>
@@ -101,12 +106,12 @@
           <span>{{ scope.row.is_recommend === 1 ? '是' : '否' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上架时间" sortable="custom" prop="time" width="150">
+      <el-table-column label="上架时间" sortable="custom" prop="time" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.time ? scope.row.time : '未发布' }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" sortable="custom" prop="updated_at" width="150">
+      <el-table-column label="更新时间" sortable="custom" prop="updated_at" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.updated_at }}</span>
         </template>

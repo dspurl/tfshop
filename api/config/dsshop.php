@@ -25,8 +25,18 @@ return [
     'orderOvertime' => env('ORDER_OVERTIME', 1440),  // 订单超时时间(分钟)
     'automaticReceivingState' => env('AUTOMATIC_RECEIVING_STATE', true),  // 是否开启自动收货
     'automaticReceiving' => env('AUTOMATIC_RECEIVING', 7),  // 多少天后自动收货(天)
-    'maxFileUploadSize' => env('MAX_FILE_UPLOAD_SIZE', 2 * 1024 * 1024),  // 文件最大上传大小2M
-    'down'  => env('APP_DOWN', false),   // 维护模式
+    'maxFileUploadSize' => env('MAX_FILE_UPLOAD_SIZE', 2 * 1024 * 1024),
+    'down' => env('APP_DOWN', false),   // 维护模式
+    'file' => [
+        'image' => [
+            'size' => env('FILE_IMAGE_SIZE', 2 * 1024 * 1024), // 图片最大上传大小2M
+            'extension' => env('FILE_IMAGE_EXTENSION', 'gif,jpg,jpeg,bmp,png') // 图片支持的格式
+        ],
+        'custom' => [
+            'size' => env('FILE_CUSTOM_SIZE', 5 * 1024 * 1024), // 自定义最大上传大小5M
+            'extension' => env('FILE_CUSTOM_EXTENSION', 'gif,jpg,jpeg,bmp,png,zip,html,txt,json') // 自定义支持的格式
+        ],
+    ],
 
     // 插件市场相关配置
     'marketApplicationSecret' => env('MARKET_APPLICATION_SECRET', null),    // 插件市场应用密钥

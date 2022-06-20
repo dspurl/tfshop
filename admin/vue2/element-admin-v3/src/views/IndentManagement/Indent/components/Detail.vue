@@ -3,7 +3,7 @@
     <!-- 订单详情 -->
     <el-card shadow="always">
       <el-row type="flex">
-        <el-col :span="20" style="font-size: 18px;line-height: 45px;font-weight: bold;">订单号：{{ list.identification }}</el-col>
+        <el-col :span="20" style="font-size: 18px;line-height: 45px;font-weight: bold;">订单号：{{ list.identification }}【{{ list.type }}】</el-col>
         <el-col :span="3" style="text-align: right;"><el-button v-if="list.shipping_status === 0 && list.state === 2" type="primary" @click="handleDelete(list, 2)">发货</el-button></el-col>
         <el-col :span="1"/>
       </el-row>
@@ -40,7 +40,7 @@
       <el-steps :active="order_progress" align-center>
         <el-step :description="list.created_at" title="买家下单"/>
         <el-step :description="list.pay_time !== '1970-01-01 08:00:00' ? list.pay_time : ''" title="买家付款"/>
-        <el-step :description="list.shipping_time !== '1970-01-01 08:00:00' ? list.shipping_time : ''" title="商家发货"/>
+        <el-step v-if="goodType !== '卡密/网盘' && goodType !== '下载商品'" :description="list.shipping_time !== '1970-01-01 08:00:00' ? list.shipping_time : ''" title="商家发货"/>
         <el-step :description="list.confirm_time !== '1970-01-01 08:00:00' ? list.confirm_time : ''" title="交易完成"/>
       </el-steps>
     </el-card>
@@ -70,6 +70,11 @@
             <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.good_id }}" target="_blank"> {{ scope.row.name }}</router-link>
           </template>
         </el-table-column>
+        <el-table-column label="类型" align="center">
+          <template slot-scope="scope">
+            <span>{{ scope.row.good.type }}</span>
+          </template>
+        </el-table-column>
         <el-table-column label="规格">
           <template slot-scope="scope">
             <span>{{ scope.row.specification }}</span>
@@ -93,7 +98,7 @@
       </el-table>
     </el-card>
     <!-- 拼团信息 -->
-    <el-card shadow="always" style="margin-top: 25px">
+    <el-card v-if="list.type === '拼团订单'" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
         <span>拼团信息</span>
       </div>
@@ -180,7 +185,7 @@
       </el-table>
     </el-card>
     <!-- 配送 -->
-    <el-card shadow="always" style="margin-top: 25px">
+    <el-card v-if="list.good_location" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
         <span>配送</span>
       </div>
@@ -232,6 +237,18 @@
             <el-button :loading="shipmentLoading" type="primary" @click="receivingEdit">保存</el-button>
           </el-form-item>
         </el-form>
+      </div>
+    </el-card>
+    <!-- 网盘 -->
+    <el-card v-if="list.good_code.length" shadow="always" style="margin-top: 25px">
+      <div slot="header" class="clearfix">
+        <span>{{ code_type ? '网盘' : '卡密' }}</span>
+      </div>
+      <div class="code-list">
+        <div v-for="(item,index) in list.good_code" :key="index" class="li">
+          <div v-if="item.name" class="name">{{ code_type ? '网盘地址' : '卡号' }}：{{ item.name }}<span class="el-icon-copy-document" @click="doCopy(item.name)"/></div>
+          <div class="value">{{ code_type ? '提取码' : '卡密' }}：{{ item.code }}<span class="el-icon-copy-document" @click="doCopy(item.code)"/></div>
+        </div>
       </div>
     </el-card>
     <!-- 退款记录 -->
@@ -361,7 +378,7 @@
     </el-dialog>
   </div>
 </template>
-<style lang="scss" scoped>
+<style lang='scss' scoped>
   .app-container{
     padding-bottom: 80px;
   }
@@ -449,6 +466,20 @@
       border: 1px solid #000;
     }
   }
+  .code-list{
+    font-size: 12px;
+    .li{
+      display: flex;
+      line-height: 25px;
+      .el-icon-copy-document{
+        margin-left: 10px;
+        cursor:pointer;
+      }
+      .name{
+        margin-right: 50px;
+      }
+    }
+  }
 </style>
 <script>
 import { detail, shipment, refund, query, dhl, receiving } from '@/api/indent'
@@ -466,7 +497,9 @@ export default {
       queryLoading: false,
       order_progress: 0,
       logistics: false,
-      list: '',
+      list: {
+        good_code: []
+      },
       dialogFormVisible: false,
       listLoading: true,
       id: this.$route.query.id,
@@ -510,7 +543,9 @@ export default {
         integralDeduction: ''
       },
       dhl: [],
-      groupPurchaseInfo: []
+      groupPurchaseInfo: [],
+      goodType: '普通商品',
+      code_type: 0
     }
   },
   created() {
@@ -542,6 +577,7 @@ export default {
           response.data.goods_list[k].identification = response.data.goods_list[k].good.identification
           response.data.goods_list[k].articleNumber = response.data.goods_list[k].good.number
           if (response.data.goods_list[k].good_sku) {
+            this.code_type = response.data.goods_list[k].good_sku.code_type
             response.data.goods_list[k].good_sku.product_sku.forEach(item => {
               if (response.data.goods_list[k].specification) {
                 response.data.goods_list[k].specification += item.key + ':' + item.value + ';'
@@ -551,6 +587,7 @@ export default {
             })
             response.data.goods_list[k].specification = response.data.goods_list[k].specification.substr(0, response.data.goods_list[k].specification.length - 1)
           }
+          this.goodType = response.data.goods_list[k].good.type
         }
         this.receivingTemp.new_receiving_time = response.data.receiving_time
         this.receivingTemp.id = response.data.id
@@ -725,6 +762,16 @@ export default {
         }
       })
       return sums
+    },
+    doCopy(item) {
+      this.$copyText(item).then(message => {
+        this.$message({
+          message: '复制成功',
+          type: 'success'
+        })
+      }).catch(() => {
+        console.log('失败')
+      })
     },
     // 打印
     print() {

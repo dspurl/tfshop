@@ -1,4 +1,4 @@
-import {detail, receipt} from '@/api/goodIndent'
+import {detail, receipt, download} from '@/api/goodIndent'
 export default {
   layout: 'user',
   head () {
@@ -11,7 +11,12 @@ export default {
       loading: true,
       buttonLoading: false,
       total: 0,
-      indent:{}
+      indent:{
+        total: 0,
+        good_code: []
+      },
+      isType: true,
+      code_type: 0
     }
   },
   mounted() {
@@ -36,6 +41,7 @@ export default {
         this.indent.goods_list.forEach(item => {
           this.total += item.price * item.number;
           if(item.good_sku){
+            this.code_type = item.good_sku.code_type
             specification = null;
             item.good_sku.product_sku.forEach(item2 => {
               if (specification) {
@@ -45,6 +51,9 @@ export default {
               }
             });
             item.specification = specification.substr(0, specification.length - 1);
+          }
+          if (item.good.type === 2 || item.good.type === 3) {
+            this.isType = false
           }
         });
         this.total = Number(this.total.toFixed(2));
@@ -76,6 +85,25 @@ export default {
     },
     goBack() {
       $nuxt.$router.go(-1)
+    },
+    doCopy (item) {
+      this.$copyText(item).then(message => {
+        this.$message({
+          message: '复制成功',
+          type: 'success'
+        });
+      }).catch(err => {
+        console.log('失败')
+      })
+    },
+    // 下载文件
+    goDownload() {
+      this.buttonLoading = true
+      download(this.indent.id).then(response => {
+        window.open(process.env.API_URL + 'indentDownload/'+ response)
+      }).finally(() => {
+        this.buttonLoading = false
+      })
     }
   }
 }

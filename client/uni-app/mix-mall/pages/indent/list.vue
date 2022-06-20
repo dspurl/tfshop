@@ -105,6 +105,10 @@
 					{
 						state: 3,
 						text: '待收货'
+					},
+					{
+						state: 5,
+						text: '已完成'
 					}
 				],
 				foremanShow: false
@@ -230,8 +234,8 @@
 				    content: '是否确认删除订单？',
 				    success: function (res) {
 						if (res.confirm) {
-							GoodIndent.destroy(that.navList[that.tabCurrentIndex].orderList[index].id,function(res){
-								that.navList[that.tabCurrentIndex].orderList.splice(index, 1)
+							GoodIndent.destroy(that.list[index].id,function(res){
+								that.list.splice(index, 1)
 								that.$api.msg(`删除成功`)
 								uni.hideLoading()
 							})

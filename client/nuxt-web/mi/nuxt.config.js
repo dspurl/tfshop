@@ -77,6 +77,7 @@ export default {
     '@/plugins/vue-moment',
     { src: '@/plugins/videoPlayer.js', ssr: false },
     '@/plugins/lucky-canvas.js',
+    '@/plugins/vue-clipboard2.js'
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

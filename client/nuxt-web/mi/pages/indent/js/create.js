@@ -55,7 +55,8 @@ export default {
         coupon: false,
         seckill: false
       },
-      isSeckill: false
+      isSeckill: false,
+      isAddress: false
     }
   },
   async asyncData (ctx) {
@@ -106,6 +107,10 @@ export default {
             skuIds: item.good_sku_id
           })
         }
+      })
+      // 是否需要地址
+      this.isAddress = this.ruleForm.indentCommodity.some( function( item){
+          return item.good.type === '普通商品';
       })
       if(this.verify.seckill && seckill){
         this.isSeckill = true

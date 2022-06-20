@@ -351,8 +351,10 @@ class AppController extends Controller
         if ($User->money < $GoodIndent->total) {  //余额小于需要支付的费用
             return resReturn(0, '账户余额不足，无法完成订单', Code::CODE_PARAMETER_WRONG);
         }
+        $type = 0;
         foreach ($GoodIndent->goodsList as $indentCommodity) {
-            $Good = Good::select('id', 'is_inventory', 'inventory')->find($indentCommodity['good_id']);
+            $Good = Good::select('id', 'is_inventory', 'inventory', 'type')->find($indentCommodity['good_id']);
+            $type = $Good->type;
             if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_FILM) { //付款减库存
                 if (!$indentCommodity['good_sku_id']) { //非SKU商品
                     if ($Good->inventory - $indentCommodity['number'] < 0) {
@@ -370,11 +372,17 @@ class AppController extends Controller
                 }
             }
         }
-        $return = DB::transaction(function () use ($request, $GoodIndent) {
+        $return = DB::transaction(function () use ($request, $GoodIndent, $type) {
             User::where('id', auth('web')->user()->id)->decrement('money', $GoodIndent->total);
             $redis = new RedisService();
             $redis->setex('goodIndent.pay.type.' . $GoodIndent->id, 5, '余额支付');
-            $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
+            if ($type === Good::GOOD_TYPE_KEYS || $type === Good::GOOD_TYPE_DOWNLOAD) {
+                // 卡密和下载商品直接完成
+                $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_ACCOMPLISH;
+                $GoodIndent->confirm_time = Carbon::now()->toDateTimeString();
+            } else {
+                $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
+            }
             $GoodIndent->pay_time = Carbon::now()->toDateTimeString();
             $GoodIndent->save();
             return array(1, '支付成功');

@@ -109,6 +109,17 @@
 					</text>
 				</view>
 			</template>
+			<!-- 卡密-->
+			<template v-if="indentList.good_code.length">
+				<view class="yt-list-cell b-b">
+					<text class="cell-tit clamp">{{code_type ? '网盘' : '卡密'}}</text>
+					<text class="cell-tip"></text>
+				</view>
+				<view class="yt-list-cell b-b" v-for="(item,index) in indentList.good_code" :key="index">
+					<view class="cell-tit clamp"><template v-if="item.name">{{code_type ? '网盘地址' : '卡号'}}：{{ item.name }}<text class="text-gray cuIcon-copy" style="margin-left: 10rpx;" @tap="setClipboardData(item.name)"></text></template></view>
+					<view class="cell-tip">{{code_type ? '提取码' : '卡密'}}：{{ item.code }}<text class="text-gray cuIcon-copy" style="margin-left: 10rpx;" @tap="setClipboardData(item.code)"></text></view>
+				</view>
+			</template>
 			<view class="yt-list-cell b-b" v-if="indentList.receiving_time">
 				<text class="cell-tit clamp">订单自动收货时间</text>
 				<text class="cell-tip" style="color: #fa436a;">{{ indentList.receiving_time }}</text>
@@ -130,6 +141,10 @@
 			<view v-else-if="indentList.state === 10" class="submit" @click="goScore(indentList)">立即评价</view>
 			<view v-else-if="indentList.state === 12" class="submit" @click="goForemanScore()">邀请拼单</view>
 		</view>
+		<view class="footer" v-if="indentList.download">
+			<view class="price-content"></view>
+			<view class="submit" @click="goDownload">下载</view>
+		</view>
 	</view>
 </template>
 
@@ -145,7 +160,10 @@ export default {
 	data() {
 		return {
 			id: '',
-			indentList: {},
+			indentList: {
+				total: 0,
+				good_code: []
+			},
 			goodList: [],
 			addressData: {},
 			carriage: 0,
@@ -159,7 +177,9 @@ export default {
 				user:[]
 			},
 			modalName: 'groupPurchase',
-			foremanShow: false
+			foremanShow: false,
+			isType: true,
+			code_type: 0
 		};
 	},
 	onLoad(option) {
@@ -182,6 +202,7 @@ export default {
 			await GoodIndent.detail(this.id, function(res) {
 				for (var k in res.goods_list) {
 					if (res.goods_list[k].good_sku) {
+						that.code_type = res.goods_list[k].good_sku.code_type
 						res.goods_list[k].good_sku.product_sku.forEach(item => {
 							if (res.goods_list[k].specification) {
 								res.goods_list[k].specification += item.value + ';';
@@ -191,7 +212,11 @@ export default {
 						});
 						res.goods_list[k].specification = res.goods_list[k].specification.substr(0, res.goods_list[k].specification.length - 1);
 					}
+					if (res.goods_list[k].good.type === 2 || res.goods_list[k].good.type === 3) {
+						that.isType = false
+					}
 				}
+				
 				that.indentList = res;
 				that.calcTotal();
 				if(that.indentList.type === 2){
@@ -249,6 +274,44 @@ export default {
 		changeShow(val){
 			this.foremanShow = val
 		},
+		// 下载文件
+		goDownload() {
+			const that = this
+			GoodIndent.download(this.indentList.id,function(res){
+				// #ifndef H5
+				uni.downloadFile({
+					url: that.configURL.BaseURL + 'indentDownload/'+ res,
+					success: (res) => {
+						if (res.statusCode === 200) {
+							const filePath = res.tempFilePath
+							uni.openDocument({
+								filePath: filePath,
+								success: function (res) {
+								
+								},
+								fail: function (ress) {
+									that.$api.msg('非文档类文件请通过pc端或h5访问下载')
+								}
+							})
+							
+						} else {
+							this.$api.msg('下载失败')
+						}
+					}
+				});
+				// #endif
+				// #ifdef H5
+				window.open(that.configURL.BaseURL + 'indentDownload/'+ res)
+				// #endif
+			})
+		},
+		// 复制卡密信息
+		setClipboardData(e) {
+			uni.setClipboardData({
+				data: e,
+				success: function () {}
+			});
+		}
 	}
 };
 </script>

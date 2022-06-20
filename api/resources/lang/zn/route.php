@@ -143,6 +143,8 @@ return [
         'orderCancel' => '取消订单',
         'orderDestroy' => '删除订单',
         'orderQuantity' => '订单数量统计',
+        'orderDownload' => '下载订单地址',
+        'orderShowDownload' => '订单文件下载',
         'shippingList' => '收货地址列表',
         'shippingCreate' => '创建收货地址',
         'shippingEdit' => '保存收货地址',

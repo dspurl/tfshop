@@ -39,7 +39,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Good extends Model
 {
     use SoftDeletes;
+
     public static $withoutAppends = true;
+    const GOOD_TYPE_COMMON = 0; //类型：普通商品
+    const GOOD_TYPE_VIRTUAL = 1; //类型：虚拟商品
+    const GOOD_TYPE_KEYS = 2; //类型：卡密/网盘
+    const GOOD_TYPE_DOWNLOAD = 3; //类型：下载商品
     const GOOD_SHOW_ENTREPOT = 0; //状态：仓库
     const GOOD_SHOW_PUTAWAY = 1; //状态：上架
     const GOOD_SHOW_TIMING = 2; //状态：定时
@@ -176,6 +181,31 @@ class Good extends Model
         }
 
         return $return;
+    }
+
+    public function getTypeAttribute()
+    {
+        if (isset($this->attributes['type'])) {
+            if (self::$withoutAppends) {
+                return $this->attributes['type'];
+            }
+            $name = "";
+            switch ($this->attributes['type']) {
+                case static::GOOD_TYPE_COMMON:
+                    $name = '普通商品';
+                    break;
+                case static::GOOD_TYPE_VIRTUAL:
+                    $name = '虚拟商品';
+                    break;
+                case static::GOOD_TYPE_KEYS:
+                    $name = '卡密/网盘';
+                    break;
+                case static::GOOD_TYPE_DOWNLOAD:
+                    $name = '下载商品';
+                    break;
+            }
+            return $name;
+        }
     }
 
     /**

@@ -36,7 +36,7 @@ class SubmitGoodIndentRequest extends Request
             case 'POST':
                 return [
                     'type' => 'nullable|integer',
-                    'address' => 'required|array',
+                    'address' => 'nullable|array',
                     'carriage' => 'required|numeric',
                     'indentCommodity' => 'required|array',
                     'indentCommodity.*.price' => 'required|numeric',
@@ -61,7 +61,7 @@ class SubmitGoodIndentRequest extends Request
     public function messages()
     {
         return [
-            'address.required' => '收货地址必须',
+            'address.nullable' => '收货地址必须',
             'address.array' => '收货地址格式有误',
             'carriage.required' => '运费必须',
             'carriage.numeric' => '运费只能是数字',

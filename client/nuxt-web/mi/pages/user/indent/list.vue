@@ -5,9 +5,11 @@
       <el-tabs v-model="listQuery.index" @tab-click="getReloadList">
         <el-tab-pane label="全部订单" name="0"></el-tab-pane>
         <el-tab-pane label="待支付" name="1"></el-tab-pane>
+        <el-tab-pane v-if="isGroupPurchase" label="待成团" name="12"></el-tab-pane>
         <el-tab-pane label="待发货" name="2"></el-tab-pane>
         <el-tab-pane label="待收货" name="3"></el-tab-pane>
         <el-tab-pane v-if="isComment" label="待评价" name="10"></el-tab-pane>
+        <el-tab-pane label="已完成" name="5"></el-tab-pane>
       </el-tabs>
       <div class="indent-list" v-loading="loading">
         <div class="navigation">
@@ -36,6 +38,7 @@
                   <div class="price">￥{{item2.price}} x {{item2.number}}</div>
                   <div class="specification">{{item2.specification}}</div>
                 </div>
+                <div class="type" v-if="item2.good">{{item2.good.type}}</div>
               </div>
             </div>
             <div class="total">

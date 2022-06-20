@@ -219,7 +219,7 @@
 			</view>
 			<view class="action-btn-group" v-else>
 				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" @click="toggleSpec(false)">加入购物车</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" :disabled="getList.type === '卡密/网盘' || getList.type === '下载商品'" @click="toggleSpec(false)">加入购物车</button>
 			</view>
 		</view>
 

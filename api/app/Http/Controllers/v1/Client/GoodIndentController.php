@@ -15,6 +15,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+use Webpatser\Uuid\Uuid;
 
 /**
  * GoodIndent
@@ -37,6 +39,7 @@ class GoodIndentController extends Controller
     {
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
+        Good::$withoutAppends = false;
         $q = GoodIndent::query();
         $q->where('user_id', auth('web')->user()->id);
         if (intval($request->index) !== 0) {
@@ -51,7 +54,9 @@ class GoodIndentController extends Controller
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
         $paginate = $q->with(['goodsList' => function ($q) {
-            $q->with(['goodSku']);
+            $q->with(['goodSku', 'good' => function ($q) {
+                $q->select('name', 'id', 'type');
+            }]);
         }])->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -78,7 +83,12 @@ class GoodIndentController extends Controller
                 $GoodIndent->carriage = $request->carriage;
                 $total = 0;
                 foreach ($request->indentCommodity as $indentCommodity) {
-                    $Good = Good::select('id', 'is_inventory', 'inventory')->find($indentCommodity['good_id']);
+                    $Good = Good::select('id', 'is_inventory', 'inventory', 'type')->find($indentCommodity['good_id']);
+                    if ($Good->type === Good::GOOD_TYPE_COMMON) {
+                        if (!$request->address) {
+                            throw new \Exception('请选择地址', Code::CODE_WRONG);
+                        }
+                    }
                     if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_NO) { //拍下减库存
                         if (!$indentCommodity['good_sku_id']) { //非SKU商品
                             if ($Good->inventory - $indentCommodity['number'] < 0) {
@@ -207,9 +217,72 @@ class GoodIndentController extends Controller
                 $q->with(['resourcesMany', 'goodSku' => function ($q) {
                     $q->with('resources')->where('inventory', '>', 0);
                 }]);
-            }, 'goodSku']);
-        }, 'GoodLocation'])->find($id);
+            }, 'goodSku' => function ($q) {
+                $q->with(['resources' => function ($q) {
+                    $q->where('depict', 'product_sku_file');
+                }]);
+            }]);
+        }, 'GoodLocation', 'GoodCode'])->find($id);
+        foreach ($GoodIndent->goodsList as $commodity) {
+            if ($commodity->goodSku->resources) {
+                $GoodIndent->download = true;
+            }
+            unset($commodity->goodSku->resources);
+        }
         return resReturn(1, $GoodIndent);
+    }
+
+    /**
+     * GoodIndentDownload
+     * 下载订单地址
+     * @param int $id
+     * @return string
+     * @queryParam  id int 订单ID
+     * @throws \Exception
+     */
+    public function download($id)
+    {
+        if (!$id) {
+            throw new \Exception('却少参数', Code::CODE_WRONG);
+        }
+        $GoodIndent = GoodIndent::with(['goodsList' => function ($q) {
+            $q->with(['goodSku' => function ($q) {
+                $q->with(['resources' => function ($q) {
+                    $q->where('depict', 'product_sku_file');
+                }]);
+            }]);
+        }])->find($id);
+        if ($GoodIndent->user_id != auth('web')->user()->id) {
+            throw new \Exception('非您的订单，无权操作', Code::CODE_NO_ACCESS);
+        }
+        $code = (string)Uuid::generate();
+        foreach ($GoodIndent->goodsList as $commodity) {
+            if (!$commodity->goodSku->resources) {
+                throw new \Exception('无下载资源', Code::CODE_WRONG);
+            }
+            $redis = new RedisService();
+            $redis->setex($code, 30, $commodity->goodSku->resources->img);
+        }
+        return resReturn(1, $code);
+    }
+
+    /**
+     * GoodIndentDownload
+     * 订单文件下载
+     * @param int $code
+     * @return string
+     * @queryParam  code int 下载码
+     * @throws \Exception
+     */
+    public function showDownload($code)
+    {
+        $redis = new RedisService();
+        $download = $redis->get($code);
+        if (!$download) {
+            return resReturn(0, '下载码不正确或已经失效', Code::CODE_WRONG);
+        }
+        $redis->del($code);
+        return Storage::download($download);
     }
 
     /**
@@ -226,7 +299,7 @@ class GoodIndentController extends Controller
         User::$withoutAppends = false;
         $GoodIndent = GoodIndent::with(['goodsList' => function ($q) {
             $q->select('good_id', 'good_indent_id')->with(['good' => function ($q) {
-                $q->select('name', 'id');
+                $q->select('name', 'id', 'type');
             }]);
         }, 'User' => function ($q) {
             $q->select('id', 'money');

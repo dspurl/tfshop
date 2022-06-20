@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<!-- 地址 -->
-		<view class="address-section" @click="addAddress()">
+		<view v-if="isAddress" class="address-section" @click="addAddress()">
 			<view class="order-content">
 				<text class="yticon icon-shouhuodizhi"></text>
 				<view class="cen" v-if="addressData.location">
@@ -164,7 +164,8 @@
 					groupPurchase: false
 				},
 				isSeckill: false,
-				isGroupPurchase: false
+				isGroupPurchase: false,
+				isAddress: false
 			}
 		},
 		onLoad(option){
@@ -230,6 +231,10 @@
 					}
 				}
 				this.goodList = cartList
+				// 是否需要地址
+				this.isAddress = cartList.some( function( item){
+				  return item.good.type === '普通商品';
+				})
 				that.data.indentCommodity = cartList
 				that.calcTotal()  //计算总价
 				that.getOne()
@@ -355,7 +360,7 @@
 			//计算实付金额
 			outPocketTotal(){
 				let outPocket = 0
-				if(this.verify.seckill || this.verify.groupPurchase){
+				if(this.isSeckill || this.isGroupPurchase){
 					outPocket = outPocket + this.total + this.carriage
 				}else{
 					outPocket = outPocket + this.total + this.carriage  - this.couponMoney - this.integralPrice

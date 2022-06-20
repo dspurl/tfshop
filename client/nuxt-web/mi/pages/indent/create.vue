@@ -2,8 +2,10 @@
   <div class="box">
     <el-card class="container indent-create" shadow="always">
       <div class="address-box">
-        <div class="title">收货地址</div>
-        <address-list class="address-box-list" :select="true" @selectedAddress="selectedAddress"/>
+        <template v-if="isAddress">
+          <div class="title">收货地址</div>
+          <address-list class="address-box-list" :select="true" @selectedAddress="selectedAddress"/>
+        </template>
         <div class="title">确认订单信息</div>
         <el-table
           :data="ruleForm.indentCommodity"
@@ -29,6 +31,13 @@
                 <p>{{scope.row.name}}</p>
                 <p class="specification">{{scope.row.specification}}</p>
               </NuxtLink>
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="类型"
+            width="120">
+            <template slot-scope="scope">
+              {{ scope.row.good.type }}
             </template>
           </el-table-column>
           <el-table-column

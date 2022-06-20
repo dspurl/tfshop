@@ -33,7 +33,7 @@
             </div>
             <div class="fright">
               <div class="total">应付总额：<div class="price"><span>{{(list.total ? list.total : 0)| thousands}}</span>元</div></div>
-              <div class="show-detail" @click="showDetail">订单详情<i class="iconfont dsshop-xia"></i></div>
+              <div v-if="list.good_location" class="show-detail" @click="showDetail">订单详情<i class="iconfont dsshop-xia"></i></div>
             </div>
           </div>
         </div>

@@ -43,7 +43,7 @@ class CreateIndentLocationObserver
     public function created(GoodIndent $goodIndent)
     {
         // 当状态为待付款时触发
-        if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_PAY) {
+        if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_PAY && array_key_exists('cellphone', $this->request->address)) {
             $GoodLocation = new GoodLocation();
             $GoodLocation->good_indent_id = $goodIndent->id;
             $GoodLocation->cellphone = $this->request->address['cellphone'];

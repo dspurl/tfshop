@@ -42,24 +42,29 @@
             ref="orderGoodsTable"
             :data="scope.row.goods_list"
             style="width: 100%;">
-            <el-table-column label="商品">
+            <el-table-column label="商品" width="400">
               <template slot-scope="props">
-                <div class="drawing">
+                <div class="good-box">
                   <el-image :src="props.row.img" :preview-src-list="[props.row.img]" style="width:45px;height:45px;"/>
                   <div class="right">
-                    <div style="width:300px;">
+                    <div>
                       <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: props.row.good_id }}" target="_blank"> {{ props.row.name }}</router-link>
                     </div>
                   </div>
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="单价（元）">
+            <el-table-column label="类型" width="120">
+              <template slot-scope="props">
+                <div>{{ props.row.good.type }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column label="单价（元）" width="180">
               <template slot-scope="props">
                 <div>{{ props.row.price }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="数量">
+            <el-table-column label="数量" width="120">
               <template slot-scope="props">
                 <div>{{ props.row.number }}件</div>
               </template>
@@ -72,9 +77,14 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="120" label="订单编号">
+      <el-table-column width="200" label="订单编号">
         <template slot-scope="scope">
           <span>{{ scope.row.identification }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column width="120" label="订单类型">
+        <template slot-scope="scope">
+          <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
       <el-table-column width="120" label="订单状态" sortable="custom" prop="state">
@@ -150,59 +160,12 @@
     </div>
   </div>
 </template>
-<style rel="stylesheet/scss" lang="scss">
-  .timeInterval{
-    top:-4px;
-  }
-  .pagination-operation{
-    margin-bottom: 80px;
-    float:left;
-  }
-  .pagination-operation .operation{
-    margin-left:20px;
-    margin-top: 32px;
-    font-size: 12px;
-    float:left;
-    margin-right: 10px;
-  }
-  .pagination-operation .pagination{
-    float:left;
-    padding: 0 0;
-  }
-  .drawing img{
-    float:left;
-  }
-  .drawing .right{
-    text-align: left;
-    float:left;
-    margin-left: 10px;
-  }
-
-  .avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 188px;
-    height: 188px;
-    line-height: 188px;
-    text-align: center;
-  }
-  .progress-img{
-    padding: 30px;
-  }
-  .avatar {
-    width: 188px;
-    height: 188px;
-    display: block;
+<style lang='scss' scoped>
+  .good-box{
+    display: flex;
+    .right{
+      margin-left: 10px;
+    }
   }
 </style>
 

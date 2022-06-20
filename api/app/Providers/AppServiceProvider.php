@@ -11,6 +11,7 @@ use App\Observers\GoodIndent\FinishPaymentMoneyLogObserver;
 use App\Observers\GoodIndent\FinishPaymentNotificationObserver;
 use App\Observers\GoodIndent\IndentCancelStockProcessingObserver;
 use App\Observers\GoodIndent\IndentFailureStockProcessingObserver;
+use App\Observers\GoodIndent\OrderCompletionOfGoodsCardProcessingObserver;
 use App\Observers\GoodIndent\ReceiptNotificationObserver;
 use App\Observers\GoodIndent\RefundNotificationObserver;
 use App\Observers\GoodIndent\ShipmentNotificationObserver;
@@ -53,6 +54,7 @@ class AppServiceProvider extends ServiceProvider
         GoodIndent::observe(RefundNotificationObserver::class);
         GoodIndent::observe(EscrowRefundObserver::class);
         GoodIndent::observe(ConfirmReceiptSalesProcessingObserver::class);
+        GoodIndent::observe(OrderCompletionOfGoodsCardProcessingObserver::class);
         PaymentLog::observe(GoodIndentPaymentCreateObserver::class);
         PaymentLog::observe(GoodIndentPaymentSucceedObserver::class);
         PaymentLog::observe(GoodIndentRefundObserver::class);

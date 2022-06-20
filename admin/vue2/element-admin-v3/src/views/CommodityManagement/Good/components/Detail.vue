@@ -3,13 +3,21 @@
   <div v-loading="loading" class="createPost-container" style="padding-top: 40px">
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm" style="padding-left:100px;padding-right:100px;">
       <h3>基本信息</h3>
+      <el-form-item label="商品类型" prop="type" style="width:600px;">
+        <el-radio-group v-model="ruleForm.type" @change="setType">
+          <el-radio-button :label="0">普通商品</el-radio-button>
+          <el-radio-button :label="1">虚拟商品</el-radio-button>
+          <el-radio-button :label="2">卡密/网盘</el-radio-button>
+          <el-radio-button :label="3">下载商品</el-radio-button>
+        </el-radio-group>
+      </el-form-item>
       <el-form-item label="商品名称" prop="name" style="width:600px;">
         <el-input v-model="ruleForm.name" maxlength="60" clearable/>
       </el-form-item>
       <el-form-item label="货号" prop="number" style="width:400px;">
         <el-input v-model="ruleForm.number" maxlength="50" clearable/>
       </el-form-item>
-      <el-form-item label="运费模板" prop="freight_id">
+      <el-form-item v-if="ruleForm.type === 0" label="运费模板" prop="freight_id">
         <el-select v-model="ruleForm.freight_id" clearable placeholder="请选择">
           <el-option
             v-for="item in freight"
@@ -324,6 +332,7 @@ export default {
       loading: false,
       id: '',
       ruleForm: {
+        type: 0,
         name: '',
         category_id: '',
         number: '',
@@ -409,6 +418,17 @@ export default {
       detail(this.id ? this.id : 0, { category: getToken('applyCategory') }).then(response => {
         if (this.id > 0) {
           this.ruleForm = response.data.goods
+          // 设置类型
+          if (this.ruleForm.type === '普通商品') {
+            this.ruleForm.type = 0
+          } else if (this.ruleForm.type === '虚拟商品') {
+            this.ruleForm.type = 1
+          } else if (this.ruleForm.type === '卡密/网盘') {
+            this.ruleForm.type = 2
+          } else if (this.ruleForm.type === '下载商品') {
+            this.ruleForm.type = 3
+          }
+          this.setType(this.ruleForm.type)
           this.goodsType(true)
           this.dialogStatus = 'update'
           this.$refs.SkuDemo._setData(this.ruleForm.good_sku)
@@ -607,23 +627,52 @@ export default {
     // 得到 Sku 数据
     getSkuData() {
       const product_skus = this.$refs.SkuDemo._getData().map(item => {
-        const { id, format, img, market_price, cost_price, price, inventory, skus } = item
+        const { id, format, img, market_price, cost_price, price, inventory, skus, code_type, is_fixed, good_code, file, file_name, file_id } = item
         const skuText = skus.reduce(
           (str, prev) => `${str}${prev.k}：${prev.v}——`,
           '',
         )
-        if (market_price === '') {
+        if (market_price === undefined) {
           this.$message.error(skuText + ' 未输入市场价')
+          this.formLoading = false
           throw new Error('请输入市场价')
-        } else if (cost_price === '') {
+        } else if (cost_price === undefined) {
           this.$message.error(skuText + ' 未输入成本价')
+          this.formLoading = false
           throw new Error('请输入成本价')
-        } else if (price === '') {
+        } else if (price === undefined) {
           this.$message.error(skuText + ' 未输入销售价')
+          this.formLoading = false
           throw new Error('请输入销售价')
-        } else if (inventory === '') {
+        } else if (inventory === undefined) {
           this.$message.error(skuText + ' 未输入库存')
+          this.formLoading = false
           throw new Error('请输入库存')
+        }
+        if (this.ruleForm.type === 2) {
+          if (good_code) {
+            if (good_code.length === 0) {
+              this.$message.error(skuText + ' 未设置卡密')
+              this.formLoading = false
+              throw new Error('请设置卡密')
+            } else if (good_code.length > 1) {
+              if (Number(inventory) > good_code.length) {
+                this.$message.error(skuText + ' 卡密数量必须大于等于库存')
+                this.formLoading = false
+                throw new Error('卡密数量必须大于等于库存')
+              }
+            }
+          } else {
+            this.$message.error(skuText + ' 未设置卡密')
+            this.formLoading = false
+            throw new Error('请设置卡密')
+          }
+        } else if (this.ruleForm.type === 3) {
+          if (file === undefined) {
+            this.$message.error(skuText + ' 请上传文件')
+            this.formLoading = false
+            throw new Error('请上传文件')
+          }
         }
         return {
           id,
@@ -633,6 +682,12 @@ export default {
           cost_price,
           price,
           inventory,
+          code_type,
+          good_code,
+          is_fixed,
+          file,
+          file_name,
+          file_id,
           product_sku: skus.map(sku => ({
             key: sku.k,
             value: sku.v
@@ -652,6 +707,10 @@ export default {
     // 重新加载无法输入或选择
     change(e) {
       this.$forceUpdate()
+    },
+    // 设置类型
+    setType(e) {
+      this.$refs.SkuDemo._setType(e)
     }
   }
 }

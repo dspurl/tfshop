@@ -4,6 +4,7 @@ namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\common\RedisService;
+use App\Models\v1\Good;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodIndentCommodity;
 use App\Models\v1\MiniProgram;
@@ -36,6 +37,7 @@ class IndentController extends Controller
     public function list(Request $request)
     {
         GoodIndent::$withoutAppends = false;
+        Good::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
         $q = GoodIndent::query();
         $q->withTrashed();
@@ -71,7 +73,7 @@ class IndentController extends Controller
             }
         }
         $paginate = $q->with(['goodsList' => function ($q) {
-            $q->with(['goodSku']);
+            $q->with(['goodSku','good']);
         }, 'GoodLocation', 'Dhl'])->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -85,15 +87,16 @@ class IndentController extends Controller
      */
     public function detail($id)
     {
+        Good::$withoutAppends = false;
         GoodIndent::$withoutAppends = false;
         GoodIndentCommodity::$withoutAppends = false;
         $GoodIndent = GoodIndent::withTrashed()->with(['goodsList' => function ($q) {
             $q->with(['goodSku', 'Good' => function ($q) {
-                $q->select('id', 'identification', 'number');
+                $q->select('id', 'identification', 'number', 'type');
             }]);
         }, 'GoodLocation', 'Dhl', 'PaymentLogAll' => function ($q) {
             $q->select('id', 'type', 'name', 'money', 'number', 'platform', 'state', 'pay_id', 'pay_type', 'created_at', 'transaction_id');
-        }])->find($id);
+        }, 'GoodCode'])->find($id);
         $GoodIndent->automaticReceivingState = config('dsshop.automaticReceivingState');
         return resReturn(1, $GoodIndent);
     }

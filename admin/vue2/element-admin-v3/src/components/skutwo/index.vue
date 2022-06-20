@@ -149,7 +149,7 @@
     )
   el-form-item
       .sku_container
-        SkuTable(:specification.sync="specificationFilter" :productSkus.sync="productSkus" ref="SkuTable")
+        SkuTable(:specification.sync="specificationFilter" :type="type" :productSkus.sync="productSkus" ref="SkuTable")
 </template>
 
 <script>
@@ -171,6 +171,7 @@ class EditSku extends Vue {
   addValues = []
   productSkus = []
   specification = []
+  type = 0
   allUnified = {
     cost_price: null,
     market_price: null,
@@ -201,6 +202,11 @@ class EditSku extends Vue {
   // 设置产品参数模板
   _setSpecification(data) {
     this.specification = data
+  }
+
+  // 设置类型
+  _setType(e) {
+    this.type = e
   }
 
   // 父组件调用，获取 sku-table 的数据

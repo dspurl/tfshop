@@ -102,7 +102,9 @@ class GoodController extends Controller
         Good::$withoutAppends = false;
         GoodSku::$withoutAppends = false;
         $Good = Good::with(['resourcesMany', 'resources', 'goodSku' => function ($q) {
-            $q->with('resources')->where('inventory', '>', 0);
+            $q->with(['resources' => function ($q) {
+                $q->where('depict', '!=', 'product_sku_file');
+            }])->where('inventory', '>', 0);
         }])->find($id);
         $Good['price_show'] = (new Good())->getPriceShow($Good);
         $Good['market_price_show'] = (new Good())->getMarketPriceShow($Good);

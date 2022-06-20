@@ -112,4 +112,15 @@ export default {
 		  })
 		})
 	},
+	download(id,success,fail){
+		Network.setPost('goodIndent/download/' + id,{}, function (res) {
+		  success(res)
+		}, function (res) {
+		  uni.showToast({
+			title: res.message,
+			icon: 'none',
+			duration: 2000
+		  })
+		})
+	}
 };

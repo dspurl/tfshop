@@ -65,3 +65,9 @@ export function receipt(id) {
     method: 'POST'
   })
 }
+export function download(id) {
+  return request({
+    url: 'goodIndent/download/' + id,
+    method: 'POST'
+  })
+}

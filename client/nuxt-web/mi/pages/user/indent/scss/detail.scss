@@ -86,3 +86,25 @@
     }
   }
 }
+.code-box{
+  .min-title{
+    line-height: 45px;
+  }
+  .code-list{
+    font-size: 12px;
+    .li{
+      display: flex;
+      line-height: 25px;
+      .el-icon-copy-document{
+        margin-left: 10px;
+        cursor:pointer;
+      }
+      .name{
+        margin-right: 50px;
+      }
+    }
+  }
+}
+.download{
+  text-align: right;
+}

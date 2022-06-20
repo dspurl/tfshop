@@ -21,6 +21,8 @@ class CreateGoodSkusTable extends Migration
             $table->integer('cost_price')->default(0)->comment('成本价');
             $table->integer('price')->default(0)->comment('销售价');
             $table->integer('inventory')->default(0)->comment('库存');
+            $table->unsignedTinyInteger('code_type')->default(0)->comment('卡密类型:0=卡密-cdkey,1=网盘-net_disk');
+            $table->unsignedTinyInteger('is_fixed')->default(1)->comment('是否固定卡密:0=否-no,1=是-yes');
             $table->text('product_sku')->comment('json商品规格');
             $table->softDeletes();
             $table->timestamps();

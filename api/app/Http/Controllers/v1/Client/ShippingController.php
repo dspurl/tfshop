@@ -155,14 +155,14 @@ class ShippingController extends Controller
      * ShippingFreight
      * 获取运费
      * @param Request $request
-     * @param int $id   //用户收货地址ID，没有则取默认收货地址ID
+     * @param int $id //用户收货地址ID，没有则取默认收货地址ID
      * @return string
      */
-    public function freight($id,Request $request)
+    public function freight($id, Request $request)
     {
-        if($id){
+        if ($id) {
             $return['shipping'] = Shipping::find($id);
-        }else{
+        } else {
             $return['shipping'] = Shipping::where('defaults', Shipping::SHIPPING_DEFAULTS_YES)->where('user_id', auth('web')->user()->id)->first();
         }
 
@@ -186,7 +186,7 @@ class ShippingController extends Controller
             $list = [];
             foreach ($request->all() as $all) {
                 if (is_array($all)) {
-                    if(isset($all['good'])){
+                    if (isset($all['good'])) {
                         if (array_key_exists($all['good']['freight_id'], $list)) {
                             $list[$all['good']['freight_id']] += $all['number'];
                         } else {
@@ -200,23 +200,25 @@ class ShippingController extends Controller
                     Freight::$withoutAppends = false;
                     FreightWay::$withoutAppends = false;
                     $Freight = Freight::with(['FreightWay'])->find($index);
-                    if (!in_array($value, $Freight['pinkage'])) { //不包邮
-                        foreach ($Freight['FreightWay'] as $way) {
-                            if (in_array($value, $way->location)) { //获取不包邮实际运费
-                                if ($l == 1) { //只有一件
-                                    $carriage += $way->first_cost;
-                                } else {
-                                    if ($l <= $way->first_piece) {    //未超过首件
+                    if($Freight){
+                        if (!in_array($value, $Freight['pinkage'])) { //不包邮
+                            foreach ($Freight['FreightWay'] as $way) {
+                                if (in_array($value, $way->location)) { //获取不包邮实际运费
+                                    if ($l == 1) { //只有一件
                                         $carriage += $way->first_cost;
                                     } else {
-                                        $number = ceil(($l - $way->first_piece) / $way->add_piece);
-                                        $carriage += $way->first_cost + $way->add_cost * $number;
+                                        if ($l <= $way->first_piece) {    //未超过首件
+                                            $carriage += $way->first_cost;
+                                        } else {
+                                            $number = ceil(($l - $way->first_piece) / $way->add_piece);
+                                            $carriage += $way->first_cost + $way->add_cost * $number;
+                                        }
+
                                     }
-
+                                    break;
                                 }
-                                break;
-                            }
 
+                            }
                         }
                     }
                 }

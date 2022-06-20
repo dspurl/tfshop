@@ -17,10 +17,11 @@ class CreateResourcesTable extends Migration
         Schema::create('resources', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('type')->default(1)->comment('资源类型1图片2视频');
-            $table->string('depict',100)->nullable()->comment('资源描述');
-            $table->string('img',255)->comment('资源地址');
+            $table->string('name', 255)->nullable()->comment('资源名称');
+            $table->string('depict', 100)->nullable()->comment('资源描述');
+            $table->string('img', 255)->comment('资源地址');
             $table->integer('image_id')->default(0);
-            $table->string('image_type',200);
+            $table->string('image_type', 200);
             $table->timestamps();
             $table->unique('id');
         });

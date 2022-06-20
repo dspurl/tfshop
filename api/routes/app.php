@@ -18,6 +18,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::any('refundNotify', 'AppController@refundNotify')->name('client.refundNotify');    //退款回调
         Route::post('refreshToken', 'LoginController@refresh')->name('client.refreshToken');  //刷新token
         Route::post('verifyPlugin/{id}', 'PluginController@verify')->name('client.verifyPlugin');   //验证插件是否安装
+        Route::get('indentDownload/{code}', 'GoodIndentController@showDownload')->name('client.orderShowDownload');    //订单文件下载
     });
     // 需要secret验证
     Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
@@ -59,6 +60,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('goodIndent/cancel/{id}', 'GoodIndentController@cancel')->name('client.orderCancel');    //取消订单
         Route::post('goodIndent/destroy/{id}', 'GoodIndentController@destroy')->name('client.orderDestroy');    //删除订单
         Route::get('goodIndent/quantity', 'GoodIndentController@quantity')->name('client.orderQuantity');    //订单数量统计
+        Route::post('goodIndent/download/{id}', 'GoodIndentController@download')->name('client.orderDownload');    //下载订单地址
         Route::get('shipping', 'ShippingController@list')->name('client.shippingList');    //收货地址列表
         Route::post('shipping', 'ShippingController@create')->name('client.shippingCreate');    //创建收货地址
         Route::post('shipping/{id}', 'ShippingController@edit')->name('client.shippingEdit');    //保存收货地址

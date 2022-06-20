@@ -260,6 +260,24 @@ function imgPathShift($new, $img)
 }
 
 /**
+ * 文件保存路径转换
+ * @param string $new 保存的目录
+ * @param string $file 文件
+ * @return string
+ */
+function filePathShift($new, $file)
+{
+    $path = 'storage/temporary/';
+    $file = explode($path, $file);
+    if (count($file) == 2) {
+        Storage::move('public/temporary/' . $file[1], $new . '/' . date('Y-m-d') . '/' . $file[1]);
+        return $new . '/' . date('Y-m-d') . '/' . $file[1];
+    } else {
+        return $file[0];
+    }
+}
+
+/**
  * 根据图片路径进行删除
  * @param $directory // 图片所在目录
  * @param $img // 图片url

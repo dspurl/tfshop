@@ -87,7 +87,9 @@
             <div class="operation">
               <el-button type="danger" plain @click="buy(true)" :disabled="isSeckill && goodDetail.state === 0">立即购买</el-button>
               <template v-if="!isSeckill">
-                <el-button type="danger" @click="buy(false)">加入购物车</el-button>
+                <template v-if="goodDetail.type !== '卡密/网盘' && goodDetail.type !== '下载商品'">
+                  <el-button type="danger" @click="buy(false)">加入购物车</el-button>
+                </template>
                 <coupon v-if="isCoupon"></coupon>
               </template>
               <template v-else>

@@ -16,9 +16,17 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    //小程序上传
-    // type 类型1图片
-    // size 文件大小
+    /**
+     * upload
+     * 上传
+     * @param Request $request
+     * @queryParam  type int 1图片2自定义文件
+     * @queryParam  size int 前端文件大小
+     * @queryParam  full boolean    是否显示详细结果
+     * @return mixed|string
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
     public function uploadPictures(Request $request)
     {
 
@@ -28,68 +36,59 @@ class Controller extends BaseController
             return resReturn(0, '上传文件无效', Code::CODE_PARAMETER_WRONG);
         }
         $extension = $request->file->extension();
-        //验证格式
-        if (!isset($request->type) || ($request->type != 1 && $request->type != 2)) { //验证图片
-            return resReturn(0, '图片参数有误', Code::CODE_PARAMETER_WRONG);
-        } else {
-            if (!in_array($extension, array('gif', 'jpg', 'jpeg', 'bmp', 'png'))) {
-                return resReturn(0, '图片格式有误', Code::CODE_PARAMETER_WRONG);
-            }
+        if (!isset($request->type)) {
+            return resReturn(0, '缺少类型', Code::CODE_PARAMETER_WRONG);
         }
-
         //验证尺寸
         if (!isset($request->size)) {
             return resReturn(0, '尺寸参数有误', Code::CODE_PARAMETER_WRONG);
+        }
+        if ($request->size < $request->file->getSize()) {
+            return resReturn(0, '您上传的文件过大', Code::CODE_PARAMETER_WRONG);
+        }
+        if ($request->type == 1) { //验证图片
+            $name = 'image';
+        } else if ($request->type == 2) {  // 自定义文件
+            $name = 'custom';
         } else {
-            if ($request->size < $request->file->getSize()) {
-                return resReturn(0, '您上传的文件过大', Code::CODE_PARAMETER_WRONG);
-            }
-            if ($request->file->getSize() > config('dsshop.maxFileUploadSize')) {
-                return resReturn(0, '您上传的文件大于后台配置的最大上传大小' . (config('dsshop.maxFileUploadSize') / 1024 / 1024) . 'M', Code::CODE_PARAMETER_WRONG);
-            }
+            return resReturn(0, '类型不存在', Code::CODE_PARAMETER_WRONG);
+        }
+        if (!in_array($extension, explode(',', config("dsshop.file.$name.extension")))) {
+            return resReturn(0, '图片格式有误', Code::CODE_PARAMETER_WRONG);
+        }
+        if ($request->file->getSize() > config("dsshop.file.$name.size")) {
+            return resReturn(0, '您上传的文件大于后台配置的最大上传大小' . (config("dsshop.file.$name.size") / 1024 / 1024) . 'M', Code::CODE_PARAMETER_WRONG);
         }
         $url = $this->uploadFiles($file, $request);
         if ($url['state'] != 'SUCCESS') {
             return resReturn(0, $url['msg'], Code::CODE_PARAMETER_WRONG);
         }
-
         //微信小程序图片安全内容检测
         $config = config('wechat.mini_program.default');
-        if ($request->header('apply-secret') && $config['app_id']) {
+        if ($request->header('apply-secret') && $config['app_id'] && $request->type == 1) {
             $miniProgram = Factory::miniProgram($config); // 小程序
             $result = $miniProgram->content_security->checkImage('storage/temporary/' . $url['title']);
             if ($result['errcode'] == 87014) {
                 return resReturn(0, '图片含有敏感信息，请重新上传', Code::CODE_PARAMETER_WRONG);
             }
         }
-        return $url['url'];
+        // 显示文件详细数据
+        if ($request->has('full')) {
+            return $url;
+        } else {
+            return $url['url'];
+        }
     }
 
-    //上传文件
+    /**
+     * Upload processing
+     * 上传处理
+     * @param $file
+     * @param $request
+     * @return array|string[]
+     */
     protected function uploadFiles($file, $request)
     {
-        //多一层验证，防止直接调用此方法，对文件直接放行
-        $extension = $request->file->extension();
-        if (!isset($request->type) || ($request->type != 1 && $request->type != 2)) { //验证图片
-            return array(
-                "state" => 'no',
-                'msg' => '图片参数有误'
-            );
-        } else {
-            if (!in_array($extension, array('gif', 'jpg', 'jpeg', 'bmp', 'png'))) {
-                return array(
-                    "state" => 'no',
-                    'msg' => '图片格式有误'
-                );
-            }
-        }
-        // 判断图片有效性
-        if (!$file->isValid()) {
-            return array(
-                "state" => 'no',
-                'msg' => '上传文件无效'
-            );
-        }
         //生成文件名
         $extension = $file->getClientOriginalExtension();
         if ($extension == "") {//前端批量上传组件在拖动改变图片排序后, 扩展名会为空, 这里修补一下
@@ -100,12 +99,12 @@ class Controller extends BaseController
         $fileName = $randFileName . '.' . $extension;
 
         $pathName = 'temporary/' . $fileName;
-        // 获取图片在临时文件中的地址
+        // 获取文件在临时文件中的地址
         $files = file_get_contents($file->getRealPath());
         $disk = Storage::disk('public');
         $disk->put($pathName, $files);
         // 根据前端传递值动态生成多规格图片
-        if ($request->has('specification')) {
+        if ($request->type == 1 && $request->has('specification')) {
             $specificationArr = explode(',', $request->specification);
             if (count($specificationArr) < 1) {
                 return array(

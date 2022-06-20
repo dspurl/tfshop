@@ -28,6 +28,17 @@
           .specification{
             color: #999999;
           }
+          .good-name{
+            flex:1;
+          }
+          .type{
+            width: 120px;
+            display: flex;
+            align-items:center;
+            justify-content: center;
+            border-left: 1px solid #e5e5e5;
+            margin: -10px 0;
+          }
         }
         .good-li:last-child{
           border-bottom: none;

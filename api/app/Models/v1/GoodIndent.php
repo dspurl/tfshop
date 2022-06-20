@@ -94,6 +94,21 @@ class GoodIndent extends Model
         }
     }
 
+    public function getTypeAttribute()
+    {
+        if (isset($this->attributes['type'])) {
+            $return = '';
+            if (!self::$withoutAppends) {
+                switch ($this->attributes['type']) {
+                    case static::GOOD_INDENT_TYPE_COMMON:
+                        $return = '普通订单';
+                        break;
+                }
+            }
+            return $return;
+        }
+    }
+
     /**
      * 状态
      *
@@ -268,5 +283,10 @@ class GoodIndent extends Model
     public function PaymentLogAll()
     {
         return $this->morphMany('App\Models\v1\PaymentLog', 'pay');
+    }
+
+    public function GoodCode()
+    {
+        return $this->belongsToMany(GoodCode::class, 'good_indent_good_codes');
     }
 }

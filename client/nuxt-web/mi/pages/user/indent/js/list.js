@@ -15,6 +15,7 @@ export default {
       goodIndentList: [],
       total: 0,
       isComment: false,
+      isGroupPurchase: false,
       listQuery: {
         limit: 10,
         page: 1,
@@ -26,10 +27,11 @@ export default {
   async asyncData (ctx) {
     try {
       let [ verifyPluginData ] = await Promise.all([
-        verifyPlugin(['comment']),
+        verifyPlugin(['comment', 'groupPurchase']),
       ]);
       return {
-        isComment: verifyPluginData.comment
+        isComment: verifyPluginData.comment,
+        isGroupPurchase: verifyPluginData.groupPurchase
       }
     } catch(err) {
       ctx.$errorHandler(err)

@@ -16,6 +16,8 @@ use PhpParser\Node\Expr\Cast\Object_;
  * @property string cost_price
  * @property string price
  * @property string inventory
+ * @property int code_type
+ * @property int is_fixed
  * @property Object_ product_sku
  * @property int is_delete
  *
@@ -23,7 +25,13 @@ use PhpParser\Node\Expr\Cast\Object_;
 class GoodSku extends Model
 {
     use SoftDeletes;
+
     public static $withoutAppends = true;
+
+    const GOOD_SKU_IS_FIXED_NO = 0; //是否固定卡密：否
+    const GOOD_SKU_IS_FIXED_YES = 1; //是否固定卡密：是
+    const GOOD_SKU_CODE_TYPE_CDKEY = 0; //卡密类型：卡密
+    const GOOD_SKU_CODE_TYPE_NET_DISK = 1; //卡密类型：网盘
 
     /**
      * Prepare a date for array / JSON serialization.
@@ -64,6 +72,11 @@ class GoodSku extends Model
     public function resources()
     {
         return $this->morphOne('App\Models\v1\Resource', 'image');
+    }
+
+    public function resourcesMany()
+    {
+        return $this->morphMany(Resource::class, 'image');
     }
 
     /**
@@ -146,5 +159,10 @@ class GoodSku extends Model
     public function setPriceAttribute($value)
     {
         $this->attributes['price'] = sprintf("%01.2f", $value) * 100;
+    }
+
+    public function GoodCode()
+    {
+        return $this->hasMany(GoodCode::class);
     }
 }

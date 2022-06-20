@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int type   //资源类型1图片
+ * @property string name
  * @property string depict  //资源描述
  * @property  string img    //资源地址
  * @property int image_id
@@ -16,6 +17,7 @@ class Resource extends Model
 {
     const RESOURCE_TYPE_IMG = 1; //类型：图片
     const RESOURCE_TYPE_VIDEO = 2; //类型：视频
+    const RESOURCE_TYPE_FILE = 3; //类型：文件
 
     /**
      * Prepare a date for array / JSON serialization.

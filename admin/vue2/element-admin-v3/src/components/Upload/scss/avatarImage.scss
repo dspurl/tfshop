@@ -4,13 +4,12 @@
   justify-content: center;
 }
 .avatar-uploader{
-  border: 1px dashed #d9d9d9;
-  border-radius: 6px;
-  cursor: pointer;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  line-height: 0;
+  margin-bottom: 2px;
+  .el-upload{
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
 }
