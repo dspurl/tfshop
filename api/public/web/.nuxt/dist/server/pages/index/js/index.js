@@ -1,7 +1,7 @@
 exports.ids = [40,55];
 exports.modules = {
 
-/***/ 179:
+/***/ 180:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33,7 +33,7 @@ function goodCategory(query) {
 
 /***/ }),
 
-/***/ 187:
+/***/ 188:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -262,7 +262,7 @@ var component = Object(componentNormalizer["a" /* default */])(
 
 /***/ }),
 
-/***/ 189:
+/***/ 190:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -286,7 +286,7 @@ function detail(id) {
 
 /***/ }),
 
-/***/ 329:
+/***/ 330:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -294,7 +294,7 @@ function detail(id) {
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./api/good.js
-var good = __webpack_require__(179);
+var good = __webpack_require__(180);
 
 // EXTERNAL MODULE: ./plugins/request.js
 var request = __webpack_require__(2);
@@ -309,17 +309,17 @@ function getList(query) {
   });
 }
 // EXTERNAL MODULE: external "moment"
-var external_moment_ = __webpack_require__(155);
+var external_moment_ = __webpack_require__(156);
 var external_moment_default = /*#__PURE__*/__webpack_require__.n(external_moment_);
 
 // EXTERNAL MODULE: ./pages/seckill/components/CountDownTime.vue + 4 modules
-var CountDownTime = __webpack_require__(187);
+var CountDownTime = __webpack_require__(188);
 
 // EXTERNAL MODULE: ./api/seckill.js
-var seckill = __webpack_require__(189);
+var seckill = __webpack_require__(190);
 
 // EXTERNAL MODULE: ./api/plugin.js
-var api_plugin = __webpack_require__(37);
+var api_plugin = __webpack_require__(38);
 
 // CONCATENATED MODULE: ./pages/index/js/index.js
 

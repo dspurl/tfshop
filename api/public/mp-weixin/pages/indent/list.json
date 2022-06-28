@@ -1,7 +1,10 @@
 {
   "navigationBarTitleText": "我的订单",
+  "enablePullDownRefresh": true,
+  "onReachBottomDistance": 50,
   "usingComponents": {
     "uni-load-more": "/components/uni-load-more/uni-load-more",
-    "empty": "/components/empty"
+    "empty": "/components/empty",
+    "foreman-qr-code": "/pages/groupPurchase/components/qrCode"
   }
 }

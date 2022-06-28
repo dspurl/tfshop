@@ -1,7 +1,7 @@
 exports.ids = [41];
 exports.modules = {
 
-/***/ 324:
+/***/ 325:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38,11 +38,11 @@ function balancePay(data) {
   });
 }
 // EXTERNAL MODULE: external "@chenfengyuan/vue-countdown"
-var vue_countdown_ = __webpack_require__(169);
+var vue_countdown_ = __webpack_require__(170);
 var vue_countdown_default = /*#__PURE__*/__webpack_require__.n(vue_countdown_);
 
 // EXTERNAL MODULE: external "@chenfengyuan/vue-qrcode"
-var vue_qrcode_ = __webpack_require__(170);
+var vue_qrcode_ = __webpack_require__(171);
 var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
 
 // CONCATENATED MODULE: ./pages/money/js/pay.js
@@ -83,7 +83,7 @@ var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
 
   methods: {
     getList() {
-      Object(goodIndent["g" /* pay */])($nuxt.$route.query.id).then(response => {
+      Object(goodIndent["h" /* pay */])($nuxt.$route.query.id).then(response => {
         if (response.state !== 1) {
           // 订单发生改变时，直接跳转到结果页
           if (response.state === 4) {

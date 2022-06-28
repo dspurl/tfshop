@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "订单详情",
-  "usingComponents": {}
+  "usingComponents": {
+    "foreman-qr-code": "/pages/groupPurchase/components/qrCode"
+  }
 }

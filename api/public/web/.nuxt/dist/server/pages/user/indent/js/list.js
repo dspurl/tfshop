@@ -1,13 +1,13 @@
 exports.ids = [70];
 exports.modules = {
 
-/***/ 298:
+/***/ 299:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_goodIndent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
-/* harmony import */ var _api_plugin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(37);
+/* harmony import */ var _api_plugin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(38);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -27,6 +27,7 @@ __webpack_require__.r(__webpack_exports__);
       goodIndentList: [],
       total: 0,
       isComment: false,
+      isGroupPurchase: false,
       listQuery: {
         limit: 10,
         page: 1,
@@ -38,9 +39,10 @@ __webpack_require__.r(__webpack_exports__);
 
   async asyncData(ctx) {
     try {
-      let [verifyPluginData] = await Promise.all([Object(_api_plugin__WEBPACK_IMPORTED_MODULE_1__[/* verifyPlugin */ "a"])(['comment'])]);
+      let [verifyPluginData] = await Promise.all([Object(_api_plugin__WEBPACK_IMPORTED_MODULE_1__[/* verifyPlugin */ "a"])(['comment', 'groupPurchase'])]);
       return {
-        isComment: verifyPluginData.comment
+        isComment: verifyPluginData.comment,
+        isGroupPurchase: verifyPluginData.groupPurchase
       };
     } catch (err) {
       ctx.$errorHandler(err);
@@ -58,7 +60,7 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     async getList() {
       this.loading = true;
-      await Promise.all([Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* getList */ "f"])(this.listQuery)]).then(([goodIndent]) => {
+      await Promise.all([Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* getList */ "g"])(this.listQuery)]).then(([goodIndent]) => {
         this.goodIndentList = goodIndent.data;
         goodIndent.data.forEach(item => {
           item.goods_list.forEach(items => {
@@ -136,7 +138,7 @@ __webpack_require__.r(__webpack_exports__);
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true;
-        Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* receipt */ "i"])(item.id).then(response => {
+        Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* receipt */ "j"])(item.id).then(response => {
           this.buttonLoading = false;
           this.$message({
             message: '操作成功',

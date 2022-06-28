@@ -1,7 +1,7 @@
 exports.ids = [80];
 exports.modules = {
 
-/***/ 177:
+/***/ 178:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -32,12 +32,12 @@ function winning(id) {
 
 /***/ }),
 
-/***/ 301:
+/***/ 302:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_integralDraw__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(177);
+/* harmony import */ var _api_integralDraw__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(178);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'user',

@@ -27,6 +27,7 @@ import nuxt_plugin_global_2c8b7297 from 'nuxt_plugin_global_2c8b7297' // Source:
 import nuxt_plugin_vuemoment_522d55ca from 'nuxt_plugin_vuemoment_522d55ca' // Source: ..\\plugins\\vue-moment (mode: 'all')
 import nuxt_plugin_videoPlayer_10da482f from 'nuxt_plugin_videoPlayer_10da482f' // Source: ..\\plugins\\videoPlayer.js (mode: 'client')
 import nuxt_plugin_luckycanvas_68b24486 from 'nuxt_plugin_luckycanvas_68b24486' // Source: ..\\plugins\\lucky-canvas.js (mode: 'all')
+import nuxt_plugin_vueclipboard2_d47dc0c0 from 'nuxt_plugin_vueclipboard2_d47dc0c0' // Source: ..\\plugins\\vue-clipboard2.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -277,6 +278,10 @@ async function createApp(ssrContext, config = {}) {
 
   if (typeof nuxt_plugin_luckycanvas_68b24486 === 'function') {
     await nuxt_plugin_luckycanvas_68b24486(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_vueclipboard2_d47dc0c0 === 'function') {
+    await nuxt_plugin_vueclipboard2_d47dc0c0(app.context, inject)
   }
 
   // Lock enablePreview in context

@@ -1,7 +1,7 @@
 exports.ids = [89];
 exports.modules = {
 
-/***/ 180:
+/***/ 181:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38,7 +38,7 @@ function cancel(data) {
 
 /***/ }),
 
-/***/ 326:
+/***/ 327:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -58,13 +58,13 @@ function getList(query) {
   });
 }
 // EXTERNAL MODULE: ./api/user.js
-var user = __webpack_require__(180);
+var user = __webpack_require__(181);
 
 // EXTERNAL MODULE: ./api/goodIndent.js
 var goodIndent = __webpack_require__(22);
 
 // EXTERNAL MODULE: ./api/plugin.js
-var api_plugin = __webpack_require__(37);
+var api_plugin = __webpack_require__(38);
 
 // CONCATENATED MODULE: ./pages/user/js/portal.js
 
@@ -117,7 +117,7 @@ var api_plugin = __webpack_require__(37);
       await Promise.all([getList({
         limit: 7,
         sort: '-updated_at'
-      }), Object(user["b" /* detail */])(), Object(goodIndent["h" /* quantity */])()]).then(([browseData, userData, quantityData]) => {
+      }), Object(user["b" /* detail */])(), Object(goodIndent["i" /* quantity */])()]).then(([browseData, userData, quantityData]) => {
         this.browseList = browseData.data;
         this.user = userData;
         this.quantity = quantityData;

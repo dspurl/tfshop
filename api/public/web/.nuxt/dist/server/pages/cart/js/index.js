@@ -1,7 +1,7 @@
 exports.ids = [24];
 exports.modules = {
 
-/***/ 258:
+/***/ 259:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -43,7 +43,7 @@ __webpack_require__.r(__webpack_exports__);
       this.loading = true;
       this.cartList = [];
       this.invalidGood = [];
-      await Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* synchronizationInventory */ "j"])().then(response => {
+      await Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* synchronizationInventory */ "k"])().then(response => {
         this.store.set("DSSHOP-PC-" + 'CartList', response);
         this.cartOriginalList = response;
 

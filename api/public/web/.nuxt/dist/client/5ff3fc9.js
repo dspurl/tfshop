@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[28],{684:function(t,e,n){"use strict";n.r(e),e.default={name:"DefaultColumnDetail",props:{data:{type:Object,default:{}},loading:{type:Boolean,default:!1},listQuery:{type:Object,default:{}}},data:function(){return{}},watch:{},mounted:function(){},methods:{getList:function(){this.$emit("getList")}}}}}]);

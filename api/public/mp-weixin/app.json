@@ -40,7 +40,8 @@
     "pages/integral/index",
     "pages/user/integralDraw/index",
     "pages/user/integralDraw/log",
-    "pages/seckill/list"
+    "pages/seckill/list",
+    "pages/groupPurchase/list"
   ],
   "subPackages": [],
   "window": {
@@ -86,6 +87,5 @@
       "desc": "你的位置信息将用于位置接口的效果展示"
     }
   },
-  "usingComponents": {},
-  "sitemapLocation": "sitemap.json"
+  "usingComponents": {}
 }

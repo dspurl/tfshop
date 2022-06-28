@@ -1,7 +1,7 @@
 exports.ids = [69];
 exports.modules = {
 
-/***/ 296:
+/***/ 297:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -22,7 +22,12 @@ __webpack_require__.r(__webpack_exports__);
       loading: true,
       buttonLoading: false,
       total: 0,
-      indent: {}
+      indent: {
+        total: 0,
+        good_code: []
+      },
+      isType: true,
+      code_type: 0
     };
   },
 
@@ -49,6 +54,7 @@ __webpack_require__.r(__webpack_exports__);
           this.total += item.price * item.number;
 
           if (item.good_sku) {
+            this.code_type = item.good_sku.code_type;
             specification = null;
             item.good_sku.product_sku.forEach(item2 => {
               if (specification) {
@@ -58,6 +64,10 @@ __webpack_require__.r(__webpack_exports__);
               }
             });
             item.specification = specification.substr(0, specification.length - 1);
+          }
+
+          if (item.good.type === 2 || item.good.type === 3) {
+            this.isType = false;
           }
         });
         this.total = Number(this.total.toFixed(2));
@@ -75,7 +85,7 @@ __webpack_require__.r(__webpack_exports__);
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true;
-        Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* receipt */ "i"])(this.indent.id).then(response => {
+        Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* receipt */ "j"])(this.indent.id).then(response => {
           this.buttonLoading = false;
           this.$message({
             message: '操作成功',
@@ -90,6 +100,27 @@ __webpack_require__.r(__webpack_exports__);
 
     goBack() {
       $nuxt.$router.go(-1);
+    },
+
+    doCopy(item) {
+      this.$copyText(item).then(message => {
+        this.$message({
+          message: '复制成功',
+          type: 'success'
+        });
+      }).catch(err => {
+        console.log('失败');
+      });
+    },
+
+    // 下载文件
+    goDownload() {
+      this.buttonLoading = true;
+      Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* download */ "f"])(this.indent.id).then(response => {
+        window.open("http://dsshop.test/api/v1/app/" + 'indentDownload/' + response);
+      }).finally(() => {
+        this.buttonLoading = false;
+      });
     }
 
   }

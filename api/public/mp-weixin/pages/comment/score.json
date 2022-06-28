@@ -1,4 +1,6 @@
 {
   "navigationBarTitleText": "评价",
-  "usingComponents": {}
+  "usingComponents": {
+    "uni-rate": "/pages/comment/components/uni-rate/index"
+  }
 }
