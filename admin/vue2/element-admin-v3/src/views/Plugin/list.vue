@@ -2,10 +2,9 @@
   <div class="app-container">
     <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
       <el-menu-item index="1">本地</el-menu-item>
-      <el-menu-item index="2">市场</el-menu-item>
     </el-menu>
-    <div v-if="listQuery.activeIndex === '2' && total === 0" class="tip">
-      <p>您还没有正确配置开发者密钥，<el-link :underline="false" href="https://dsshoping.dswjcms.com/article/detail/38.html" type="primary" target="_blank">查看帮助</el-link> </p>
+    <div class="tip">
+      <p>如何配置开发者密钥，<el-link :underline="false" href="https://dsshoping.dswjcms.com/article/detail/38.html" type="primary" target="_blank">查看帮助</el-link> </p>
     </div>
     <div class="filter-container">
       <div class="condition"/>
@@ -22,9 +21,8 @@
             <p>1、插件安装需开发人员操作，安装插件前请备份项目及数据库，安装插件可能导致不可逆操作。</p>
             <p>2、插件安装请确保是开发模式下操作，因涉及文件修改、替换操作，需要人为操作环节。</p>
             <p>3、自己创建和下载的插件可以在本地列表中进行管理。</p>
-            <p>4、如自己创建的插件并发布到了市场，是会同时存在于本地和市场列表中的，请不要尝试下载市场中的插件，这将导致本地的插件被替换。</p>
-            <p>5、本地已安装插件更新步骤：市场更新插件(下载最新插件)->本地升级插件(更新本地插件)。</p>
-            <p>6、插件安装后一闪而过的错误是正常现象，因项目文件发生变化，会重新加载，如刷新后还是报错，请重新运行`npm run dev`</p>
+            <p>4、本地已安装插件更新步骤：市场更新插件(下载最新插件)->本地升级插件(更新本地插件)。</p>
+            <p>5、插件安装后一闪而过的错误是正常现象，因项目文件发生变化，会重新加载，如刷新后还是报错，请重新运行`npm run dev`</p>
           </div>
           <i slot="reference" class="el-icon-question question"/>
         </el-popover>

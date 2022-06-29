@@ -35,11 +35,15 @@ class PluginController extends Controller
     public function list(Request $request)
     {
         $Plugin = new Plugin();
-        if ($request->activeIndex == 1) {
-            $Json = $Plugin->getLocalPlugin($request);
-        } else {
-            $Json = $Plugin->getOnLinePlugin();
+//        if ($request->activeIndex == 1) {
+//            $Json = $Plugin->getLocalPlugin($request);
+//        } else {
+//            $Json = $Plugin->getOnLinePlugin();
+//        }
+        if(!config('dsshop.marketApplicationSecret') || !config('dsshop.marketApplySecret')){
+            return resReturn(0, '您还没有正确配置开发者密钥', Code::CODE_WRONG);
         }
+        $Json = $Plugin->getLocalPlugin($request);
         return resReturn(1, $Json);
     }
 
