@@ -46,7 +46,7 @@ class CategoryController extends Controller
             $q->where('name', 'like', '%' . $request->title . '%');
         }
         if ($request->has('pid')) {
-            $q->where('pid', $request->pid[count($request->pid)-1]);
+            $q->where('pid', $request->pid[count($request->pid) - 1]);
         } else {
             $q->where('pid', 0);
         }
