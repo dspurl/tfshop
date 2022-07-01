@@ -366,7 +366,7 @@ class Good extends Model
             } else {
                 $return = $this->attributes['price'] / 100;
             }
-            return $return > 0 ? $return : '';
+            return $return > 0 ? $return : 0;
         }
     }
 
