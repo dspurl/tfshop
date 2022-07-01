@@ -120,7 +120,9 @@ export default {
         sort: '+sort'
       }).then(response => {
         this.banner = response.data[0]
-        this.banner.url = this.banner.url ? this.banner.url.replace('?id=','/') : ''
+        if(this.banner){
+          this.banner.url = this.banner.url ? this.banner.url.replace('?id=','/') : ''
+        }
       })
     },
     // 秒杀倒计时结束
