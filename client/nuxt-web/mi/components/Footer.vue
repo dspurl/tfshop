@@ -22,6 +22,15 @@
     <!-- 版权信息-->
     <div class="copyright">
       <div class="container">
+        <!-- 友情链接-->
+        <div class="link-box" v-if="link.length">
+          <div class="name">友情链接：</div>
+          <div class="list">
+            <div class="item" v-for="(item,index) in link" :key="index">
+              <a :href="item.url" target="_blank">{{ item.name }}</a>
+            </div>
+          </div>
+        </div>
         <span>Copyright © 2020-{{year}} {{domain}}</span>
         <el-divider direction="vertical"></el-divider>
         <a href="http://beian.miit.gov.cn/" target="_blank">{{icp}}</a>

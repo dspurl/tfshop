@@ -1,6 +1,7 @@
 import {login} from '@/api/login'
 import {code, verify, index} from '@/api/sweepLogin'
 import {verifyPlugin} from '@/api/plugin'
+import {getList as bannerList} from '@/api/banner'
 import {
   mapMutations
 } from 'vuex';
@@ -14,11 +15,24 @@ export default {
   async asyncData (ctx) {
     try {
       let isSweepLogin = false
+      let banner = {}
       await verifyPlugin('sweepLogin').then(response => {
         isSweepLogin = response.sweepLogin
       })
+      await bannerList({
+        limit: 1,
+        type: 2,
+        state: 0,
+        sort: '+sort'
+      }).then(response => {
+        if (response.total === 1) {
+          banner = response.data[0]
+          banner.url = banner.url ? banner.url.replace('?id=','/') : ''
+        }
+      })
       return {
-        isSweepLogin: isSweepLogin
+        isSweepLogin: isSweepLogin,
+        banner: banner
       }
     } catch(err) {
       ctx.$errorHandler(err)
@@ -59,7 +73,8 @@ export default {
           { required: true, message: '请输入密码', trigger: 'blur' },
           { min: 5, message: '密码长度必须大于5位', trigger: 'blur' }
         ]
-      }
+      },
+      banner: {}
     }
   },
   beforeDestroy() {

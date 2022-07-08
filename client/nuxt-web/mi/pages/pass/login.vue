@@ -1,10 +1,10 @@
 <template>
   <div class="login">
-    <div class="banner-panel" style="background-image: url('//cdn.cnbj1.fds.api.mi-img.com/mi-mall/72644d9b8031286de3cc74e151aefd90.jpg');">
+    <div class="banner-panel" :style="{backgroundImage: `url(${banner.resources.img})`}">
       <div class="container">
         <el-row :gutter="24">
           <el-col :span="8" :offset="16">
-            <NuxtLink class="link" to="/pass/login"/>
+            <NuxtLink class="link" :to="banner.url.split('pages/').join('')"/>
             <el-card class="form" shadow="hover">
               <div class="login-method">
                 <span :class="{on:method === 1}" @click="setMethod(1)">账号登录</span>

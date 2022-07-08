@@ -39,4 +39,22 @@
       }
     }
   }
+  .link-box{
+    display: flex;
+    padding: 10px 0;
+    .name{
+      width: 60px;
+    }
+    .list{
+      flex: 1;
+      .item{
+        float: left;
+        margin-left: 15px;
+        margin-bottom: 5px;
+        a:hover{
+          color: $font-color-main;
+        }
+      }
+    }
+  }
 }

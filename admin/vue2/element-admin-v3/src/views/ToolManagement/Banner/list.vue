@@ -7,8 +7,7 @@
         </el-form-item>
         <el-form-item label="类型">
           <el-select v-model="listQuery.type" placeholder="类型" clearable>
-            <el-option label="首页轮播" value="0"/>
-            <el-option label="首页广告" value="1"/>
+            <el-option v-for="(item, index) in type" :key="index" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item>
@@ -109,8 +108,7 @@
         </el-form-item>
         <el-form-item label="类型" prop="type">
           <el-select v-model="temp.type" placeholder="请选择类型" clearable style="width:160px;">
-            <el-option :value="0" label="首页轮播"/>
-            <el-option :value="1" label="首页广告"/>
+            <el-option v-for="(item, index) in type" :key="index" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item label="图片" prop="img">
@@ -270,7 +268,25 @@ export default {
         sort: [
           { required: true, message: '请填写排序', trigger: 'blur' }
         ]
-      }
+      },
+      type: [
+        {
+          label: '首页轮播',
+          value: 0
+        },
+        {
+          label: '首页广告',
+          value: 1
+        },
+        {
+          label: '登录页广告',
+          value: 2
+        },
+        {
+          label: '友情链接',
+          value: 3
+        }
+      ]
     }
   },
   created() {

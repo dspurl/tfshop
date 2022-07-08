@@ -19,6 +19,8 @@ class Banner extends Model
     public static $withoutAppends = true;
     const BANNER_TYPE_INDEX_CAROUSEL = 0; //类型：首页轮播
     const BANNER_TYPE_INDEX_ADVERTISING = 1; //类型：首页广告
+    const BANNER_TYPE_INDEX_LOGIN = 2; //类型：登录页广告
+    const BANNER_TYPE_INDEX_LINK = 3; //类型：友情链接
     const BANNER_STAE_SHOW = 0; //状态：显示
     const BANNER_STAE_HIDE = 1; //状态：隐藏
     protected $appends = ['type_show', 'state_show'];
@@ -56,6 +58,10 @@ class Banner extends Model
                     return '首页轮播';
                 } else if ($this->attributes['type'] == static::BANNER_TYPE_INDEX_ADVERTISING) {
                     return '首页广告';
+                } else if ($this->attributes['type'] == static::BANNER_TYPE_INDEX_LOGIN) {
+                    return '登录页广告';
+                } else if ($this->attributes['type'] == static::BANNER_TYPE_INDEX_LINK) {
+                    return '友情链接';
                 }
             }
         }
