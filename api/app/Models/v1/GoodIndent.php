@@ -97,7 +97,7 @@ class GoodIndent extends Model
     public function getTypeAttribute()
     {
         if (isset($this->attributes['type'])) {
-            $return = '';
+            $return = $this->attributes['type'];
             if (!self::$withoutAppends) {
                 switch ($this->attributes['type']) {
                     case static::GOOD_INDENT_TYPE_COMMON:
