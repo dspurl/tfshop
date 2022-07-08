@@ -24,18 +24,17 @@ export default {
         type: 1,
         size: 1024 * 1024 * 2,
         specification: [80, 150]
-      }
+      },
+      identification: null
     }
   },
   created() {
-    console.log('111')
     this.getDetail()
   },
   methods: {
     async getDetail(){
-
-      if(!$nuxt.$route.query.id){
-
+      if($nuxt.$route.query.identification){
+        this.identification = $nuxt.$route.query.identification
       }
       await Promise.all([
         detail($nuxt.$route.query.id)

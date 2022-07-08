@@ -4,7 +4,7 @@
     </el-page-header>
     <div v-loading="loading">
       <div class="top">
-        <div class="order-number">订单号：{{indent.identification}}</div>
+        <div class="order-number">订单号：{{identification}}</div>
       </div>
       <el-divider></el-divider>
       <el-form class="ruleForm" :model="indent" ref="ruleForm" label-width="120px">
@@ -17,7 +17,7 @@
               align="center"
               width="100">
               <template slot-scope="scope">
-                <NuxtLink :to="{ path: '/product/detail', query: { id: scope.row.good_id }}">
+                <NuxtLink :to="{ path: `/product/detail/${scope.row.good_id}`}">
                   <el-image
                     class="image"
                     :src="scope.row.img | smallImage(80)"
