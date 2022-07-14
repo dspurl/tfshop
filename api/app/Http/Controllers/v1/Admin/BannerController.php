@@ -156,16 +156,20 @@ class BannerController extends Controller
             if ($id) {
                 $Banner = Banner::find($id);
                 $Resource = Resource::where('image_type', 'App\Models\v1\Banner')->where('image_id', $Banner->id)->first();
-                Resource::where('image_type', 'App\Models\v1\Banner')->where('image_id', $Banner->id)->delete();
                 Banner::where('id', $Banner->id)->delete();
-                imgPathDelete('banner', $Resource->img);
+                if ($Resource) {
+                    Resource::where('image_type', 'App\Models\v1\Banner')->where('image_id', $Banner->id)->delete();
+                    imgPathDelete('banner', $Resource->img);
+                }
             } else {
                 foreach ($request as $data) {
                     $Banner = Banner::find($data['id']);
                     $Resource = Resource::where('image_type', 'App\Models\v1\Banner')->where('image_id', $Banner->id)->first();
-                    Resource::where('image_type', 'App\Models\v1\Banner')->where('image_id', $Banner->id)->delete();
                     Banner::where('id', $Banner->id)->delete();
-                    imgPathDelete('banner', $Resource->img);
+                    if ($Resource) {
+                        Resource::where('image_type', 'App\Models\v1\Banner')->where('image_id', $Banner->id)->delete();
+                        imgPathDelete('banner', $Resource->img);
+                    }
                 }
             }
             return 1;

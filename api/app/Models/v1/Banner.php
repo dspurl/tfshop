@@ -52,7 +52,7 @@ class Banner extends Model
     {
         if (isset($this->attributes['type'])) {
             if (self::$withoutAppends) {
-                return null;
+                return $this->attributes['type'];
             } else {
                 if ($this->attributes['type'] == static::BANNER_TYPE_INDEX_CAROUSEL) {
                     return '首页轮播';
