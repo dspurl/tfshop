@@ -24,34 +24,13 @@
 ------------
 <p>master分支为稳定版本，推荐大多数用户下载，new分支为新版本，随时会有更新，未进行测试验收，不推荐用户使用</p>
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
-<p>项目更新已趋于稳定，不会做大的修改，一般更新节奏为1-2个月更新一次，以修复BUG和优化功能，开发插件为主</p>
-<p>当前版本3.0.2</p>
+<p>当前版本3.0.3</p>
 
 介绍
 ------------
-DSSHOP是一套多终端商城解决方案，它采用前后端分离，后端基于laravel,前端基于Vue。
+DSSHOP是一套代代码多终端商城解决方案，它采用前后端分离，后端基于laravel,前端基于Vue。
 
 我们不生成代码，我们只是代码的搬运工，60%的复制粘贴，30%的思考，10%的代码量。
-
-> 本项目定位：入门简单，无需一行代码；深入需要多人协同完成，亦可全栈实现。
->
-> 本项目涉及前后端代码，深入会需要掌握VUE、JS、HTML、H5、Laravel、小程序、uni-app
->
-> 本项目适合各阶段人群：学生、培训机构、创业公司、外包公司，项目正在不断迭代更新，并会针对各个阶段推出不同的分支，以满足不同需求。
->
-> 本项目完全免费开源，无需授权，可直接用于商业用途和二开后对外出售
->
-> 欢迎社区贡献代码，帮助自己也可以帮助他人
-
-##### DSSHOP是什么
-
-- DSSHOP是一套多终端的商城底层系统，需要通过插件来扩充自己，从而满足商用需求。
-- DSSHOP的开源之初就提及不适合任何人群，我们只面向开发者，所以需要你或你的团队掌握一定的编程基础。
-
-##### DSSHOP名字由来
-
-- DSSHOP中文名：点石商城系统，因本人2012年开始做开源项目：点石为金资源管理系统（DSWJCMS），然后购买了dswjcms.com的域名,基于TP3.2做了好几个开源项目，后来对DSSHOP进行了重构，所以才有了现在的项目
-- DSSHOP又名DSSHOPING
 
 演示
 ------------
@@ -138,7 +117,8 @@ npm start
 <p>积分(付费)</p>
 <p>积分商城(付费)</p>
 <p>积分抽奖【大转盘、九宫格、老虎机】(付费)</p>
-
+<p>秒杀(付费)</p>
+<p>拼团(付费)</p>
 功能介绍
 ------------
 - **RBAC权限** 支持为不同管理员分配不同的权限
@@ -160,6 +140,21 @@ npm start
 - **邮件系统** 邮箱认证、绑定、消息通知发送
 - **备份系统** 可对项目和数据库进行备份，并支持保留指定天数，超出后自动清除旧备份
 
+效果图
+------------
+<p align="center">
+  <img src="https://dspurl.github.io/image/a01.png" width="100%">
+  <img src="https://dspurl.github.io/image/a02.png" width="100%">
+  <img src="https://dspurl.github.io/image/a03.png" width="100%">
+  <img src="https://dspurl.github.io/image/a04.png" width="100%">
+  <img src="https://dspurl.github.io/image/a05.png" width="100%">
+  <img src="https://dspurl.github.io/image/a06.png" width="100%">
+  <img src="https://dspurl.github.io/image/a07.png" width="100%">
+  <img src="https://dspurl.github.io/image/a08.png" width="100%">
+  <img src="https://dspurl.github.io/image/a09.png" width="100%">
+  <img src="https://dspurl.github.io/image/a10.png" width="100%">
+  <img src="https://dspurl.github.io/image/a11.png" width="100%">
+</p>
 图标
 ------------
 > 图标部分是svg，部分使用iconfont，iconfont并未明确可以免费用于商业用途，版权归图标作者所有，如对版权有要求的，请自行更换图标
@@ -182,9 +177,12 @@ npm start
 
 版权说明
 ------------
-- 通过官网注册并创建的应用(注册和创建应用不需要费用)可免费用于商业运营;未通过官网创建的应用不允许商用，仅供学习所用，不允许商用！！！
+- 通过官网注册并创建的应用(注册和创建应用不需要费用)可免费用于商业运营
 
 联系我们
 ------------
 - 开源项目可能存在BUG，如发现问题，可通过Github的issue进行提交，请根据提问格式提问，不符合的一律不回答。
-- 有商业服务需求的，请通过官网联系在线客服，有专人对接
+- dsshop交流群，微信扫码进群
+<p align="center">
+  <img src="https://dspurl.github.io/image/12.png" width="200">
+</p>
