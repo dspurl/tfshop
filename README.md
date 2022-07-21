@@ -153,9 +153,8 @@ npm start
   <img src="https://dspurl.github.io/image/a07.png" width="100%">
   <img src="https://dspurl.github.io/image/a08.png" width="100%">
   <img src="https://dspurl.github.io/image/a09.png" width="100%">
-  <img src="https://dspurl.github.io/image/a10.png" width="100%">
-  <img src="https://dspurl.github.io/image/a11.png" width="100%">
 </p>
+
 图标
 ------------
 > 图标部分是svg，部分使用iconfont，iconfont并未明确可以免费用于商业用途，版权归图标作者所有，如对版权有要求的，请自行更换图标
