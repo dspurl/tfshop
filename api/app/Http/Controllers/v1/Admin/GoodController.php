@@ -35,7 +35,6 @@ class GoodController extends Controller
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
-     * @queryParam  ids array 商品ID组
      */
     public function list(Request $request)
     {
@@ -76,14 +75,6 @@ class GoodController extends Controller
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
-        }
-        // 如果有设置商品ID组的话，如果无值的话，不展示数据
-        if ($request->has('ids')) {
-            if ($request->ids) {
-                $q->whereIn('id', $request->ids);
-            } else {
-                $q->where('id', 0);
-            }
         }
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
@@ -552,9 +543,9 @@ class GoodController extends Controller
                         if (!array_key_exists("file_name", $good_sku)) {
                             throw new \Exception('上传文件有误', Code::CODE_WRONG);
                         }
-                        if (array_key_exists('file_id', $good_sku)) {
+                        if(array_key_exists('file_id',$good_sku)){
                             $Resource = Resource::find($good_sku['file_id']);
-                        } else {
+                        }else{
                             $Resource = new Resource();
                             $Resource->type = Resource::RESOURCE_TYPE_FILE;
                             $Resource->image_id = $GoodSku->id;

@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === "development") {
 	const domainName = 'http://dsshop.test'
 	configURL = {
 		// 腾讯地图的key，参考：https://lbs.qq.com/service/webService/webServiceGuide/webServiceGeocoder
-		lbsQq: 'BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC',
+		lbsQq: '',
 		DomainName: domainName,
 		BaseURL: domainName +INTERFACE,	//api_URL
 		secret: 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === "development") {
 		//测试环境
 		const domainName = 'http://dsshop.test'
 		configURL = {
-			lbsQq: 'BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC',
+			lbsQq: '',
 			DomainName: domainName,
 			BaseURL: domainName +INTERFACE,
 			secret: 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='
@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === "development") {
 		//生产环境
 		const domainName = 'http://dsshop.test'
 		configURL = {
-			lbsQq: 'BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC',
+			lbsQq: '',
 			DomainName: domainName,
 			BaseURL: domainName +INTERFACE,
 			secret: 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='

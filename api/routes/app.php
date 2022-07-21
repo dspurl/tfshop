@@ -37,7 +37,6 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::get('good/{id}', 'GoodController@detail')->name('client.goodDetail');    //商品详情
         Route::get('goodCategory', 'GoodController@category')->name('client.goodCategory');    //商品分类展示
         Route::get('banner', 'BannerController@list')->name('client.bannerList');    //轮播列表
-        Route::get('project/{id}', 'ProjectController@detail')->name('client.projectDetail');    //商城详情
     });
     // 需要用户登录验证
     Route::prefix('app')->namespace('Client')->middleware(['appverify', 'auth:web'])->group(function () {

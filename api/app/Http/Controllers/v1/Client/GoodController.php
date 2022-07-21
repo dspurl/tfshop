@@ -25,7 +25,6 @@ class GoodController extends Controller
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
      * @queryParam  pid int 类目ID
-     * @queryParam  ids array 商品ID组
      */
     public function list(Request $request)
     {
@@ -63,14 +62,6 @@ class GoodController extends Controller
                 ->orderBy('sort', 'ASC')
                 ->orderBy('time', 'DESC');
         }
-        // 如果有设置商品ID组的话，如果无值的话，不展示数据
-        if ($request->has('ids')) {
-            if ($request->ids) {
-                $q->whereIn('id', explode(',', $request->ids));
-            } else {
-                $q->where('id', 0);
-            }
-        }
         // 自定义类目
         if ($request->has('pid')) {
             $q->whereHas('category', function ($query) use ($request) {
@@ -88,12 +79,11 @@ class GoodController extends Controller
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
         }, 'goodSku' => function ($q) {
-            $q->select('good_id', 'price', 'inventory', 'market_price');
+            $q->select('good_id', 'price', 'inventory');
         }])->select('updated_at', 'id', 'name', 'number', 'market_price', 'sales', 'order_price', 'brand_id', 'price', 'is_show', 'is_recommend', 'is_new', 'is_hot', 'sort', 'time')->paginate($limit);
         if ($paginate) {
             foreach ($paginate as $id => $p) {
                 $paginate[$id]['price_show'] = (new Good())->getPriceShow($p);
-                $paginate[$id]['original_price_show'] = (new Good())->getMarketPriceShow($p);
                 $paginate[$id]['inventory_show'] = (new Good())->getInventoryShow($p);
             }
         }
