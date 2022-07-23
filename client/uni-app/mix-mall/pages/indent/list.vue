@@ -196,6 +196,7 @@
 						}
 						item.goods_list.forEach(items=>{
 							if(items.good_sku){
+                items.specification = ''
 								items.good_sku.product_sku.forEach(item2=>{
 									if(items.specification){
 										items.specification+= item2.value + ';'
