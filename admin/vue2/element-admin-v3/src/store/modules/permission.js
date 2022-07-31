@@ -43,6 +43,8 @@ export const componentsMap = {
   StatisticsVisitList: () => import('@/views/Statistics/visit'),
   StatisticsAgeAndSexList: () => import('@/views/Statistics/user'),
   StatisticsPayList: () => import('@/views/Statistics/pay'),
+  // 页面设计
+  PageDesignDetail: () => import('@/views/Setting/PageDesign/index'),
   // 栏目文章_s
   Column: () => import('@/views/ToolManagement/Article/Column/index'),
   ColumnList: () => import('@/views/ToolManagement/Article/Column/list'),

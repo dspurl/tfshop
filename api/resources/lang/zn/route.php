@@ -103,6 +103,9 @@ return [
         'StatisticsAgeAndSex' => '年龄和性别',
         'statisticsPay' => '交易分析',
         'verifyPlugin' => '验证插件是否安装',
+        'projectDetail' => '商城详情',
+        'projectEdit' => '保存商城信息',
+        'projectQr' => '获取商城小程序二维码',
         // admin插件
     ],
     'client' => [
@@ -165,6 +168,7 @@ return [
         'changeCellphone' => '更换手机号',
         'amendPassword' => '修改密码',
         'serviceConfig' => '获取客服配置',
+        'projectDetail' => '商城详情',
         // client插件
     ]
 ];

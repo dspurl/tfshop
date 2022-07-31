@@ -330,10 +330,33 @@ function resourceAutoDelete($resource)
 }
 
 /**
+ * 多维数组图片替换
+ * @param $array
+ * @param $path
+ * @return false|string|string[]
+ */
+function multiDimensionalArrayImageReplacement($array, $path)
+{
+    $con = json_encode($array);
+    $reg = '/image\":\"(.+?)\".*?/';
+
+    $matches = array();
+    preg_match_all($reg, $con, $matches);
+    if (count($matches[1]) > 0) {
+        foreach ($matches[1] as $img) {
+            $newImg = str_replace("\\", "", $img);
+            $newImg = imgPathShift($path, $newImg);
+            $con = str_replace($img, $newImg, $con);
+        }
+    }
+    return $con;
+}
+
+/**
  * 图片查找替换并更新
- * @param string $str
- * @param string $path
- * @return string
+ * @param $str
+ * @param $path
+ * @return mixed|string|string[]
  */
 function imgFindReplaceUpdate($str, $path)
 {

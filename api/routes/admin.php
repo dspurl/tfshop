@@ -112,5 +112,8 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('statistic/source', 'StatisticsController@source')->name('admin.source')->middleware(['permissions:StatisticsVisitList']);    //来源分析
         Route::get('statistic/age_and_sex', 'StatisticsController@ageAndSex')->name('admin.StatisticsAgeAndSex')->middleware(['permissions:StatisticsAgeAndSexList']);    //年龄和性别
         Route::get('statistic/pay', 'StatisticsController@pay')->name('admin.statisticsPay')->middleware(['permissions:StatisticsPayList']);    //交易分析
+        Route::get('project/{id}', 'ProjectController@detail')->name('admin.projectDetail')->middleware(['permissions:ProjectDetail']);    //商城详情
+        Route::post('project/{id}', 'ProjectController@edit')->name('admin.projectEdit')->middleware(['permissions:ProjectEdit']);    //保存商城信息
+        Route::post('projectQr', 'ProjectController@qr')->name('admin.projectQr')->middleware(['permissions:ProjectQr']);    //获取商城小程序二维码
     });
 });

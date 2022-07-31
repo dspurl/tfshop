@@ -132,7 +132,13 @@ INSERT INTO `auth_group_auth_rules` (`auth_group_id`, `auth_rule_id`) VALUES
 (1, 100),
 (1, 101),
 (1, 104),
-(1, 194);
+(1, 194),
+(1, 197),
+(1, 198),
+(1, 199),
+(1, 200),
+(1, 201),
+(1, 202);
 INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `sort`) VALUES
 (2, 'UserManagement', '', 'user', '用户管理', 0, 1, 1),
 (6, 'Admin', '', '', '管理员管理', 2, 1, 0),
@@ -222,7 +228,13 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (193, 'PlugInEdit', '', '', '插件编辑', 156, 0, 0),
 (194, 'AdminLogList', '', '', '管理员操作日志', 6, 1, 0),
 (195, 'GoodDetail', '', '', '商品详情', 116, 0, 0),
-(196, 'IndentDhl', '', '', '保存订单配送信息', 127, 0, 0);
+(196, 'IndentDhl', '', '', '保存订单配送信息', 127, 0, 0),
+(197, 'Setting', '', 'setting', '设置', 0, 1, 2),
+(198, 'PageDesignDetail', '', '', '页面设计', 197, 1, 5),
+(199, 'Project', '', '', '商城', 197, 0, 0),
+(200, 'ProjectDetail', '', '', '商城详情', 199, 0, 0),
+(201, 'ProjectEdit', '', '', '保存商城信息', 199, 0, 0),
+(202, 'ProjectQr', '', '', '获取商城小程序二维码', 199, 0, 0);
 INSERT INTO `banners` (`id`, `type`, `name`, `url`, `sort`, `state`, `created_at`, `updated_at`) VALUES
 (4, 0, '测试', '/pages/product/detail?id=21', 5, 0, '2020-07-18 20:07:15', '2020-07-30 11:49:17'),
 (5, 0, '2', NULL, 5, 0, '2020-07-18 20:10:04', '2020-07-18 20:10:04'),
