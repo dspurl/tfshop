@@ -1,5 +1,5 @@
-<template >
-  <div>
+<template>
+  <div ref="iframeBox" class="iframe-box">
     <iframe
       ref="iframe"
       :style="{
@@ -13,6 +13,9 @@
   </div>
 </template>
 <style lang="scss" scoped>
+.iframe-box{
+  height: 100vh;
+}
 .sidebar-container{
   display: none;
 }
@@ -33,6 +36,11 @@ export default {
       iframeUrl: 'http://dsshop.test/platform/#/login',
       initIframe: false
     }
+  },
+  created() {
+    this.$nextTick(function() {
+      this.iframeHeight = this.$refs.iframeBox.clientHeight
+    })
   },
   methods: {
     // 发送信息，同步初始化iframe
