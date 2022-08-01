@@ -24,7 +24,7 @@
 ------------
 <p>master分支为稳定版本，推荐大多数用户下载，new分支为新版本，随时会有更新，未进行测试验收，不推荐用户使用</p>
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
-<p>当前版本3.0.3</p>
+<p>当前版本3.1.0</p>
 
 介绍
 ------------
@@ -112,6 +112,7 @@ npm start
 <p>评价(免费)</p>
 <p>栏目文章(免费)</p>
 <p>分销功能(免费)</p>
+<p>可视化UI，无代码(免费)</p>
 <p>产品参数模板(付费)</p>
 <p>扫码登录(付费)</p>
 <p>积分(付费)</p>
@@ -144,6 +145,7 @@ npm start
 效果图
 ------------
 <p align="center">
+  <img src="https://dspurl.github.io/image/a12.png" width="100%">
   <img src="https://dspurl.github.io/image/a01.png" width="100%">
   <img src="https://dspurl.github.io/image/a02.png" width="100%">
   <img src="https://dspurl.github.io/image/a03.png" width="100%">

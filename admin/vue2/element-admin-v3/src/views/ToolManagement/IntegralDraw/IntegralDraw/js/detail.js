@@ -111,7 +111,7 @@ export default {
       this.loading = true
       detail(this.id).then(response => {
         this.ruleForm = response.data
-        this.ruleForm.time = [this.ruleForm.start_time, this.ruleForm.end_time]
+        this.$set(this.ruleForm, 'time', [this.ruleForm.start_time, this.ruleForm.end_time])
         this.ruleForm.integral_prize.forEach(item => {
           item.model_type = item.model_type ? item.model_type : ''
           if (item.resource) {

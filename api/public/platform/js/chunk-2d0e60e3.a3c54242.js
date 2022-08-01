@@ -1,0 +1,2 @@
+(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d0e60e3"],{"96b2":function(e,n,t){"use strict";t.r(n);var a=function(){var e=this,n=e.$createElement,t=e._self._c||n;return t("SideBar",{attrs:{groups:e.groups}})},r=[],l=t("81e6"),o={components:{SideBar:l["a"]},data:function(){return{groups:[{label:"个性装修",list:[{name:"商城导航",path:"/mall/store/navigation-tpl"}]}]}}},s=o,u=t("2877"),i=Object(u["a"])(s,a,r,!1,null,null,null);n["default"]=i.exports}}]);
+//# sourceMappingURL=chunk-2d0e60e3.a3c54242.js.map

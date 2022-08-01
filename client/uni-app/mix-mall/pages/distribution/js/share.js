@@ -82,10 +82,11 @@ export default {
 		clipboard() {
 			const url = this.configURL.DomainName +'/h5/#/pages/public/register?uuid=' + this.uuid
 			// #ifndef H5
+			const that = this
 			uni.setClipboardData({
 			    data: url,
 			    success: function () {
-					this.$api.msg('分享链接已复制，快去分享吧~')
+					that.$api.msg('分享链接已复制，快去分享吧~')
 			    }
 			});
 			// #endif
