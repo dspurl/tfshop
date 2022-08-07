@@ -158,7 +158,7 @@
     </div>
     <!--分页-->
     <div class="pagination-operation">
-      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="list"/>
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
     </div>
     <!-- 冲突-->
     <el-dialog :close-on-click-modal="false" :visible.sync="dialogDiff" :title="diffTitle" @close="getList">
