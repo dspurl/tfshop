@@ -1352,7 +1352,7 @@ class Plugin
                     if ($a['name'] != 'id') {
                         switch ($a['type']) {
                             case 'tinyInteger':
-                                if (count($annotationParameterList) < 2) {
+                                if (count($annotationParameterList) < 2 && count($annotationParameterList) !=0) {
                                     throw new \Exception('表注释不带参数的话，请不要用":"', Code::CODE_INEXISTENCE);
                                 }
                                 $detail .= '
