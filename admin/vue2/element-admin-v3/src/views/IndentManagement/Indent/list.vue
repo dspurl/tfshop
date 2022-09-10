@@ -4,7 +4,6 @@
       <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
         <el-menu-item index="0">全部订单</el-menu-item>
         <el-menu-item index="1">待付款</el-menu-item>
-        <el-menu-item v-if="verifyPlugin.groupPurchase" index="12">待成团</el-menu-item>
         <el-menu-item index="2">待发货</el-menu-item>
         <el-menu-item index="3">待收货</el-menu-item>
         <el-menu-item index="5">已完成</el-menu-item>
@@ -14,8 +13,6 @@
       <br>
       <el-radio-group v-model="listQuery.type" size="small" style="margin-bottom: 10px;" @change="handleFilter">
         <el-radio-button :label="0">普通订单</el-radio-button>
-        <el-radio-button v-if="verifyPlugin.seckill" :label="1">秒杀订单</el-radio-button>
-        <el-radio-button v-if="verifyPlugin.groupPurchase" :label="2">拼团订单</el-radio-button>
       </el-radio-group>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
         <el-form-item label="订单信息">
@@ -172,7 +169,6 @@
 <script>
 import { getList } from '@/api/indent'
 import Pagination from '@/components/Pagination'
-import { verifyPlugin } from '@/api/plugin'
 export default {
   name: 'IndentList',
   components: { Pagination },
@@ -197,23 +193,13 @@ export default {
         activeIndex: '0',
         type: 0
       },
-      temp: {},
-      verifyPlugin: {
-        groupPurchase: false,
-        seckill: false
-      }
+      temp: {}
     }
   },
   created() {
     this.getList()
-    this.getVerifyPlugin()
   },
   methods: {
-    getVerifyPlugin() {
-      verifyPlugin(['seckill', 'groupPurchase']).then(response => {
-        this.verifyPlugin = response.data
-      })
-    },
     getList() {
       this.listLoading = true
       getList(this.listQuery).then(response => {

@@ -26,8 +26,6 @@
 			<view class="g-item padding-top-sm" v-for="(item,index) in goodList" :key="index">
 				<image :src="item.img | smallImage" lazy-load></image>
 				<view class="right">
-					<view class="tag-box" v-if="isSeckill"><view class="seckill-tag">限时秒杀</view></view>
-					<view class="tag-box" v-else-if="isGroupPurchase"><view class="group-purchase-tag">拼单</view></view>
 					<text class="title clamp">{{item.name}}</text>
 					<text class="spec">{{item.specification}}</text>
 					<view class="price-box">
@@ -43,20 +41,7 @@
 				<text class="cell-tit clamp">商品金额</text>
 				<text class="cell-tip">￥{{total | 1000}}</text>
 			</view>
-			<!-- 优惠明细 -->
-			<view class="yt-list" v-if="couponMoney && !isSeckill && !isGroupPurchase">
-				<view class="yt-list-cell b-b" @click="toggleMask('show')">
-					<view class="cell-icon">
-						券
-				</view>
-					<text class="cell-tit clamp">优惠券</text>
-					<text class="cell-tip active">
-						{{couponList.length>0 ? couponList[couponIndex].title : '选择优惠券'}}
-				</text>
-					<text class="cell-more wanjia wanjia-gengduo-d"></text>
-				</view>
-			</view>
-			<view class="yt-list-cell b-b" v-if="!data.integral_draw_log_id">
+			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">运费</text>
 				<text class="cell-tip">
 					<block v-if="addressData">
@@ -72,38 +57,9 @@
 					</block>
 				</text>
 			</view>
-			<template v-if="integral.deductible && integral.available && !data.integral_draw_log_id && !isSeckill && !isGroupPurchase">
-				<view class="integral-box">
-					<view class="left">使用<input class="input" v-model.number="data.integral" type="number" @input="numberIntegral"></input>积分：</view>
-					<view class="right">-￥{{integralPrice}}元</view>
-				</view>
-				<view class="explain solid-bottom text-xs">你有个{{integral.available}}，可用{{integral.deductible}}个</view>
-			</template>
 			<view class="yt-list-cell desc-cell">
 				<text class="cell-tit clamp">备注</text>
 				<input class="desc" type="text" v-model="data.remark" placeholder="请填写备注信息" placeholder-class="placeholder" maxlength="200"/>
-			</view>
-		</view>
-		<!-- 优惠券面板 -->
-		<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
-			<view class="mask-content" @click.stop.prevent="stopPrevent">
-				<!-- 优惠券页面，仿mt -->
-				<view class="coupon-item" v-for="(item,index) in couponList" :key="index" :class="couponIndex === index ? 'on' : ''" @tap="toggleCoupon(index)">
-					<view class="con">
-						<view class="left">
-							<text class="title">{{item.title}}</text>
-							<text class="time">有效期至{{item.endTime}}</text>
-						</view>
-						<view class="right">
-							<text class="price">{{item.price}}</text>
-							<text>{{item.sill}}</text>
-						</view>
-	
-						<view class="circle l"></view>
-						<view class="circle r"></view>
-					</view>
-					<text class="tips">{{item.type}}</text>
-				</view>
 			</view>
 		</view>
 		<!-- 底部 -->
@@ -111,8 +67,7 @@
 			<view class="price-content">
 				<text>实付款</text>
 				<text class="price-tip">￥</text>
-        <text class="price" v-if="data.integral_draw_log_id">0.00</text>
-				<text class="price" v-else>{{outPocket | 1000}}</text>
+				<text class="price">{{outPocket | 1000}}</text>
 			</view>
 			<text class="submit" @click="submit">提交订单</text>
 		</view>
@@ -122,20 +77,13 @@
 <script>
 	import Shipping from '../../api/shipping'
 	import GoodIndent from '../../api/goodIndent'
-	import {getDetail} from '@/api/integralCommodity.js'
 	import {mapMutations} from 'vuex'
-	import {getUserList} from '@/api/coupon'
-	import {good} from '@/api/integralDrawLog'
-	import {verifyPlugin} from '@/api/plugin'
 	export default {
 		data() {
 			return {
 				maskState: 0, //优惠券面板显示状态
 				desc: '', //备注
 				payType: 1, //1微信 2支付宝
-				couponList: [],
-				couponMoney: 0,
-				couponIndex: null,
 				goodList: [],
 				addressData: {},
 				carriage: 0,
@@ -146,56 +94,16 @@
 					address: {},
 					remark: '',
 					carriage: 0,
-					user_coupon_id: '',
-					integral: 0,
-					integral_draw_log_id: 0
 				},
-				integralPrice: 0,
-				integral: {
-					available: 0,
-					deductible: 0,
-					parities: 0
-				},
-				verify: {
-					coupon: false,
-					integral: false,
-					integralCommodity: false,
-					seckill: false,
-					groupPurchase: false
-				},
-				isSeckill: false,
-				isGroupPurchase: false,
 				isAddress: false
 			}
 		},
 		onLoad(option){
-			this.getVerifyPlugin(option)
-			
-		},
-		watch: {
-			total(newVal) {
-				if(this.verify.coupon){
-					this.getCouponList(newVal)
-				}
-			}
+      this.loginCheck()
+      this.loadData()
 		},
 		methods: {
 			...mapMutations(['loginCheck']),
-			getVerifyPlugin(option){
-				const that = this
-				verifyPlugin(['coupon','integral','integralCommodity','seckill','groupPurchase'],function(res){
-					that.verify = res
-					that.loginCheck()
-					if(option.integral_draw_log_id){
-						that.data.integral_draw_log_id = option.integral_draw_log_id
-						if(that.verify.integral){
-							that.getIntegralDrawData()
-						}
-					}else{
-						that.loadData()
-					}
-				})
-			},
 			//商品数据
 			async loadData(){
 				this.cartList = []
@@ -222,9 +130,6 @@
 							skuIds: cartList[k].good_sku_id
 						})
 					}
-					if(this.verify.integralCommodity){
-						this.getDetailData(data)
-					}
 					
 					if(cartList[k].invalid === true){ //失效的商品
 						cartList.splice(k,1)
@@ -240,44 +145,6 @@
 				that.getOne()
 
 
-			},
-			async getIntegralDrawData(){
-				const data = []
-				this.cartList = []
-				this.invalidGood = []
-				const that = this
-				await good(this.data.integral_draw_log_id,function(res){
-				  for(var k in res){
-					res[k].checked = true
-					res[k].loaded = 'loaded'
-					if(res[k].good_sku){
-					  res[k].good_sku.skus.forEach(item=>{
-						if(res[k].specification){
-						  res[k].specification+= item.v + ';'
-						}else{
-						  res[k].specification = item.v + ';'
-						}
-
-					  })
-					  res[k].specification = res[k].specification.substr(0,res[k].specification.length-1)
-					}
-					data.push({
-					  ids: res[k].good_id,
-					  price: res[k].price,
-					  skuIds: res[k].good_sku_id
-					})
-					if(that.verify.integralCommodity){
-						that.getDetailData(data)
-					}
-					if(res[k].invalid === true){ //失效的商品
-					  res.splice(k,1)
-					}
-				  }
-				  that.goodList = res
-				  that.data.indentCommodity = res
-				  that.calcTotal()  //计算总价
-				  that.getOne()
-				})
 			},
 			//获取默认收货地址
 			getOne(){
@@ -298,9 +165,6 @@
 				if(!this.addressData){
 					this.$api.msg('请选择地址')
 					return false
-				}
-				if(this.couponList.length>0){
-					this.data.user_coupon_id = this.couponList[this.couponIndex].id
 				}
 				this.data.address = this.addressData
 				this.data.carriage = this.carriage
@@ -343,139 +207,16 @@
 				let seckill = false
 				let groupPurchase = false
 				for(var k in list){
-					if(this.verify.seckill && list[k].good.seckill){
-					  seckill = list[k].good.seckill
-					}else if(this.verify.groupPurchase && list[k].good.group_purchase){
-						groupPurchase = list[k].good.group_purchase
-					}
 					total += list[k].price * list[k].number
-				}
-				if(this.verify.seckill && seckill){
-					this.isSeckill = true
-				}else if(this.verify.groupPurchase && groupPurchase){
-					this.isGroupPurchase = true
 				}
 				this.total = Number(total.toFixed(2))
 			},
 			//计算实付金额
 			outPocketTotal(){
-				let outPocket = 0
-				if(this.isSeckill || this.isGroupPurchase){
-					outPocket = outPocket + this.total + this.carriage
-				}else{
-					outPocket = outPocket + this.total + this.carriage  - this.couponMoney - this.integralPrice
-				}
+				let outPocket = this.total + this.carriage
 				this.outPocket = Number(outPocket.toFixed(2))
 			},
 			stopPrevent(){},
-			//获取可用的优惠券
-			getCouponList(money){
-				let that = this
-				let couponList = []
-				let couponMoney = 0 //默认优惠金额
-				let couponIndex = null //默认优惠券index
-				getUserList({
-					money: money,
-					limit: 100,
-					index: 1
-				}, function(res) {
-					res.data.forEach((item,index)=>{
-						let data = {
-							id: item.id,
-							title: item.coupon.name,
-							explain: item.coupon.explain,
-							endTime: item.failure_time ? item.failure_time.split(' ')[0].replace(/-/g,".") : item.coupon.endtime.split(' ')[0].replace(/-/g,".")
-						}
-	
-						switch(item.coupon.type){
-							case 1:
-								data.type = '满减优惠券'
-								data.price = item.coupon.cost/100
-								if(data.price > couponMoney){
-									couponMoney = data.price
-									couponIndex = index
-								}
-	
-								break
-							case 2:
-								data.type = '随机优惠券'
-								data.price = item.coupon.cost/100
-								if(data.price > couponMoney){
-									couponMoney = data.price
-									couponIndex = index
-								}
-	
-								break
-							case 3:
-								data.type = '折扣优惠券'
-								data.price = that.total * item.coupon.cost/10000
-								if(data.price > couponMoney){
-									couponMoney = data.price
-									couponIndex = index
-								}
-								break
-						}
-						if(item.coupon.sill){
-							data.sill = '满' + (item.coupon.sill/100) + '可用'
-						}else{
-							data.sill = '无门槛'
-						}
-						couponList.push(data)
-					})
-					that.couponList = couponList
-					that.couponMoney = couponMoney
-					that.couponIndex = couponIndex
-					that.outPocketTotal()
-				})
-			},
-			//显示优惠券面板
-			toggleMask(type){
-				let timer = type === 'show' ? 10 : 300;
-				let	state = type === 'show' ? 1 : 0;
-				this.maskState = 2;
-				setTimeout(()=>{
-					this.maskState = state;
-				}, timer)
-			},
-			// 切换优惠券
-			toggleCoupon(index){
-				this.couponIndex = index
-				this.couponMoney = this.couponList[index].price
-				this.outPocketTotal()
-				this.toggleMask('hide')
-			},
-			// 获取积分商品信息
-			getDetailData(row){
-				const that = this
-				getDetail(row,function(res){
-					that.integral.available = res.available
-					that.integral.deductible = res.deductible
-					that.integral.parities = res.parities
-					if (that.integral.available >= that.integral.deductible) {
-						that.data.integral = that.integral.deductible
-						that.integralPrice = that.integral.deductible * that.integral.parities * 100 / 100
-					} else {
-						that.data.integral = that.integral.available
-						that.integralPrice = that.integral.available * that.integral.parities * 100 / 100
-					}
-				})
-			},
-			// 自定义积分
-			numberIntegral(event) {
-				if(this.integral.deductible > this.integral.available){
-					if(event.target.value>this.integral.available){
-						this.$api.msg(`积分不能大于${this.integral.available}积分`)
-						return false
-					}
-				}else{
-					if(event.target.value>this.integral.deductible){
-						this.$api.msg(`积分不能大于${this.integral.deductible}积分`)
-						return false
-					}
-				}
-				this.integralPrice = event.target.value * this.integral.parities * 100 / 100
-				this.outPocketTotal()
-			}
 		}
 	}
 </script>
@@ -793,141 +534,6 @@
 			color: #fff;
 			font-size: 32upx;
 			background-color: $base-color;
-		}
-	}
-	/* 优惠券面板 */
-	.mask{
-		display: flex;
-		align-items: flex-end;
-		position: fixed;
-		left: 0;
-		top: var(--window-top);
-		bottom: 0;
-		width: 100%;
-		background: rgba(0,0,0,0);
-		z-index: 9995;
-		transition: .3s;
-		
-		.mask-content{
-			width: 100%;
-			min-height: 30vh;
-			max-height: 70vh;
-			background: #f3f3f3;
-			transform: translateY(100%);
-			transition: .3s;
-			overflow-y:scroll;
-		}
-		&.none{
-			display: none;
-		}
-		&.show{
-			background: rgba(0,0,0,.4);
-			
-			.mask-content{
-				transform: translateY(0);
-			}
-		}
-	}
-	/* 优惠券列表 */
-	.coupon-item{
-		display: flex;
-		flex-direction: column;
-		margin: 20upx 24upx;
-		background: #fff;
-		.con{
-			display: flex;
-			align-items: center;
-			position: relative;
-			height: 120upx;
-			padding: 0 30upx;
-			&:after{
-				position: absolute;
-				left: 0;
-				bottom: 0;
-				content: '';
-				width: 100%;
-				height: 0;
-				border-bottom: 1px dashed #f3f3f3;
-				transform: scaleY(50%);
-			}
-		}
-		.left{
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			flex: 1;
-			overflow: hidden;
-			height: 100upx;
-		}
-		.title{
-			font-size: 32upx;
-			color: $font-color-dark;
-			margin-bottom: 10upx;
-		}
-		.time{
-			font-size: 24upx;
-			color: $font-color-light;
-		}
-		.right{
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			align-items: center;
-			font-size: 26upx;
-			color: $font-color-base;
-			height: 100upx;
-		}
-		.price{
-			font-size: 44upx;
-			color: $base-color;
-			&:before{
-				content: '￥';
-				font-size: 34upx;
-			}
-		}
-		.tips{
-			font-size: 24upx;
-			color: $font-color-light;
-			line-height: 60upx;
-			padding-left: 30upx;
-		}
-		.circle{
-			position: absolute;
-			left: -6upx;
-			bottom: -10upx;
-			z-index: 10;
-			width: 20upx;
-			height: 20upx;
-			background: #f3f3f3;
-			border-radius: 100px;
-			&.r{
-				left: auto;
-				right: -6upx;
-			}
-		}
-	}
-	.integral-box{
-		display: flex;
-		flex-wrap: wrap;
-		padding: 10rpx 30rpx 10rpx 40rpx;
-		.left{
-			flex: 1;
-			display: flex;
-			flex-wrap: wrap;
-			.input{
-				width: 120rpx;
-				border-radius: 8rpx;
-				border: 1px solid #dcdfe6;
-				padding: 0 8rpx;
-				margin: 0 10rpx;
-				color: #aaaaaa;
-				font-size: 24rpx;
-				position: relative;
-				top: 4rpx;
-			}
-		}
-		.right{
-			color: #e54d42;
 		}
 	}
 	.explain{

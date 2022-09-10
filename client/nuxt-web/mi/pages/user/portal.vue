@@ -8,7 +8,6 @@
         <div class="card-box">
           <div class="username">{{ user.cellphone ? (user.nickname ? user.nickname : user.cellphone) : '游客' }}</div>
           <div class="money">余额：{{ (user.money ? user.money : 0) | thousands }}</div>
-          <div class="money" v-if="isIntegral">积分：{{ user.integral ? user.integral.available : 0 }}<span class="integral-money">(约¥{{ user.integralMoney }})</span></div>
           <NuxtLink class="personal" to="/user/userinfo">修改个人信息></NuxtLink>
         </div>
       </div>
@@ -34,13 +33,6 @@
         <div class="describe">
           <div class="name">待收货的订单：<span>{{ quantity.waitforreceiving ? quantity.waitforreceiving : 0 }}</span></div>
           <NuxtLink class="link" :to="{ path: '/user/indent/list', query: { index: 3 }}">查看待收货订单 ></NuxtLink>
-        </div>
-      </div>
-      <div class="li" v-if="isComment">
-        <div class="icon bg-olive"><i class="iconfont dsshop-daipingjia"></i></div>
-        <div class="describe">
-          <div class="name">待评价的订单：<span>{{ quantity.remainEvaluated ? quantity.remainEvaluated : 0 }}</span></div>
-          <NuxtLink class="link" :to="{ path: '/user/indent/list', query: { index: 10 }}">查看待评价订单 ></NuxtLink>
         </div>
       </div>
     </div>

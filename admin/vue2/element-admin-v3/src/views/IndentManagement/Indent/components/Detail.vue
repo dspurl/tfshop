@@ -21,15 +21,6 @@
       </el-row>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
         <el-col v-if="list.good_location" :span="10">收货地址：{{ list.good_location.location }} ({{ list.good_location.address }})</el-col>
-        <el-col v-if="list.coupon_money" :span="6">优惠金额：¥ {{ list.coupon_money/100 | 1000 }}</el-col>
-        <el-col v-if="list.integralPrice" :span="6">积分抵扣金额：¥ {{ list.integralPrice | 1000 }}</el-col>
-      </el-row>
-      <el-row v-if="list.integral_draw_log" type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="24">中奖信息：参与
-          <router-link :to="{ path: '/toolManagement/integralDraw/IntegralDrawEdit', query: { id: list.integral_draw_log.integral_draw.id }}" target="_blank">
-            {{ list.integral_draw_log.integral_draw.name }}
-          </router-link>
-          抽奖获得奖品：({{ list.integral_draw_log.integral_prize.name }})</el-col>
       </el-row>
     </el-card>
     <!-- 订单进度 -->
@@ -93,47 +84,6 @@
         <el-table-column label="金额（元）" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.price * scope.row.number }}</span>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
-    <!-- 拼团信息 -->
-    <el-card v-if="list.type === '拼团订单'" shadow="always" style="margin-top: 25px">
-      <div slot="header" class="clearfix">
-        <span>拼团信息</span>
-      </div>
-      <el-table
-        :data="groupPurchaseInfo"
-        border
-        style="width: 100%">
-        <el-table-column label="团长" align="left">
-          <template slot-scope="scope">
-            <span>{{ scope.row.group_purchase_foreman.my_user.cellphone }} / {{ scope.row.group_purchase_foreman.user_id }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="开团时间" align="left">
-          <template slot-scope="scope">
-            <span>{{ scope.row.group_purchase_foreman.created_at }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="拼团人数" align="left">
-          <template slot-scope="scope">
-            <span>{{ scope.row.group_purchase_foreman.number }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="最大可拼团人数" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.group_purchase_foreman.number_max }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="几人参加" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.group_purchase_foreman.user.length }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="状态" align="center">
-          <template slot-scope="scope">
-            <span>{{ scope.row.group_purchase_foreman.state }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -265,12 +215,6 @@
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
         <el-col :span="24">退款说明：{{ list.refund_reason }}</el-col>
       </el-row>
-      <el-row v-if="list.refund_integral" type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="24">扣除积分：{{ list.refund_integral }}</el-col>
-      </el-row>
-      <el-row v-if="list.integralDeduction" type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="24">返还抵扣积分：{{ list.integralDeduction }}</el-col>
-      </el-row>
     </el-card>
     <div class="right" style="margin-top: 20px;filter:alpha(Opacity=90);-moz-opacity:0.9;opacity: 0.9;">
       <el-button v-if="(list.state !== 1 && !list.refund_money) || !list.state === 8" :loading="shipmentLoading" type="danger" @click="dialogFormVisible = true">退款</el-button>
@@ -293,14 +237,6 @@
         </el-form-item>
         <el-form-item label="退款理由" prop="refund_reason" style="width:600px;">
           <el-input v-model="refundTemp.refund_reason" placeholder="请填写退款理由" maxlength="500" clearable/>
-        </el-form-item>
-        <el-form-item v-if="list.integral" label="扣除积分" prop="refund_integral" style="width:300px;">
-          <el-input-number v-model="refundTemp.refund_integral" :min="1" :max="list.integral" label="扣除积分"/>
-          <p>可扣除积分：{{ list.integral }}</p>
-        </el-form-item>
-        <el-form-item v-if="list.integralDeduction" label="可返还抵扣积分" prop="integralDeduction" style="width:300px;">
-          <el-input-number v-model="refundTemp.integralDeduction" :min="1" :max="list.integralDeduction" label="可返还抵扣积分"/>
-          <p>可返还抵扣积分：{{ list.integralDeduction }}</p>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -484,8 +420,6 @@
 <script>
 import { detail, shipment, refund, query, dhl, receiving } from '@/api/indent'
 import { getList } from '@/api/dhl'
-import { verifyPlugin } from '@/api/plugin'
-import { info as getGroupPurchaseInfo } from '@/api/groupPurchase'
 import printJS from 'print-js'
 export default {
   name: 'IndentListDetails',
@@ -543,7 +477,6 @@ export default {
         integralDeduction: ''
       },
       dhl: [],
-      groupPurchaseInfo: [],
       goodType: '普通商品',
       code_type: 0
     }
@@ -602,18 +535,7 @@ export default {
             that.queryNumber(element)
           }
         })
-        this.getVerifyPlugin()
         this.listLoading = false
-      })
-    },
-    getVerifyPlugin() {
-      verifyPlugin(['groupPurchase']).then(response => {
-        const groupPurchase = response.data.groupPurchase
-        if (groupPurchase && this.list.type === 2) {
-          getGroupPurchaseInfo(this.list.id).then(res => {
-            this.groupPurchaseInfo = res.data
-          })
-        }
       })
     },
     getDhl() {

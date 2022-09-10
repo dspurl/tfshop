@@ -68,17 +68,9 @@
 					<block v-else>免运费</block>
 				</text>
 			</view>
-			<view class="yt-list-cell b-b" v-if="indentList.coupon_money>0">
-				<text class="cell-tit clamp">优惠金额</text>
-				<text class="cell-tip red">-￥{{indentList.coupon_money/100}}</text>
-			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">实付款</text>
 				<text class="cell-tip">{{ indentList.total | 1000 }}</text>
-			</view>
-			<view class="yt-list-cell b-b" v-if="indentList.integralPrice">
-				<text class="cell-tit clamp">积分抵扣：</text>
-				<text class="text-red">-{{ indentList.integralPrice | 1000 }}</text>
 			</view>
 			<view class="yt-list-cell b-b">
 				<text class="cell-tit clamp">订单号</text>
@@ -90,25 +82,6 @@
 				<text class="cell-tit clamp">订单状态</text>
 				<text class="cell-tip">{{ indentList.state_show }}</text>
 			</view>
-			<!-- 拼团-->
-			<template v-if="indentList.type === 2">
-				<view class="yt-list-cell b-b" v-if="groupPurchaseForeman.number">
-					<text class="cell-tit clamp">成团人数</text>
-					<text class="cell-tip">{{groupPurchaseForeman.number}}</text>
-				</view>
-				<view class="yt-list-cell b-b" v-if="groupPurchaseForeman.end_time">
-					<text class="cell-tit clamp">成团结束时间</text>
-					<text class="cell-tip">{{groupPurchaseForeman.end_time}}</text>
-				</view>
-				<view class="yt-list-cell b-b" v-if="groupPurchaseForeman.user">
-					<text class="cell-tit clamp">拼团用户</text>
-					<text class="cell-tip">
-						<view class="cu-avatar-group">
-							<view v-for="(item,index) in groupPurchaseForeman.user" :key="index" class="cu-avatar round" :style="[{ backgroundImage:'url('+(item.portrait ? item.portrait : require('@/static/missing-face.png'))+')' }]"></view>
-						</view>
-					</text>
-				</view>
-			</template>
 			<!-- 卡密-->
 			<template v-if="indentList.good_code.length">
 				<view class="yt-list-cell b-b">
@@ -124,22 +97,12 @@
 				<text class="cell-tit clamp">订单自动收货时间</text>
 				<text class="cell-tip" style="color: #fa436a;">{{ indentList.receiving_time }}</text>
 			</view>
-			<view v-if="indentList.integral_draw_log" class="yt-list-cell b-b winning-information">
-				<text class="name">中奖信息</text>
-				<navigator :url="`/pages/user/integralDraw/index?id=${indentList.integral_draw_log.integral_draw.id}`" hover-class="none">
-					<text class="content">参与{{indentList.integral_draw_log.integral_draw.name}}获得:({{indentList.integral_draw_log.integral_prize.name}})</text>
-				</navigator>
-			</view>
 		</view>
-		<!-- 拼团分享-->
-		<foreman-qr-code v-if="indentList.state === 12" :sid="indentList.goods_list[0].id" :show="foremanShow" @changeShow="changeShow"></foreman-qr-code>
 		<!-- 底部 -->
 		<view v-if="indentList.state === 1 || indentList.state === 3 || indentList.state === 10 || indentList.state === 12" class="footer">
 			<view class="price-content"></view>
 			<navigator v-if="indentList.state === 1" :url="'/pages/money/pay?id=' + indentList.id" hover-class="none" class="submit">立即支付</navigator>
 			<view v-else-if="indentList.state === 3" class="submit" @click="confirmReceipt(indentList)">确认收货</view>
-			<view v-else-if="indentList.state === 10" class="submit" @click="goScore(indentList)">立即评价</view>
-			<view v-else-if="indentList.state === 12" class="submit" @click="goForemanScore()">邀请拼单</view>
 		</view>
 		<view class="footer" v-if="indentList.download">
 			<view class="price-content"></view>
@@ -151,12 +114,7 @@
 <script>
 import GoodIndent from '../../api/goodIndent';
 import {mapMutations} from 'vuex'
-import {indent} from '@/api/groupPurchase'
-import ForemanQrCode from '@/pages/groupPurchase/components/qrCode'
 export default {
-	components: {
-		ForemanQrCode
-	},
 	data() {
 		return {
 			id: '',
@@ -171,13 +129,6 @@ export default {
 			outPocket: 0,
 			order: [],
 			onError: null,
-			groupPurchaseForeman: {
-				end_time: 0,
-				number: 0,
-				user:[]
-			},
-			modalName: 'groupPurchase',
-			foremanShow: false,
 			isType: true,
 			code_type: 0
 		};
@@ -219,9 +170,6 @@ export default {
 				
 				that.indentList = res;
 				that.calcTotal();
-				if(that.indentList.type === 2){
-					that.getGroupPurchase()
-				}
 			});
 		},
 		//计算总价
@@ -246,34 +194,6 @@ export default {
 			})
 		},
 		stopPrevent() {},
-		// 评价
-		goScore(item){
-			uni.navigateTo({
-				url: `/pages/comment/score?id=${item.id}`
-			})
-		},
-		//评价成功后回调
-		refreshOderList(){
-			// 需要重新加载
-			this.getList()
-		},
-		// 获取拼团信息
-		getGroupPurchase(){
-			const that = this
-			indent(this.indentList.id,function(res){
-				that.groupPurchaseForeman = res
-			})
-		},
-		hideModal(e) {
-			this.modalName = null
-		},
-		// 拼团分享
-		goForemanScore(){
-			this.foremanShow = true
-		},
-		changeShow(val){
-			this.foremanShow = val
-		},
 		// 下载文件
 		goDownload() {
 			const that = this

@@ -8,10 +8,6 @@
             <el-card class="form" shadow="hover">
               <div class="login-method">
                 <span :class="{on:method === 1}" @click="setMethod(1)">账号登录</span>
-                <template v-if="isSweepLogin">
-                  <el-divider direction="vertical"></el-divider>
-                  <span :class="{on:method === 2}" @click="setMethod(2)">扫码登录</span>
-                </template>
               </div>
               <div v-if="method === 1">
                 <el-form :model="ruleForm" :rules="rules" ref="ruleForm">
@@ -34,36 +30,6 @@
                   <NuxtLink to="/pass/register">立即注册</NuxtLink>
                   <el-divider direction="vertical"></el-divider>
                   <NuxtLink to="/pass/findPassword">忘记密码？</NuxtLink>
-                </div>
-              </div>
-              <div v-else>
-                <div class="qr-code">
-                  <div class="qr" v-loading="codeLoading">
-                    <el-image
-                      class="image"
-                      :src="codeImg"
-                      fit="scale-down"/>
-                    <div class="lose-efficacy" v-if="codeState === 1">
-                      <div class="name">扫码成功</div>
-                      <el-button size="mini" class="flush" type="danger" @click="getCode()">重新扫码</el-button>
-                    </div>
-                    <div class="lose-efficacy" v-else-if="codeState === 3">
-                      <div class="name">扫码失败</div>
-                      <el-button size="mini" class="flush" type="danger" @click="getCode()">重新扫码</el-button>
-                    </div>
-                    <div class="lose-efficacy" v-else-if="codeState === 4">
-                      <div class="name">二维码已失效</div>
-                      <el-button size="mini" class="flush" type="danger" @click="getCode()">刷新</el-button>
-                    </div>
-                  </div>
-                  <div class="explain" v-if="codeState === 1">请在手机完成授权登录</div>
-                  <div class="explain" v-else-if="codeState === 3">您拒绝授权，尝试重新扫码</div>
-                  <div class="explain" v-else>使用<span>微信</span>扫描二维码</div>
-                  <div class="advantage">
-                    <div><i class="iconfont dsshop-kuai"/>更快</div>
-                    <div><i class="iconfont dsshop-anquanzhuye"/>更安全</div>
-                    <div><i class="iconfont dsshop-shurukuang"/>免输入</div>
-                  </div>
                 </div>
               </div>
             </el-card>
