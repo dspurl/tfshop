@@ -11,8 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group power
- * 权限管理
+ * @group [ADMIN]Power(权限管理)
  * Class PowerController
  * @package App\Http\Controllers\v1\Admin
  */

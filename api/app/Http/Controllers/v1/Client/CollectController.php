@@ -13,8 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * collect
- * 收藏
+ * @group [CLIENT]Collect(收藏)
  * Class CollectController
  * @package App\Http\Controllers\v1\Client
  */

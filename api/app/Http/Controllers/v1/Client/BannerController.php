@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * banner
- * 轮播广告
+ * @group [CLIENT]Banner(轮播广告)
  * Class BannerController
  * @package App\Http\Controllers\v1\Client
  */

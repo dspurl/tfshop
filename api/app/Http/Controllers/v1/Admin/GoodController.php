@@ -19,8 +19,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group good
- * 商品管理
+ * @group [ADMIN]Good(商品管理)
  * Class GoodController
  * @package App\Http\Controllers\v1\Admin
  */

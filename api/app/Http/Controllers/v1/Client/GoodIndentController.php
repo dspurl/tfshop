@@ -19,8 +19,7 @@ use Illuminate\Support\Facades\Storage;
 use Webpatser\Uuid\Uuid;
 
 /**
- * GoodIndent
- * 商品订单
+ * @group [CLIENT]GoodIndent(商品订单)
  * Class GoodIndentController
  * @package App\Http\Controllers\v1\Client
  */
@@ -126,6 +125,7 @@ class GoodIndentController extends Controller
     }
 
     /**
+     * AddItemsToShoppingCart
      * 添加商品到购物车
      * @param Request $request
      * @return string
@@ -142,6 +142,7 @@ class GoodIndentController extends Controller
     }
 
     /**
+     * EmptyCart
      * 清空购物车
      * @param Request $request
      * @return string

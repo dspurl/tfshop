@@ -1,0 +1,20 @@
+parameters:
+    level: 5
+    reportUnmatchedIgnoredErrors: true
+    inferPrivatePropertyTypeFromConstructor: true
+    ignoreErrors:
+        - '#Call to an undefined static method Illuminate\\Support\\Facades\\URL::forceRootUrl\(\)#'
+        - '#Call to an undefined method Illuminate\\Routing\\Route::versions\(\).#'
+        - '#Call to an undefined method Illuminate\\Contracts\\Validation\\Validator::getRules\(\).#'
+        - '#Call to an undefined method ReflectionType::getName\(\).#'
+        - '#(.*)NunoMaduro\\Collision(.*)#'
+        - '#.+Dingo.+#'
+        - '#Call to an undefined method Illuminate\\Contracts\\Filesystem\\Filesystem::path\(\)#'
+        - '#Access to an undefined property Illuminate\\Support\\HigherOrderCollectionProxy#'
+        - '#Access to an undefined property Illuminate\\Contracts\\Foundation\\Application::\$view#'
+        - '#Unsafe usage of new static#'
+        - '#Dead catch#'
+        - '/Call to an undefined method League\\Flysystem\\Filesystem::deleteDir\(\)./'
+        - '/Instantiated class League\\Flysystem\\Adapter\\Local not found./'
+        - '/Parameter #1 \$adapter of class League\\Flysystem\\Filesystem constructor expects League\\Flysystem\\FilesystemAdapter, League\\Flysystem\\Adapter\\Local given./'
+        - '/Call to method getPathPrefix\(\) on an unknown class League\\Flysystem\\Adapter\\Local/'

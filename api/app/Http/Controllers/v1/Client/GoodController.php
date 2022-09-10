@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * goods
- * 商品
+ * @group [CLIENT]Goods(商品)
  * Class GoodController
  * @package App\Http\Controllers\v1\Client
  */

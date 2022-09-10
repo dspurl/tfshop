@@ -11,8 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group brand
- * 品牌管理
+ * @group [ADMIN]Brand(品牌管理)
  * Class BrandController
  * @package App\Http\Controllers\v1\Admin
  */

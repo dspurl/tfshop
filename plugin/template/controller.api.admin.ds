@@ -11,8 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * {{ name }}
- * {{ annotation }}
+ * @group [ADMIN]{{ name }}({{ annotation }})
  * Class {{ name }}Controller
  * @package App\Http\Controllers\v{{ versions }}\Plugin\Admin
  */

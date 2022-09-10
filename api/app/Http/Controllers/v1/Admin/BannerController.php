@@ -10,8 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * banner
- * 轮播管理
+ * @group [ADMIN]Banner(轮播管理)
  * Class BannerController
  * @package App\Http\Controllers\v1\Admin
  */

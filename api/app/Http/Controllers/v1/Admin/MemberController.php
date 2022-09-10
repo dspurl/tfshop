@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * @group member
- * 会员管理
+ * @group [ADMIN]Member(会员管理)
  * Class MemberController
  * @package App\Http\Controllers\v1\Admin
  */

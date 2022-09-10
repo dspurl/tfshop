@@ -21,8 +21,7 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Http\Request;
 
 /**
- * application
- * 应用程序
+ * @group [CLIENT]Application(应用程序)
  * Class WeChatController
  * @package App\Http\Controllers\v1\Client
  */

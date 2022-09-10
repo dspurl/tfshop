@@ -17,9 +17,10 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * upload
+     * Upload
      * 上传
      * @param Request $request
+     * @bodyParam   file file 上传的文件
      * @queryParam  type int 1图片2自定义文件
      * @queryParam  size int 前端文件大小
      * @queryParam  full boolean    是否显示详细结果

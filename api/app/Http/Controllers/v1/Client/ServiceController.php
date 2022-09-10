@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * service
- * 客服
+ * @group [CLIENT]Service(客服)
  * Class ServiceController
  * @package App\Http\Controllers\v1\Client
  */

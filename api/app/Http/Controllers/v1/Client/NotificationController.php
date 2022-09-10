@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * notification
- * 通知
+ * @group [CLIENT]Notification(通知)
  * Class NoticeController
  * @package App\Http\Controllers\v1\Client
  */

@@ -13,8 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 
 /**
- * @group admin
- * 管理员管理
+ * @group [ADMIN]Admin(管理员管理)
  * Class AdminController
  * @package App\Http\Controllers\v1\Admin
  */
@@ -122,8 +121,8 @@ class AdminController extends Controller
     }
 
     /**
-     * Display a listing of the auth group.
-     *
+     * ObtainingPermissionGroup
+     * 获取权限组
      * @param  $request
      * @return \Illuminate\Http\Response
      */
@@ -135,8 +134,8 @@ class AdminController extends Controller
     }
 
     /**
-     * Display a listing of the Syslog.
-     *
+     * AdministratorLogs
+     * 管理员日志
      * @param  $request
      * @return \Illuminate\Http\Response
      */

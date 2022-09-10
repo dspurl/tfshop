@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * moneyLog
- * 资金记录
+ * @group [CLIENT]MoneyLog(资金记录)
  * Class MoneyLogController
  * @package App\Http\Controllers\v1\Client
  */

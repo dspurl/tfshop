@@ -11,8 +11,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group specification
- * 规格管理
+ * @group [ADMIN]Specification(规格管理)
  * Class SpecificationController
  * @package App\Http\Controllers\v1\Admin
  */

@@ -17,8 +17,7 @@ use Illuminate\Support\Facades\DB;
 use App\common\RedisLock;
 
 /**
- * indent
- * 订单管理
+ * @group [ADMIN]Indent(订单管理)
  * Class IndentController
  * @package App\Http\Controllers\v1\Admin
  */

@@ -13,10 +13,24 @@ use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
+/**
+ * @group [ADMIN]Login(登录)
+ * Class LoginController
+ * @package App\Http\Controllers\v1\Admin
+ */
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
+    /**
+     * Register
+     * 登录
+     * @param Request $request
+     * @return string|void
+     * @throws \Illuminate\Validation\ValidationException
+     * @queryParam  username string 用户名
+     * @queryParam  password string 密码
+     */
     public function index(Request $request)
     {
 
@@ -70,9 +84,11 @@ class LoginController extends Controller
     }
 
     /**
+     * TokenRefresh
      * token刷新
      * @param Request $request
      * @return string
+     * @queryParam  refresh_token string 刷新密钥
      */
     public function refresh(Request $request)
     {
@@ -86,8 +102,12 @@ class LoginController extends Controller
         return resReturn(1, $access_token);
     }
 
-    //获取管理员信息
-    public function userInfo(Request $request)
+    /**
+     * ObtainingAdministratorInformation
+     * 获取管理员信息
+     * @return string
+     */
+    public function userInfo()
     {
         $user = auth('api')->user();
         $data['name'] = $user->name;
