@@ -12,8 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group manage
- * 管理组管理
+ * @group [ADMIN]Manage(管理组管理)
  * Class ManageController
  * @package App\Http\Controllers\v1\Admin
  */
@@ -22,10 +21,9 @@ class ManageController extends Controller
     /**
      * ManageList
      * 管理组列表
-     * @param Request $request
      * @return string
      */
-    public function list(Request $request)
+    public function list()
     {
         $q = Admin::query();
         //查询管理员列表

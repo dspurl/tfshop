@@ -7,7 +7,7 @@ exports.modules = {
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(175);
+var content = __webpack_require__(181);
 if(content.__esModule) content = content.default;
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
@@ -19,7 +19,7 @@ module.exports.__inject__ = function (context) {
 
 /***/ }),
 
-/***/ 173:
+/***/ 175:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -106,7 +106,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 174:
+/***/ 180:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -118,7 +118,7 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 175:
+/***/ 181:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
@@ -132,7 +132,7 @@ module.exports = ___CSS_LOADER_EXPORT___;
 
 /***/ }),
 
-/***/ 176:
+/***/ 184:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -147,7 +147,7 @@ var staticRenderFns = []
 // CONCATENATED MODULE: ./components/Pagination/index.vue?vue&type=template&id=c339c37e&scoped=true&
 
 // EXTERNAL MODULE: ./components/Pagination/js/index.js
-var js = __webpack_require__(173);
+var js = __webpack_require__(175);
 
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib??ref--2-0!./node_modules/@nuxt/components/dist/loader.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./components/Pagination/index.vue?vue&type=script&lang=js&
 //
@@ -182,7 +182,7 @@ var componentNormalizer = __webpack_require__(1);
 
 function injectStyles (context) {
   
-  var style0 = __webpack_require__(174)
+  var style0 = __webpack_require__(180)
 if (style0.__inject__) style0.__inject__(context)
 
 }

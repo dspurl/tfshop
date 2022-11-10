@@ -28,20 +28,7 @@
     "pages/money/paySuccess",
     "pages/notice/notice",
     "pages/category/category",
-    "pages/product/list",
-    "pages/article/column",
-    "pages/article/detail",
-    "pages/article/index",
-    "pages/comment/score",
-    "pages/comment/list",
-    "pages/distribution/share",
-    "pages/coupon/list",
-    "pages/sweepLogin/index",
-    "pages/integral/index",
-    "pages/user/integralDraw/index",
-    "pages/user/integralDraw/log",
-    "pages/seckill/list",
-    "pages/groupPurchase/list"
+    "pages/product/list"
   ],
   "subPackages": [],
   "window": {

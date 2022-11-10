@@ -32,29 +32,6 @@
           </template>
           <template v-else>
             <div v-if="goodDetail.short_description" class="description">{{goodDetail.short_description}}</div>
-            <!-- 秒杀-->
-            <div class="seckill-box" v-if="isSeckill">
-              <div class="list-box" :class="{'active': goodDetail.state === 1}">
-                <div class="name">
-                  <i class="el-icon-alarm-clock"/>
-                  <template v-if="goodDetail.state === 1">
-                    <div class="tt">限时秒杀</div>
-                  </template>
-                  <template v-else>
-                    <div class="tt">限时秒杀</div>
-                    <div class="time">{{goodDetail.seckill_time | moment('MM-DD HH:mm')}}</div>
-                  </template>
-                </div>
-                <div class="times">
-                  <div class="nn">{{ goodDetail.state === 1 ? '距离结束' : '距离开始还剩'}}</div>
-                  <count-down-time class="background-box" v-slot="timeObj" :time="goodDetail.seckillTime" @end="endTime()">
-                    <template v-if="timeObj.d>0"><div class="background">{{ timeObj.d }}</div>天</template><div class="background">{{ timeObj.hh }}</div>:<div class="background">{{ timeObj.mm }}</div>:<div class="background">{{ timeObj.ss }}</div>
-                  </count-down-time>
-                </div>
-              </div>
-              <div class="abstract">{{goodDetail.abstract}}</div>
-            </div>
-            <!-- 秒杀 end-->
             <div class="price-box">
               <!-- 已选择规则-->
               <template v-if="specificationDefaultDisplay.price_show">
@@ -85,18 +62,16 @@
 
             </div>
             <div class="operation">
-              <el-button type="danger" plain @click="buy(true)" :disabled="isSeckill && goodDetail.state === 0">立即购买</el-button>
-              <template v-if="!isSeckill">
+              <el-button type="danger" plain @click="buy(true)" :disabled="goodDetail.state === 0">立即购买</el-button>
+              <template>
                 <template v-if="goodDetail.type !== '卡密/网盘' && goodDetail.type !== '下载商品'">
                   <el-button type="danger" @click="buy(false)">加入购物车</el-button>
                 </template>
-                <coupon v-if="isCoupon"></coupon>
               </template>
-              <template v-else>
+              <template>
                 <el-button type="info" :class="{'product-detail-on' : collect}" icon="el-icon-star-off" @click="toCollect">收藏</el-button>
               </template>
             </div>
-            <el-tag v-if="goodDetail.integral_commodity_count && !isSeckill" type="warning" style="margin-top:20px;">可积分抵扣</el-tag>
           </template>
         </div>
       </div>
@@ -106,17 +81,10 @@
     <div class="product-box">
       <div class="tab">
         <span :class="{on:tab === 1}" @click="cutTab(1)">商品详情</span>
-        <template v-if="isComment">
-          <el-divider direction="vertical"></el-divider>
-          <span :class="{on:tab === 2}" @click="cutTab(2)">评价({{commentTotal}})</span>
-        </template>
       </div>
       <div class="detail-box">
         <div class="container" v-loading="tabLoading">
           <div v-if="tab === 1" v-html="goodDetail.details"></div>
-          <div v-else-if="tab === 2">
-            <Comment v-if="isComment"></Comment>
-          </div>
         </div>
       </div>
     </div>

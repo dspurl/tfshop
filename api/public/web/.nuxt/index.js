@@ -26,8 +26,6 @@ import nuxt_plugin_store_2324db6d from 'nuxt_plugin_store_2324db6d' // Source: .
 import nuxt_plugin_global_2c8b7297 from 'nuxt_plugin_global_2c8b7297' // Source: ..\\plugins\\global (mode: 'all')
 import nuxt_plugin_vuemoment_522d55ca from 'nuxt_plugin_vuemoment_522d55ca' // Source: ..\\plugins\\vue-moment (mode: 'all')
 import nuxt_plugin_videoPlayer_10da482f from 'nuxt_plugin_videoPlayer_10da482f' // Source: ..\\plugins\\videoPlayer.js (mode: 'client')
-import nuxt_plugin_luckycanvas_68b24486 from 'nuxt_plugin_luckycanvas_68b24486' // Source: ..\\plugins\\lucky-canvas.js (mode: 'all')
-import nuxt_plugin_vueclipboard2_d47dc0c0 from 'nuxt_plugin_vueclipboard2_d47dc0c0' // Source: ..\\plugins\\vue-clipboard2.js (mode: 'all')
 
 // Component: <ClientOnly>
 Vue.component(ClientOnly.name, ClientOnly)
@@ -95,7 +93,7 @@ async function createApp(ssrContext, config = {}) {
   // here we inject the router and store to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = {
-    head: {"title":"DSSHOP商城-跨终端商城解决方案","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"hid":"index","name":"DSSHOP商城-跨终端商城解决方案","content":"商城网店系统,商城,网店,免费商城,免费网店"},{"name":"viewport","content":"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"},{"hid":"description","name":"description","content":"免费开源可商用，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端"},{"hid":"keywords","name":"keywords","content":"商城网店系统,商城,网店,免费商城,免费网店"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"shortcut icon","href":"\u002Ffavicon.ico"},{"rel":"apple-touch-icon","href":"\u002Ffavicon.ico"},{"rel":"stylesheet","href":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_2655595_egx5erq394.css"},{"rel":"stylesheet","href":"\u002F\u002Fat.alicdn.com\u002Ft\u002Ffont_3269515_fy5dzldrd39.css"}],"style":[],"script":[]},
+    head: {"title":"DSSHOP商城-跨终端商城解决方案","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"hid":"index","name":"DSSHOP商城-跨终端商城解决方案","content":"商城网店系统,商城,网店,免费商城,免费网店"},{"name":"viewport","content":"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"},{"hid":"description","name":"description","content":"免费开源可商用，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端"},{"hid":"keywords","name":"keywords","content":"商城网店系统,商城,网店,免费商城,免费网店"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"shortcut icon","href":"\u002Ffavicon.ico"},{"rel":"apple-touch-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
 
     store,
     router,
@@ -274,14 +272,6 @@ async function createApp(ssrContext, config = {}) {
 
   if (process.client && typeof nuxt_plugin_videoPlayer_10da482f === 'function') {
     await nuxt_plugin_videoPlayer_10da482f(app.context, inject)
-  }
-
-  if (typeof nuxt_plugin_luckycanvas_68b24486 === 'function') {
-    await nuxt_plugin_luckycanvas_68b24486(app.context, inject)
-  }
-
-  if (typeof nuxt_plugin_vueclipboard2_d47dc0c0 === 'function') {
-    await nuxt_plugin_vueclipboard2_d47dc0c0(app.context, inject)
   }
 
   // Lock enablePreview in context

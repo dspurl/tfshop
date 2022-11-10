@@ -45,20 +45,7 @@
 			<view class="attr-list">
 				<text class="item-left">购买数量</text>
 				<view class="item-right">
-					<!-- 秒杀-->
 					<uni-number-box
-						v-if="getLists.purchase_number"
-						class="step"
-						:min="1" 
-						:max="getLists.purchase_number"
-						:value="cartGood.number>getLists.purchase_number?getLists.purchase_number:cartGood.number"
-						:isMax="cartGood.number >= getLists.purchase_number ? true : false"
-						:isMin="cartGood.number===1"
-						:disabled="getLists.purchase_number === 1"
-						@eventChange="numberChange"
-					></uni-number-box>
-					<uni-number-box
-						v-else
 						class="step"
 						:min="1" 
 						:max="specificationDefaultDisplay.inventory_show"
@@ -154,19 +141,6 @@ export default{
 		},
 	},
 	methods:{
-		//秒杀调用详情
-		_setData(good_sku){
-			this.loaded = false
-			this.getLists.good_sku = good_sku
-			this.specification = []
-			this.specSelectedIndex = []
-			this.noSelectedName = []
-			this.selectedSku = []
-			this.selectedSkuIndex = [[]]
-			this.productSkus = []
-			this.SKUResult = {}
-			this.loadData()
-		},
 		//获取详情
 		loadData() {
 			this.loaded = true

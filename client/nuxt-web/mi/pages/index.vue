@@ -38,39 +38,6 @@
       </div>
     </div>
     <!--分类 end-->
-    <!-- 秒杀 -->
-    <div class="seckill-box" v-if="isSeckill && seckill.length" v-loading="seckillLoading">
-      <NuxtLink class="countdown-box" :to="{ path: `/seckill/list`}">
-        <div class="tt">限时秒杀</div>
-        <div class="el-icon-alarm-clock"></div>
-        <div class="describe">
-          <div class="time">{{ seckillActiveTime }}点场</div>
-          <div class="name">距结束</div>
-        </div>
-        <div class="countdown">
-          <count-down-time class="background-box" v-slot="timeObj" :time="seckillTime" @end="endSeckillTime()">
-            <template v-if="timeObj.d>0"><div class="background">{{ timeObj.d }}</div>天</template><div class="background">{{ timeObj.hh }}</div>:<div class="background">{{ timeObj.mm }}</div>:<div class="background">{{ timeObj.ss }}</div>
-          </count-down-time>
-        </div>
-      </NuxtLink>
-      <div class="seckill-list">
-        <NuxtLink class="li" v-for="(item, index) in seckill" :key="index" :to="{ path: `/product/detail/${item.good_id}`}">
-          <el-card class="card" shadow="hover">
-            <el-image
-              class="image"
-              :src="item.resources.img | smallImage(200)"
-              fit="scale-down"
-              lazy/>
-            <div class="name">{{item.name}}</div>
-            <div class="price">
-              <div class="symbol">¥</div>
-              <div class="value">{{item.price[0] | thousands}}</div>
-            </div>
-          </el-card>
-        </NuxtLink>
-      </div>
-    </div>
-    <!-- 秒杀 end-->
     <!--推荐-->
     <div class="recommend container">
       <div class="title">为你推荐</div>

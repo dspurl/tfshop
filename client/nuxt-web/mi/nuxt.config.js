@@ -51,9 +51,7 @@ export default {
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
       { rel: "shortcut icon", href: "/favicon.ico" },
-      { rel: "apple-touch-icon", href: "/favicon.ico" },
-      { rel: "stylesheet", href: "//at.alicdn.com/t/font_2655595_egx5erq394.css" },
-      { rel: 'stylesheet', href: '//at.alicdn.com/t/font_3269515_fy5dzldrd39.css'}
+      { rel: "apple-touch-icon", href: "/favicon.ico" }
     ]
   },
 
@@ -75,9 +73,7 @@ export default {
     '@/plugins/store',
     '@/plugins/global',
     '@/plugins/vue-moment',
-    { src: '@/plugins/videoPlayer.js', ssr: false },
-    '@/plugins/lucky-canvas.js',
-    '@/plugins/vue-clipboard2.js'
+    { src: '@/plugins/videoPlayer.js', ssr: false }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

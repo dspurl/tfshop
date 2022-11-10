@@ -11,9 +11,18 @@ use App\Models\v1\MoneyLog;
 use App\Models\v1\User;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @group [ADMIN]Index(首页)
+ * Class IndentController
+ * @package App\Http\Controllers\v1\Admin
+ */
 class IndexController extends Controller
 {
-    //首页
+    /**
+     * Index
+     * 首页
+     * @return string
+     */
     public function index()
     {
         $return['chart'] = array_merge(Common::getChartData('注册量', 1), Common::getChartData('订单量', 1), Common::getChartData('销售金额', 1));

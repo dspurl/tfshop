@@ -12,8 +12,7 @@ use App\Http\Controllers\Controller;
 use Webpatser\Uuid\Uuid;
 
 /**
- * user
- * 用户
+ * @group [CLIENT]User(用户)
  * Class UserController
  * @package App\Http\Controllers\v1\Client
  */

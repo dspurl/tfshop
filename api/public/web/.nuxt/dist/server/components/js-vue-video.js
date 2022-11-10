@@ -1,13 +1,13 @@
 exports.ids = [3];
 exports.modules = {
 
-/***/ 208:
+/***/ 188:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(209);
+var content = __webpack_require__(189);
 if(content.__esModule) content = content.default;
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
@@ -15,7 +15,7 @@ __webpack_require__(4).default("64ca229e", content, true)
 
 /***/ }),
 
-/***/ 209:
+/***/ 189:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
@@ -29,14 +29,14 @@ module.exports = ___CSS_LOADER_EXPORT___;
 
 /***/ }),
 
-/***/ 214:
+/***/ 191:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var video_js_dist_video_js_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(75);
+/* harmony import */ var video_js_dist_video_js_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(73);
 /* harmony import */ var video_js_dist_video_js_css__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(video_js_dist_video_js_css__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var vue_video_player_src_custom_theme_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(208);
+/* harmony import */ var vue_video_player_src_custom_theme_css__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(188);
 /* harmony import */ var vue_video_player_src_custom_theme_css__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue_video_player_src_custom_theme_css__WEBPACK_IMPORTED_MODULE_1__);
 
 

@@ -5,8 +5,11 @@
   },
   "setting": {
     "urlCheck": true,
+    "es6": false,
+    "postcss": true,
     "minified": true,
-    "postcss": true
+    "newFeature": true,
+    "bigPackageSizeSupport": true
   },
   "compileType": "miniprogram",
   "libVersion": "",

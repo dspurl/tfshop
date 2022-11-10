@@ -14,8 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * browse
- * 浏览记录
+ * @group [CLIENT]Browse(浏览记录)
  * Class BrowseController
  * @package App\Http\Controllers\v1\Client
  */

@@ -14,8 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * shipping
- * 收货地址
+ * @group [CLIENT]Shipping(收货地址)
  * Class ShippingController
  * @package App\Http\Controllers\v1\Client
  */

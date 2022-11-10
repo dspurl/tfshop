@@ -10,8 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * Project
- * 商城
+ * @group [CLIENT]Project(商城)
  * Class ProjectController
  * @package App\Http\Controllers\v1\Client
  */

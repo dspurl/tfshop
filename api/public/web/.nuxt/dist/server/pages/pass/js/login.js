@@ -1,60 +1,19 @@
-exports.ids = [47];
+exports.ids = [29];
 exports.modules = {
 
-/***/ 326:
+/***/ 210:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-// ESM COMPAT FLAG
 __webpack_require__.r(__webpack_exports__);
-
-// EXTERNAL MODULE: ./api/login.js
-var login = __webpack_require__(39);
-
-// EXTERNAL MODULE: ./plugins/request.js
-var request = __webpack_require__(2);
-
-// EXTERNAL MODULE: external "qs"
-var external_qs_ = __webpack_require__(7);
-var external_qs_default = /*#__PURE__*/__webpack_require__.n(external_qs_);
-
-// CONCATENATED MODULE: ./api/sweepLogin.js
-
-
-function code() {
-  return Object(request["a" /* default */])({
-    url: 'sweepLogin',
-    method: 'GET'
-  });
-}
-function verify(data) {
-  data = external_qs_default.a.parse(data);
-  return Object(request["a" /* default */])({
-    url: 'sweepLogin/verify',
-    method: 'POST',
-    data
-  });
-}
-function index(data) {
-  data = external_qs_default.a.parse(data);
-  return Object(request["a" /* default */])({
-    url: 'sweepLogin',
-    method: 'POST',
-    data
-  });
-}
-// EXTERNAL MODULE: ./api/plugin.js
-var api_plugin = __webpack_require__(38);
-
-// EXTERNAL MODULE: external "vuex"
-var external_vuex_ = __webpack_require__(13);
-
-// CONCATENATED MODULE: ./pages/pass/js/login.js
+/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(37);
+/* harmony import */ var _api_banner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(38);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuex__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
-
-/* harmony default export */ var js_login = __webpack_exports__["default"] = ({
+/* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'login',
 
   head() {
@@ -65,12 +24,20 @@ var external_vuex_ = __webpack_require__(13);
 
   async asyncData(ctx) {
     try {
-      let isSweepLogin = false;
-      await Object(api_plugin["a" /* verifyPlugin */])('sweepLogin').then(response => {
-        isSweepLogin = response.sweepLogin;
+      let banner = {};
+      await Object(_api_banner__WEBPACK_IMPORTED_MODULE_1__[/* getList */ "a"])({
+        limit: 1,
+        type: 2,
+        state: 0,
+        sort: '+sort'
+      }).then(response => {
+        if (response.total === 1) {
+          banner = response.data[0];
+          banner.url = banner.url ? banner.url.replace('?id=', '/') : '';
+        }
       });
       return {
-        isSweepLogin: isSweepLogin
+        banner: banner
       };
     } catch (err) {
       ctx.$errorHandler(err);
@@ -93,14 +60,7 @@ var external_vuex_ = __webpack_require__(13);
     };
 
     return {
-      isSweepLogin: false,
       method: 1,
-      codeLoading: false,
-      codeImg: '',
-      codeTimer: null,
-      codeState: 0,
-      codeTime: 0,
-      codeUuid: 0,
       ruleForm: {
         cellphone: '',
         password: '',
@@ -121,7 +81,8 @@ var external_vuex_ = __webpack_require__(13);
           message: '密码长度必须大于5位',
           trigger: 'blur'
         }]
-      }
+      },
+      banner: {}
     };
   },
 
@@ -129,86 +90,17 @@ var external_vuex_ = __webpack_require__(13);
     clearInterval(this.codeTimer);
   },
 
-  methods: { ...Object(external_vuex_["mapMutations"])(['login']),
+  methods: { ...Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapMutations"])(['login']),
 
     setMethod(index) {
       this.method = index;
-
-      if (index === 2) {
-        this.getCode();
-      }
-    },
-
-    // 获取二维码
-    getCode() {
-      this.codeLoading = true;
-      this.codeState = 0;
-
-      if (this.codeTimer) {
-        clearInterval(this.codeTimer);
-      }
-
-      code().then(response => {
-        this.codeImg = response.code;
-        this.codeTime = response.expires_in;
-        this.codeUuid = response.uuid;
-        this.codeTimer = setInterval(this.getRefreshCode, 2000);
-      }).finally(() => {
-        this.codeLoading = false;
-      });
-    },
-
-    // 刷新登录状态
-    getRefreshCode() {
-      this.codeTime = this.codeTime - 1;
-
-      if (this.codeTime === 0) {
-        clearInterval(this.codeTimer);
-        this.codeState = 4;
-      } else {
-        verify({
-          uuid: this.codeUuid
-        }).then(response => {
-          this.codeState = response.state;
-
-          if (this.codeState !== 0 && this.codeState !== 1) {
-            clearInterval(this.codeTimer);
-          }
-
-          if (this.codeState === 2) {
-            index({
-              uuid: this.codeUuid
-            }).then(response => {
-              this.login(response);
-              this.$message({
-                message: '登录成功',
-                type: 'success'
-              });
-              this.loading = false;
-              const route = this.store.get('route');
-
-              if (route) {
-                this.store.remove('route');
-                this.$router.replace({
-                  path: route.path,
-                  query: route.query
-                });
-              } else {
-                $nuxt.$router.replace('/user/portal');
-              }
-            }).catch(() => {
-              this.loading = false;
-            });
-          }
-        });
-      }
     },
 
     toLogin() {
       this.$refs['ruleForm'].validate(valid => {
         if (valid) {
           this.loading = true;
-          Object(login["f" /* login */])(this.ruleForm).then(response => {
+          Object(_api_login__WEBPACK_IMPORTED_MODULE_0__[/* login */ "f"])(this.ruleForm).then(response => {
             response.remember = this.ruleForm.remember;
             this.login(response);
             this.$message({

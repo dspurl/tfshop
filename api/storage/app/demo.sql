@@ -757,7 +757,7 @@ INSERT INTO `resources` (`id`, `type`, `depict`, `img`, `image_id`, `image_type`
 (438, 1, 'category_5', 'http://dsshop.test/storage/image/category/lD6CW1618812859.png', 5, 'App\\Models\\v1\\Category', '2021-04-19 14:14:24', '2021-04-19 14:14:24'),
 (439, 1, 'category_7', 'http://dsshop.test/storage/image/category/018Hg1618812907.png', 7, 'App\\Models\\v1\\Category', '2021-04-19 14:15:12', '2021-04-19 14:15:12'),
 (440, 1, 'goods_80_zimg', 'http://dsshop.test/storage/image/good/hspT31618883558.jpg', 80, 'App\\Models\\v1\\Good', '2021-04-20 09:53:58', '2021-04-20 09:53:58'),
-(441, NULL, 1, 'banner_8', 'http://dsshop.test/storage/image/banner/M0OZu1657264464.jpg', 8, 'App\\Models\\v1\\Banner', '2022-07-08 15:15:03', '2022-07-08 15:15:03');
+(441, 1, 'banner_8', 'http://dsshop.test/storage/image/banner/M0OZu1657264464.jpg', 8, 'App\\Models\\v1\\Banner', '2022-07-08 15:15:03', '2022-07-08 15:15:03');
 INSERT INTO `specifications` (`id`, `name`, `type`, `is_search`, `location`, `value`, `specification_group_id`, `label`, `sort`, `created_at`, `updated_at`) VALUES
 (1, '棉含量', 1, 0, 2, NULL, 1, '棉含量', 5, '2020-04-24 09:57:48', '2020-07-13 16:30:27'),
 (2, '材质', 2, 0, 2, '棉\n麻', 1, '材质', 5, '2020-04-24 09:59:00', '2020-07-13 16:30:07'),

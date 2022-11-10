@@ -1,6 +1,4 @@
 {
   "navigationBarTitleText": "Dsshop",
-  "usingComponents": {
-    "count-down-time": "/pages/seckill/components/CountDownTime"
-  }
+  "usingComponents": {}
 }

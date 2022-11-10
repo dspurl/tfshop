@@ -7,8 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- * Resource
- * 资源管理
+ * @group [ADMIN]Resource(资源管理)
  * Class ResourceController
  * @package App\Http\Controllers\v1\Admin
  */

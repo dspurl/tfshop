@@ -10,8 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * project
- * 商城管理
+ * @group [ADMIN]Project(商城管理)
  * Class BannerController
  * @package App\Http\Controllers\v1\Admin
  */

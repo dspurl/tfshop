@@ -1,7 +1,7 @@
-exports.ids = [25];
+exports.ids = [17];
 exports.modules = {
 
-/***/ 180:
+/***/ 169:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -33,12 +33,12 @@ function goodCategory(query) {
 
 /***/ }),
 
-/***/ 261:
+/***/ 201:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_good__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(180);
+/* harmony import */ var _api_good__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(169);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   data() {

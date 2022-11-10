@@ -76,85 +76,6 @@
 		<view class="ad-1">
 			<image v-if="adData.resources" :src="adData.resources.img" mode="scaleToFill" lazy-load  @click="navTo(adData.url)"></image>
 		</view>
-		<!-- 秒杀 -->
-		<view class="seckill-section m-t" v-if="isSeckill && seckill.length">
-			<navigator url="../seckill/list" hover-class="none" class="s-header">
-				<image class="s-img" src="/static/temp/secskill-img.jpg" mode="widthFix"></image>
-				<text class="tip">{{seckillActiveTime}}点场</text>
-				<count-down-time :time="seckillTime" @end="endSeckillTime()"></count-down-time>
-				<text class="yticon icon-you"></text>
-			</navigator>
-			<scroll-view class="floor-list" scroll-x>
-				<view class="scoll-wrapper">
-					<view 
-						v-for="(item, index) in seckill" :key="index"
-						class="floor-item"
-						@click="navToSeckillPage(item)"
-					>
-						<image :src="item.resources.img | smallImage(250)" mode="aspectFill"></image>
-						<text class="title clamp">{{item.name}}</text>
-						<text class="price">￥{{item.price[0] | 1000}}</text>
-					</view>
-				</view>
-			</scroll-view>
-		</view>
-		<!-- 拼团 -->
-		<view v-if="isGroupPurchase && groupPurchase.length">
-			<navigator url="../groupPurchase/list" hover-class="none" class="f-header m-t">
-				<image src="/static/temp/h1.png"></image>
-				<view class="tit-box">
-					<text class="tit">精品团购</text>
-					<text class="tit2">Boutique Group Buying</text>
-				</view>
-				<text class="yticon icon-you"></text>
-			</navigator>
-			<view class="group-section">
-				<swiper class="g-swiper" :duration="500">
-					<swiper-item
-						class="g-swiper-item"
-						v-for="(item, index) in groupPurchase" :key="index"
-						v-if="index%2 === 0"
-					>
-						<navigator :url="`/pages/product/detail?id=${item.good_id}`" hover-class="none" class="g-item left">
-							<image :src="item.resources.img | smallImage(250)" mode="aspectFill"></image>
-							<view class="t-box">
-								<text class="title clamp">{{item.name}}</text>
-								<view class="price-box">
-									<text class="price">￥{{item.price[0] | 1000}}</text> 
-									<text class="m-price">￥{{item.originalPrice[0] | 1000}}</text> 
-								</view>
-								
-								<view class="pro-box">
-								  	<view class="progress-box">
-								  		<progress :percent="item.progress" activeColor="#fa436a" active stroke-width="6" />
-								  	</view>
-									<text>{{item.number}}人成团</text>
-								</view>
-							</view>          
-						</navigator>
-						<template v-if="groupPurchase[index+1]">
-							<navigator :url="`/pages/product/detail?id=${groupPurchase[index+1].good_id}`" hover-class="none" class="g-item right">
-								<image :src="groupPurchase[index+1].resources.img" mode="aspectFill"></image>
-								<view class="t-box">
-									<text class="title clamp">{{groupPurchase[index+1].name}}</text>
-									<view class="price-box">
-										<text class="price">￥{{groupPurchase[index+1].price | 1000}}</text> 
-										<text class="m-price">￥{{groupPurchase[index+1].originalPrice | 1000}}</text> 
-									</view>
-									<view class="pro-box">
-									  	<view class="progress-box">
-									  		<progress :percent="groupPurchase[index+1].progress" activeColor="#fa436a" active stroke-width="6" />
-									  	</view>
-										<text>{{groupPurchase[index+1].number}}人成团</text>
-									</view>
-								</view>
-							</navigator>
-						</template>
-					</swiper-item>
-			
-				</swiper>
-			</view>
-		</view>
 		<!-- 为你推荐 -->
 		<view class="f-header m-t">
 			<image src="/static/temp/h1.png"></image>
@@ -185,15 +106,7 @@
 <script>
 import Good from '../../api/good'
 import Banner from '../../api/banner'
-import moment from 'moment'
-import {getList as seckillList} from '@/api/seckill'
-import {getList as groupPurchaseList} from '@/api/groupPurchase'
-import CountDownTime from '@/pages/seckill/components/CountDownTime';
-import {verifyPlugin} from '@/api/plugin'
-	export default {
-		components: {
-			CountDownTime
-		},
+export default {
 		data() {
 			return {
 				modalName: null,
@@ -206,12 +119,6 @@ import {verifyPlugin} from '@/api/plugin'
 				goodsList: [],
 				adData: {},
 				ctegory:[],
-				isSeckill: false,
-				seckill: [],
-				seckillTime: 0,
-				seckillActiveTime: '',
-				isGroupPurchase: false,
-				groupPurchase: []
 			};
 		},
 
@@ -226,7 +133,6 @@ import {verifyPlugin} from '@/api/plugin'
 		},
 		onShow(){
 			getApp().showDsshopCartNumber()
-			this.getVerifyPlugin()
 		},
 		methods: {
 			/**
@@ -288,13 +194,6 @@ import {verifyPlugin} from '@/api/plugin'
 					url: `/pages/product/detail?id=${id}`
 				})
 			},
-			// 秒杀详情页
-			navToSeckillPage(item) {
-				let id = item.good_id;
-				uni.navigateTo({
-					url: `/pages/product/detail?id=${id}`
-				})
-			},
 			//跳转
 			navTo(url){
 				if(url){
@@ -316,51 +215,6 @@ import {verifyPlugin} from '@/api/plugin'
 				uni.setStorageSync('applyDsshopGuidanceMy', true)
 			},
 			// #endif
-			getVerifyPlugin(){
-				const that = this
-				verifyPlugin(['seckill','groupPurchase'],function(res){
-					if(res.seckill){
-						that.isSeckill = true
-						that.getSeckill()
-					}
-					if(res.groupPurchase){
-						that.isGroupPurchase = true
-						that.getGroupPurchase()
-					}
-				})
-			},
-			// 获取拼团列表
-			getGroupPurchase(){
-				let that = this
-				groupPurchaseList({
-					limit: 10,
-					state: 1
-				},function(res){
-					that.groupPurchase = res.data
-				})
-			},
-			// 获取秒杀列表
-			getSeckill(){
-				let time = moment().format('YYYY-MM-DD HH:00:00')
-				let that = this
-				if(moment().format('HH')%2 !== 0){
-					time = moment().subtract(1, 'hour').format('YYYY-MM-DD HH:00:00')
-				}
-				this.seckillActiveTime = moment(time, "YYYY-MM-DD HH:00:00").format('HH')
-				this.seckillTime = (moment(time, "YYYY-MM-DD HH:00:00").add(2, 'hour')-moment().valueOf())/1000
-				seckillList({
-					limit: 10,
-					time: time,
-					sort: '-id',
-					state: 1
-				},function(res){
-					that.seckill = res.data
-				})
-			},
-			// 秒杀倒计时结束
-			endSeckillTime() {
-			    this.getSeckill()
-			}
 		},
 		// #ifndef MP
 		// 标题栏input搜索框点击
@@ -542,66 +396,6 @@ import {verifyPlugin} from '@/api/plugin'
 			height: 100%; 
 		}
 	}
-	/* 秒杀专区 */
-	.seckill-section{
-		padding: 4upx 30upx 24upx;
-		background: #fff;
-		.s-header{
-			display:flex;
-			align-items:center;
-			height: 92upx;
-			line-height: 1;
-			.s-img{
-				width: 140upx;
-				height: 30upx;
-			}
-			.tip{
-				font-size: $font-base;
-				color: $font-color-light;
-				margin: 0 20upx 0 40upx;
-			}
-			.timer{
-				display:inline-block;
-				width: 40upx;
-				height: 36upx;
-				text-align:center;
-				line-height: 36upx;
-				margin-right: 14upx;
-				font-size: $font-sm+2upx;
-				color: #fff;
-				border-radius: 2px;
-				background: rgba(0,0,0,.8);
-			}
-			.icon-you{
-				font-size: $font-lg;
-				color: $font-color-light;
-				flex: 1;
-				text-align: right;
-			}
-		}
-		.floor-list{
-			white-space: nowrap;
-		}
-		.scoll-wrapper{
-			display:flex;
-			align-items: flex-start;
-		}
-		.floor-item{
-			width: 150upx;
-			margin-right: 20upx;
-			font-size: $font-sm+2upx;
-			color: $font-color-dark;
-			line-height: 1.8;
-			image{
-				width: 150upx;
-				height: 150upx;
-				border-radius: 6upx;
-			}
-			.price{
-				color: $uni-color-primary;
-			}
-		}
-	}
 	
 	.f-header{
 		display:flex;
@@ -632,72 +426,6 @@ import {verifyPlugin} from '@/api/plugin'
 		.icon-you{
 			font-size: $font-lg +2upx;
 			color: $font-color-light;
-		}
-	}
-	/* 团购楼层 */
-	.group-section{
-		background: #fff;
-		.g-swiper{
-			height: 480upx;
-			padding-bottom: 30upx;
-		}
-		.g-swiper-item{
-			width: 100%;
-			padding: 0 30upx;
-			display:flex;
-		}
-		image{
-			width: 100%;
-			height: 460upx;
-			border-radius: 4px;
-		}
-		.g-item{
-			display:flex;
-			flex-direction: column;
-			overflow:hidden;
-		}
-		.left{
-			flex: 1;
-			margin-right: 24upx;
-			.t-box{
-				padding-top: 20upx;
-			}
-		}
-		.right{
-			flex: 1;
-			flex-direction: column-reverse;
-			.t-box{
-				padding-bottom: 20upx;
-			}
-		}
-		.t-box{
-			height: 160upx;
-			font-size: $font-base+2upx;
-			color: $font-color-dark;
-			line-height: 1.6;
-		}
-		.price{
-			color:$uni-color-primary;
-		}
-		.m-price{
-			font-size: $font-sm+2upx;
-			text-decoration: line-through;
-			color: $font-color-light;
-			margin-left: 8upx;
-		}
-		.pro-box{
-			display:flex;
-			align-items:center;
-			margin-top: 10upx;
-			font-size: $font-sm;
-			color: $font-base;
-			padding-right: 10upx;
-		}
-		.progress-box{
-			flex: 1;
-			border-radius: 10px;
-			overflow: hidden;
-			margin-right: 8upx;
 		}
 	}
 	/* 分类推荐楼层 */

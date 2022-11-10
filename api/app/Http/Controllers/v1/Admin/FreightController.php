@@ -10,8 +10,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group freight
- * 运费模板管理
+ * @group [ADMIN]Freight(运费模板管理)
  * Class FreightController
  * @package App\Http\Controllers\v1\Admin
  */

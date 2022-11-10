@@ -2162,6 +2162,82 @@
             "install-path": "../facade/ignition-contracts"
         },
         {
+            "name": "fakerphp/faker",
+            "version": "v1.19.0",
+            "version_normalized": "1.19.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/FakerPHP/Faker.git",
+                "reference": "d7f08a622b3346766325488aa32ddc93ccdecc75"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/FakerPHP/Faker/zipball/d7f08a622b3346766325488aa32ddc93ccdecc75",
+                "reference": "d7f08a622b3346766325488aa32ddc93ccdecc75",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "psr/container": "^1.0 || ^2.0",
+                "symfony/deprecation-contracts": "^2.2 || ^3.0"
+            },
+            "conflict": {
+                "fzaninotto/faker": "*"
+            },
+            "require-dev": {
+                "bamarni/composer-bin-plugin": "^1.4.1",
+                "doctrine/persistence": "^1.3 || ^2.0",
+                "ext-intl": "*",
+                "symfony/phpunit-bridge": "^4.4 || ^5.2"
+            },
+            "suggest": {
+                "doctrine/orm": "Required to use Faker\\ORM\\Doctrine",
+                "ext-curl": "Required by Faker\\Provider\\Image to download images.",
+                "ext-dom": "Required by Faker\\Provider\\HtmlLorem for generating random HTML.",
+                "ext-iconv": "Required by Faker\\Provider\\ru_RU\\Text::realText() for generating real Russian text.",
+                "ext-mbstring": "Required for multibyte Unicode string functionality."
+            },
+            "time": "2022-02-02T17:38:57+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "v1.19-dev"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Faker\\": "src/Faker/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "François Zaninotto"
+                }
+            ],
+            "description": "Faker is a PHP library that generates fake data for you.",
+            "keywords": [
+                "data",
+                "faker",
+                "fixtures"
+            ],
+            "support": {
+                "issues": "https://github.com/FakerPHP/Faker/issues",
+                "source": "https://github.com/FakerPHP/Faker/tree/v1.19.0"
+            },
+            "install-path": "../fakerphp/faker"
+        },
+        {
             "name": "fideloper/proxy",
             "version": "4.4.1",
             "version_normalized": "4.4.1.0",
@@ -2355,64 +2431,6 @@
                 "source": "https://github.com/firebase/php-jwt/tree/v5.4.0"
             },
             "install-path": "../firebase/php-jwt"
-        },
-        {
-            "name": "fzaninotto/faker",
-            "version": "v1.9.2",
-            "version_normalized": "1.9.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
-                "reference": "848d8125239d7dbf8ab25cb7f054f1a630e68c2e",
-                "shasum": ""
-            },
-            "require": {
-                "php": "^5.3.3 || ^7.0"
-            },
-            "require-dev": {
-                "ext-intl": "*",
-                "phpunit/phpunit": "^4.8.35 || ^5.7",
-                "squizlabs/php_codesniffer": "^2.9.2"
-            },
-            "time": "2020-12-11T09:56:16+00:00",
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.9-dev"
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Faker\\": "src/Faker/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "François Zaninotto"
-                }
-            ],
-            "description": "Faker is a PHP library that generates fake data for you.",
-            "keywords": [
-                "data",
-                "faker",
-                "fixtures"
-            ],
-            "support": {
-                "issues": "https://github.com/fzaninotto/Faker/issues",
-                "source": "https://github.com/fzaninotto/Faker/tree/v1.9.2"
-            },
-            "abandoned": true,
-            "install-path": "../fzaninotto/faker"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -3046,6 +3064,111 @@
                 "source": "https://github.com/justinrainbow/json-schema/tree/5.2.11"
             },
             "install-path": "../justinrainbow/json-schema"
+        },
+        {
+            "name": "knuckleswtf/scribe",
+            "version": "3.37.2",
+            "version_normalized": "3.37.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/knuckleswtf/scribe.git",
+                "reference": "74c483d8f14a57c36fad6a1063cab5437c312c6b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/knuckleswtf/scribe/zipball/74c483d8f14a57c36fad6a1063cab5437c312c6b",
+                "reference": "74c483d8f14a57c36fad6a1063cab5437c312c6b",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "erusev/parsedown": "1.7.4",
+                "ext-fileinfo": "*",
+                "ext-json": "*",
+                "ext-pdo": "*",
+                "fakerphp/faker": "^1.9.1",
+                "illuminate/console": "^6.0|^7.0|^8.0|^9.0",
+                "illuminate/routing": "^6.0|^7.0|^8.0|^9.0",
+                "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
+                "league/flysystem": "^1.1.4|^2.1.1|^3.0",
+                "mpociot/reflection-docblock": "^1.0.1",
+                "nikic/php-parser": "^4.10",
+                "nunomaduro/collision": "^3.0|^4.0|^5.0|^6.0",
+                "php": ">=7.4",
+                "ramsey/uuid": "^3.8|^4.0",
+                "shalvah/clara": "^3.1.0",
+                "shalvah/upgrader": "0.*",
+                "spatie/data-transfer-object": "^2.6|^3.0",
+                "symfony/var-exporter": "^4.0|^5.0|^6.0",
+                "symfony/yaml": "^4.0|^5.0|^6.0"
+            },
+            "replace": {
+                "mpociot/laravel-apidoc-generator": "*"
+            },
+            "require-dev": {
+                "brianium/paratest": "^6.0",
+                "dms/phpunit-arraysubset-asserts": "^0.2.0",
+                "laravel/legacy-factories": "^1.3.0",
+                "laravel/lumen-framework": "^6.0|^7.0|^8.0|^9.0",
+                "league/fractal": "^0.19.0",
+                "nikic/fast-route": "^1.3",
+                "orchestra/testbench": "^4.0|^5.0|^6.0|^7.0",
+                "pestphp/pest": "^1.21",
+                "phpstan/phpstan": "^1.0",
+                "phpunit/phpunit": "^9.0|^10.0",
+                "symfony/css-selector": "^5.3|^6.0",
+                "symfony/dom-crawler": "^5.3|^6.0"
+            },
+            "time": "2022-09-07T23:13:06+00:00",
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Knuckles\\Scribe\\ScribeServiceProvider"
+                    ]
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Knuckles\\Camel\\": "camel/",
+                    "Knuckles\\Scribe\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shalvah",
+                    "email": "hello@shalvah.me"
+                }
+            ],
+            "description": "Generate API documentation for humans from your Laravel codebase.✍",
+            "homepage": "http://github.com/knuckleswtf/scribe",
+            "keywords": [
+                "api",
+                "dingo",
+                "documentation",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/knuckleswtf/scribe/issues",
+                "source": "https://github.com/knuckleswtf/scribe/tree/3.37.2"
+            },
+            "funding": [
+                {
+                    "url": "https://patreon.com/shalvah",
+                    "type": "patreon"
+                }
+            ],
+            "install-path": "../knuckleswtf/scribe"
         },
         {
             "name": "laminas/laminas-diactoros",
@@ -4132,101 +4255,6 @@
             "install-path": "../league/oauth2-server"
         },
         {
-            "name": "mnapoli/front-yaml",
-            "version": "1.8.0",
-            "version_normalized": "1.8.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mnapoli/FrontYAML.git",
-                "reference": "76baa8ca538e111bfe53ac49c6a512ec5ea2bf54"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/FrontYAML/zipball/76baa8ca538e111bfe53ac49c6a512ec5ea2bf54",
-                "reference": "76baa8ca538e111bfe53ac49c6a512ec5ea2bf54",
-                "shasum": ""
-            },
-            "require": {
-                "erusev/parsedown": "~1.0",
-                "php": ">=7.3",
-                "symfony/yaml": "~2.1|^3.0|^4.0|^5.0"
-            },
-            "require-dev": {
-                "league/commonmark": "~1.4",
-                "phpunit/phpunit": "^9.4"
-            },
-            "time": "2020-12-04T10:52:19+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Mni\\FrontYAML\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "support": {
-                "issues": "https://github.com/mnapoli/FrontYAML/issues",
-                "source": "https://github.com/mnapoli/FrontYAML/tree/1.8.0"
-            },
-            "install-path": "../mnapoli/front-yaml"
-        },
-        {
-            "name": "mnapoli/silly",
-            "version": "1.7.2",
-            "version_normalized": "1.7.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mnapoli/silly.git",
-                "reference": "66807f87abd2ab8e5708754d70b4b601f5614c32"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mnapoli/silly/zipball/66807f87abd2ab8e5708754d70b4b601f5614c32",
-                "reference": "66807f87abd2ab8e5708754d70b4b601f5614c32",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.0",
-                "php-di/invoker": "~2.0",
-                "psr/container": "^1.0",
-                "symfony/console": "~3.0|~4.0|~5.0"
-            },
-            "require-dev": {
-                "friendsofphp/php-cs-fixer": "^2.12",
-                "mnapoli/phpunit-easymock": "~1.0",
-                "phpunit/phpunit": "~6.4"
-            },
-            "time": "2019-11-26T20:07:27+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Silly\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Silly CLI micro-framework based on Symfony Console",
-            "keywords": [
-                "PSR-11",
-                "cli",
-                "console",
-                "framework",
-                "micro-framework",
-                "silly"
-            ],
-            "support": {
-                "issues": "https://github.com/mnapoli/silly/issues",
-                "source": "https://github.com/mnapoli/silly/tree/1.7.2"
-            },
-            "install-path": "../mnapoli/silly"
-        },
-        {
             "name": "mockery/mockery",
             "version": "1.4.3",
             "version_normalized": "1.4.3.0",
@@ -4402,142 +4430,6 @@
                 }
             ],
             "install-path": "../monolog/monolog"
-        },
-        {
-            "name": "mpociot/documentarian",
-            "version": "0.4.0",
-            "version_normalized": "0.4.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mpociot/documentarian.git",
-                "reference": "c7dc266b6646a49f82b304a3451e41161cc4b1c3"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mpociot/documentarian/zipball/c7dc266b6646a49f82b304a3451e41161cc4b1c3",
-                "reference": "c7dc266b6646a49f82b304a3451e41161cc4b1c3",
-                "shasum": ""
-            },
-            "require": {
-                "illuminate/view": "5.*|^6.0|^7.0",
-                "mnapoli/front-yaml": "^1.5",
-                "mnapoli/silly": "~1.0",
-                "php": ">=5.5.9",
-                "windwalker/renderer": "3.*"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^4.8"
-            },
-            "time": "2020-03-06T07:31:21+00:00",
-            "bin": [
-                "documentarian"
-            ],
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "files": [
-                    "includes/helpers.php"
-                ],
-                "psr-4": {
-                    "Mpociot\\Documentarian\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "Apache 2"
-            ],
-            "authors": [
-                {
-                    "name": "Marcel Pociot",
-                    "email": "m.pociot@gmail.com"
-                }
-            ],
-            "support": {
-                "issues": "https://github.com/mpociot/documentarian/issues",
-                "source": "https://github.com/mpociot/documentarian/tree/0.4.0"
-            },
-            "install-path": "../mpociot/documentarian"
-        },
-        {
-            "name": "mpociot/laravel-apidoc-generator",
-            "version": "4.8.2",
-            "version_normalized": "4.8.2.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/mpociot/laravel-apidoc-generator.git",
-                "reference": "9015d39020dc1d7e80b0cd012bc1e999fd2542ca"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/mpociot/laravel-apidoc-generator/zipball/9015d39020dc1d7e80b0cd012bc1e999fd2542ca",
-                "reference": "9015d39020dc1d7e80b0cd012bc1e999fd2542ca",
-                "shasum": ""
-            },
-            "require": {
-                "ext-json": "*",
-                "fzaninotto/faker": "^1.8",
-                "illuminate/console": "^5.7|^6.0|^7.0",
-                "illuminate/routing": "^5.7|^6.0|^7.0",
-                "illuminate/support": "^5.7|^6.0|^7.0",
-                "league/flysystem": "^1.0",
-                "mpociot/documentarian": "^0.4.0",
-                "mpociot/reflection-docblock": "^1.0.1",
-                "nunomaduro/collision": "^3.0|^4.0",
-                "php": ">=7.2.0",
-                "ramsey/uuid": "^3.8|^4.0",
-                "symfony/var-exporter": "^4.0|^5.0"
-            },
-            "require-dev": {
-                "dms/phpunit-arraysubset-asserts": "^0.1.0",
-                "laravel/lumen-framework": "^5.7|^6.0|^7.0",
-                "league/fractal": "^0.19.0",
-                "orchestra/testbench": "^3.7|^4.0|^5.0",
-                "phpstan/phpstan": "^0.11.15",
-                "phpunit/phpunit": "^8.0"
-            },
-            "suggest": {
-                "league/fractal": "Required for transformers support"
-            },
-            "time": "2020-05-28T14:10:08+00:00",
-            "type": "library",
-            "extra": {
-                "laravel": {
-                    "providers": [
-                        "Mpociot\\ApiDoc\\ApiDocGeneratorServiceProvider"
-                    ]
-                },
-                "branch-alias": {
-                    "dev-v4": "4.x-dev"
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Mpociot\\ApiDoc\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Marcel Pociot",
-                    "email": "m.pociot@gmail.com"
-                }
-            ],
-            "description": "Generate beautiful API documentation from your Laravel application",
-            "homepage": "http://github.com/mpociot/laravel-apidoc-generator",
-            "keywords": [
-                "api",
-                "documentation",
-                "laravel"
-            ],
-            "support": {
-                "issues": "https://github.com/mpociot/laravel-apidoc-generator/issues",
-                "source": "https://github.com/mpociot/laravel-apidoc-generator/tree/master"
-            },
-            "install-path": "../mpociot/laravel-apidoc-generator"
         },
         {
             "name": "mpociot/reflection-docblock",
@@ -5324,64 +5216,6 @@
                 "source": "https://github.com/paragonie/random_compat"
             },
             "install-path": "../paragonie/random_compat"
-        },
-        {
-            "name": "php-di/invoker",
-            "version": "2.3.0",
-            "version_normalized": "2.3.0.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/PHP-DI/Invoker.git",
-                "reference": "992fec6c56f2d1ad1ad5fee28267867c85bfb8f9"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/PHP-DI/Invoker/zipball/992fec6c56f2d1ad1ad5fee28267867c85bfb8f9",
-                "reference": "992fec6c56f2d1ad1ad5fee28267867c85bfb8f9",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.3",
-                "psr/container": "~1.0"
-            },
-            "require-dev": {
-                "athletic/athletic": "~0.1.8",
-                "mnapoli/hard-mode": "~0.3.0",
-                "phpunit/phpunit": "^9.0"
-            },
-            "time": "2021-01-15T10:25:40+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Invoker\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "Generic and extensible callable invoker",
-            "homepage": "https://github.com/PHP-DI/Invoker",
-            "keywords": [
-                "callable",
-                "dependency",
-                "dependency-injection",
-                "injection",
-                "invoke",
-                "invoker"
-            ],
-            "support": {
-                "issues": "https://github.com/PHP-DI/Invoker/issues",
-                "source": "https://github.com/PHP-DI/Invoker/tree/2.3.0"
-            },
-            "funding": [
-                {
-                    "url": "https://github.com/mnapoli",
-                    "type": "github"
-                }
-            ],
-            "install-path": "../php-di/invoker"
         },
         {
             "name": "php-http/message-factory",
@@ -6703,6 +6537,129 @@
             "install-path": "../seld/phar-utils"
         },
         {
+            "name": "shalvah/clara",
+            "version": "3.1.0",
+            "version_normalized": "3.1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shalvah/clara.git",
+                "reference": "d3ae9b277393d438edbfcf9ddb7ca42e958fa054"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shalvah/clara/zipball/d3ae9b277393d438edbfcf9ddb7ca42e958fa054",
+                "reference": "d3ae9b277393d438edbfcf9ddb7ca42e958fa054",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": ">=7.4",
+                "symfony/console": "^4.0|^5.0|^6.0"
+            },
+            "require-dev": {
+                "eloquent/phony-phpunit": "^7.0",
+                "phpunit/phpunit": "^9.1"
+            },
+            "time": "2022-01-14T13:54:30+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "helpers.php"
+                ],
+                "psr-4": {
+                    "Shalvah\\Clara\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "🔊 Simple, pretty, testable console output for CLI apps.",
+            "keywords": [
+                "cli",
+                "log",
+                "logging"
+            ],
+            "support": {
+                "issues": "https://github.com/shalvah/clara/issues",
+                "source": "https://github.com/shalvah/clara/tree/3.1.0"
+            },
+            "install-path": "../shalvah/clara"
+        },
+        {
+            "name": "shalvah/upgrader",
+            "version": "0.1.4",
+            "version_normalized": "0.1.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/shalvah/upgrader.git",
+                "reference": "3006962363988cbb75ac7860915949fa8fe7cc2a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/shalvah/upgrader/zipball/3006962363988cbb75ac7860915949fa8fe7cc2a",
+                "reference": "3006962363988cbb75ac7860915949fa8fe7cc2a",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "illuminate/support": "^6.0|^7.0|^8.0",
+                "nikic/php-parser": "^4.10",
+                "php": ">=7.4"
+            },
+            "require-dev": {
+                "dms/phpunit-arraysubset-asserts": "^0.2.0",
+                "pestphp/pest": "^1.10",
+                "phpstan/phpstan": "^0.12.90",
+                "spatie/ray": "^1.28"
+            },
+            "time": "2021-09-09T15:46:25+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Shalvah\\Upgrader\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Shalvah",
+                    "email": "hello@shalvah.me"
+                }
+            ],
+            "description": "Create automatic upgrades for your package.",
+            "homepage": "http://github.com/shalvah/upgrader",
+            "keywords": [
+                "upgrade"
+            ],
+            "support": {
+                "issues": "https://github.com/shalvah/upgrader/issues",
+                "source": "https://github.com/shalvah/upgrader/tree/0.1.4"
+            },
+            "funding": [
+                {
+                    "url": "https://patreon.com/shalvah",
+                    "type": "patreon"
+                }
+            ],
+            "install-path": "../shalvah/upgrader"
+        },
+        {
             "name": "simplesoftwareio/simple-qrcode",
             "version": "2.0.0",
             "version_normalized": "2.0.0.0",
@@ -6833,6 +6790,78 @@
                 }
             ],
             "install-path": "../slevomat/coding-standard"
+        },
+        {
+            "name": "spatie/data-transfer-object",
+            "version": "2.8.4",
+            "version_normalized": "2.8.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/spatie/data-transfer-object.git",
+                "reference": "167ebbe56ead65ef23abcfae7b75f932afd496a4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/spatie/data-transfer-object/zipball/167ebbe56ead65ef23abcfae7b75f932afd496a4",
+                "reference": "167ebbe56ead65ef23abcfae7b75f932afd496a4",
+                "shasum": "",
+                "mirrors": [
+                    {
+                        "url": "https://mirrors.aliyun.com/composer/dists/%package%/%reference%.%type%",
+                        "preferred": true
+                    }
+                ]
+            },
+            "require": {
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^9.0"
+            },
+            "suggest": {
+                "phpstan/phpstan": "Take advantage of checkUninitializedProperties with \\Spatie\\DataTransferObject\\PHPstan\\PropertiesAreAlwaysInitializedExtension"
+            },
+            "time": "2021-12-07T05:41:11+00:00",
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "Spatie\\DataTransferObject\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brent Roose",
+                    "email": "brent@spatie.be",
+                    "homepage": "https://spatie.be",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Data transfer objects with batteries included",
+            "homepage": "https://github.com/spatie/data-transfer-object",
+            "keywords": [
+                "data-transfer-object",
+                "spatie"
+            ],
+            "support": {
+                "issues": "https://github.com/spatie/data-transfer-object/issues",
+                "source": "https://github.com/spatie/data-transfer-object/tree/2.8.4"
+            },
+            "funding": [
+                {
+                    "url": "https://spatie.be/open-source/support-us",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/spatie",
+                    "type": "github"
+                }
+            ],
+            "install-path": "../spatie/data-transfer-object"
         },
         {
             "name": "spatie/db-dumper",
@@ -10229,130 +10258,6 @@
                 "source": "https://github.com/webpatser/uuid"
             },
             "install-path": "../webpatser/laravel-uuid"
-        },
-        {
-            "name": "windwalker/renderer",
-            "version": "3.5.23",
-            "version_normalized": "3.5.23.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ventoviro/windwalker-renderer.git",
-                "reference": "b157f2832dac02209db032cb61e21b8264ee4499"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ventoviro/windwalker-renderer/zipball/b157f2832dac02209db032cb61e21b8264ee4499",
-                "reference": "b157f2832dac02209db032cb61e21b8264ee4499",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.3",
-                "windwalker/structure": "~3.0"
-            },
-            "require-dev": {
-                "illuminate/view": "5.2.*",
-                "league/plates": "3.*",
-                "mustache/mustache": "2.*",
-                "twig/twig": "1.*",
-                "windwalker/dom": "~3.0",
-                "windwalker/filesystem": "~3.0",
-                "windwalker/test": "~3.0"
-            },
-            "suggest": {
-                "illuminate/view": "Install 5.* if you require Laravel Blade engine.",
-                "league/plates": "Install 3.* if you require Plates template engine.",
-                "mustache/mustache": "Install 2.* if you require Mustache engine.",
-                "twig/twig": "Install 1.* if you require Twig engine."
-            },
-            "time": "2019-10-26T15:42:26+00:00",
-            "type": "windwalker-package",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Windwalker\\Renderer\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.0-or-later"
-            ],
-            "description": "Windwalker Renderer package",
-            "homepage": "https://github.com/ventoviro/windwalker-renderer",
-            "keywords": [
-                "framework",
-                "renderer",
-                "windwalker"
-            ],
-            "support": {
-                "issues": "https://github.com/ventoviro/windwalker-renderer/issues",
-                "source": "https://github.com/ventoviro/windwalker-renderer/tree/3.5.21"
-            },
-            "install-path": "../windwalker/renderer"
-        },
-        {
-            "name": "windwalker/structure",
-            "version": "3.5.23",
-            "version_normalized": "3.5.23.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/ventoviro/windwalker-structure.git",
-                "reference": "59466adb846685d60463f9c1403df2832d2fcf90"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/ventoviro/windwalker-structure/zipball/59466adb846685d60463f9c1403df2832d2fcf90",
-                "reference": "59466adb846685d60463f9c1403df2832d2fcf90",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.1.3"
-            },
-            "require-dev": {
-                "ext-json": "*",
-                "laktak/hjson": "^2.1",
-                "symfony/yaml": "^4.0||^5.0",
-                "windwalker/test": "~3.0",
-                "yosymfony/toml": "^1.0"
-            },
-            "suggest": {
-                "laktak/hjson": "Install ~2.0 if you require HJSON support.",
-                "symfony/yaml": "Install 3.* if you require YAML support.",
-                "yosymfony/toml": "Install ~1.0 if you require TOML support."
-            },
-            "time": "2020-07-04T09:50:33+00:00",
-            "type": "windwalker-package",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.x-dev"
-                }
-            },
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "Windwalker\\Structure\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "LGPL-2.0-or-later"
-            ],
-            "description": "Windwalker Structure package",
-            "homepage": "https://github.com/ventoviro/windwalker-structure",
-            "keywords": [
-                "framework",
-                "structure",
-                "windwalker"
-            ],
-            "support": {
-                "issues": "https://github.com/ventoviro/windwalker-structure/issues",
-                "source": "https://github.com/ventoviro/windwalker-structure/tree/3.5.21"
-            },
-            "install-path": "../windwalker/structure"
         }
     ],
     "dev": true,
@@ -10369,29 +10274,26 @@
         "dealerdirect/phpcodesniffer-composer-installer",
         "erusev/parsedown",
         "facade/ignition-contracts",
+        "fakerphp/faker",
         "filp/whoops",
-        "fzaninotto/faker",
         "hamcrest/hamcrest-php",
         "justinrainbow/json-schema",
-        "mnapoli/front-yaml",
-        "mnapoli/silly",
+        "knuckleswtf/scribe",
         "mockery/mockery",
-        "mpociot/documentarian",
-        "mpociot/laravel-apidoc-generator",
         "mpociot/reflection-docblock",
         "nunomaduro/collision",
-        "php-di/invoker",
         "phpdocumentor/reflection-common",
         "phpdocumentor/type-resolver",
         "phpstan/phpdoc-parser",
         "react/promise",
         "seld/jsonlint",
         "seld/phar-utils",
+        "shalvah/clara",
+        "shalvah/upgrader",
         "slevomat/coding-standard",
+        "spatie/data-transfer-object",
         "squizlabs/php_codesniffer",
         "symfony/filesystem",
-        "symfony/yaml",
-        "windwalker/renderer",
-        "windwalker/structure"
+        "symfony/yaml"
     ]
 }

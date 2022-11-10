@@ -39,7 +39,7 @@ export default {
       dialogFormVisible: false,
       listQuery: {
         page: 1,
-        limit: 10,
+        limit: 20,
         sort: '+id',
         activeIndex: '1'
       }

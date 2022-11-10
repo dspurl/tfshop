@@ -9,8 +9,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 /**
- *  plugin
- * 插件管理
+ * @group [ADMIN]Plugin(插件管理)
  * Class PluginController
  * @package App\Http\Controllers\v1\Admin
  */
@@ -29,7 +28,7 @@ class PluginController extends Controller
      * PlugInList
      * 插件列表
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return string
      * @throws \Exception
      */
     public function list(Request $request)
@@ -40,7 +39,7 @@ class PluginController extends Controller
 //        } else {
 //            $Json = $Plugin->getOnLinePlugin();
 //        }
-        if(!config('dsshop.marketApplicationSecret') || !config('dsshop.marketApplySecret')){
+        if (!config('dsshop.marketApplicationSecret') || !config('dsshop.marketApplySecret')) {
             return resReturn(0, '您还没有正确配置开发者密钥', Code::CODE_WRONG);
         }
         $Json = $Plugin->getLocalPlugin($request);
@@ -95,7 +94,7 @@ class PluginController extends Controller
      */
     public function install($name)
     {
-        return resReturn(1, (new Plugin())->autoPlugin($name));
+        return resReturn(1, (new Plugin())->autoPlugin($name, true));
     }
 
     /**
@@ -133,11 +132,11 @@ class PluginController extends Controller
      */
     public function uninstall($name)
     {
-        return resReturn(1, (new Plugin())->autoUninstall($name));
+        return resReturn(1, (new Plugin())->autoUninstall($name, true));
     }
 
     /**
-     * Gets a list of all routes
+     * GetsAListOfAllRoutes
      * 获取所有路由列表
      * @param $type // 类型：all为全部，no_get为除get请求外
      * @return string
@@ -203,7 +202,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Get all models
+     * GetAllModels
      * 获取所有模型
      */
     public function models()
@@ -212,7 +211,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Get all templates
+     * GetAllTemplates
      * 获取所有模板
      * @param $name //client or admin
      * @return string
@@ -224,7 +223,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Get all jurisdiction
+     * GetAllJurisdiction
      * 获取所有权限
      * @param Request $request
      * @return string
@@ -235,7 +234,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Get all diff
+     * GetAllDiff
      * 获取冲突文件列表
      * @param $name // 插件标识
      * @return string
@@ -247,7 +246,7 @@ class PluginController extends Controller
     }
 
     /**
-     * Get install plugin list
+     * GetInstallPluginList
      * 获取安装的插件列表
      * @return string
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
@@ -258,7 +257,7 @@ class PluginController extends Controller
     }
 
     /**
-     * conflict resolution
+     * conflictResolution
      * 冲突处理
      * @param $name // 插件标识
      * @param Request $request
@@ -268,21 +267,22 @@ class PluginController extends Controller
      */
     public function conflictResolution($name, Request $request)
     {
-        if(!$request->has('index')){
+        if (!$request->has('index')) {
             throw new \Exception('参数有误', Code::CODE_WRONG);
         }
         return resReturn(1, (new Plugin())->conflictResolution($name, $request));
     }
 
     /**
-     * Verify that the plug-in is installed
+     * VerifyThatThePlugInIsInstalled
      * 验证插件是否安装
      * @param $name // 插件名称
      * @return string
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function verify($name){
-        if(!$name){
+    public function verify($name)
+    {
+        if (!$name) {
             return resReturn(0, '插件名称有误', Code::CODE_MISUSE);
         }
         return resReturn(1, (new Plugin())->hasAll($name));

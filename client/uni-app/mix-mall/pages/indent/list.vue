@@ -32,11 +32,6 @@
 								<text><text class="text-red text-price padding-right">{{goodsItem.price}}</text><text>x {{goodsItem.number}}</text></text>
 							</view>
 						</view>
-						<view v-if="item.state === 12" class="action-box b-t">
-								<button class="action-btn recom" @tap="goForemanScore()">邀请拼单</button>
-								<!-- 拼团分享-->
-								<foreman-qr-code :sid="goodsItem.id" :show="foremanShow" @changeShow="changeShow"></foreman-qr-code>
-						</view>
 					</view>
 					<view class="price-box" v-if="item.remark">{{item.remark}}</view>
 					<view class="price-box">
@@ -58,9 +53,6 @@
 					<block v-if="item.state === 3">
 						<button class="action-btn recom" @tap="confirmReceipt(item)">确认收货</button>
 					</block>
-					<block v-if="item.state === 10">
-						<button class="action-btn recom" @tap="goScore(item)">立即评价</button>
-					</block>
 				</view>
 			</view>
 			<uni-load-more :status="loadingType"></uni-load-more>
@@ -73,13 +65,10 @@
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	import empty from "@/components/empty";
 	import GoodIndent from '../../api/goodIndent'
-	import {verifyPlugin} from '@/api/plugin'
-	import ForemanQrCode from '@/pages/groupPurchase/components/qrCode'
 	export default {
 		components: {
 			uniLoadMore,
-			empty,
-			ForemanQrCode
+			empty
 		},
 		data() {
 			return {
@@ -110,8 +99,7 @@
 						state: 5,
 						text: '已完成'
 					}
-				],
-				foremanShow: false
+				]
 			};
 		},
 		
@@ -119,7 +107,6 @@
 			if(options.state){
 				this.tabCurrentIndex = options.state
 			}
-			this.getVerifyPlugin()
 		},
 		onShow(){
 			this.loginCheck()
@@ -130,24 +117,6 @@
 		},
 		methods: {
 			...mapMutations(['loginCheck']),
-			//设置导航
-			getVerifyPlugin(){
-				const that = this
-				verifyPlugin(['comment','groupPurchase'],function(res){
-					if(res.comment){
-						that.navList.push({
-							state: 10,
-							text: '待评价'
-						})
-					}
-					if(res.groupPurchase){
-						that.navList.splice(2, 0, {
-							state: 12,
-							text: '待成团'
-						})
-					}
-				})
-			},
 			//获取订单列表
 			async loadData(type='add', loading) {
 				// 下拉刷新
@@ -303,24 +272,10 @@
 			onReachBottom(){
 				this.loadData();
 			},
-			// 评价
-			goScore(item){
-				uni.navigateTo({
-					url: `/pages/comment/score?id=${item.id}`
-				})
-			},
-			//评价成功后回调
-			refreshOderList(){
-				// 需要重新加载
-				this.loadData('refresh')
-			},
-			// 拼团分享
-			goForemanScore(){
-				this.foremanShow = true
-			},
-			changeShow(val){
-				this.foremanShow = val
-			},
+      refreshOderList(){
+        // 需要重新加载
+        this.loadData('refresh')
+      }
 		},
 	}
 </script>

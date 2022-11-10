@@ -4,7 +4,7 @@
       <el-menu-item index="1">本地</el-menu-item>
     </el-menu>
     <div class="tip">
-      <p>如何配置开发者密钥，<el-link :underline="false" href="https://dsshoping.dswjcms.com/article/detail/38.html" type="primary" target="_blank">查看帮助</el-link> </p>
+      <p>如何配置开发者密钥，<el-link :underline="false" href="https://www.dswjcms.com/article/detail/38" type="primary" target="_blank">查看帮助</el-link> </p>
     </div>
     <div class="filter-container">
       <div class="condition"/>
@@ -158,7 +158,7 @@
     </div>
     <!--分页-->
     <div class="pagination-operation">
-      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="list"/>
+      <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
     </div>
     <!-- 冲突-->
     <el-dialog :close-on-click-modal="false" :visible.sync="dialogDiff" :title="diffTitle" @close="getList">

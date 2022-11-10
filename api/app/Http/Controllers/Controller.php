@@ -17,9 +17,10 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * upload
+     * Upload
      * 上传
      * @param Request $request
+     * @bodyParam   file file 上传的文件
      * @queryParam  type int 1图片2自定义文件
      * @queryParam  size int 前端文件大小
      * @queryParam  full boolean    是否显示详细结果
@@ -132,5 +133,45 @@ class Controller extends BaseController
             "type" => $file->getClientMimeType(),            //文件类型
             "size" => $file->getSize()           //文件大小
         );
+    }
+
+    /**
+     * 获取顶级域名
+     * @param $url // 域名
+     * @return string
+     */
+    public function getTopHost($url)
+    {
+        $url = strtolower($url);
+        $hosts = parse_url($url);
+        $host = $hosts['host'];
+        //查看是几级域名
+        $data = explode('.', $host);
+        $n = count($data);
+        //判断是否是双后缀
+        $preg = '/[\w].+\.(com|net|org|gov|edu)\.cn$/';
+        if (($n > 2) && preg_match($preg, $host)) {
+            //双后缀取后3位
+            $host = $data[$n - 3] . '.' . $data[$n - 2] . '.' . $data[$n - 1];
+        } else {
+            //非双后缀取后两位
+            $host = $data[$n - 2] . '.' . $data[$n - 1];
+        }
+        return $host;
+    }
+
+    /**
+     * 获取协议
+     * @return string
+     */
+    public function scheme(){
+        if (isset($_SERVER['HTTP_X_CLIENT_SCHEME'])) {
+            $scheme = $_SERVER['HTTP_X_CLIENT_SCHEME'] . '://';
+        } elseif (isset($_SERVER['REQUEST_SCHEME'])) {
+            $scheme = $_SERVER['REQUEST_SCHEME'] . '://';
+        } else {
+            $scheme = 'http://';
+        }
+        return $scheme;
     }
 }

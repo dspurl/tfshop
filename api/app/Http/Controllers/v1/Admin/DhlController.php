@@ -9,8 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group dhl
- * 快递公司管理
+ * @group [ADMIN]Dhl(快递公司管理)
  * Class DhlController
  * @package App\Http\Controllers\v1\Admin
  */

@@ -30,14 +30,15 @@
         "spatie/db-dumper": "^2.21.1",
         "spatie/laravel-backup": "^6.14",
         "webpatser/laravel-uuid": "^3.0",
-        "ext-zip": "*"
+        "ext-zip": "*",
+      "ext-bcmath": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",
         "beyondcode/laravel-dump-server": "^1.0",
         "filp/whoops": "^2.0",
+        "knuckleswtf/scribe": "^3.37",
         "mockery/mockery": "^1.0",
-        "mpociot/laravel-apidoc-generator": "^4.8",
         "nunomaduro/collision": "^4.1",
         "slevomat/coding-standard": "^6.4",
         "squizlabs/php_codesniffer": "^3.5"
@@ -45,7 +46,11 @@
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "easywechat-composer/easywechat-composer": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     },
     "extra": {
         "laravel": {

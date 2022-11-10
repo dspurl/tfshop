@@ -7,15 +7,14 @@ use App\common\Plugin;
 use App\Http\Controllers\Controller;
 
 /**
- * collect
- * 收藏
+ * @group [CLIENT]Plugin(插件)
  * Class CollectController
  * @package App\Http\Controllers\v1\Client
  */
 class PluginController extends Controller
 {
     /**
-     * Verify that the plug-in is installed
+     * VerifyThatThePlugInIsInstalled
      * 验证插件是否安装
      * @param $name // 插件名称
      * @return string

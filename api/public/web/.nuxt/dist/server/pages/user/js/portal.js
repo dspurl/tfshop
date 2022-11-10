@@ -1,7 +1,7 @@
-exports.ids = [89];
+exports.ids = [52];
 exports.modules = {
 
-/***/ 181:
+/***/ 170:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38,7 +38,7 @@ function cancel(data) {
 
 /***/ }),
 
-/***/ 327:
+/***/ 248:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -58,16 +58,12 @@ function getList(query) {
   });
 }
 // EXTERNAL MODULE: ./api/user.js
-var user = __webpack_require__(181);
+var user = __webpack_require__(170);
 
 // EXTERNAL MODULE: ./api/goodIndent.js
 var goodIndent = __webpack_require__(22);
 
-// EXTERNAL MODULE: ./api/plugin.js
-var api_plugin = __webpack_require__(38);
-
 // CONCATENATED MODULE: ./pages/user/js/portal.js
-
 
 
 
@@ -81,21 +77,13 @@ var api_plugin = __webpack_require__(38);
   },
 
   async asyncData(ctx) {
-    try {
-      let [verifyPluginData] = await Promise.all([Object(api_plugin["a" /* verifyPlugin */])(['integral', 'comment'])]);
-      return {
-        isIntegral: verifyPluginData.integral,
-        isComment: verifyPluginData.comment
-      };
-    } catch (err) {
+    try {} catch (err) {
       ctx.$errorHandler(err);
     }
   },
 
   data() {
     return {
-      isIntegral: false,
-      isComment: false,
       loading: true,
       user: {},
       browseList: [],

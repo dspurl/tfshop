@@ -1,7 +1,7 @@
 exports.ids = [1];
 exports.modules = {
 
-/***/ 185:
+/***/ 173:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -64,12 +64,12 @@ function defaultSet(data) {
 
 /***/ }),
 
-/***/ 194:
+/***/ 174:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_shipping__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(185);
+/* harmony import */ var _api_shipping__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(173);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AddressList',

@@ -10,8 +10,7 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Redis;
 
 /**
- * @group redis
- * Redis管理
+ * @group [ADMIN]Redis(Redis管理)
  * Class RedisServiceController
  * @package App\Http\Controllers\v1\Admin
  */

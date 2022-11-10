@@ -9,564 +9,261 @@
         "name": "cart-js",
         "path": "js",
         "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\cart\\\\js\\\\index.js",
-        "chunkName": "pages/cart/js/index",
-        "_name": "_7080fe5e"
+        "chunkName": "pages/cart/js/index"
       }
-    ],
-    "_name": "_1353fe3b"
+    ]
   },
   {
     "name": "category-list",
     "path": "/category/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\category\\\\list.vue",
-    "chunkName": "pages/category/list",
-    "_name": "_98bb4012"
-  },
-  {
-    "name": "comment-list",
-    "path": "/comment/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\comment\\\\list.vue",
-    "chunkName": "pages/comment/list",
-    "_name": "_0a9a939c"
-  },
-  {
-    "name": "comment-score",
-    "path": "/comment/score",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\comment\\\\score.vue",
-    "chunkName": "pages/comment/score",
-    "_name": "_261fc5ae"
-  },
-  {
-    "name": "coupon-components",
-    "path": "/coupon/components",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\coupon\\\\components\\\\index.vue",
-    "chunkName": "pages/coupon/components/index",
-    "_name": "_70a27b0b"
-  },
-  {
-    "name": "coupon-list",
-    "path": "/coupon/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\coupon\\\\list.vue",
-    "chunkName": "pages/coupon/list",
-    "_name": "_f9640442"
+    "chunkName": "pages/category/list"
   },
   {
     "name": "indent-create",
     "path": "/indent/create",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\indent\\\\create.vue",
-    "chunkName": "pages/indent/create",
-    "_name": "_e9236efa"
+    "chunkName": "pages/indent/create"
   },
   {
     "name": "money-pay",
     "path": "/money/pay",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\pay.vue",
-    "chunkName": "pages/money/pay",
-    "_name": "_035b857a"
+    "chunkName": "pages/money/pay"
   },
   {
     "name": "money-success",
     "path": "/money/success",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\success.vue",
-    "chunkName": "pages/money/success",
-    "_name": "_122824c4"
+    "chunkName": "pages/money/success"
   },
   {
     "name": "pass-findPassword",
     "path": "/pass/findPassword",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\findPassword.vue",
-    "chunkName": "pages/pass/findPassword",
-    "_name": "_52acd0a0"
+    "chunkName": "pages/pass/findPassword"
   },
   {
     "name": "pass-login",
     "path": "/pass/login",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\login.vue",
-    "chunkName": "pages/pass/login",
-    "_name": "_90b15126"
+    "chunkName": "pages/pass/login"
   },
   {
     "name": "pass-register",
     "path": "/pass/register",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\register.vue",
-    "chunkName": "pages/pass/register",
-    "_name": "_8df02362"
-  },
-  {
-    "name": "seckill-list",
-    "path": "/seckill/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\seckill\\\\list.vue",
-    "chunkName": "pages/seckill/list",
-    "_name": "_1a5929fc"
+    "chunkName": "pages/pass/register"
   },
   {
     "name": "user-address",
     "path": "/user/address",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\address.vue",
-    "chunkName": "pages/user/address",
-    "_name": "_a53b5c04"
+    "chunkName": "pages/user/address"
   },
   {
     "name": "user-cancel",
     "path": "/user/cancel",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\cancel.vue",
-    "chunkName": "pages/user/cancel",
-    "_name": "_ed78ff40"
+    "chunkName": "pages/user/cancel"
   },
   {
     "name": "user-cellphone",
     "path": "/user/cellphone",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\cellphone.vue",
-    "chunkName": "pages/user/cellphone",
-    "_name": "_310bf6d6"
+    "chunkName": "pages/user/cellphone"
   },
   {
     "name": "user-collect",
     "path": "/user/collect",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\collect.vue",
-    "chunkName": "pages/user/collect",
-    "_name": "_6df08c34"
-  },
-  {
-    "name": "user-integralDraw",
-    "path": "/user/integralDraw",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\index.vue",
-    "chunkName": "pages/user/integralDraw/index",
-    "_name": "_23ad0368"
+    "chunkName": "pages/user/collect"
   },
   {
     "name": "user-password",
     "path": "/user/password",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\password.vue",
-    "chunkName": "pages/user/password",
-    "_name": "_13943881"
+    "chunkName": "pages/user/password"
   },
   {
     "name": "user-portal",
     "path": "/user/portal",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\portal.vue",
-    "chunkName": "pages/user/portal",
-    "_name": "_28b79152"
+    "chunkName": "pages/user/portal"
   },
   {
     "name": "user-userinfo",
     "path": "/user/userinfo",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\userinfo.vue",
-    "chunkName": "pages/user/userinfo",
-    "_name": "_6a7adc42"
-  },
-  {
-    "name": "article-components-defaultArticle",
-    "path": "/article/components/defaultArticle",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\article\\\\components\\\\defaultArticle.vue",
-    "chunkName": "pages/article/components/defaultArticle",
-    "_name": "_3dfb1ab6"
-  },
-  {
-    "name": "article-components-defaultColumn",
-    "path": "/article/components/defaultColumn",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\article\\\\components\\\\defaultColumn.vue",
-    "chunkName": "pages/article/components/defaultColumn",
-    "_name": "_7a9b7fc6"
-  },
-  {
-    "name": "article-components-defaultColumnDetail",
-    "path": "/article/components/defaultColumnDetail",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\article\\\\components\\\\defaultColumnDetail.vue",
-    "chunkName": "pages/article/components/defaultColumnDetail",
-    "_name": "_c15c6d92"
-  },
-  {
-    "name": "article-js-defaultArticle",
-    "path": "/article/js/defaultArticle",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\article\\\\js\\\\defaultArticle.js",
-    "chunkName": "pages/article/js/defaultArticle",
-    "_name": "_1e271e06"
-  },
-  {
-    "name": "article-js-defaultColumn",
-    "path": "/article/js/defaultColumn",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\article\\\\js\\\\defaultColumn.js",
-    "chunkName": "pages/article/js/defaultColumn",
-    "_name": "_dd7fd508"
-  },
-  {
-    "name": "article-js-defaultColumnDetail",
-    "path": "/article/js/defaultColumnDetail",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\article\\\\js\\\\defaultColumnDetail.js",
-    "chunkName": "pages/article/js/defaultColumnDetail",
-    "_name": "_8afb10aa"
+    "chunkName": "pages/user/userinfo"
   },
   {
     "name": "category-js-list",
     "path": "/category/js/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\category\\\\js\\\\list.js",
-    "chunkName": "pages/category/js/list",
-    "_name": "_480f168f"
-  },
-  {
-    "name": "comment-js-list",
-    "path": "/comment/js/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\comment\\\\js\\\\list.js",
-    "chunkName": "pages/comment/js/list",
-    "_name": "_0e31d274"
-  },
-  {
-    "name": "comment-js-score",
-    "path": "/comment/js/score",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\comment\\\\js\\\\score.js",
-    "chunkName": "pages/comment/js/score",
-    "_name": "_4af3dfaa"
-  },
-  {
-    "name": "coupon-components-js",
-    "path": "/coupon/components/js",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\coupon\\\\components\\\\js\\\\index.js",
-    "chunkName": "pages/coupon/components/js/index",
-    "_name": "_f15f9da6"
-  },
-  {
-    "name": "coupon-components-use",
-    "path": "/coupon/components/use",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\coupon\\\\components\\\\use.vue",
-    "chunkName": "pages/coupon/components/use",
-    "_name": "_7d016980"
-  },
-  {
-    "name": "coupon-js-list",
-    "path": "/coupon/js/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\coupon\\\\js\\\\list.js",
-    "chunkName": "pages/coupon/js/list",
-    "_name": "_1c4bcfa7"
+    "chunkName": "pages/category/js/list"
   },
   {
     "name": "indent-js-create",
     "path": "/indent/js/create",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\indent\\\\js\\\\create.js",
-    "chunkName": "pages/indent/js/create",
-    "_name": "_2be5cc7a"
+    "chunkName": "pages/indent/js/create"
   },
   {
     "name": "money-js-pay",
     "path": "/money/js/pay",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\js\\\\pay.js",
-    "chunkName": "pages/money/js/pay",
-    "_name": "_08edb735"
+    "chunkName": "pages/money/js/pay"
   },
   {
     "name": "money-js-success",
     "path": "/money/js/success",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\js\\\\success.js",
-    "chunkName": "pages/money/js/success",
-    "_name": "_505742fa"
+    "chunkName": "pages/money/js/success"
   },
   {
     "name": "pass-js-findPassword",
     "path": "/pass/js/findPassword",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\findPassword.js",
-    "chunkName": "pages/pass/js/findPassword",
-    "_name": "_7d7cf746"
+    "chunkName": "pages/pass/js/findPassword"
   },
   {
     "name": "pass-js-login",
     "path": "/pass/js/login",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\login.js",
-    "chunkName": "pages/pass/js/login",
-    "_name": "_868ae3ea"
+    "chunkName": "pages/pass/js/login"
   },
   {
     "name": "pass-js-register",
     "path": "/pass/js/register",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\register.js",
-    "chunkName": "pages/pass/js/register",
-    "_name": "_03c1ab37"
-  },
-  {
-    "name": "seckill-components-CountDownTime",
-    "path": "/seckill/components/CountDownTime",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\seckill\\\\components\\\\CountDownTime.vue",
-    "chunkName": "pages/seckill/components/CountDownTime",
-    "_name": "_7de3c294"
-  },
-  {
-    "name": "seckill-js-list",
-    "path": "/seckill/js/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\seckill\\\\js\\\\list.js",
-    "chunkName": "pages/seckill/js/list",
-    "_name": "_1779a8b8"
-  },
-  {
-    "name": "user-coupon-components",
-    "path": "/user/coupon/components",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\coupon\\\\components\\\\index.vue",
-    "chunkName": "pages/user/coupon/components/index",
-    "_name": "_2256c0a0"
-  },
-  {
-    "name": "user-coupon-list",
-    "path": "/user/coupon/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\coupon\\\\list.vue",
-    "chunkName": "pages/user/coupon/list",
-    "_name": "_91e16bac"
+    "chunkName": "pages/pass/js/register"
   },
   {
     "name": "user-finance-list",
     "path": "/user/finance/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\finance\\\\list.vue",
-    "chunkName": "pages/user/finance/list",
-    "_name": "_009411fc"
+    "chunkName": "pages/user/finance/list"
   },
   {
     "name": "user-indent-detail",
     "path": "/user/indent/detail",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\detail.vue",
-    "chunkName": "pages/user/indent/detail",
-    "_name": "_44ac72e3"
+    "chunkName": "pages/user/indent/detail"
   },
   {
     "name": "user-indent-list",
     "path": "/user/indent/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\list.vue",
-    "chunkName": "pages/user/indent/list",
-    "_name": "_462419a0"
-  },
-  {
-    "name": "user-integral-list",
-    "path": "/user/integral/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integral\\\\list.vue",
-    "chunkName": "pages/user/integral/list",
-    "_name": "_696d5cb0"
-  },
-  {
-    "name": "user-integralDraw-js",
-    "path": "/user/integralDraw/js",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\js\\\\index.js",
-    "chunkName": "pages/user/integralDraw/js/index",
-    "_name": "_49e3da4c"
-  },
-  {
-    "name": "user-integralDraw-list",
-    "path": "/user/integralDraw/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\list.vue",
-    "chunkName": "pages/user/integralDraw/list",
-    "_name": "_7688f7d8"
-  },
-  {
-    "name": "user-integralDraw-log",
-    "path": "/user/integralDraw/log",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\log.vue",
-    "chunkName": "pages/user/integralDraw/log",
-    "_name": "_b719ff84"
+    "chunkName": "pages/user/indent/list"
   },
   {
     "name": "user-js-address",
     "path": "/user/js/address",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\address.js",
-    "chunkName": "pages/user/js/address",
-    "_name": "_1e9ed21a"
+    "chunkName": "pages/user/js/address"
   },
   {
     "name": "user-js-cancel",
     "path": "/user/js/cancel",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\cancel.js",
-    "chunkName": "pages/user/js/cancel",
-    "_name": "_2d78ac74"
+    "chunkName": "pages/user/js/cancel"
   },
   {
     "name": "user-js-cellphone",
     "path": "/user/js/cellphone",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\cellphone.js",
-    "chunkName": "pages/user/js/cellphone",
-    "_name": "_26b977fc"
+    "chunkName": "pages/user/js/cellphone"
   },
   {
     "name": "user-js-collect",
     "path": "/user/js/collect",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\collect.js",
-    "chunkName": "pages/user/js/collect",
-    "_name": "_66e57924"
+    "chunkName": "pages/user/js/collect"
   },
   {
     "name": "user-js-password",
     "path": "/user/js/password",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\password.js",
-    "chunkName": "pages/user/js/password",
-    "_name": "_5b0f9fc5"
+    "chunkName": "pages/user/js/password"
   },
   {
     "name": "user-js-portal",
     "path": "/user/js/portal",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\portal.js",
-    "chunkName": "pages/user/js/portal",
-    "_name": "_0f70b294"
+    "chunkName": "pages/user/js/portal"
   },
   {
     "name": "user-js-userinfo",
     "path": "/user/js/userinfo",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\userinfo.js",
-    "chunkName": "pages/user/js/userinfo",
-    "_name": "_0621a2a7"
+    "chunkName": "pages/user/js/userinfo"
   },
   {
     "name": "user-notice-detail",
     "path": "/user/notice/detail",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\detail.vue",
-    "chunkName": "pages/user/notice/detail",
-    "_name": "_3e86370f"
+    "chunkName": "pages/user/notice/detail"
   },
   {
     "name": "user-notice-list",
     "path": "/user/notice/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\list.vue",
-    "chunkName": "pages/user/notice/list",
-    "_name": "_6882d25c"
-  },
-  {
-    "name": "coupon-components-js-use",
-    "path": "/coupon/components/js/use",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\coupon\\\\components\\\\js\\\\use.js",
-    "chunkName": "pages/coupon/components/js/use",
-    "_name": "_60d00e58"
-  },
-  {
-    "name": "user-coupon-components-coolc-coupon",
-    "path": "/user/coupon/components/coolc-coupon",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\coupon\\\\components\\\\coolc-coupon.vue",
-    "chunkName": "pages/user/coupon/components/coolc-coupon",
-    "_name": "_5eb08a3b"
-  },
-  {
-    "name": "user-coupon-js-list",
-    "path": "/user/coupon/js/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\coupon\\\\js\\\\list.js",
-    "chunkName": "pages/user/coupon/js/list",
-    "_name": "_30cdc908"
+    "chunkName": "pages/user/notice/list"
   },
   {
     "name": "user-finance-js-list",
     "path": "/user/finance/js/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\finance\\\\js\\\\list.js",
-    "chunkName": "pages/user/finance/js/list",
-    "_name": "_63c51fa4"
+    "chunkName": "pages/user/finance/js/list"
   },
   {
     "name": "user-indent-js-detail",
     "path": "/user/indent/js/detail",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\js\\\\detail.js",
-    "chunkName": "pages/user/indent/js/detail",
-    "_name": "_7df190e3"
+    "chunkName": "pages/user/indent/js/detail"
   },
   {
     "name": "user-indent-js-list",
     "path": "/user/indent/js/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\js\\\\list.js",
-    "chunkName": "pages/user/indent/js/list",
-    "_name": "_4c5ee694"
-  },
-  {
-    "name": "user-integral-js-list",
-    "path": "/user/integral/js/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integral\\\\js\\\\list.js",
-    "chunkName": "pages/user/integral/js/list",
-    "_name": "_8e329994"
-  },
-  {
-    "name": "user-integralDraw-components-dsLuckyGrid",
-    "path": "/user/integralDraw/components/dsLuckyGrid",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\components\\\\dsLuckyGrid.vue",
-    "chunkName": "pages/user/integralDraw/components/dsLuckyGrid",
-    "_name": "_2410bd23"
-  },
-  {
-    "name": "user-integralDraw-components-dsLuckyWheel",
-    "path": "/user/integralDraw/components/dsLuckyWheel",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\components\\\\dsLuckyWheel.vue",
-    "chunkName": "pages/user/integralDraw/components/dsLuckyWheel",
-    "_name": "_76320264"
-  },
-  {
-    "name": "user-integralDraw-components-dsSlotMachine",
-    "path": "/user/integralDraw/components/dsSlotMachine",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\components\\\\dsSlotMachine.vue",
-    "chunkName": "pages/user/integralDraw/components/dsSlotMachine",
-    "_name": "_21546304"
-  },
-  {
-    "name": "user-integralDraw-components-winningResults",
-    "path": "/user/integralDraw/components/winningResults",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\components\\\\winningResults.vue",
-    "chunkName": "pages/user/integralDraw/components/winningResults",
-    "_name": "_20d1305c"
-  },
-  {
-    "name": "user-integralDraw-js-list",
-    "path": "/user/integralDraw/js/list",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\js\\\\list.js",
-    "chunkName": "pages/user/integralDraw/js/list",
-    "_name": "_04c0a152"
-  },
-  {
-    "name": "user-integralDraw-js-log",
-    "path": "/user/integralDraw/js/log",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\integralDraw\\\\js\\\\log.js",
-    "chunkName": "pages/user/integralDraw/js/log",
-    "_name": "_f6d33f4c"
+    "chunkName": "pages/user/indent/js/list"
   },
   {
     "name": "user-notice-js-detail",
     "path": "/user/notice/js/detail",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\js\\\\detail.js",
-    "chunkName": "pages/user/notice/js/detail",
-    "_name": "_3ab56592"
+    "chunkName": "pages/user/notice/js/detail"
   },
   {
     "name": "user-notice-js-list",
     "path": "/user/notice/js/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\js\\\\list.js",
-    "chunkName": "pages/user/notice/js/list",
-    "_name": "_1b2f4e0a"
+    "chunkName": "pages/user/notice/js/list"
   },
   {
     "name": "product-detail-js-id",
     "path": "/product/detail/js/:id?",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\detail\\\\js\\\\_id.js",
-    "chunkName": "pages/product/detail/js/_id",
-    "_name": "_924cb4ba"
+    "chunkName": "pages/product/detail/js/_id"
   },
   {
     "name": "product-list-js-id",
     "path": "/product/list/js/:id?",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\list\\\\js\\\\_id.js",
-    "chunkName": "pages/product/list/js/_id",
-    "_name": "_047db520"
-  },
-  {
-    "name": "article-detail-id",
-    "path": "/article/detail/:id?",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\article\\\\detail\\\\_id.vue",
-    "chunkName": "pages/article/detail/_id",
-    "_name": "_5fd82924"
-  },
-  {
-    "name": "article-list-id",
-    "path": "/article/list/:id?",
-    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\article\\\\list\\\\_id.vue",
-    "chunkName": "pages/article/list/_id",
-    "_name": "_39702901"
+    "chunkName": "pages/product/list/js/_id"
   },
   {
     "name": "product-detail-id",
     "path": "/product/detail/:id?",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\detail\\\\_id.vue",
-    "chunkName": "pages/product/detail/_id",
-    "_name": "_4781bc95"
+    "chunkName": "pages/product/detail/_id"
   },
   {
     "name": "product-list-id",
     "path": "/product/list/:id?",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\list\\\\_id.vue",
-    "chunkName": "pages/product/list/_id",
-    "_name": "_76c3d030"
+    "chunkName": "pages/product/list/_id"
   },
   {
     "name": "index",
@@ -578,10 +275,8 @@
         "name": "index-js",
         "path": "js",
         "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\index\\\\js\\\\index.js",
-        "chunkName": "pages/index/js/index",
-        "_name": "_7f3a9446"
+        "chunkName": "pages/index/js/index"
       }
-    ],
-    "_name": "_1cf7d247"
+    ]
   }
 ]

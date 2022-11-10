@@ -13,8 +13,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * category
- * 分类管理
+ * @group [ADMIN]Category(分类管理)
  * Class CategoryController
  * @package App\Http\Controllers\v1\Admin
  */

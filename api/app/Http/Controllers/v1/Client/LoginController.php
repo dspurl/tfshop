@@ -17,8 +17,8 @@ use Illuminate\Support\Str;
 use Webpatser\Uuid\Uuid;
 
 /**
- * login
- * 登录、注册相关
+ *
+ * @group [CLIENT]Login(登录)
  * Class LoginController
  * @package App\Http\Controllers\v1\Client
  */
