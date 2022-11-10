@@ -34,6 +34,7 @@ class GoodController extends Controller
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
+     * @queryParam  notInId array 不包含的商品ID
      * @queryParam  ids array 商品ID组
      */
     public function list(Request $request)
@@ -82,6 +83,11 @@ class GoodController extends Controller
                 $q->whereIn('id', $request->ids);
             } else {
                 $q->where('id', 0);
+            }
+        }
+        if ($request->has('notInId')) {
+            if ($request->notInId) {
+                $q->whereNotIn('id', $request->notInId);
             }
         }
         $paginate = $q->with(['resources' => function ($q) {

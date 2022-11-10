@@ -165,4 +165,19 @@ class GoodSku extends Model
     {
         return $this->hasMany(GoodCode::class);
     }
+
+    /**
+     * 获取商品
+     */
+    public function good(){
+        return $this->hasOne(Good::class,'id','good_id');
+    }
+
+    /**
+     * 获取单张图片
+     */
+    public function Resource()
+    {
+        return $this->morphOne('App\Models\v1\Resource', 'image');
+    }
 }

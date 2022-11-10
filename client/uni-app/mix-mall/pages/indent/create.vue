@@ -204,8 +204,6 @@
 			calcTotal(){
 				let list = this.goodList
 				let total = 0
-				let seckill = false
-				let groupPurchase = false
 				for(var k in list){
 					total += list[k].price * list[k].number
 				}

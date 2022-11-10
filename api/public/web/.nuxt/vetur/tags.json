@@ -41,11 +41,11 @@
   "Pagination": {
     "description": "Auto imported from components/Pagination/index.vue"
   },
-  "UploadAvatarImage": {
-    "description": "Auto imported from components/Upload/AvatarImage.vue"
+  "AddressJsList": {
+    "description": "Auto imported from components/Address/js/list.js"
   },
-  "UploadInsertImage": {
-    "description": "Auto imported from components/Upload/InsertImage.vue"
+  "PaginationJs": {
+    "description": "Auto imported from components/Pagination/js/index.js"
   },
   "Sku": {
     "description": "Auto imported from components/Sku/index.vue"
@@ -56,19 +56,19 @@
   "SkuUtils": {
     "description": "Auto imported from components/Sku/utils.js"
   },
-  "AddressJsList": {
-    "description": "Auto imported from components/Address/js/list.js"
+  "UploadAvatarImage": {
+    "description": "Auto imported from components/Upload/AvatarImage.vue"
   },
-  "PaginationJs": {
-    "description": "Auto imported from components/Pagination/js/index.js"
+  "UploadInsertImage": {
+    "description": "Auto imported from components/Upload/InsertImage.vue"
+  },
+  "SkuJs": {
+    "description": "Auto imported from components/Sku/js/index.js"
   },
   "UploadJsAvatarImage": {
     "description": "Auto imported from components/Upload/js/avatarImage.js"
   },
   "UploadJsInsertImage": {
     "description": "Auto imported from components/Upload/js/insertImage.js"
-  },
-  "SkuJs": {
-    "description": "Auto imported from components/Sku/js/index.js"
   }
 }

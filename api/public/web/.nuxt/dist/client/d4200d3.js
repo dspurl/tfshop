@@ -1,1 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[48],{730:function(t,n,e){"use strict";e.r(n),n.default={layout:"cart",middleware:"auth",head:function(){return{title:"支付成功-DSSHOP商城-跨终端商城解决方案"}},data:function(){return{}},mounted:function(){$nuxt.$store.commit("setCartTitle","支付成功")},methods:{go:function(path){$nuxt.$router.push(path)}}}}}]);

@@ -1,14 +1,12 @@
-exports.ids = [70];
+exports.ids = [45];
 exports.modules = {
 
-/***/ 299:
+/***/ 230:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _api_goodIndent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
-/* harmony import */ var _api_plugin__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(38);
-
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'user',
@@ -26,8 +24,6 @@ __webpack_require__.r(__webpack_exports__);
       loading: false,
       goodIndentList: [],
       total: 0,
-      isComment: false,
-      isGroupPurchase: false,
       listQuery: {
         limit: 10,
         page: 1,
@@ -38,13 +34,7 @@ __webpack_require__.r(__webpack_exports__);
   },
 
   async asyncData(ctx) {
-    try {
-      let [verifyPluginData] = await Promise.all([Object(_api_plugin__WEBPACK_IMPORTED_MODULE_1__[/* verifyPlugin */ "a"])(['comment', 'groupPurchase'])]);
-      return {
-        isComment: verifyPluginData.comment,
-        isGroupPurchase: verifyPluginData.groupPurchase
-      };
-    } catch (err) {
+    try {} catch (err) {
       ctx.$errorHandler(err);
     }
   },

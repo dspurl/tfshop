@@ -97,9 +97,7 @@
 					all: 0,
 					obligation: 0,
 					waitdeliver: 0,
-					waitforreceiving: 0,
-					remainEvaluated: 0,
-					share: 0
+					waitforreceiving: 0
 				}
 			}
 		},
@@ -148,8 +146,7 @@
 						all: 0,
 						obligation: 0,
 						waitdeliver: 0,
-						waitforreceiving: 0,
-						remainEvaluated: 0
+						waitforreceiving: 0
 					}
 				}
 			},
@@ -236,7 +233,6 @@
     }  
 </script>  
 <style lang='scss'>
-	@import './integralDraw/scss/icon.css';
 	%flex-center {
 	 display:flex;
 	 flex-direction: column;
@@ -412,32 +408,6 @@
 				height: 160upx;
 				margin-right: 20upx;
 				border-radius: 10upx;
-			}
-		}
-	}
-	.integral-draw-list{
-		white-space: nowrap;
-		padding: 30rpx 30rpx;
-		background: #FFFFFF;
-		margin-top:20rpx;
-		border-radius: 10rpx;
-		.item{
-			display:inline-block;
-			width: 200rpx;
-			margin-right: 20rpx;
-			text-align: center;
-			.dsshop{
-				font-size: 100rpx;
-				&.failure{
-					filter: grayscale(100%);
-				}
-			}
-			.name{
-				font-size: 28rpx;
-				margin-top:10rpx;
-				overflow: hidden;
-				text-overflow:ellipsis;
-				white-space: nowrap;
 			}
 		}
 	}

@@ -29,28 +29,13 @@ export default {
         indentCommodity: [],
         address: {},
         remark: '',
-        carriage: 0,
-        user_coupon_id: 0,
-        integral: 0,
-        integral_draw_log_id: 0
-      },
-      couponMoney: 0,
-      integralPrice: 0,
-      integral: {
-        available: 0,
-        deductible: 0,
-        parities: 0
+        carriage: 0
       },
       rules: {
         remark: [
           { validator: validateRemark, trigger: 'blur' }
         ],
       },
-      verify: {
-        coupon: false,
-        seckill: false
-      },
-      isSeckill: false,
       isAddress: false
     }
   },

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
+use App\common\RedisService;
 use App\Models\v1\Admin;
 use App\Models\v1\AdminLog;
 use App\Models\v1\AuthRule;
@@ -107,7 +108,7 @@ class LoginController extends Controller
      * 获取管理员信息
      * @return string
      */
-    public function userInfo()
+    public function userInfo(Request $request)
     {
         $user = auth('api')->user();
         $data['name'] = $user->name;
@@ -168,6 +169,9 @@ class LoginController extends Controller
             }
         }
         $data['asyncRouterMap'] = genTree($asyncRouterMap, 'pid');
+        $redis = new RedisService();
+        $dsshop = $redis->get(config('dsshop.marketApplySecret') . '.' . $this->getTopHost($this->scheme() . $_SERVER['HTTP_HOST']) . '.result');
+        $data['dsshop'] = $dsshop == 1 || !$dsshop ? 0 : 1;
         return resReturn(1, $data);
     }
 }

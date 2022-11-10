@@ -4,7 +4,6 @@
   "onReachBottomDistance": 50,
   "usingComponents": {
     "uni-load-more": "/components/uni-load-more/uni-load-more",
-    "empty": "/components/empty",
-    "foreman-qr-code": "/pages/groupPurchase/components/qrCode"
+    "empty": "/components/empty"
   }
 }

@@ -1,7 +1,7 @@
-exports.ids = [97,90];
+exports.ids = [60,53];
 exports.modules = {
 
-/***/ 181:
+/***/ 170:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -38,20 +38,20 @@ function cancel(data) {
 
 /***/ }),
 
-/***/ 249:
+/***/ 198:
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__.p + "img/portrait.2250589.gif";
 
 /***/ }),
 
-/***/ 291:
+/***/ 225:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(181);
-/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(39);
+/* harmony import */ var _api_user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(170);
+/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(37);
 /* harmony import */ var _plugins_auth__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(5);
 
 
@@ -265,13 +265,13 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ 292:
+/***/ 226:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(372);
+var content = __webpack_require__(282);
 if(content.__esModule) content = content.default;
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
@@ -283,19 +283,19 @@ module.exports.__inject__ = function (context) {
 
 /***/ }),
 
-/***/ 371:
+/***/ 281:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_userinfo_vue_vue_type_style_index_0_id_40a5dd45_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(292);
+/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_userinfo_vue_vue_type_style_index_0_id_40a5dd45_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(226);
 /* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_userinfo_vue_vue_type_style_index_0_id_40a5dd45_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_userinfo_vue_vue_type_style_index_0_id_40a5dd45_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_userinfo_vue_vue_type_style_index_0_id_40a5dd45_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_userinfo_vue_vue_type_style_index_0_id_40a5dd45_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ 372:
+/***/ 282:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
@@ -309,7 +309,7 @@ module.exports = ___CSS_LOADER_EXPORT___;
 
 /***/ }),
 
-/***/ 425:
+/***/ 320:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -317,14 +317,14 @@ module.exports = ___CSS_LOADER_EXPORT___;
 __webpack_require__.r(__webpack_exports__);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/@nuxt/components/dist/loader.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./pages/user/userinfo.vue?vue&type=template&id=40a5dd45&scoped=true&
-var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"box"},[_vm._ssrNode("<div class=\"user-title\" data-v-40a5dd45>个人资料</div> "),_vm._ssrNode("<div class=\"padding-top-20\" data-v-40a5dd45>","</div>",[_c('el-form',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],attrs:{"label-width":"200px"}},[_c('el-form-item',{attrs:{"label":"头像","prop":"portrait"}},[_c('el-avatar',{attrs:{"size":80}},[_c('img',{staticClass:"portrait",attrs:{"src":_vm.user.portrait ? _vm.user.portrait : __webpack_require__(249)},on:{"click":function($event){return _vm.modification('portrait')}}})])],1),_vm._v(" "),_c('el-form-item',{attrs:{"label":"昵称","prop":"nickname"}},[_c('span',[_vm._v(_vm._s(_vm.user.nickname ? _vm.user.nickname : '未设置'))]),_vm._v(" "),_c('el-link',{attrs:{"type":"primary","underline":false},on:{"click":function($event){return _vm.modification('nickname')}}},[_vm._v("修改")])],1),_vm._v(" "),_c('el-form-item',{attrs:{"label":"邮箱","prop":"email"}},[_c('span',[_vm._v(_vm._s(_vm.user.email ? _vm.user.email : '未绑定'))]),_vm._v(" "),_c('el-link',{attrs:{"type":"primary","underline":false},on:{"click":function($event){return _vm.modification('email')}}},[_vm._v("修改")])],1)],1)],1),_vm._ssrNode(" "),_c('el-dialog',{attrs:{"title":_vm.dialogTitle,"visible":_vm.centerDialogVisible,"close-on-click-modal":false,"width":"600px"},on:{"update:visible":function($event){_vm.centerDialogVisible=$event}}},[_c('el-form',{ref:"ruleForm",staticClass:"ruleForm",attrs:{"model":_vm.ruleForm,"rules":_vm.rules,"label-width":"100px"}},[(_vm.dialogType === 'portrait')?[_c('el-form-item',{attrs:{"label":"头像","prop":"portrait"}},[_c('el-upload',{staticClass:"avatar-uploader",attrs:{"show-file-list":false,"on-success":_vm.handleAvatarSuccess,"before-upload":_vm.beforeAvatarUpload,"on-progress":_vm.handleProgress,"action":_vm.uploadFile.url,"headers":_vm.uploadFile.header,"data":_vm.uploadFile.data}},[(_vm.imgProgress)?_c('span',[_c('el-progress',{staticClass:"progress-img",attrs:{"percentage":_vm.imgProgressPercent,"type":"circle"}})],1):_c('span',[(_vm.ruleForm.portrait)?_c('img',{staticClass:"avatar",attrs:{"src":_vm.ruleForm.portrait}}):_c('i',{staticClass:"el-icon-plus avatar-uploader-icon"})]),_vm._v(" "),_c('div',{staticClass:"el-upload__tip",attrs:{"slot":"tip"},slot:"tip"},[_vm._v("只能上传jpg/png/gif文件，且不超过2M")])])],1)]:(_vm.dialogType === 'nickname')?[_c('el-form-item',{attrs:{"label":"昵称","prop":"nickname"}},[_c('el-input',{attrs:{"maxlength":"30","placeholder":"请输入昵称","clearable":""},model:{value:(_vm.ruleForm.nickname),callback:function ($$v) {_vm.$set(_vm.ruleForm, "nickname", $$v)},expression:"ruleForm.nickname"}})],1)]:[_c('el-form-item',{attrs:{"label":"邮箱","prop":"email"}},[_c('el-input',{attrs:{"maxlength":"255","placeholder":"请输入邮箱","clearable":""},model:{value:(_vm.ruleForm.email),callback:function ($$v) {_vm.$set(_vm.ruleForm, "email", $$v)},expression:"ruleForm.email"}})],1),_vm._v(" "),_c('el-form-item',{attrs:{"label":"验证码","prop":"code"}},[_c('el-input',{attrs:{"maxlength":"5","placeholder":"请输入验证码","clearable":""},model:{value:(_vm.ruleForm.code),callback:function ($$v) {_vm.$set(_vm.ruleForm, "code", _vm._n($$v))},expression:"ruleForm.code"}}),_vm._v(" "),_c('el-button',{staticClass:"code-button",attrs:{"loading":_vm.buttonLoading,"type":"danger","round":"","size":"mini","disabled":_vm.disabled},on:{"click":_vm.getCode}},[_vm._v(_vm._s(_vm.codename + _vm.seconds + _vm.unit))])],1)]],2),_vm._v(" "),_c('span',{staticClass:"dialog-footer",attrs:{"slot":"footer"},slot:"footer"},[_c('el-button',{attrs:{"loading":_vm.buttonLoading},on:{"click":function($event){_vm.centerDialogVisible = false}}},[_vm._v("取 消")]),_vm._v(" "),_c('el-button',{attrs:{"loading":_vm.buttonLoading,"type":"danger"},on:{"click":_vm.submitForm}},[_vm._v("确 定")])],1)],1)],2)}
+var render = function () {var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;return _c('div',{staticClass:"box"},[_vm._ssrNode("<div class=\"user-title\" data-v-40a5dd45>个人资料</div> "),_vm._ssrNode("<div class=\"padding-top-20\" data-v-40a5dd45>","</div>",[_c('el-form',{directives:[{name:"loading",rawName:"v-loading",value:(_vm.loading),expression:"loading"}],attrs:{"label-width":"200px"}},[_c('el-form-item',{attrs:{"label":"头像","prop":"portrait"}},[_c('el-avatar',{attrs:{"size":80}},[_c('img',{staticClass:"portrait",attrs:{"src":_vm.user.portrait ? _vm.user.portrait : __webpack_require__(198)},on:{"click":function($event){return _vm.modification('portrait')}}})])],1),_vm._v(" "),_c('el-form-item',{attrs:{"label":"昵称","prop":"nickname"}},[_c('span',[_vm._v(_vm._s(_vm.user.nickname ? _vm.user.nickname : '未设置'))]),_vm._v(" "),_c('el-link',{attrs:{"type":"primary","underline":false},on:{"click":function($event){return _vm.modification('nickname')}}},[_vm._v("修改")])],1),_vm._v(" "),_c('el-form-item',{attrs:{"label":"邮箱","prop":"email"}},[_c('span',[_vm._v(_vm._s(_vm.user.email ? _vm.user.email : '未绑定'))]),_vm._v(" "),_c('el-link',{attrs:{"type":"primary","underline":false},on:{"click":function($event){return _vm.modification('email')}}},[_vm._v("修改")])],1)],1)],1),_vm._ssrNode(" "),_c('el-dialog',{attrs:{"title":_vm.dialogTitle,"visible":_vm.centerDialogVisible,"close-on-click-modal":false,"width":"600px"},on:{"update:visible":function($event){_vm.centerDialogVisible=$event}}},[_c('el-form',{ref:"ruleForm",staticClass:"ruleForm",attrs:{"model":_vm.ruleForm,"rules":_vm.rules,"label-width":"100px"}},[(_vm.dialogType === 'portrait')?[_c('el-form-item',{attrs:{"label":"头像","prop":"portrait"}},[_c('el-upload',{staticClass:"avatar-uploader",attrs:{"show-file-list":false,"on-success":_vm.handleAvatarSuccess,"before-upload":_vm.beforeAvatarUpload,"on-progress":_vm.handleProgress,"action":_vm.uploadFile.url,"headers":_vm.uploadFile.header,"data":_vm.uploadFile.data}},[(_vm.imgProgress)?_c('span',[_c('el-progress',{staticClass:"progress-img",attrs:{"percentage":_vm.imgProgressPercent,"type":"circle"}})],1):_c('span',[(_vm.ruleForm.portrait)?_c('img',{staticClass:"avatar",attrs:{"src":_vm.ruleForm.portrait}}):_c('i',{staticClass:"el-icon-plus avatar-uploader-icon"})]),_vm._v(" "),_c('div',{staticClass:"el-upload__tip",attrs:{"slot":"tip"},slot:"tip"},[_vm._v("只能上传jpg/png/gif文件，且不超过2M")])])],1)]:(_vm.dialogType === 'nickname')?[_c('el-form-item',{attrs:{"label":"昵称","prop":"nickname"}},[_c('el-input',{attrs:{"maxlength":"30","placeholder":"请输入昵称","clearable":""},model:{value:(_vm.ruleForm.nickname),callback:function ($$v) {_vm.$set(_vm.ruleForm, "nickname", $$v)},expression:"ruleForm.nickname"}})],1)]:[_c('el-form-item',{attrs:{"label":"邮箱","prop":"email"}},[_c('el-input',{attrs:{"maxlength":"255","placeholder":"请输入邮箱","clearable":""},model:{value:(_vm.ruleForm.email),callback:function ($$v) {_vm.$set(_vm.ruleForm, "email", $$v)},expression:"ruleForm.email"}})],1),_vm._v(" "),_c('el-form-item',{attrs:{"label":"验证码","prop":"code"}},[_c('el-input',{attrs:{"maxlength":"5","placeholder":"请输入验证码","clearable":""},model:{value:(_vm.ruleForm.code),callback:function ($$v) {_vm.$set(_vm.ruleForm, "code", _vm._n($$v))},expression:"ruleForm.code"}}),_vm._v(" "),_c('el-button',{staticClass:"code-button",attrs:{"loading":_vm.buttonLoading,"type":"danger","round":"","size":"mini","disabled":_vm.disabled},on:{"click":_vm.getCode}},[_vm._v(_vm._s(_vm.codename + _vm.seconds + _vm.unit))])],1)]],2),_vm._v(" "),_c('span',{staticClass:"dialog-footer",attrs:{"slot":"footer"},slot:"footer"},[_c('el-button',{attrs:{"loading":_vm.buttonLoading},on:{"click":function($event){_vm.centerDialogVisible = false}}},[_vm._v("取 消")]),_vm._v(" "),_c('el-button',{attrs:{"loading":_vm.buttonLoading,"type":"danger"},on:{"click":_vm.submitForm}},[_vm._v("确 定")])],1)],1)],2)}
 var staticRenderFns = []
 
 
 // CONCATENATED MODULE: ./pages/user/userinfo.vue?vue&type=template&id=40a5dd45&scoped=true&
 
 // EXTERNAL MODULE: ./pages/user/js/userinfo.js
-var userinfo = __webpack_require__(291);
+var userinfo = __webpack_require__(225);
 
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib??ref--2-0!./node_modules/@nuxt/components/dist/loader.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./pages/user/userinfo.vue?vue&type=script&lang=js&
 //
@@ -415,7 +415,7 @@ var componentNormalizer = __webpack_require__(1);
 
 function injectStyles (context) {
   
-  var style0 = __webpack_require__(371)
+  var style0 = __webpack_require__(281)
 if (style0.__inject__) style0.__inject__(context)
 
 }

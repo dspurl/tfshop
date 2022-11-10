@@ -272,6 +272,10 @@
 			onReachBottom(){
 				this.loadData();
 			},
+      refreshOderList(){
+        // 需要重新加载
+        this.loadData('refresh')
+      }
 		},
 	}
 </script>
