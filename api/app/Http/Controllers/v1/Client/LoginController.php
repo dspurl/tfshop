@@ -25,6 +25,7 @@ use Webpatser\Uuid\Uuid;
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
+
     /**
      * Login
      * 登录
@@ -67,7 +68,7 @@ class LoginController extends Controller
         ]);
         $respond = $client->post($url, ['form_params' => $params]);
         $access_token = json_decode($respond->getBody()->getContents(), true);
-        $access_token['refresh_expires_in'] = config('passport.refresh_expires_in')/60/60/24;
+        $access_token['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
         $access_token['nickname'] = $user->nickname;
         $access_token['cellphone'] = $user->cellphone;
         $access_token['wechat'] = $user->wechat;
@@ -79,14 +80,18 @@ class LoginController extends Controller
      * @param Request $request
      * @return string
      */
-    public function refresh(Request $request){
+    public function refresh(Request $request)
+    {
         $client = new Client();
         $url = request()->root() . '/oauth/token';
-        $params = array_merge(config('passport.web.refresh'), [
-            'refresh_token' => $request->refresh_token,
-        ]);
-        $respond = $client->post($url, ['form_params' => $params]);
-        $access_token = json_decode($respond->getBody()->getContents(), true);
+        $access_token = '';
+        if ($request->refresh_token) {
+            $params = array_merge(config('passport.web.refresh'), [
+                'refresh_token' => $request->refresh_token,
+            ]);
+            $respond = $client->post($url, ['form_params' => $params]);
+            $access_token = json_decode($respond->getBody()->getContents(), true);
+        }
         return resReturn(1, $access_token);
     }
 
@@ -136,7 +141,7 @@ class LoginController extends Controller
                     ]);
                     $respond = $client->post($url, ['form_params' => $params]);
                     $access_token = json_decode($respond->getBody()->getContents(), true);
-                    $access_token['refresh_expires_in'] = config('passport.refresh_expires_in')/60/60/24;
+                    $access_token['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
                     $access_token['nickname'] = $return['data']->nickname;
                     $access_token['cellphone'] = $return['data']->cellphone;
                     $access_token['portrait'] = $return['data']->portrait;
@@ -168,7 +173,7 @@ class LoginController extends Controller
                     ]);
                     $respond = $client->post($url, ['form_params' => $params]);
                     $access_token = json_decode($respond->getBody()->getContents(), true);
-                    $access_token['refresh_expires_in'] = config('passport.refresh_expires_in')/60/60/24;
+                    $access_token['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
                     $access_token['nickname'] = $return['data']->nickname;
                     $access_token['cellphone'] = $return['data']->cellphone;
                     $access_token['portrait'] = $return['data']->portrait;
