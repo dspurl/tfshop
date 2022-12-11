@@ -246,6 +246,7 @@ class MiniProgram extends Model
         $config['notify_url'] = request()->root() . '/api/v1/app/paymentNotify';
         $app = Factory::payment($config);
         if ($config['sandbox'] == true) {
+            throw new \Exception('沙箱环境已不再支持，请用真实环境测试', Code::CODE_WRONG);
             $fee = '101';
         }
         $result = $app->order->unify([
