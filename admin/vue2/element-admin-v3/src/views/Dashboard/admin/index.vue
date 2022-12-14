@@ -2,7 +2,7 @@
   <div class="dashboard-editor-container">
     <el-row :gutter="40" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
+        <div class="card-panel" @click="goPush('/userManagement/member/memberList')">
           <div class="card-panel-icon-wrapper icon-message">
             <svg-icon icon-class="visitor" class-name="card-panel-icon" />
           </div>
@@ -13,7 +13,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel">
+        <div class="card-panel" @click="goPush('/indentManagement/indentList')">
           <div class="card-panel-icon-wrapper icon-money">
             <svg-icon icon-class="Indent" class-name="card-panel-icon" />
           </div>
@@ -46,7 +46,7 @@
         </div>
       </el-col>
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
-        <div class="card-panel" @click="goGood">
+        <div class="card-panel" @click="goPush('/indentManagement/indentList')">
           <div class="card-panel-icon-wrapper icon-shopping">
             <svg-icon icon-class="shipments" class-name="card-panel-icon" />
           </div>
@@ -153,8 +153,8 @@ export default {
         this.listLoading = false
       })
     },
-    goGood() {
-      this.$router.push({ path: '/indentManagement/indentList' })
+    goPush(url) {
+      this.$router.push({ path: url })
     }
   }
 }
