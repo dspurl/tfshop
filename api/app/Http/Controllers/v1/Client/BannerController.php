@@ -34,6 +34,9 @@ class BannerController extends Controller
         if ($request->has('type')) {
             $q->where('type', $request->type);
         }
+        if ($request->has('state')) {
+            $q->where('state', $request->state);
+        }
         $limit = $request->limit;
         $paginate = $q->with(['resources'])->paginate($limit);
         return resReturn(1, $paginate);
