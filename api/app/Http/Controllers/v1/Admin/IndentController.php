@@ -120,10 +120,15 @@ class IndentController extends Controller
         } else if ($queryNumber['result'] == 'ok' && $PaymentLog->state == PaymentLog::PAYMENT_LOG_STATE_CREATE) {  //需要同步时
             switch ($PaymentLog->type) {
                 case PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT:
-                    (new GoodIndent())->goodIndentNotify($PaymentLog['pay_id']);
+                    if ($queryNumber['state']) {
+                        (new GoodIndent())->goodIndentNotify($PaymentLog['pay_id']);
+                    }
                     break;
                 case PaymentLog::PAYMENT_LOG_TYPE_REFUND:
-                    (new GoodIndent())->goodIndentRefundNotify($PaymentLog['pay_id']);
+                case PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT_REFUND:
+                    if ($queryNumber['state']) {
+                        (new GoodIndent())->goodIndentRefundNotify($PaymentLog['pay_id']);
+                    }
                     break;
             }
             $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_COMPLETE;

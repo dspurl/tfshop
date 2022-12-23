@@ -328,17 +328,26 @@ class MiniProgram extends Model
         ];
         $config = config('wechat.payment.default');
         $app = Factory::payment($config);
-
-        if ($type == PaymentLog::PAYMENT_LOG_TYPE_REFUND) {   //退款
+        $state = false;
+        if ($type == PaymentLog::PAYMENT_LOG_TYPE_REFUND || $type == PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT_REFUND) {   //退款
             $result = $app->refund->queryByOutRefundNumber($number);
             $transaction_id = $result['refund_id_0'];
+            // 退款成功
+            if ($result['refund_status_0'] == 'SUCCESS') {
+                $state = true;
+            }
         } else {  //其它
             $result = $app->order->queryByOutTradeNumber($number);
             $transaction_id = isset($result['transaction_id']) ? $result['transaction_id'] : '';
+            // 付款成功
+            if ($result['trade_state'] == 'SUCCESS') {
+                $state = true;
+            }
         }
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'SUCCESS') {
             return [
                 'result' => 'ok',
+                'state' => $state,
                 'transaction_id' => $transaction_id,
                 'msg' => '需要同步'
             ];

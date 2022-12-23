@@ -289,4 +289,31 @@ class GoodIndent extends Model
     {
         return $this->belongsToMany(GoodCode::class, 'good_indent_good_codes');
     }
+
+    /**
+     * 支付回调
+     * @param $id
+     * @return void
+     */
+    public function goodIndentNotify($id)
+    {
+        $GoodIndent = GoodIndent::find($id);
+        $redis = new RedisService();
+        $redis->setex('goodIndent.pay.type.' . $GoodIndent->id, 5, '微信支付');
+        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
+        $GoodIndent->pay_time = Carbon::now()->toDateTimeString();
+        $GoodIndent->save();
+    }
+
+    /**
+     * 退款回调
+     * @param $id
+     * @return string
+     */
+    public function goodIndentRefundNotify($id)
+    {
+        $GoodIndent = GoodIndent::find($id);
+        $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_REFUND;
+        $GoodIndent->save();
+    }
 }
