@@ -47,7 +47,7 @@ class EscrowRefundObserver
             $refund = $MiniProgram->refund($goodIndent->PaymentLog->platform, $goodIndent->PaymentLog->number, $goodIndent->PaymentLog->money, $this->request->refund_money * 100, $this->request->refund_reason);
             if ($refund['result'] == 'ok') {
                 $PaymentLog = new PaymentLog();
-                $PaymentLog->user_id = auth('web')->user()->id;
+                $PaymentLog->user_id = $goodIndent->user_id;
                 $PaymentLog->name = '对订单：' . $goodIndent->identification . '的退款';
                 $PaymentLog->number = $refund['number'];
                 $PaymentLog->money = $this->request->refund_money * 100;
