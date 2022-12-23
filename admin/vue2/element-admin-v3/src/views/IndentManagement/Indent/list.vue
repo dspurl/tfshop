@@ -196,7 +196,7 @@ export default {
       temp: {}
     }
   },
-  created() {
+  activated() {
     this.getList()
   },
   methods: {
