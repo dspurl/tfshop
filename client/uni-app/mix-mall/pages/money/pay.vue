@@ -134,10 +134,6 @@
 				const that = this
 				GoodIndent.pay(this.id,function(res){
 					that.orderInfo = res
-					// 如果是拼团，设置跳转位置
-					if(that.orderInfo.type === '拼团订单'){
-						that.paySuccess = that.paySuccess+'?state=12'
-					}
 					if(res.state !== 1 && res.state !== 4){
 						uni.redirectTo({
 							url: that.paySuccess

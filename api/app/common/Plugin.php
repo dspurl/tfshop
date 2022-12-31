@@ -584,7 +584,7 @@ class Plugin
         // 关联的文件
         if (count($routes['relevance']) > 0) {
             foreach ($routes['relevance'] as $relevance) {
-                if (strpos($relevance,'api') || $template) {
+                if (strpos($relevance, 'api') || $template) {
                     $this->fileConflictHandling($path . $relevance, $relevance, $name);
                 }
             }
@@ -1352,7 +1352,7 @@ class Plugin
                     if ($a['name'] != 'id') {
                         switch ($a['type']) {
                             case 'tinyInteger':
-                                if (count($annotationParameterList) < 2 && count($annotationParameterList) !=0) {
+                                if (count($annotationParameterList) < 2 && count($annotationParameterList) != 0) {
                                     throw new \Exception('表注释不带参数的话，请不要用":"', Code::CODE_INEXISTENCE);
                                 }
                                 $detail .= '
@@ -2255,6 +2255,9 @@ class Plugin
      */
     public function installList()
     {
+        if (!Storage::disk('root')->exists($this->pluginPath . '/dsshop.json')) {
+            throw new \Exception('项目目录结构有误，缺少plugin目录和dsshop.json文件', Code::CODE_INEXISTENCE);
+        }
         $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
         return collect($json_dsshop)->where('is_delete', 0);
     }

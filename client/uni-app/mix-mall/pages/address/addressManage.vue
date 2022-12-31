@@ -83,7 +83,7 @@
 							that.addressData.longitude = data.longitude
 						},
 						fail: (res)=>{
-							// this.$api.msg(res.errMsg)
+							// that.$api.msg(res.errMsg)
 						}
 					})
 				}else{
@@ -95,7 +95,7 @@
 							that.addressData.longitude = data.longitude
 						},
 						fail: (res)=>{
-							// this.$api.msg(res.errMsg)
+							// that.$api.msg(res.errMsg)
 						}
 					})
 				}

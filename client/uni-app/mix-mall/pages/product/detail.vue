@@ -235,8 +235,13 @@ export default {
 		},
 		//规格弹窗开关
 		toggleSpec(state, gropuPurchaseId) {
-			if (!this.hasLogin && state === true){
+			if (!this.hasLogin){
 				this.$api.msg('请先登录')
+				setTimeout(function () {
+					uni.navigateTo({
+						url: `/pages/public/login`
+					})
+				}, 1000);
 				return false
 			}
 			// 拼团

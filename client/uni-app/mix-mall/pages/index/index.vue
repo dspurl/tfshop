@@ -66,18 +66,18 @@
 			</view>
 		</view>
 		<!-- 分类 -->
-		<view class="cate-section">
+		<view class="cate-section" v-if="ctegory.length">
 			<view v-for="item in ctegory" :key="item.id" class="cate-item" @click="navTo('/pages/product/list?fid='+(item.category ? item.category.pid : 0)+'&sid='+item.pid+'&tid='+item.id)">
 				<image v-if="item.resources" :src="item.resources.img | smallImage(80)" lazy-load style="padding:20rpx;"></image>
 				<text>{{item.name}}</text>
 			</view>
 		</view>
 		
-		<view class="ad-1">
-			<image v-if="adData.resources" :src="adData.resources.img" mode="scaleToFill" lazy-load  @click="navTo(adData.url)"></image>
+		<view class="ad-1" v-if="adData.resources">
+			<image :src="adData.resources.img" mode="scaleToFill" lazy-load  @click="navTo(adData.url)"></image>
 		</view>
 		<!-- 为你推荐 -->
-		<view class="f-header m-t">
+		<view class="f-header m-t" v-if="goodsList.length">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
 				<text class="tit">为你推荐</text>

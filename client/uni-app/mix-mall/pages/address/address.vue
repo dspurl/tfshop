@@ -146,6 +146,9 @@ export default {
 							});
 						}
 					});
+				},
+				fail(res){
+					// that.$api.msg(res.errMsg)
 				}
 			});
 			//#endif

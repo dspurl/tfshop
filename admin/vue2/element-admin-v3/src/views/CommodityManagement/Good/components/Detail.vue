@@ -491,10 +491,8 @@ export default {
     beforeAvatarUpload(file) {
       const isLt2M = file.size / 1024 / 1024 < 2
       if (
-        ['image/jpeg',
-          'image/gif',
-          'image/png',
-          'image/bmp'
+        [
+          'image/png'
         ].indexOf(file.type) === -1) {
         this.$message.error('请上传正确的图片格式')
         return false

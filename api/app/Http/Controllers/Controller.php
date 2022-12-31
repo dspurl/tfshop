@@ -106,6 +106,9 @@ class Controller extends BaseController
         $disk->put($pathName, $files);
         // 根据前端传递值动态生成多规格图片
         if ($request->type == 1 && $request->has('specification')) {
+            if($extension != 'png'){
+                throw new \Exception('多规格图片只支持png格式', Code::CODE_WRONG);
+            }
             $specificationArr = explode(',', $request->specification);
             if (count($specificationArr) < 1) {
                 return array(

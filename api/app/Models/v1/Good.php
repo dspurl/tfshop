@@ -217,12 +217,15 @@ class Good extends Model
     public function getPriceShow($row)
     {
         $return = [];
-
-        if (count($row->goodSku) > 0) {
-            $return[] = $row->goodSku->min('price');
-            $return[] = $row->goodSku->max('price');
-            if ($return[0] == $return[1]) {
-                $return = [$return[0]];
+        if ($row->goodSku) {
+            if (count($row->goodSku) > 0) {
+                $return[] = $row->goodSku->min('price');
+                $return[] = $row->goodSku->max('price');
+                if ($return[0] == $return[1]) {
+                    $return = [$return[0]];
+                }
+            } else {
+                $return[] = $row->price;
             }
         } else {
             $return[] = $row->price;
