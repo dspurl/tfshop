@@ -196,6 +196,9 @@ export default {
       temp: {}
     }
   },
+  created() {
+    this.getList()
+  },
   activated() {
     this.getList()
   },
