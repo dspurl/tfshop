@@ -38,6 +38,6 @@
     "node-sass": "^6.0.1",
     "sass-loader": "^10.1.1",
     "video.js": "^7.15.4",
-    "vue-jest": "^3.0.4"
+    "vue-jest": "^4.0.1"
   }
 }
