@@ -223,7 +223,7 @@ class GoodIndentController extends Controller
                     $q->where('depict', 'product_sku_file');
                 }]);
             }]);
-        }, 'GoodLocation', 'GoodCode'])->find($id);
+        }, 'GoodLocation', 'GoodCode', 'Dhl'])->find($id);
         foreach ($GoodIndent->goodsList as $commodity) {
             if ($commodity->goodSku->resources) {
                 $GoodIndent->download = true;

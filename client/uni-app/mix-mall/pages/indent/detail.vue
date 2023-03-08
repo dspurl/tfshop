@@ -1,13 +1,19 @@
 <template>
 	<view>
 		<!-- 运费单号 -->
-		<view v-if="indentList.odd" class="address-section" v-clipboard:copy="indentList.odd"
-        v-clipboard:success="onSuccess" 
-        v-clipboard:error="onError">
+		<view v-if="indentList.odd" class="address-section">
 			<view class="order-content">
 				<text class="cuIcon-deliver"></text>
+				{{indentList.dhl.name}}
 				<view class="cen">
-					{{indentList.odd}}
+					<view class="copy-box">
+						<view class="odd">{{indentList.odd}}</view>
+						<view class="copy text-blue" 
+						v-clipboard:copy="indentList.odd"
+						v-clipboard:success="onSuccess" 
+						v-clipboard:error="onError"
+						>复制</view>
+					</view>
 				</view>
 			</view>
 		</view>
@@ -276,6 +282,16 @@ page {
 		flex: 1;
 		font-size: 28upx;
 		color: $font-color-dark;
+		.copy-box{
+			display: flex;
+			padding-left: 10rpx;
+			.odd{
+				padding-top:4rpx;
+			}
+			.copy{
+				margin-left: 10rpx;
+			}
+		}
 	}
 
 	.name {
