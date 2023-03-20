@@ -413,6 +413,15 @@ export default{
 		},
 		//加入购物车
 		cart(){
+			if (!this.hasLogin){
+				this.$api.msg('请先登录')
+				setTimeout(function () {
+					uni.navigateTo({
+						url: `/pages/public/login`
+					})
+				}, 1000);
+				return false
+			}
 			// 单品或已选规格
 			if(this.shoppingAttributes.id > 0 || this.getLists.good_sku.length === 0){
 				const tmp = /^\d+\.?\d{0,2}$/
