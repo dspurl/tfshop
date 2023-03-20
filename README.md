@@ -24,7 +24,7 @@
 ------------
 <p>master分支为稳定版本，推荐大多数用户下载，new分支为新版本，随时会有更新，未进行测试验收，不推荐用户使用</p>
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
-<p>当前版本3.2.1</p>
+<p>当前版本3.2.2</p>
 
 介绍
 ------------

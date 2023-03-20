@@ -234,21 +234,7 @@ export default {
 			});
 		},
 		//规格弹窗开关
-		toggleSpec(state, gropuPurchaseId) {
-			if (!this.hasLogin){
-				this.$api.msg('请先登录')
-				setTimeout(function () {
-					uni.navigateTo({
-						url: `/pages/public/login`
-					})
-				}, 1000);
-				return false
-			}
-			// 拼团
-			if (gropuPurchaseId){
-				this.getList.gropuPurchaseId = gropuPurchaseId
-				this.modalName = null
-			}
+		toggleSpec(state) {
 			if (typeof state === 'boolean'){
 				this.buy=state
 			}

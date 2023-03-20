@@ -99,6 +99,20 @@
         </el-table-column>
       </el-table>
       <el-divider></el-divider>
+      <template v-if="indent.odd">
+        <div class="address">
+          <div class="min-title">物流信息</div>
+          <div class="li">
+            <div class="name">物流公司：</div>
+            <div class="value">{{indent.dhl.name}}</div>
+          </div>
+          <div class="li">
+            <div class="name">运单号：</div>
+            <div class="value">{{indent.odd}}</div>
+          </div>
+        </div>
+        <el-divider></el-divider>
+      </template>
       <template v-if="indent.good_location">
         <div class="address">
           <div class="min-title">收货信息</div>
