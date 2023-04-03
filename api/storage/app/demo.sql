@@ -139,7 +139,9 @@ INSERT INTO `auth_group_auth_rules` (`auth_group_id`, `auth_rule_id`) VALUES
 (1, 200),
 (1, 201),
 (1, 202),
-(1, 203);
+(1, 203),
+(1, 204),
+(1, 205);
 INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `sort`) VALUES
 (2, 'UserManagement', '', 'user', '用户管理', 0, 1, 1),
 (6, 'Admin', '', '', '管理员管理', 2, 1, 0),
@@ -236,7 +238,9 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (200, 'ProjectDetail', '', '', '商城详情', 199, 0, 0),
 (201, 'ProjectEdit', '', '', '保存商城信息', 199, 0, 0),
 (202, 'ProjectQr', '', '', '获取商城小程序二维码', 199, 0, 0),
-(203, 'IndentShipment', '', '', '发货', 127, 0, 0);
+(203, 'IndentShipment', '', '', '发货', 127, 0, 0),
+(204, 'ConfigDetail', '', '', '系统设置', 197, 1, 5),
+(205, 'ConfigEdit', '', '', '保存配置', 197, 0, 0);
 INSERT INTO `banners` (`id`, `type`, `name`, `url`, `sort`, `state`, `created_at`, `updated_at`) VALUES
 (4, 0, '测试', '/pages/product/detail?id=21', 5, 0, '2020-07-18 20:07:15', '2020-07-30 11:49:17'),
 (5, 0, '2', NULL, 5, 0, '2020-07-18 20:10:04', '2020-07-18 20:10:04'),

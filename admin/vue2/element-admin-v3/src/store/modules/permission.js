@@ -45,6 +45,8 @@ export const componentsMap = {
   StatisticsPayList: () => import('@/views/Statistics/pay'),
   // 页面设计
   PageDesignDetail: () => import('@/views/Setting/PageDesign/index'),
+  // 系统设置
+  ConfigDetail: () => import('@/views/Setting/Config/index'),
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
