@@ -6,6 +6,7 @@
       :headers="imgHeaders"
       :on-success="handleSuccessList"
       :on-remove="handleRemove"
+      :on-preview="handlePictureCardPreview"
       :before-upload="beforeUploadList"
       :on-error="handleError"
       :data="imgData"
@@ -15,6 +16,9 @@
       list-type="picture-card">
       <i slot="default" class="el-icon-plus"/>
     </el-upload>
+    <el-dialog :visible.sync="dialogVisible" modal-append-to-body append-to-body>
+      <img :src="dialogImageUrl" width="100%" alt="">
+    </el-dialog>
   </div>
 </template>
 
