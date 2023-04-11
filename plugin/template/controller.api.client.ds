@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 /**
  * @group [CLIENT]{{ name }}({{ annotation }})
  * Class {{ name }}Controller
- * @package App\Http\Controllers\v{{ versions }}\Plugin\Admin
+ * @package App\Http\Controllers\v{{ versions }}\Plugin\Client
  */
 class {{ name }}Controller extends Controller
 {
