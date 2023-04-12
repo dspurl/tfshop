@@ -5,7 +5,7 @@
 }
 .avatar-uploader{
   margin-bottom: 2px;
-  .el-upload{
+  & /deep/ .el-upload{
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
     cursor: pointer;
