@@ -65,6 +65,7 @@
 import uniNumberBox from '@/components/uni-number-box.vue'
 import { param2Data } from '@/components/sku/sku2param'
 import GoodIndent from '@/api/goodIndent'
+import { mapState } from 'vuex';
 export default{
 	name: 'sku',
 	components: {
@@ -139,6 +140,9 @@ export default{
 			this.getLists = newVal.good
 			this.initSelectSpec(newVal)
 		},
+	},
+	computed:{
+		...mapState(['hasLogin'])
 	},
 	methods:{
 		//获取详情
