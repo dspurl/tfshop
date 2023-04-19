@@ -52,6 +52,7 @@ class ConfigController extends Controller
     public function edit(Request $request, $id)
     {
         DB::transaction(function () use ($request, $id) {
+            $redis = new RedisService();
             foreach ($request->children as $children) {
                 if ($children['required'] && !isset($children['value'])) {
                     throw new \Exception($children['name'] . '不能为空', Code::CODE_WRONG);
@@ -59,7 +60,6 @@ class ConfigController extends Controller
                 // 重置
                 if ($children['keys'] == 'dsshop.reset' && $children['value']) {
                     Config::where('id', '>', 0)->delete();
-                    $redis = new RedisService();
                     $redis->del('config');
                     return true;
                 }
@@ -78,6 +78,7 @@ class ConfigController extends Controller
                     $Config->value = $children['value'];
                     $Config->save();
                 }
+                $redis->del('config');
             }
         }, 5);
         return resReturn(1, '更新成功');
