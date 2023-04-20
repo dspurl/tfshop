@@ -82,7 +82,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 62);
+/******/ 	return __webpack_require__(__webpack_require__.s = 64);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -203,14 +203,14 @@ module.exports = require("element-ui/lib/mixins/emitter");
 
 /***/ }),
 
-/***/ 49:
+/***/ 50:
 /***/ (function(module, exports) {
 
 module.exports = require("element-ui/lib/input-number");
 
 /***/ }),
 
-/***/ 62:
+/***/ 64:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -352,7 +352,7 @@ render._withStripped = true
 // CONCATENATED MODULE: ./packages/slider/src/main.vue?vue&type=template&id=32708644&
 
 // EXTERNAL MODULE: external "element-ui/lib/input-number"
-var input_number_ = __webpack_require__(49);
+var input_number_ = __webpack_require__(50);
 var input_number_default = /*#__PURE__*/__webpack_require__.n(input_number_);
 
 // CONCATENATED MODULE: ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./packages/slider/src/button.vue?vue&type=template&id=e72d2ad2&

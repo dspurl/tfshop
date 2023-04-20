@@ -82,7 +82,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 57);
+/******/ 	return __webpack_require__(__webpack_require__.s = 59);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -203,14 +203,14 @@ module.exports = require("babel-helper-vue-jsx-merge-props");
 
 /***/ }),
 
-/***/ 42:
+/***/ 43:
 /***/ (function(module, exports) {
 
 module.exports = require("element-ui/lib/progress");
 
 /***/ }),
 
-/***/ 57:
+/***/ 59:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -384,7 +384,7 @@ var locale_ = __webpack_require__(6);
 var locale_default = /*#__PURE__*/__webpack_require__.n(locale_);
 
 // EXTERNAL MODULE: external "element-ui/lib/progress"
-var progress_ = __webpack_require__(42);
+var progress_ = __webpack_require__(43);
 var progress_default = /*#__PURE__*/__webpack_require__.n(progress_);
 
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib!./node_modules/vue-loader/lib??vue-loader-options!./packages/upload/src/upload-list.vue?vue&type=script&lang=js&

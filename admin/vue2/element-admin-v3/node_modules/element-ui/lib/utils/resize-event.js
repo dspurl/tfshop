@@ -7,6 +7,8 @@ var _resizeObserverPolyfill = require('resize-observer-polyfill');
 
 var _resizeObserverPolyfill2 = _interopRequireDefault(_resizeObserverPolyfill);
 
+var _throttleDebounce = require('throttle-debounce');
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var isServer = typeof window === 'undefined';
@@ -41,7 +43,7 @@ var addResizeListener = exports.addResizeListener = function addResizeListener(e
   if (isServer) return;
   if (!element.__resizeListeners__) {
     element.__resizeListeners__ = [];
-    element.__ro__ = new _resizeObserverPolyfill2.default(resizeHandler);
+    element.__ro__ = new _resizeObserverPolyfill2.default((0, _throttleDebounce.debounce)(16, resizeHandler));
     element.__ro__.observe(element);
   }
   element.__resizeListeners__.push(fn);

@@ -82,7 +82,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 121);
+/******/ 	return __webpack_require__(__webpack_require__.s = 100);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -189,7 +189,7 @@ function normalizeComponent (
 
 /***/ }),
 
-/***/ 121:
+/***/ 100:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -350,8 +350,8 @@ var merge_default = /*#__PURE__*/__webpack_require__.n(merge_);
       // if no callback, return promise
       if (typeof callback !== 'function' && window.Promise) {
         promise = new window.Promise(function (resolve, reject) {
-          callback = function callback(valid) {
-            valid ? resolve(valid) : reject(valid);
+          callback = function callback(valid, invalidFields) {
+            valid ? resolve(valid) : reject(invalidFields);
           };
         });
       }
