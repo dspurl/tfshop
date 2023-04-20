@@ -4,9 +4,8 @@ namespace App\Providers;
 
 use App\common\RedisService;
 use App\Models\v1\Config;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Support\Facades\Cache;
 
 class ConfigServiceProvider extends ServiceProvider
 {
@@ -27,7 +26,9 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->loadMyConfig();
+        if (Schema::hasTable('configs')){
+            $this->loadMyConfig();
+        }
     }
 
     protected function loadMyConfig()
