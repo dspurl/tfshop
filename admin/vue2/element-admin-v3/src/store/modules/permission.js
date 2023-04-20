@@ -47,6 +47,9 @@ export const componentsMap = {
   PageDesignDetail: () => import('@/views/Setting/PageDesign/index'),
   // 系统设置
   ConfigDetail: () => import('@/views/Setting/Config/index'),
+  // 维护
+  DevelopDocumentDetail: () => import('@/views/Maintain/DevelopDocument/index'),
+  ApiDocumentDetail: () => import('@/views/Maintain/ApiDocument/index'),
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),
