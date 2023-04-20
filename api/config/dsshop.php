@@ -688,5 +688,5 @@ return [
     // 插件市场相关配置
     'marketApplicationSecret' => env('MARKET_APPLICATION_SECRET', null),    // 插件市场应用密钥
     'marketApplySecret' => env('MARKET_APPLY_SECRET', null),    // 开发者密钥
-    'marketUrl' => 'https://www.dswjcms.com',    // 插件市场地址，此为固定值，请不要随意修改
+    'marketUrl' => 'http://www.dswjcms.com',    // 插件市场地址，此为固定值，请不要随意修改
 ];

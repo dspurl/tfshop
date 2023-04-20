@@ -127,6 +127,26 @@ switch ($_GET['step']) {
                 ];
             }
         }
+        $env = file_get_contents("../../../.env");
+        if (!strstr($env, "PASSPORT_WEB_ID=2")) {
+            $shell .= sellCode('php artisan passport:client --password --provider=users');
+            if (strstr($shell, "Password grant client created successfully")) {
+                $content = explode("\n", $shell);
+                foreach ($content as $c) {
+                    if (strstr($c, "Client ID:")) {
+                        $env = str_replace("PASSPORT_WEB_ID=", "PASSPORT_WEB_ID=" . trim(explode(":", $c)[1]), $env);
+                    } else if (strstr($c, "Client secret:")) {
+                        $env = str_replace("PASSPORT_WEB_SECRET=", "PASSPORT_WEB_SECRET=" . trim(explode(":", $c)[1]), $env);
+                    }
+                }
+                file_put_contents("../../../.env", $env);
+                $return = [
+                    'code' => 1,
+                    'step' => 6,
+                    'msg' => PHP_EOL . 'OAuth令牌生成成功' . PHP_EOL,
+                ];
+            }
+        }
         break;
     case 6: //第六步：生成资源路径迁移
         $shell .= sellCode($envArr['APP_URL']);
