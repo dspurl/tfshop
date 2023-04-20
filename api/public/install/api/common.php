@@ -8,6 +8,9 @@ function resReturn($data)
 {
     header('Content-Type:application/json');
     header("Access-Control-Allow-Origin: *");
+    if(isset($data['msg'])){
+        $data['msg'] = mb_convert_encoding($data['msg'], 'UTF-8', 'UTF-8');
+    }
     echo json_encode($data);
     exit;
 }
