@@ -14,7 +14,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
- * @group config
+ * @group [ADMIN]Config(配置)
  * 配置
  * Class ConfigController
  * @package App\Http\Controllers\v1\Admin

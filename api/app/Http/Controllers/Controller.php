@@ -11,7 +11,11 @@ use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use EasyWeChat\Factory;
-
+/**
+ * @group [PUBLIC]Controller(公共方法)
+ * Class Controller
+ * @package App\Http\Controllers
+ */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;

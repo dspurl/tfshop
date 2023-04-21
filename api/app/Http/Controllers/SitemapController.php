@@ -3,8 +3,7 @@
 namespace App\Http\Controllers;
 
 /**
- * @group sitemap
- * sitemap生成
+ * @group [CLIENT]Sitemap(sitemap生成)
  * Class SitemapController
  * @package App\Http\Controllers
  */
