@@ -33,7 +33,7 @@ export default {
     return {
       widgetInfoList: [],
       iframeHeight: 667,
-      iframeUrl: process.env.BASE_HTTP + '/docs',
+      iframeUrl: process.env.BASE_HTTP + '/docs?t=' + parseInt(new Date().getTime() / 1000) + '',
       initIframe: false
     }
   },

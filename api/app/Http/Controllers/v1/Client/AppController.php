@@ -22,7 +22,7 @@ use Illuminate\Http\Request;
 
 /**
  * @group [CLIENT]Application(应用程序)
- * Class WeChatController
+ * Class AppController
  * @package App\Http\Controllers\v1\Client
  */
 class AppController extends Controller

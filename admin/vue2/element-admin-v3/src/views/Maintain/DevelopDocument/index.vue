@@ -33,7 +33,7 @@ export default {
     return {
       widgetInfoList: [],
       iframeHeight: 667,
-      iframeUrl: 'https://dswjcms_purl.gitee.io/dsshop/guide',
+      iframeUrl: 'https://dswjcms_purl.gitee.io/dsshop/guide?t=' + parseInt(new Date().getTime() / 1000) + '',
       initIframe: false
     }
   },
