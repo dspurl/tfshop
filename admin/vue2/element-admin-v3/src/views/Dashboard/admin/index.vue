@@ -1,5 +1,8 @@
 <template>
   <div class="dashboard-editor-container">
+    <div v-if="is_update" class="tip" style="background-color: #fdf6ec;border-left: 5px solid #e6a23c;">
+      <p>检测到新版本，<el-link :underline="false" type="primary" @click="goPush('/maintain/updateDetail')">去更新</el-link> </p>
+    </div>
     <el-row :gutter="40" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
         <div class="card-panel" @click="goPush('/userManagement/member/memberList')">
@@ -138,13 +141,23 @@ export default {
       options: [],
       analyze_loading: false,
       name: '当日统计',
-      pandectData: []
+      pandectData: [],
+      is_update: false
     }
   },
   created() {
     this.getList()
+    this.getUpdate()
   },
   methods: {
+    getUpdate() {
+      if (sessionStorage.getItem('update_info')) {
+        const data = JSON.parse(sessionStorage.getItem('update_info'))
+        if (data.new_version !== data.version) {
+          this.is_update = true
+        }
+      }
+    },
     getList() {
       this.listLoading = true
       indexList().then(response => {

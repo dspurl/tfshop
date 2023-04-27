@@ -108,6 +108,8 @@ return [
         'projectQr' => '获取商城小程序二维码',
         'configList' => '配置详情',
         'configEdit' => '保存配置',
+        'updateDetail' => '更新详情',
+        'updateEdit' => '更新提交',
         // admin插件
     ],
     'client' => [

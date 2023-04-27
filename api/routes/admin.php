@@ -117,5 +117,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('projectQr', 'ProjectController@qr')->name('admin.projectQr')->middleware(['permissions:ProjectQr']);    //获取商城小程序二维码
         Route::get('config', 'ConfigController@list')->name('admin.configList')->middleware(['permissions:ConfigDetail']);    //配置详情
         Route::post('config/{id}', 'ConfigController@edit')->name('admin.configEdit')->middleware(['permissions:ConfigEdit']);    //保存配置
+        Route::get('update', 'UpdateController@detail')->name('admin.updateDetail')->middleware(['permissions:UpdateDetail']);    //更新详情
+        Route::post('update/{step}', 'UpdateController@edit')->name('admin.updateEdit')->middleware(['permissions:UpdateEdit']);    //更新提交
     });
 });

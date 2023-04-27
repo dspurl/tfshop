@@ -1,4 +1,5 @@
 import { loginByUsername, getUserInfo, refreshToken } from '@/api/login'
+import { detail as updateDetail } from '@/api/update'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 
 const user = {
@@ -97,6 +98,19 @@ const user = {
         }).catch(error => {
           reject(error)
         })
+      })
+    },
+    // 获取用户信息
+    GetUpdate() {
+      return new Promise((resolve, reject) => {
+        if (!sessionStorage.getItem('update_info')) {
+          updateDetail().then(response => {
+            sessionStorage.setItem('update_info', JSON.stringify(response.data))
+            resolve(response)
+          }).catch(error => {
+            reject(error)
+          })
+        }
       })
     },
     // 获取用户信息
