@@ -154,7 +154,8 @@ export default {
         if (response.data.state === 2) {
           this.$alert('更新成功', this.$t('hint.succeed'), {
             confirmButtonText: '确定',
-            callback: action => {
+            callback: () => {
+              this.pre = ''
               this.getDetail()
               this.formLoading = false
               this.is_pre = false
