@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'switch'=> env('BACKUP_SWITCH', false),
+    'switch' => env('BACKUP_SWITCH', false),
     /**
      * 备份时间
      * 默认只需配置time即可，将进行数据库和文件的备份，当想分别设置数据库和文件的备份时间，请单独配置db_time和files_time；当只想进行数据库备份或文件备份时，设置db_time或files_time即可
@@ -9,10 +9,10 @@ return [
      * db_time：设置后仅备份数据库，time失效
      * files_time：设置后仅备份文件，time失效
      */
-    'time'=>env('BACKUP_TIME', NULL),
-    'db_time'=>env('BACKUP_DB_TIME', NULL),
-    'files_time'=>env('BACKUP_FILES_TIME', NULL),
-    'clean_time'=>env('BACKUP_CLEAN_TIME', NULL),   //清除时间
+    'time' => env('BACKUP_TIME', NULL),
+    'db_time' => env('BACKUP_DB_TIME', NULL),
+    'files_time' => env('BACKUP_FILES_TIME', NULL),
+    'clean_time' => env('BACKUP_CLEAN_TIME', NULL),   //清除时间
     'backup' => [
 
         /*
@@ -29,7 +29,7 @@ return [
                  * The list of directories and files that will be included in the backup.
                  */
                 'include' => [
-                    base_path(),
+                    dirname(base_path()),
                 ],
 
                 /*
@@ -38,6 +38,9 @@ return [
                  * Directories used by the backup process will automatically be excluded.
                  */
                 'exclude' => [
+                    dirname(base_path()) . '/admin/vue2/element-admin-v3/node_modules',
+                    dirname(base_path()) . '/client/nuxt-web/mi/node_modules',
+                    dirname(base_path()) . '/client/uni-app/mix-mall/node_modules',
                     base_path('vendor'),
                     base_path('node_modules'),
                 ],
@@ -106,7 +109,7 @@ return [
          *
          * If you do not want any compressor at all, set it to null.
          */
-        'database_dump_compressor' => null,
+        'database_dump_compressor' => Spatie\DbDumper\Compressors\GzipCompressor::class,
 
         'destination' => [
 

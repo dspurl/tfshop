@@ -146,7 +146,12 @@ INSERT INTO `auth_group_auth_rules` (`auth_group_id`, `auth_rule_id`) VALUES
 (1, 207),
 (1, 208),
 (1, 209),
-(1, 210);
+(1, 210),
+(1, 211),
+(1, 212),
+(1, 213),
+(1, 214),
+(1, 215);
 INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `sort`) VALUES
 (2, 'UserManagement', '', 'user', '用户管理', 0, 1, 1),
 (6, 'Admin', '', '', '管理员管理', 2, 1, 0),
@@ -250,7 +255,12 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (207, 'DevelopDocumentDetail', '', '', '开发文档', 206, 1, 5),
 (208, 'ApiDocumentDetail', '', '', '接口文档', 206, 1, 5),
 (209, 'UpdateDetail', '', '', '更新', 206, 1, 5),
-(210, 'UpdateEdit', '', '', '更新提交', 206, 1, 5);
+(210, 'UpdateEdit', '', '', '更新提交', 206, 1, 5),
+(211, 'Backup', '', '', '备份管理', 206, 1, 5),
+(212, 'BackupCreate', '', '', '备份', 211, 0, 0),
+(213, 'BackupEdit', '', '', '还原', 211, 0, 0),
+(214, 'BackupDestroy', '', '', '删除备份', 211, 0, 0),
+(215, 'BackupList', '', '', '备份列表', 211, 1, 5);
 INSERT INTO `banners` (`id`, `type`, `name`, `url`, `sort`, `state`, `created_at`, `updated_at`) VALUES
 (4, 0, '测试', '/pages/product/detail?id=21', 5, 0, '2020-07-18 20:07:15', '2020-07-30 11:49:17'),
 (5, 0, '2', NULL, 5, 0, '2020-07-18 20:10:04', '2020-07-18 20:10:04'),

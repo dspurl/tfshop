@@ -51,6 +51,8 @@ export const componentsMap = {
   DevelopDocumentDetail: () => import('@/views/Maintain/DevelopDocument/index'),
   ApiDocumentDetail: () => import('@/views/Maintain/ApiDocument/index'),
   UpdateDetail: () => import('@/views/Maintain/Update/index'),
+  Backup: () => import('@/views/Maintain/Backup/index'),
+  BackupList: () => import('@/views/Maintain/Backup/list'),
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),

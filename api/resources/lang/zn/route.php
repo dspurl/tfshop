@@ -110,6 +110,10 @@ return [
         'configEdit' => '保存配置',
         'updateDetail' => '更新详情',
         'updateEdit' => '更新提交',
+        'backupList' => '备份列表',
+        'backupCreate' => '备份',
+        'backupEdit' => '还原',
+        'backupDestroy' => '删除备份',
         // admin插件
     ],
     'client' => [
