@@ -139,7 +139,19 @@ INSERT INTO `auth_group_auth_rules` (`auth_group_id`, `auth_rule_id`) VALUES
 (1, 200),
 (1, 201),
 (1, 202),
-(1, 203);
+(1, 203),
+(1, 204),
+(1, 205),
+(1, 206),
+(1, 207),
+(1, 208),
+(1, 209),
+(1, 210),
+(1, 211),
+(1, 212),
+(1, 213),
+(1, 214),
+(1, 215);
 INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `sort`) VALUES
 (2, 'UserManagement', '', 'user', '用户管理', 0, 1, 1),
 (6, 'Admin', '', '', '管理员管理', 2, 1, 0),
@@ -236,7 +248,19 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (200, 'ProjectDetail', '', '', '商城详情', 199, 0, 0),
 (201, 'ProjectEdit', '', '', '保存商城信息', 199, 0, 0),
 (202, 'ProjectQr', '', '', '获取商城小程序二维码', 199, 0, 0),
-(203, 'IndentShipment', '', '', '发货', 127, 0, 0);
+(203, 'IndentShipment', '', '', '发货', 127, 0, 0),
+(204, 'ConfigDetail', '', '', '系统设置', 197, 1, 5),
+(205, 'ConfigEdit', '', '', '保存配置', 197, 0, 0),
+(206, 'Maintain', '', 'tool', '维护', 0, 1, 2),
+(207, 'DevelopDocumentDetail', '', '', '开发文档', 206, 1, 5),
+(208, 'ApiDocumentDetail', '', '', '接口文档', 206, 1, 5),
+(209, 'UpdateDetail', '', '', '更新', 206, 1, 5),
+(210, 'UpdateEdit', '', '', '更新提交', 206, 1, 5),
+(211, 'Backup', '', '', '备份管理', 206, 1, 5),
+(212, 'BackupCreate', '', '', '备份', 211, 0, 0),
+(213, 'BackupEdit', '', '', '还原', 211, 0, 0),
+(214, 'BackupDestroy', '', '', '删除备份', 211, 0, 0),
+(215, 'BackupList', '', '', '备份列表', 211, 1, 5);
 INSERT INTO `banners` (`id`, `type`, `name`, `url`, `sort`, `state`, `created_at`, `updated_at`) VALUES
 (4, 0, '测试', '/pages/product/detail?id=21', 5, 0, '2020-07-18 20:07:15', '2020-07-30 11:49:17'),
 (5, 0, '2', NULL, 5, 0, '2020-07-18 20:10:04', '2020-07-18 20:10:04'),
@@ -768,3 +792,5 @@ INSERT INTO `specifications` (`id`, `name`, `type`, `is_search`, `location`, `va
 (5, '厚度', 2, 0, 2, '0.6mm\n0.7mm\n0.8mm', 1, '厚度', 5, '2020-04-24 10:00:58', '2020-04-24 10:00:58');
 INSERT INTO `specification_groups` (`id`, `name`, `created_at`, `updated_at`) VALUES
 (1, '产品参数', '2020-04-24 09:57:14', '2020-04-24 09:57:14');
+INSERT INTO `projects` (`id`, `name`, `cover`, `pages`, `config`, `created_at`, `updated_at`) VALUES
+(1, '默认', '', '[{\"id\": \"000000\", \"home\": true, \"name\": \"首页\", \"componentList\": []}]', '{\"hotList\": [], \"listTpl\": {\"model\": \"one\", \"addIcon\": \"cart\"}, \"navigation\": {\"list\": [{\"id\": \"00001\", \"icon\": \"icon-shop\", \"jump\": {\"id\": \"000000\", \"type\": \"custom\"}, \"text\": \"首页\"}, {\"id\": \"00002\", \"icon\": \"icon-sort\", \"jump\": {\"id\": \"category\", \"type\": \"fixed\"}, \"text\": \"分类\"}, {\"id\": \"00003\", \"icon\": \"icon-cart\", \"jump\": {\"id\": \"car\", \"type\": \"fixed\"}, \"text\": \"购物车\"}, {\"id\": \"00004\", \"icon\": \"icon-my\", \"jump\": {\"id\": \"my\", \"type\": \"fixed\"}, \"text\": \"我的\"}], \"label\": \"导航\", \"styles\": {\"background\": \"#fff\"}}, \"categoryTpl\": {\"advertising\": false}, \"goodsGroups\": [{\"name\": \"新品上架\", \"type\": \"0001\", \"child\": [], \"level\": 1}, {\"name\": \"热销排行\", \"type\": \"0002\", \"child\": [], \"level\": 1}], \"backgroundColor\": \"#FFFFFF\"}', '2022-07-14 12:01:18', '2022-07-31 20:12:00');

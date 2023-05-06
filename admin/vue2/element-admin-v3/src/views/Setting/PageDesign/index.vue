@@ -33,7 +33,7 @@ export default {
     return {
       widgetInfoList: [],
       iframeHeight: 667,
-      iframeUrl: 'http://dsshop.test/platform/#/login',
+      iframeUrl: process.env.BASE_HTTP + '/platform/#/login',
       initIframe: false
     }
   },

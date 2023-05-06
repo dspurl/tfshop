@@ -18,5 +18,9 @@ foreach ($post as $key=>$value){
         file_put_contents("../../mp-weixin/project.config.json",$project);
     }
 }
-file_put_contents("../../../.env", $contents);
-resReturn('ok');
+$file_put_contents = file_put_contents("../../../.env", $contents);
+if(!$file_put_contents){
+    resReturn('error');
+}else{
+    resReturn('ok');
+}

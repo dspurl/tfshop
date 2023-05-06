@@ -115,5 +115,13 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('project/{id}', 'ProjectController@detail')->name('admin.projectDetail')->middleware(['permissions:ProjectDetail']);    //商城详情
         Route::post('project/{id}', 'ProjectController@edit')->name('admin.projectEdit')->middleware(['permissions:ProjectEdit']);    //保存商城信息
         Route::post('projectQr', 'ProjectController@qr')->name('admin.projectQr')->middleware(['permissions:ProjectQr']);    //获取商城小程序二维码
+        Route::get('config', 'ConfigController@list')->name('admin.configList')->middleware(['permissions:ConfigDetail']);    //配置详情
+        Route::post('config/{id}', 'ConfigController@edit')->name('admin.configEdit')->middleware(['permissions:ConfigEdit']);    //保存配置
+        Route::get('update', 'UpdateController@detail')->name('admin.updateDetail')->middleware(['permissions:UpdateDetail']);    //更新详情
+        Route::post('update/{step}', 'UpdateController@edit')->name('admin.updateEdit')->middleware(['permissions:UpdateEdit']);    //更新提交
+        Route::get('backup', 'BackupController@list')->name('admin.backupList')->middleware(['permissions:BackupList']);    //备份列表
+        Route::post('backup', 'BackupController@create')->name('admin.backupCreate')->middleware(['permissions:BackupCreate']);    //备份
+        Route::post('backup/{id}', 'BackupController@edit')->name('admin.backupEdit')->middleware(['permissions:BackupEdit']);    //还原
+        Route::post('backup/destroy/{id}', 'BackupController@destroy')->name('admin.backupDestroy')->middleware(['permissions:BackupDestroy']);    //删除备份
     });
 });

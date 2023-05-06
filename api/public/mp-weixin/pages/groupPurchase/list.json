@@ -1,8 +1,0 @@
-{
-  "enablePullDownRefresh": true,
-  "onReachBottomDistance": 50,
-  "navigationBarTitleText": "精品团购",
-  "usingComponents": {
-    "uni-load-more": "/components/uni-load-more/uni-load-more"
-  }
-}

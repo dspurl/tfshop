@@ -31,7 +31,8 @@
         "spatie/laravel-backup": "^6.14",
         "webpatser/laravel-uuid": "^3.0",
         "ext-zip": "*",
-      "ext-bcmath": "*"
+      "ext-bcmath": "*",
+        "ext-mysqli": "*"
     },
     "require-dev": {
         "barryvdh/laravel-ide-helper": "^2.6",

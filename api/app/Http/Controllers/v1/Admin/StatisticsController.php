@@ -8,7 +8,7 @@ use App\Http\Controllers\Controller;
 use EasyWeChat\Factory;
 
 /**
- * @group [ADMIN]Statistics(统计s)
+ * @group [ADMIN]Statistics(统计)
  * Class StatisticsController
  * @package App\Http\Controllers\v1\Admin
  */

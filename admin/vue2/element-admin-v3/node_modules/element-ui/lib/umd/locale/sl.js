@@ -124,14 +124,17 @@
         hasCheckedFormat: '{checked}/{total} izbranih'
       },
       image: {
-        error: 'FAILED' // to be translated
+        error: 'NEUSPELO'
       },
       pageHeader: {
-        title: 'Back' // to be translated
+        title: 'Nazaj'
       },
       popconfirm: {
-        confirmButtonText: 'Yes', // to be translated
-        cancelButtonText: 'No' // to be translated
+        confirmButtonText: 'Da',
+        cancelButtonText: 'Ne'
+      },
+      empty: {
+        description: 'Ni podatkov'
       }
     }
   };

@@ -82,7 +82,7 @@ module.exports =
 /******/
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 67);
+/******/ 	return __webpack_require__(__webpack_require__.s = 70);
 /******/ })
 /************************************************************************/
 /******/ ({
@@ -203,14 +203,14 @@ module.exports = require("element-ui/lib/mixins/emitter");
 
 /***/ }),
 
-/***/ 48:
+/***/ 49:
 /***/ (function(module, exports) {
 
 module.exports = require("async-validator");
 
 /***/ }),
 
-/***/ 67:
+/***/ 70:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -321,7 +321,7 @@ render._withStripped = true
 // CONCATENATED MODULE: ./packages/form/src/form-item.vue?vue&type=template&id=b6f3db6c&
 
 // EXTERNAL MODULE: external "async-validator"
-var external_async_validator_ = __webpack_require__(48);
+var external_async_validator_ = __webpack_require__(49);
 var external_async_validator_default = /*#__PURE__*/__webpack_require__.n(external_async_validator_);
 
 // EXTERNAL MODULE: external "element-ui/lib/mixins/emitter"
@@ -544,6 +544,11 @@ component.options.__file = "packages/form/src/label-wrap.vue"
     },
     validateStatus: function validateStatus(value) {
       this.validateState = value;
+    },
+    rules: function rules(value) {
+      if ((!value || value.length === 0) && this.required === undefined) {
+        this.clearValidate();
+      }
     }
   },
   computed: {

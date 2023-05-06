@@ -106,6 +106,7 @@ class LoginController extends Controller
     /**
      * ObtainingAdministratorInformation
      * 获取管理员信息
+     * @param Request $request
      * @return string
      */
     public function userInfo(Request $request)
@@ -172,6 +173,7 @@ class LoginController extends Controller
         $redis = new RedisService();
         $dsshop = $redis->get(config('dsshop.marketApplySecret') . '.' . $this->getTopHost($this->scheme() . $_SERVER['HTTP_HOST']) . '.result');
         $data['dsshop'] = $dsshop == 1 || !$dsshop ? 0 : 1;
+        $data['version'] = config('dsshop.appVersion');
         return resReturn(1, $data);
     }
 }

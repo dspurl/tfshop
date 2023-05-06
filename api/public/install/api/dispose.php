@@ -14,7 +14,7 @@ $envArr = [];
 $envFile = explode("\n", $envFile);
 foreach ($envFile as $e) {
     if ($e) {
-        $explode = explode("=", str_replace("\r",'',$e));
+        $explode = explode("=", str_replace("\r", '', $e));
         $envArr[$explode[0]] = $explode[1];
     }
 }
@@ -127,13 +127,44 @@ switch ($_GET['step']) {
                 ];
             }
         }
+        $env = file_get_contents("../../../.env");
+        if (!strstr($env, "PASSPORT_WEB_ID=2")) {
+            $shell .= sellCode('php artisan passport:client --password --provider=users');
+            if (strstr($shell, "Password grant client created successfully")) {
+                $content = explode("\n", $shell);
+                foreach ($content as $c) {
+                    if (strstr($c, "Client ID:")) {
+                        $env = str_replace("PASSPORT_WEB_ID=", "PASSPORT_WEB_ID=" . trim(explode(":", $c)[1]), $env);
+                    } else if (strstr($c, "Client secret:")) {
+                        $env = str_replace("PASSPORT_WEB_SECRET=", "PASSPORT_WEB_SECRET=" . trim(explode(":", $c)[1]), $env);
+                    }
+                }
+                file_put_contents("../../../.env", $env);
+                $return = [
+                    'code' => 1,
+                    'step' => 6,
+                    'msg' => PHP_EOL . 'OAuth令牌生成成功' . PHP_EOL,
+                ];
+            }
+        }
         break;
     case 6: //第六步：生成资源路径迁移
-        $shell .= sellCode($envArr['APP_URL']);
+        $shell .= sellCode('php artisan resource:migration ' . $envArr['APP_URL']);
+        $return = [
+            'code' => 1,
+            'step' => 7,
+            'msg' => PHP_EOL . '资源路径迁移成功' . PHP_EOL,
+        ];
+    case 7: //第七步：生成后台、小程序和H5
+        alternateDomainName('admin/static/js', $envArr);
+        alternateDomainName('h5/static/js', $envArr);
+        alternateDomainName('mp-weixin/common', $envArr);
+        alternateDomainName('platform/js', $envArr);
+        alternateDomainName('template/static/js', $envArr);
         $return = [
             'code' => 1,
             'step' => 'end',
-            'msg' => PHP_EOL . '资源路径迁移成功' . PHP_EOL,
+            'msg' => PHP_EOL . '生成后台、小程序和H5成功' . PHP_EOL,
         ];
 }
 echo resReturn($return);

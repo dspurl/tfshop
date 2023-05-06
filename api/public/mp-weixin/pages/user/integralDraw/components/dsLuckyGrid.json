@@ -1,7 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "winning-results": "/pages/user/integralDraw/components/winningResults",
-    "lucky-grid": "/node-modules/@lucky-canvas/uni/lucky-grid"
-  }
-}
