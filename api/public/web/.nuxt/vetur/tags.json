@@ -41,12 +41,6 @@
   "Pagination": {
     "description": "Auto imported from components/Pagination/index.vue"
   },
-  "AddressJsList": {
-    "description": "Auto imported from components/Address/js/list.js"
-  },
-  "PaginationJs": {
-    "description": "Auto imported from components/Pagination/js/index.js"
-  },
   "Sku": {
     "description": "Auto imported from components/Sku/index.vue"
   },
@@ -61,6 +55,12 @@
   },
   "UploadInsertImage": {
     "description": "Auto imported from components/Upload/InsertImage.vue"
+  },
+  "AddressJsList": {
+    "description": "Auto imported from components/Address/js/list.js"
+  },
+  "PaginationJs": {
+    "description": "Auto imported from components/Pagination/js/index.js"
   },
   "SkuJs": {
     "description": "Auto imported from components/Sku/js/index.js"

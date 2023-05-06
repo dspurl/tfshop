@@ -1,7 +1,0 @@
-{
-  "component": true,
-  "usingComponents": {
-    "winning-results": "/pages/user/integralDraw/components/winningResults",
-    "slot-machine": "/node-modules/@lucky-canvas/uni/slot-machine"
-  }
-}

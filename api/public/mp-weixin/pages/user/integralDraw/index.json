@@ -1,9 +1,0 @@
-{
-  "navigationBarTitleText": "抽奖详情",
-  "navigationStyle": "custom",
-  "usingComponents": {
-    "ds-lucky-wheel": "/pages/user/integralDraw/components/dsLuckyWheel",
-    "ds-lucky-grid": "/pages/user/integralDraw/components/dsLuckyGrid",
-    "ds-slot-machine": "/pages/user/integralDraw/components/dsSlotMachine"
-  }
-}

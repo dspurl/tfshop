@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([["OLpp"],{OLpp:function(e,n,t){"use strict";t.r(n);var i=t("KHd+"),p=Object(i.a)({},function(){var e=this.$createElement,n=this._self._c||e;return n("div",[n("router-view")],1)},[],!1,null,null,null);p.options.__file="index.vue";n.default=p.exports}}]);
