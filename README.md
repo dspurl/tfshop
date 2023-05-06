@@ -13,7 +13,7 @@
   </a>
   <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
 </p>
-<h3 align="center">DSSHOP(DSSHOPING)电商商城</h3>
+<h3 align="center">DSSHOP电商商城</h3>
 <p align="center">前后端分离架构，VUE2.0+Laravel7，免费开源可商用。</p>
 <p align="center">官网: <a href="https://dsshoping.dswjcms.com" target="_blank">https://dsshoping.dswjcms.com</a></p>
 
@@ -24,7 +24,7 @@
 ------------
 <p>master分支为稳定版本，推荐大多数用户下载，new分支为新版本，随时会有更新，未进行测试验收，不推荐用户使用</p>
 <p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
-<p>当前版本3.2.2</p>
+<p>当前版本3.3.0</p>
 
 介绍
 ------------
@@ -119,7 +119,7 @@ npm start
 <p>积分抽奖【大转盘、九宫格、老虎机】</p>
 <p>秒杀</p>
 <p>拼团</p>
-
+<p>快递查询</p>
 功能介绍
 ------------
 - **RBAC权限** 支持为不同管理员分配不同的权限
@@ -139,8 +139,10 @@ npm start
 - **注册协议** 自带隐私协议、注册协议（需添加栏目文章模块）
 - **关联微信公众号** 系统已集成引导用户关注公众号代码，用户可轻松绑定微信公众号
 - **邮件系统** 邮箱认证、绑定、消息通知发送
-- **备份系统** 可对项目和数据库进行备份，并支持保留指定天数，超出后自动清除旧备份
-
+- **备份还原系统** 可对项目和数据库进行备份，并支持保留指定天数，超出后自动清除旧备份
+- **API文档系统** 后台可直接查询API接口文档
+- **系统配置** 支持平台常用配置自定义
+- **可视化系统** 支持拖拽编辑移动端首页、导航和自定义页面（仅傻瓜式支持）
 效果图
 ------------
 <p align="center">
