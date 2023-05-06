@@ -14,7 +14,7 @@ $envArr = [];
 $envFile = explode("\n", $envFile);
 foreach ($envFile as $e) {
     if ($e) {
-        $explode = explode("=", str_replace("\r",'',$e));
+        $explode = explode("=", str_replace("\r", '', $e));
         $envArr[$explode[0]] = $explode[1];
     }
 }
@@ -149,11 +149,22 @@ switch ($_GET['step']) {
         }
         break;
     case 6: //第六步：生成资源路径迁移
-        $shell .= sellCode($envArr['APP_URL']);
+        $shell .= sellCode('php artisan resource:migration ' . $envArr['APP_URL']);
+        $return = [
+            'code' => 1,
+            'step' => 7,
+            'msg' => PHP_EOL . '资源路径迁移成功' . PHP_EOL,
+        ];
+    case 7: //第七步：生成后台、小程序和H5
+        alternateDomainName('admin/static/js', $envArr);
+        alternateDomainName('h5/static/js', $envArr);
+        alternateDomainName('mp-weixin/common', $envArr);
+        alternateDomainName('platform/js', $envArr);
+        alternateDomainName('template/static/js', $envArr);
         $return = [
             'code' => 1,
             'step' => 'end',
-            'msg' => PHP_EOL . '资源路径迁移成功' . PHP_EOL,
+            'msg' => PHP_EOL . '生成后台、小程序和H5成功' . PHP_EOL,
         ];
 }
 echo resReturn($return);

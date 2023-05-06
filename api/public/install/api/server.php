@@ -24,6 +24,11 @@ $return=[
         'value'=>'',
         'state'=>extension_loaded('openssl') ? true : false
     ],
+    [
+        'server'=>'composer2',
+        'value'=>'',
+        'state'=>strstr(sellCode('composer --version'),'Composer version 2') ? true : false
+    ],
     /*  [
           'install'=>'pcntl',
           'value'=>'',
