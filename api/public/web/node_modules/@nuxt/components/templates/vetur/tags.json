@@ -1,0 +1,8 @@
+<%
+const tags = {}
+for (const c of options.getComponents()) {
+  tags[c.pascalName] = {
+    description: `Auto imported from ${c.shortPath}`
+  }
+}
+%><%= JSON.stringify(tags, null, 2) %>

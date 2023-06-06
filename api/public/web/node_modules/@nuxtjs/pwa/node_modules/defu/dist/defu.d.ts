@@ -1,0 +1,3 @@
+import type { Defu } from './types';
+declare const defu: Defu;
+export default defu;
