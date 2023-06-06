@@ -8,7 +8,7 @@ DSSHOP商城系统
 一款轻量级商城开源系统
 </div>
 <div align="center">
- **支持多语言** **易二开** **低代码** **跨终端**
+ <b>支持多语言</b> <b>易二开</b> <b>低代码</b> <b>跨终端</b>
 </div>
 
 <div align="center" >
