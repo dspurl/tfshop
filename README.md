@@ -7,9 +7,9 @@ DSSHOP商城系统
 <div align="center">
 一款轻量级商城开源系统
 </div>
-<div align="center">
- **支持多语言** **易二开** **低代码** **跨终端**
-</div>
+<p align="center">
+ <b>支持多语言</b> <b>易二开</b> <b>低代码</b> <b>跨终端</b>
+</p>
 
 <div align="center" >
     <a href="https://www.dswjcms.com">
@@ -82,9 +82,9 @@ node= 14.18.3
 
 管理后台： https://v3.dswjcms.com/admin 账号：demo 密码：dswjcms.com
 
-H5端：https://v3.dswjcms.com/h5（移动端打开）
+H5端：[https://v3.dswjcms.com/h5](https://v3.dswjcms.com/h5)（移动端打开）
 
-PC端：https://v3.dswjcms.com/（电脑端打开）
+PC端：[https://v3.dswjcms.com/](https://v3.dswjcms.com/)（电脑端打开）
 
 ### PRO版演示
 
@@ -94,9 +94,9 @@ PC端：https://v3.dswjcms.com/（电脑端打开）
 
 管理后台： https://dsshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
 
-H5端：https://dsshop.dswjcms.com/h5（移动端打开）
+H5端：[https://dsshop.dswjcms.com/h5](https://dsshop.dswjcms.com/h5)（移动端打开）
 
-PC端：https://dsshop.dswjcms.com/（电脑端打开）
+PC端：[https://dsshop.dswjcms.com/](https://dsshop.dswjcms.com/)（电脑端打开）
 
 ### 页面展示
 (页面仅展示部分UI)
@@ -117,7 +117,7 @@ PC端：https://dsshop.dswjcms.com/（电脑端打开）
 欢迎提交代码 [提交代码](https://github.com/dspurl/dsshop/pulls)。
 
 欢迎加入我们的QQ频道
-<p><img src="/image/channel.png" width="250" /></p>
+<p><img src="https://dspurl.github.io/image/channel.png" width="250" /></p>
 
 ### 特别鸣谢
 
