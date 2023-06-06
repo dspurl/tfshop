@@ -129,7 +129,7 @@ switch ($_GET['step']) {
         }
         $env = file_get_contents("../../../.env");
         if (!strstr($env, "PASSPORT_WEB_ID=2")) {
-            $shell .= sellCode('php artisan passport:client --password --provider=users');
+            $shell = sellCode('php artisan passport:client --password --provider=users');
             if (strstr($shell, "Password grant client created successfully")) {
                 $content = explode("\n", $shell);
                 foreach ($content as $c) {
