@@ -1,7 +1,7 @@
 <template>
 	<view class="content">
 		<text class="success-icon yticon icon-xuanzhong2"></text>
-		<text class="tit">支付成功</text>
+		<text class="tit">{{$t('payment_log.succeed')}}</text>
 		
 		<view class="btn-group">
 			<navigator :url="`/pages/indent/list?state=${state}`" open-type="redirect" class="mix-btn">查看订单</navigator>
@@ -16,6 +16,11 @@
 			return {
 				state: 2,
 			}
+		},
+		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('payment_log.succeed')
+			})
 		},
 		onLoad(options) {
 			if(options.state){

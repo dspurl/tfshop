@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -65,12 +74,12 @@ class CollectController extends Controller
             }, 5);
             RedisLock::unlock($redis, 'collect');
             if ($return == 1) {
-                return resReturn(1, '添加成功');
+                return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
             } else {
                 return resReturn(0, $return[0], $return[1]);
             }
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 
@@ -97,15 +106,15 @@ class CollectController extends Controller
     public function destroy($id)
     {
         if (!$id) {
-            return resReturn(0, '参数有误', Code::CODE_MISUSE);
+            return resReturn(0, __('common.arguments'), Code::CODE_MISUSE);
         }
         $redis = new RedisService();
         $lock = RedisLock::lock($redis, 'browse');
         if ($lock) {
             Collect::where('user_id', auth('web')->user()->id)->where('good_id', $id)->delete();
-            return resReturn(1, '删除成功');
+            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 }

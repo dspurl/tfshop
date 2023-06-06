@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -57,12 +66,12 @@ class SubmitManageRequest extends Request
     public function messages()
     {
         return [
-            'roles.required' => __('hint.error.not_null',['specification'=>__('hint.routine.character')]),
-            'roles.unique' => __('hint.error.exist',['specification'=>__('hint.routine.character')]),
-            'roles.max' => __('hint.error.exceed',['specification'=>__('hint.routine.character'),'place'=>11]),
-            'introduction.required' => __('hint.error.not_null',['specification'=>__('hint.routine.describe')]),
-            'introduction.max' => __('hint.error.exceed',['specification'=>__('hint.routine.describe'),'place'=>80]),
-            'rules.required' => __('hint.error.distribution',['specification'=>__('hint.routine.permissions')]),
+            'roles.required' => __('hint.error.not_null',['specification'=>__('manage.roles')]),
+            'roles.unique' => __('hint.error.exist',['specification'=>__('manage.roles')]),
+            'roles.max' => __('hint.error.exceed',['specification'=>__('manage.roles'),'place'=>11]),
+            'introduction.required' => __('hint.error.not_null',['specification'=>__('manage.introduction')]),
+            'introduction.max' => __('hint.error.exceed',['specification'=>__('manage.introduction'),'place'=>80]),
+            'rules.required' => __('hint.error.not_null',['specification'=>__('manage.rules')]),
         ];
     }
 }

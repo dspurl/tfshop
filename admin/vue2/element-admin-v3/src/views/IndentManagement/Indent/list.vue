@@ -2,24 +2,24 @@
   <div class="app-container">
     <div class="filter-container">
       <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
-        <el-menu-item index="0">全部订单</el-menu-item>
-        <el-menu-item index="1">待付款</el-menu-item>
-        <el-menu-item index="2">待发货</el-menu-item>
-        <el-menu-item index="3">待收货</el-menu-item>
-        <el-menu-item index="5">已完成</el-menu-item>
-        <el-menu-item index="6">已取消</el-menu-item>
-        <el-menu-item index="7">已退款</el-menu-item>
+        <el-menu-item index="0">{{ $t('good_indent.state.all') }}</el-menu-item>
+        <el-menu-item index="1">{{ $t('good_indent.state.pay') }}</el-menu-item>
+        <el-menu-item index="2">{{ $t('good_indent.state.deliver') }}</el-menu-item>
+        <el-menu-item index="3">{{ $t('good_indent.state.take') }}</el-menu-item>
+        <el-menu-item index="5">{{ $t('good_indent.state.accomplish') }}</el-menu-item>
+        <el-menu-item index="6">{{ $t('good_indent.state.cancel') }}</el-menu-item>
+        <el-menu-item index="7">{{ $t('good_indent.state.refund') }}</el-menu-item>
       </el-menu>
       <br>
       <el-radio-group v-model="listQuery.type" size="small" style="margin-bottom: 10px;" @change="handleFilter">
-        <el-radio-button :label="0">普通订单</el-radio-button>
+        <el-radio-button :label="0">{{ $t('good_indent.type.common') }}</el-radio-button>
       </el-radio-group>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="订单信息">
-          <el-input v-model="listQuery.title" placeholder="订单号、收货人等" clearable/>
+        <el-form-item :label="$t('good_indent.info')">
+          <el-input :placeholder="$t('good_indent.placeholder.info')" v-model="listQuery.title" clearable/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleFilter">搜索</el-button>
+          <el-button type="primary" @click="handleFilter">{{ $t('common.search') }}</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -39,10 +39,10 @@
             ref="orderGoodsTable"
             :data="scope.row.goods_list"
             style="width: 100%;">
-            <el-table-column label="商品" width="400">
+            <el-table-column :label="$t('good_indent.commodity')" width="400">
               <template slot-scope="props">
                 <div class="good-box">
-                  <el-image :src="props.row.img" :preview-src-list="[props.row.img]" style="width:45px;height:45px;"/>
+                  <el-image :src="props.row.img" :preview-src-list="[props.row.img]" fit="scale-down" style="width:60px;"/>
                   <div class="right">
                     <div>
                       <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: props.row.good_id }}" target="_blank"> {{ props.row.name }}</router-link>
@@ -51,17 +51,17 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column label="类型" width="120">
+            <el-table-column :label="$t('good_indent.type')" width="120">
               <template slot-scope="props">
                 <div>{{ props.row.good.type }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="单价（元）" width="180">
+            <el-table-column :label="`${$t('good_indent.price')}(${$t('common.monetary_unit')})`" width="180">
               <template slot-scope="props">
                 <div>{{ props.row.price }}</div>
               </template>
             </el-table-column>
-            <el-table-column label="数量" width="120">
+            <el-table-column :label="$t('good_indent.number')" width="120">
               <template slot-scope="props">
                 <div>{{ props.row.number }}件</div>
               </template>
@@ -69,81 +69,81 @@
           </el-table>
         </template>
       </el-table-column>
-      <el-table-column label="编号" width="80" sortable="custom" prop="id">
+      <el-table-column :label="$t('good.table.id')" width="100" sortable="custom" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200" label="订单编号">
+      <el-table-column :label="$t('good_indent.identification')" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.identification }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="120" label="订单类型">
+      <el-table-column :label="$t('good_indent.type')" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.type }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="120" label="订单状态" sortable="custom" prop="state">
+      <el-table-column :label="$t('good_indent.state')" width="120" sortable="custom" prop="state">
         <template slot-scope="scope">
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="80" label="订单总额">
+      <el-table-column :label="$t('good_indent.total')" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.total ? scope.row.total : 0 | 1000 }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="80" label="运费">
+      <el-table-column :label="$t('good_indent.carriage')" width="80">
         <template slot-scope="scope">
           <span v-if="scope.row.carriage">{{ scope.row.carriage | 1000 }}</span>
-          <span v-else>免运费</span>
+          <span v-else>{{ $t('good_indent.freight_free') }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="80" label="收货人">
+      <el-table-column :label="$t('good_indent.good_location')" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.good_location ? scope.row.good_location.name : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180" label="手机号">
+      <el-table-column :label="$t('good_indent.cellphone')" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.good_location ? scope.row.good_location.cellphone : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="200" label="地址">
+      <el-table-column :label="$t('good_indent.location')" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.good_location ? scope.row.good_location.location : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="80" label="快递公司">
+      <el-table-column :label="$t('good_indent.dhl')" width="80">
         <template slot-scope="scope">
           <span>{{ scope.row.dhl ? scope.row.dhl.name : '' }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180" label="运单号">
+      <el-table-column :label="$t('good_indent.odd')" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.odd }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="100" label="备注">
+      <el-table-column :label="$t('good_indent.remark')" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.remark }}</span>
         </template>
       </el-table-column>
-      <el-table-column width="180" label="订单时间" sortable="custom" prop="created_at">
+      <el-table-column :label="$t('good_indent.created_at')" width="180" sortable="custom" prop="created_at">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column fixed="right" label="操作" class-name="small-padding fixed-width" width="120">
+      <el-table-column :label="$t('common.operation')" fixed="right" class-name="small-padding fixed-width" width="120">
         <template slot-scope="scope">
           <router-link v-permission="$store.jurisdiction.IndentDetail" :to="{ path: 'indentDetail', query: { id: scope.row.id }}">
-            <el-tooltip class="item" effect="dark" content="订单详情" placement="top-start">
+            <el-tooltip :content="$t('good_indent.operation.info')" class="item" effect="dark" placement="top-start">
               <el-button type="warning" icon="el-icon-tickets" circle/>
             </el-tooltip>
           </router-link>
           <router-link v-if="scope.row.state === 2" :to="{ path: 'indentDetail', query: { id: scope.row.id }}">
-            <el-tooltip class="item" effect="dark" content="发货" placement="top-start">
+            <el-tooltip :content="$t('good_indent.operation.shipments')" class="item" effect="dark" placement="top-start">
               <el-button type="primary" icon="el-icon-truck" circle/>
             </el-tooltip>
           </router-link>

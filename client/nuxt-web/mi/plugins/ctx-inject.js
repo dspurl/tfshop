@@ -1,3 +1,13 @@
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 // 为context注册全局的错误处理事件
 import { Message } from 'element-ui'
 export default (ctx, inject) => {
@@ -14,10 +24,10 @@ export default (ctx, inject) => {
         if (process.env.APP_DEBUG) {
           console.log('context信息：',err)
         }
-        ctx.error({ statusCode: 500, message: '服务器开小差了~' })
+        ctx.error({ statusCode: 500, message: `The server went astray~` })
       }
     } catch {
-      ctx.error({ statusCode: 500, message: '服务器开小差了~' })
+      ctx.error({ statusCode: 500, message: `The server went astray~` })
     }
   }
 }

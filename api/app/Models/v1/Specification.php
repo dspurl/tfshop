@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -43,11 +52,11 @@ class Specification extends Model
     {
         if (isset($this->attributes['type'])) {
             if ($this->attributes['type'] == static::SPECIFICATION_TYPE_TEXT) {
-                return '文本';
+                return __('specification.type.text');
             } else if ($this->attributes['type'] == static::SPECIFICATION_TYPE_RADIO) {
-                return '单选';
+                return __('specification.type.radio');
             } else if ($this->attributes['type'] == static::SPECIFICATION_TYPE_CHECK) {
-                return '多选';
+                return __('specification.type.check');
             }
         }
     }
@@ -56,11 +65,11 @@ class Specification extends Model
     {
         if (isset($this->attributes['location'])) {
             if ($this->attributes['location'] == static::SPECIFICATION_LOCATION_SPEC) {
-                return '规格参数页';
+                return __('specification.location.spec');
             } else if ($this->attributes['location'] == static::SPECIFICATION_LOCATION_DETAILS) {
-                return '详情页';
+                return __('specification.location.details');
             } else if ($this->attributes['location'] == static::SPECIFICATION_LOCATION_ALL) {
-                return '都显示';
+                return __('specification.location.all');
             }
         }
     }

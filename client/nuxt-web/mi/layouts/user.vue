@@ -5,10 +5,10 @@
       <el-breadcrumb separator="/" class="breadcrumb">
         <el-breadcrumb-item>
           <NuxtLink :to="{ path: '/' }">
-            首页
+            {{$t('header.top.nav_list.home')}}
           </NuxtLink>
         </el-breadcrumb-item>
-        <el-breadcrumb-item>个人中心</el-breadcrumb-item>
+        <el-breadcrumb-item>{{$t('header.top.personal_center')}}</el-breadcrumb-item>
       </el-breadcrumb>
       <div class="user-box">
         <!-- 导航-->
@@ -24,6 +24,7 @@
         <!-- 主体-->
         <div class="main-box">
           <Nuxt />
+          <div v-if="copyright !== '1'" style="padding-top: 80px;text-align: center;color: #c4c3c3;">DSWJCMS提供技术支持</div>
         </div>
         <!-- 主体-->
       </div>

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -75,17 +84,17 @@ class SubmitDhlRequest extends Request
     public function messages()
     {
         return [
-            'name.required' =>'快递公司名称必须',
-            'name.string' =>'快递公司名称格式有误',
-            'name.unique' => '快递公司名称已存在',
-            'name.max' =>'快递公司名称不能超过30个字符',
-            'abbreviation.required' =>'快递公司缩写必须',
-            'abbreviation.string' =>'快递公司缩写格式有误',
-            'abbreviation.max' =>'快递公司缩写不能超过80个字符',
-            'state.required' =>'状态必须',
-            'state.integer' =>'状态格式有误',
-            'sort.required' =>'排序必须',
-            'sort.integer' =>'排序格式有误',
+            'name.required' =>__('hint.error.not_null', ['attribute' => __('dhl.name')]),
+            'name.string' =>__('hint.error.wrong_format', ['attribute' => __('dhl.name')]),
+            'name.unique' => __('hint.error.exist', ['attribute' => __('dhl.name')]),
+            'name.max' =>__('hint.error.max', ['attribute' => __('dhl.name'), 'place' => 30]),
+            'abbreviation.required' =>__('hint.error.not_null', ['attribute' => __('dhl.abbreviation')]),
+            'abbreviation.string' =>__('hint.error.wrong_format', ['attribute' => __('dhl.abbreviation')]),
+            'abbreviation.max' =>__('hint.error.max', ['attribute' => __('dhl.abbreviation'), 'place' => 80]),
+            'state.required' =>__('hint.error.not_null', ['attribute' => __('common.state')]),
+            'state.integer' =>__('hint.error.wrong_format', ['attribute' => __('common.state')]),
+            'sort.required' =>__('hint.error.not_null', ['attribute' => __('common.sort')]),
+            'sort.integer' =>__('hint.error.wrong_format', ['attribute' => __('common.sort')]),
         ];
     }
 }

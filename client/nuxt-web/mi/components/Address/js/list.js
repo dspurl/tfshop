@@ -10,11 +10,11 @@ export default{
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error(this.$t('hint.error.import', { attribute: this.$t('find_password.cellphone') })));
       } else {
         const myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
         if (!myreg.test(value)) {
-          callback(new Error('手机号格式有误'));
+          callback(new Error(this.$t('hint.error.wrong_format', { attribute: this.$t('find_password.cellphone') })));
         }
         callback();
       }
@@ -24,7 +24,7 @@ export default{
       restaurants: [],
       buttonLoading: false,
       loading: false,
-      dialogTitle: '添加收货地址',
+      dialogTitle: this.$t('address.add'),
       centerDialogVisible: false,
       list: [],
       ruleForm: {
@@ -38,14 +38,14 @@ export default{
       },
       rules: {
         name: [
-          { required: true, message: '请输入姓名', trigger: 'blur' },
+          { required: true, message: this.$t('hint.error.import', { attribute: this.$t('address.name') }), trigger: 'blur' },
         ],
         cellphone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
+          { required: true, message: this.$t('hint.error.import', { attribute: this.$t('find_password.cellphone') }), trigger: 'blur' },
           { validator: validateCellphone, trigger: 'blur' }
         ],
         house: [
-          { required: true, message: '请输入门牌号', trigger: 'blur' },
+          { required: true, message: this.$t('hint.error.import', { attribute: this.$t('address.house') }), trigger: 'blur' },
         ],
       }
     };
@@ -97,7 +97,7 @@ export default{
               this.$refs['ruleForm'].resetFields();
               this.getList()
               this.$message({
-                message: '修改成功',
+                message: this.$t('hint.succeed.win', { attribute: this.$t('common.amend') }),
                 type: 'success'
               });
             }).catch(() => {
@@ -105,7 +105,7 @@ export default{
             })
           }else{
             if(!this.ruleForm.longitude){
-              this.$message.error('请选择地址');
+              this.$message.error(this.$t('hint.error.selects', { attribute: this.$t('address.location') }));
             }
             create(this.ruleForm).then(response => {
               this.buttonLoading = false
@@ -113,7 +113,7 @@ export default{
               this.$refs['ruleForm'].resetFields();
               this.getList()
               this.$message({
-                message: '添加成功',
+                message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
                 type: 'success'
               });
             }).catch(() => {
@@ -124,9 +124,9 @@ export default{
       })
     },
     defaultAddress(item){
-      this.$confirm('是否设为默认？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('address.is_default'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true
@@ -134,7 +134,7 @@ export default{
           this.buttonLoading = false;
           this.getList()
           this.$message({
-            message: '设置成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
         }).catch(() => {
@@ -146,14 +146,14 @@ export default{
     deleteAddress(item){
       if(item.defaults){
         this.$message({
-          message: '默认地址无法删除',
+          message: this.$t('address.delete.confirm'),
           type: 'error'
         })
         return
       }
-      this.$confirm('确定要删除该地址吗？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('address.delete.title'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true
@@ -161,7 +161,7 @@ export default{
           this.buttonLoading = false;
           this.getList()
           this.$message({
-            message: '删除成功',
+            message: this.$t('hint.succeed.win', { attribute: this.$t('common.delete') }),
             type: 'success'
           });
         }).catch(() => {
@@ -173,7 +173,7 @@ export default{
     updateAddress(item){
       if(item.id){
         this.ruleForm = item
-        this.dialogTitle = '修改收货地址'
+        this.dialogTitle = this.$t('address.amend')
       }else{
         this.ruleForm = {
           location: '',
@@ -184,7 +184,7 @@ export default{
           latitude: '',
           longitude: ''
         }
-        this.dialogTitle = '添加收货地址'
+        this.dialogTitle = this.$t('address.add')
       }
       this.centerDialogVisible = true
     },

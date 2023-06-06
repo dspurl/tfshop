@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -72,13 +81,12 @@ class SubmitBrandRequest extends Request
     public function messages()
     {
         return [
-            'name.required' => '品牌名称必须',
-            'name.string' => '品牌名称格式有误',
-            'name.unique' => '品牌名称已存在',
-            'name.max' => '品牌名称不能超过30个字符',
-            'sort.required' => '排序必须',
-            'sort.numeric' => '排序格式有误',
-            'sort.max' => '排序不能超过6个字符',
+            'name.required' => __('hint.error.not_null', ['attribute' => __('brand.name')]),
+            'name.string' => __('hint.error.wrong_format', ['attribute' => __('brand.name')]),
+            'name.unique' => __('hint.error.exist', ['attribute' => __('brand.name')]),
+            'name.max' => _('hint.error.max', ['attribute' => __('brand.name'), 'place' => 30]),
+            'sort.required' => __('hint.error.not_null', ['attribute' => __('common.sort')]),
+            'sort.numeric' => __('hint.error.wrong_format', ['attribute' => __('common.sort')]),
         ];
     }
 }

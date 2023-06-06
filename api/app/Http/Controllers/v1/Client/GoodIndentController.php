@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -85,20 +94,20 @@ class GoodIndentController extends Controller
                     $Good = Good::select('id', 'is_inventory', 'inventory', 'type')->find($indentCommodity['good_id']);
                     if ($Good->type === Good::GOOD_TYPE_COMMON) {
                         if (!$request->address) {
-                            throw new \Exception('请选择地址', Code::CODE_WRONG);
+                            throw new \Exception(__('hint.error.not_null', ['attribute' => __('shipping.location')]), Code::CODE_WRONG);
                         }
                     }
                     if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_NO) { //拍下减库存
                         if (!$indentCommodity['good_sku_id']) { //非SKU商品
                             if ($Good->inventory - $indentCommodity['number'] < 0) {
-                                return array('存在库存不足的商品，请重新获取购物车', Code::CODE_PARAMETER_WRONG);
+                                return array(__('good_indent.deficient_commodity'), Code::CODE_PARAMETER_WRONG);
                             }
                             $Good->inventory = $Good->inventory - $indentCommodity['number'];
                             $Good->save();
                         } else {
                             $GoodSku = GoodSku::find($indentCommodity['good_sku_id']);
                             if ($GoodSku->inventory - $indentCommodity['number'] < 0) {
-                                return array('存在库存不足的SKU商品，请重新获取购物车', Code::CODE_PARAMETER_WRONG);
+                                return array(__('good_indent.deficient_commodity_sku'), Code::CODE_PARAMETER_WRONG);
                             }
                             $GoodSku->inventory = $GoodSku->inventory - $indentCommodity['number'];
                             $GoodSku->save();
@@ -120,7 +129,7 @@ class GoodIndentController extends Controller
                 return resReturn(0, $return[0], $return[1]);
             }
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 
@@ -138,7 +147,7 @@ class GoodIndentController extends Controller
         if (count($return) > 0) {
             $redis->set('shoppingCart' . auth('web')->user()->id, json_encode($return));
         }
-        return resReturn(1, '成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -151,7 +160,7 @@ class GoodIndentController extends Controller
     {
         $redis = new RedisService();
         $redis->del('shoppingCart' . auth('web')->user()->id);
-        return resReturn(1, '成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -244,7 +253,7 @@ class GoodIndentController extends Controller
     public function download($id)
     {
         if (!$id) {
-            throw new \Exception('却少参数', Code::CODE_WRONG);
+            throw new \Exception(__('common.arguments'), Code::CODE_WRONG);
         }
         $GoodIndent = GoodIndent::with(['goodsList' => function ($q) {
             $q->with(['goodSku' => function ($q) {
@@ -254,12 +263,12 @@ class GoodIndentController extends Controller
             }]);
         }])->find($id);
         if ($GoodIndent->user_id != auth('web')->user()->id) {
-            throw new \Exception('非您的订单，无权操作', Code::CODE_NO_ACCESS);
+            throw new \Exception(__('good_indent.error.download.impuissance'), Code::CODE_NO_ACCESS);
         }
         $code = (string)Uuid::generate();
         foreach ($GoodIndent->goodsList as $commodity) {
             if (!$commodity->goodSku->resources) {
-                throw new \Exception('无下载资源', Code::CODE_WRONG);
+                throw new \Exception(__('good_indent.error.download.nothing'), Code::CODE_WRONG);
             }
             $redis = new RedisService();
             $redis->setex($code, 30, $commodity->goodSku->resources->img);
@@ -280,7 +289,7 @@ class GoodIndentController extends Controller
         $redis = new RedisService();
         $download = $redis->get($code);
         if (!$download) {
-            return resReturn(0, '下载码不正确或已经失效', Code::CODE_WRONG);
+            return resReturn(0, __('good_indent.error.download.incorrectness'), Code::CODE_WRONG);
         }
         $redis->del($code);
         return Storage::download($download);
@@ -329,7 +338,7 @@ class GoodIndentController extends Controller
             $GoodIndent->confirm_time = Carbon::now()->toDateTimeString();
             $GoodIndent->receiving_time = Carbon::now()->toDateTimeString();
             $GoodIndent->save();
-            return array(1, '收货成功');
+            return array(1, __('common.succeed'));
         });
         if ($return[0] == 1) {
             return resReturn(1, $return[1]);
@@ -349,7 +358,7 @@ class GoodIndentController extends Controller
         $GoodIndent = GoodIndent::with(['goodsList'])->find($id);
         $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_CANCEL;
         $GoodIndent->save();
-        return resReturn(1, '成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -361,7 +370,7 @@ class GoodIndentController extends Controller
     public function destroy($id)
     {
         GoodIndent::destroy($id);
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 
     /**

@@ -2,20 +2,20 @@
   <div class="app-container">
     <div class="filter-container">
       <el-menu :default-active="listQuery.activeIndex" class="el-menu-demo" mode="horizontal" clearable @select="handleSelect">
-        <el-menu-item index="1">全部商品({{ goodCount.all }})</el-menu-item>
-        <el-menu-item index="2">出售中({{ goodCount.sell }})</el-menu-item>
-        <el-menu-item index="3">仓库中({{ goodCount.warehouse }})</el-menu-item>
-        <el-menu-item index="4">低库存({{ goodCount.lowInventory }})</el-menu-item>
-        <el-menu-item index="5">已售完({{ goodCount.sellOut }})</el-menu-item>
+        <el-menu-item index="1">{{ $t('good.search.active_index.all') }}({{ goodCount.all }})</el-menu-item>
+        <el-menu-item index="2">{{ $t('good.search.active_index.on_offer') }}({{ goodCount.sell }})</el-menu-item>
+        <el-menu-item index="3">{{ $t('good.search.active_index.warehouse') }}({{ goodCount.warehouse }})</el-menu-item>
+        <el-menu-item index="4">{{ $t('good.search.active_index.low_inventory') }}({{ goodCount.lowInventory }})</el-menu-item>
+        <el-menu-item index="5">{{ $t('good.search.active_index.sell_out') }}({{ goodCount.sellOut }})</el-menu-item>
       </el-menu>
       <br>
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="关键字">
-          <el-input v-model="listQuery.title" placeholder="商品标题/商品货号" clearable @keyup.enter.native="handleFilter" />
+        <el-form-item :label="$t('good.search.form.title.label')">
+          <el-input v-model="listQuery.title" :placeholder="$t('good.search.form.title.placeholder')" clearable @keyup.enter.native="handleFilter" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleFilter">搜索</el-button>
-          分类筛选:
+          <el-button type="primary" @click="handleFilter">{{ $t('common.search') }}</el-button>
+          {{ $t('good.search.form.category_id.label') }}:
           <el-cascader
             v-model="listQuery.category_id"
             :options="categorys"
@@ -26,7 +26,7 @@
       </el-form>
       <br>
       <router-link v-permission="$store.jurisdiction.GoodCreate" :to="'GoodCreate'">
-        <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">添加</el-button>
+        <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">{{ $t('common.add') }}</el-button>
       </router-link>
     </div>
 
@@ -45,22 +45,22 @@
         type="selection"
         width="55"
         fixed="left"/>
-      <el-table-column label="编号" sortable="custom" prop="id" width="80">
+      <el-table-column :label="$t('good.table.id')" sortable="custom" prop="id" width="80">
         <template slot-scope="scope">
           <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.id }}" target="_blank" style="width:300px;"> {{ scope.row.id }}</router-link>
         </template>
       </el-table-column>
-      <el-table-column label="商品类型" sortable="custom" prop="type" width="120">
+      <el-table-column :label="$t('good.table.type')" sortable="custom" prop="type" width="120">
         <template slot-scope="scope">
           {{ scope.row.type }}
         </template>
       </el-table-column>
-      <el-table-column label="图片" width="150">
+      <el-table-column :label="$t('good.table.img')" width="150">
         <template slot-scope="scope">
           <el-image :src="scope.row.resources.img | smallImage(150)" :preview-src-list="[ scope.row.resources.img ]" style="width:80px;height:80px;"/>
         </template>
       </el-table-column>
-      <el-table-column label="商品" width="200">
+      <el-table-column :label="$t('good.table.commodity')" width="200">
         <template slot-scope="scope">
           <div class="drawing">
             <div class="right">
@@ -71,65 +71,65 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column label="分类" width="150">
+      <el-table-column :label="$t('good.table.classify')" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.category ? scope.row.category.name : '无' }}</span>
+          <span>{{ scope.row.category ? scope.row.category.name : $t('common.table.nothing') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="货号" width="150">
+      <el-table-column :label="$t('good.table.number')" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.number }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="库存" width="100">
+      <el-table-column :label="$t('good.table.inventory')" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.inventory_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="销量" sortable="custom" prop="sales" width="100">
+      <el-table-column :label="$t('good.table.sales')" sortable="custom" prop="sales" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.sales }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" sortable="custom" prop="is_show" width="100">
+      <el-table-column :label="$t('common.table.state')" sortable="custom" prop="is_show" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.putaway_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="减库存方式" sortable="custom" prop="is_inventory" width="150">
+      <el-table-column :label="$t('good.table.is_inventory')" sortable="custom" prop="is_inventory" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.is_inventory_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否推荐" sortable="custom" prop="is_recommend" width="150">
+      <el-table-column :label="$t('good.table.is_recommend')" sortable="custom" prop="is_recommend" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.is_recommend === 1 ? '是' : '否' }}</span>
+          <span>{{ scope.row.is_recommend === 1 ? $t('common.yes') : $t('common.no') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="上架时间" sortable="custom" prop="time" width="160">
+      <el-table-column :label="$t('good.table.time')" sortable="custom" prop="time" width="160">
         <template slot-scope="scope">
-          <span>{{ scope.row.time ? scope.row.time : '未发布' }}</span>
+          <span>{{ scope.row.time ? scope.row.time : $t('good.table.unpublished') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="更新时间" sortable="custom" prop="updated_at" width="160">
+      <el-table-column :label="$t('good.table.updated_at')" sortable="custom" prop="updated_at" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.updated_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="148" fixed="right">
+      <el-table-column :label="$t('common.operation')" class-name="small-padding fixed-width" width="148" fixed="right">
         <template slot-scope="scope">
           <router-link v-permission="$store.jurisdiction.GoodEdit" :to="{ path: 'GoodEdit', query: { id: scope.row.id,page:listQuery.page,activeIndex:listQuery.activeIndex }}">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
               <el-button type="primary" icon="el-icon-edit" circle/>
             </el-tooltip>
           </router-link>
-          <el-tooltip v-permission="$store.jurisdiction.GoodEdit" v-if="scope.row.is_show !== 1" class="item" effect="dark" content="立即发布" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.GoodEdit" v-if="scope.row.is_show !== 1" :content="$t('good.table.button.immediate_release')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="success" icon="el-icon-sell" circle @click="handleState(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.GoodEdit" v-else class="item" effect="dark" content="放入库存" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.GoodEdit" v-else :content="$t('good.table.button.inventory')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="info" icon="el-icon-sold-out" circle @click="handleState(scope.row, 1)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.GoodDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.GoodDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -139,10 +139,11 @@
     <!--分页-->
     <div class="pagination-operation">
       <div class="operation">
-        <el-button size="mini" @click="handleCheckAllChange">全选/反选</el-button>
+        <el-button size="mini" @click="handleCheckAllChange">{{ $t('common.check_all') }}/{{ $t('common.inverse') }}</el-button>
         <el-button v-permission="$store.jurisdiction.GoodEdit" v-if="listQuery.activeIndex === '3'" :loading="formLoading" size="mini" type="success" @click="handleAllState()">立即发布</el-button>
         <el-button v-permission="$store.jurisdiction.GoodEdit" v-else-if="listQuery.activeIndex === '2'" :loading="formLoading" size="mini" type="info" @click="handleAllState(1)">放入库存</el-button>
-        <el-button v-permission="$store.jurisdiction.GoodDestroy" :loading="formLoading" size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
+        <el-button v-permission="$store.jurisdiction.GoodDestroy" :loading="formLoading" size="mini" type="danger" @click="handleAllDelete()">
+          {{ $t('common.delete') }}</el-button>
       </div>
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
     </div>
@@ -233,10 +234,6 @@ export default {
       tableKey: 0,
       list: null,
       total: 0,
-      textMap: {
-        update: '修改',
-        create: '添加'
-      },
       imgData: {
         type: 1,
         size: 1024 * 500
@@ -255,27 +252,7 @@ export default {
         cateId: this.$route.query.cateId
       },
       temp: {},
-      categorys: [],
-      rules: {
-        title: [
-          { required: true, message: '请输入标题', trigger: 'blur' }
-        ],
-        type: [
-          { required: true, message: '请选择类型', trigger: 'change' }
-        ],
-        price: [
-          { required: true, message: '请填写价格', trigger: 'change' }
-        ],
-        img: [
-          { required: true, message: '请上传图片', trigger: 'change' }
-        ],
-        state: [
-          { required: true, message: '请选择状态', trigger: 'change' }
-        ],
-        sort: [
-          { required: true, message: '请填写排序', trigger: 'blur' }
-        ]
-      }
+      categorys: []
     }
   },
   created() {
@@ -330,14 +307,13 @@ export default {
       this.multipleSelection = val
     },
     handleState(row, type) { // 变更状态
-      let title = '是否确认立即上架商品?'
+      let title = this.$t('good.operation.state.confirm.title.putaway')
       if (type === 1) {
-        title = '是否确认将商品加入仓库？'
+        title = this.$t('good.operation.state.confirm.title.inventory')
       }
-      const win = '操作成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -346,8 +322,8 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
-            message: win,
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { 'attribute': this.$t('common.operation') }),
             type: 'success',
             duration: 2000
           })
@@ -358,11 +334,9 @@ export default {
       })
     },
     handleDelete(row) { // 删除
-      const title = '是否确认删除该商品?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(this.$t('good.operation.delete.confirm.title'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -371,8 +345,8 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
-            message: win,
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { 'attribute': this.$t('common.delete') }),
             type: 'success',
             duration: 2000
           })
@@ -383,14 +357,13 @@ export default {
       })
     },
     handleAllState(type) { // 批量变更状态
-      let title = '是否确认批量立即上架商品?'
+      let title = this.$t('good.operation.state.confirm.title.putaway.batch')
       if (type === 1) {
-        title = '是否确认批量将商品加入仓库？'
+        title = this.$t('good.operation.state.confirm.title.inventory.batch')
       }
-      const win = '操作成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -399,8 +372,8 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
-            message: win,
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { 'attribute': this.$t('common.operation') }),
             type: 'success',
             duration: 2000
           })
@@ -411,11 +384,9 @@ export default {
       })
     },
     handleAllDelete() { // 批量删除
-      const title = '是否确认批量删除内容?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(this.$t('good.operation.delete.confirm.title.batch'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -424,8 +395,8 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
-            message: win,
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { 'attribute': this.$t('common.delete') }),
             type: 'success',
             duration: 2000
           })

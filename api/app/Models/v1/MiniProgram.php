@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use App\Code;
@@ -186,7 +195,7 @@ class MiniProgram extends Model
                 'purePhoneNumber' => $result['purePhoneNumber']
             ];
         } else {
-            throw new \Exception('获取手机号失败', Code::CODE_WRONG);
+            throw new \Exception(__('mini_program.phone_number_failure'), Code::CODE_WRONG);
         }
     }
 
@@ -224,7 +233,7 @@ class MiniProgram extends Model
                 'purePhoneNumber' => $result['purePhoneNumber']
             ];
         } else {
-            throw new \Exception('获取手机号失败', Code::CODE_WRONG);
+            throw new \Exception(__('mini_program.phone_number_failure'), Code::CODE_WRONG);
         }
     }
 
@@ -246,7 +255,7 @@ class MiniProgram extends Model
         $config['notify_url'] = request()->root() . '/api/v1/app/paymentNotify';
         $app = Factory::payment($config);
         if ($config['sandbox'] == true) {
-            throw new \Exception('沙箱环境已不再支持，请用真实环境测试', Code::CODE_WRONG);
+            throw new \Exception(__('mini_program.sandbox'), Code::CODE_WRONG);
             $fee = '101';
         }
         $result = $app->order->unify([
@@ -270,7 +279,7 @@ class MiniProgram extends Model
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
             throw new \Exception($result['return_msg'], Code::CODE_WRONG);
         }
-        throw new \Exception('支付异常，请联系管理员', Code::CODE_WRONG);
+        throw new \Exception(__('mini_program.abnormal_payment'), Code::CODE_WRONG);
     }
 
     /**
@@ -286,7 +295,7 @@ class MiniProgram extends Model
     {
         $return = [
             'result' => 'error',
-            'msg' => '退款异常，请联系管理员'
+            'msg' => __('mini_program.refund_exception')
         ];
         $refundNumber = orderNumber();
         $config = config('wechat.payment.default');
@@ -309,7 +318,7 @@ class MiniProgram extends Model
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'FAIL' && isset($result['err_code_des'])) {
             throw new \Exception($result['err_code_des'], Code::CODE_WRONG);
         }
-        throw new \Exception('退款异常，请联系管理员', Code::CODE_WRONG);
+        throw new \Exception(__('mini_program.refund_exception'), Code::CODE_WRONG);
     }
 
     /**
@@ -324,7 +333,7 @@ class MiniProgram extends Model
     {
         $return = [
             'result' => 'error',
-            'msg' => '查询异常，请联系管理员'
+            'msg' => __('mini_program.query_exception')
         ];
         $config = config('wechat.payment.default');
         $app = Factory::payment($config);
@@ -349,7 +358,7 @@ class MiniProgram extends Model
                 'result' => 'ok',
                 'state' => $state,
                 'transaction_id' => $transaction_id,
-                'msg' => '需要同步'
+                'msg' => __('mini_program.synchronization')
             ];
         }
         if ($result['return_code'] == 'SUCCESS' && $result['result_code'] == 'FAIL') {
@@ -358,6 +367,6 @@ class MiniProgram extends Model
         if ($result['return_code'] == 'FAIL' && array_key_exists('return_msg', $result)) {
             throw new \Exception($result['return_msg'], Code::CODE_WRONG);
         }
-        throw new \Exception('查询异常，请联系管理员', Code::CODE_WRONG);
+        throw new \Exception(__('mini_program.query_exception'), Code::CODE_WRONG);
     }
 }

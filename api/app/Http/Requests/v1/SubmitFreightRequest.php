@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -72,26 +81,26 @@ class SubmitFreightRequest extends Request
     public function messages()
     {
         return [
-            'name.required' =>'模板名称必须',
-            'name.string' =>'模板名称格式有误',
-            'name.unique' =>'模板名称已存在',
-            'name.max' =>'模板名称不能超过60个字符',
-            'location.required' =>'宝贝地址必须',
-            'location.array' =>'宝贝地址必须是数组',
-            'pinkage.array' =>'包邮地址必须是数组',
-            'valuation.required' =>'计价方式必须',
-            'valuation.integer' =>'计价方式格式有误',
-            'freight_way.array' =>'不包邮配送区域必须是数组',
-            'freight_way.*.first_piece.required' =>'首件必须',
-            'freight_way.*.first_piece.integer' =>'首件格式有误',
-            'freight_way.*.first_cost.required' =>'首费必须',
-            'freight_way.*.first_cost.numeric' =>'首费格式有误',
-            'freight_way.*.add_piece.required' =>'续件必须',
-            'freight_way.*.add_piece.integer' =>'续件格式有误',
-            'freight_way.*.add_cost.required' =>'续费必须',
-            'freight_way.*.add_cost.numeric' =>'续费格式有误',
-            'freight_way.*.location.required' =>'送货到必须',
-            'freight_way.location.array' =>'送货到必须是数组',
+            'name.required' =>__('hint.error.not_null', ['attribute' => __('freight.name')]),
+            'name.string' =>__('hint.error.wrong_format', ['attribute' => __('freight.name')]),
+            'name.unique' =>__('hint.error.exist', ['attribute' => __('freight.name')]),
+            'name.max' =>__('hint.error.max', ['attribute' => __('freight.name'), 'place' => 60]),
+            'location.required' =>__('hint.error.not_null', ['attribute' => __('freight.location')]),
+            'location.array' =>__('hint.error.wrong_format', ['attribute' => __('freight.location')]),
+            'pinkage.array' =>__('hint.error.wrong_format', ['attribute' => __('freight.pinkage')]),
+            'valuation.required' =>__('hint.error.not_null', ['attribute' => __('freight.valuation')]),
+            'valuation.integer' =>__('hint.error.wrong_format', ['attribute' => __('freight.valuation')]),
+            'freight_way.array' =>__('hint.error.wrong_format', ['attribute' => __('freight.freight_way')]),
+            'freight_way.*.first_piece.required' =>__('hint.error.not_null', ['attribute' => __('freight.freight_way.first_piece')]),
+            'freight_way.*.first_piece.integer' =>__('hint.error.wrong_format', ['attribute' => __('freight.freight_way.first_piece')]),
+            'freight_way.*.first_cost.required' =>__('hint.error.not_null', ['attribute' => __('freight.freight_way.first_cost')]),
+            'freight_way.*.first_cost.numeric' =>__('hint.error.wrong_format', ['attribute' => __('freight.freight_way.first_cost')]),
+            'freight_way.*.add_piece.required' =>__('hint.error.not_null', ['attribute' => __('freight.freight_way.add_piece')]),
+            'freight_way.*.add_piece.integer' =>__('hint.error.wrong_format', ['attribute' => __('freight.freight_way.add_piece')]),
+            'freight_way.*.add_cost.required' =>__('hint.error.not_null', ['attribute' => __('freight.freight_way.add_cost')]),
+            'freight_way.*.add_cost.numeric' =>__('hint.error.wrong_format', ['attribute' => __('freight.freight_way.add_cost')]),
+            'freight_way.*.location.required' =>__('hint.error.not_null', ['attribute' => __('freight.location')]),
+            'freight_way.location.array' =>__('hint.error.wrong_format', ['attribute' => __('freight.location')]),
         ];
     }
 }

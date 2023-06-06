@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Observers\GoodIndent;
 
 use App\Models\v1\Dhl;
@@ -57,30 +66,30 @@ class ShipmentNotificationObserver
             ];
             $invoice = [
                 'type' => InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
-                'title' => '您购买的商品已发货，请到订单详情查看',
+                'title' => __('observer.good_indent.shipment_notification.invoice.title'),
                 'list' => [
                     [
-                        'keyword' => '订单编号',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.identification'),
                         'data' => $parameter['identification']
                     ],
                     [
-                        'keyword' => '发货时间',
+                        'keyword' => __('observer.good_indent.receipt_notification.shipping_time'),
                         'data' => $parameter['shipping_time']
                     ],
                     [
-                        'keyword' => '物流公司',
+                        'keyword' => __('observer.good_indent.shipment_notification.invoice.dhl'),
                         'data' => $parameter['dhl']
                     ],
                     [
-                        'keyword' => '快递单号',
+                        'keyword' => __('observer.good_indent.shipment_notification.invoice.odd'),
                         'data' => $parameter['odd']
                     ],
                     [
-                        'keyword' => '收件信息',
+                        'keyword' => __('observer.good_indent.shipment_notification.invoice.location'),
                         'data' => $parameter['location']->name . ' ' . $parameter['location']->cellphone . ' ' . $parameter['location']->location . $parameter['location']->house
                     ],
                 ],
-                'remark' => '请保持收件手机畅通！',
+                'remark' => __('observer.good_indent.shipment_notification.invoice.remark'),
                 'url' => '/pages/indent/detail?id=' . $parameter['id'],
                 'parameter' => $parameter,
                 'prefers' => ['database', 'miniweixin', 'mail', 'wechat']

@@ -1,9 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pang
- * Date: 2020/12/15
- * Time: 11:17
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
  */
 
 namespace App\Services\WinXin;
@@ -20,6 +24,6 @@ class OtherMessageHandler implements EventHandlerInterface
      */
     public function handle($payload = null)
     {
-        return '暂不支持此类消息';
+        return __('service.other_message');
     }
 }

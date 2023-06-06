@@ -1,7 +1,7 @@
 exports.ids = [23];
 exports.modules = {
 
-/***/ 247:
+/***/ 256:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9,16 +9,26 @@ exports.modules = {
 __webpack_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: ./api/goodIndent.js
-var goodIndent = __webpack_require__(22);
+var goodIndent = __webpack_require__(27);
 
 // EXTERNAL MODULE: ./plugins/request.js
 var request = __webpack_require__(2);
 
 // EXTERNAL MODULE: external "qs"
-var external_qs_ = __webpack_require__(7);
+var external_qs_ = __webpack_require__(8);
 var external_qs_default = /*#__PURE__*/__webpack_require__.n(external_qs_);
 
 // CONCATENATED MODULE: ./api/pay.js
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 
 
 function unifiedPayment(data) {
@@ -38,11 +48,11 @@ function balancePay(data) {
   });
 }
 // EXTERNAL MODULE: external "@chenfengyuan/vue-countdown"
-var vue_countdown_ = __webpack_require__(167);
+var vue_countdown_ = __webpack_require__(176);
 var vue_countdown_default = /*#__PURE__*/__webpack_require__.n(vue_countdown_);
 
 // EXTERNAL MODULE: external "@chenfengyuan/vue-qrcode"
-var vue_qrcode_ = __webpack_require__(168);
+var vue_qrcode_ = __webpack_require__(177);
 var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
 
 // CONCATENATED MODULE: ./pages/money/js/pay.js
@@ -57,13 +67,11 @@ var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
   },
   layout: 'cart',
   middleware: 'auth',
-
   head() {
     return {
-      title: '支付订单' + '-' + "DSSHOP商城-跨终端商城解决方案"
+      title: this.$t('money.title') + '-' + "DSSHOP商城-轻量级易扩展低代码开源商城系统"
     };
   },
-
   data() {
     return {
       loading: true,
@@ -75,12 +83,10 @@ var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
       list: {}
     };
   },
-
   mounted() {
-    $nuxt.$store.commit('setCartTitle', '支付订单');
+    $nuxt.$store.commit('setCartTitle', this.$t('money.title'));
     this.getList();
   },
-
   methods: {
     getList() {
       Object(goodIndent["h" /* pay */])($nuxt.$route.query.id).then(response => {
@@ -98,26 +104,22 @@ var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
             $nuxt.$router.replace('/money/success');
           }
         }
-
         this.loading = false;
         this.list = response;
       }).catch(error => {
         this.$message({
-          message: '请求参数有误',
+          message: this.$t('common.arguments'),
           type: 'error'
         });
       });
     },
-
     // 显示详情
     showDetail() {
       this.detail = !this.detail;
     },
-
     // 支付
     payment(type) {
       this.buttonLoading = true;
-
       if (type === 1) {
         // 余额支付
         balancePay({
@@ -136,7 +138,6 @@ var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
           this.centerDialogVisible = true;
           this.qrcode = response.code_url;
           this.buttonLoading = false;
-
           if (this.timer) {
             clearInterval(this.timer);
             this.timer = setInterval(() => {
@@ -149,19 +150,16 @@ var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
           }
         }).catch(error => {
           this.$message({
-            message: '支付配置有误，请检查',
+            message: this.$t('money.error'),
             type: 'error'
           });
         });
       }
     }
-
   },
-
   destroyed() {
     clearInterval(this.timer);
   }
-
 });
 
 /***/ })

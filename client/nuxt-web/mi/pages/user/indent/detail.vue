@@ -1,14 +1,14 @@
 <template>
   <div class="box">
-    <el-page-header @back="goBack" content="订单详情">
+    <el-page-header @back="goBack" :content="$t('money.pay.order_details')">
     </el-page-header>
     <div v-loading="loading">
       <div class="top">
-        <div class="order-number">订单号：{{indent.identification}}</div>
+        <div class="order-number">{{$t('money.pay.order_number')}}：{{indent.identification}}</div>
         <div class="operation">
-          <div style="margin-bottom: 5px;" v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini">取消订单</el-button></div>
-          <NuxtLink :to="{ path: '/money/pay', query: { id: indent.id }}" v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini" type="danger">立即付款</el-button></NuxtLink>
-          <div v-if="indent.state === 3"><el-button :loading="buttonLoading" size="mini" type="danger" @click="confirmReceipt()">确认收货</el-button></div>
+          <div style="margin-bottom: 5px;" v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini">{{$t('indent.cancel_order')}}</el-button></div>
+          <NuxtLink :to="{ path: '/money/pay', query: { id: indent.id }}" v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini" type="danger">{{$t('indent.payment')}}</el-button></NuxtLink>
+          <div v-if="indent.state === 3"><el-button :loading="buttonLoading" size="mini" type="danger" @click="confirmReceipt()">{{$t('indent.confirm_receipt')}}</el-button></div>
         </div>
       </div>
       <el-divider></el-divider>
@@ -16,18 +16,18 @@
         <div class="title">{{indent.state_show}}</div>
         <div class="steps">
           <div :class="{on:indent.created_at}">
-            <div class="chunk">下单</div>
+            <div class="chunk">{{$t('indent.orders')}}</div>
           </div>
           <div :class="{on:indent.pay_time}">
-            <div class="chunk">付款</div>
+            <div class="chunk">{{$t('indent.payments')}}</div>
             <div class="name"></div>
           </div>
           <div v-if="isType" :class="{on:indent.shipping_time}">
-            <div class="chunk">配货</div>
+            <div class="chunk">{{$t('indent.distribution')}}</div>
             <div class="name"></div>
           </div>
           <div :class="{on:indent.state === 5 || indent.state === 11}">
-            <div class="chunk">交易成功</div>
+            <div class="chunk">{{$t('indent.trade_successfully')}}</div>
             <div class="name"></div>
           </div>
         </div>
@@ -65,7 +65,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="商品名称">
+          :label="$t('indent.name')">
           <template slot-scope="scope">
             <NuxtLink :to="{ path: `/product/detail/${scope.row.good_id}`}">
               <p>{{scope.row.name}}</p>
@@ -74,7 +74,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="单价"
+          :label="$t('indent.price')"
           width="150"
           align="center">
           <template slot-scope="scope">
@@ -82,7 +82,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="数量"
+          :label="$t('indent.number')"
           width="150"
           align="center">
           <template slot-scope="scope">
@@ -90,7 +90,7 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="小计"
+          :label="$t('indent.subtotal')"
           width="150"
           align="center">
           <template slot-scope="scope">
@@ -101,13 +101,13 @@
       <el-divider></el-divider>
       <template v-if="indent.odd">
         <div class="address">
-          <div class="min-title">物流信息</div>
+          <div class="min-title">{{$t('indent.logistics')}}</div>
           <div class="li">
-            <div class="name">物流公司：</div>
+            <div class="name">{{$t('indent.logistics_company')}}：</div>
             <div class="value">{{indent.dhl.name}}</div>
           </div>
           <div class="li">
-            <div class="name">运单号：</div>
+            <div class="name">{{$t('indent.waybill_number')}}：</div>
             <div class="value">{{indent.odd}}</div>
           </div>
         </div>
@@ -115,17 +115,17 @@
       </template>
       <template v-if="indent.good_location">
         <div class="address">
-          <div class="min-title">收货信息</div>
+          <div class="min-title">{{$t('money.pay.receiving')}}</div>
           <div class="li">
-            <div class="name">姓名：</div>
+            <div class="name">{{$t('indent.compellation')}}：</div>
             <div class="value">{{indent.good_location.name}}</div>
           </div>
           <div class="li">
-            <div class="name">联系电话：</div>
+            <div class="name">{{$t('indent.phone')}}：</div>
             <div class="value">{{indent.good_location.cellphone}}</div>
           </div>
           <div class="li">
-            <div class="name">收货地址：</div>
+            <div class="name">{{$t('indent.shipping_address')}}：</div>
             <div class="value">
               {{ indent.good_location.location }}
               <span v-if="indent.good_location.address">({{ indent.good_location.address }})</span>
@@ -137,21 +137,21 @@
       </template>
       <div v-if="indent.refund_time">
         <div class="address">
-          <div class="min-title">退款方式</div>
+          <div class="min-title">{{$t('indent.refund_method')}}</div>
           <div class="li">
-            <div class="name">退款方式：</div>
+            <div class="name">{{$t('indent.refund_method')}}：</div>
             <div class="value">{{indent.refund_way}}</div>
           </div>
           <div class="li">
-            <div class="name">退款时间：</div>
+            <div class="name">{{$t('indent.refund_time')}}：</div>
             <div class="value">{{indent.refund_time}}</div>
           </div>
           <div class="li">
-            <div class="name">退款金额：</div>
+            <div class="name">{{$t('indent.refund_amount')}}：</div>
             <div class="value">{{indent.refund_money}}</div>
           </div>
           <div class="li">
-            <div class="name">退款原因：</div>
+            <div class="name">{{$t('indent.refund_refund')}}：</div>
             <div class="value">{{indent.refund_reason}}</div>
           </div>
         </div>
@@ -159,44 +159,44 @@
       </div>
       <!-- 网盘 -->
       <div class="code-box" v-if="indent.good_code.length">
-        <div class="min-title">{{code_type ? '网盘' : '卡密'}}</div>
+        <div class="min-title">{{code_type ? $t('good.code_type.web_disk') : $t('good.code_type.carmi')}}</div>
         <div class="code-list">
           <div class="li" v-for="(item,index) in indent.good_code" :key="index">
-            <div class="name" v-if="item.name">{{code_type ? '网盘地址' : '卡号'}}：{{ item.name }}<span class="el-icon-copy-document" @click="doCopy(item.name)"></span></div>
-            <div class="value">{{code_type ? '提取码' : '卡密'}}：{{ item.code }}<span class="el-icon-copy-document" @click="doCopy(item.code)"></span></div>
+            <div class="name" v-if="item.name">{{code_type ? $t('good.good_code.url') : $t('good.good_code.card_number')}}：{{ item.name }}<span class="el-icon-copy-document" @click="doCopy(item.name)"></span></div>
+            <div class="value">{{code_type ? $t('good.web_disk.code') : $t('good.code_type.carmi')}}：{{ item.code }}<span class="el-icon-copy-document" @click="doCopy(item.code)"></span></div>
           </div>
         </div>
         <el-divider></el-divider>
       </div>
       <div class="address">
-        <div class="min-title">其它</div>
+        <div class="min-title">{{$t('indent.other')}}</div>
         <div class="li">
-          <div class="name">备注：</div>
-          <div class="value">{{indent.remark ? indent.remark : '无'}}</div>
+          <div class="name">{{$t('indent.remark')}}：</div>
+          <div class="value">{{indent.remark ? indent.remark : $t('indent.without')}}</div>
         </div>
       </div>
       <el-divider></el-divider>
       <div class="right">
         <div class="li">
-          <div class="name">商品总价：</div>
-          <div class="value">{{total | thousands}}元</div>
+          <div class="name">{{$t('indent.total')}}：</div>
+          <div class="value">{{total | thousands}}{{$t('common.monetary_unit')}}</div>
         </div>
         <div class="li" v-if="indent.coupon_money">
-          <div class="name">优惠金额：</div>
-          <div class="value">-{{indent.coupon_money/100 | thousands}}元</div>
+          <div class="name">{{$t('indent.discount_amount')}}：</div>
+          <div class="value">-{{indent.coupon_money/100 | thousands}}{{$t('common.monetary_unit')}}</div>
         </div>
         <div class="li" v-if="!indent.integral_draw_log">
-          <div class="name">运费：</div>
-          <div class="value" v-if="indent.carriage>0">{{indent.carriage | thousands}}元</div>
-          <div class="value" v-else>免运费</div>
+          <div class="name">{{$t('indent.freight')}}：</div>
+          <div class="value" v-if="indent.carriage>0">{{indent.carriage | thousands}}{{$t('common.monetary_unit')}}</div>
+          <div class="value" v-else>{{$t('indent.free_shipping')}}</div>
         </div>
         <div class="li">
-          <div class="name">应付金额：</div>
-          <div class="value total"><span>{{indent.total | thousands}}</span>元</div>
+          <div class="name">{{$t('indent.amount_payable')}}：</div>
+          <div class="value total"><span>{{indent.total | thousands}}</span>{{$t('common.monetary_unit')}}</div>
         </div>
       </div>
       <div class="download" v-if="indent.download">
-        <el-button type="danger" @click="goDownload" v-loading="buttonLoading">下载</el-button>
+        <el-button type="danger" @click="goDownload" v-loading="buttonLoading">{{$t('indent.download')}}</el-button>
       </div>
     </div>
   </div>

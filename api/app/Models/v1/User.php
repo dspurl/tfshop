@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -89,11 +98,11 @@ class User extends Authenticatable implements HasLocalePreference
     {
         if (isset($this->attributes['gender'])) {
             if ($this->attributes['gender'] == static::USER_GENDER_UNKNOWN) {
-                return '未知';
+                return __('user.gender.unknown');
             } else if ($this->attributes['gender'] == static::USER_GENDER_MAN) {
-                return '男性';
+                return __('user.gender.man');
             } else if ($this->attributes['gender'] == static::USER_GENDER_WOMAN) {
-                return '女性';
+                return __('user.gender.woman');
             }
         }
     }
@@ -102,9 +111,9 @@ class User extends Authenticatable implements HasLocalePreference
     {
         if (isset($this->attributes['state'])) {
             if ($this->attributes['state'] == static::USER_STATE_NORMAL) {
-                return '正常';
+                return __('user.state.normal');
             } else if ($this->attributes['state'] == static::USER_STATE_FORBID) {
-                return '禁止访问';
+                return __('user.state.forbid');
             }
         }
     }

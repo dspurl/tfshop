@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -17,7 +26,6 @@ use Illuminate\Support\Str;
 use Webpatser\Uuid\Uuid;
 
 /**
- *
  * @group [CLIENT]Login(登录)
  * Class LoginController
  * @package App\Http\Controllers\v1\Client
@@ -25,7 +33,6 @@ use Webpatser\Uuid\Uuid;
 class LoginController extends Controller
 {
     use AuthenticatesUsers;
-
     /**
      * Login
      * 登录
@@ -37,23 +44,23 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         if (!$request->has('cellphone')) {
-            return resReturn(0, '手机号不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.cellphone')]), Code::CODE_WRONG);
         }
         if (!$request->has('password')) {
-            return resReturn(0, '密码不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.password')]), Code::CODE_WRONG);
         }
         $user = User::where('cellphone', $request->cellphone)->first();
         if (!$user) {
-            return resReturn(0, '手机号未注册过', Code::CODE_WRONG);
+            return resReturn(0, __('user.cellphone.error.unregistered'), Code::CODE_WRONG);
         }
         if ($user->unsubscribe == User::USER_UNSUBSCRIBE_YES) {
-            return resReturn(0, '您的账号已注销，无法重新注册', Code::CODE_WRONG);
+            return resReturn(0, __('user.cellphone.error.cancelled'), Code::CODE_WRONG);
         }
         if ($user->state == User::USER_STATE_FORBID) {
-            return resReturn(0, '您的账户禁止访问，请联系管理员', Code::CODE_WRONG);
+            return resReturn(0, __('user.cellphone.error.forbidden'), Code::CODE_WRONG);
         }
         if (!Hash::check($request->password, $user->password)) {
-            return resReturn(0, '密码错误', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.mistake', ['attribute' => __('user.password')]), Code::CODE_WRONG);
         }
         if (!$user->api_token) {
             $user->api_token = hash('sha256', Str::random(60));
@@ -106,7 +113,7 @@ class LoginController extends Controller
         if ($request->has('iv')) {
             $openid = $request->header('openid');
             if (!$openid) {
-                return resReturn(0, '参数有误', Code::CODE_MISUSE);
+                return resReturn(0, __('common.arguments'), Code::CODE_MISUSE);
             }
             $MiniProgram = new MiniProgram();
             $miniPhoneNumber = $MiniProgram->miniPhoneNumber($request->platform, $request->session_key, $request->iv, $request->encryptedData);
@@ -152,7 +159,7 @@ class LoginController extends Controller
                 }
             } else {
                 if ($User->unsubscribe == User::USER_UNSUBSCRIBE_YES) {
-                    return resReturn(0, '您的账号已注销，无法重新注册', Code::CODE_WRONG);
+                    return resReturn(0, __('user.cellphone.error.cancelled'), Code::CODE_WRONG);
                 }
                 $return = DB::transaction(function () use ($request, $miniPhoneNumber, $User, $openid) {
                     $User->updated_at = Carbon::now()->toDateTimeString();
@@ -182,7 +189,7 @@ class LoginController extends Controller
                 }
             }
         } else {
-            return resReturn(0, '您拒绝授权，无法登录', Code::CODE_MISUSE);
+            return resReturn(0, __('user.authorization.error'), Code::CODE_MISUSE);
         }
     }
 
@@ -197,7 +204,7 @@ class LoginController extends Controller
         $user = User::find(auth('web')->user()->id);
         $user->updated_at = Carbon::now()->toDateTimeString();
         $user->save();
-        return resReturn(1, '退出成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -213,31 +220,31 @@ class LoginController extends Controller
     public function register(Request $request)
     {
         if (!$request->has('cellphone')) {
-            return resReturn(0, '手机号不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.cellphone')]), Code::CODE_WRONG);
         }
         if (!$request->has('password')) {
-            return resReturn(0, '密码不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.password')]), Code::CODE_WRONG);
         }
         if (!$request->has('rPassword')) {
-            return resReturn(0, '重复密码不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('user.duplicate_password.error.null'), Code::CODE_WRONG);
         }
         if ($request->password != $request->rPassword) {
-            return resReturn(0, '重复密码和密码不相同', Code::CODE_WRONG);
+            return resReturn(0, __('user.duplicate_password.error.different'), Code::CODE_WRONG);
         }
         $user = User::where('cellphone', $request->cellphone)->first();
         if ($user) {
             if ($user->unsubscribe == User::USER_UNSUBSCRIBE_YES) {
-                return resReturn(0, '您的账号已注销，无法重新注册', Code::CODE_WRONG);
+                return resReturn(0, __('user.cellphone.error.cancelled'), Code::CODE_WRONG);
             }
-            return resReturn(0, '手机号已被注册', Code::CODE_WRONG);
+            return resReturn(0, __('user.cellphone.error.exist'), Code::CODE_WRONG);
         }
         $redis = new RedisService();
         $code = $redis->get('code.register.' . $request->cellphone);
         if (!$code) {
-            return resReturn(0, '验证码已失效，请重新获取', Code::CODE_MISUSE);
+            return resReturn(0, __('user.email.error.lost_effectiveness'), Code::CODE_MISUSE);
         }
         if ($code != $request->code) {
-            return resReturn(0, '验证码错误', Code::CODE_MISUSE);
+            return resReturn(0, __('user.email_code.error'), Code::CODE_MISUSE);
         }
         $return = DB::transaction(function () use ($request) {
             $addUser = new User();
@@ -249,13 +256,13 @@ class LoginController extends Controller
             $addUser->save();
             return [
                 'result' => 'ok',
-                'msg' => '成功'
+                'msg' => __('common.succeed')
             ];
         }, 5);
         if ($return['result'] == 'ok') {
-            return resReturn(1, '注册成功');
+            return resReturn(1, __('common.succeed'));
         } else {
-            return resReturn(0, '注册失败', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('common.fail'), Code::CODE_PARAMETER_WRONG);
         }
     }
 
@@ -272,29 +279,29 @@ class LoginController extends Controller
     public function findPassword(Request $request)
     {
         if (!$request->has('cellphone')) {
-            return resReturn(0, '手机号不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.cellphone')]), Code::CODE_WRONG);
         }
         if (!$request->has('password')) {
-            return resReturn(0, '新密码不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.new_password')]), Code::CODE_WRONG);
         }
         if (!$request->has('rPassword')) {
-            return resReturn(0, '确认密码不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('user.affirm_password.error.null'), Code::CODE_WRONG);
         }
         if ($request->password != $request->rPassword) {
-            return resReturn(0, '确认密码和新密码不相同', Code::CODE_WRONG);
+            return resReturn(0, __('user.affirm_password.error.different'), Code::CODE_WRONG);
         }
         $redis = new RedisService();
         $code = $redis->get('code.register.' . $request->cellphone);
         if (!$code) {
-            return resReturn(0, '验证码已失效，请重新获取', Code::CODE_MISUSE);
+            return resReturn(0, __('user.email.error.lost_effectiveness'), Code::CODE_MISUSE);
         }
         if ($code != $request->code) {
-            return resReturn(0, '验证码错误', Code::CODE_MISUSE);
+            return resReturn(0, __('user.email_code.error'), Code::CODE_MISUSE);
         }
         $user = User::where('cellphone', $request->cellphone)->first();
         $user->password = bcrypt($request->password);
         $user->save();
-        return resReturn(1, '密码重置成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -310,27 +317,27 @@ class LoginController extends Controller
     public function amendPassword(Request $request)
     {
         if (!$request->has('nowPassword')) {
-            return resReturn(0, '当前密码不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.old_password')]), Code::CODE_WRONG);
         }
         if (!$request->has('password')) {
-            return resReturn(0, '新密码不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.new_password')]), Code::CODE_WRONG);
         }
         if (!$request->has('rPassword')) {
-            return resReturn(0, '确认密码不能为空', Code::CODE_WRONG);
+            return resReturn(0, __('user.affirm_password.error.null'), Code::CODE_WRONG);
         }
         if (!Hash::check($request->nowPassword, auth('web')->user()->password)) {
-            return resReturn(0, '当前密码错误', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.mistake', ['attribute' => __('user.old_password')]), Code::CODE_WRONG);
         }
         if ($request->nowPassword == $request->password) {
-            return resReturn(0, '新密码不能和旧密码相同', Code::CODE_WRONG);
+            return resReturn(0, __('user.old_password.error.not_identical'), Code::CODE_WRONG);
         }
         if ($request->password != $request->rPassword) {
-            return resReturn(0, '确认密码和新密码不相同', Code::CODE_WRONG);
+            return resReturn(0, __('user.old_password.error.different'), Code::CODE_WRONG);
         }
         $user = User::find(auth('web')->user()->id);
         $user->password = bcrypt($request->password);
         $user->save();
-        return resReturn(1, '密码修改成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**

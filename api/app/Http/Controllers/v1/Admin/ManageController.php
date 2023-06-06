@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -154,7 +163,7 @@ class ManageController extends Controller
             }
 
         }, 5);
-        return resReturn(1, '添加成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
     }
 
     /**
@@ -205,7 +214,7 @@ class ManageController extends Controller
                 unset($data);
             }
         }, 5);
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.amend')]));
     }
 
     /**
@@ -219,13 +228,13 @@ class ManageController extends Controller
     {
         DB::transaction(function () use ($id) {
             if (!$id) {
-                return resReturn(0, '参数错误', Code::CODE_PARAMETER_WRONG);
+                return resReturn(0, __('common.arguments'), Code::CODE_PARAMETER_WRONG);
             }
             $authGroup = AuthGroup::find($id);
             $authGroup->delete();
             DB::table('auth_group_auth_rules')->where('auth_group_id', $authGroup->id)->delete();
             DB::table('admin_auth_group')->where('auth_group_id', $authGroup->id)->delete();
         }, 5);
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

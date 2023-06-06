@@ -1,27 +1,29 @@
 <template>
   <div>
-    <el-card shadow="hover" header="版本信息" class="card">
+    <el-card :header="$t('update.title')" shadow="hover" class="card">
       <div class="tip" style="background-color: #fff6f7;border-left: 5px solid #fe6c6f;">
-        <p>更新之前请务必备份好数据和文件，以免超成不必要的损失！</p>
-        <p>如因网络等问题未完成更新的，可以刷新后重试</p>
+        <p>{{ $t('update.tip.one') }}</p>
+        <p>{{ $t('update.tip.two') }}</p>
+        <p>{{ $t('update.tip.three') }}</p>
+        <p>{{ $t('update.tip.four') }}</p>
       </div>
       <div style="text-align: center;">
         <img src="@/assets/ver.svg" style="height:140px">
         <h2 style="margin-top: 15px;">DSSHOP</h2>
         <div v-loading="loading">
-          <p style="margin-top: 5px;">当前版本：{{ data.version }}</p>
-          <p style="margin-top: 5px;">最新版本：{{ data.new_version }}</p>
+          <p style="margin-top: 5px;">{{ $t('update.current_version') }}：{{ data.version }}</p>
+          <p style="margin-top: 5px;">{{ $t('update.latest_version') }}：{{ data.new_version }}</p>
           <template v-if="data.state === 1">
             <p style="margin-top: 5px;">
-              <el-button type="primary" plain round @click="openBody">更新日志</el-button>
+              <el-button type="primary" plain round @click="openBody">{{ $t('update.update_log') }}</el-button>
             </p>
             <p style="margin-top: 5px;">
-              <el-button :loading="formLoading" round type="primary" @click="handleEdit(0)">一键更新</el-button>
+              <el-button :loading="formLoading" round type="primary" @click="handleEdit(0)">{{ $t('update.updates') }}</el-button>
             </p>
             <pre v-if="is_pre" ref="main" class="pre" v-html="pre"/>
           </template>
           <template v-else>
-            <el-button :loading="formLoading" round type="success" @click="getDetail">检测更新</el-button>
+            <el-button :loading="formLoading" round type="success" @click="getDetail">{{ $t('update.detection_update') }}</el-button>
           </template>
         </div>
       </div>
@@ -132,13 +134,24 @@ export default {
     getDetail() {
       this.formLoading = true
       detail().then(response => {
+        if (response.data.state === 2) {
+          this.$message.error(this.$t('update.error.state.2'))
+          this.formLoading = false
+          console.log(response.data.body)
+          return false
+        } else if (response.data.state === 3) {
+          this.$message.error(this.$t('update.error.state.3'))
+          this.formLoading = false
+          console.log(response.data.body)
+          return false
+        }
         this.data = response.data
         sessionStorage.setItem('update_info', JSON.stringify(response.data))
         this.formLoading = false
       })
     },
     openBody() {
-      this.$alert(`<div style="white-space: pre-wrap;">${this.data.body}</div>`, '更新日志', {
+      this.$alert(`<div style="white-space: pre-wrap;">${this.data.body}</div>`, this.$t('update.update_log'), {
         dangerouslyUseHTMLString: true
       }).then(() => { }).catch(() => { })
     },
@@ -152,8 +165,8 @@ export default {
         this.pre += response.data.message
         div.scrollTop = div.scrollHeight
         if (response.data.state === 2) {
-          this.$alert('更新成功', this.$t('hint.succeed'), {
-            confirmButtonText: '确定',
+          this.$alert(this.$t('hint.succeed.win', { attribute: this.$t('common.update') }), this.$t('common.succeed'), {
+            confirmButtonText: this.$t('common.confirm'),
             callback: () => {
               this.pre = ''
               this.getDetail()

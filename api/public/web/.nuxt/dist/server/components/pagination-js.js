@@ -1,7 +1,7 @@
 exports.ids = [5];
 exports.modules = {
 
-/***/ 175:
+/***/ 184:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -23,11 +23,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     pageSizes: {
       type: Array,
-
       default() {
         return [10, 20, 30, 50];
       }
-
     },
     layout: {
       type: String,
@@ -51,21 +49,17 @@ __webpack_require__.r(__webpack_exports__);
       get() {
         return this.page;
       },
-
       set(val) {
         this.$emit('update:page', val);
       }
-
     },
     pageSize: {
       get() {
         return this.limit;
       },
-
       set(val) {
         this.$emit('update:limit', val);
       }
-
     }
   },
   methods: {
@@ -75,14 +69,12 @@ __webpack_require__.r(__webpack_exports__);
         limit: val
       });
     },
-
     handleCurrentChange(val) {
       this.$emit('pagination', {
         page: val,
         limit: this.pageSize
       });
     }
-
   }
 });
 

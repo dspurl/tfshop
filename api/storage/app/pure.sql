@@ -253,7 +253,7 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (207, 'DevelopDocumentDetail', '', '', '开发文档', 206, 1, 5),
 (208, 'ApiDocumentDetail', '', '', '接口文档', 206, 1, 5),
 (209, 'UpdateDetail', '', '', '更新', 206, 1, 5),
-(210, 'UpdateEdit', '', '', '更新提交', 206, 1, 5),
+(210, 'UpdateEdit', '', '', '更新提交', 206, 0, 0),
 (211, 'Backup', '', '', '备份管理', 206, 1, 5),
 (212, 'BackupCreate', '', '', '备份', 211, 0, 0),
 (213, 'BackupEdit', '', '', '还原', 211, 0, 0),

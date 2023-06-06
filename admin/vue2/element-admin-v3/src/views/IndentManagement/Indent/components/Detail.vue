@@ -3,43 +3,44 @@
     <!-- 订单详情 -->
     <el-card shadow="always">
       <el-row type="flex">
-        <el-col :span="20" style="font-size: 18px;line-height: 45px;font-weight: bold;">订单号：{{ list.identification }}【{{ list.type }}】</el-col>
-        <el-col :span="3" style="text-align: right;"><el-button v-if="list.shipping_status === 0 && list.state === 2" type="primary" @click="handleDelete(list, 2)">发货</el-button></el-col>
+        <el-col :span="20" style="font-size: 18px;line-height: 45px;font-weight: bold;">{{ $t('good_indent.odd') }}：{{ list.identification }}【{{ list.type }}】</el-col>
+        <el-col :span="3" style="text-align: right;"><el-button v-if="list.shipping_status === 0 && list.state === 2" type="primary" @click="handleDelete(list, 2)">
+          {{ $t('good_indent.operation.shipments') }}</el-button></el-col>
         <el-col :span="1"/>
       </el-row>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="10">下单时间：{{ list.created_at }}</el-col>
-        <el-col :span="10">买家信息：{{ list.good_location ? list.good_location.name : '' }}</el-col>
-        <el-col :span="2" style="color: rgba(0, 0, 0, 0.447)">状态</el-col>
-        <el-col :span="2" style="color: rgba(0, 0, 0, 0.447)">订单金额</el-col>
+        <el-col :span="10">{{ $t('good_indent.created_at') }}：{{ list.created_at }}</el-col>
+        <el-col :span="10">{{ $t('good_indent.buyer_information') }}：{{ list.good_location ? list.good_location.name : '' }}</el-col>
+        <el-col :span="2" style="color: rgba(0, 0, 0, 0.447)">{{ $t('good_indent.state') }}</el-col>
+        <el-col :span="2" style="color: rgba(0, 0, 0, 0.447)">{{ $t('good_indent.total') }}</el-col>
       </el-row>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="10">备注：{{ list.remark ? list.remark : '无' }}</el-col>
-        <el-col :span="10">联系方式：{{ list.good_location ? list.good_location.cellphone : '' }}</el-col>
+        <el-col :span="10">{{ $t('good_indent.remark') }}：{{ list.remark ? list.remark : $t('common.table.nothing') }}</el-col>
+        <el-col :span="10">{{ $t('good_indent.contact_way') }}：{{ list.good_location ? list.good_location.cellphone : '' }}</el-col>
         <el-col :span="2" style="font-weight: bold;font-size: 18px;">{{ list.state_show }}</el-col>
         <el-col :span="2" style="font-weight: bold;font-size: 18px;">¥ {{ list.total | 1000 }}</el-col>
       </el-row>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col v-if="list.good_location" :span="10">收货地址：{{ list.good_location.location }} ({{ list.good_location.address }})</el-col>
+        <el-col v-if="list.good_location" :span="10">{{ $t('good_indent.location') }}：{{ list.good_location.location }} ({{ list.good_location.address }})</el-col>
       </el-row>
     </el-card>
     <!-- 订单进度 -->
     <el-card shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
-        <span>订单进度</span>
+        <span>{{ $t('good_indent.schedule') }}</span>
       </div>
       <el-steps :active="order_progress" align-center>
-        <el-step :description="list.created_at" title="买家下单"/>
-        <el-step :description="list.pay_time !== '1970-01-01 08:00:00' ? list.pay_time : ''" title="买家付款"/>
-        <el-step v-if="goodType !== '卡密/网盘' && goodType !== '下载商品'" :description="list.shipping_time !== '1970-01-01 08:00:00' ? list.shipping_time : ''" title="商家发货"/>
-        <el-step :description="list.confirm_time !== '1970-01-01 08:00:00' ? list.confirm_time : ''" title="交易完成"/>
+        <el-step :description="list.created_at" :title="$t('good_indent.buyer_order')"/>
+        <el-step :description="list.pay_time !== '1970-01-01 08:00:00' ? list.pay_time : ''" :title="$t('good_indent.buyer_payment')"/>
+        <el-step v-if="goodType !== $t('good.type.keys') && goodType !== $t('good.type.download')" :description="list.shipping_time !== '1970-01-01 08:00:00' ? list.shipping_time : ''" :title="$t('good_indent.merchant_delivery')"/>
+        <el-step :description="list.confirm_time !== '1970-01-01 08:00:00' ? list.confirm_time : ''" :title="$t('good_indent.complete_transaction')"/>
       </el-steps>
     </el-card>
     <!-- 商品信息 -->
     <el-card shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
-        <span>商品信息</span>
-        <el-link :underline="false" type="primary" class="invoice" @click="dialogInvoiceVisible = true">送货单</el-link>
+        <span>{{ $t('good_indent.commodity_information') }}</span>
+        <el-link :underline="false" type="primary" class="invoice" @click="dialogInvoiceVisible = true">{{ $t('good_indent.delivery_slip') }}</el-link>
       </div>
       <el-table
         :data="list.goods_list"
@@ -48,40 +49,40 @@
         show-summary
         style="width: 100%">
         <el-table-column
+          :label="$t('good.table.id')"
           type="index"
-          label="编号"
-          width="50"/>
+          width="100"/>
         <el-table-column align="center" width="80">
           <template slot-scope="scope">
             <el-image :src="scope.row.img" :preview-src-list="[scope.row.img]" style="width:45px;height:45px;"/>
           </template>
         </el-table-column>
-        <el-table-column label="商品" align="left">
+        <el-table-column :label="$t('good_indent.delivery_slip.commodity')" align="left">
           <template slot-scope="scope">
             <router-link :to="{ path: '/commodityManagement/good/goodDetail', query: { id: scope.row.good_id }}" target="_blank"> {{ scope.row.name }}</router-link>
           </template>
         </el-table-column>
-        <el-table-column label="类型" align="center">
+        <el-table-column :label="$t('good_indent.delivery_slip.type')" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.good.type }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="规格">
+        <el-table-column :label="$t('good_indent.delivery_slip.specification')">
           <template slot-scope="scope">
             <span>{{ scope.row.specification }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="单价（元）" align="center">
+        <el-table-column :label="`${$t('good_indent.delivery_slip.unit_price')}(${$t('common.monetary_unit')})`" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.price }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="数量（件）" align="center">
+        <el-table-column :label="$t('good_indent.delivery_slip.amount')" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.number }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="金额（元）" align="center">
+        <el-table-column :label="`${$t('good_indent.delivery_slip.money')}(${$t('common.monetary_unit')})`" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.price * scope.row.number }}</span>
           </template>
@@ -91,43 +92,43 @@
     <!-- 在线支付记录 -->
     <el-card shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
-        <span>在线支付记录</span>
+        <span>{{ $t('good_indent.payment_record') }}</span>
       </div>
       <el-table
         :data="list.payment_log_all"
         border
         style="width: 100%">
-        <el-table-column label="订单描述" align="left">
+        <el-table-column :label="$t('good_indent.payment_record.name')" align="left">
           <template slot-scope="scope">
             <span>{{ scope.row.name }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="商户订单号" align="left">
+        <el-table-column :label="$t('good_indent.payment_record.number')" align="left">
           <template slot-scope="scope">
             <span>{{ scope.row.number }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="第三方订单号" align="left">
+        <el-table-column :label="$t('good_indent.payment_record.transaction_id')" align="left">
           <template slot-scope="scope">
             <span>{{ scope.row.transaction_id }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="支付类型" align="center">
+        <el-table-column :label="$t('good_indent.payment_record.type_show')" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.type_show }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="操作金额（元）" align="center">
+        <el-table-column :label="`${$t('good_indent.payment_record.money_show')}(${$t('common.monetary_unit')})`" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.money_show | 1000 }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="平台" align="center">
+        <el-table-column :label="$t('good_indent.payment_record.platform_show')" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.platform_show }}</span>
           </template>
         </el-table-column>
-        <el-table-column label="状态" align="center">
+        <el-table-column :label="$t('common.table.state')" align="center">
           <template slot-scope="scope">
             <span>{{ scope.row.state_show }}</span>
           </template>
@@ -137,17 +138,17 @@
     <!-- 配送 -->
     <el-card v-if="list.good_location" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
-        <span>配送</span>
+        <span>{{ $t('good_indent.distribution') }}</span>
       </div>
       <div>
-        <el-form ref="dataForm" :rules="rules" :model="temp" label-width="120px" style="width: 400px; margin-left:50px;">
-          <el-form-item label="运费">
-            <span v-if="list.carriage">{{ list.carriage | 1000 }}元</span>
-            <span v-else>免运费</span>
+        <el-form ref="dataForm" :rules="rules" :model="temp" label-width="160px" style="width: 400px; margin-left:50px;">
+          <el-form-item :label="$t('good_indent.distribution.carriage')">
+            <span v-if="list.carriage">{{ list.carriage | 1000 }}{{ $t('common.monetary_unit') }}</span>
+            <span v-else>{{ $t('good_indent.distribution.free_shipping') }}</span>
           </el-form-item>
-          <el-form-item label="物流公司" prop="dhl_id">
+          <el-form-item :label="$t('good_indent.distribution.dhl')" prop="dhl_id">
             <div v-if="list.dhl && !temp.dhl">{{ list.dhl.name }}</div>
-            <el-select v-else v-model="temp.dhl_id" placeholder="请选择" clearable>
+            <el-select v-else :placeholder="$t('common.select')" v-model="temp.dhl_id" clearable>
               <el-option
                 v-for="(item,index) in dhl"
                 :key="index"
@@ -155,13 +156,13 @@
                 :value="item.id"/>
             </el-select>
           </el-form-item>
-          <el-form-item label="运单号" prop="odd">
+          <el-form-item :label="$t('good_indent.distribution.odd')" prop="odd">
             <div v-if="list.odd && !temp.odd">{{ list.odd }}</div>
             <el-input v-else ref="odd" v-model="temp.odd" maxlength="255" clearable/>
           </el-form-item>
           <el-form-item v-if="list.state === 3">
-            <el-button v-if="temp.id" :loading="shipmentLoading" type="primary" @click="setDhlUpdate">保存</el-button>
-            <el-button v-else type="primary" @click="dhlUpdate">编辑</el-button>
+            <el-button v-if="temp.id" :loading="shipmentLoading" type="primary" @click="setDhlUpdate">{{ $t('common.save') }}</el-button>
+            <el-button v-else type="primary" @click="dhlUpdate">{{ $t('common.redact') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -169,22 +170,22 @@
     <!-- 延长收货时间 -->
     <el-card v-if="list.state === 3 && list.automaticReceivingState" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
-        <span>延长收货时间</span>
+        <span>{{ $('good_indent.overtime') }}</span>
       </div>
       <div>
         <el-form ref="receivingForm" :rules="receivingRules" :model="receivingTemp" label-width="120px" style="width: 400px; margin-left:50px;">
-          <el-form-item label="自动收货时间">
+          <el-form-item :label="$t('good_indent.overtime.receiving_time')">
             <span>{{ list.receiving_time }}</span>
           </el-form-item>
-          <el-form-item label="设置收货时间" prop="new_receiving_time">
+          <el-form-item :label="$t('good_indent.overtime.new_receiving_time')" prop="new_receiving_time">
             <el-date-picker
+              :placeholder="$t('common.select')"
               v-model="receivingTemp.new_receiving_time"
               type="date"
-              placeholder="选择收货时间"
               value-format="yyyy-MM-dd HH:mm:ss"/>
           </el-form-item>
           <el-form-item>
-            <el-button :loading="shipmentLoading" type="primary" @click="receivingEdit">保存</el-button>
+            <el-button :loading="shipmentLoading" type="primary" @click="receivingEdit">{{ $t('common.save') }}</el-button>
           </el-form-item>
         </el-form>
       </div>
@@ -192,75 +193,73 @@
     <!-- 网盘 -->
     <el-card v-if="list.good_code.length" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
-        <span>{{ code_type ? '网盘' : '卡密' }}</span>
+        <span>{{ code_type ? $t('good_indent.web_disk') : $t('good_indent.carmi') }}</span>
       </div>
       <div class="code-list">
         <div v-for="(item,index) in list.good_code" :key="index" class="li">
-          <div v-if="item.name" class="name">{{ code_type ? '网盘地址' : '卡号' }}：{{ item.name }}<span class="el-icon-copy-document" @click="doCopy(item.name)"/></div>
-          <div class="value">{{ code_type ? '提取码' : '卡密' }}：{{ item.code }}<span class="el-icon-copy-document" @click="doCopy(item.code)"/></div>
+          <div v-if="item.name" class="name">{{ code_type ? $t('good_indent.web_disk.url') : $t('good_indent.web_disk.card_number') }}：{{ item.name }}<span class="el-icon-copy-document" @click="doCopy(item.name)"/></div>
+          <div class="value">{{ code_type ? $t('good_indent.web_disk.code') : $t('good_indent.carmi') }}：{{ item.code }}<span class="el-icon-copy-document" @click="doCopy(item.code)"/></div>
         </div>
       </div>
     </el-card>
     <!-- 退款记录 -->
     <el-card v-if="list.refund_money" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
-        <span>退款详情</span>
+        <span>{{ $t('good_indent.web_disk.refund_details') }}</span>
       </div>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="24">退款金额：{{ list.refund_money | 1000 }}元</el-col>
+        <el-col :span="24">{{ $t('good_indent.web_disk.refund_details.refund_money') }}({{ $t('common.monetary_unit') }})：{{ list.refund_money | 1000 }}</el-col>
       </el-row>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="24">退款方式：{{ list.refund_way }}</el-col>
+        <el-col :span="24">{{ $t('good_indent.web_disk.refund_details.refund_way') }}：{{ list.refund_way }}</el-col>
       </el-row>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="24">退款说明：{{ list.refund_reason }}</el-col>
+        <el-col :span="24">{{ $t('good_indent.web_disk.refund_details.refund_reason') }}：{{ list.refund_reason }}</el-col>
       </el-row>
     </el-card>
     <div class="right" style="margin-top: 20px;filter:alpha(Opacity=90);-moz-opacity:0.9;opacity: 0.9;">
-      <el-button v-if="(list.state !== 1 && !list.refund_money) || !list.state === 8" :loading="shipmentLoading" type="danger" @click="dialogFormVisible = true">退款</el-button>
-      <el-button v-if="list.state === 2" :loading="shipmentLoading" type="primary" @click="shipmentSubmit()">发货</el-button>
+      <el-button v-if="(list.state !== 1 && !list.refund_money) || !list.state === 8" :loading="shipmentLoading" type="danger" @click="dialogFormVisible = true">{{ $t('good_indent.operation.refund') }}</el-button>
+      <el-button v-if="list.state === 2" :loading="shipmentLoading" type="primary" @click="shipmentSubmit()">{{ $t('good_indent.operation.shipments') }}</el-button>
     </div>
     <!--退款-->
-    <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false" title="退款">
-      <el-form ref="refundForm" :rules="refundRules" :model="refundTemp" label-position="left" label-width="120px" style="width:700px;">
-        <el-form-item label="退款金额" prop="refund_money" style="width:300px;">
+    <el-dialog :visible.sync="dialogFormVisible" :close-on-click-modal="false" :title="$t('good_indent.operation.refund')">
+      <el-form ref="refundForm" :rules="refundRules" :model="refundTemp" label-position="left" label-width="160px">
+        <el-form-item :label="$t('good_indent.web_disk.refund_details.refund_money')" prop="refund_money" style="width:300px;">
           <el-input-number v-model="refundTemp.refund_money" :precision="2" :min="0.01" :max="list.total" label="退款金额"/>
         </el-form-item>
-        <el-form-item label="退款方式" prop="refund_way">
+        <el-form-item :label="$t('good_indent.web_disk.refund_details.refund_way')" prop="refund_way">
           <el-radio-group v-model="refundTemp.refund_way">
-            <el-radio :label="0">退到余额</el-radio>
-            <el-radio :label="1">原路退回</el-radio>
+            <el-radio :label="0">{{ $t('good_indent.web_disk.refund_details.refund_way.balance') }}</el-radio>
+            <el-radio :label="1">{{ $t('good_indent.web_disk.refund_details.refund_way.back_track') }}</el-radio>
           </el-radio-group>
-          <el-alert
-            title="退到余额：将款项退到用户余额中;原路退回：用户通过哪个支付途径付款，就退回哪里"
-            type="warning"/>
+          <div>{{ $t('good_indent.web_disk.refund_details.refund_way.tip') }}</div>
         </el-form-item>
-        <el-form-item label="退款理由" prop="refund_reason" style="width:600px;">
-          <el-input v-model="refundTemp.refund_reason" placeholder="请填写退款理由" maxlength="500" clearable/>
+        <el-form-item :label="$t('good_indent.web_disk.refund_details.refund_reason')" prop="refund_reason" style="width:600px;">
+          <el-input :placeholder="$t('hint.error.please_enter', { attribute: $t('good_indent.web_disk.refund_details.refund_reason') })" v-model="refundTemp.refund_reason" maxlength="500" clearable/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="shipmentLoading" type="primary" @click="refundData()">{{ $t('usuel.confirm') }}</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="shipmentLoading" type="primary" @click="refundData()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
     <!-- 送货单-->
     <el-dialog v-if="list.good_location" :visible.sync="dialogInvoiceVisible" :close-on-click-modal="false" center fullscreen class="delivery">
       <div ref="print">
         <div class="text-center title">{{ name }}</div>
-        <div class="text-center name">送货单</div>
+        <div class="text-center name">{{ $t('good_indent.delivery_slip') }}</div>
         <div class="message">
-          <div><span>客户姓名：</span>{{ list.good_location.name }}</div>
-          <div><span>订单号：</span>{{ list.identification }}</div>
-          <div><span>客户下单日期：</span>{{ list.created_at }}</div>
+          <div><span>{{ $t('good_indent.customer') }}：</span>{{ list.good_location.name }}</div>
+          <div><span>{{ $t('good_indent.order_number') }}：</span>{{ list.identification }}</div>
+          <div><span>{{ $t('good_indent.order_date') }}：</span>{{ list.created_at }}</div>
         </div>
-        <div class="location"><span>送货地址：</span>{{ list.good_location.location }} ({{ list.good_location.address }})</div>
+        <div class="location"><span>{{ $t('good_indent.delivery_address') }}：</span>{{ list.good_location.location }} ({{ list.good_location.address }})</div>
         <div class="message">
-          <div><span>收货人：</span>{{ list.good_location.name }}</div>
-          <div><span>联系电话：</span>{{ list.good_location.cellphone }}</div>
+          <div><span>{{ $t('good_indent.good_location') }}：</span>{{ list.good_location.name }}</div>
+          <div><span>{{ $t('good_indent.contact_number') }}：</span>{{ list.good_location.cellphone }}</div>
           <div><span/></div>
         </div>
-        <div class="location"><span>备注：</span>{{ list.remark ? list.remark : '' }}</div>
+        <div class="location"><span>{{ $t('good_indent.remark') }}：</span>{{ list.remark ? list.remark : '' }}</div>
         <el-table
           :data="list.goods_list"
           :summary-method="getSummaries"
@@ -268,40 +267,40 @@
           show-summary
           style="width: 100%">
           <el-table-column
+            :label="$t('good.table.id')"
             type="index"
-            label="编号"
-            width="50"/>
-          <el-table-column label="商品编码" align="left">
+            width="100"/>
+          <el-table-column :label="$t('good_indent.identification')" align="left">
             <template slot-scope="scope">
               <span>{{ scope.row.identification }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="货号" align="left">
+          <el-table-column :label="$t('good.table.number')" align="left">
             <template slot-scope="scope">
               <span>{{ scope.row.articleNumber }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="商品名称" align="left">
+          <el-table-column :label="$t('good.detail.name')" align="left">
             <template slot-scope="scope">
               <span>{{ scope.row.name }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="规格">
+          <el-table-column :label="$t('good_indent.delivery_slip.specification')">
             <template slot-scope="scope">
               <span>{{ scope.row.specification }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="单价（元）" align="center">
+          <el-table-column :label="`${$t('good_indent.delivery_slip.unit_price')}(${$t('common.monetary_unit')})`" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.price }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="数量（件）" align="center">
+          <el-table-column :label="$t('good_indent.delivery_slip.amount')" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.number }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="金额（元）" align="center">
+          <el-table-column :label="`${$t('good_indent.delivery_slip.money')}(${$t('common.monetary_unit')})`" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.price * scope.row.number }}</span>
             </template>
@@ -309,7 +308,7 @@
         </el-table>
       </div>
       <div class="operation">
-        <el-button type="primary" @click="print()">打印</el-button>
+        <el-button type="primary" @click="print()">{{ $t('common.print') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -447,26 +446,26 @@ export default {
       },
       receivingRules: {
         new_receiving_time: [
-          { required: true, message: '请设置新的自动收货时间', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.select', { attribute: this.$t('good_indent.overtime.receiving_time') }), trigger: 'change' }
         ]
       },
       rules: {
         dhl_id: [
-          { required: true, message: '请选择物流公司', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.select', { attribute: this.$t('good_indent.distribution.dhl') }), trigger: 'change' }
         ],
         odd: [
-          { required: true, message: '请输入运单号', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good_indent.odd') }), trigger: 'blur' }
         ]
       },
       refundRules: {
         refund_money: [
-          { required: true, message: '请输入退款金额', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good_indent.web_disk.refund_details.refund_money') }), trigger: 'blur' }
         ],
         refund_way: [
-          { required: true, message: '请选择退款方式', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good_indent.web_disk.refund_details.refund_way') }), trigger: 'change' }
         ],
         refund_reason: [
-          { required: true, message: '请输入退款原因', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good_indent.web_disk.refund_details.refund_reason') }), trigger: 'blur' }
         ]
       },
       refundTemp: {
@@ -477,7 +476,7 @@ export default {
         integralDeduction: ''
       },
       dhl: [],
-      goodType: '普通商品',
+      goodType: this.$t('good.detail.form.type.radio_group.general'),
       code_type: 0
     }
   },
@@ -558,8 +557,8 @@ export default {
             this.dialogFormVisible = false
             this.shipmentLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: '发货成功',
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('good_indent.operation.shipments') }),
               type: 'success',
               duration: 2000
             })
@@ -572,7 +571,7 @@ export default {
           this.$refs.odd.focus()
           this.$notify({
             title: '',
-            message: '请输入物流信息',
+            message: this.$t('hint.error.please_enter', { attribute: this.$t('good_indent.logistics_information') }),
             type: 'warning',
             duration: 2000
           })
@@ -587,8 +586,8 @@ export default {
             this.dialogFormVisible = false
             this.shipmentLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: '退款成功',
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('good_indent.operation.refund') }),
               type: 'success',
               duration: 2000
             })
@@ -619,8 +618,8 @@ export default {
             this.temp = {}
             this.getList()
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: '保存成功',
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.save') }),
               type: 'success',
               duration: 2000
             })
@@ -639,8 +638,8 @@ export default {
         this.shipmentLoading = false
         this.getList()
         this.$notify({
-          title: this.$t('hint.succeed'),
-          message: '修改成功',
+          title: this.$t('common.succeed'),
+          message: this.$t('hint.succeed.win', { attribute: this.$t('common.amend') }),
           type: 'success',
           duration: 2000
         })
@@ -653,7 +652,7 @@ export default {
       const sums = []
       columns.forEach((column, index) => {
         if (index === 0) {
-          sums[index] = '总价'
+          sums[index] = this.$t('good_indent.rental')
           return
         } else if (index === 1 || index === 2 || index === 3) {
           return
@@ -667,7 +666,7 @@ export default {
                 return prev
               }
             }, 0)
-            sums[index] += ' 件'
+            sums[index] += ` ${this.$t('good_indent.piece')}`
           }
         } else if (index === 7) {
           if (data.length > 0) {
@@ -679,7 +678,7 @@ export default {
                 return prev
               }
             }, 0)
-            sums[index] = sums[index] / 100 + ' 元'
+            sums[index] = sums[index] / 100 + ` ${this.$t('common.monetary_unit')}`
           }
         }
       })
@@ -688,7 +687,7 @@ export default {
     doCopy(item) {
       this.$copyText(item).then(message => {
         this.$message({
-          message: '复制成功',
+          message: this.$t('hint.succeed.win', { attribute: this.$t('common.copy') }),
           type: 'success'
         })
       }).catch(() => {
@@ -701,7 +700,7 @@ export default {
       const list = []
       const goods_list = JSON.parse(JSON.stringify(this.list.goods_list))
       goods_list.push({
-        serial: '总价',
+        serial: this.$t('good_indent.total_prices'),
         money: 220,
         number: 1,
         name: '',
@@ -727,51 +726,51 @@ export default {
       printJS({
         printable: list,
         header: `<div style="text-align: center;font-size: 26px;font-weight: bold;line-height: 50px;">${this.name}</div>
-        <div style="text-align: center;font-size: 20px;font-weight: bold;padding-bottom: 50px;">送货单</div>
+        <div style="text-align: center;font-size: 20px;font-weight: bold;padding-bottom: 50px;">${this.$t('good_indent.delivery_slip')}</div>
         <div style="display: flex;">
-          <div style="line-height: 30px;flex:1;"><span>客户姓名：</span>${this.list.good_location.name}</div>
-          <div style="line-height: 30px;flex:1;"><span>订单号：</span>${this.list.identification}</div>
-          <div style="line-height: 30px;flex:1;"><span>下单日期：</span>${this.list.created_at}</div>
+          <div style="line-height: 30px;flex:1;"><span>${this.$t('good_indent.customer')}：</span>${this.list.good_location.name}</div>
+          <div style="line-height: 30px;flex:1;"><span>${this.$t('good_indent.order_number')}：</span>${this.list.identification}</div>
+          <div style="line-height: 30px;flex:1;"><span>${this.$t('good_indent.order_date')}：</span>${this.list.created_at}</div>
         </div>
-        <div style="line-height: 30px;"><span>送货地址：</span>${this.list.good_location.location}${this.list.good_location.address}</div>
+        <div style="line-height: 30px;"><span>${this.$t('good_indent.delivery_address')}：</span>${this.list.good_location.location}${this.list.good_location.address}</div>
         <div style="display: flex;">
-          <div style="line-height: 30px;flex:1;"><span>收货人：</span>${this.list.good_location.name}</div>
-          <div style="line-height: 30px;flex:1;"><span>联系电话：</span>${this.list.good_location.cellphone}</div>
+          <div style="line-height: 30px;flex:1;"><span>${this.$t('good_indent.good_location')}：</span>${this.list.good_location.name}</div>
+          <div style="line-height: 30px;flex:1;"><span>${this.$t('good_indent.contact_number')}：</span>${this.list.good_location.cellphone}</div>
           <div style="line-height: 30px;flex:1;"></div>
         </div>
-        <div style="line-height: 30px;"><span>备注：</span>${this.list.remark ? this.list.remark : ''}</div>`,
+        <div style="line-height: 30px;"><span>${this.$t('good_indent.remark')}：</span>${this.list.remark ? this.list.remark : ''}</div>`,
         properties: [
           {
             field: 'serial',
-            displayName: '编号'
+            displayName: this.$t('good.table.id')
           },
           {
             field: 'name',
-            displayName: '商品名称'
+            displayName: this.$t('good.detail.name')
           },
           {
             field: 'identification',
-            displayName: '商品编码'
+            displayName: this.$t('good_indent.identification')
           },
           {
             field: 'articleNumber',
-            displayName: '货号'
+            displayName: this.$t('good.table.number')
           },
           {
             field: 'specification',
-            displayName: '规格'
+            displayName: this.$t('good_indent.delivery_slip.specification')
           },
           {
             field: 'price',
-            displayName: '单价(元)'
+            displayName: `${this.$t('good_indent.delivery_slip.unit_price')}`
           },
           {
             field: 'number',
-            displayName: '数量'
+            displayName: this.$t('good_indent.number')
           },
           {
             field: 'money',
-            displayName: '金额'
+            displayName: this.$t('good_indent.delivery_slip.money')
           }
         ],
         type: 'json',

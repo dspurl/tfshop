@@ -1,12 +1,12 @@
 exports.ids = [11,13];
 exports.modules = {
 
-/***/ 245:
+/***/ 254:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _plugins_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var _plugins_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'InsertImage',
@@ -38,7 +38,6 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
-
   data() {
     return {
       url: "http://dsshop.test/api/v1/app/" + 'uploadPictures',
@@ -48,81 +47,75 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-
   watch: {},
-
   mounted() {},
-
   methods: {
     // 图片列表上传成功
     handleSuccessList(res, file, fileList) {
       this.$emit('getFile', fileList);
     },
-
     handleRemove(file, fileList) {
       this.$emit('getFile', fileList);
     },
-
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 ${this.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(this.$t('good.file.warning', {
+        limit: this.limit,
+        length: files.length,
+        total: files.length + fileList.length
+      }));
     },
-
     // 图片列表图片格式大小验证
     beforeUploadList(file) {
       const isLt = file.size < this.imgData.size;
-
       if (this.format.indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的文件格式');
+        this.$message.error(this.$t('good.file.error'));
         return false;
       }
-
       if (!isLt) {
-        this.$message.error('上传文件大小不能超过 ' + file.size / 1024 / 1024 + 'MB!');
+        this.$message.error(this.$t('good.file.size.error') + file.size / 1024 / 1024 + 'MB!');
       }
-
       return isLt;
     }
-
   }
 });
 
 /***/ }),
 
-/***/ 246:
+/***/ 255:
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(305);
+var content = __webpack_require__(314);
 if(content.__esModule) content = content.default;
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add CSS to SSR context
-var add = __webpack_require__(4).default
+var add = __webpack_require__(6).default
 module.exports.__inject__ = function (context) {
   add("67fa09cc", content, true, context)
 };
 
 /***/ }),
 
-/***/ 304:
+/***/ 313:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InsertImage_vue_vue_type_style_index_0_id_7b9a9e52_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(246);
+/* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InsertImage_vue_vue_type_style_index_0_id_7b9a9e52_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(255);
 /* harmony import */ var _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InsertImage_vue_vue_type_style_index_0_id_7b9a9e52_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InsertImage_vue_vue_type_style_index_0_id_7b9a9e52_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__);
 /* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InsertImage_vue_vue_type_style_index_0_id_7b9a9e52_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _node_modules_vue_style_loader_index_js_ref_7_oneOf_1_0_node_modules_css_loader_dist_cjs_js_ref_7_oneOf_1_1_node_modules_vue_loader_lib_loaders_stylePostLoader_js_node_modules_postcss_loader_src_index_js_ref_7_oneOf_1_2_node_modules_sass_loader_dist_cjs_js_ref_7_oneOf_1_3_node_modules_sass_resources_loader_lib_loader_js_ref_7_oneOf_1_4_node_modules_nuxt_components_dist_loader_js_ref_0_0_node_modules_vue_loader_lib_index_js_vue_loader_options_InsertImage_vue_vue_type_style_index_0_id_7b9a9e52_lang_scss_scoped_true___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
 
 
 /***/ }),
 
-/***/ 305:
+/***/ 314:
 /***/ (function(module, exports, __webpack_require__) {
 
 // Imports
-var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(3);
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(5);
 var ___CSS_LOADER_EXPORT___ = ___CSS_LOADER_API_IMPORT___(false);
 // Module
 ___CSS_LOADER_EXPORT___.push([module.i, "", ""]);
@@ -132,7 +125,7 @@ module.exports = ___CSS_LOADER_EXPORT___;
 
 /***/ }),
 
-/***/ 330:
+/***/ 339:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -147,7 +140,7 @@ var staticRenderFns = []
 // CONCATENATED MODULE: ./components/Upload/InsertImage.vue?vue&type=template&id=7b9a9e52&scoped=true&
 
 // EXTERNAL MODULE: ./components/Upload/js/insertImage.js
-var insertImage = __webpack_require__(245);
+var insertImage = __webpack_require__(254);
 
 // CONCATENATED MODULE: ./node_modules/babel-loader/lib??ref--2-0!./node_modules/@nuxt/components/dist/loader.js??ref--0-0!./node_modules/vue-loader/lib??vue-loader-options!./components/Upload/InsertImage.vue?vue&type=script&lang=js&
 //
@@ -174,11 +167,12 @@ var insertImage = __webpack_require__(245);
 //
 //
 
+
 /* harmony default export */ var InsertImagevue_type_script_lang_js_ = (insertImage["default"]);
 // CONCATENATED MODULE: ./components/Upload/InsertImage.vue?vue&type=script&lang=js&
  /* harmony default export */ var Upload_InsertImagevue_type_script_lang_js_ = (InsertImagevue_type_script_lang_js_); 
 // EXTERNAL MODULE: ./node_modules/vue-loader/lib/runtime/componentNormalizer.js
-var componentNormalizer = __webpack_require__(1);
+var componentNormalizer = __webpack_require__(3);
 
 // CONCATENATED MODULE: ./components/Upload/InsertImage.vue
 
@@ -186,7 +180,7 @@ var componentNormalizer = __webpack_require__(1);
 
 function injectStyles (context) {
   
-  var style0 = __webpack_require__(304)
+  var style0 = __webpack_require__(313)
 if (style0.__inject__) style0.__inject__(context)
 
 }

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -47,10 +56,10 @@ class PaymentLog extends Model
             $name = '';
             switch ($this->attributes['state']) {
                 case static::PAYMENT_LOG_STATE_CREATE:
-                    $name = '未处理';
+                    $name = __('payment_log.state.create');
                     break;
                 case static::PAYMENT_LOG_STATE_COMPLETE:
-                    $name = '已完成';
+                    $name = __('payment_log.state.complete');
                     break;
             }
             return $name;
@@ -69,7 +78,7 @@ class PaymentLog extends Model
         if (isset($this->attributes['platform'])) {
             switch ($this->attributes['platform']) {
                 case static::PAYMENT_LOG_PLATFORM_WEIXIN:
-                    return '微信支付';
+                    return __('payment_log.platform.weixin');
                     break;
             }
         }
@@ -80,10 +89,10 @@ class PaymentLog extends Model
         if (isset($this->attributes['type'])) {
             switch ($this->attributes['type']) {
                 case static::PAYMENT_LOG_TYPE_GOODS_INDENT:
-                    return '订单支付';
+                    return __('payment_log.type.goods_indent');
                     break;
                 case static::PAYMENT_LOG_TYPE_REFUND:
-                    return '订单退款';
+                    return __('payment_log.type.refund');
                     break;
             }
         }

@@ -6,7 +6,7 @@
       display: flex;
       font-size: 12px;
       .good{
-        width: 600px;
+        width: 500px;
         .good-li{
           display: flex;
           padding:10px;
@@ -46,7 +46,7 @@
       }
       .total{
         display: flex;
-        width: 150px;
+        width: 180px;
         text-align: center;
         border-right: 1px solid #e5e5e5;
         align-items:center;
@@ -57,7 +57,7 @@
       }
       .state{
         display: flex;
-        width: 80px;
+        width: 150px;
         text-align: center;
         border-right: 1px solid #e5e5e5;
         align-items:center;
@@ -70,7 +70,7 @@
         }
       }
       .operation{
-        width: 120px;
+        width: 140px;
         display: flex;
         text-align: center;
         align-items:center;
@@ -113,18 +113,18 @@
     font-size: 14px;
     color: #666;
     .good{
-      width: 580px;
+      width: 480px;
     }
     .total{
-      width: 150px;
+      width: 180px;
       text-align: center;
     }
     .state{
-      width: 80px;
+      width: 160px;
       text-align: center;
     }
     .operation{
-      width: 120px;
+      width: 140px;
       text-align: center;
     }
   }

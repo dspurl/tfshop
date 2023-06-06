@@ -4,16 +4,16 @@
       <el-col v-loading="analyze_loading" :span="24" style="padding-bottom: 20px;">
         <el-card shadow="hover">
           <div class="title">
-            <h3>性别、年龄分布</h3>
+            <h3>{{ $t('statistics.user.sex_age') }}</h3>
             <div>
-              <el-select v-model="genderType" placeholder="请选择" @change="setDate('genderType')">
+              <el-select :placeholder="$t('common.select')" v-model="genderType" @change="setDate('genderType')">
                 <el-option
                   v-for="item in genderTypeData"
                   :key="item.value"
                   :label="item.lable"
                   :value="item.value"/>
               </el-select>
-              <el-select v-model="genderDate" placeholder="请选择" @change="setDate('genderDate')">
+              <el-select :placeholder="$t('common.select')" v-model="genderDate" @change="setDate('genderDate')">
                 <el-option
                   v-for="item in gender"
                   :key="item.value"
@@ -36,16 +36,16 @@
       <el-col v-loading="province_loading" :span="24" style="padding-bottom: 20px;">
         <el-card shadow="hover">
           <div class="title">
-            <h3>地区分布</h3>
+            <h3>{{ $t('statistics.user.regional_distribution') }}</h3>
             <div>
-              <el-select v-model="provinceType" placeholder="请选择" @change="setDate('provinceType')">
+              <el-select :placeholder="$t('common.select')" v-model="provinceType" @change="setDate('provinceType')">
                 <el-option
                   v-for="item in provinceTypeData"
                   :key="item.value"
                   :label="item.lable"
                   :value="item.value"/>
               </el-select>
-              <el-select v-model="provinceDate" placeholder="请选择" @change="setDate('provinceDate')">
+              <el-select :placeholder="$t('common.select')" v-model="provinceDate" @change="setDate('provinceDate')">
                 <el-option
                   v-for="item in province"
                   :key="item.value"
@@ -68,16 +68,16 @@
       <el-col v-loading="platforms_loading" :span="24" style="padding-bottom: 20px;">
         <el-card shadow="hover">
           <div class="title">
-            <h3>地区分布</h3>
+            <h3>{{ $t('statistics.user.terminal_distribution') }}</h3>
             <div>
-              <el-select v-model="platformsType" placeholder="请选择" @change="setDate('platformsType')">
+              <el-select :placeholder="$t('common.select')" v-model="platformsType" @change="setDate('platformsType')">
                 <el-option
                   v-for="item in platformsTypeData"
                   :key="item.value"
                   :label="item.lable"
                   :value="item.value"/>
               </el-select>
-              <el-select v-model="platformsDate" placeholder="请选择" @change="setDate('platformsDate')">
+              <el-select :placeholder="$t('common.select')" v-model="platformsDate" @change="setDate('platformsDate')">
                 <el-option
                   v-for="item in platforms"
                   :key="item.value"
@@ -122,69 +122,69 @@ export default {
       genderType: 0,
       genderTypeData: [{
         value: 0,
-        lable: '活跃用户数'
+        lable: this.$t('statistics.user.active_user_number')
       }, {
         value: 1,
-        lable: '新增用户数'
+        lable: this.$t('statistics.user.new_number_of_users')
       }],
       genderDate: 1,
       genderData: [],
       agesData: [],
       gender: [{
         value: 1,
-        lable: '昨天'
+        lable: this.$t('statistics.visit.yesterday')
       }, {
         value: 7,
-        lable: '最近7天'
+        lable: this.$t('statistics.visit.recently', { number: 7 })
       }, {
         value: 30,
-        lable: '最近30天'
+        lable: this.$t('statistics.visit.recently', { number: 30 })
       }],
       genderShowDate: '',
       province_loading: false,
       provinceType: 0,
       provinceTypeData: [{
         value: 0,
-        lable: '活跃用户数'
+        lable: this.$t('statistics.user.active_user_number')
       }, {
         value: 1,
-        lable: '新增用户数'
+        lable: this.$t('statistics.user.new_number_of_users')
       }],
       provinceDate: 1,
       provinceData: [],
       cityData: [],
       province: [{
         value: 1,
-        lable: '昨天'
+        lable: this.$t('statistics.visit.yesterday')
       }, {
         value: 7,
-        lable: '最近7天'
+        lable: this.$t('statistics.visit.recently', { number: 7 })
       }, {
         value: 30,
-        lable: '最近30天'
+        lable: this.$t('statistics.visit.recently', { number: 30 })
       }],
       provinceShowDate: '',
       platforms_loading: false,
       platformsType: 0,
       platformsTypeData: [{
         value: 0,
-        lable: '活跃用户数'
+        lable: this.$t('statistics.user.active_user_number')
       }, {
         value: 1,
-        lable: '新增用户数'
+        lable: this.$t('statistics.user.new_number_of_users')
       }],
       platformsDate: 1,
       platformsData: [],
       devicesData: [],
       platforms: [{
         value: 1,
-        lable: '昨天'
+        lable: this.$t('statistics.visit.yesterday')
       }, {
         value: 7,
-        lable: '最近7天'
+        lable: this.$t('statistics.visit.recently', { number: 7 })
       }, {
         value: 30,
-        lable: '最近30天'
+        lable: this.$t('statistics.visit.recently', { number: 30 })
       }],
       platformsShowDate: ''
     }
@@ -195,9 +195,9 @@ export default {
   methods: {
     getList() {
       this.listLoading = true
-      this.genderShowDate = getBeforeDate(this.genderDate) + '至' + getBeforeDate(1)
-      this.provinceShowDate = getBeforeDate(this.provinceDate) + '至' + getBeforeDate(1)
-      this.platformsShowDate = getBeforeDate(this.platformsDate) + '至' + getBeforeDate(1)
+      this.genderShowDate = getBeforeDate(this.genderDate) + this.$t('common.to') + getBeforeDate(1)
+      this.provinceShowDate = getBeforeDate(this.provinceDate) + this.$t('common.to') + getBeforeDate(1)
+      this.platformsShowDate = getBeforeDate(this.platformsDate) + this.$t('common.to') + getBeforeDate(1)
       age_and_sex().then(response => {
         this.platformsOptions = this.provinceOptions = this.options = response.data
         this.genderData = this.options.visit_uv.genders
@@ -211,7 +211,7 @@ export default {
     },
     getGender() {
       this.analyze_loading = true
-      this.genderShowDate = getBeforeDate(this.genderDate) + '至' + getBeforeDate(1)
+      this.genderShowDate = getBeforeDate(this.genderDate) + this.$t('common.to') + getBeforeDate(1)
       age_and_sex({ date: this.genderDate }).then(response => {
         this.options = response.data
         if (this.genderType === 0) {
@@ -226,7 +226,7 @@ export default {
     },
     getProvince() {
       this.province_loading = true
-      this.provinceShowDate = getBeforeDate(this.provinceDate) + '至' + getBeforeDate(1)
+      this.provinceShowDate = getBeforeDate(this.provinceDate) + this.$t('common.to') + getBeforeDate(1)
       age_and_sex({ date: this.provinceDate }).then(response => {
         this.provinceOptions = response.data
         if (this.provinceType === 0) {
@@ -241,7 +241,7 @@ export default {
     },
     getPlatforms() {
       this.platforms_loading = true
-      this.platformsShowDate = getBeforeDate(this.platformsDate) + '至' + getBeforeDate(1)
+      this.platformsShowDate = getBeforeDate(this.platformsDate) + this.$t('common.to') + getBeforeDate(1)
       age_and_sex({ date: this.platformsDate }).then(response => {
         this.platformsOptions = response.data
         if (this.platformsType === 0) {
@@ -266,7 +266,7 @@ export default {
         }
         this.analyze_loading = false
       } else if (item === 'genderDate') {
-        this.genderShowDate = getBeforeDate(this.genderDate) + '至' + getBeforeDate(1)
+        this.genderShowDate = getBeforeDate(this.genderDate) + this.$t('common.to') + getBeforeDate(1)
         this.getGender()
       } else if (item === 'provinceType') {
         this.province_loading = true
@@ -279,7 +279,7 @@ export default {
         }
         this.province_loading = false
       } else if (item === 'provinceDate') {
-        this.provinceShowDate = getBeforeDate(this.provinceDate) + '至' + getBeforeDate(1)
+        this.provinceShowDate = getBeforeDate(this.provinceDate) + this.$t('common.to') + getBeforeDate(1)
         this.getProvince()
       } else if (item === 'platformsType') {
         this.platforms_loading = true
@@ -292,7 +292,7 @@ export default {
         }
         this.platforms_loading = false
       } else if (item === 'platformsDate') {
-        this.platformsShowDate = getBeforeDate(this.platformsDate) + '至' + getBeforeDate(1)
+        this.platformsShowDate = getBeforeDate(this.platformsDate) + this.$t('common.to') + getBeforeDate(1)
         this.getPlatforms()
       }
     }

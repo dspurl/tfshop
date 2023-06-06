@@ -10,6 +10,7 @@
 
 <script>
 import tinymce from 'tinymce/tinymce' // tinymce默认hidden，不引入不显示
+import { getToken } from '@/utils/auth'
 import 'tinymce/icons/default/icons.min.js'
 import Editor from '@tinymce/tinymce-vue'
 import 'tinymce/themes/silver'
@@ -68,8 +69,8 @@ export default {
   data() {
     return {
       init: {
-        language_url: './static/tinymce/langs/zh_CN.js',
-        language: 'zh_CN',
+        language_url: `./static/tinymce/langs/${getToken('language') || 'zh'}.js`,
+        language: getToken('language') ? getToken('language') === 'zh' ? 'zh_CN' : getToken('language') : 'zh_CN',
         skin_url: './static/tinymce/skins/ui/oxide',
         content_css: `./static/tinymce/skins/content/default/content.css`,
         height: 300,

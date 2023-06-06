@@ -3,10 +3,10 @@
     <el-breadcrumb class="breadcrumb container" separator="/">
       <el-breadcrumb-item>
         <NuxtLink :to="{ path: '/' }">
-          首页
+          {{$t('header.top.nav_list.home')}}
         </NuxtLink>
       </el-breadcrumb-item>
-      <el-breadcrumb-item>全部商品分类</el-breadcrumb-item>
+      <el-breadcrumb-item>{{$t('category.all')}}</el-breadcrumb-item>
     </el-breadcrumb>
     <div class="category-box">
       <div class="category-list container" v-for="(item, index) in goodCategory" :key="index">

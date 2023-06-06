@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -58,12 +67,12 @@ class SubmitPowerRequest extends Request
     public function messages()
     {
         return [
-            'title.required' => __('hint.error.not_null', ['specification' => __('hint.routine.permissions_name')]),
-            'title.unique' => __('hint.error.exist', ['specification' => __('hint.routine.permissions_name')]),
-            'title.max' => __('hint.error.exceed', ['specification' => __('hint.routine.permissions_name'), 'place' => 30]),
-            'api.unique' => __('hint.error.exist', ['specification' => __('hint.routine.api')]),
-            'api.max' => __('hint.error.exceed', ['specification' => __('hint.routine.api'), 'place' => 200]),
-            'pid.required' => __('hint.error.select', ['specification' => __('hint.routine.grouping')]),
+            'title.required' => __('hint.error.not_null', ['specification' => __('power.title')]),
+            'title.unique' => __('hint.error.exist', ['specification' => __('power.title')]),
+            'title.max' => __('hint.error.exceed', ['specification' => __('power.title'), 'place' => 30]),
+            'api.unique' => __('hint.error.exist', ['specification' => __('power.api')]),
+            'api.max' => __('hint.error.exceed', ['specification' => __('power.api'), 'place' => 200]),
+            'pid.required' => __('hint.error.not_null', ['specification' => __('power.pid')]),
         ];
     }
 }

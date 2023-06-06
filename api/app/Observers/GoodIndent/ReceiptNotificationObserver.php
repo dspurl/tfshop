@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Observers\GoodIndent;
 
 use App\Models\v1\GoodIndent;
@@ -45,40 +54,40 @@ class ReceiptNotificationObserver
             $parameter = [
                 'id' => $goodIndent->id,  //订单ID
                 'identification' => $goodIndent->identification,  //订单号
-                'name' => $goodIndent->goodsList[0]->name . (count($goodIndent->goodsList) > 1 ? '等多件' : ''),    //商品名称
+                'name' => $goodIndent->goodsList[0]->name . (count($goodIndent->goodsList) > 1 ? __('observer.good_indent.finish_payment_notification.excessive_parts') : ''),    //商品名称
                 'created_at' => date("Y-m-d H:i:s", strtotime($goodIndent->created_at)),   // 下单时间
                 'shipping_time' => $goodIndent->shipping_time,    //发货时间
                 'confirm_time' => $goodIndent->confirm_time,    //确认收货时间
                 'template' => 'order_confirm_receipt',   //通知模板标识
                 'user_id' => $goodIndent->user_id    //用户ID
             ];
-            $name = $goodIndent->is_automatic_receiving == GoodIndent::GOOD_INDENT_IS_AUTOMATIC_RECEIVING_YES ? '自动' : '';
+            $name = $goodIndent->is_automatic_receiving == GoodIndent::GOOD_INDENT_IS_AUTOMATIC_RECEIVING_YES ? __('observer.good_indent.receipt_notification_voluntarily') : '';
             $invoice = [
                 'type' => InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
-                'title' => '亲：您在我们商城买的宝贝已经' . $name . '确认收货。',
+                'title' => __('observer.good_indent.receipt_notification.title', ['name'=>$name ]),
                 'list' => [
                     [
-                        'keyword' => '订单编号',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.identification'),
                         'data' => $parameter['identification']
                     ],
                     [
-                        'keyword' => '商品名称',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.name'),
                         'data' => $parameter['name']
                     ],
                     [
-                        'keyword' => '下单时间',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.time'),
                         'data' => $parameter['created_at']
                     ],
                     [
-                        'keyword' => '发货时间',
+                        'keyword' => __('observer.good_indent.receipt_notification.shipping_time'),
                         'data' => $parameter['shipping_time']
                     ],
                     [
-                        'keyword' => '确认收货时间',
+                        'keyword' => __('observer.good_indent.receipt_notification.confirm_time'),
                         'data' => $parameter['confirm_time']
                     ]
                 ],
-                'remark' => '感谢您的支持与厚爱。',
+                'remark' => __('wechat_channel.order_confirm_receipt.remark'),
                 'url' => '/pages/indent/detail?id=' . $parameter['id'],
                 'parameter' => $parameter,
                 'prefers' => ['database', 'wechat', 'mail']
@@ -95,22 +104,22 @@ class ReceiptNotificationObserver
             ];
             $invoice = [
                 'type' => InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
-                'title' => '订单完成通知',
+                'title' => __('wechat_channel.admin_order_completion.first'),
                 'list' => [
                     [
-                        'keyword' => '订单编号',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.identification'),
                         'data' => $parameter['identification']
                     ],
                     [
-                        'keyword' => '商品名称',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.name'),
                         'data' => $parameter['name']
                     ],
                     [
-                        'keyword' => '完成时间',
+                        'keyword' => __('observer.good_indent.receipt_notification.completion_time'),
                         'data' => $parameter['confirm_time']
                     ]
                 ],
-                'remark' => '客户已' . $name . '确认收货，订单已完成',
+                'remark' => __('observer.good_indent.receipt_notification.remark', ['name'=>$name]),
                 'url' => '/Indent/shipment?id=' . $parameter['id'],
                 'parameter' => $parameter,
                 'admin' => true,

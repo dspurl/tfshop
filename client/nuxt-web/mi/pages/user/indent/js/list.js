@@ -3,7 +3,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '我的订单-个人中心',
+      title: `${this.$t('header.top.order')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {
@@ -66,16 +66,16 @@ export default {
     },
     //取消订单
     cancelOrder(item){
-      this.$confirm('是否确认取消订单？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm',{attribute:this.$t('indent.cancel_order')}), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true
         cancel(item.id).then(response => {
           this.buttonLoading = false;
           this.$message({
-            message: '取消成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
           this.getReloadList();
@@ -87,16 +87,16 @@ export default {
     },
     // 删除订单
     deleteOrder(item){
-      this.$confirm('是否确认删除订单？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm',{attribute:this.$t('indent.delete_order')}), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true
         destroy(item.id).then(response => {
           this.buttonLoading = false;
           this.$message({
-            message: '删除成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
           this.getReloadList();
@@ -108,16 +108,16 @@ export default {
     },
     // 确认收货
     confirmReceipt(item){
-      this.$confirm('是否确认收货？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm',{attribute:this.$t('indent.receiving')}), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true
         receipt(item.id).then(response => {
           this.buttonLoading = false;
           this.$message({
-            message: '操作成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
           this.getReloadList();

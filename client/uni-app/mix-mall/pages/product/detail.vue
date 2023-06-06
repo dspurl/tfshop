@@ -2,7 +2,7 @@
 	<view class="container">
 		<view class="carousel">
 			<video v-if="video" id="showVideo" :src="video" :poster="poster" class="showVideo"/>
-			<view v-if="video" class="showVideoClose" @click.stop="closeVideo">关闭</view>
+			<view v-if="video" class="showVideoClose" @click.stop="closeVideo">{{$t('common.close')}}</view>
 			<swiper indicator-dots circular="true" duration="400" v-if="getList.resources_many" @change="imgCtu">
 				<swiper-item class="swiper-item" v-for="(item, index) in resources_many" :key="index" @click="showVideo">
 					<view v-if="item.type === 'img'" class="image-wrapper" @click="imgList()"><image :src="item.img" class="loaded" mode="aspectFill" lazy-load></image></view>
@@ -16,25 +16,25 @@
 		<view class="introduce-section">
 			<text class="title">{{ getList.name }}</text>
 			<view class="price-box" v-if="inventoryFlag">
-				<text class="price-tip">¥</text>
+				<text class="price-tip">{{$t('common.unit')}}</text>
 				<template v-if="getList.price_show">
 					<text class="price" v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</text>
 					<text class="price" v-else-if="getList.price_show.length === 1">{{ getList.price_show[0] }}</text>
 				</template>
 				<template v-if="getList.market_price_show">
-					<text class="m-price" v-if="getList.market_price_show.length > 1">¥{{ getList.market_price_show[1] }}</text>
-					<text class="m-price" v-else-if="getList.market_price_show.length === 1">¥{{ getList.market_price_show[0] }}</text>
+					<text class="m-price" v-if="getList.market_price_show.length > 1">{{$t('common.unit')}}{{ getList.market_price_show[1] }}</text>
+					<text class="m-price" v-else-if="getList.market_price_show.length === 1">{{$t('common.unit')}}{{ getList.market_price_show[0] }}</text>
 				</template>
 			</view>
 			<view class="bot-row">
-				<text>库存: {{ getList.inventory_show }}</text>
-				<text>销量: {{ getList.sales}}</text>
+				<text>{{$t('good.table.inventory')}}: {{ getList.inventory_show }}</text>
+				<text>{{$t('product.sales')}}: {{ getList.sales}}</text>
 			</view>
 		</view>
 		<view class="c-list">
 			<block v-if="getList.is_delete || getList.is_show !== 1">
 				<view v-if="specificationDefaultDisplay" class="c-row b-b">
-					<text class="tit">购买类型</text>
+					<text class="tit">{{$t('product.type')}}</text>
 					<view class="con">
 						<text class="selected-text">{{ specificationDefaultDisplay }}</text>
 					</view>
@@ -43,7 +43,7 @@
 			</block>
 			<block v-else>
 				<view v-if="specificationDefaultDisplay" class="c-row b-b" @click="toggleSpec(true)">
-					<text class="tit">购买类型</text>
+					<text class="tit">{{$t('product.type')}}</text>
 					<view class="con">
 						<text class="selected-text">{{ specificationDefaultDisplay }}</text>
 					</view>
@@ -52,7 +52,7 @@
 			</block>
 		</view>
 		<view class="detail-desc">
-			<view class="d-header"><text>图文详情</text></view>
+			<view class="d-header"><text>{{$t('product.details')}}</text></view>
 			<u-parse :content="getList.details" lazyLoad/>
 		</view>
 
@@ -60,23 +60,23 @@
 		<view class="page-bottom">
 			<navigator url="/pages/index/index" open-type="switchTab" class="p-b-btn">
 				<text class="yticon icon-xiatubiao--copy"></text>
-				<text>首页</text>
+				<text>{{$t('product.menu.home')}}</text>
 			</navigator>
 			<navigator url="/pages/cart/cart" open-type="switchTab" class="p-b-btn">
 				<text class="yticon icon-gouwuche"></text>
-				<text>购物车</text>
+				<text>{{$t('product.menu.cart')}}</text>
 			</navigator>
 			<view class="p-b-btn" :class="{ active: favorite }" @click="toFavorite">
 				<text class="yticon icon-shoucang"></text>
-				<text>收藏</text>
+				<text>{{$t('product.menu.collect')}}</text>
 			</view>
 			<view class="action-btn-group" v-if="getList.is_delete  || getList.is_show !== 1 || !inventoryFlag">
-				<button type="primary" class=" action-btn no-border buy-now-btn" disabled>立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>加入购物车</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" disabled>{{$t('product.menu.buy')}}</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>{{$t('product.menu.add_cart')}}</button>
 			</view>
 			<view class="action-btn-group" v-else>
-				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">立即购买</button>
-				<button type="primary" class=" action-btn no-border add-cart-btn" :disabled="getList.type === '卡密/网盘' || getList.type === '下载商品'" @click="toggleSpec(false)">加入购物车</button>
+				<button type="primary" class=" action-btn no-border buy-now-btn" @click="toggleSpec(true)">{{$t('product.menu.buy')}}</button>
+				<button type="primary" class=" action-btn no-border add-cart-btn" :disabled="getList.type === $t('good.type.keys') || getList.type === $t('good.type.download')" @click="toggleSpec(false)">{{$t('product.menu.add_cart')}}</button>
 			</view>
 		</view>
 
@@ -86,8 +86,8 @@
 			<view class="layer attr-content" @click.stop="stopPrevent"><sku ref="sku" :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku></view>
 		</view>
 		<!-- 已删除或还未发布-->
-		<view v-if="getList.is_show === 0" class="sold-out padding-sm">商品已经下架了~</view>
-		<view v-if="inventoryFlag == false" class="sold-out padding-sm">商品已经售完了~</view>
+		<view v-if="getList.is_show === 0" class="sold-out padding-sm">{{$t('product.sold_out')}}~</view>
+		<view v-if="inventoryFlag == false" class="sold-out padding-sm">{{$t('product.sell_out')}}~</view>
 	</view>
 </template>
 

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 
@@ -41,14 +50,14 @@ class SubmitAdminRequest extends Request
             case 'POST':    //create
                 if (Request::has('id')) {   //更新
                     return [
-                        'name' => 'required|unique:admins,name,' . $request['id'] . '|string|max:30',
+                        'name' => 'required|unique:admins,name,' . $request['id'] . '|string|max:30|min:4',
                         'email' => 'required|email|max:255',
                         'cellphone' => 'required|unique:admins,cellphone,' . $request['id'] . '|mobile|max:11',
                         'portrait' => 'required|string|max:255',
                     ];
                 } else {
                     return [
-                        'name' => 'required|unique:admins|string|max:30',
+                        'name' => 'required|unique:admins|string|max:30|min:4',
                         'email' => 'required|email|max:255',
                         'cellphone' => 'required|unique:admins|mobile|max:11',
                         'portrait' => 'required|string|max:255',
@@ -66,15 +75,16 @@ class SubmitAdminRequest extends Request
     public function messages()
     {
         return [
-            'name.required' => '管理员账号不能为空',
-            'name.unique' => '管理员账号已存在',
-            'name.max' => '管理员账号长度不能超过30位',
-            'email.required' => '邮箱不能为空',
-            'cellphone.required' => '手机号不能为空',
-            'cellphone.max' => '手机号长度不能超过11位',
-            'cellphone.unique' => '手机号已存在',
-            'portrait.required' => '头像不能为空',
-            'password.required' => '密码不能为空',
+            'name.required' => __('hint.error.not_null', ['attribute' => __('admin.name')]),
+            'name.unique' => __('hint.error.exist', ['attribute' => __('admin.name')]),
+            'name.max' => __('hint.error.max', ['attribute' => __('admin.name'), 'place' => 30]),
+            'name.min' => __('hint.error.min', ['attribute' => __('admin.name'), 'place' => 30]),
+            'email.email' => __('hint.error.wrong_format', ['attribute' => __('admin.email')]),
+            'cellphone.mobile' => __('hint.error.wrong_format', ['attribute' => __('admin.cellphone')]),
+            'cellphone.unique' =>__('hint.error.exist', ['attribute' => __('admin.cellphone')]),
+            'cellphone.max' => __('hint.error.max', ['attribute' => __('admin.cellphone'), 'place' => 11]),
+            'portrait.max' => __('hint.error.max', ['attribute' => __('admin.portrait'), 'place' => 50]),
+            'password.required' => __('hint.error.not_null', ['attribute' => __('admin.password')]),
         ];
     }
 

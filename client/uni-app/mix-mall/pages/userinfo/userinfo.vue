@@ -1,47 +1,47 @@
 <template>
 	<view class="container">
 		<view class="list-cell b-b m-t" @click="setPortrait" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">头像</text>
+			<text class="cell-tit">{{$t('userinfo.portrait')}}</text>
 			<view class="action">
 				<view v-if="user.portrait" class="cu-avatar round" :style="'background-image:url('+user.portrait+');'"></view>
 			</view>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="list-cell b-b" @tap="showModal" data-target="DialogModal1" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">昵称</text>
+			<text class="cell-tit">{{$t('userinfo.nickname')}}</text>
 			<view class="action">
-				{{user.nickname ? user.nickname : '未设置'}}
+				{{user.nickname ? user.nickname : $t('userinfo.not_set')}}
 			</view>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
 			<view class="cu-dialog">
 				<view class="cu-bar bg-white justify-end">
-					<view class="content">昵称</view>
+					<view class="content">{{$t('userinfo.nickname')}}</view>
 					<view class="action" @tap="hideModal">
 						<text class="cuIcon-close text-red"></text>
 					</view>
 				</view>
 				<view class="padding-xl">
-					<input class="input" v-model="user.nickname" placeholder="昵称" placeholder-class="placeholder" maxlength="60"/>
+					<input class="input" v-model="user.nickname" :placeholder="$t('userinfo.nickname')" placeholder-class="placeholder" maxlength="60"/>
 				</view>
 				<view class="cu-bar bg-white justify-end">
 					<view class="action">
-						<button class="cu-btn line-red text-red" @tap="hideModal">取消</button>
-						<button class="cu-btn bg-red margin-left" @tap="setUser(1)">确定</button>
+						<button class="cu-btn line-red text-red" @tap="hideModal">{{$t('common.cancel')}}</button>
+						<button class="cu-btn bg-red margin-left" @tap="setUser(1)">{{$t('common.confirm')}}</button>
 		
 					</view>
 				</view>
 			</view>
 		</view>
 		<view class="list-cell b-b" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">手机号</text>
+			<text class="cell-tit">{{$t('userinfo.cellphone')}}</text>
 			<view class="action">
 				{{user.cellphone}}
 			</view>
 		</view>
 		<view class="list-cell b-b" @click="navTo('/pages/userinfo/email?email='+(user.email ? user.email : ''))" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">邮箱</text>
+			<text class="cell-tit">{{$t('userinfo.email')}}</text>
 			<view class="action">
 				{{user.email}}
 			</view>
@@ -61,6 +61,9 @@
 			};
 		},
 		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('set.personal')
+			})
 			this.loginCheck()
 			this.getUser()
 		},

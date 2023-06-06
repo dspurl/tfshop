@@ -1,5 +1,16 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | 公共方法
+ * +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers;
 
 use App\Code;
@@ -38,31 +49,31 @@ class Controller extends BaseController
         $file = $request->file('file');
         // 判断图片有效性
         if (!$file->isValid()) {
-            return resReturn(0, '上传文件无效', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('upload_pictures.is_valid.error'), Code::CODE_PARAMETER_WRONG);
         }
         $extension = $request->file->extension();
         if (!isset($request->type)) {
-            return resReturn(0, '缺少类型', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('upload_pictures.type.error'), Code::CODE_PARAMETER_WRONG);
         }
         //验证尺寸
         if (!isset($request->size)) {
-            return resReturn(0, '尺寸参数有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('upload_pictures.size.error'), Code::CODE_PARAMETER_WRONG);
         }
         if ($request->size < $request->file->getSize()) {
-            return resReturn(0, '您上传的文件过大', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('upload_pictures.get_size.error'), Code::CODE_PARAMETER_WRONG);
         }
         if ($request->type == 1) { //验证图片
             $name = 'image';
         } else if ($request->type == 2) {  // 自定义文件
             $name = 'custom';
         } else {
-            return resReturn(0, '类型不存在', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('upload_pictures.type_inexistence.error'), Code::CODE_PARAMETER_WRONG);
         }
         if (!in_array($extension, explode(',', config("dsshop.file.$name.extension")))) {
-            return resReturn(0, '图片格式有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('upload_pictures.extension.error'), Code::CODE_PARAMETER_WRONG);
         }
         if ($request->file->getSize() > config("dsshop.file.$name.size")) {
-            return resReturn(0, '您上传的文件大于后台配置的最大上传大小' . (config("dsshop.file.$name.size") / 1024 / 1024) . 'M', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('upload_pictures.admin_size.error') . (config("dsshop.file.$name.size") / 1024 / 1024) . 'M', Code::CODE_PARAMETER_WRONG);
         }
         $url = $this->uploadFiles($file, $request);
         if ($url['state'] != 'SUCCESS') {
@@ -74,7 +85,7 @@ class Controller extends BaseController
             $miniProgram = Factory::miniProgram($config); // 小程序
             $result = $miniProgram->content_security->checkImage('storage/temporary/' . $url['title']);
             if ($result['errcode'] == 87014) {
-                return resReturn(0, '图片含有敏感信息，请重新上传', Code::CODE_PARAMETER_WRONG);
+                return resReturn(0, __('upload_pictures.mini_program.error'), Code::CODE_PARAMETER_WRONG);
             }
         }
         // 显示文件详细数据
@@ -110,14 +121,14 @@ class Controller extends BaseController
         $disk->put($pathName, $files);
         // 根据前端传递值动态生成多规格图片
         if ($request->type == 1 && $request->has('specification')) {
-            if($extension != 'png'){
-                throw new \Exception('多规格图片只支持png格式', Code::CODE_WRONG);
-            }
+//            if($extension != 'png'){
+//                throw new \Exception(__('upload_pictures.specification_png.error'), Code::CODE_WRONG);
+//            }
             $specificationArr = explode(',', $request->specification);
             if (count($specificationArr) < 1) {
                 return array(
                     "state" => 'no',
-                    'msg' => 'specification格式有误'
+                    'msg' => __('upload_pictures.specification.error')
                 );
             }
             $realBasePath = public_path() . '/storage/';

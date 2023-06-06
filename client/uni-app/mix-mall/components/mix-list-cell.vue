@@ -10,6 +10,13 @@
 				}]"
 				:class="icon"
 			></text>
+			<text
+				v-if="cuIcon"
+				class="cell-icon"
+				:class="cuIcon"
+				:style="[{
+					color: iconColor,
+				}]"></text>
 			<text class="cell-tit clamp">{{title}}</text>
 			<text v-if="tips" class="cell-tip">{{tips}}</text>
 			<text class="cell-more yticon"
@@ -38,6 +45,10 @@
 		},
 		props: {
 			icon: {
+				type: String,
+				default: ''
+			},
+			cuIcon: {
 				type: String,
 				default: ''
 			},

@@ -1,0 +1,29 @@
+{
+  "name": "is-https",
+  "version": "4.0.0",
+  "description": "Check if the given request is HTTPS",
+  "repository": "unjs/is-https",
+  "license": "MIT",
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "require": "./dist/index.js",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "siroc build",
+    "release": "yarn build && standard-version && npm publish && git push --follow-tags"
+  },
+  "devDependencies": {
+    "@types/node": "latest",
+    "siroc": "latest",
+    "standard-version": "latest"
+  }
+}

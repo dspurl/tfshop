@@ -1,21 +1,26 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\common\RedisService;
-use App\Http\Requests\v1\SubmitBrandRequest;
 use App\Http\Resources\ConfigResources;
-use App\Models\v1\Brand;
 use App\Models\v1\Config;
-use App\Models\v1\Resource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 
 /**
  * @group [ADMIN]Config(配置)
- * 配置
  * Class ConfigController
  * @package App\Http\Controllers\v1\Admin
  */
@@ -55,7 +60,7 @@ class ConfigController extends Controller
             $redis = new RedisService();
             foreach ($request->children as $children) {
                 if ($children['required'] && !isset($children['value'])) {
-                    throw new \Exception($children['name'] . '不能为空', Code::CODE_WRONG);
+                    throw new \Exception(__('hint.error.not_null', ['attribute' => $children['name']]), Code::CODE_WRONG);
                 }
                 // 重置
                 if ($children['keys'] == 'dsshop.reset' && $children['value']) {
@@ -67,7 +72,7 @@ class ConfigController extends Controller
                 if (isset($children['children'])) {
                     foreach ($children['children'] as $c) {
                         if ($c['required'] && !isset($c['value'])) {
-                            throw new \Exception($c['name'] . '不能为空', Code::CODE_WRONG);
+                            throw new \Exception(__('hint.error.not_null', ['attribute' => $c['name']]), Code::CODE_WRONG);
                         }
                         $Config = Config::find($c['id']);
                         $Config->value = $c['value'];
@@ -81,6 +86,6 @@ class ConfigController extends Controller
                 $redis->del('config');
             }
         }, 5);
-        return resReturn(1, '更新成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
     }
 }

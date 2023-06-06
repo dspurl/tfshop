@@ -13,7 +13,7 @@
 							<text class="cuIcon-unfold"></text>
 						</view>
 						<view class="text-gray text-sm">
-							支出￥{{expend | 1000}}元 收入￥{{income | 1000}}元
+							{{$t('finance.expenditure')}}{{$t('common.unit')}}{{expend | 1000}}元 {{$t('finance.earning')}}￥{{income | 1000}}元
 						</view>
 					</view>
 					<!-- <view class="action text-grey">
@@ -27,12 +27,12 @@
 				
 				<block v-if="item.type === 0">
 					<view class="cu-avatar round lg bg-green">
-						<text class="avatar-text">收</text>
+						<text class="avatar-text">{{$t('finance.income')}}</text>
 					</view>
 				</block>
 				<block v-else-if="item.type === 1">
 					<view class="cu-avatar round lg bg-red">
-						<text class="avatar-text">支</text>
+						<text class="avatar-text">{{$t('finance.disbursement')}}</text>
 					</view>
 				</block>
 				<view class="content text-cut">
@@ -71,6 +71,11 @@
 				income: 0,
 				expend: 0
 			}
+		},
+		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('user.bill')
+			})
 		},
 		onLoad(options){
 			this.loginCheck()

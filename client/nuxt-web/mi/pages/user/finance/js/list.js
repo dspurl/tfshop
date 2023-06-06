@@ -3,7 +3,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '我的账单-个人中心',
+      title: `${this.$t('user.bill')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {

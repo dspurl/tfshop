@@ -2,15 +2,15 @@
   <div class="app-container">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="规格名称">
-          <el-input v-model="listQuery.title" placeholder="规格名称" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
+        <el-form-item :label="$t('specification.filter.form.input.label.title')">
+          <el-input :placeholder="$t('specification.filter.form.input.placeholder.title')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleFilter">搜索</el-button>
+          <el-button type="primary" @click="handleFilter">{{ $t('common.search') }}</el-button>
         </el-form-item>
       </el-form>
       <br>
-      <el-button v-permission="$store.jurisdiction.SpecificationCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="$store.jurisdiction.SpecificationCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('common.add') }}</el-button>
     </div>
 
     <el-table
@@ -24,62 +24,62 @@
       style="width: 100%;"
       @sort-change="sortChange"
       @selection-change="handleSelectionChange">
-      <el-table-column label="编号" sortable="custom" prop="id">
+      <el-table-column :label="$t('good.table.id')" sortable="custom" prop="id" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格名称" >
+      <el-table-column :label="$t('specification.table.column.label.name')" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格标注名称" >
+      <el-table-column :label="$t('specification.table.column.label.label')" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.label }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格组名称" align="center" >
+      <el-table-column :label="$t('specification.table.column.label.specification_group_id')" align="center" width="220">
         <template slot-scope="scope">
-          <span>{{ scope.row.specification_group_id ? scope.row.specification_group.name : '未分组' }}</span>
+          <span>{{ scope.row.specification_group_id ? scope.row.specification_group.name : $t('specification.table.column.label.ungrouped') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格类型" align="center" >
+      <el-table-column :label="$t('specification.table.column.label.type_show')" align="center" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.type_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="显示位置" align="center" >
+      <el-table-column :label="$t('specification.table.column.label.location_show')" align="center" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.location_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="规格值" align="center" >
+      <el-table-column :label="$t('specification.table.column.label.value')" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.value }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否可搜索" align="center" >
+      <el-table-column :label="$t('specification.table.column.label.is_search')" align="center" width="150">
         <template slot-scope="scope">
-          <span>{{ scope.row.is_search ? '是' : '否' }}</span>
+          <span>{{ scope.row.is_search ? $t('common.yes') : $t('common.no') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序" align="center" >
+      <el-table-column :label="$t('common.table.sort')" align="center" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="添加时间" align="center">
+      <el-table-column :label="$t('common.table.add_time')" align="center" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="120" fixed="right">
+      <el-table-column :label="$t('common.operation')" class-name="small-padding fixed-width" width="120" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip v-permission="$store.jurisdiction.SpecificationEdit" class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.SpecificationEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.SpecificationDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.SpecificationDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -93,31 +93,29 @@
 
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="规格名称" prop="name">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="200px" style="margin-left:20px;">
+        <el-form-item :label="$t('specification.dialog.form.input.label.name')" prop="name">
           <el-input v-model="temp.name" maxlength="30" clearable/>
         </el-form-item>
-        <el-form-item label="规格标注名称" prop="label">
-          <el-input v-model="temp.label" placeholder="为空取规格名称" maxlength="20" clearable/>
+        <el-form-item :label="$t('specification.dialog.form.input.label.label')" prop="label">
+          <el-input :placeholder="$t('specification.dialog.form.input.placeholder.label')" v-model="temp.label" maxlength="20" clearable/>
         </el-form-item>
-        <el-form-item label="规格类型" prop="type">
-          <el-select v-model="temp.type" placeholder="请选择类型" clearable style="width:160px;">
-            <el-option :value="1" label="文本"/>
-            <el-option :value="2" label="单选"/>
-            <el-option :value="3" label="多选"/>
+        <el-form-item :label="$t('specification.dialog.form.select.label.type_show')" prop="type">
+          <el-select :placeholder="$t('hint.error.select', { specification: $t('specification.dialog.form.select.label.type_show') })" v-model="temp.type" clearable style="width:160px;">
+            <el-option :value="1" :label="$t('specification.dialog.form.select.option.label.text')"/>
+            <el-option :value="2" :label="$t('specification.dialog.form.select.option.label.radio')"/>
+            <el-option :value="3" :label="$t('specification.dialog.form.select.option.label.multi_select')"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="是否可搜索" prop="is_search">
+        <el-form-item :label="$t('specification.dialog.form.select.label.is_search')" prop="is_search">
           <el-radio-group v-model="temp.is_search">
-            <el-radio :label="0">否</el-radio>
-            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">{{ $t('common.no') }}</el-radio>
+            <el-radio :label="1">{{ $t('common.yes') }}</el-radio>
           </el-radio-group>
-          <el-alert
-            title="设为可搜索，则可显示在筛选条件中;只有单选、多选设置才有效"
-            type="warning"/>
+          <div>{{ $t('specification.dialog.form.select.tip.is_search') }}</div>
         </el-form-item>
-        <el-form-item label="规格组" prop="specification_group_id">
-          <el-select v-model="temp.specification_group_id" placeholder="请选择类型" clearable style="width:160px;">
+        <el-form-item :label="$t('specification.dialog.form.select.label.specification_group_id')" prop="specification_group_id">
+          <el-select v-model="temp.specification_group_id" clearable style="width:160px;">
             <el-option
               v-for="(item,index) in SpecificationGroup"
               :key="index"
@@ -125,31 +123,27 @@
               :value="item.id"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="显示位置" prop="location">
-          <el-select v-model="temp.location" placeholder="请选择位置" clearable style="width:160px;">
-            <el-option :value="0" label="规格参数页"/>
-            <el-option :value="1" label="详情页"/>
-            <el-option :value="2" label="都显示"/>
+        <el-form-item :label="$t('specification.dialog.form.select.label.location')" prop="location">
+          <el-select :placeholder="$t('specification.dialog.form.select.placeholder.location')" v-model="temp.location" clearable style="width:160px;">
+            <el-option :label="$t('specification.dialog.form.select.option.label.parameter')" :value="0"/>
+            <el-option :label="$t('specification.dialog.form.select.option.label.details')" :value="1"/>
+            <el-option :label="$t('specification.dialog.form.select.option.label.all')" :value="2"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="规格值" prop="value">
+        <el-form-item :label="$t('specification.dialog.form.input.label.value')" prop="value">
           <el-input v-model="temp.value" :autosize="{ minRows: 4}" type="textarea" show-word-limit clearable/>
-          <el-alert
-            title="多个规格，请用回车分割"
-            type="warning"/>
+          <div>{{ $t('specification.dialog.form.input.tip.value') }}</div>
         </el-form-item>
-        <el-form-item label="排序" prop="sort" style="width:200px;">
+        <el-form-item :label="$t('common.sort')" prop="sort">
           <el-input v-model="temp.sort" clearable/>
         </el-form-item>
         <el-form-item prop="sort">
-          <el-alert
-            title="排序值越小越靠前"
-            type="warning"/>
+          <div>{{ $t('common.sort.tip') }}</div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">确定</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -233,8 +227,8 @@ export default {
       list: null,
       total: 0,
       textMap: {
-        update: '修改',
-        create: '添加'
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       imgData: {
         type: 1,
@@ -255,19 +249,19 @@ export default {
       temp: {},
       rules: {
         name: [
-          { required: true, message: '请输入属性名称', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.nonentity', { attribute: this.$t('specification.dialog.form.input.label.name') }), trigger: 'blur' }
         ],
         type: [
-          { required: true, message: '请选择属性类型', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.select', { attribute: this.$t('specification.dialog.form.select.label.type_show') }), trigger: 'change' }
         ],
         is_search: [
-          { required: true, message: '请选择是否可搜索属性', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.select', { attribute: this.$t('specification.dialog.form.select.label.is_search') }), trigger: 'change' }
         ],
         location: [
-          { required: true, message: '请选择显示位置', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.select', { attribute: this.$t('specification.dialog.form.select.label.location') }), trigger: 'change' }
         ],
         sort: [
-          { required: true, message: '请输入排序', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('common.sort') }), trigger: 'blur' }
         ]
       }
     }
@@ -338,11 +332,11 @@ export default {
       this.multipleSelection = val
     },
     handleDelete(row) { // 删除
-      const title = '是否确认删除该内容?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const title = this.$t('hint.confirm.delete')
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -351,7 +345,7 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: win,
             type: 'success',
             duration: 2000
@@ -371,8 +365,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -393,8 +387,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })

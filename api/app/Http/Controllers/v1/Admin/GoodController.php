@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -155,14 +164,14 @@ class GoodController extends Controller
     public function create(SubmitGoodRequest $request)
     {
         if (count($request->good_sku) == 0) {
-            return resReturn(0, '请设置产品规格', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('good.error.good_specification'), Code::CODE_PARAMETER_WRONG);
         }
         if ($request->is_show == Good::GOOD_SHOW_TIMING && !$request->timing) {
-            return resReturn(0, '请选择上架时间', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('good.error.time'), Code::CODE_PARAMETER_WRONG);
         }
         if ($request->timing) {
             if (strtotime($request->timing) <= time()) {
-                return resReturn(0, '上架时间必须大于当前时间', Code::CODE_PARAMETER_WRONG);
+                return resReturn(0, __('good.error.timing'), Code::CODE_PARAMETER_WRONG);
             }
         }
         $return = DB::transaction(function () use ($request) {
@@ -265,13 +274,13 @@ class GoodController extends Controller
                     // 卡密
                     if ($Good->type == Good::GOOD_TYPE_KEYS) {
                         if (!array_key_exists("good_code", $good_sku)) {
-                            throw new \Exception('未配置卡密', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.good_code'), Code::CODE_WRONG);
                         }
                         if (!array_key_exists("code_type", $good_sku)) {
-                            throw new \Exception('未配置卡密类型', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.code_type'), Code::CODE_WRONG);
                         }
                         if (count($good_sku['good_code']) > 1 && $good_sku['inventory'] > count($good_sku['good_code'])) {
-                            throw new \Exception('卡密数量必须大于等于库存', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.inventory'), Code::CODE_WRONG);
                         }
                         $GoodSku->code_type = $good_sku['code_type'];
                         $GoodSku->is_fixed = $good_sku['is_fixed'];
@@ -299,10 +308,10 @@ class GoodController extends Controller
                     if ($Good->type == Good::GOOD_TYPE_DOWNLOAD) {
                         // 处理下载商品
                         if (!array_key_exists("file", $good_sku)) {
-                            throw new \Exception('请上传文件', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.file'), Code::CODE_WRONG);
                         }
                         if (!array_key_exists("file_name", $good_sku)) {
-                            throw new \Exception('上传文件有误', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.file_name'), Code::CODE_WRONG);
                         }
                         $Resource = new Resource();
                         $Resource->type = Resource::RESOURCE_TYPE_FILE;
@@ -320,7 +329,7 @@ class GoodController extends Controller
             return 1;
         }, 5);
         if ($return == 1) {
-            return resReturn(1, '添加成功');
+            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
         } else {
             return resReturn(0, $return[0], $return[1]);
         }
@@ -356,14 +365,14 @@ class GoodController extends Controller
     public function edit(SubmitGoodRequest $request, $id)
     {
         if (count($request->good_sku) == 0) {
-            return resReturn(0, '请设置产品规格', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0,  __('good.error.good_specification'), Code::CODE_PARAMETER_WRONG);
         }
         if ($request->is_show == Good::GOOD_SHOW_TIMING && !$request->timing) {
-            return resReturn(0, '请选择上架时间', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('good.error.time'), Code::CODE_PARAMETER_WRONG);
         }
         if ($request->timing) {
             if (strtotime($request->timing) <= time()) {
-                return resReturn(0, '上架时间必须大于当前时间', Code::CODE_PARAMETER_WRONG);
+                return resReturn(0, __('good.error.timing'), Code::CODE_PARAMETER_WRONG);
             }
         }
         $Good = Good::find($id);
@@ -499,13 +508,13 @@ class GoodController extends Controller
                     // 卡密
                     if ($Good->type == Good::GOOD_TYPE_KEYS) {
                         if (!array_key_exists("good_code", $good_sku)) {
-                            throw new \Exception('未配置卡密', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.good_code'), Code::CODE_WRONG);
                         }
                         if (!array_key_exists("code_type", $good_sku)) {
-                            throw new \Exception('未配置卡密类型', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.code_type'), Code::CODE_WRONG);
                         }
                         if (count($good_sku['good_code']) > 1 && $good_sku['inventory'] > count($good_sku['good_code'])) {
-                            throw new \Exception('卡密数量必须大于等于库存', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.inventory'), Code::CODE_WRONG);
                         }
                         $GoodSku->code_type = $good_sku['code_type'];
                         $GoodSku->is_fixed = $good_sku['is_fixed'];
@@ -552,10 +561,10 @@ class GoodController extends Controller
                     if ($Good->type == Good::GOOD_TYPE_DOWNLOAD) {
                         // 处理下载商品
                         if (!array_key_exists("file", $good_sku)) {
-                            throw new \Exception('请上传文件', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.file'), Code::CODE_WRONG);
                         }
                         if (!array_key_exists("file_name", $good_sku)) {
-                            throw new \Exception('上传文件有误', Code::CODE_WRONG);
+                            throw new \Exception(__('good.error.file_name'), Code::CODE_WRONG);
                         }
                         if (array_key_exists('file_id', $good_sku)) {
                             $Resource = Resource::find($good_sku['file_id']);
@@ -579,7 +588,7 @@ class GoodController extends Controller
             return 1;
         }, 5);
         if ($return == 1) {
-            return resReturn(1, '更新成功');
+            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
         } else {
             return resReturn(0, $return[0], $return[1]);
         }
@@ -620,7 +629,6 @@ class GoodController extends Controller
                 }
             }
             $return['goods'] = collect($Good)->merge((new Good())->getImg($Good->resourcesMany));
-
         }
         //展示应用所在分类下的子类目
         $Category = Category::orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
@@ -673,7 +681,7 @@ class GoodController extends Controller
                 $Good->save();
             } else {
                 if (!$request->all()) {
-                    return resReturn(0, '请选择内容', Code::CODE_WRONG);
+                    return resReturn(0, __('good.error.content'), Code::CODE_WRONG);
                 }
                 $all = $request->all();
                 if ($all[0]['is_show'] == Good::GOOD_SHOW_PUTAWAY) {
@@ -688,7 +696,7 @@ class GoodController extends Controller
             return 1;
         }, 5);
         if ($return == 1) {
-            return resReturn(1, '变更成功');
+            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
         } else {
             return resReturn(0, $return[0], $return[1]);
         }
@@ -709,7 +717,7 @@ class GoodController extends Controller
                 Good::destroy($id);
             } else {
                 if (!$request->all()) {
-                    return resReturn(0, '请选择内容', Code::CODE_WRONG);
+                    return resReturn(0, __('good.error.content'), Code::CODE_WRONG);
                 }
                 $idData = collect($request->all())->pluck('id');
                 Good::destroy($idData);
@@ -717,7 +725,7 @@ class GoodController extends Controller
             return 1;
         }, 5);
         if ($return == 1) {
-            return resReturn(1, '删除成功');
+            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
         } else {
             return resReturn(0, $return[0], $return[1]);
         }

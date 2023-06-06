@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -34,13 +43,12 @@ class LoginController extends Controller
      */
     public function index(Request $request)
     {
-
         $admin = Admin::query()->where('name', $request->username)->first();
         if (!$admin) {
-            return resReturn(0, '账号不存在', Code::CODE_INEXISTENCE);
+            return resReturn(0, __('hint.error.nonentity',['attribute'=>__('admin.name')]), Code::CODE_INEXISTENCE);
         }
         if (!Hash::check($request->password, $admin->password)) {
-            return resReturn(0, '密码错误', Code::CODE_WRONG);
+            return resReturn(0, __('hint.error.falseness',['attribute'=>__('admin.password')]), Code::CODE_WRONG);
         }
         $admin->last_login_at = Carbon::now()->toDateTimeString();
         $admin->save();
@@ -170,9 +178,6 @@ class LoginController extends Controller
             }
         }
         $data['asyncRouterMap'] = genTree($asyncRouterMap, 'pid');
-        $redis = new RedisService();
-        $dsshop = $redis->get(config('dsshop.marketApplySecret') . '.' . $this->getTopHost($this->scheme() . $_SERVER['HTTP_HOST']) . '.result');
-        $data['dsshop'] = $dsshop == 1 || !$dsshop ? 0 : 1;
         $data['version'] = config('dsshop.appVersion');
         return resReturn(1, $data);
     }

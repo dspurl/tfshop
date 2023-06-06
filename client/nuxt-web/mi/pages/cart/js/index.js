@@ -3,7 +3,7 @@ export default {
   layout: 'cart',
   head () {
     return {
-      title: '我的购物车' + '-' + process.env.APP_NAME,
+      title: this.$t('cart.title') + '-' + process.env.APP_NAME,
     }
   },
   data() {
@@ -19,7 +19,7 @@ export default {
     }
   },
   mounted() {
-    $nuxt.$store.commit('setCartTitle', '我的购物车');
+    $nuxt.$store.commit('setCartTitle', this.$t('cart.title'));
     if($nuxt.$store.state.hasLogin){
       this.getList()
     }
@@ -95,7 +95,7 @@ export default {
     createOrder(){
       if(this.multipleSelection.length <=0){
         this.$message({
-          message: '请选择商品',
+          message: this.$t('hint.error.selects', {attribute: this.$t('cart.commodity')}),
           type: 'error'
         });
       }else{
@@ -112,9 +112,9 @@ export default {
     },
     //删除失效的商品
     deleteInvalidGood(index){
-      this.$confirm('是否移除该商品？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('cart.confirm.title'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.cartOriginalList.splice(this.invalidGood[index].index, 1)
@@ -132,9 +132,9 @@ export default {
     },
     //删除
     deleteCartItem(index){
-      this.$confirm('是否移除该商品？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('cart.confirm.title'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.cartOriginalList.splice(this.cartList[index].index, 1)
@@ -152,9 +152,9 @@ export default {
     },
     //删除选中的商品
     clearCart(){
-      this.$confirm('是否移除所选商品？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('cart.confirm.title.selected'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.multipleSelection.forEach(item=>{

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -83,7 +92,7 @@ class ShippingController extends Controller
                 return resReturn(0, $return[0], $return[1]);
             }
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 
@@ -127,7 +136,7 @@ class ShippingController extends Controller
                 return resReturn(0, $return[0], $return[1]);
             }
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 
@@ -144,9 +153,9 @@ class ShippingController extends Controller
         $lock = RedisLock::lock($redis, 'shipping');
         if ($lock) {
             Shipping::where('id', $id)->delete();
-            return resReturn(1, '删除成功');
+            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 
@@ -241,7 +250,7 @@ class ShippingController extends Controller
             return 1;
         }, 5);
         if ($return == 1) {
-            return resReturn(1, '设置成功');
+            return resReturn(1, __('common.succeed'));
         } else {
             return resReturn(0, $return[0], $return[1]);
         }

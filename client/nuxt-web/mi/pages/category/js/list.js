@@ -30,7 +30,7 @@ export default {
   },
   head () {
     return {
-      title: '全部商品分类-' + process.env.APP_NAME
+      title: this.$t('category.all') + '-' + process.env.APP_NAME
     }
   },
   mounted() {

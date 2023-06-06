@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -110,7 +119,7 @@ class IndentController extends Controller
     public function query($id)
     {
         if (!$id) {
-            return resReturn(0, '参数有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('common.arguments'), Code::CODE_PARAMETER_WRONG);
         }
         $PaymentLog = PaymentLog::find($id);
         $MiniProgram = new MiniProgram();
@@ -135,7 +144,7 @@ class IndentController extends Controller
             $PaymentLog->transaction_id = $queryNumber['transaction_id'];
             $PaymentLog->save();
         }
-        return resReturn(1, '同步成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -157,7 +166,7 @@ class IndentController extends Controller
                 $GoodIndent->receiving_time = date('Y-m-d 00:00:00', strtotime("+$automaticReceiving day"));
             }
             $GoodIndent->save();
-            return array(1, '发货成功');
+            return array(1, __('common.succeed'));
         });
         if ($return[0] == 1) {
             return resReturn(1, $return[1]);
@@ -178,7 +187,7 @@ class IndentController extends Controller
         $GoodIndent->dhl_id = $request->dhl_id;
         $GoodIndent->odd = $request->odd;
         $GoodIndent->save();
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.amend')]));
     }
 
     /**
@@ -192,7 +201,7 @@ class IndentController extends Controller
         $GoodIndent = GoodIndent::find($request->id);
         $GoodIndent->receiving_time = $request->new_receiving_time;
         $GoodIndent->save();
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.amend')]));
     }
 
     /**
@@ -205,16 +214,16 @@ class IndentController extends Controller
     public function refund($id, Request $request)
     {
         if (!$id) {
-            return resReturn(0, '参数有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('common.arguments'), Code::CODE_PARAMETER_WRONG);
         }
         if (!$request->has('refund_money')) {
-            return resReturn(0, '退款金额有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('hint.error.mistake', ['attribute' => __('good_indent.refund_money')]), Code::CODE_PARAMETER_WRONG);
         }
         if (!$request->has('refund_way')) {
-            return resReturn(0, '退款方式有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('hint.error.mistake', ['attribute' => __('good_indent.refund_way')]), Code::CODE_PARAMETER_WRONG);
         }
         if (!$request->has('refund_reason')) {
-            return resReturn(0, '退款原因有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('hint.error.mistake', ['attribute' => __('good_indent.refund_reason')]), Code::CODE_PARAMETER_WRONG);
         }
         $redis = new RedisService();
         $lock = RedisLock::lock($redis, 'goodRefund');
@@ -243,12 +252,12 @@ class IndentController extends Controller
             });
             RedisLock::unlock($redis, 'goodRefund');
             if ($return['result'] == 'ok') {
-                return resReturn(1, '退款操作成功');
+                return resReturn(1, __('common.succeed'));
             } else {
                 return resReturn(0, $return['msg'], Code::CODE_PARAMETER_WRONG);
             }
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 }

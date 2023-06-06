@@ -9,14 +9,14 @@ export default {
   middleware: 'auth',
   head () {
     return {
-      title: '确认订单' + '-' + process.env.APP_NAME,
+      title: this.$t('indent.title') + '-' + process.env.APP_NAME,
     }
   },
   data() {
     const validateRemark = (rule, value, callback) => {
       const flag = new RegExp("[`~!@#$^&*()=|{}':'\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘：”“'。？ ]");
       if(flag.test(value)){
-        return callback(new Error('不允许输入非法字符'));
+        return callback(new Error(this.$t('header.top.validate_remark')));
       }else{
         callback();
       }
@@ -46,7 +46,7 @@ export default {
     }
   },
   mounted() {
-    $nuxt.$store.commit('setCartTitle', '确认订单');
+    $nuxt.$store.commit('setCartTitle', this.$t('indent.title'));
     this.getList()
   },
   methods: {
@@ -75,7 +75,7 @@ export default {
       })
       // 是否需要地址
       this.isAddress = this.ruleForm.indentCommodity.some( function( item){
-          return item.good.type === '普通商品';
+          return item.good.type === this.$t('good.type.common');
       })
     },
     // 选择的地址
@@ -93,7 +93,7 @@ export default {
         if (valid) {
           if(!this.ruleForm.address){
             this.$message({
-              message: '请选择地址',
+              message: this.$t('hint.error.selects', {attribute:this.$t('indent.location')}),
               type: 'error'
             });
             return false

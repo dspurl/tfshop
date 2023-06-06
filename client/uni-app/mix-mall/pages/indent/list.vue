@@ -35,23 +35,23 @@
 					</view>
 					<view class="price-box" v-if="item.remark">{{item.remark}}</view>
 					<view class="price-box">
-						共
+						{{$t('indent.common')}}
 						<text class="num">{{item.goods_list.length}}</text>
-						件商品
-						订单总额
+						{{$t('indent.pieces_goods')}}
+						{{$t('indent.order_total')}}
 						<text class="num">{{item.total | 1000}}</text>
-						元
+						{{$t('common.monetary_unit')}}
 					</view>
 				</view>
 				<view class="action-box b-t">
 					<block v-if="item.state === 1">
-						<button class="action-btn" @tap="cancelOrder(item)">取消订单</button>
+						<button class="action-btn" @tap="cancelOrder(item)">{{$t('indent.cancel')}}</button>
 					</block>
 					<block v-if="item.state === 1">
-						<button class="action-btn recom" @tap="goPay(item)">立即支付</button>
+						<button class="action-btn recom" @tap="goPay(item)">{{$t('indent.payment')}}</button>
 					</block>
 					<block v-if="item.state === 3">
-						<button class="action-btn recom" @tap="confirmReceipt(item)">确认收货</button>
+						<button class="action-btn recom" @tap="confirmReceipt(item)">{{$t('indent.confirm_receipt')}}</button>
 					</block>
 				</view>
 			</view>
@@ -81,23 +81,23 @@
 				list: [],
 				navList: [{
 						state: 0,
-						text: '全部'
+						text: this.$t('good_indent.state.all')
 					},
 					{
 						state: 1,
-						text: '待付款'
+						text: this.$t('good_indent.state.pay')
 					},
 					{
 						state: 2,
-						text: '待发货'
+						text: this.$t('good_indent.state.deliver')
 					},
 					{
 						state: 3,
-						text: '待收货'
+						text: this.$t('good_indent.state.take')
 					},
 					{
 						state: 5,
-						text: '已完成'
+						text: this.$t('good_indent.state.accomplish')
 					}
 				]
 			};
@@ -109,6 +109,9 @@
 			}
 		},
 		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('indent.title')
+			})
 			this.loginCheck()
 			this.loadData()
 		},
@@ -200,13 +203,13 @@
 			deleteOrder(index){
 				const that = this
 				uni.showModal({
-				    title: '提示',
-				    content: '是否确认删除订单？',
+				    title: this.$t('common.hint'),
+				    content: this.$t('good_indent.affirm.delete'),
 				    success: function (res) {
 						if (res.confirm) {
 							GoodIndent.destroy(that.list[index].id,function(res){
 								that.list.splice(index, 1)
-								that.$api.msg(`删除成功`)
+								that.$api.msg(that.$t('common.success'))
 								uni.hideLoading()
 							})
 						}
@@ -223,12 +226,12 @@
 			cancelOrder(item){
 				const that = this
 				uni.showModal({
-				    title: '提示',
-				    content: '是否确认取消订单？',
+				    title: this.$t('common.hint'),
+				    content: this.$t('good_indent.affirm.cancel'),
 				    success: function (res) {
 						if (res.confirm) {
 							GoodIndent.cancel(item.id,function(res){
-								that.$api.msg(`操作成功`)
+								that.$api.msg(that.$t('common.success'))
 								that.refreshOderList()
 							})
 						}
@@ -251,12 +254,12 @@
 			confirmReceipt(item){
 				const that = this
 				uni.showModal({
-				    title: '提示',
-				    content: '是否确认收货？',
+				    title: this.$t('common.hint'),
+				    content: this.$t('good_indent.affirm.receiving'),
 				    success: function (res) {
 						if (res.confirm) {
 							GoodIndent.receipt(item.id,function(res){
-								that.$api.msg(`操作成功`)
+								that.$api.msg(that.$t('common.success'))
 								that.refreshOderList()
 							})
 						}

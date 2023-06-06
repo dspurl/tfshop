@@ -3,7 +3,7 @@
 		<view class="list b-b" v-for="(item, index) in addressList" :key="index" @click="checkAddress(item)">
 			<view class="wrapper">
 				<view class="address-box">
-					<text v-if="item.defaults" class="tag">默认</text>
+					<text v-if="item.defaults" class="tag">{{$t('address.defaults')}}</text>
 					<text class="address">{{ item.location ? item.location + '(' : '' }}{{ item.address }} {{ item.house ? ')' + item.house : '' }}</text>
 				</view>
 				<view class="u-box">
@@ -14,13 +14,13 @@
 			<text class="yticon icon-bianji" @click.stop="addAddress('edit', item)"></text>
 			<text class="cuIcon-delete" @click.stop="deleteAddress(index, item)"></text>
 		</view>
-		<view v-if="addressList.length == 0"><view class="no-data flex justify-center">还没有收货地址, 请添加~</view></view>
+		<view v-if="addressList.length == 0"><view class="no-data flex justify-center">{{$t('address.no_hint')}}</view></view>
 		<!-- #ifdef MP -->
-		<button class="add-btn1" @click="getWxaddAddress()">获取收货地址</button>
-		<button class="add-btn2" @click="addAddress('add')">手动新增地址</button>
+		<button class="add-btn1" @click="getWxaddAddress()">{{$t('address.gain')}}</button>
+		<button class="add-btn2" @click="addAddress('add')">{{$t('address.hand_movement')}}</button>
 		<!-- #endif -->
 		<!-- #ifndef MP -->
-		<button class="add-btn" @click="addAddress('add')">新增地址</button>
+		<button class="add-btn" @click="addAddress('add')">{{$t('address.add')}}</button>
 		<!-- #endif -->
 	</view>
 </template>
@@ -46,6 +46,11 @@ export default {
 			}
 		};
 	},
+	onShow(){
+		uni.setNavigationBarTitle({
+			title: this.$t('address.address')
+		})
+	},
 	onLoad(option) {
 		this.loginCheck();
 		if (option.type) {
@@ -69,7 +74,7 @@ export default {
 			const that = this;
 			if (!item.defaults) {
 				uni.showModal({
-					content: '设为默认地址？',
+					content: that.$t('address.set_default'),
 					success: confirmRes => {
 						if (confirmRes.confirm) {
 							Shipping.defaultSet(item, function(res) {
@@ -77,7 +82,7 @@ export default {
 									that.$api.prePage().refreshAddress(item);
 									uni.navigateBack();
 								} else {
-									that.$api.msg('设置成功');
+									that.$api.msg(that.$t('address.successfully_set'));
 									that.loadData();
 								}
 							});
@@ -109,7 +114,7 @@ export default {
 		getWxaddAddress() {
 			let that = this;
 			if(!that.configURL.lbsQq){
-				that.$api.msg('请配置config.js的lbsQq参数')
+				that.$api.msg(that.$t('address.configuration_lbs'))
 				return false
 			}
 			//#ifdef MP
@@ -141,7 +146,7 @@ export default {
 						},
 						fail: res => {
 							uni.showToast({
-								title: '服务器无响应',
+								title: this.$t('request.no_response'),
 								duration: 2000
 							});
 						}
@@ -161,11 +166,11 @@ export default {
 		deleteAddress(index, item) {
 			const that = this;
 			uni.showModal({
-				content: '确定要删除该地址吗？',
+				content: that.$t('address.delete.title'),
 				success: confirmRes => {
 					if (confirmRes.confirm) {
 						if (item.defaults) {
-							this.$api.msg('默认收货地址无法删除');
+							this.$api.msg(that.$t('address.delete.confirm'));
 							return false;
 						}
 						Shipping.destroy(item.id, function(res) {

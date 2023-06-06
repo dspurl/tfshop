@@ -5,13 +5,13 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '个人资料-个人中心',
+      title: `${this.$t('user.info')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {
     return {
       disabled: false,
-      codename:'获取验证码',
+      codename:this.$t('find_password.get_code'),
       seconds: '',
       unit: '',
       uploadFile:{
@@ -37,19 +37,19 @@ export default {
       collectList: [],
       rules: {
         portrait: [
-          { required: true, message: '请上传头像', trigger: 'blur' }
+          { required: true, message: this.$t('userinfo.portrait'), trigger: 'blur' }
         ],
         nickname: [
-          { required: true, message: '请设置昵称', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('userinfo.nickname')}), trigger: 'blur' }
         ],
         email: [
-          { required: true, message: '请设置邮箱', trigger: 'blur' },
-          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('userinfo.email')}), trigger: 'blur' },
+          { type: 'email', message: this.$t('hint.error.wrong_format', {attribute: this.$t('userinfo.email')}), trigger: ['blur', 'change'] }
         ],
         code: [
-          { required: true, message: '请输入验证码', trigger: 'blur' },
-          { type: 'number', message: '验证码必须为数字'}
-        ]
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('find_password.verification_code')}), trigger: 'blur' },
+          { type: 'number', message: this.$t('find_password.verification_code.number', {attribute: this.$t('find_password.verification_code')})}
+        ],
       }
     }
   },
@@ -77,7 +77,7 @@ export default {
               this.centerDialogVisible = false;
               this.getUser();
               this.$message({
-                message: '保存成功',
+                message: this.$t('common.success'),
                 type: 'success'
               });
             }).catch(() => {
@@ -89,7 +89,7 @@ export default {
               this.centerDialogVisible = false;
               this.getUser();
               this.$message({
-                message: '保存成功',
+                message: this.$t('common.success'),
                 type: 'success'
               });
             }).catch(() => {
@@ -105,19 +105,19 @@ export default {
 
       switch (type) {
         case 'portrait':
-          this.dialogTitle = '修改头像';
+          this.dialogTitle = this.$t('userinfo.amend_portrait');
           this.ruleForm = {
             portrait: this.user.portrait
           };
           break;
         case 'nickname':
-          this.dialogTitle = '修改昵称';
+          this.dialogTitle = this.$t('userinfo.amend_nickname');
           this.ruleForm = {
             nickname: this.user.nickname
           };
           break;
         case 'email':
-          this.dialogTitle = '修改邮箱';
+          this.dialogTitle = this.$t('userinfo.amend_email');
           this.ruleForm = {
             email: this.user.email,
             code: ''
@@ -142,11 +142,11 @@ export default {
           'image/png',
           'image/bmp'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式');
+        this.$message.error(this.$t('userinfo.error.image'));
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error(this.$t('userinfo.error.image.size'))
       }
       this.imgProgress = true;
       return isLt2M
@@ -168,7 +168,7 @@ export default {
             // 读秒结束 清空计时器
             clearInterval(that.timer);
             that.seconds = '';
-            that.codename = '获取验证码';
+            that.codename = this.$t('find_password.get_code');
             that.unit = '';
             that.disabled = false
           }

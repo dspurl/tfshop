@@ -1,7 +1,7 @@
 exports.ids = [7,8,9];
 exports.modules = {
 
-/***/ 176:
+/***/ 185:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -14,11 +14,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getCombFlags", function() { return getCombFlags; });
 // skus: [{"k_id":1,"k":"颜色","v_id":11,"v":"红色"},{"k_id":2,"k":"尺寸","v_id":22,"v":"小"}],
 // output：1-11_2-22
-const creatIds = skus => skus.reduce((total, prev, index) => `${total}${prev.k_id}-${prev.v_id}${index === skus.length - 1 ? '' : '_'}`, ''); // 计算每个sku后面有多少项
+const creatIds = skus => skus.reduce((total, prev, index) => `${total}${prev.k_id}-${prev.v_id}${index === skus.length - 1 ? '' : '_'}`, '');
 
+// 计算每个sku后面有多少项
 function getLevels(tree) {
   const level = [];
-
   for (let i = tree.length - 1; i >= 0; i--) {
     if (tree[i + 1] && tree[i + 1].leaf) {
       level[i] = tree[i + 1].leaf.length * level[i + 1] || 1;
@@ -26,16 +26,15 @@ function getLevels(tree) {
       level[i] = 1;
     }
   }
-
   return level;
 }
+
 /**
  * 笛卡尔积运算
  * @param  {[type]} tree   [description]
  * @param  {Array}  stocks [description]
  * @return {[type]}        [description]
  */
-
 function flatten(tree, stocks = [], options) {
   const {
     optionValue = 'id',
@@ -44,7 +43,6 @@ function flatten(tree, stocks = [], options) {
   const result = [];
   let skuLen = 0;
   const stockMap = {}; // 记录已存在的stock的数据
-
   const level = getLevels(tree);
   if (tree.length === 0) return result;
   tree.forEach(sku => {
@@ -53,8 +51,8 @@ function flatten(tree, stocks = [], options) {
     } = sku;
     if (!leaf || leaf.length === 0) return true;
     skuLen = (skuLen || 1) * leaf.length;
-  }); // 根据已有的stocks生成一个map
-
+  });
+  // 根据已有的stocks生成一个map
   stocks.forEach(stock => {
     const {
       skus,
@@ -62,7 +60,6 @@ function flatten(tree, stocks = [], options) {
     } = stock;
     stockMap[skus.map(item => `${item.k_id}_${item.v_id}`).join('|')] = attr;
   });
-
   for (let i = 0; i < skuLen; i++) {
     const skus = [];
     const mapKey = [];
@@ -72,14 +69,12 @@ function flatten(tree, stocks = [], options) {
       } = sku;
       let item = {};
       if (!leaf || leaf.length === 0) return true;
-
       if (leaf.length > 1) {
         const row = parseInt(i / level[column], 10) % leaf.length;
         item = tree[column].leaf[row];
       } else {
         item = tree[column].leaf[0];
       }
-
       if (!sku[optionValue] || !item[optionValue]) return;
       mapKey.push(`${sku[optionValue]}_${item[optionValue]}`);
       skus.push({
@@ -89,23 +84,24 @@ function flatten(tree, stocks = [], options) {
         v: item[optionText]
       });
     });
-    const { ...data
-    } = stockMap[mapKey.join('|')] || {}; // 从map中找出存在的sku并保留其值
-
-    result.push({ ...data,
+    const {
+      ...data
+    } = stockMap[mapKey.join('|')] || {};
+    // 从map中找出存在的sku并保留其值
+    result.push({
+      ...data,
       skus
     });
   }
-
   return result;
 }
+
 /**
  * 判断两个sku是否相同
  * @param  {[type]}  prevSKU [description]
  * @param  {[type]}  nextSKU [description]
  * @return {Boolean}         [description]
  */
-
 function isEqual(prevSKU, nextSKU, options) {
   const {
     optionValue = 'id'
@@ -117,94 +113,77 @@ function isEqual(prevSKU, nextSKU, options) {
     return prevSKU[index][optionValue] === nextSKU[index][optionValue] && leaf.length === prevLeaf.length && leaf.map(item => item[optionValue]).join(',') === prevLeaf.map(item => item[optionValue]).join(',');
   });
 }
+
 /**
  * 从数组中生成指定长度的组合
  * 方法: 先生成[0,1...]形式的数组, 然后根据0,1从原数组取元素，得到组合数组
  */
-
 function combInArray(aData) {
   if (!aData || !aData.length) {
     return [];
   }
-
   var len = aData.length;
   var aResult = [];
   var ids = [];
-
   for (var n = 1; n < len; n++) {
     var aaFlags = getCombFlags(len, n);
-
     while (aaFlags.length) {
       var aFlag = aaFlags.shift();
       var aComb = [];
-
       for (var i = 0; i < len; i++) {
         aFlag[i] && aComb.push(aData[i]['v_id']);
       }
-
       aResult.push(aComb);
     }
   }
-
   for (var n = 0; n < len; n++) {
     ids.push(aData[n].v_id);
   }
-
   aResult.push(ids);
   return aResult;
 }
+
 /**
  * 得到从 m 元素中取 n 元素的所有组合
  * 结果为[0,1...]形式的数组, 1表示选中，0表示不选
  */
-
 function getCombFlags(m, n) {
   if (!n || n < 1) {
     return [];
   }
-
   var aResult = [];
   var aFlag = [];
   var bNext = true;
   var i, j, iCnt1;
-
   for (i = 0; i < m; i++) {
     aFlag[i] = i < n ? 1 : 0;
   }
-
   aResult.push(aFlag.concat());
-
   while (bNext) {
     iCnt1 = 0;
-
     for (i = 0; i < m - 1; i++) {
       if (aFlag[i] == 1 && aFlag[i + 1] == 0) {
         for (j = 0; j < i; j++) {
           aFlag[j] = j < iCnt1 ? 1 : 0;
         }
-
         aFlag[i] = 0;
         aFlag[i + 1] = 1;
         var aTmp = aFlag.concat();
         aResult.push(aTmp);
-
         if (aTmp.slice(-n).join("").indexOf('0') == -1) {
           bNext = false;
         }
-
         break;
       }
-
       aFlag[i] == 1 && iCnt1++;
     }
   }
-
   return aResult;
 }
 
 /***/ }),
 
-/***/ 185:
+/***/ 194:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -215,42 +194,49 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.d(__webpack_exports__, "param2Data", function() { return /* binding */ param2Data; });
 
 // CONCATENATED MODULE: ./plugins/index.js
-/**
- * @returns {string}
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
  */
 function createUniqueString() {
   const randomNum = parseInt((1 + Math.random()) * 65536) + '';
   return randomNum + new Date().getMilliseconds();
 }
 // EXTERNAL MODULE: ./components/Sku/utils.js
-var utils = __webpack_require__(176);
+var utils = __webpack_require__(185);
 
 // CONCATENATED MODULE: ./components/Sku/sku2param.js
 
 
-
 function objectValues(obj) {
   var res = [];
-
   for (var i in obj) {
     if (Object.prototype.hasOwnProperty.call(obj, i)) {
       res.push(obj[i]);
     }
   }
-
   return res;
 }
-
 function param2Data(product_skus_data) {
   // product_skus_data 数据结构请参考 `/src/components/mock.js`
   if (!product_skus_data || !product_skus_data.length) return;
-  const specificationObj = {}; // 储存所有 spec 的随机生成的 id
+  const specificationObj = {};
 
-  const spec_id_dict = {// '颜色': 'xxxid',
+  // 储存所有 spec 的随机生成的 id
+  const spec_id_dict = {
+    // '颜色': 'xxxid',
     // '皮质': 'xxxid',
-  }; // 储存所有 option 的随机生成的 id
+  };
 
-  const option_id_dict = {// '红色': 'xxxid',
+  // 储存所有 option 的随机生成的 id
+  const option_id_dict = {
+    // '红色': 'xxxid',
     // '绿色': 'xxxid',
     // '蓝色': 'xxxid',
     // '一级皮': 'xxxid',
@@ -258,14 +244,15 @@ function param2Data(product_skus_data) {
     // '三级皮': 'xxxid',
   };
   const productSkus = product_skus_data.map(item => {
-    const skusObj = { ...item,
+    const skusObj = {
+      ...item,
       product_sku_id: item.id,
       skus: item.product_sku.map((sku, index) => {
         // const spec_random_id = createUniqueString() + '_id'
         // const option_random_id = createUniqueString() + '_id'
         const spec_random_id = 'sku' + createUniqueString();
-        const option_random_id = 'sku' + createUniqueString(); // 加上 if ，防止 dict 里的 id 被覆盖，每次只记录第一次生成的 id
-
+        const option_random_id = 'sku' + createUniqueString();
+        // 加上 if ，防止 dict 里的 id 被覆盖，每次只记录第一次生成的 id
         if (!spec_id_dict[sku.key]) spec_id_dict[sku.key] = spec_random_id;
         if (!option_id_dict[sku.value]) option_id_dict[sku.value] = option_random_id;
         const sepc_id = spec_id_dict[sku.key];
@@ -273,7 +260,8 @@ function param2Data(product_skus_data) {
         specificationObj[sku.key] = {
           value: sku.key,
           id: sepc_id,
-          leaf: { ...(specificationObj[sku.key] ? specificationObj[sku.key].leaf : {}),
+          leaf: {
+            ...(specificationObj[sku.key] ? specificationObj[sku.key].leaf : {}),
             [sku.value]: {
               value: sku.value,
               id: option_id,
@@ -290,12 +278,14 @@ function param2Data(product_skus_data) {
         };
       })
     };
-    return { ...skusObj,
+    return {
+      ...skusObj,
       ids: Object(utils["creatIds"])(skusObj.skus),
       data: Object(utils["combInArray"])(skusObj.skus)
     };
   });
-  const specification = objectValues(specificationObj).map(item => ({ ...item,
+  const specification = objectValues(specificationObj).map(item => ({
+    ...item,
     leaf: objectValues(item.leaf)
   }));
   return {
@@ -306,39 +296,39 @@ function param2Data(product_skus_data) {
 
 /***/ }),
 
-/***/ 190:
+/***/ 199:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var core_js_modules_esnext_map_delete_all_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(154);
+/* harmony import */ var core_js_modules_esnext_map_delete_all_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(83);
 /* harmony import */ var core_js_modules_esnext_map_delete_all_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_delete_all_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var core_js_modules_esnext_map_every_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(155);
+/* harmony import */ var core_js_modules_esnext_map_every_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(84);
 /* harmony import */ var core_js_modules_esnext_map_every_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_every_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var core_js_modules_esnext_map_filter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(156);
+/* harmony import */ var core_js_modules_esnext_map_filter_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(85);
 /* harmony import */ var core_js_modules_esnext_map_filter_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_filter_js__WEBPACK_IMPORTED_MODULE_2__);
-/* harmony import */ var core_js_modules_esnext_map_find_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(157);
+/* harmony import */ var core_js_modules_esnext_map_find_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(86);
 /* harmony import */ var core_js_modules_esnext_map_find_js__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_find_js__WEBPACK_IMPORTED_MODULE_3__);
-/* harmony import */ var core_js_modules_esnext_map_find_key_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(158);
+/* harmony import */ var core_js_modules_esnext_map_find_key_js__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(87);
 /* harmony import */ var core_js_modules_esnext_map_find_key_js__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_find_key_js__WEBPACK_IMPORTED_MODULE_4__);
-/* harmony import */ var core_js_modules_esnext_map_includes_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(159);
+/* harmony import */ var core_js_modules_esnext_map_includes_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(88);
 /* harmony import */ var core_js_modules_esnext_map_includes_js__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_includes_js__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var core_js_modules_esnext_map_key_of_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(160);
+/* harmony import */ var core_js_modules_esnext_map_key_of_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(89);
 /* harmony import */ var core_js_modules_esnext_map_key_of_js__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_key_of_js__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var core_js_modules_esnext_map_map_keys_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(161);
+/* harmony import */ var core_js_modules_esnext_map_map_keys_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(90);
 /* harmony import */ var core_js_modules_esnext_map_map_keys_js__WEBPACK_IMPORTED_MODULE_7___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_map_keys_js__WEBPACK_IMPORTED_MODULE_7__);
-/* harmony import */ var core_js_modules_esnext_map_map_values_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(162);
+/* harmony import */ var core_js_modules_esnext_map_map_values_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(91);
 /* harmony import */ var core_js_modules_esnext_map_map_values_js__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_map_values_js__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var core_js_modules_esnext_map_merge_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(163);
+/* harmony import */ var core_js_modules_esnext_map_merge_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(92);
 /* harmony import */ var core_js_modules_esnext_map_merge_js__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_merge_js__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var core_js_modules_esnext_map_reduce_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(164);
+/* harmony import */ var core_js_modules_esnext_map_reduce_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(93);
 /* harmony import */ var core_js_modules_esnext_map_reduce_js__WEBPACK_IMPORTED_MODULE_10___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_reduce_js__WEBPACK_IMPORTED_MODULE_10__);
-/* harmony import */ var core_js_modules_esnext_map_some_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(165);
+/* harmony import */ var core_js_modules_esnext_map_some_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(94);
 /* harmony import */ var core_js_modules_esnext_map_some_js__WEBPACK_IMPORTED_MODULE_11___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_some_js__WEBPACK_IMPORTED_MODULE_11__);
-/* harmony import */ var core_js_modules_esnext_map_update_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(166);
+/* harmony import */ var core_js_modules_esnext_map_update_js__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(95);
 /* harmony import */ var core_js_modules_esnext_map_update_js__WEBPACK_IMPORTED_MODULE_12___default = /*#__PURE__*/__webpack_require__.n(core_js_modules_esnext_map_update_js__WEBPACK_IMPORTED_MODULE_12__);
-/* harmony import */ var _components_Sku_sku2param__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(185);
-/* harmony import */ var _api_goodIndent__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(22);
+/* harmony import */ var _components_Sku_sku2param__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(194);
+/* harmony import */ var _api_goodIndent__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(27);
 
 
 
@@ -352,9 +342,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-const store = __webpack_require__(15);
-
+const store = __webpack_require__(19);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -381,7 +369,6 @@ const store = __webpack_require__(15);
       default: false
     }
   },
-
   data() {
     return {
       cartGood: {
@@ -411,37 +398,30 @@ const store = __webpack_require__(15);
       getLists: this.getList
     };
   },
-
   watch: {
     getList(newVal) {
       this.$emit('getList', newVal);
       this.getLists = this.getList;
-
       if (!this.update) {
         this.loadData();
       }
     },
-
     getLists(newVal) {
       this.$emit('getLists', newVal);
     },
-
     cartDetails(newVal) {
       this.getLists = newVal.good;
       this.initSelectSpec(newVal);
     }
-
   },
-
   mounted() {
     this.loadData();
   },
-
   methods: {
     //获取详情
     loadData() {
-      this.selectedSku = []; // Sku
-
+      this.selectedSku = [];
+      // Sku
       if (this.getLists.good_sku.length > 0) {
         const {
           productSkus,
@@ -458,10 +438,10 @@ const store = __webpack_require__(15);
               leaf: index2
             };
           });
-        }); // return false
-
-        this.productSkus = productSkus; // 获取可选集成
-
+        });
+        // return false
+        this.productSkus = productSkus;
+        // 获取可选集成
         productSkus.forEach((item, ind) => {
           item.data.forEach(item2 => {
             item2.sort(function (value1, value2) {
@@ -469,8 +449,8 @@ const store = __webpack_require__(15);
             });
             this.SKUResult[item2.join("_")] = true;
           });
-        }); // 规格默认属性
-
+        });
+        // 规格默认属性
         this.specificationDefaultDisplay = {
           img: this.getLists.resources_many[0].img,
           price_show: this.getLists.price_show,
@@ -485,16 +465,14 @@ const store = __webpack_require__(15);
           inventory_show: this.getLists.inventory_show
         };
         this.cartGood.price = this.getLists.price;
-      } //自动选择默认第一项规格
-
-
+      }
+      //自动选择默认第一项规格
       if (typeof this.specification[0].leaf[0] != 'undefined') {
         for (var i = 0; i < this.specification.length; i++) {
           this.selectSpec(i, 0, this.specification[i].leaf[0]);
         }
       }
     },
-
     //初始化选中项
     initSelectSpec(newVal) {
       this.selectedSku = [];
@@ -504,10 +482,8 @@ const store = __webpack_require__(15);
       this.shoppingAttributes = newVal.good_sku;
       this.good_sku = newVal.good_sku;
       let checkedId = []; //选中的ID
-
       let checkedBrother = []; //兄弟列表
       // Sku
-
       if (newVal.good_sku) {
         const {
           productSkus,
@@ -521,16 +497,13 @@ const store = __webpack_require__(15);
               if (item2.value === newVal.good_sku.product_sku[i].value) {
                 item.leaf[index2].selected = true;
                 this.specSelectedIndex[index] = index2;
-
                 if (index2 !== null) {
                   checkedId.push(specification[index]['leaf'][index2]['id']);
                   checkedBrother.push(index);
                 }
-
                 break;
               }
             }
-
             this.selectedSku.push(item2.id);
             this.selectedSkuIndex[item2.id] = {
               index: index,
@@ -538,8 +511,8 @@ const store = __webpack_require__(15);
             };
           });
         });
-        this.productSkus = productSkus; // 获取可选集成
-
+        this.productSkus = productSkus;
+        // 获取可选集成
         productSkus.forEach((item, ind) => {
           item.data.forEach(item2 => {
             item2.sort(function (value1, value2) {
@@ -549,19 +522,17 @@ const store = __webpack_require__(15);
           });
         });
       }
-
       this.specificationDefaultDisplay = {
         img: newVal.img,
         price_show: [newVal.good_sku.price],
         inventory_show: newVal.good_sku.inventory,
         selected: '已选 ' + newVal.specification
-      }; // 处理不可选项
-
-      let selectedSkus = JSON.parse(JSON.stringify(this.selectedSku)); //判断属性是否可选
-
+      };
+      // 处理不可选项
+      let selectedSkus = JSON.parse(JSON.stringify(this.selectedSku));
+      //判断属性是否可选
       let assemblyCache = []; //组合临时存放
       // 去除选中后的可选项
-
       selectedSkus.forEach(item => {
         //选把未选中的和选中的组合，如果是选中兄弟节点，把选中的值移除
         assemblyCache = JSON.parse(JSON.stringify(checkedId));
@@ -576,9 +547,10 @@ const store = __webpack_require__(15);
         });
         assemblyCache.sort(function (value1, value2) {
           return parseInt(value1.replace("sku", "")) - parseInt(value2.replace("sku", ""));
-        }); // assembly.push(assemblyCache.join("_"))
-        // 判断选择项是否在可选集合内
+        });
 
+        // assembly.push(assemblyCache.join("_"))
+        // 判断选择项是否在可选集合内
         if (!this.SKUResult[assemblyCache.join("_")]) {
           this.specification[this.selectedSkuIndex[item].index].leaf[this.selectedSkuIndex[item].leaf].disabled = true;
         } else {
@@ -586,28 +558,24 @@ const store = __webpack_require__(15);
         }
       });
     },
-
     //输入价格
     priceInput: function (event) {
       this.cartGood.price = parseFloat(event.target.value);
     },
-
     //选择规格
     selectSpec(index, childIndex, res) {
       if (res.disabled) {
         //不可选的直接返回
         return false;
       }
-
       let chooseAll = false; //是否选全
-
-      let specification = this.specification; // 选中的清空
-
+      let specification = this.specification;
+      // 选中的清空
       if (this.specSelectedIndex[index] === childIndex) {
         //选择结果相同处理
         this.$set(specification[index]['leaf'][childIndex], 'selected', specification[index]['leaf'][childIndex]['selected'] ? false : true);
-        this.specSelectedIndex[index] = null; // 添加未选择的值
-
+        this.specSelectedIndex[index] = null;
+        // 添加未选择的值
         this.noSelectedName.splice(index, 0, specification[index].value);
       } else {
         //选择不同的处理
@@ -615,18 +583,16 @@ const store = __webpack_require__(15);
           //不等于null的时候把同个规格的其它参数设为未选中
           this.$set(specification[index]['leaf'][this.specSelectedIndex[index]], 'selected', false);
         }
-
         this.$set(specification[index]['leaf'][childIndex], 'selected', specification[index]['leaf'][childIndex]['selected'] ? false : true);
-        this.specSelectedIndex[index] = childIndex; // this.noSelectedName
+        this.specSelectedIndex[index] = childIndex;
+        // this.noSelectedName
         // 删除选中的元素
-
         this.noSelectedName.forEach((item, indexs) => {
           if (item === specification[index].value) {
             this.noSelectedName.splice(indexs, 1);
           }
         });
       }
-
       if (this.noSelectedName.length > 0) {
         this.specificationDefaultDisplay = {
           img: this.getLists.resources_many[0].img,
@@ -634,26 +600,22 @@ const store = __webpack_require__(15);
           inventory_show: this.getLists.inventory_show,
           selected: '选择 ' + this.noSelectedName
         };
-
         if (!this.update) {
           this.$emit('purchasePattern', this.specificationDefaultDisplay);
         }
-      } //保存最新选择的位置
-      //存储已选择
+      }
+      //保存最新选择的位置
 
+      //存储已选择
       /**
        * 修复选择规格存储错误
        * 将这几行代码替换即可
        * 选择的规格存放在specSelected中
        */
-
-
       this.specSelected = [];
       let ids = '';
       let checkedId = []; //选中的ID
-
       let checkedBrother = []; //兄弟列表
-
       let selectedSkus = JSON.parse(JSON.stringify(this.selectedSku));
       this.specSelectedIndex.forEach((item, index) => {
         if (item !== null) {
@@ -666,11 +628,12 @@ const store = __webpack_require__(15);
         } else {
           chooseAll = false;
         }
-      }); //判断属性是否可选
+      });
 
+      //判断属性是否可选
       let assemblyCache = []; //组合临时存放
-      // 去除选中后的可选项
 
+      // 去除选中后的可选项
       selectedSkus.forEach(item => {
         //选把未选中的和选中的组合，如果是选中兄弟节点，把选中的值移除
         assemblyCache = JSON.parse(JSON.stringify(checkedId));
@@ -685,21 +648,21 @@ const store = __webpack_require__(15);
         });
         assemblyCache.sort(function (value1, value2) {
           return parseInt(value1.replace("sku", "")) - parseInt(value2.replace("sku", ""));
-        }); // assembly.push(assemblyCache.join("_"))
+        });
+        // assembly.push(assemblyCache.join("_"))
         // 判断选择项是否在可选集合内
-
         if (!this.SKUResult[assemblyCache.join("_")]) {
           specification[this.selectedSkuIndex[item].index].leaf[this.selectedSkuIndex[item].leaf].disabled = true;
         } else {
           specification[this.selectedSkuIndex[item].index].leaf[this.selectedSkuIndex[item].leaf].disabled = false;
         }
-      }); // console.log(ids.substr(0, ids.length - 1))
-      // 选项已选择
+      });
 
+      // console.log(ids.substr(0, ids.length - 1))
+      // 选项已选择
       if (chooseAll === true) {
         this.cartGood.number = 1;
         this.shoppingAttributes = [];
-
         for (var i = 0; i < this.productSkus.length; i++) {
           if (this.productSkus[i].ids === ids.substr(0, ids.length - 1)) {
             const specificationDefaultDisplay = this.specificationDefaultDisplay;
@@ -714,11 +677,9 @@ const store = __webpack_require__(15);
               selected: '已选 ' + selectedName.join(";"),
               cost_price: this.productSkus[i].cost_price
             };
-
             if (!this.update) {
               this.$emit('purchasePattern', this.specificationDefaultDisplay);
             }
-
             this.cartGood.price = this.productSkus[i].price;
             this.shoppingAttributes = this.productSkus[i];
             break;
@@ -726,35 +687,28 @@ const store = __webpack_require__(15);
         }
       }
     },
-
     //数量
     numberChange(data) {
       this.cartGood.number = data;
     },
-
     //加入购物车
     cart(buyState) {
       // 单品或已选规格
       if (this.shoppingAttributes.id > 0 || this.getLists.good_sku.length === 0) {
         const tmp = /^\d+\.?\d{0,2}$/;
-
         if (!tmp.test(this.cartGood.price)) {
           this.$message.error('输入的金额有误');
           return false;
         }
-
         this.$emit('toggleSpec');
-
         if (this.order) {
           //订单更新，直接返回更新后的数据
           // 非SKU商品不允许订单下修改，故不做处理
           if (this.getLists.good_sku.length > 0) {
             let img = this.getLists.resources_many[0].img;
-
             if (this.shoppingAttributes.resources) {
               img = this.shoppingAttributes.resources.img;
             }
-
             let cart = {
               id: this.cartDetails.id ? this.cartDetails.id : 0,
               name: this.getLists.name,
@@ -772,22 +726,19 @@ const store = __webpack_require__(15);
           // store.remove(process.env.CACHE_PR + 'CartList')
           let cartList = store.get("DSSHOP-PC-" + 'CartList') || [];
           let cartMap = new Map();
-
           if (buyState) {
             //直接购买
             cartList = [];
           }
-
           cartList.forEach(item => {
             cartMap.set(item.good_sku_id, item);
           });
-          let img = this.getLists.resources_many[0].img; //Sku
-
+          let img = this.getLists.resources_many[0].img;
+          //Sku
           if (this.getLists.good_sku.length > 0) {
             if (this.shoppingAttributes.resources) {
               img = this.shoppingAttributes.resources.img;
             }
-
             if (this.update) {
               //更新
               // 判断用户是否更改了SKU
@@ -795,7 +746,6 @@ const store = __webpack_require__(15);
                 cartMap.delete(this.good_sku.id);
               }
             }
-
             if (cartMap.get(this.shoppingAttributes.id)) {
               //已存在，更新其它属性，增加新添加的数量
               if (this.update) {
@@ -803,13 +753,12 @@ const store = __webpack_require__(15);
                 cartMap.get(this.shoppingAttributes.id).number = this.cartGood.number;
               } else {
                 cartMap.get(this.shoppingAttributes.id).number += this.cartGood.number;
-              } //如果购物车商品购买数大于当前库存，将结果改成库存数量
+              }
 
-
+              //如果购物车商品购买数大于当前库存，将结果改成库存数量
               if (cartMap.get(this.shoppingAttributes.id).number > this.specificationDefaultDisplay.inventory_show) {
                 cartMap.get(this.shoppingAttributes.id).number = this.specificationDefaultDisplay.inventory_show;
               }
-
               cartMap.get(this.shoppingAttributes.id).price = this.cartGood.price;
               cartMap.get(this.shoppingAttributes.id).name = this.getLists.name;
               cartMap.get(this.shoppingAttributes.id).good_id = this.getLists.id;
@@ -839,13 +788,12 @@ const store = __webpack_require__(15);
                 cartList['good_' + this.getLists.id].number = this.cartGood.number;
               } else {
                 cartList['good_' + this.getLists.id].number += this.cartGood.number;
-              } //如果购物车商品购买数大于当前库存，将结果改成库存数量
+              }
 
-
+              //如果购物车商品购买数大于当前库存，将结果改成库存数量
               if (cartList['good_' + this.getLists.id].number > this.getLists.inventory_show) {
                 cartList['good_' + this.getLists.id].number = this.getLists.inventory_show;
               }
-
               cartList['good_' + this.getLists.id].price = this.cartGood.price;
               cartList['good_' + this.getLists.id].name = this.getLists.name;
               cartList['good_' + this.getLists.id].good_id = this.getLists.id;
@@ -862,7 +810,6 @@ const store = __webpack_require__(15);
               };
             }
           }
-
           if (buyState) {
             //直接购买
             store.set("DSSHOP-PC-" + 'OrderList', [...cartMap.values()]);
@@ -871,13 +818,12 @@ const store = __webpack_require__(15);
             Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_14__[/* addShoppingCart */ "a"])([...cartMap.values()], function (res) {
               this.$emit('loadCart'); //重载数据
             });
+
             store.set("DSSHOP-PC-" + 'CartList', [...cartMap.values()]);
             $nuxt.$store.commit('setShoppingCartNumber', cartMap.size);
           }
         }
-
         this.initList();
-
         if (this.update) {//更新
         } else {
           if (buyState) {
@@ -894,7 +840,6 @@ const store = __webpack_require__(15);
         this.$message.error('请选择规格');
       }
     },
-
     //初始化
     initList() {
       this.cartGood = {
@@ -914,7 +859,6 @@ const store = __webpack_require__(15);
       this.shoppingAttributes = [];
       this.loadData();
     }
-
   }
 });
 

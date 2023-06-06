@@ -4,10 +4,10 @@
       <el-col :span="24" style="padding-bottom: 20px;">
         <el-card shadow="hover">
           <div class="title">
-            <h3>行为数据</h3>
-            <div class="right" @click="handleDownload('behavior')">下载</div>
+            <h3>{{ $t('statistics.visit.behavioral_data') }}</h3>
+            <div class="right" @click="handleDownload('behavior')">{{ $t('common.download') }}</div>
             <div>
-              <el-select v-model="behaviorDate" placeholder="请选择" @change="setDate('behavior')">
+              <el-select :placeholder="$t('common.select')" v-model="behaviorDate" @change="setDate('behavior')">
                 <el-option
                   v-for="item in behavior"
                   :key="item.value"
@@ -23,10 +23,10 @@
       <el-col :span="24" style="padding-bottom: 20px;">
         <el-card shadow="hover">
           <div class="title">
-            <h3>留存趋势</h3>
-            <div class="right" @click="handleDownload('keep')">下载</div>
+            <h3>{{ $t('statistics.visit.retention_trend') }}</h3>
+            <div class="right" @click="handleDownload('keep')">{{ $t('common.download') }}</div>
             <div>
-              <el-select v-model="keepDate" placeholder="请选择" @change="setDate('keep')">
+              <el-select :placeholder="$t('common.select')" v-model="keepDate" @change="setDate('keep')">
                 <el-option
                   v-for="item in keep"
                   :key="item.value"
@@ -42,10 +42,10 @@
       <el-col :span="24" style="padding-bottom: 20px;">
         <el-card shadow="hover">
           <div class="title">
-            <h3>来源分析</h3>
-            <div class="right" @click="handleDownload('source')">下载</div>
+            <h3>{{ $t('statistics.visit.stream_analysis') }}</h3>
+            <div class="right" @click="handleDownload('source')">{{ $t('common.download') }}</div>
             <div>
-              <el-select v-model="sourceDate" placeholder="请选择" @change="setDate('source')">
+              <el-select :placeholder="$t('common.select')" v-model="sourceDate" @change="setDate('source')">
                 <el-option
                   v-for="item in source"
                   :key="item.value"
@@ -84,10 +84,10 @@ export default {
       behaviorShowDate: '',
       behavior: [{
         value: 7,
-        lable: '最近7天'
+        lable: this.$t('statistics.visit.recently', { number: 7 })
       }, {
         value: 30,
-        lable: '最近30天'
+        lable: this.$t('statistics.visit.recently', { number: 30 })
       }],
       keep_loading: false,
       keepData: [],
@@ -96,10 +96,10 @@ export default {
       keepShowDate: '',
       keep: [{
         value: 7,
-        lable: '最近7天'
+        lable: this.$t('statistics.visit.recently', { number: 7 })
       }, {
         value: 30,
-        lable: '最近30天'
+        lable: this.$t('statistics.visit.recently', { number: 30 })
       }],
       source_loading: false,
       sourceData: [],
@@ -108,10 +108,10 @@ export default {
       sourceShowDate: '',
       source: [{
         value: 7,
-        lable: '最近7天'
+        lable: this.$t('statistics.visit.recently', { number: 7 })
       }, {
         value: 30,
-        lable: '最近30天'
+        lable: this.$t('statistics.visit.recently', { number: 307 })
       }]
     }
   },
@@ -123,7 +123,7 @@ export default {
   methods: {
     getBehavior() {
       this.analyze_loading = true
-      this.behaviorShowDate = getBeforeDate(this.behaviorDate) + '至' + getBeforeDate(1)
+      this.behaviorShowDate = getBeforeDate(this.behaviorDate) + this.$t('common.to') + getBeforeDate(1)
       behavior({ date: this.behaviorDate }).then(response => {
         this.behaviorData = response.data
         this.behaviorExcelData = []
@@ -133,11 +133,11 @@ export default {
             data[v['date']] = {}
           }
           data[v['date']] = [0, 0, 0, v.date]
-          if (v.country === '累计访问人数') {
+          if (v.country === this.$t('statistics.visit.cumulative_number_of_visitors')) {
             data[v['date']][0] = v.value
-          } else if (v.country === '转发次数') {
+          } else if (v.country === this.$t('statistics.visit.number_of_forwarding')) {
             data[v['date']][1] = v.value
-          } else if (v.country === '转发人数') {
+          } else if (v.country === this.$t('statistics.visit.forwarding_number')) {
             data[v['date']][2] = v.value
           }
         })
@@ -149,7 +149,7 @@ export default {
     },
     getKeep() {
       this.keep_loading = true
-      this.keepShowDate = getBeforeDate(this.keepDate) + '至' + getBeforeDate(1)
+      this.keepShowDate = getBeforeDate(this.keepDate) + this.$t('common.to') + getBeforeDate(1)
       keep({ date: this.keepDate }).then(response => {
         this.keepData = response.data
         this.keepExcelData = []
@@ -159,9 +159,9 @@ export default {
             data[v['date']] = {}
           }
           data[v['date']] = [0, 0, v.date]
-          if (v.country === '新增用户留存') {
+          if (v.country === this.$t('statistics.visit.new_user_retention')) {
             data[v['date']][0] = v.value
-          } else if (v.country === '活跃用户留存') {
+          } else if (v.country === this.$t('statistics.visit.active_user_retention')) {
             data[v['date']][1] = v.value
           }
         })
@@ -173,7 +173,7 @@ export default {
     },
     getSource() {
       this.source_loading = true
-      this.sourceShowDate = getBeforeDate(this.sourceDate) + '至' + getBeforeDate(1)
+      this.sourceShowDate = getBeforeDate(this.sourceDate) + this.$t('common.to') + getBeforeDate(1)
       source({ date: this.sourceDate }).then(response => {
         this.sourceData = response.data
         this.source_loading = false
@@ -181,13 +181,13 @@ export default {
     },
     setDate(item) {
       if (item === 'behavior') {
-        this.behaviorShowDate = getBeforeDate(this.behaviorDate) + '至' + getBeforeDate(1)
+        this.behaviorShowDate = getBeforeDate(this.behaviorDate) + this.$t('common.to') + getBeforeDate(1)
         this.getBehavior()
       } else if (item === 'keep') {
-        this.keepShowDate = getBeforeDate(this.keepDate) + '至' + getBeforeDate(1)
+        this.keepShowDate = getBeforeDate(this.keepDate) + this.$t('common.to') + getBeforeDate(1)
         this.getKeep()
       } else if (item === 'source') {
-        this.sourceShowDate = getBeforeDate(this.sourceDate) + '至' + getBeforeDate(1)
+        this.sourceShowDate = getBeforeDate(this.sourceDate) + this.$t('common.to') + getBeforeDate(1)
         this.getSource()
       }
     },
@@ -198,12 +198,12 @@ export default {
         let data = []
         let filename = ''
         if (item === 'behavior') {
-          tHeader = ['累计访问人数', '转发次数', '转发人数', '时间']
-          filename = '行为数据'
+          tHeader = [this.$t('statistics.visit.cumulative_number_of_visitors'), this.$t('statistics.visit.number_of_forwarding'), this.$t('statistics.visit.forwarding_number'), this.$t('common.time')]
+          filename = this.$t('statistics.visit.behavioral_data')
           data = this.behaviorExcelData
         } else if (item === 'keep') {
-          tHeader = ['新增用户留存', '活跃用户留存', '时间']
-          filename = '留存趋势'
+          tHeader = [this.$t('statistics.visit.new_user_retention'), this.$t('statistics.visit.active_user_retention'), this.$t('common.time')]
+          filename = this.$t('statistics.visit.retention_trend')
           data = this.keepExcelData
         } else if (item === 'source') {
           tHeader = []
@@ -212,7 +212,7 @@ export default {
             tHeader.push(sourceData.type)
             data[0].push(sourceData.value)
           })
-          filename = '来源分析'
+          filename = this.$t('statistics.visit.stream_analysis')
         }
         excel.export_json_to_excel({
           header: tHeader,

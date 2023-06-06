@@ -5,22 +5,22 @@
       <div class="container">
         <div class="topbar-nav">
           <div class="menu">
-            <div class="li">微信小程序
+            <div class="li">{{$t('header.top.wechat_mini_program')}}
               <div class="appcode">
                 <img class="padding" src="~/assets/img/miniweixin.jpg"/>
-                <p>微信小程序</p>
+                <p>{{$t('header.top.wechat_mini_program')}}</p>
               </div>
             </div>
-            <div class="li">h5
+            <div class="li">{{$t('header.top.h5')}}
               <div class="appcode">
                 <img src="~/assets/img/h5.png"/>
-                <p>h5</p>
+                <p>{{$t('header.top.h5')}}</p>
               </div>
             </div>
-            <div class="li">下载APP
+            <div class="li">{{$t('header.top.app')}}
               <div class="appcode">
                 <img src="~/assets/img/android.png"/>
-                <p>安卓APP</p>
+                <p>{{$t('header.top.android')}}</p>
               </div>
             </div>
 
@@ -32,22 +32,27 @@
                 <el-collapse-transition>
                   <div class="user-menu-wrapper" v-show="userActive">
                     <ul class="user-menu">
-                      <li><NuxtLink class="a" to="/user/portal">个人中心</NuxtLink></li>
-                      <li><NuxtLink class="a" to="/user/collect">我的收藏</NuxtLink></li>
-                      <li><div class="a" @click="logout">退出登录</div></li>
+                      <li><NuxtLink class="a" to="/user/portal">{{$t('header.top.personal_center')}}</NuxtLink></li>
+                      <li><NuxtLink class="a" to="/user/collect">{{$t('header.top.collection')}}</NuxtLink></li>
+                      <li><div class="a" @click="logout">{{$t('header.top.logout')}}</div></li>
                     </ul>
                   </div>
                 </el-collapse-transition>
               </div>
-              <NuxtLink class="li" to="/user/indent/list">我的订单</NuxtLink>
+              <NuxtLink class="li" to="/user/indent/list">{{$t('header.top.order')}}</NuxtLink>
             </template>
             <template v-else>
-              <div class="li" @click="goLogin">登录</div>
-              <NuxtLink class="li" to="/pass/register">注册</NuxtLink>
+              <div class="li" @click="goLogin">{{$t('header.top.login')}}</div>
+              <NuxtLink class="li" to="/pass/register">{{$t('header.top.register')}}</NuxtLink>
             </template>
-            <NuxtLink class="li" to="/user/notice/list">消息通知</NuxtLink>
+            <NuxtLink class="li" to="/user/notice/list">{{$t('header.top.message')}}</NuxtLink>
+            <NuxtLink
+              class="li"
+              v-for="locale in availableLocales"
+              :key="locale.code"
+              :to="switchLocalePath(locale.code)"><span @click="handleChangeLang(locale.code)">{{ locale.name }}</span></NuxtLink>
             <div class="li cart" :class="{ on: shoppingCart.length > 0 }" @mouseenter="userCart" @mouseleave="userCartOut">
-              <NuxtLink :to="{ path: '/cart'}"><div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>购物车({{$nuxt.$store.state.shoppingCartNumber}})</div></NuxtLink>
+              <NuxtLink :to="{ path: '/cart'}"><div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>{{$t('header.top.cart')}}({{$nuxt.$store.state.shoppingCartNumber}})</div></NuxtLink>
               <el-collapse-transition>
                 <div class="cart-box" v-show="cartActive" v-loading="cartLoading">
                 <template v-if="shoppingCart.length > 0">
@@ -61,25 +66,25 @@
                       <NuxtLink :to="{ path: `/product/detail/${item.good_id}`}" class="title">
                         {{item.name}}
                       </NuxtLink>
-                      <div class="price">{{item.price}}元 × {{item.number}}</div>
+                      <div class="price">{{item.price}}{{$t('common.monetary_unit')}} × {{item.number}}</div>
                       <div class="close"><i class="el-icon-delete" @click="deleteCart(index)"></i></div>
                       <div class="invalid" v-if="item.invalid">
-                        商品已失效
+                        {{$t('header.top.failure_of_goods')}}
                       </div>
                     </div>
                   </div>
                   <div class="cart-total">
                     <div class="number">
-                      <div class="name">共 {{ $nuxt.$store.state.shoppingCartNumber }} 件商品</div>
-                      <div class="price"><span>{{ shoppingTotal }}</span>元</div>
+                      <div class="name">{{$t('header.top.common', { number: $nuxt.$store.state.shoppingCartNumber})}}</div>
+                      <div class="price"><span>{{ shoppingTotal }}</span>{{$t('common.monetary_unit')}}</div>
                     </div>
                     <div class="operation">
-                      <NuxtLink :to="{ path: '/cart'}"><el-button type="danger">去购物车结算</el-button></NuxtLink>
+                      <NuxtLink :to="{ path: '/cart'}"><el-button type="danger">{{$t('header.top.settle')}}</el-button></NuxtLink>
                     </div>
                   </div>
                 </template>
                 <template v-else>
-                  <div class="msg-empty">购物车中还没有商品，赶紧选购吧！</div>
+                  <div class="msg-empty">{{$t('header.top.no_goods_cart')}}</div>
                 </template>
               </div>
               </el-collapse-transition>
@@ -93,7 +98,6 @@
     <div class="container">
       <div class="top-nav">
         <NuxtLink class="li" to="/"><img class="logo" src="~/assets/img/logo.png"/></NuxtLink>
-
         <div class="nav">
           <div class="menu">
             <NuxtLink class="li" :class="index === navActive ? 'active' : ''" v-for="(item, index) in navList" :key="index" :to="{ path: item.path, query: item.query}">{{item.name}}</NuxtLink>

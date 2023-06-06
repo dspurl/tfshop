@@ -240,7 +240,7 @@
               </el-form-item>
             </el-form>
           </el-collapse-item>
-          <el-button type="danger" round style="width:100%;margin-top: 20px;" @click="deleteLableEvent()">删除</el-button>
+          <el-button type="danger" round style="width:100%;margin-top: 20px;" @click="deleteLableEvent()">{{ $t('common.delete') }}</el-button>
         </el-collapse>
       </el-scrollbar>
     </el-card>
@@ -281,8 +281,8 @@
         </el-tabs>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button type="primary" @click="selectedImage()">确定</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="selectedImage()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
 
@@ -565,11 +565,11 @@ export default {
           'image/png',
           'image/bmp'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error(this.$t('hint.upload.img.rmvb'))
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error(this.$t('hint.upload.img.can_not_surpass', { size: '2MB' }))
       }
       this.imgProgress = true
       return isLt2M

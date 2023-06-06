@@ -1,7 +1,18 @@
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 import Network from '../utils/network.js'
+import i18n from '@/utils/lang/index'
 export default {
 	login(data, success, fail) {
-		Network.setPostMessage('login', data, '登录中', function(res) {
+		Network.setPostMessage('login', data, i18n.t('common.processing'), function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({
@@ -12,7 +23,7 @@ export default {
 		})
 	},
 	register(data, success, fail) {
-		Network.setPostMessage('register', data, '处理中', function(res) {
+		Network.setPostMessage('register', data, i18n.t('common.processing'), function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({
@@ -34,7 +45,7 @@ export default {
 		})
 	},
 	verifyEmail(data, success, fail) {
-		Network.setPostMessage('verifyEmail', data, '处理中', function(res) {
+		Network.setPostMessage('verifyEmail', data, i18n.t('common.processing'), function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({
@@ -45,7 +56,7 @@ export default {
 		})
 	},
 	findPassword(data, success, fail) {
-		Network.setPostMessage('findPassword', data, '处理中', function(res) {
+		Network.setPostMessage('findPassword', data, i18n.t('common.processing'), function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({
@@ -78,7 +89,7 @@ export default {
 		})
 	},
 	emailCode(data, success, fail) {
-		Network.setPostMessage('emailCode', data, '处理中', function(res) {
+		Network.setPostMessage('emailCode', data, i18n.t('common.processing'), function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({
@@ -89,7 +100,7 @@ export default {
 		})
 	},
 	logout(data, success, fail) {
-		Network.setPostMessage('logout', {}, '退出中', function(res) {
+		Network.setPostMessage('logout', {}, i18n.t('common.processing'), function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({

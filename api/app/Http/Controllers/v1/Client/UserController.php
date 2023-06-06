@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -39,7 +48,7 @@ class UserController extends Controller
                 $User->uuid = $uuid;
                 RedisLock::unlock($redis, 'dsShopUser');
             } else {
-                return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+                return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
             }
         }
         return resReturn(1, $User);
@@ -58,7 +67,7 @@ class UserController extends Controller
     public function edit(Request $request)
     {
         if (!$request->portrait && !$request->nickname) {
-            return resReturn(0, '参数有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('common.arguments'), Code::CODE_PARAMETER_WRONG);
         }
         $redis = new RedisService();
         $lock = RedisLock::lock($redis, 'dsShopUser');
@@ -74,7 +83,7 @@ class UserController extends Controller
             RedisLock::unlock($redis, 'dsShopUser');
             return resReturn(1, $User->portrait);
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 
@@ -88,10 +97,10 @@ class UserController extends Controller
         //判断订单是否在未完成的
         $GoodIndentCount = GoodIndent::where('user_id', auth('web')->user()->id)->where('state', '!=', GoodIndent::GOOD_INDENT_STATE_ACCOMPLISH)->count();
         if ($GoodIndentCount > 0) {
-            return resReturn(0, '您有未完成的业务，无法注销', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('user.state.error.unable_out'), Code::CODE_PARAMETER_WRONG);
         }
         User::where('id', auth('web')->user()->id)->update(['unsubscribe' => User::USER_UNSUBSCRIBE_YES]);
-        return resReturn(1, '注销成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -102,11 +111,11 @@ class UserController extends Controller
     public function notification(Request $request)
     {
         if (!$request->notification) {
-            return resReturn(0, '参数有误', Code::CODE_MISUSE);
+            return resReturn(0, __('common.arguments'), Code::CODE_MISUSE);
         }
         $User = User::find(auth('web')->user()->id);
         $User->notification = $request->notification;
         $User->save();
-        return resReturn(1, '操作成功');
+        return resReturn(1, __('common.succeed'));
     }
 }

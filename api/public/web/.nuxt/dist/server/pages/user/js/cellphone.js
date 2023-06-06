@@ -1,81 +1,43 @@
 exports.ids = [49];
 exports.modules = {
 
-/***/ 170:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return detail; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return edit; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return cancel; });
-/* harmony import */ var _plugins_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
-/* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(qs__WEBPACK_IMPORTED_MODULE_1__);
-
-
-function detail() {
-  return Object(_plugins_request__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])({
-    url: 'user',
-    method: 'GET'
-  });
-}
-function edit(data) {
-  data = qs__WEBPACK_IMPORTED_MODULE_1___default.a.parse(data);
-  return Object(_plugins_request__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])({
-    url: 'user',
-    method: 'POST',
-    data
-  });
-}
-function cancel(data) {
-  data = qs__WEBPACK_IMPORTED_MODULE_1___default.a.parse(data);
-  return Object(_plugins_request__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])({
-    url: 'cancel',
-    method: 'POST',
-    data
-  });
-}
-
-/***/ }),
-
-/***/ 218:
+/***/ 229:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(170);
-/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(37);
+/* harmony import */ var _api_user__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(45);
+/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(44);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'user',
-
   head() {
     return {
-      title: '修改手机号-个人中心'
+      title: `${this.$t('user.cellphone')}-${this.$t('header.top.personal_center')}`
     };
   },
-
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error(this.$t('hint.error.import', {
+          attribute: this.$t('find_password.cellphone')
+        })));
       } else {
         const myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
-
         if (!myreg.test(value)) {
-          callback(new Error('手机号格式有误'));
+          callback(new Error(this.$t('hint.error.wrong_format', {
+            attribute: this.$t('find_password.cellphone')
+          })));
         }
-
         callback();
       }
     };
-
     return {
       buttonLoading: false,
       loading: true,
       disabled: false,
-      codename: '获取验证码',
+      codename: this.$t('find_password.get_code'),
       seconds: '',
       cellphone: '',
       unit: '',
@@ -88,7 +50,9 @@ __webpack_require__.r(__webpack_exports__);
       rules: {
         cellphone: [{
           required: true,
-          message: '请输入新手机号',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('cellphone.new')
+          }),
           trigger: 'blur'
         }, {
           validator: validateCellphone,
@@ -96,20 +60,20 @@ __webpack_require__.r(__webpack_exports__);
         }],
         code: [{
           required: true,
-          message: '请输入验证码',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('find_password.verification_code')
+          }),
           trigger: 'blur'
         }]
       }
     };
   },
-
   mounted() {
     this.getUser();
   },
-
   methods: {
     async getUser() {
-      await Promise.all([Object(_api_user__WEBPACK_IMPORTED_MODULE_0__[/* detail */ "b"])(this.listQuery)]).then(([userData]) => {
+      await Promise.all([Object(_api_user__WEBPACK_IMPORTED_MODULE_0__[/* detail */ "c"])(this.listQuery)]).then(([userData]) => {
         this.user = userData;
         this.cellphone = JSON.parse(JSON.stringify(userData.cellphone));
         this.loading = false;
@@ -117,7 +81,6 @@ __webpack_require__.r(__webpack_exports__);
         this.loading = false;
       });
     },
-
     // 获取验证码
     getCode() {
       const that = this;
@@ -131,17 +94,16 @@ __webpack_require__.r(__webpack_exports__);
         this.buttonLoading = false;
         this.timer = setInterval(function () {
           that.seconds = that.seconds - 1;
-
           if (that.seconds === 0) {
             // 读秒结束 清空计时器
             clearInterval(that.timer);
             that.seconds = '';
-            that.codename = '获取验证码';
+            that.codename = this.$t('find_password.get_code');
             that.unit = '';
             that.codeDisabled = false;
           }
-        }, 1000); // 模拟验证码发送
-
+        }, 1000);
+        // 模拟验证码发送
         if (response.code) {
           that.ruleForm.code = response.code;
         }
@@ -149,7 +111,6 @@ __webpack_require__.r(__webpack_exports__);
         this.buttonLoading = false;
       });
     },
-
     submitForm() {
       this.$refs['ruleForm'].validate(valid => {
         if (valid) {
@@ -161,7 +122,7 @@ __webpack_require__.r(__webpack_exports__);
             this.getUser();
             this.$refs['ruleForm'].resetFields();
             this.$message({
-              message: '修改成功',
+              message: this.$t('common.success'),
               type: 'success'
             });
           }).catch(() => {
@@ -171,11 +132,9 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-
     resetForm(formName) {
       this.$refs[formName].resetFields();
     }
-
   }
 });
 

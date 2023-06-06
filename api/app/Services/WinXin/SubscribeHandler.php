@@ -1,9 +1,13 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: pang
- * Date: 2020/12/15
- * Time: 11:17
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
  */
 
 namespace App\Services\WinXin;
@@ -38,7 +42,7 @@ class SubscribeHandler implements EventHandlerInterface
                             'wechat' => $payload['FromUserName'],
                             'notification' => json_encode($notification)
                         ]);
-                        return '恭喜您成功开通微信提醒服务！';
+                        return __('service.subscribe.scan');
                     }
                 }
                 break;
@@ -54,6 +58,6 @@ class SubscribeHandler implements EventHandlerInterface
                 break;
         }
 
-        return '感谢您的关注';
+        return __('service.subscribe');
     }
 }

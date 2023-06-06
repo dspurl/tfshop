@@ -4,17 +4,17 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '修改手机号-个人中心',
+      title: `${this.$t('user.cellphone')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error(this.$t('hint.error.import', {attribute: this.$t('find_password.cellphone')})));
       } else {
         const myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
         if (!myreg.test(value)) {
-          callback(new Error('手机号格式有误'));
+          callback(new Error(this.$t('hint.error.wrong_format', {attribute: this.$t('find_password.cellphone')})));
         }
         callback();
       }
@@ -23,7 +23,7 @@ export default {
       buttonLoading: false,
       loading: true,
       disabled: false,
-      codename:'获取验证码',
+      codename:this.$t('find_password.get_code'),
       seconds: '',
       cellphone: '',
       unit: '',
@@ -35,11 +35,11 @@ export default {
       },
       rules: {
         cellphone: [
-          { required: true, message: '请输入新手机号', trigger: 'blur' },
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('cellphone.new')}), trigger: 'blur' },
           { validator: validateCellphone, trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入验证码', trigger: 'blur' },
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('find_password.verification_code')}), trigger: 'blur' },
         ]
       }
     }
@@ -76,7 +76,7 @@ export default {
             // 读秒结束 清空计时器
             clearInterval(that.timer);
             that.seconds = '';
-            that.codename = '获取验证码';
+            that.codename = this.$t('find_password.get_code');
             that.unit = '';
             that.codeDisabled = false
           }
@@ -100,7 +100,7 @@ export default {
             this.getUser();
             this.$refs['ruleForm'].resetFields();
             this.$message({
-              message: '修改成功',
+              message: this.$t('common.success'),
               type: 'success'
             });
           }).catch(() => {

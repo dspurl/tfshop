@@ -1,7 +1,7 @@
 export default {
   head () {
     return {
-      title:'网站正在维护中-'  + process.env.APP_NAME,
+      title:this.$t('error.maintain') + '-'  + process.env.APP_NAME,
     }
   },
   methods: {

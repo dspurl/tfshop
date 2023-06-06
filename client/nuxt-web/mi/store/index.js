@@ -1,10 +1,21 @@
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 const store = require('store');
 import { setToken, removeToken } from '@/plugins/auth'
 export const state = () => ({
   hasLogin: false,
   cartTitle: '',
   shoppingCartNumber: 0,
-  searchKeyword: ''
+  searchKeyword: '',
+  lang: 'zh'
 })
 
 export const mutations = {
@@ -50,10 +61,13 @@ export const mutations = {
     if(!state.hasLogin){
       store.set('route', { path: $nuxt.$route.path, query: $nuxt.$route.query });
       $nuxt.$router.replace('/pass/login');
-      $nuxt.$message.warning('请先登录')
+      $nuxt.$message.warning($nuxt.$t('login.please_login_first'))
     }
   },
   setCartTitle(state, provider){
     state.cartTitle = provider
+  },
+  setLang(state, lang) {
+    state.lang = lang
   }
 }

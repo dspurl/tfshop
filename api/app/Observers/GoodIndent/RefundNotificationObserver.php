@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Observers\GoodIndent;
 
 use App\Models\v1\GoodIndent;
@@ -50,30 +59,30 @@ class RefundNotificationObserver
             $Money->type = MoneyLog::MONEY_LOG_TYPE_INCOME;
             $Money->money = $goodIndent->refund_money;
             if ($goodIndent->refund_way == GoodIndent::GOOD_INDENT_REFUND_WAY_BALANCE) {
-                $Money->remark = '订单：' . $goodIndent->identification . '的退款';
+                $Money->remark = __('observer.good_indent.refund_notification.balance.remark', ['id'=>$goodIndent->identification]);
             } else {
-                $Money->remark = '订单：' . $goodIndent->identification . '的退款，已退回到您的充值账号中';
+                $Money->remark = __('observer.good_indent.refund_notification.remark', ['id'=>$goodIndent->identification]);
             }
             $Money->save();
             $parameter = [
                 'money_id' => $Money->id,  //资金记录ID
                 'identification' => $goodIndent->identification,  //订单号
                 'total' => $goodIndent->refund_money,    //退款金额
-                'type' => $goodIndent->refund_way == GoodIndent::GOOD_INDENT_REFUND_WAY_BALANCE ? '退到余额' : '原路退还', //退款方式
+                'type' => $goodIndent->refund_way == GoodIndent::GOOD_INDENT_REFUND_WAY_BALANCE ? __('good_indent.refund_way.balance') : __('good_indent.refund_way.back'), //退款方式
                 'refund_reason' => $goodIndent->refund_reason,    //退款理由
                 'template' => 'refund_success',   //通知模板标识
                 'user_id' => $goodIndent->user_id   //用户ID
             ];
             $invoice = [
                 'type' => InvoicePaid::NOTIFICATION_TYPE_DEAL,
-                'title' => '您有一笔退款成功，退款方式：' . $parameter['type'] . '，请留意。',
+                'title' => __('observer.good_indent.refund_notification.invoice.title', ['type'=>$parameter['type']]),
                 'list' => [
                     [
-                        'keyword' => '订单编号',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.identification'),
                         'data' => $parameter['identification']
                     ],
                     [
-                        'keyword' => '退款方式',
+                        'keyword' => __('good_indent.refund_way'),
                         'data' => $parameter['type']
                     ]
                 ],

@@ -171,7 +171,7 @@ function resolveComponents (route) {
 }
 
 function callMiddleware (Components, context, layout) {
-  let midd = ["refreshToken","terminal"]
+  let midd = ["refreshToken","terminal","lang","nuxti18n"]
   let unknownMiddleware = false
 
   // If layout is undefined, only call global middleware

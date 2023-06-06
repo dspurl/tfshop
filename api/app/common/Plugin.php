@@ -1,5 +1,16 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | 插件
+ * +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\common;
 
 use App\Code;
@@ -425,7 +436,7 @@ class Plugin
         if ($request->routes) {
             $this->createRoutes($request, true);
         }
-        return '更新成功';
+        return __('hint.succeed.win', ['attribute' => __('common.update')]);
     }
 
     /**
@@ -786,7 +797,7 @@ class Plugin
             }
             $this->removeRoutes($path['name'], $path);
             Storage::disk('root')->deleteDirectory($this->pluginListPath . '/' . $name);
-            return '删除成功';
+            return __('hint.succeed.win', ['attribute' => __('common.delete')]);
         }
     }
 
@@ -1303,7 +1314,7 @@ class Plugin
                 $this->createFile('list.client.' . $structure[1] . '.ds', [], [], $pages . '/' . $name . '/list.vue');
                 $this->createFile('list.client.' . $structure[1] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/list.js');
                 Storage::disk('root')->put($pages . '/' . $name . '/scss/list.scss', '');
-                $this->createFile('detail.client.' . $structure[1] . '.ds', [], [], $pages . '/' . $name . '/Detail.vue');
+                $this->createFile('detail.client.' . $structure[1] . '.ds', [], [], $pages . '/' . $name . '/detail.vue');
                 $this->createFile('detail.client.' . $structure[1] . '.js.ds', ['/{{ name }}/'], [$name], $pages . '/' . $name . '/js/detail.js');
                 Storage::disk('root')->put($pages . '/' . $name . '/scss/detail.scss', '');
                 $this->createFile('api.client.' . $structure[1] . '.ds', ['/{{ name }}/'], [$name], $path . '/api/' . $name . '.js');
@@ -1352,7 +1363,7 @@ class Plugin
                     if ($a['name'] != 'id') {
                         switch ($a['type']) {
                             case 'tinyInteger':
-                                if (count($annotationParameterList) < 2 && count($annotationParameterList) != 0) {
+                                if (count($annotationParameterList) < 2) {
                                     throw new \Exception('表注释不带参数的话，请不要用":"', Code::CODE_INEXISTENCE);
                                 }
                                 $detail .= '
@@ -1457,7 +1468,7 @@ class Plugin
         // 生成edit模板
         $this->createFile('edit.admin.ds', ['/{{ name }}/'], [$name], $path . '/edit.vue');
         // 生成detail模板
-        $this->createFile('detail.admin.ds', ['/{{ detail }}/'], [$detail], $path . '/components/Detail.vue');
+        $this->createFile('detail.admin.ds', ['/{{ detail }}/'], [$detail], $path . '/components/detail.vue');
         $this->createFile('detail.admin.js.ds', ['/{{ name }}/', '/{{ ruleForm }}/', '/{{ rules }}/', '/{{ api }}/'], [$name, rtrim($ruleForm, ','), rtrim($rules, ','), $api], $path . '/js/detail.js');
     }
 
@@ -2137,40 +2148,33 @@ class Plugin
      */
     protected function fileConflictHandling($from, $to, $name)
     {
-        $pluginPath = $this->pluginListPath . '/' . $name;
-        $diffPath = $pluginPath . '/diff.json';
-        $diff = [];
-        if (Storage::disk('root')->exists($diffPath)) {
-            $diff = json_decode(Storage::disk('root')->get($diffPath), true);
-        }
-
         if (PHP_OS != 'Linux') {
-            $path = str_replace("\api", "", base_path());
-            $to = str_replace("/", "\\", $to);
-            $from = str_replace("/", "\\", $from);
-            $shellExec = shell_exec("fc $path$to $path$from");
-            // 中文乱码处理
-            if (strstr($shellExec, 'FC:')) {
-                $shellExec = '';
-            } else {
-                $shellExec = 'WINDOWS不显示冲突详情，请通过比对软件自行解决';
+            if (Storage::disk('root')->exists($to)) {
+                Storage::disk('root')->delete($to);
             }
+            $this->copyProcessing($from, $to);
         } else {
+            $pluginPath = $this->pluginListPath . '/' . $name;
+            $diffPath = $pluginPath . '/diff.json';
+            $diff = [];
+            if (Storage::disk('root')->exists($diffPath)) {
+                $diff = json_decode(Storage::disk('root')->get($diffPath), true);
+            }
             $path = str_replace("/api", "", base_path());
             $shellExec = shell_exec("diff -u $path$to $path$from");
-        }
-        // 存在冲突
-        if ($shellExec) {
-            $diff[$path . $to] = [
-                'state' => 0,
-                'from' => $path . $from,
-                'to' => $path . $to,
-                'details' => $shellExec,
-            ];
-            Storage::disk('root')->put($diffPath, json_encode($diff));
-        } else {
-            if (!Storage::disk('root')->exists($to)) {
-                $this->copyProcessing($from, $to);
+            // 存在冲突
+            if ($shellExec) {
+                $diff[$path . $to] = [
+                    'state' => 0,
+                    'from' => $path . $from,
+                    'to' => $path . $to,
+                    'details' => $shellExec,
+                ];
+                Storage::disk('root')->put($diffPath, json_encode($diff));
+            } else {
+                if (!Storage::disk('root')->exists($to)) {
+                    $this->copyProcessing($from, $to);
+                }
             }
         }
     }
@@ -2252,6 +2256,7 @@ class Plugin
 
     /**
      * 安装的插件列表
+     * @throws \Exception
      */
     public function installList()
     {

@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input v-model="listQuery.title" placeholder="分类名称" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="$t('category.filter.form.cascader.placeholder.pid')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
       <el-cascader
         v-model="listQuery.pid"
         :options="options"
@@ -9,8 +9,8 @@
         filterable
         clearable
         style="top:-4px"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
-      <el-button v-permission="$store.jurisdiction.CategoryCreate" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('usuel.add') }}</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('common.search') }}</el-button>
+      <el-button v-permission="$store.jurisdiction.CategoryCreate" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('common.add') }}</el-button>
     </div>
 
     <el-table
@@ -22,48 +22,48 @@
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange">
-      <el-table-column :label="$t('usuel.id')" align="center" width="65" sortable="custom" prop="id">
+      <el-table-column :label="$t('common.table.id')" align="center" width="65" sortable="custom" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类目图标" align="center">
+      <el-table-column :label="$t('category.table.label.icon')" align="center">
         <template slot-scope="scope">
           <el-image
             v-if="scope.row.resources"
             :src="scope.row.resources.img | smallImage(300)"
             fit="scale-down"
             style="width: 80px;"/>
-          <span v-else>无</span>
+          <span v-else>{{ $t('common.table.nothing') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类目名称" align="center">
+      <el-table-column :label="$t('category.table.label.name')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序" align="center">
+      <el-table-column :label="$t('common.table.sort')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center">
+      <el-table-column :label="$t('common.table.state')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="220">
+      <el-table-column :label="$t('common.operation')" align="center" class-name="small-padding fixed-width" width="220">
         <template slot-scope="scope">
-          <el-tooltip v-permission="$store.jurisdiction.CategoryCreate" class="item" effect="dark" content="复制" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.CategoryCreate" :content="$t('common.copy')" class="item" effect="dark" placement="top-start">
             <el-button type="success" icon="el-icon-document-copy" circle @click="handleCreate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.CategoryCreate" class="item" effect="dark" content="添加子类" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.CategoryCreate" :content="$t('common.add_subclass')" class="item" effect="dark" placement="top-start">
             <el-button type="success" icon="el-icon-folder-add" circle @click="handleSonCreate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.CategoryEdit" class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.CategoryEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.CategoryDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.CategoryDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -76,10 +76,10 @@
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
       <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="120px" style="width:90%;">
-        <el-form-item label="类目名称" prop="name" style="width:400px;">
+        <el-form-item :label="$t('category.dialog.form.input.label.name')" prop="name" style="width:400px;">
           <el-input v-model="temp.name" maxlength="30" clearable/>
         </el-form-item>
-        <el-form-item label="上级类目" prop="pid">
+        <el-form-item :label="$t('category.dialog.form.cascader.label.pid')" prop="pid">
           <el-cascader
             v-model="temp.pid"
             :options="options"
@@ -88,15 +88,15 @@
             clearable
             style="top:-4px"/>
         </el-form-item>
-        <el-form-item label="排序" prop="sort" style="width:200px;">
+        <el-form-item :label="$t('common.sort')" prop="sort" style="width:200px;">
           <el-input v-model="temp.sort" clearable/>
         </el-form-item>
         <el-form-item prop="sort">
           <el-alert
-            title="排序值越小越靠前"
+            :title="$t('common.sort.tip')"
             type="warning"/>
         </el-form-item>
-        <el-form-item label="类目图标" prop="logo">
+        <el-form-item :label="$t('category.dialog.form.upload.label.logo')" prop="logo">
           <el-upload
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -117,51 +117,51 @@
                 class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon"/>
             </span>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过500kb，尺寸推荐120*120</div>
+            <div slot="tip" class="el-upload__tip">{{ $t('hint.tip.upload_recommend', { rmvb: 'jpg/png/gif', size: '500KB', recommend: '120px*120px' }) }}</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="是否显示" prop="state">
+        <el-form-item :label="$t('common.is_show')" prop="state">
           <el-radio-group v-model="temp.state">
-            <el-radio :label="0">是</el-radio>
-            <el-radio :label="1">否</el-radio>
+            <el-radio :label="0">{{ $t('common.yes') }}</el-radio>
+            <el-radio :label="1">{{ $t('common.no') }}</el-radio>
           </el-radio-group>
           <el-alert
-            title="如有子类，选择隐藏，将不会显示子类"
+            :title="$t('category.dialog.form.radio_group.tip.is_show')"
             type="warning"/>
         </el-form-item>
-        <el-form-item label="是否首页推荐" prop="is_recommend">
+        <el-form-item :label="$t('category.dialog.form.radio_group.label.is_recommend')" prop="is_recommend">
           <el-radio-group v-model="temp.is_recommend">
-            <el-radio :label="1">是</el-radio>
-            <el-radio :label="0">否</el-radio>
+            <el-radio :label="1">{{ $t('common.yes') }}</el-radio>
+            <el-radio :label="0">{{ $t('common.no') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="规格" prop="specification">
+        <el-form-item :label="$t('category.dialog.form.transfer.label.specification')" prop="specification">
           <el-transfer
             :filter-method="filterMethod"
-            :titles="['未选择', '已选择']"
+            :titles="[$t('common.unselected'), $t('common.selected')]"
             :data="data"
+            :filter-placeholder="$t('category.dialog.form.transfer.filter_placeholder.specification')"
             v-model="temp.specification"
-            filterable
-            filter-placeholder="请输入规格名称"/>
+            filterable/>
           <el-alert
-            title="添加分类规格后，在选择该分类时，自动获取所选规格"
+            :title="$t('category.dialog.form.transfer.tip.specification')"
             type="warning"/>
         </el-form-item>
-        <el-form-item label="品牌" prop="brand">
+        <el-form-item :label="$t('category.dialog.form.transfer.label.brand')" prop="brand">
           <el-transfer
-            :titles="['未选择', '已选择']"
+            :titles="[$t('common.unselected'), $t('common.selected')]"
             :data="dataBrand"
+            :filter-placeholder="$t('category.dialog.form.transfer.filter_placeholder.brand')"
             v-model="temp.brand"
-            filterable
-            filter-placeholder="请输入品牌名称"/>
+            filterable/>
           <el-alert
-            title="关联品牌后，该分类下将显示该品牌"
+            :title="$t('category.dialog.form.transfer.tip.brand')"
             type="warning"/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button :loading="formLoading" @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
+        <el-button :loading="formLoading" @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -225,8 +225,8 @@ export default {
       list: null,
       total: 0,
       textMap: {
-        update: this.$t('usuel.amend'),
-        create: this.$t('usuel.add')
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       imgData: {
         type: 1,
@@ -261,13 +261,13 @@ export default {
       dialogStatus: '',
       adminRules: {
         name: [
-          { required: true, message: '类目名称必须填写', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('category.dialog.form.input.label.name') }), trigger: 'blur' }
         ],
         sort: [
-          { required: true, message: '排序必须填写', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('common.sort') }), trigger: 'blur' }
         ],
         state: [
-          { required: true, message: '状态必须填写', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.select', { specification: this.$t('common.state') }), trigger: 'blur' }
         ]
       },
       downloadLoading: false,
@@ -364,8 +364,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -387,8 +387,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })
@@ -413,9 +413,9 @@ export default {
       })
     },
     handleDelete(row) { // 删除
-      this.$confirm(this.$t('hint.deleteDetermine'), this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(this.$t('hint.deleteDetermine'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -424,8 +424,8 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
-            message: this.$t('hint.deletedSuccessful'),
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { attribute: this.$t('common.delete') }),
             type: 'success',
             duration: 2000
           })
@@ -455,11 +455,11 @@ export default {
           'image/png',
           'image/bmp'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error(this.$t('hint.upload.img.rmvb'))
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 500KB!')
+        this.$message.error(this.$t('hint.upload.img.can_not_surpass', { size: '500KB' }))
       }
       this.imgProgress = true
       return isLt2M

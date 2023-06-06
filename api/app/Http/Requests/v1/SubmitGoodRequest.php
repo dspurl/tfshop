@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -136,50 +145,49 @@ class SubmitGoodRequest extends Request
     public function messages()
     {
         return [
-            'name.required' => '商品名称必须',
-            'name.string' => '商品名称格式有误',
-            'name.unique' => '商品名称已存在',
-            'name.max' => '商品名称不能超过60个字符',
-            'number.required' => '货号必须',
-            'number.string' => '货号格式有误',
-            'number.unique' => '货号已存在',
-            'number.max' => '货号不能超过50个字符',
-            'type.required' => '类型必须',
-            'type.integer' => '类型格式有误',
-            'freight_id.nullable' => '运费模板必须',
-            'freight_id.integer' => '运费模板格式有误',
-            'img.required' => '主图必须',
-            'img.url' => '主图格式有误',
-            'img.max' => '主图不能超过255个字符',
-            'market_price.numeric' => '市场价格式有误',
-            'cost_price.numeric' => '成本价格式有误',
-            'price.numeric' => '销售价格式有误',
-            'inventory.integer' => '库存格式有误',
-            'keywords.string' => '关键字格式有误',
-            'keywords.max' => '关键字不能超过255个字符',
-            'short_description.string' => '短描述格式有误',
-            'short_description.max' => '短描述不能超过160个字符',
-            'category_id.required' => '类目必须',
-            'brand_id.integer' => '品牌格式有误',
-            'good_sku.*.img.url' => '图片格式有误',
-            'good_sku.*.market_price.required' => '未输入市场价',
-            'good_sku.*.market_price.numeric' => '市场价格式有误',
-            'good_sku.*.cost_price.required' => '未输入成本价',
-            'good_sku.*.cost_price.numeric' => '成本价格式有误',
-            'good_sku.*.price.required' => '未输入销售价',
-            'good_sku.*.price.numeric' => '销售价格式有误',
-            'good_sku.*.inventory.required' => '未输入库存',
-            'good_sku.*.inventory.numeric' => '库存格式有误',
-            'is_show.required' => '上架时间必须',
-            'is_show.integer' => '上架时间格式有误',
-            'is_recommend.required' => '是否推荐必须',
-            'is_recommend.boolean' => '是否推荐格式有误',
-            'is_new.required' => '是否新品必须',
-            'is_new.boolean' => '是否新品格式有误',
-            'is_hot.required' => '是否热销必须',
-            'is_hot.boolean' => '是否热销格式有误',
-            'sort.required' => '排序必须',
-            'sort.integer' => '排序格式有误',
+            'name.required' => __('hint.error.not_null', ['attribute' => __('good.name')]),
+            'name.string' => __('hint.error.wrong_format', ['attribute' => __('good.name')]),
+            'name.unique' => __('hint.error.exist', ['attribute' => __('good.name')]),
+            'name.max' => __('hint.error.max', ['attribute' => __('good.name'), 'place' => 60]),
+            'number.required' => __('hint.error.not_null', ['attribute' => __('good.number')]),
+            'number.string' => __('hint.error.wrong_format', ['attribute' => __('good.number')]),
+            'number.unique' => __('hint.error.exist', ['attribute' => __('good.number')]),
+            'number.max' => __('hint.error.max', ['attribute' => __('good.number'), 'place' => 50]),
+            'type.required' => __('hint.error.not_null', ['attribute' => __('good.type')]),
+            'type.integer' => __('hint.error.wrong_format', ['attribute' => __('good.type')]),
+            'freight_id.integer' => __('hint.error.wrong_format', ['attribute' => __('good.freight_id')]),
+            'img.required' => __('hint.error.not_null', ['attribute' => __('good.img')]),
+            'img.url' => __('hint.error.wrong_format', ['attribute' => __('good.img')]),
+            'img.max' => __('hint.error.max', ['attribute' => __('good.img'), 'place' => 255]),
+            'market_price.numeric' => __('hint.error.wrong_format', ['attribute' => __('good.market_price')]),
+            'cost_price.numeric' => __('hint.error.wrong_format', ['attribute' => __('good.cost_price')]),
+            'price.numeric' => __('hint.error.wrong_format', ['attribute' => __('good.price')]),
+            'inventory.integer' => __('hint.error.wrong_format', ['attribute' => __('good.inventory')]),
+            'keywords.string' => __('hint.error.wrong_format', ['attribute' => __('good.keywords')]),
+            'keywords.max' => __('hint.error.max', ['attribute' => __(''), 'place' => 255]),
+            'short_description.string' => __('hint.error.wrong_format', ['attribute' => __('good.short_description')]),
+            'short_description.max' => __('hint.error.max', ['attribute' => __('good.short_description'), 'place' => 160]),
+            'category_id.required' => __('hint.error.not_null', ['attribute' => __('good.category_id')]),
+            'brand_id.integer' => __('hint.error.wrong_format', ['attribute' => __('good.brand_id')]),
+            'good_sku.*.img.url' => __('hint.error.wrong_format', ['attribute' => __('good.good_sku.img')]),
+            'good_sku.*.market_price.required' => __('hint.error.not_null', ['attribute' => __('good.good_sku.market_price')]),
+            'good_sku.*.market_price.numeric' => __('hint.error.wrong_format', ['attribute' => __('good.good_sku.market_price')]),
+            'good_sku.*.cost_price.required' => __('hint.error.not_null', ['attribute' => __('good.good_sku.cost_price')]),
+            'good_sku.*.cost_price.numeric' => __('hint.error.wrong_format', ['attribute' => __('good.good_sku.cost_price')]),
+            'good_sku.*.price.required' => __('hint.error.not_null', ['attribute' => __('good.good_sku.price')]),
+            'good_sku.*.price.numeric' => __('hint.error.wrong_format', ['attribute' => __('good.good_sku.price')]),
+            'good_sku.*.inventory.required' => __('hint.error.not_null', ['attribute' => __('good.good_sku.inventory')]),
+            'good_sku.*.inventory.numeric' => __('hint.error.wrong_format', ['attribute' => __('good.good_sku.inventory')]),
+            'is_show.required' => __('hint.error.not_null', ['attribute' => __('good.is_show')]),
+            'is_show.integer' => __('hint.error.wrong_format', ['attribute' => __('good.is_show')]),
+            'is_recommend.required' => __('hint.error.not_null', ['attribute' => __('good.is_recommend')]),
+            'is_recommend.boolean' => __('hint.error.wrong_format', ['attribute' => __('good.is_recommend')]),
+            'is_new.required' => __('hint.error.not_null', ['attribute' => __('good.is_new')]),
+            'is_new.boolean' => __('hint.error.wrong_format', ['attribute' => __('good.is_new')]),
+            'is_hot.required' => __('hint.error.not_null', ['attribute' => __('good.is_hot')]),
+            'is_hot.boolean' => __('hint.error.wrong_format', ['attribute' => __('good.is_hot')]),
+            'sort.required' => __('hint.error.not_null', ['attribute' => __('common.sort')]),
+            'sort.integer' => __('hint.error.wrong_format', ['attribute' => __('common.sort')]),
         ];
     }
 }

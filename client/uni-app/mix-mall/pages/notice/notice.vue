@@ -1,7 +1,7 @@
 <template>
 	<view>
 		<view v-if="data.length === 0">
-			<view class="no-data flex justify-center">暂时没有通知哦~</view>
+			<view class="no-data flex justify-center">{{$t('notice.no_data')}}</view>
 		</view>
 		<block v-else>
 			<view class="notice-item" v-for="(item, index) in data" :key="index">
@@ -9,7 +9,7 @@
 				<view class="content">
 					<text class="title">{{item.data.title}}</text>
 					<block v-if="item.data.type === 2">
-						<view class="text-center text-gray padding-bottom">付款金额</view>
+						<view class="text-center text-gray padding-bottom">{{$t('notice.payment_amount')}}</view>
 						<view class="text-center text-price text-sl padding-bottom padding-top">{{item.data.price/100 | 1000}}</view>
 					</block>
 					<view class="padding-bottom" v-if="item.data.list.length > 0" v-for="(items, indexs) in item.data.list" :key="indexs">
@@ -19,7 +19,7 @@
 						{{item.data.remark}}
 					</text>
 					<view class="bot b-t" v-if="item.data.url" @click="goNavigator(item.data.url)">
-						<text>查看详情</text>
+						<text>{{$t('notice.view_details')}}</text>
 						<text class="more-icon yticon icon-you"></text>
 					</view>
 				</view>
@@ -50,6 +50,9 @@
 			this.loadData()
 		},
 		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('user.inform')
+			})
 			this.loginCheck()
 		},
 		methods: {

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -65,16 +74,16 @@ class SubmitUserRequest extends Request
     public function messages()
     {
         return [
-            'name.required' => __('hint.error.not_null',['attribute'=>__('hint.routine.username')]),
-            'name.unique' => __('hint.error.exist',['attribute'=>__('hint.routine.username')]),
-            'name.max' => __('hint.error.exceed',['attribute'=>__('hint.routine.username'),'place'=>16]),
-            'email.required' => __('hint.error.not_null',['attribute'=>__('hint.routine.email')]),
-            'email.unique' => __('hint.error.exist',['attribute'=>__('hint.routine.email')]),
-            'email.max' => __('hint.error.exceed',['attribute'=>__('hint.routine.email'),'place'=>190]),
-            'cellphone.required' => __('hint.error.not_null',['attribute'=>__('hint.routine.cellphone')]),
-            'cellphone.unique' => __('hint.error.exist',['attribute'=>__('hint.routine.cellphone')]),
-            'password.required' => __('hint.error.not_null',['attribute'=>__('hint.routine.password')]),
-            'portrait.required' => __('hint.error.uploading',['attribute'=>__('hint.routine.portrait')]),
+            'name.required' => __('hint.error.not_null',['attribute'=>__('user.name')]),
+            'name.unique' => __('hint.error.exist',['attribute'=>__('user.name')]),
+            'name.max' => __('hint.error.exceed',['attribute'=>__('user.name'),'place'=>16]),
+            'cellphone.required' => __('hint.error.not_null',['attribute'=>__('user.cellphone')]),
+            'cellphone.mobile' => __('hint.error.wrong_format',['attribute'=>__('user.cellphone')]),
+            'cellphone.unique' => __('hint.error.exist',['attribute'=>__('user.cellphone')]),
+            'cellphone.max' => __('hint.error.exceed',['attribute'=>__('user.cellphone'),'place'=>11]),
+            'password.required' => __('hint.error.not_null',['attribute'=>__('user.password')]),
+            'portrait.required' => __('hint.error.uploading',['attribute'=>__('user.portrait')]),
+            'gender.required' => __('hint.error.not_null',['attribute'=>__('user.gender')]),
         ];
     }
 

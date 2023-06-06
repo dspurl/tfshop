@@ -2,15 +2,15 @@
   <div class="app-container">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="快递公司">
-          <el-input v-model="listQuery.title" placeholder="快递公司" clearable @keyup.enter.native="handleFilter"/>
+        <el-form-item :label="$t('dhl.name')">
+          <el-input :placeholder="$t('dhl.placeholder.name')" v-model="listQuery.title" clearable @keyup.enter.native="handleFilter"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleFilter">搜索</el-button>
+          <el-button type="primary" @click="handleFilter">{{ $t('common.search') }}</el-button>
         </el-form-item>
       </el-form>
       <br>
-      <el-button v-permission="$store.jurisdiction.DhlCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="$store.jurisdiction.DhlCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('common.add') }}</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -23,37 +23,37 @@
       style="width: 100%;"
       @sort-change="sortChange"
       @selection-change="handleSelectionChange">
-      <el-table-column label="编号" fixed="left" sortable="custom" prop="id">
+      <el-table-column :label="$t('good.table.id')" fixed="left" sortable="custom" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="快递公司" align="center">
+      <el-table-column :label="$t('dhl.name')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="快递公司简称" align="center">
+      <el-table-column :label="$t('dhl.abbreviation')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.abbreviation }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="是否默认" align="center">
+      <el-table-column :label="$t('dhl.is_default')" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.is_default == 1 ? '默认' : '' }}</span>
+          <span>{{ scope.row.is_default == 1 ? $t('common.yes') : $t('common.no') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时间" align="center" sortable="custom" prop="created_at">
+      <el-table-column :label="$t('common.date_time')" align="center" sortable="custom" prop="created_at">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="120" fixed="right">
+      <el-table-column :label="$t('common.operation')" class-name="small-padding fixed-width" width="120" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip v-permission="$store.jurisdiction.DhlEdit" class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.DhlEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.DhlDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.DhlDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -66,33 +66,33 @@
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="公司名称" prop="name">
+        <el-form-item :label="$t('dhl.name')" prop="name">
           <el-input v-model="temp.name" maxlength="30" clearable/>
         </el-form-item>
-        <el-form-item label="简称" prop="abbreviation">
+        <el-form-item :label="$t('dhl.abbreviation')" prop="abbreviation">
           <el-input v-model="temp.abbreviation" maxlength="80" clearable/>
         </el-form-item>
-        <el-form-item label="是否默认" prop="is_default">
+        <el-form-item :label="$t('dhl.is_default')" prop="is_default">
           <el-radio-group v-model="temp.is_default">
-            <el-radio :label="0">普通</el-radio>
-            <el-radio :label="1">默认</el-radio>
+            <el-radio :label="0">{{ $t('common.no') }}</el-radio>
+            <el-radio :label="1">{{ $t('common.yes') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否显示" prop="state">
+        <el-form-item :label="$t('common.is_show')" prop="state">
           <el-radio-group v-model="temp.state">
-            <el-radio :label="0">显示</el-radio>
-            <el-radio :label="1">隐藏</el-radio>
+            <el-radio :label="0">{{ $t('common.yes') }}</el-radio>
+            <el-radio :label="1">{{ $t('common.no') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item :label="$t('common.sort')" prop="sort">
           <el-radio-group v-model="temp.sort">
             <el-input v-model="temp.sort" maxlength="11" clearable style="width:80px;"/>
           </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">确定</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -173,8 +173,8 @@ export default {
       list: null,
       total: 0,
       textMap: {
-        update: '修改',
-        create: '添加'
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       imgData: {
         type: 1,
@@ -195,16 +195,16 @@ export default {
       temp: {},
       rules: {
         name: [
-          { required: true, message: '请输入公司名称', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('dhl.name') }), trigger: 'blur' }
         ],
         abbreviation: [
-          { required: true, message: '请输入简称', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('dhl.abbreviation') }), trigger: 'blur' }
         ],
         state: [
-          { required: true, message: '请选择状态', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.select', { attribute: this.$t('common.state') }), trigger: 'change' }
         ],
         sort: [
-          { required: true, message: '请填写排序', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('common.sort') }), trigger: 'blur' }
         ]
       }
     }
@@ -240,6 +240,7 @@ export default {
     resetTemp() {
       this.temp = {
         state: 0,
+        is_default: 0,
         sort: '5',
         name: '',
         abbreviation: ''
@@ -269,11 +270,11 @@ export default {
       this.multipleSelection = val
     },
     handleDelete(row) { // 删除
-      const title = '是否确认删除该内容?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const title = this.$t('hint.confirm.delete')
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -282,7 +283,7 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: win,
             type: 'success',
             duration: 2000
@@ -302,8 +303,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -324,8 +325,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })
@@ -356,11 +357,11 @@ export default {
           'image/png',
           'image/bmp'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error(this.$t('hint.upload.img.rmvb'))
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 500KB!')
+        this.$message.error(this.$t('hint.upload.img.can_not_surpass', { size: '500KB' }))
       }
       this.imgProgress = true
       return isLt2M

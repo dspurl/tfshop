@@ -1,6 +1,15 @@
 <?php
-/**
- * 微信公众号模板消息
+/** +----------------------------------------------------------------------
+ * | 微信公众号模板消息
+ * +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
  */
 namespace App\Channels;
 use App\Models\v1\NotificationLog;
@@ -53,13 +62,13 @@ class WechatChannel
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->wechat,
             'data' => [
-                'first' => '您购买的订单已经发货啦，正快马加鞭向您飞奔而去。',
+                'first' => __('wechat_channel.delivery_release.first'),
                 'keyword1' => $message['identification'],
                 'keyword2' => $message['shipping_time'],
                 'keyword3' => $message['dhl'],
                 'keyword4' => $message['odd'],
                 'keyword5' => $message['location']->name . ' ' . $message['location']->cellphone . ' ' . $message['location']->location . $message['location']->house,
-                'remark' => '请保持收件手机畅通！',
+                'remark' => __('wechat_channel.delivery_release.remark'),
             ],
         ];
         if ($this->miniweixin) {
@@ -94,13 +103,13 @@ class WechatChannel
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->wechat,
             'data' => [
-                'first' => '恭喜您！购买的商品已支付成功，我们会尽快安排发货哦！么么哒！~~',
+                'first' => __('wechat_channel.finish_payment.first'),
                 'keyword1' => $message['identification'],
                 'keyword2' => $message['name'],
                 'keyword3' => sprintf("%01.2f", $message['total'] / 100),
-                'keyword4' => '已支付',
+                'keyword4' => __('wechat_channel.finish_payment.paid'),
                 'keyword5' => $message['time'],
-                'remark' => '欢迎您的到来！',
+                'remark' => __('wechat_channel.finish_payment.remark'),
             ],
         ];
         if ($this->miniweixin) {
@@ -135,12 +144,12 @@ class WechatChannel
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->wechat,
             'data' => [
-                'first' => '您有一个新的待发货订单',
+                'first' => __('wechat_channel.admin_order_send_good.first'),
                 'keyword1' => $message['identification'],
                 'keyword2' => sprintf("%01.2f", $message['total'] / 100),
                 'keyword3' => $message['cellphone'],
-                'keyword4' => '已支付',
-                'remark' => '客户已付款，尽快发货吧',
+                'keyword4' => __('wechat_channel.finish_payment.paid'),
+                'remark' => __('wechat_channel.admin_order_send_good.remark'),
             ],
         ];
         $data['url'] = request()->root() . '/admin/#/Indent/shipment?id=' . $message['id'];
@@ -168,13 +177,13 @@ class WechatChannel
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->wechat,
             'data' => [
-                'first' => '亲：您在我们商城买的宝贝已经确认收货。',
+                'first' => __('wechat_channel.order_confirm_receipt.first'),
                 'keyword1' => $message['identification'],
                 'keyword2' => $message['name'],
                 'keyword3' => $message['created_at'],
                 'keyword4' => $message['shipping_time'],
                 'keyword5' => $message['confirm_time'],
-                'remark' => '感谢您的支持与厚爱。',
+                'remark' => __('wechat_channel.order_confirm_receipt.remark'),
             ],
         ];
         if ($this->miniweixin) {
@@ -209,11 +218,11 @@ class WechatChannel
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->wechat,
             'data' => [
-                'first' => '订单完成通知',
+                'first' => __('wechat_channel.admin_order_completion.first'),
                 'keyword1' => $message['identification'],
                 'keyword2' => $message['name'],
                 'keyword3' => $message['confirm_time'],
-                'remark' => '客户已确认收货，订单已完成',
+                'remark' => __('wechat_channel.admin_order_completion.remark'),
             ],
         ];
         $data['url'] = request()->root() . '/admin/#/Indent/shipment?id=' . $message['id'];
@@ -241,7 +250,7 @@ class WechatChannel
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->wechat,
             'data' => [
-                'first' => '您有一笔退款成功，退款方式：' . $message['type'] . '，请留意。',
+                'first' => __('wechat_channel.refund_success.first',['type'=>$message['type']]),
                 'keyword1' => $message['identification'],
                 'keyword2' => sprintf("%01.2f", $message['total'] / 100),
                 'remark' => $message['refund_reason'],
@@ -279,11 +288,11 @@ class WechatChannel
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->wechat,
             'data' => [
-                'first' => '您好，恭喜您成功注册帐号。',
+                'first' => __('wechat_channel.registered_success.first'),
                 'keyword1' => $message['phoneNumber'],
                 'keyword2' => $message['password'],
                 'keyword3' => $message['phoneNumber'],
-                'remark' => '您第一次授权登录我们平台，我们将为您生成初始密码，请妥善保管',
+                'remark' => __('wechat_channel.registered_success.remark'),
             ],
         ];
         //发送记录

@@ -1,74 +1,71 @@
 <!--suppress ALL -->
 <template>
   <div v-loading="loading" class="createPost-container" style="padding-top: 40px">
-    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="140px" class="demo-ruleForm" style="padding-left: 200px;padding-right:20px;">
-      <el-form-item label="模板名称" prop="name">
+    <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="180px" class="demo-ruleForm" style="padding-left: 200px;padding-right:20px;">
+      <el-form-item :label="$t('freight.name')" prop="name">
         <el-input v-model="ruleForm.name" maxlength="60" clearable style="width: 400px;"/>
       </el-form-item>
-      <el-form-item label="宝贝地址" prop="location">
+      <el-form-item :label="$t('freight.location')" prop="location">
         <el-cascader
           ref="cascaderAddr"
           :options="options"
           v-model="ruleForm.location"/>
       </el-form-item>
-      <el-form-item label="计价方式" prop="valuation">
+      <el-form-item :label="$t('freight.valuation')" prop="valuation">
         <el-radio-group v-model="ruleForm.valuation">
-          <el-radio :label="0">按件数</el-radio>
-          <el-radio :label="1">按重量</el-radio>
-          <el-radio :label="2">按体积</el-radio>
+          <el-radio :label="0">{{ $t('freight.valuation.piece') }}</el-radio>
+          <el-radio :label="1">{{ $t('freight.valuation.weight') }}</el-radio>
+          <el-radio :label="2">{{ $t('freight.valuation.volume') }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="不包邮配送区域" class="distribution-area">
+      <el-form-item :label="$t('freight.valuation.volume.no_free_delivery_area')" class="distribution-area">
         <el-table
           :data="ruleForm.freight_way"
           border
           style="width: 100%;padding-bottom: 10px;">
           <el-table-column
-            label="送货到"
+            :label="$t('freight.delivery')"
             width="180">
             <template slot-scope="scope">
               <span>{{ scope.row.location_name.join(",") }}</span>
             </template>
           </el-table-column>
           <el-table-column
+            :label="$t('freight.first_piece')"
             prop="first_piece"
-            label="首件"
             width="180"/>
           <el-table-column
-            prop="first_cost"
-            label="首费"/>
+            :label="$t('freight.first_cost')"
+            prop="first_cost"/>
           <el-table-column
-            prop="add_piece"
-            label="续件"/>
+            :label="$t('freight.add_piece')"
+            prop="add_piece"/>
           <el-table-column
-            prop="add_cost"
-            label="续费"/>
+            :label="$t('freight.add_cost')"
+            prop="add_cost"/>
           <el-table-column
-            label="操作">
+            :label="$t('common.operation')">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+              <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
                 <el-button type="primary" icon="el-icon-edit" circle @click="distributionArea(scope.row, scope.$index)"/>
               </el-tooltip>
-              <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+              <el-tooltip :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
                 <el-button type="danger" icon="el-icon-delete" circle @click="distributionDelete(scope.$index)"/>
               </el-tooltip>
             </template>
           </el-table-column>
         </el-table>
-        <el-alert
-          :closable="false"
-          title="不在'不包邮配送区域'的，都按包邮处理"
-          type="warning"/>
-        <el-button type="warning" style="margin-top: 10px;" round @click="distributionArea()">添加可配送区域和运费</el-button>
+        <div>{{ $t('freight.tip') }}</div>
+        <el-button type="warning" style="margin-top: 10px;" round @click="distributionArea()">{{ $t('freight.add_shipping_areas_and_freight') }}</el-button>
       </el-form-item>
       <el-form-item>
-        <el-button :loading="dialogLoading" type="primary" @click="dialogStatus==='create'?create():edit()">提交</el-button>
+        <el-button :loading="dialogLoading" type="primary" @click="dialogStatus==='create'?create():edit()">{{ $t('common.submit') }}</el-button>
       </el-form-item>
     </el-form>
     <!--添加-->
-    <el-dialog :visible.sync="dialogFormVisible" title="不包邮配送区域">
+    <el-dialog :visible.sync="dialogFormVisible" :title="$t('freight.valuation.volume.no_free_delivery_area')">
       <el-form :rules="distribution_rules" label-position="left" label-width="80px" style="margin-left:50px;">
-        <el-form-item label="配送区域" prop="location">
+        <el-form-item :label="$t('freight.valuation.volume.distribution_area')" prop="location">
           <el-tag
             v-for="(item, index) in provinces"
             v-if="!item.hide || item.itself"
@@ -79,26 +76,26 @@
             {{ item.label }}
           </el-tag>
         </el-form-item>
-        <el-form-item label="配送费用">
+        <el-form-item :label="$t('freight.valuation.distribution_cost')">
           <el-form ref="dataForm" :model="temp" :inline="true" :rules="distribution_rules" class="demo-form-inline">
-            <el-form-item label="首件数" prop="first_piece">
+            <el-form-item :label="$t('freight.first_piece')" prop="first_piece">
               <el-input v-model="temp.first_piece" style="width: 80px;" maxlength="11"/>
             </el-form-item>
-            <el-form-item label="首费" prop="first_cost">
+            <el-form-item :label="$t('freight.first_cost')" prop="first_cost">
               <el-input v-model="temp.first_cost" style="width: 80px;" maxlength="11"/>
             </el-form-item>
-            <el-form-item label="续件数" prop="add_piece">
+            <el-form-item :label="$t('freight.add_piece')" prop="add_piece">
               <el-input v-model="temp.add_piece" style="width: 80px;" maxlength="11"/>
             </el-form-item>
-            <el-form-item label="续费" prop="add_cost">
+            <el-form-item :label="$t('freight.add_cost')" prop="add_cost">
               <el-input v-model="temp.add_cost" style="width: 80px;" maxlength="11"/>
             </el-form-item>
           </el-form>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="distributionStatus==='create'?distributionSubmit():distributionSubmit()">确定</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="distributionStatus==='create'?distributionSubmit():distributionSubmit()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -197,30 +194,30 @@ export default {
       imgProgressPercent: 0,
       rules: {
         name: [
-          { required: true, message: '请输入模板名称', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('freight.name') }), trigger: 'blur' }
         ],
         location: [
-          { required: true, message: '请选择宝贝地址', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('freight.location') }), trigger: 'change' }
         ],
         valuation: [
-          { required: true, message: '请选择计价方式', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.select', { attribute: this.$t('freight.valuation') }), trigger: 'change' }
         ]
       },
       distribution_rules: {
         location: [
-          { required: true, message: '请选择配送区域', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.select', { attribute: this.$t('freight.valuation.volume.distribution_area') }), trigger: 'blur' }
         ],
         first_piece: [
-          { required: true, message: '请输入首件数', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('freight.first_piece') }), trigger: 'blur' }
         ],
         first_cost: [
-          { required: true, message: '请输入首费', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('freight.first_cost') }), trigger: 'blur' }
         ],
         add_piece: [
-          { required: true, message: '请输入续件数', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('freight.add_piece') }), trigger: 'blur' }
         ],
         add_cost: [
-          { required: true, message: '请输入续费', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('freight.add_cost') }), trigger: 'blur' }
         ]
       }
     }
@@ -369,8 +366,8 @@ export default {
             this.dialogFormVisible = false
             this.dialogLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -398,8 +395,8 @@ export default {
             this.dialogFormVisible = false
             this.dialogLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })

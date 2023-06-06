@@ -1,3 +1,13 @@
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '@/store'
@@ -18,6 +28,7 @@ service.interceptors.request.use(
       config.headers['Authorization'] = getToken('token_type') + ' ' + getToken('access_token')
       config.headers['Accept'] = 'application/json'
     }
+    config.headers['Lang'] = getToken('language') || 'zh'
     return config
   },
   error => {

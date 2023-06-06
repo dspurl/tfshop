@@ -1,27 +1,25 @@
 exports.ids = [29];
 exports.modules = {
 
-/***/ 210:
+/***/ 221:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(37);
-/* harmony import */ var _api_banner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(38);
-/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(13);
+/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(44);
+/* harmony import */ var _api_banner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(46);
+/* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(17);
 /* harmony import */ var vuex__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(vuex__WEBPACK_IMPORTED_MODULE_2__);
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'login',
-
   head() {
     return {
-      title: '登录' + '-' + "DSSHOP商城-跨终端商城解决方案"
+      title: this.$t('header.top.login') + '-' + "DSSHOP商城-轻量级易扩展低代码开源商城系统"
     };
   },
-
   async asyncData(ctx) {
     try {
       let banner = {};
@@ -43,22 +41,22 @@ __webpack_require__.r(__webpack_exports__);
       ctx.$errorHandler(err);
     }
   },
-
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error(this.$t('hint.error.import', {
+          attribute: this.$t('find_password.cellphone')
+        })));
       } else {
         const myreg = /^1[3456789]\d{9}$/;
-
         if (!myreg.test(value)) {
-          callback(new Error('手机号格式有误'));
+          callback(new Error(this.$t('hint.error.wrong_format', {
+            attribute: this.$t('find_password.cellphone')
+          })));
         }
-
         callback();
       }
     };
-
     return {
       method: 1,
       ruleForm: {
@@ -74,28 +72,27 @@ __webpack_require__.r(__webpack_exports__);
         }],
         password: [{
           required: true,
-          message: '请输入密码',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('find_password.password')
+          }),
           trigger: 'blur'
         }, {
           min: 5,
-          message: '密码长度必须大于5位',
+          message: this.$t('find_password.password.length'),
           trigger: 'blur'
         }]
       },
       banner: {}
     };
   },
-
   beforeDestroy() {
     clearInterval(this.codeTimer);
   },
-
-  methods: { ...Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapMutations"])(['login']),
-
+  methods: {
+    ...Object(vuex__WEBPACK_IMPORTED_MODULE_2__["mapMutations"])(['login']),
     setMethod(index) {
       this.method = index;
     },
-
     toLogin() {
       this.$refs['ruleForm'].validate(valid => {
         if (valid) {
@@ -104,12 +101,11 @@ __webpack_require__.r(__webpack_exports__);
             response.remember = this.ruleForm.remember;
             this.login(response);
             this.$message({
-              message: '登录成功',
+              message: this.$t('find_password.login_successfully'),
               type: 'success'
             });
             this.loading = false;
             const route = this.store.get('route');
-
             if (route) {
               this.store.remove('route');
               this.$router.replace({
@@ -125,7 +121,6 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     }
-
   }
 });
 

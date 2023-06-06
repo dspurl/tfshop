@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -71,7 +80,7 @@ class AdminController extends Controller
         $Admin->last_login_at = Carbon::now()->toDateTimeString();
         $Admin->password = bcrypt($request->password);
         $Admin->save();
-        return resReturn(1, '添加成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
 
     }
 
@@ -99,7 +108,7 @@ class AdminController extends Controller
         $Admin->email = $request->email;
         $Admin->portrait = imgPathShift('portrait', $request->portrait);
         $Admin->save();
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.amend')]));
     }
 
     /**
@@ -117,7 +126,7 @@ class AdminController extends Controller
         $Admin = Admin::find($id);
         Storage::delete('public/image/avatar/' . $Admin->portrait);    //删除头像
         $Admin->delete();
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 
     /**

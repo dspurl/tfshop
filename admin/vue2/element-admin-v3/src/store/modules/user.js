@@ -126,11 +126,6 @@ const user = {
           } else {
             reject('getInfo: roles must be a non-null array !')
           }
-          if (data.dsshop) {
-            const tmp = document.createElement('div')
-            tmp.innerHTML = decodeURIComponent('%3Cdiv%20style%3D%22position%3A%20fixed%3Btop%3A%200%3Bleft%3A%2050%25%3Bz-index%3A%2099999%3Bmargin-top%3A%2020px%3Bcolor%3Ared%3B%22%3E%E6%82%A8%E7%9A%84%E6%8E%88%E6%9D%83%E6%9C%89%E8%AF%AF%EF%BC%8C%3Ca%20target%3D%22_blank%22%20href%3D%22https%3A%2F%2Fwww.dswjcms.com%2Farticle%2Fdetail%2F57.html%22%20style%3D%22color%3Ablue%22%3E%E7%82%B9%E5%87%BB%3C%2Fa%3E%E4%BA%86%E8%A7%A3%E8%AF%A6%E6%83%85%EF%BC%81%3C%2Fdiv%3E')
-            document.body.appendChild(tmp)
-          }
           commit('SET_NAME', data.name)
           commit('SET_AVATAR', data.avatar)
           commit('SET_INTRODUCTION', data.introduction)

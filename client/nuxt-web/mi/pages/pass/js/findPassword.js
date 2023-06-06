@@ -3,26 +3,26 @@ export default {
   layout: 'login',
   head () {
     return {
-      title: '重置密码' + '-' + process.env.APP_NAME
+      title: this.$t('ind_password.title') + '-' + process.env.APP_NAME
     }
   },
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error(this.$t('hint.error.import', {attribute: this.$t('find_password.cellphone')})));
       } else {
         const myreg = /^1[3456789]\d{9}$/;
         if (!myreg.test(value)) {
-          callback(new Error('手机号格式有误'));
+          callback(new Error(this.$t('hint.error.wrong_format', {attribute: this.$t('find_password.cellphone')})));
         }
         callback();
       }
     };
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error(this.$t('find_password.password.reenter')));
       } else if (value !== this.ruleForm.password) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error(this.$t('find_password.password.inconformity')));
       } else {
         callback();
       }
@@ -35,7 +35,7 @@ export default {
         rPassword: '',
         state: 1
       },
-      codename:'获取验证码',
+      codename:this.$t('find_password.get_code'),
       seconds: '',
       unit: '',
       loading: false,
@@ -45,12 +45,12 @@ export default {
           { validator: validateCellphone, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 5, message: '密码长度必须大于5位', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('find_password.password')}), trigger: 'blur' },
+          { min: 5, message: this.$t('find_password.password.length'), trigger: 'blur' }
         ],
         code: [
-          { required: true, message: '请输入验证码', trigger: 'blur' },
-          { type: 'number', message: '验证码必须为数字'}
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('find_password.verification_code')}), trigger: 'blur' },
+          { type: 'number', message: this.$t('find_password.verification_code.number', {attribute: this.$t('find_password.verification_code')})}
         ],
         rPassword: [
           { validator: validatePass, trigger: 'blur' }
@@ -74,7 +74,7 @@ export default {
             // 读秒结束 清空计时器
             clearInterval(that.timer);
             that.seconds = '';
-            that.codename = '获取验证码';
+            that.codename = this.$t('find_password.get_code');
             that.unit = '';
             that.codeDisabled = false
           }
@@ -93,7 +93,7 @@ export default {
           this.loading = true;
           findPassword(this.ruleForm).then(() => {
             this.$message({
-              message: '重置成功',
+              message: this.$t('find_password.reset_successfully'),
               type: 'success'
             });
             this.loading = false;

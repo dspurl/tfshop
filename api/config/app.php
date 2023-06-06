@@ -80,7 +80,7 @@ return [
     |
     */
 
-    'locale' => 'zn',
+    'locale' => 'zh',
 
     /*
     |--------------------------------------------------------------------------
@@ -93,7 +93,7 @@ return [
     |
     */
 
-    'fallback_locale' => 'zn',
+    'fallback_locale' => 'zh',
 
     /*
     |--------------------------------------------------------------------------
@@ -161,8 +161,7 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-	Intervention\Image\ImageServiceProvider::class,
-
+	    Intervention\Image\ImageServiceProvider::class,
 
         /*
          * Package Service Providers...

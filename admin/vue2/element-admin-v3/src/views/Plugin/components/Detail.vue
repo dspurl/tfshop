@@ -163,14 +163,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.operation')"
           width="120"
           fixed="right">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
               <el-button type="primary" icon="el-icon-edit" circle @click="editDataTable(scope.row)"/>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+            <el-tooltip :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
               <el-button type="danger" icon="el-icon-delete" circle @click="deleteDataTable(scope.$index)"/>
             </el-tooltip>
           </template>
@@ -227,14 +227,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.operation')"
           width="120"
           fixed="right">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
               <el-button type="primary" icon="el-icon-edit" circle @click="editObserverTable(scope.row)"/>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+            <el-tooltip :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
               <el-button type="danger" icon="el-icon-delete" circle @click="deleteObserverTable(scope.$index)"/>
             </el-tooltip>
           </template>
@@ -263,14 +263,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.operation')"
           width="120"
           fixed="right">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
               <el-button type="primary" icon="el-icon-edit" circle @click="editRelyOnTable(scope.row)"/>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+            <el-tooltip :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
               <el-button type="danger" icon="el-icon-delete" circle @click="deleteRelyOnTable(scope.$index)"/>
             </el-tooltip>
           </template>
@@ -299,14 +299,14 @@
           </template>
         </el-table-column>
         <el-table-column
-          label="操作"
+          :label="$t('common.operation')"
           width="120"
           fixed="right">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+            <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
               <el-button type="primary" icon="el-icon-edit" circle @click="editRelevanceTable(scope.row)"/>
             </el-tooltip>
-            <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+            <el-tooltip :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
               <el-button type="danger" icon="el-icon-delete" circle @click="deleteRelevanceTable(scope.$index)"/>
             </el-tooltip>
           </template>
@@ -342,7 +342,7 @@
         </div>
       </el-form-item>
       <el-form-item class="float-button">
-        <el-button :loading="formLoading" type="primary" @click="submit">提交</el-button>
+        <el-button :loading="formLoading" type="primary" @click="submit">{{ $t('common.submit') }}</el-button>
       </el-form-item>
     </el-form>
     <!--新建数据表-->
@@ -494,11 +494,11 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="操作"
+              :label="$t('common.operation')"
               width="50"
               fixed="right">
               <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+                <el-tooltip :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
                   <el-button type="danger" icon="el-icon-delete" circle @click="deleteDBAttribute(scope.$index)"/>
                 </el-tooltip>
               </template>
@@ -554,14 +554,14 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="操作"
+              :label="$t('common.operation')"
               width="120"
               fixed="right">
               <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+                <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
                   <el-button type="primary" icon="el-icon-edit" circle @click="editIndexes(scope.row)"/>
                 </el-tooltip>
-                <el-tooltip class="item" effect="dark" content="删除" placement="top-start">
+                <el-tooltip :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
                   <el-button type="danger" icon="el-icon-delete" circle @click="deleteIndexes(scope.$index)"/>
                 </el-tooltip>
               </template>
@@ -615,8 +615,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="float-button">
-        <el-button :loading="formLoading" @click="dialogDataTable = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dataTableSubmit">确定</el-button>
+        <el-button :loading="formLoading" @click="dialogDataTable = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dataTableSubmit">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
     <!-- 添加索引-->
@@ -645,8 +645,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button :loading="formLoading" @click="dialogIndexes = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="indexesSubmit">确定</el-button>
+        <el-button :loading="formLoading" @click="dialogIndexes = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="indexesSubmit">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
     <!-- 添加观察者-->
@@ -692,8 +692,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button :loading="formLoading" @click="dialogObserver = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="observerSubmit">确定</el-button>
+        <el-button :loading="formLoading" @click="dialogObserver = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="observerSubmit">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
     <!-- 添加关联文件-->
@@ -709,8 +709,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button :loading="formLoading" @click="dialogRelevance = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="relevanceSubmit">确定</el-button>
+        <el-button :loading="formLoading" @click="dialogRelevance = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="relevanceSubmit">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
     <!-- 添加依赖插件-->
@@ -734,8 +734,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button :loading="formLoading" @click="dialogRelyOn = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="relyOnSubmit">确定</el-button>
+        <el-button :loading="formLoading" @click="dialogRelyOn = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="relyOnSubmit">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>

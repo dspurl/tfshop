@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -44,9 +53,9 @@ class Category extends Model
                 return ' ';
             } else {
                 if ($this->attributes['state'] == static::CATEGORY_STATE_YES) {
-                    return '显示';
+                    return __('common.is_show');
                 } else if ($this->attributes['state'] == static::CATEGORY_STATE_NO) {
-                    return '隐藏';
+                    return __('common.is_hide');
                 }
             }
         }
@@ -102,7 +111,7 @@ class Category extends Model
             }
             return collect(genTree($options, 'pid'))->prepend(array(
                 'value' => 0,
-                'label' => '顶级分组'
+                'label' => __('category.top')
             ));
         } else {
             return true;

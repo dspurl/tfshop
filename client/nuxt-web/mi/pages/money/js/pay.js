@@ -8,7 +8,7 @@ export default {
   middleware: 'auth',
   head () {
     return {
-      title: '支付订单' + '-' + process.env.APP_NAME,
+      title: this.$t('money.title') + '-' + process.env.APP_NAME,
     }
   },
   data() {
@@ -23,7 +23,7 @@ export default {
     }
   },
   mounted() {
-    $nuxt.$store.commit('setCartTitle', '支付订单');
+    $nuxt.$store.commit('setCartTitle', this.$t('money.title'));
     this.getList()
   },
   methods: {
@@ -42,7 +42,7 @@ export default {
         this.list = response
       }).catch(error=>{
         this.$message({
-          message: '请求参数有误',
+          message: this.$t('common.arguments'),
           type: 'error'
         });
 
@@ -82,7 +82,7 @@ export default {
           }
         }).catch(error=>{
           this.$message({
-            message: '支付配置有误，请检查',
+            message: this.$t('money.error'),
             type: 'error'
           });
         })

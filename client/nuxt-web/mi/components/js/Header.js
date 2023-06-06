@@ -4,16 +4,12 @@ export default {
     const validateRemark = (rule, value, callback) => {
       const flag = new RegExp("[`~!@#$^&*()=|{}':'\\[\\].<>《》/?~！@#￥……&*（）——|{}【】‘：”“'。？ ]");
       if(flag.test(value)){
-        return callback(new Error('不允许输入非法字符'));
+        return callback(new Error(this.$t('header.top.validate_remark')));
       }else{
         callback();
       }
     };
     return {
-      navList: [
-        { name: '首页', path: '/' },
-        { name: '全部分类', path: '/category/list' },
-      ],
       shoppingCart: [],
       cartOriginalList: [],
       cartLoading: false,
@@ -32,6 +28,17 @@ export default {
           { validator: validateRemark, trigger: 'blur' }
         ]
       }
+    }
+  },
+  computed: {
+    availableLocales () {
+      return this.$i18n.locales.filter(i => i.code !== this.$i18n.locale)
+    },
+    navList () {
+      return [
+        { name: this.$t('header.top.nav_list.home'), path: '/' },
+        { name: this.$t('header.top.nav_list.all_classifications'), path: '/category/list' },
+      ]
     }
   },
   watch: {
@@ -87,9 +94,10 @@ export default {
       })
     },
     setNavActive(path){
+      this.navActive = -1
       for (let i=0;i<this.navList.length;i++)
       {
-        if(this.navList[i].path.split('\/')[1]  === path.split('\/')[1]){
+        if(this.navList[i].path.split('\/')[1]  === path.split('\/')[1] || this.$store.state.lang !== 'zh' && this.navList[i].path.split('\/')[1]  === path.split('\/')[2]){
           this.navActive = i
           break
         }
@@ -150,6 +158,10 @@ export default {
           })
         }
       });
+    },
+    handleChangeLang(lang) {
+      this.$store.commit("setLang", lang);
+      $nuxt.$i18n.setLocale(lang)
     }
   }
 }

@@ -2,32 +2,32 @@
 <template>
   <div v-loading="loading" class="createPost-container" style="padding-top: 40px">
     <el-form ref="ruleForm" :model="ruleForm" :rules="rules" label-width="150px" class="demo-ruleForm" style="padding-left:100px;padding-right:100px;">
-      <h3>基本信息</h3>
-      <el-form-item label="商品类型" prop="type" style="width:600px;">
+      <h3>{{ $t('good.detail.form.title.basic_information') }}</h3>
+      <el-form-item :label="$t('good.detail.form.type.label')" prop="type" style="width:700px;">
         <el-radio-group v-model="ruleForm.type" @change="setType">
-          <el-radio-button :label="0">普通商品</el-radio-button>
-          <el-radio-button :label="1">虚拟商品</el-radio-button>
-          <el-radio-button :label="2">卡密/网盘</el-radio-button>
-          <el-radio-button :label="3">下载商品</el-radio-button>
+          <el-radio-button :label="0">{{ $t('good.detail.form.type.radio_group.general') }}</el-radio-button>
+          <el-radio-button :label="1">{{ $t('good.detail.form.type.radio_group.virtual') }}</el-radio-button>
+          <el-radio-button :label="2">{{ $t('good.detail.form.type.radio_group.keys') }}</el-radio-button>
+          <el-radio-button :label="3">{{ $t('good.detail.form.type.radio_group.download') }}</el-radio-button>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="商品名称" prop="name" style="width:600px;">
+      <el-form-item :label="$t('good.detail.form.input.label.name')" prop="name" style="width:600px;">
         <el-input v-model="ruleForm.name" maxlength="60" clearable/>
       </el-form-item>
-      <el-form-item label="货号" prop="number" style="width:400px;">
+      <el-form-item :label="$t('good.detail.form.input.label.number')" prop="number" style="width:400px;">
         <el-input v-model="ruleForm.number" maxlength="50" clearable/>
       </el-form-item>
-      <el-form-item v-if="ruleForm.type === 0" label="运费模板" prop="freight_id">
-        <el-select v-model="ruleForm.freight_id" clearable placeholder="请选择">
+      <el-form-item v-if="ruleForm.type === 0" :label="$t('good.detail.form.select.label.type')" prop="freight_id">
+        <el-select v-model="ruleForm.freight_id" :placeholder="$t('common.select')" clearable>
           <el-option
             v-for="item in freight"
             :key="item.id"
             :label="item.name"
             :value="item.id"/>
         </el-select>
-        <div class="el-upload__tip">请选择商品的所属类型，进而完善此商品的规格</div>
+        <div class="el-upload__tip">{{ $t('good.detail.form.select.tip.type') }}</div>
       </el-form-item>
-      <el-form-item label="主图" prop="img">
+      <el-form-item :label="$t('good.detail.form.upload.label.img')" prop="img">
         <el-upload
           :show-file-list="false"
           :on-success="handleAvatarSuccess"
@@ -49,20 +49,20 @@
             <i v-else class="el-icon-plus avatar-uploader-icon"/>
           </span>
         </el-upload>
-        <div class="el-upload__tip">每张不能大于2M</div>
+        <div class="el-upload__tip">{{ $t('hint.error.each_picture', { size: '2M' }) }}，{{ $t('good.detail.form.img_progress_percent') }}</div>
       </el-form-item>
-      <el-form-item label="视频" prop="video" style="width:600px;">
-        <el-input v-model="ruleForm.video" clearable placeholder="视频地址" @blur="setVideo"/>
-        <el-input v-model="ruleForm.poster" clearable placeholder="封面地址" style="padding-top: 10px;padding-bottom: 10px;" @blur="setPoster"/>
+      <el-form-item :label="$t('good.detail.form.input.label.video')" prop="video" style="width:600px;">
+        <el-input :placeholder="$t('good.detail.form.input.placeholder.video')" v-model="ruleForm.video" clearable @blur="setVideo"/>
+        <el-input :placeholder="$t('good.detail.form.input.placeholder.poster')" v-model="ruleForm.poster" clearable style="padding-top: 10px;padding-bottom: 10px;" @blur="setPoster"/>
         <video-player
           v-if="ruleForm.video"
           ref="videoPlayer"
           :playsinline="true"
           :options="playerOptions"
           class="video-player vjs-custom-skin"/>
-        <div class="el-upload__tip">填写视频地址</div>
+        <div class="el-upload__tip">{{ $t('good.detail.form.input.tip.video') }}</div>
       </el-form-item>
-      <el-form-item label="图片列表" prop="resource">
+      <el-form-item :label="$t('good.detail.form.upload.label.resource')" prop="resource">
         <el-upload
           :limit="5"
           :action="actionurl"
@@ -76,26 +76,26 @@
           list-type="picture-card">
           <i slot="default" class="el-icon-plus"/>
         </el-upload>
-        <div class="el-upload__tip">最多可上传5张，每张不能大于2M</div>
+        <div class="el-upload__tip">{{ $t('hint.error.upload_amount', { amount: 5 }) }}，{{ $t('hint.error.each_picture', { size: '2M' }) }}</div>
       </el-form-item>
-      <el-form-item label="关键字" prop="keywords" style="width:600px;">
+      <el-form-item :label="$t('good.detail.form.input.label.keywords')" prop="keywords" style="width:600px;">
         <el-input v-model="ruleForm.keywords" maxlength="255" clearable/>
       </el-form-item>
-      <el-form-item label="短描述" prop="short_description" style="width:600px;">
+      <el-form-item :label="$t('good.detail.form.input.label.short_description')" prop="short_description" style="width:600px;">
         <el-input v-model="ruleForm.short_description" maxlength="160" clearable/>
       </el-form-item>
-      <h3>商品规格</h3>
-      <el-form-item label="类目" prop="category_id">
+      <h3>{{ $t('good.detail.form.title.specification') }}</h3>
+      <el-form-item :label="$t('good.detail.form.cascader.label.category_id')" prop="category_id">
         <el-cascader
           v-model="ruleForm.category_id"
           :options="goods_type"
-          :props="{ expandTrigger: 'hover' }"
+          :props="{ expandTrigger: 'hover', emitPath: false }"
           clearable
           @change="goodsType"/>
-        <div class="el-upload__tip">请选择商品的所属类型，进而完善此商品的规格</div>
+        <div class="el-upload__tip">{{ $t('good.detail.form.cascader.label.tip') }}</div>
       </el-form-item>
-      <el-form-item v-if="goods_brand.length > 0" label="品牌" prop="brand_id">
-        <el-select v-model="ruleForm.brand_id" clearable placeholder="请选择" @change="change($event)">
+      <el-form-item v-if="goods_brand.length > 0" :label="$t('good.detail.form.select.label.brand_id')" prop="brand_id">
+        <el-select :placeholder="$t('common.select')" v-model="ruleForm.brand_id" clearable @change="change($event)">
           <el-option
             v-for="item in goods_brand"
             :key="item.id"
@@ -105,14 +105,14 @@
       </el-form-item>
       <el-form-item v-for="(item, i) in good_attribute" :label="item.name" :key="i">
         <el-input v-if="item.type === 1" v-model="ruleForm.good_specification[i]['data']" clearable style="width:400px;" @input="change($event)"/>
-        <el-select v-else-if="item.type === 2" v-model="ruleForm.good_specification[i]['data']" clearable placeholder="请选择" @change="change($event)">
+        <el-select v-else-if="item.type === 2" :placeholder="$t('common.select')" v-model="ruleForm.good_specification[i]['data']" clearable @change="change($event)">
           <el-option
             v-for="(list, index) in item.value"
             :key="index"
             :label="list"
             :value="index"/>
         </el-select>
-        <el-select v-else v-model="ruleForm.good_specification[i]['data']" clearable multiple placeholder="请选择" @change="change($event)">
+        <el-select v-else :placeholder="$t('common.select')" v-model="ruleForm.good_specification[i]['data']" clearable multiple @change="change($event)">
           <el-option
             v-for="(list, index) in item.value"
             :key="index"
@@ -121,8 +121,8 @@
         </el-select>
       </el-form-item>
       <sku ref="SkuDemo"/>
-      <h3>详情</h3>
-      <el-form-item label="详情" prop="details">
+      <h3>{{ $t('good.detail.form.title.details') }}</h3>
+      <el-form-item :label="$t('good.detail.form.tinymce.details')" prop="details">
         <tinymce
           ref="editor"
           v-model="ruleForm.details"
@@ -130,53 +130,53 @@
           :url="actionurl"
           :header="imgHeaders"/>
       </el-form-item>
-      <h3>设置</h3>
-      <el-form-item label="上架时间" prop="is_show">
+      <h3>{{ $t('good.detail.form.title.set') }}</h3>
+      <el-form-item :label="$t('good.detail.form.radio_group.label.is_show')" prop="is_show">
         <el-radio-group v-model="ruleForm.is_show">
-          <el-radio :label="0">暂不售卖，放入仓库</el-radio>
-          <el-radio :label="1">立即上架售卖</el-radio>
-          <el-radio :label="2">定时上架
+          <el-radio :label="0">{{ $t('good.detail.form.radio_group.is_show.warehouse') }}</el-radio>
+          <el-radio :label="1">{{ $t('good.detail.form.radio_group.is_show.putaway') }}</el-radio>
+          <el-radio :label="2">{{ $t('good.detail.form.radio_group.is_show.timer') }}
             <el-date-picker
               :disabled="ruleForm.is_show === 2 ? false : true"
+              :placeholder="$t('common.date_time')"
               v-model="ruleForm.timing"
               type="date"
-              placeholder="选择日期时间"
               align="right"
               value-format="yyyy-MM-dd HH:mm:ss"/>
           </el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="减库存方式" prop="is_inventory">
+      <el-form-item :label="$t('good.detail.form.radio_group.label.is_inventory')" prop="is_inventory">
         <el-radio-group v-model="ruleForm.is_inventory">
-          <el-radio :label="0">拍下减库存</el-radio>
-          <el-radio :label="1">付款减库存</el-radio>
+          <el-radio :label="0">{{ $t('good.detail.form.radio_group.order') }}</el-radio>
+          <el-radio :label="1">{{ $t('good.detail.form.radio_group.payment') }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="是否推荐" prop="is_recommend">
+      <el-form-item :label="$t('good.detail.form.radio_group.label.is_recommend')" prop="is_recommend">
         <el-radio-group v-model="ruleForm.is_recommend">
-          <el-radio :label="0">否</el-radio>
-          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">{{ $t('good.detail.form.radio_group.is_recommend.no') }}</el-radio>
+          <el-radio :label="1">{{ $t('good.detail.form.radio_group.is_recommend.yes') }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="是否新品" prop="is_new">
+      <el-form-item :label="$t('good.detail.form.radio_group.label.is_new')" prop="is_new">
         <el-radio-group v-model="ruleForm.is_new">
-          <el-radio :label="0">否</el-radio>
-          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">{{ $t('good.detail.form.radio_group.is_new.no') }}</el-radio>
+          <el-radio :label="1">{{ $t('good.detail.form.radio_group.is_new.yes') }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="是否热销" prop="is_hot">
+      <el-form-item :label="$t('good.detail.form.radio_group.label.is_hot')" prop="is_hot">
         <el-radio-group v-model="ruleForm.is_hot">
-          <el-radio :label="0">否</el-radio>
-          <el-radio :label="1">是</el-radio>
+          <el-radio :label="0">{{ $t('good.detail.form.radio_group.is_hot.no') }}</el-radio>
+          <el-radio :label="1">{{ $t('good.detail.form.radio_group.is_hot.yes') }}</el-radio>
         </el-radio-group>
       </el-form-item>
-      <el-form-item label="排序" prop="sort">
+      <el-form-item :label="$t('good.detail.form.input.label.sort')" prop="sort">
         <el-radio-group v-model="ruleForm.sort">
           <el-input v-model="ruleForm.sort" maxlength="11" clearable style="width:80px;"/>
         </el-radio-group>
       </el-form-item>
       <el-form-item class="float-button">
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">提交</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">{{ $t('common.submit') }}</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -273,7 +273,7 @@ export default {
       const pattern = /^\d+.?\d{0,2}$/
       if (value) {
         if (!pattern.test(value)) {
-          callback(new Error('只允许数字，并小数点后最多只能输入两位2'))
+          callback(new Error(this.$t('good.detail.form.validate_price')))
         }
       }
       callback()
@@ -281,30 +281,6 @@ export default {
     return {
       formLoading: false,
       dialogFormVisible: false,
-      // 视频播放
-      playerOptions: {
-        playbackRates: [0.7, 1.0, 1.5, 2.0], // 播放速度
-        autoplay: false, // 如果true,浏览器准备好时开始回放。
-        muted: false, // 默认情况下将会消除任何音频。
-        loop: false, // 导致视频一结束就重新开始。
-        preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
-        language: 'zh-CN',
-        aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
-        fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
-        sources: [{
-          type: '',
-          src: '' // url地址
-        }],
-        poster: '', // 你的封面地址
-        // width: document.documentElement.clientWidth,
-        notSupportedMessage: '此视频暂无法播放，请稍后再试', // 允许覆盖Video.js无法播放媒体源时显示的默认信息。
-        controlBar: {
-          timeDivider: true,
-          durationDisplay: true,
-          remainingTimeDisplay: false,
-          fullscreenToggle: true // 全屏按钮
-        }
-      },
       freight: [],
       disabled: false,
       sku: [],
@@ -357,41 +333,68 @@ export default {
       imgProgressPercent: 0,
       rules: {
         name: [
-          { required: true, message: '请输入商品名称', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good.detail.name') }), trigger: 'blur' }
         ],
         number: [
-          { required: true, message: '请输入货号', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good.detail.keypoint') }), trigger: 'blur' }
         ],
         freight_id: [
-          { required: true, message: '请选择运费模板', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.select', { specification: this.$t('good.detail.form.select.label.type') }), trigger: 'change' }
         ],
         img: [
-          { required: true, message: '请上传主图', trigger: 'change' }
+          { required: true, message: this.$t('good.detail.img_upload'), trigger: 'change' }
         ],
         market_price: [
-          { required: false, validator: validatePrice, message: '只允许数字，并小数点后最多只能输入两位', trigger: 'blur' }
+          { required: false, validator: validatePrice, message: this.$t('good.detail.form.validate_price'), trigger: 'blur' }
         ],
         cost_price: [
-          { required: false, validator: validatePrice, message: '只允许数字，并小数点后最多只能输入两位', trigger: 'blur' }
+          { required: false, validator: validatePrice, message: this.$t('good.detail.form.validate_price'), trigger: 'blur' }
         ],
         price: [
-          { required: false, validator: validatePrice, message: '只允许数字，并小数点后最多只能输入两位', trigger: 'blur' }
+          { required: false, validator: validatePrice, message: this.$t('good.detail.form.validate_price'), trigger: 'blur' }
         ],
         inventory: [
-          { required: false, message: '只能输入整数', trigger: 'blur' }
+          { required: false, message: this.$t('good.detail.inventory_integer'), trigger: 'blur' }
         ],
         brand_id: [
-          { required: true, message: '请选择品牌', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.select', { specification: this.$t('good.detail.form.select.label.brand_id') }), trigger: 'blur' }
         ],
         category_id: [
-          { required: true, message: '请选择类目', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.select', { specification: this.$t('good.detail.form.cascader.label.category_id') }), trigger: 'blur' }
         ],
         details: [
-          { required: true, message: '请输入详情', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good.detail.details') }), trigger: 'blur' }
         ],
         sort: [
-          { required: true, message: '请输入排序', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('common.sort') }), trigger: 'blur' }
         ]
+      }
+    }
+  },
+  computed: {
+    playerOptions() {
+      return {
+        playbackRates: [0.7, 1.0, 1.5, 2.0], // 播放速度
+        autoplay: false, // 如果true,浏览器准备好时开始回放。
+        muted: false, // 默认情况下将会消除任何音频。
+        loop: false, // 导致视频一结束就重新开始。
+        preload: 'auto', // 建议浏览器在<video>加载元素后是否应该开始下载视频数据。auto浏览器选择最佳行为,立即开始加载视频（如果浏览器支持）
+        language: getToken('language') ? getToken('language') === 'zh' ? 'zh-CN' : getToken('language') : 'zh-CN',
+        aspectRatio: '16:9', // 将播放器置于流畅模式，并在计算播放器的动态大小时使用该值。值应该代表一个比例 - 用冒号分隔的两个数字（例如"16:9"或"4:3"）
+        fluid: true, // 当true时，Video.js player将拥有流体大小。换句话说，它将按比例缩放以适应其容器。
+        sources: [{
+          type: '',
+          src: '' // url地址
+        }],
+        poster: '', // 你的封面地址
+        // width: document.documentElement.clientWidth,
+        notSupportedMessage: this.$t('good.detail.player_options_not_supported_message'), // 允许覆盖Video.js无法播放媒体源时显示的默认信息。
+        controlBar: {
+          timeDivider: true,
+          durationDisplay: true,
+          remainingTimeDisplay: false,
+          fullscreenToggle: true // 全屏按钮
+        }
       }
     }
   },
@@ -408,13 +411,13 @@ export default {
         if (this.id > 0) {
           this.ruleForm = response.data.goods
           // 设置类型
-          if (this.ruleForm.type === '普通商品') {
+          if (this.ruleForm.type === this.$t('good.detail.form.type.radio_group.general')) {
             this.ruleForm.type = 0
-          } else if (this.ruleForm.type === '虚拟商品') {
+          } else if (this.ruleForm.type === this.$t('good.detail.form.type.radio_group.virtual')) {
             this.ruleForm.type = 1
-          } else if (this.ruleForm.type === '卡密/网盘') {
+          } else if (this.ruleForm.type === this.$t('good.detail.form.type.radio_group.keys')) {
             this.ruleForm.type = 2
-          } else if (this.ruleForm.type === '下载商品') {
+          } else if (this.ruleForm.type === this.$t('good.detail.form.type.radio_group.download')) {
             this.ruleForm.type = 3
           }
           this.setType(this.ruleForm.type)
@@ -440,8 +443,8 @@ export default {
           this.ruleForm.good_sku = this.getSkuData()
           create(this.ruleForm).then(() => {
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -462,8 +465,8 @@ export default {
           this.ruleForm.good_sku = this.getSkuData()
           edit(this.ruleForm).then(() => {
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })
@@ -492,13 +495,15 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 2
       if (
         [
+          'image/jpeg',
+          'image/gif',
           'image/png'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error(this.$t('hint.upload.img.rmvb'))
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error(this.$t('hint.upload.img.can_not_surpass', { size: '2MB' }))
       }
       this.imgProgress = true
       return isLt2M
@@ -507,16 +512,16 @@ export default {
     beforeAvatarUploadList(file) {
       const isLt2M = file.size / 1024 / 1024 < 2
       if (
-        ['image/jpeg',
+        [
+          'image/jpeg',
           'image/gif',
-          'image/png',
-          'image/bmp'
+          'image/png'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error(this.$t('hint.upload.img.rmvb'))
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error(this.$t('hint.upload.img.can_not_surpass', { size: '2MB' }))
       }
       return isLt2M
     },
@@ -619,45 +624,45 @@ export default {
           '',
         )
         if (market_price === undefined) {
-          this.$message.error(skuText + ' 未输入市场价')
+          this.$message.error(skuText + this.$t('good.detail.no_input', { attribute: this.$t('good.sku.form.input.placeholder.market_price') }))
           this.formLoading = false
-          throw new Error('请输入市场价')
+          throw new Error(this.$t('hint.error.please_entert', { attribute: this.$t('good.sku.form.input.placeholder.market_price') }))
         } else if (cost_price === undefined) {
-          this.$message.error(skuText + ' 未输入成本价')
+          this.$message.error(skuText + this.$t('good.detail.no_input', { attribute: this.$t('good.sku.form.input.placeholder.cost_price') }))
           this.formLoading = false
-          throw new Error('请输入成本价')
+          throw new Error(this.$t('hint.error.please_entert', { attribute: this.$t('good.sku.form.input.placeholder.cost_price') }))
         } else if (price === undefined) {
-          this.$message.error(skuText + ' 未输入销售价')
+          this.$message.error(skuText + this.$t('good.detail.no_input', { attribute: this.$t('good.sku.form.input.placeholder.price') }))
           this.formLoading = false
-          throw new Error('请输入销售价')
+          throw new Error(this.$t('hint.error.please_entert', { attribute: this.$t('good.sku.form.input.placeholder.price') }))
         } else if (inventory === undefined) {
-          this.$message.error(skuText + ' 未输入库存')
+          this.$message.error(skuText + this.$t('good.detail.no_input', { attribute: this.$t('good.sku.form.input.placeholder.inventory') }))
           this.formLoading = false
-          throw new Error('请输入库存')
+          throw new Error(this.$t('hint.error.please_entert', { attribute: this.$t('good.sku.form.input.placeholder.inventory') }))
         }
         if (this.ruleForm.type === 2) {
           if (good_code) {
             if (good_code.length === 0) {
-              this.$message.error(skuText + ' 未设置卡密')
+              this.$message.error(skuText + this.$t('good.detail.no_card_is_set'))
               this.formLoading = false
-              throw new Error('请设置卡密')
+              throw new Error(this.$t('good.detail.card_is_set'))
             } else if (good_code.length > 1) {
               if (Number(inventory) > good_code.length) {
-                this.$message.error(skuText + ' 卡密数量必须大于等于库存')
+                this.$message.error(skuText + this.$t('good.detail.carmi_inventory'))
                 this.formLoading = false
-                throw new Error('卡密数量必须大于等于库存')
+                throw new Error(this.$t('good.detail.carmi_inventory'))
               }
             }
           } else {
-            this.$message.error(skuText + ' 未设置卡密')
+            this.$message.error(skuText + this.$t('good.detail.no_card_is_set'))
             this.formLoading = false
-            throw new Error('请设置卡密')
+            throw new Error(this.$t('good.detail.card_is_set'))
           }
         } else if (this.ruleForm.type === 3) {
           if (file === undefined) {
-            this.$message.error(skuText + ' 请上传文件')
+            this.$message.error(skuText + this.$t('good.detail.upload_files'))
             this.formLoading = false
-            throw new Error('请上传文件')
+            throw new Error(this.$t('good.detail.upload_files'))
           }
         }
         return {

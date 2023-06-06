@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import i18n from '@/utils/lang/index'
 	export default {
 		name: "uni-load-more",
 		props: {
@@ -45,9 +46,9 @@
 				type: Object,
 				default () {
 					return {
-						contentdown: "上拉显示更多",
-						contentrefresh: "正在加载...",
-						contentnomore: "没有更多数据了"
+						contentdown: i18n.t('load_more.content_down'),
+						contentrefresh: i18n.t('load_more.content_refresh'),
+						contentnomore: i18n.t('load_more.content_no_more')
 					};
 				}
 			}

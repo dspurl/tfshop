@@ -1,3 +1,4 @@
+import i18n from "./plugins/i18n"
 require('dotenv').config()
 // console.log(process.env.APP_ENV)
 export default {
@@ -15,7 +16,7 @@ export default {
     APP_ENV: process.env.APP_ENV
   },
   router: {
-    middleware: ['refreshToken', 'terminal']
+    middleware: ['refreshToken', 'terminal', 'lang']
   },
   pwa: {
     icon: {
@@ -92,7 +93,11 @@ export default {
     '@nuxtjs/pwa',
     // ['@nuxtjs/dotenv', { filename: '.env' }],
     ['@nuxtjs/dotenv', { filename: process.env.APP_ENV === 'local' || !process.env.APP_ENV ? '.env' : '.env.' + process.env.APP_ENV }],
-    '@nuxtjs/style-resources'
+    '@nuxtjs/style-resources',
+    [
+      '@nuxtjs/i18n',
+      i18n
+    ]
   ],
   styleResources: {
     scss: './assets/css/main.scss'

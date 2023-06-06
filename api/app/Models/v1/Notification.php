@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use App\Notifications\InvoicePaid;
@@ -41,13 +50,13 @@ class Notification extends Model
                     $return = json_decode($this->attributes['data']);
                     switch ($return->type){
                         case InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES:
-                            $return->typeShow = '系统消息';
+                            $return->typeShow = __('invoice_paid.type.system_messages');
                             break;
                         case InvoicePaid::NOTIFICATION_TYPE_DEAL:
-                            $return->typeShow = '交易';
+                            $return->typeShow = __('invoice_paid.type.deal');
                             break;
                         case InvoicePaid::NOTIFICATION_TYPE_ACTIVITY:
-                            $return->typeShow = '活动';
+                            $return->typeShow = __('invoice_paid.type.activity');
                             break;
                     }
                 }

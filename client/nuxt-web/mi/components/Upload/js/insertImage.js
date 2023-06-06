@@ -58,18 +58,18 @@ export default{
       this.$emit('getFile', fileList)
     },
     handleExceed(files, fileList) {
-      this.$message.warning(`当前限制选择 ${this.limit} 个文件，本次选择了 ${files.length} 个文件，共选择了 ${files.length + fileList.length} 个文件`);
+      this.$message.warning(this.$t('good.file.warning', {limit: this.limit, length: files.length, total: files.length + fileList.length}));
     },
     // 图片列表图片格式大小验证
     beforeUploadList(file) {
       const isLt = file.size < this.imgData.size
       if (
         this.format.indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的文件格式')
+        this.$message.error(this.$t('good.file.error'))
         return false
       }
       if (!isLt) {
-        this.$message.error('上传文件大小不能超过 ' + file.size / 1024 / 1024 + 'MB!')
+        this.$message.error(this.$t('good.file.size.error') + file.size / 1024 / 1024 + 'MB!')
       }
       return isLt
     },

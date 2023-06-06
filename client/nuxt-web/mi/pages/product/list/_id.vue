@@ -3,22 +3,22 @@
     <el-breadcrumb class="breadcrumb container" separator="/">
       <el-breadcrumb-item>
         <NuxtLink :to="{ path: '/' }">
-          首页
+          {{$t('header.top.nav_list.home')}}
         </NuxtLink>
       </el-breadcrumb-item>
-      <el-breadcrumb-item v-if="listQuery.pid">商品分类</el-breadcrumb-item>
-      <el-breadcrumb-item v-else>搜索结果</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="listQuery.pid">{{$t('product.classify')}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-else>{{$t('product.search_result')}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
     </el-breadcrumb>
     <div v-if="total">
       <div class="screen-box">
         <div class="screen container">
-          <el-link :underline="false" :class="{on: !listQuery.sort}" @click="tabClick()">综合</el-link>
+          <el-link :underline="false" :class="{on: !listQuery.sort}" @click="tabClick()">{{$t('product.sort.synthesize')}}</el-link>
           <el-divider class="divider" direction="vertical"></el-divider>
-          <el-link :underline="false" :class="{on: listQuery.sort === '-sales'}" @click="tabClick('sales')">销量</el-link>
+          <el-link :underline="false" :class="{on: listQuery.sort === '-sales'}" @click="tabClick('sales')">{{$t('product.sort.sales')}}</el-link>
           <el-divider class="divider" direction="vertical"></el-divider>
           <el-link class="f-sort" :underline="false" @click="tabClick('order_price')">
-            <span class="fs-tit">价格</span>
+            <span class="fs-tit">{{$t('product.sort.price')}}</span>
             <em class="fs-up">
               <i class="up el-icon-caret-top" :class="{on: listQuery.sort === '+order_price'}"></i>
               <i class="below el-icon-caret-bottom" :class="{on: listQuery.sort === '-order_price'}"></i>
@@ -37,7 +37,7 @@
                 lazy/>
               <div class="name">{{item.name}}</div>
               <div class="price">
-                <div class="symbol">¥</div>
+                <div class="symbol">{{$t('common.unit')}}</div>
                 <div class="value">{{item.order_price | thousands}}</div>
               </div>
             </el-card>
@@ -57,8 +57,8 @@
     </div>
     <div class="no-goods" v-else>
       <img :src="require('assets/img/no-goods.png')"/>
-      <div v-if="listQuery.pid">抱歉，“{{title}}”分类下暂无商品，换个分类搜搜吧</div>
-      <div v-else>抱歉，没有找到商品“{{title}}”，换个词搜搜吧</div>
+      <div v-if="listQuery.pid">{{$t('product.classified_no_commodity', {title: title})}}</div>
+      <div v-else>{{$t('product._no_commodity', {title: title})}}</div>
     </div>
   </div>
 </template>

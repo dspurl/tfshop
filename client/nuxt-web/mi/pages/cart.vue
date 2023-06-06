@@ -6,15 +6,15 @@
           <img :src="require('assets/img/empty-cart.png')"/>
         </div>
           <div class="instructions">
-            <div class="title">您的购物车还是空的！</div>
-            <div class="login" v-if="!$store.state.hasLogin">登录后将显示您之前加入的商品</div>
+            <div class="title">{{$t('cart.empty')}}</div>
+            <div class="login" v-if="!$store.state.hasLogin">{{$t('money.success.after_login')}}</div>
             <div class="operation">
               <template v-if="$store.state.hasLogin">
-                <NuxtLink class="li" to="/category/list"><el-button type="danger">马上去购物</el-button></NuxtLink>
+                <NuxtLink class="li" to="/category/list"><el-button type="danger">{{$t('cart.go_shopping')}}</el-button></NuxtLink>
               </template>
               <template v-else>
-                <NuxtLink class="li" to="/pass/login"><el-button type="danger">立即登录</el-button></NuxtLink>
-                <NuxtLink class="li" to="/category/list"><el-button type="danger" plain>马上去购物</el-button></NuxtLink>
+                <NuxtLink class="li" to="/pass/login"><el-button type="danger">{{$t('cart.login')}}</el-button></NuxtLink>
+                <NuxtLink class="li" to="/category/list"><el-button type="danger" plain>{{$t('cart.go_shopping')}}</el-button></NuxtLink>
               </template>
             </div>
           </div>
@@ -46,7 +46,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="商品名称">
+            :label="$t('indent.name')">
             <template slot-scope="scope">
               <NuxtLink :to="{ path: `/product/detail/${scope.row.good_id}`}">
                 <p>{{scope.row.name}}</p>
@@ -55,7 +55,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="单价"
+            :label="$t('indent.price')"
             width="150"
             align="center">
             <template slot-scope="scope">
@@ -63,7 +63,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="数量"
+            :label="$t('indent.number')"
             width="150"
             align="center">
             <template slot-scope="scope">
@@ -71,7 +71,7 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="小计"
+            :label="$t('indent.subtotal')"
             width="150"
             align="center">
             <template slot-scope="scope">
@@ -79,11 +79,11 @@
             </template>
           </el-table-column>
           <el-table-column
-            label="操作"
-            width="80"
+            :label="$t('common.operation')"
+            width="100"
             align="center">
             <template slot-scope="scope">
-              <el-tooltip class="item" effect="dark" content="移除商品" placement="top-start">
+              <el-tooltip class="item" effect="dark" :content="$t('cart.remove_goods')" placement="top-start">
                 <el-button @click.stop="deleteCartItem(scope.$index)" size="mini" type="danger" icon="el-icon-delete" circle></el-button>
               </el-tooltip>
             </template>
@@ -91,20 +91,20 @@
         </el-table>
         <div class="cart-operation">
           <div class="left">
-            <el-button @click="handleCheckAllChange" size="mini" type="danger" plain>全选/全不选</el-button>
+            <el-button @click="handleCheckAllChange" size="mini" type="danger" plain>{{$t('notice.select_reverse')}}</el-button>
             <el-divider direction="vertical"></el-divider>
-            <span class="delete" @click="clearCart">删除</span>
+            <span class="delete" @click="clearCart">{{$t('common.delete')}}</span>
             <el-divider direction="vertical"></el-divider>
-            <span>共 <span class="number">{{cartList.length}}</span> 件商品，已选择 <span class="number">{{multipleSelection.length}}</span>件</span>
+            <span>{{$t('cart.common')}} <span class="number">{{cartList.length}}</span> {{$t('cart.pieces_goods')}}，{{$t('common.selected')}} <span class="number">{{multipleSelection.length}}</span>{{$t('good_indent.piece')}}</span>
           </div>
           <div class="right">
-            <div class="total">合计：<span>{{total}}</span>元</div>
-            <el-button class="settlement" type="danger" :disabled="total<=0" @click="createOrder">去结算</el-button>
+            <div class="total">{{$t('cart.total')}}：<span>{{total}}</span>{{$t('common.monetary_unit')}}</div>
+            <el-button class="settlement" type="danger" :disabled="total<=0" @click="createOrder">{{$t('cart.settle')}}</el-button>
           </div>
         </div>
         <!-- 失效的商品-->
         <template v-if="invalidGood.length">
-          <h3 class="invalid-title">已失效的商品</h3>
+          <h3 class="invalid-title">{{$t('cart.invalid_commodity')}}</h3>
           <el-table
             :data="invalidGood"
             ref="invalidTable"
@@ -122,7 +122,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="商品名称">
+              :label="$t('indent.name')">
               <template slot-scope="scope">
                 <NuxtLink :to="{ path: `/product/detail/${scope.row.good_id}`}">
                   <p>{{scope.row.name}}</p>
@@ -131,7 +131,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="单价"
+              :label="$t('indent.price')"
               width="150"
               align="center">
               <template slot-scope="scope">
@@ -139,7 +139,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="数量"
+              :label="$t('indent.number')"
               width="150"
               align="center">
               <template slot-scope="scope">
@@ -147,7 +147,7 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="小计"
+              :label="$t('indent.subtotal')"
               width="150"
               align="center">
               <template slot-scope="scope">
@@ -155,11 +155,11 @@
               </template>
             </el-table-column>
             <el-table-column
-              label="操作"
+              :label="$t('common.operation')"
               width="80"
               align="center">
               <template slot-scope="scope">
-                <el-tooltip class="item" effect="dark" content="移除商品" placement="top-start">
+                <el-tooltip class="item" effect="dark" :content="$t('cart.remove_goods')" placement="top-start">
                   <el-button @click="deleteInvalidGood(scope.$index)" size="mini" type="danger" icon="el-icon-delete" circle></el-button>
                 </el-tooltip>
               </template>

@@ -3,7 +3,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '消息通知-个人中心',
+      title: `${this.$t('header.top.message')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {
@@ -19,7 +19,7 @@ export default {
     async getDetail(){
       if(!$nuxt.$route.query.id){
         this.$message({
-          message: '参数有误，请联系管理员',
+          message: this.$t('common.arguments'),
           type: 'error'
         });
         $nuxt.$router.go(-1);

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Http\Requests\v1\SubmitDhlRequest;
@@ -67,7 +76,7 @@ class DhlController extends Controller
         $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
         $Dhl->save();
-        return resReturn(1, '添加成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
     }
 
     /**
@@ -93,7 +102,7 @@ class DhlController extends Controller
         $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
         $Dhl->save();
-        return resReturn(1, '更新成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
     }
 
     /**
@@ -106,6 +115,6 @@ class DhlController extends Controller
     public function destroy($id)
     {
         Dhl::destroy($id);
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

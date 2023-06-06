@@ -40,7 +40,7 @@
     <!--分类 end-->
     <!--推荐-->
     <div class="recommend container">
-      <div class="title">为你推荐</div>
+      <div class="title">{{$t('index.recommend')}}</div>
       <div class="list">
         <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: `/product/detail/${item.id}`}">
           <el-card class="card" shadow="hover">
@@ -51,7 +51,7 @@
               lazy/>
             <div class="name">{{item.name}}</div>
             <div class="price">
-              <div class="symbol">¥</div>
+              <div class="symbol">{{$t('common.unit')}}</div>
               <div class="value">{{item.order_price | thousands}}</div>
             </div>
           </el-card>
@@ -75,7 +75,7 @@
     <div class="recommend container" v-for="(fitem, findex) in recommendCategoryList" :key="findex">
       <div class="title-box">
         <div class="min-title">{{fitem.name}}</div>
-        <NuxtLink class="more" :to="{ path: `/product/list/${fitem.id}`, query: { title: fitem.name }}">查看更多>></NuxtLink>
+        <NuxtLink class="more" :to="{ path: `/product/list/${fitem.id}`, query: { title: fitem.name }}">{{$t('index.view_more')}}>></NuxtLink>
       </div>
       <div class="list">
         <NuxtLink class="li" v-for="(item, index) in recommendGoodList[findex]" :key="index" :to="{ path: `/product/detail/${item.id}`}">
@@ -87,7 +87,7 @@
               lazy/>
             <div class="name">{{item.name}}</div>
             <div class="price">
-              <div class="symbol">¥</div>
+              <div class="symbol">{{$t('common.unit')}}</div>
               <div class="value">{{item.order_price | thousands}}</div>
             </div>
           </el-card>

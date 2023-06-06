@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -73,16 +82,16 @@ class SubmitCategoryRequest extends Request
     public function messages()
     {
         return [
-            'name.required' =>'类目名称必须',
-            'name.string' =>'类目格式有误',
-            'name.unique' => '类目名称已存在',
-            'name.max' =>'类目不能超过30个字符',
-            'pid.required' =>'上级类目必须',
-            'pid.numeric' =>'上级类目格式有误',
-            'sort.required' =>'排序必须',
-            'sort.numeric' =>'排序格式有误',
-            'state.required' =>'状态必须',
-            'state.numeric' =>'状态格式有误',
+            'name.required' =>__('hint.error.not_null', ['attribute' => __('category.name')]),
+            'name.string' =>__('hint.error.wrong_format', ['attribute' => __('category.name')]),
+            'name.unique' => __('hint.error.exist', ['attribute' => __('category.name')]),
+            'name.max' =>__('hint.error.max', ['attribute' => __('category.name'), 'place' => 30]),
+            'pid.required' =>__('hint.error.not_null', ['attribute' => __('category.pid')]),
+            'pid.numeric' =>__('hint.error.wrong_format', ['attribute' => __('category.pid')]),
+            'sort.required' =>__('hint.error.not_null', ['attribute' => __('common.sort')]),
+            'sort.numeric' =>__('hint.error.wrong_format', ['attribute' => __('common.sort')]),
+            'state.required' =>__('hint.error.not_null', ['attribute' => __('common.state')]),
+            'state.numeric' =>__('hint.error.wrong_format', ['attribute' => __('common.state')]),
         ];
     }
 }

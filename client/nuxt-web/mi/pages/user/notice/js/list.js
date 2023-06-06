@@ -3,7 +3,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '消息通知-个人中心',
+      title: `${this.$t('header.top.message')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {
@@ -50,14 +50,14 @@ export default {
     handleAllDelete() { // 批量删除
       if(this.multipleSelection.length === 0){
         this.$message({
-          message: '请选择需要操作的内容',
+          message: this.$t('notice.all_delete'),
           type: 'error'
         });
         return false
       }
-      this.$confirm('是否确认删除选中内容？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm', {attribute:this.$t('common.delete') }), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true;
@@ -65,7 +65,7 @@ export default {
           this.buttonLoading = false;
           this.handleFilter();
           this.$message({
-            message: '删除成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
         }).catch(() => {
@@ -77,7 +77,7 @@ export default {
     handleAllRead() { // 批量标记为已读
       if(this.multipleSelection.length === 0){
         this.$message({
-          message: '请选择需要操作的内容',
+          message: this.$t('notice.all_delete'),
           type: 'error'
         });
         return false
@@ -87,7 +87,7 @@ export default {
         this.buttonLoading = false;
         this.getList();
         this.$message({
-          message: '标记成功',
+          message: this.$t('common.success'),
           type: 'success'
         });
       }).catch(() => {

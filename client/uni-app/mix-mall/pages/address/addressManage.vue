@@ -1,15 +1,15 @@
 <template>
 	<view class="content">
 		<view class="row b-b">
-			<text class="tit">联系人</text>
-			<input class="input" type="text" v-model="addressData.name" placeholder="收货人姓名" placeholder-class="placeholder" />
+			<text class="tit">{{$t('address.name')}}</text>
+			<input class="input" type="text" v-model="addressData.name" :placeholder="$t('address.name.placeholder')" placeholder-class="placeholder" />
 		</view>
 		<view class="row b-b">
-			<text class="tit">手机号</text>
-			<input class="input" type="number" v-model="addressData.cellphone" placeholder="收货人手机号码" placeholder-class="placeholder" maxlength="11"/>
+			<text class="tit">{{$t('address.cellphone')}}</text>
+			<input class="input" type="number" v-model="addressData.cellphone" :placeholder="$t('address.cellphone.placeholder')" placeholder-class="placeholder" maxlength="11"/>
 		</view>
 		<view class="row b-b">
-			<text class="tit">地址</text>
+			<text class="tit">{{$t('address.address')}}</text>
 			<text @click="chooseLocation" class="input">
 				{{addressData.location}}
 				<block v-if="addressData.address">
@@ -19,10 +19,10 @@
 			<text class="yticon icon-shouhuodizhi"></text>
 		</view>
 		<view class="row b-b">
-			<text class="tit">门牌号</text>
-			<input class="input" type="text" v-model="addressData.house" placeholder="楼号、门牌" placeholder-class="placeholder" />
+			<text class="tit">{{$t('address.house')}}</text>
+			<input class="input" type="text" v-model="addressData.house" :placeholder="$t('address.house.placeholder')" placeholder-class="placeholder" />
 		</view>
-		<button class="add-btn" @click="confirm">提交</button>
+		<button class="add-btn" @click="confirm">{{$t('common.submit')}}</button>
 	</view>
 </template>
 
@@ -35,7 +35,7 @@
 				addressData: {
 					name: '',
 					cellphone: '',
-					location: '选择地址',
+					location: this.$t('hint.error.select', { attribute: this.$t('address.address')}),
 					address: '',
 					latitude: '',
 					longitude: '',
@@ -46,10 +46,10 @@
 		},
 		onLoad(option){
 			this.loginCheck()
-			let title = '新增收货地址';
+			let title = this.$t('hint.newly_increased',{ attribute : this.$t('address.address') });
 			const that = this
 			if(option.type==='edit'){
-				title = '编辑收货地址'
+				title = this.$t('hint.redact',{ attribute : this.$t('address.address') })
 			}
 			if(option.data){
 				this.addressData = JSON.parse(option.data)
@@ -141,26 +141,26 @@
 				const that = this
 				let data = this.addressData;
 				if(!data.name){
-					this.$api.msg('请填写收货人姓名');
+					this.$api.msg(this.$t('hint.error.import', { attribute: this.$t('address.name.placeholder') }));
 					return;
 				}
 				if(!/(^1[3|4|5|7|8|9][0-9]{9}$)/.test(data.cellphone)){
-					this.$api.msg('请输入正确的手机号码');
+					this.$api.msg(this.$t('hint.error.import', { attribute: this.$t('address.cellphone.placeholder') }));
 					return;
 				}
 				if(!data.location){
-					this.$api.msg('请在地图选择所在位置');
+					this.$api.msg(this.$t('hint.error.selects', { attribute: this.$t('address.address') }));
 					return;
 				}
 				if(!data.house){
-					this.$api.msg('请填写门牌号信息');
+					this.$api.msg(this.$t('hint.error.import', { attribute: that.$t('address.house.placeholder') }));
 					return;
 				}
 				data.cellphone = Number(data.cellphone)
 				if(data.id){
 					Shipping.edit(data,function(res){
 						that.$api.prePage().refreshList()
-						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
+						that.$api.msg(`${that.$t('address.address')}${that.manageType=='edit' ? that.$t('common.amend'): that.$t('common.add')}${that.$t('common.succeed')}`);
 						setTimeout(()=>{
 							uni.navigateBack()
 						}, 1000)
@@ -168,7 +168,7 @@
 				}else{
 					Shipping.create(data,function(res){
 						that.$api.prePage().refreshList()
-						that.$api.msg(`地址${that.manageType=='edit' ? '修改': '添加'}成功`);
+						that.$api.msg(`${that.$t('address.address')}${that.manageType=='edit' ? that.$t('common.amend'): that.$t('common.add')}${that.$t('common.succeed')}`);
 						setTimeout(()=>{
 							uni.navigateBack()
 						}, 1000)

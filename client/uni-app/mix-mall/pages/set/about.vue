@@ -4,17 +4,17 @@
 			<image style="width: 300upx;height: 300upx;" src="/static/logo.png" lazy-load></image>
 		</view>
 		<view class="list-cell solid-top" @click="navTo('/pages/article/details?list=0&id=2')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">用户协议</text>
+			<text class="cell-tit">{{$t('about.user_agreement')}}</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="list-cell solid-top" @click="navTo('/pages/article/details?list=0&id=1')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">隐私政策</text>
+			<text class="cell-tit">{{$t('about.privacy_policy')}}</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="service" v-if="service.id">
 			<button class="cu-btn round lg bg-red" @click="goService()">
 				<text class="cuIcon-servicefill"></text>
-				联系客服
+				{{$t('about.service')}}
 			</button>
 		</view>
 	</view>
@@ -36,6 +36,9 @@
 		},
 		onShow(){
 			this.loginCheck()
+			uni.setNavigationBarTitle({
+				title: this.$t('set.about')
+			})
 		},
 		onLoad(){
 			this.getConfig()

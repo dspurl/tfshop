@@ -6,7 +6,7 @@
 		<view class="wrapper">
 			<view class="left-top-sign">DSSHOP</view>
 			<view class="welcome">
-				找回密码
+				{{$t('find_password.title')}}
 			</view>
 			<!--  #ifdef  MP-WEIXIN -->
 			<scroll-view scroll-x class="bg-white nav padding">
@@ -19,39 +19,39 @@
 			<!--  #endif -->
 			<view v-if="TabCur == 0" class="bg-white">
 				<view class="padding flex flex-direction">
-				  <button class="cu-btn round bg-red shadow lg" open-type="getPhoneNumber" @getphonenumber="toLogin" :disabled="logining">授权登录</button>
+				  <button class="cu-btn round bg-red shadow lg" open-type="getPhoneNumber" @getphonenumber="toLogin" :disabled="logining">{{$t('find_password.authorized_login')}}</button>
 				</view>
 			</view>
 			<view v-else>
 			    <view class="bg-white">
 			      <form>
 			        <view class="cu-form-group">
-			          <view class="title">手机号码</view>
+			          <view class="title">{{$t('find_password.cellphone')}}</view>
 			          <input type="number" maxlength="11" v-model="ruleForm.cellphone" @input="cellphoneInput"></input>
 			        </view>
 			        <view class="cu-form-group">
-			          <view class="title">验证码</view>
+			          <view class="title">{{$t('find_password.code')}}</view>
 			          <input type="number" maxlength="5" v-model="ruleForm.code" @input="codeInput"></input>
 			          <button class="cu-btn bg-red shadow round getcode" :disabled="disabled" @click="getCode">{{codename + seconds + unit}}</button>
 			        </view>
 			        <view class="cu-form-group">
-			          <view class="title">新密码</view>
+			          <view class="title">{{$t('find_password.password')}}</view>
 			          <input type="password" password v-model="ruleForm.password" @input="passwordInput"></input>
 			        </view>
 					<view class="cu-form-group">
-					  <view class="title">确认密码</view>
+					  <view class="title">{{$t('find_password.confirm_password')}}</view>
 					  <input type="password" password v-model="ruleForm.rPassword" @input="rPasswordInput"></input>
 					</view>
 			      </form>
 			    </view>
 			    <view class=" flex flex-direction padding">
-			      <button class="cu-btn round bg-red shadow lg" @click="toFindPassword">提交</button>
+			      <button class="cu-btn round bg-red shadow lg" @click="toFindPassword">{{$t('common.submit')}}</button>
 			    </view>
 			  </view>
 		  </view>
 			<view class="register-section">
-				已有账号?
-				<text @click="toLogin">马上登录</text>
+				{{$t('find_password.existing_account')}}
+				<text @click="toLogin">{{$t('find_password.log_in_now')}}</text>
 			</view>
 		</view>
 	</view>
@@ -66,8 +66,8 @@
 	export default{
 		data(){
 			return {
-				tabname:['微信授权','短信验证'],
-				codename:'获取验证码',
+				tabname:[this.$t('find_password.tab.authorization'),this.$t('find_password.tab.sms')],
+				codename:this.$t('find_password.get_code'),
 				unit: '',
 				TabCur: 0,
 				seconds: '', // 读秒
@@ -102,40 +102,40 @@
 					ruleForm.encryptedData = e.detail.encryptedData
 				}else{
 					if (!ruleForm.cellphone) {
-					  this.$api.msg('请填写手机号码')
+					  this.$api.msg(this.$t('find_password.rule.cellphone'))
 					  return false
 					} else if (ruleForm.cellphone.length != 11) {
-					  this.$api.msg('手机号长度有误')
+					  this.$api.msg(this.$t('find_password.rule.cellphone.length'))
 					  return false;
 					}
 					var myreg = /^1[3456789]\d{9}$/;
 					if (!myreg.test(ruleForm.cellphone)) {
-					  this.$api.msg('手机号有误')
+					  this.$api.msg(this.$t('find_password.rule.cellphone.reg'))
 					  return false
 					}
 					if (!ruleForm.code) {
-					  this.$api.msg('验证码必须')
+					  this.$api.msg(this.$t('find_password.rule.code'))
 					  return false
 					}
 					if (ruleForm.code.length != 5) {
-					  this.$api.msg('验证码长度有误')
+					  this.$api.msg(this.$t('find_password.rule.code.length'))
 					  return false
 					}
 					if (!ruleForm.password) {
-					  this.$api.msg('新密码必须')
+					  this.$api.msg(this.$t('find_password.rule.password'))
 					  return false
 					}
 					if (!ruleForm.rPassword) {
-					  this.$api.msg('确认密码必须')
+					  this.$api.msg(this.$t('find_password.rule.r_password'))
 					  return false
 					}
 					if (ruleForm.password != ruleForm.rPassword) {
-					  this.$api.msg('确认密码和新密码不一致')
+					  this.$api.msg(this.$t('find_password.rule.password_r_password'))
 					  return false
 					}
 				}
 				Login.findPassword(ruleForm,function(res){
-					that.$api.msg(`密码重置成功`);
+					that.$api.msg(that.$t('find_password.rule.succeed'));
 					uni.redirectTo({
 						url: `/pages/public/login`
 					})
@@ -174,15 +174,15 @@
 			  getCode(){
 			    let that = this
 			    if (!this.ruleForm.cellphone){
-				  this.$api.msg('请填写手机号码')
+				  this.$api.msg(this.$t('find_password.rule.cellphone'))
 				  return false;
 			    } else if (this.ruleForm.cellphone.length != 11) {
-				  this.$api.msg('手机号长度有误')
+				  this.$api.msg(this.$t('find_password.rule.cellphone.length'))
 			      return false;
 			    }
 			    var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
 			    if (!myreg.test(this.ruleForm.cellphone)) {
-				  this.$api.msg('手机号有误')
+				  this.$api.msg(this.$t('find_password.rule.cellphone.reg'))
 			      return false;
 			    }
 				Login.cellphoneCode(this.ruleForm,function(res){
@@ -197,7 +197,7 @@
 							// 读秒结束 清空计时器
 							clearInterval(that.timer)
 							that.seconds = ''
-							that.codename = '获取验证码'
+							that.codename = that.$t('find_password.get_code')
 							that.unit = ''
 							that.disabled = false
 						}
@@ -349,7 +349,7 @@
 		}
 	}
 	.cu-form-group .title{
-		width: 160upx;
+		width: 240rpx;
 		text-align: right;
 	}
 </style>

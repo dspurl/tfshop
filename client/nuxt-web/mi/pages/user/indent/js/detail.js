@@ -3,7 +3,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '订单详情-个人中心',
+      title: `${this.$t('money.pay.order_details')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {
@@ -26,7 +26,7 @@ export default {
     async getDetail(){
       if(!$nuxt.$route.query.id){
         this.$message({
-          message: '参数有误，请联系管理员',
+          message: this.$t('common.arguments'),
           type: 'error'
         });
         $nuxt.$router.go(-1);
@@ -64,16 +64,16 @@ export default {
     },
     // 确认收货
     confirmReceipt(){
-      this.$confirm('是否确认收货？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm',{attribute:this.$t('indent.receiving')}), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true
         receipt(this.indent.id).then(response => {
           this.buttonLoading = false;
           this.$message({
-            message: '操作成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
           this.getDetail();
@@ -89,7 +89,7 @@ export default {
     doCopy (item) {
       this.$copyText(item).then(message => {
         this.$message({
-          message: '复制成功',
+          message: this.$t('indent.copy'),
           type: 'success'
         });
       }).catch(err => {

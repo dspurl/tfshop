@@ -1,12 +1,12 @@
 [
   {
-    "name": "cart",
+    "name": "cart___zh",
     "path": "/cart",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\cart.vue",
     "chunkName": "pages/cart",
     "children": [
       {
-        "name": "cart-js",
+        "name": "cart-js___zh",
         "path": "js",
         "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\cart\\\\js\\\\index.js",
         "chunkName": "pages/cart/js/index"
@@ -14,265 +14,545 @@
     ]
   },
   {
-    "name": "category-list",
+    "name": "index___en",
+    "path": "/en",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\index.vue",
+    "chunkName": "pages/index",
+    "children": [
+      {
+        "name": "index-js___en",
+        "path": "js",
+        "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\index\\\\js\\\\index.js",
+        "chunkName": "pages/index/js/index"
+      }
+    ]
+  },
+  {
+    "name": "category-list___zh",
     "path": "/category/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\category\\\\list.vue",
     "chunkName": "pages/category/list"
   },
   {
-    "name": "indent-create",
+    "name": "cart___en",
+    "path": "/en/cart",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\cart.vue",
+    "chunkName": "pages/cart",
+    "children": [
+      {
+        "name": "cart-js___en",
+        "path": "js",
+        "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\cart\\\\js\\\\index.js",
+        "chunkName": "pages/cart/js/index"
+      }
+    ]
+  },
+  {
+    "name": "indent-create___zh",
     "path": "/indent/create",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\indent\\\\create.vue",
     "chunkName": "pages/indent/create"
   },
   {
-    "name": "money-pay",
+    "name": "money-pay___zh",
     "path": "/money/pay",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\pay.vue",
     "chunkName": "pages/money/pay"
   },
   {
-    "name": "money-success",
+    "name": "money-success___zh",
     "path": "/money/success",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\success.vue",
     "chunkName": "pages/money/success"
   },
   {
-    "name": "pass-findPassword",
+    "name": "pass-findPassword___zh",
     "path": "/pass/findPassword",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\findPassword.vue",
     "chunkName": "pages/pass/findPassword"
   },
   {
-    "name": "pass-login",
+    "name": "pass-login___zh",
     "path": "/pass/login",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\login.vue",
     "chunkName": "pages/pass/login"
   },
   {
-    "name": "pass-register",
+    "name": "pass-register___zh",
     "path": "/pass/register",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\register.vue",
     "chunkName": "pages/pass/register"
   },
   {
-    "name": "user-address",
+    "name": "user-address___zh",
     "path": "/user/address",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\address.vue",
     "chunkName": "pages/user/address"
   },
   {
-    "name": "user-cancel",
+    "name": "user-cancel___zh",
     "path": "/user/cancel",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\cancel.vue",
     "chunkName": "pages/user/cancel"
   },
   {
-    "name": "user-cellphone",
+    "name": "user-cellphone___zh",
     "path": "/user/cellphone",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\cellphone.vue",
     "chunkName": "pages/user/cellphone"
   },
   {
-    "name": "user-collect",
+    "name": "user-collect___zh",
     "path": "/user/collect",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\collect.vue",
     "chunkName": "pages/user/collect"
   },
   {
-    "name": "user-password",
+    "name": "user-password___zh",
     "path": "/user/password",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\password.vue",
     "chunkName": "pages/user/password"
   },
   {
-    "name": "user-portal",
+    "name": "user-portal___zh",
     "path": "/user/portal",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\portal.vue",
     "chunkName": "pages/user/portal"
   },
   {
-    "name": "user-userinfo",
+    "name": "user-userinfo___zh",
     "path": "/user/userinfo",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\userinfo.vue",
     "chunkName": "pages/user/userinfo"
   },
   {
-    "name": "category-js-list",
+    "name": "category-js-list___zh",
     "path": "/category/js/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\category\\\\js\\\\list.js",
     "chunkName": "pages/category/js/list"
   },
   {
-    "name": "indent-js-create",
+    "name": "category-list___en",
+    "path": "/en/category/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\category\\\\list.vue",
+    "chunkName": "pages/category/list"
+  },
+  {
+    "name": "indent-create___en",
+    "path": "/en/indent/create",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\indent\\\\create.vue",
+    "chunkName": "pages/indent/create"
+  },
+  {
+    "name": "money-pay___en",
+    "path": "/en/money/pay",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\pay.vue",
+    "chunkName": "pages/money/pay"
+  },
+  {
+    "name": "money-success___en",
+    "path": "/en/money/success",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\success.vue",
+    "chunkName": "pages/money/success"
+  },
+  {
+    "name": "pass-findPassword___en",
+    "path": "/en/pass/findPassword",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\findPassword.vue",
+    "chunkName": "pages/pass/findPassword"
+  },
+  {
+    "name": "pass-login___en",
+    "path": "/en/pass/login",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\login.vue",
+    "chunkName": "pages/pass/login"
+  },
+  {
+    "name": "pass-register___en",
+    "path": "/en/pass/register",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\register.vue",
+    "chunkName": "pages/pass/register"
+  },
+  {
+    "name": "user-address___en",
+    "path": "/en/user/address",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\address.vue",
+    "chunkName": "pages/user/address"
+  },
+  {
+    "name": "user-cancel___en",
+    "path": "/en/user/cancel",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\cancel.vue",
+    "chunkName": "pages/user/cancel"
+  },
+  {
+    "name": "user-cellphone___en",
+    "path": "/en/user/cellphone",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\cellphone.vue",
+    "chunkName": "pages/user/cellphone"
+  },
+  {
+    "name": "user-collect___en",
+    "path": "/en/user/collect",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\collect.vue",
+    "chunkName": "pages/user/collect"
+  },
+  {
+    "name": "user-password___en",
+    "path": "/en/user/password",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\password.vue",
+    "chunkName": "pages/user/password"
+  },
+  {
+    "name": "user-portal___en",
+    "path": "/en/user/portal",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\portal.vue",
+    "chunkName": "pages/user/portal"
+  },
+  {
+    "name": "user-userinfo___en",
+    "path": "/en/user/userinfo",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\userinfo.vue",
+    "chunkName": "pages/user/userinfo"
+  },
+  {
+    "name": "indent-js-create___zh",
     "path": "/indent/js/create",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\indent\\\\js\\\\create.js",
     "chunkName": "pages/indent/js/create"
   },
   {
-    "name": "money-js-pay",
+    "name": "money-js-pay___zh",
     "path": "/money/js/pay",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\js\\\\pay.js",
     "chunkName": "pages/money/js/pay"
   },
   {
-    "name": "money-js-success",
+    "name": "money-js-success___zh",
     "path": "/money/js/success",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\js\\\\success.js",
     "chunkName": "pages/money/js/success"
   },
   {
-    "name": "pass-js-findPassword",
+    "name": "pass-js-findPassword___zh",
     "path": "/pass/js/findPassword",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\findPassword.js",
     "chunkName": "pages/pass/js/findPassword"
   },
   {
-    "name": "pass-js-login",
+    "name": "pass-js-login___zh",
     "path": "/pass/js/login",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\login.js",
     "chunkName": "pages/pass/js/login"
   },
   {
-    "name": "pass-js-register",
+    "name": "pass-js-register___zh",
     "path": "/pass/js/register",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\register.js",
     "chunkName": "pages/pass/js/register"
   },
   {
-    "name": "user-finance-list",
+    "name": "user-finance-list___zh",
     "path": "/user/finance/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\finance\\\\list.vue",
     "chunkName": "pages/user/finance/list"
   },
   {
-    "name": "user-indent-detail",
+    "name": "user-indent-detail___zh",
     "path": "/user/indent/detail",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\detail.vue",
     "chunkName": "pages/user/indent/detail"
   },
   {
-    "name": "user-indent-list",
+    "name": "user-indent-list___zh",
     "path": "/user/indent/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\list.vue",
     "chunkName": "pages/user/indent/list"
   },
   {
-    "name": "user-js-address",
+    "name": "user-js-address___zh",
     "path": "/user/js/address",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\address.js",
     "chunkName": "pages/user/js/address"
   },
   {
-    "name": "user-js-cancel",
+    "name": "user-js-cancel___zh",
     "path": "/user/js/cancel",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\cancel.js",
     "chunkName": "pages/user/js/cancel"
   },
   {
-    "name": "user-js-cellphone",
+    "name": "user-js-cellphone___zh",
     "path": "/user/js/cellphone",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\cellphone.js",
     "chunkName": "pages/user/js/cellphone"
   },
   {
-    "name": "user-js-collect",
+    "name": "user-js-collect___zh",
     "path": "/user/js/collect",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\collect.js",
     "chunkName": "pages/user/js/collect"
   },
   {
-    "name": "user-js-password",
+    "name": "user-js-password___zh",
     "path": "/user/js/password",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\password.js",
     "chunkName": "pages/user/js/password"
   },
   {
-    "name": "user-js-portal",
+    "name": "user-js-portal___zh",
     "path": "/user/js/portal",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\portal.js",
     "chunkName": "pages/user/js/portal"
   },
   {
-    "name": "user-js-userinfo",
+    "name": "user-js-userinfo___zh",
     "path": "/user/js/userinfo",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\userinfo.js",
     "chunkName": "pages/user/js/userinfo"
   },
   {
-    "name": "user-notice-detail",
+    "name": "user-notice-detail___zh",
     "path": "/user/notice/detail",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\detail.vue",
     "chunkName": "pages/user/notice/detail"
   },
   {
-    "name": "user-notice-list",
+    "name": "user-notice-list___zh",
     "path": "/user/notice/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\list.vue",
     "chunkName": "pages/user/notice/list"
   },
   {
-    "name": "user-finance-js-list",
+    "name": "category-js-list___en",
+    "path": "/en/category/js/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\category\\\\js\\\\list.js",
+    "chunkName": "pages/category/js/list"
+  },
+  {
+    "name": "indent-js-create___en",
+    "path": "/en/indent/js/create",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\indent\\\\js\\\\create.js",
+    "chunkName": "pages/indent/js/create"
+  },
+  {
+    "name": "money-js-pay___en",
+    "path": "/en/money/js/pay",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\js\\\\pay.js",
+    "chunkName": "pages/money/js/pay"
+  },
+  {
+    "name": "money-js-success___en",
+    "path": "/en/money/js/success",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\money\\\\js\\\\success.js",
+    "chunkName": "pages/money/js/success"
+  },
+  {
+    "name": "pass-js-findPassword___en",
+    "path": "/en/pass/js/findPassword",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\findPassword.js",
+    "chunkName": "pages/pass/js/findPassword"
+  },
+  {
+    "name": "pass-js-login___en",
+    "path": "/en/pass/js/login",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\login.js",
+    "chunkName": "pages/pass/js/login"
+  },
+  {
+    "name": "pass-js-register___en",
+    "path": "/en/pass/js/register",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\pass\\\\js\\\\register.js",
+    "chunkName": "pages/pass/js/register"
+  },
+  {
+    "name": "user-finance-list___en",
+    "path": "/en/user/finance/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\finance\\\\list.vue",
+    "chunkName": "pages/user/finance/list"
+  },
+  {
+    "name": "user-indent-detail___en",
+    "path": "/en/user/indent/detail",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\detail.vue",
+    "chunkName": "pages/user/indent/detail"
+  },
+  {
+    "name": "user-indent-list___en",
+    "path": "/en/user/indent/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\list.vue",
+    "chunkName": "pages/user/indent/list"
+  },
+  {
+    "name": "user-js-address___en",
+    "path": "/en/user/js/address",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\address.js",
+    "chunkName": "pages/user/js/address"
+  },
+  {
+    "name": "user-js-cancel___en",
+    "path": "/en/user/js/cancel",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\cancel.js",
+    "chunkName": "pages/user/js/cancel"
+  },
+  {
+    "name": "user-js-cellphone___en",
+    "path": "/en/user/js/cellphone",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\cellphone.js",
+    "chunkName": "pages/user/js/cellphone"
+  },
+  {
+    "name": "user-js-collect___en",
+    "path": "/en/user/js/collect",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\collect.js",
+    "chunkName": "pages/user/js/collect"
+  },
+  {
+    "name": "user-js-password___en",
+    "path": "/en/user/js/password",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\password.js",
+    "chunkName": "pages/user/js/password"
+  },
+  {
+    "name": "user-js-portal___en",
+    "path": "/en/user/js/portal",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\portal.js",
+    "chunkName": "pages/user/js/portal"
+  },
+  {
+    "name": "user-js-userinfo___en",
+    "path": "/en/user/js/userinfo",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\js\\\\userinfo.js",
+    "chunkName": "pages/user/js/userinfo"
+  },
+  {
+    "name": "user-notice-detail___en",
+    "path": "/en/user/notice/detail",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\detail.vue",
+    "chunkName": "pages/user/notice/detail"
+  },
+  {
+    "name": "user-notice-list___en",
+    "path": "/en/user/notice/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\list.vue",
+    "chunkName": "pages/user/notice/list"
+  },
+  {
+    "name": "user-finance-js-list___zh",
     "path": "/user/finance/js/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\finance\\\\js\\\\list.js",
     "chunkName": "pages/user/finance/js/list"
   },
   {
-    "name": "user-indent-js-detail",
+    "name": "user-indent-js-detail___zh",
     "path": "/user/indent/js/detail",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\js\\\\detail.js",
     "chunkName": "pages/user/indent/js/detail"
   },
   {
-    "name": "user-indent-js-list",
+    "name": "user-indent-js-list___zh",
     "path": "/user/indent/js/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\js\\\\list.js",
     "chunkName": "pages/user/indent/js/list"
   },
   {
-    "name": "user-notice-js-detail",
+    "name": "user-notice-js-detail___zh",
     "path": "/user/notice/js/detail",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\js\\\\detail.js",
     "chunkName": "pages/user/notice/js/detail"
   },
   {
-    "name": "user-notice-js-list",
+    "name": "user-notice-js-list___zh",
     "path": "/user/notice/js/list",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\js\\\\list.js",
     "chunkName": "pages/user/notice/js/list"
   },
   {
-    "name": "product-detail-js-id",
+    "name": "user-finance-js-list___en",
+    "path": "/en/user/finance/js/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\finance\\\\js\\\\list.js",
+    "chunkName": "pages/user/finance/js/list"
+  },
+  {
+    "name": "user-indent-js-detail___en",
+    "path": "/en/user/indent/js/detail",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\js\\\\detail.js",
+    "chunkName": "pages/user/indent/js/detail"
+  },
+  {
+    "name": "user-indent-js-list___en",
+    "path": "/en/user/indent/js/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\indent\\\\js\\\\list.js",
+    "chunkName": "pages/user/indent/js/list"
+  },
+  {
+    "name": "user-notice-js-detail___en",
+    "path": "/en/user/notice/js/detail",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\js\\\\detail.js",
+    "chunkName": "pages/user/notice/js/detail"
+  },
+  {
+    "name": "user-notice-js-list___en",
+    "path": "/en/user/notice/js/list",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\user\\\\notice\\\\js\\\\list.js",
+    "chunkName": "pages/user/notice/js/list"
+  },
+  {
+    "name": "product-detail-js-id___en",
+    "path": "/en/product/detail/js/:id?",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\detail\\\\js\\\\_id.js",
+    "chunkName": "pages/product/detail/js/_id"
+  },
+  {
+    "name": "product-list-js-id___en",
+    "path": "/en/product/list/js/:id?",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\list\\\\js\\\\_id.js",
+    "chunkName": "pages/product/list/js/_id"
+  },
+  {
+    "name": "product-detail-id___en",
+    "path": "/en/product/detail/:id?",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\detail\\\\_id.vue",
+    "chunkName": "pages/product/detail/_id"
+  },
+  {
+    "name": "product-list-id___en",
+    "path": "/en/product/list/:id?",
+    "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\list\\\\_id.vue",
+    "chunkName": "pages/product/list/_id"
+  },
+  {
+    "name": "product-detail-js-id___zh",
     "path": "/product/detail/js/:id?",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\detail\\\\js\\\\_id.js",
     "chunkName": "pages/product/detail/js/_id"
   },
   {
-    "name": "product-list-js-id",
+    "name": "product-list-js-id___zh",
     "path": "/product/list/js/:id?",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\list\\\\js\\\\_id.js",
     "chunkName": "pages/product/list/js/_id"
   },
   {
-    "name": "product-detail-id",
+    "name": "product-detail-id___zh",
     "path": "/product/detail/:id?",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\detail\\\\_id.vue",
     "chunkName": "pages/product/detail/_id"
   },
   {
-    "name": "product-list-id",
+    "name": "product-list-id___zh",
     "path": "/product/list/:id?",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\product\\\\list\\\\_id.vue",
     "chunkName": "pages/product/list/_id"
   },
   {
-    "name": "index",
+    "name": "index___zh",
     "path": "/",
     "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\index.vue",
     "chunkName": "pages/index",
     "children": [
       {
-        "name": "index-js",
+        "name": "index-js___zh",
         "path": "js",
         "component": "D:\\\\www\\\\dsshop\\\\client\\\\nuxt-web\\\\mi\\\\pages\\\\index\\\\js\\\\index.js",
         "chunkName": "pages/index/js/index"
