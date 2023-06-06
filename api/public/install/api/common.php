@@ -8,7 +8,7 @@ function resReturn($data)
 {
     header('Content-Type:application/json');
     header("Access-Control-Allow-Origin: *");
-    if(isset($data['msg'])){
+    if (isset($data['msg'])) {
         $data['msg'] = mb_convert_encoding($data['msg'], 'UTF-8', 'UTF-8');
     }
     echo json_encode($data);
@@ -17,22 +17,22 @@ function resReturn($data)
 
 function getPermission($folder)
 {
-    if(!fileperms($folder)){
+    if (!fileperms($folder)) {
         resReturn([
-            'code'=>1,
-            'msg'=>'目录结构有误'
+            'code' => 1,
+            'msg' => '目录结构有误'
         ]);
     }
     $jurisdiction = substr(sprintf('%o', fileperms($folder)), -3);
-    if($jurisdiction == '777'){
+    if ($jurisdiction == '777') {
         return [
-            'jurisdiction'=>$jurisdiction,
-            'state'=>true,
+            'jurisdiction' => $jurisdiction,
+            'state' => true,
         ];
-    }else {
+    } else {
         return [
-            'jurisdiction'=>$jurisdiction,
-            'state'=>false,
+            'jurisdiction' => $jurisdiction,
+            'state' => false,
         ];
     }
 }
@@ -42,7 +42,8 @@ function getPermission($folder)
  * @param $code
  * @return string|null
  */
-function sellCode($code){
+function sellCode($code)
+{
     return shell_exec("cd ../../../ && $code");
 }
 
@@ -53,14 +54,19 @@ function sellCode($code){
  */
 function alternateDomainName($path, $envArr)
 {
-    $filename = scandir('../../'.$path);
+    $filename = scandir('../../' . $path);
     foreach ($filename as $f) {
         if ($f == "." || $f == "..") {
             continue;
         }
-        $file = file_get_contents('../../'.$path.'/'.$f);
-        $file = str_replace("http://dsshop.test", $envArr['APP_URL'], $file);
-        $file = str_replace("DSSHOP电商商城", $envArr['APP_NAME'], $file);
-        file_put_contents('../../'.$path.'/'.$f, $file);
+        if (is_dir('../../' . $path . '/' . $f)) {
+            alternateDomainName($path . '/' . $f, $envArr);
+        } else {
+            $file = file_get_contents('../../' . $path . '/' . $f);
+            $file = str_replace("http://dsshop.test", $envArr['APP_URL'], $file);
+            $file = str_replace("DSSHOP电商商城", $envArr['APP_NAME'], $file);
+            file_put_contents('../../' . $path . '/' . $f, $file);
+        }
+
     }
 }

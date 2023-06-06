@@ -1,17 +1,17 @@
 <template>
   <div class="box">
-    <el-page-header @back="goBack" content="详情">
+    <el-page-header @back="goBack" :content="$t('notice.details')">
     </el-page-header>
     <div v-loading="loading">
       <el-card shadow="hover" class="card" v-if="notice.data">
         <div class="title">{{ notice.data.title }}</div>
         <template v-if="notice.data.type === 2">
-          <div class="text-money-name">付款金额</div>
+          <div class="text-money-name">{{$t('notice.payment_amount')}}</div>
           <div class="text-money-value">{{notice.data.price/100 | thousands}}</div>
         </template>
         <div class="card-list" v-if="notice.data.list.length > 0" v-for="(item, index) in notice.data.list" :key="index">
           <div class="card-list-title">{{item.keyword}}：</div>
-          <div>{{item.data}}</div>
+          <div class="card-list-data">{{item.data}}</div>
         </div>
         <div class="introduce" v-if="notice.data.remark">
           {{notice.data.remark}}

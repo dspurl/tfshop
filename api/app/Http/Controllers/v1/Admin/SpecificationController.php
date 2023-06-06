@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -71,7 +80,7 @@ class SpecificationController extends Controller
         $Specification->value = $request->value;
         $Specification->sort = $request->sort;
         $Specification->save();
-        return resReturn(1, '成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -102,7 +111,7 @@ class SpecificationController extends Controller
         $Specification->value = $request->value;
         $Specification->sort = $request->sort;
         $Specification->save();
-        return resReturn(1, '更新成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
     }
 
     /**
@@ -115,6 +124,6 @@ class SpecificationController extends Controller
     public function destroy($id)
     {
         Specification::destroy($id);
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

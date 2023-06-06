@@ -1,7 +1,7 @@
 exports.ids = [50];
 exports.modules = {
 
-/***/ 186:
+/***/ 195:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -10,8 +10,18 @@ exports.modules = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return create; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return destroy; });
 /* harmony import */ var _plugins_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+/* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
 /* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(qs__WEBPACK_IMPORTED_MODULE_1__);
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 
 
 function getList(query) {
@@ -44,22 +54,20 @@ function destroy(id) {
 
 /***/ }),
 
-/***/ 220:
+/***/ 231:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_collect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(186);
+/* harmony import */ var _api_collect__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(195);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'user',
-
   head() {
     return {
-      title: '我的收藏-个人中心'
+      title: `${this.$t('header.top.collection')}-${this.$t('header.top.personal_center')}`
     };
   },
-
   data() {
     return {
       loading: true,
@@ -72,11 +80,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-
   mounted() {
     this.getList();
   },
-
   methods: {
     async getList() {
       this.loading = true;
@@ -88,28 +94,27 @@ __webpack_require__.r(__webpack_exports__);
         this.loading = false;
       });
     },
-
     destroy(id) {
-      this.$confirm('是否确认删除？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm', {
+        attribute: this.$t('common.delete')
+      }), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         Object(_api_collect__WEBPACK_IMPORTED_MODULE_0__[/* destroy */ "b"])(id).then(response => {
           this.handleFilter();
           this.$message({
-            message: '删除成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
         }).catch(() => {});
       }).catch(() => {});
     },
-
     handleFilter() {
       this.listQuery.page = 1;
       this.getList();
     }
-
   }
 });
 

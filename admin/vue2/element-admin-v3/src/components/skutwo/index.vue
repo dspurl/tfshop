@@ -38,7 +38,7 @@
   font-weight: 400
 
   .input
-    width: 200px
+    width: 400px
 
   .remove
     top: 12px
@@ -84,65 +84,65 @@
 
 <template lang="pug">
 .container
-  h3 设置产品参数
+  h3 {{ $t('good.sku.title.set_product_parameters') }}
   el-form-item
       .sku_container
         .sku_group.mb10(v-for="(spec, index) in specification" :key="spec.id")
           .spec_title
-            span.label 规格名：
-            el-input.input(placeholder='请输入规格名' v-model.trim="spec.value")
-            span.remove(@click="delSepc(index)") ×
+            span.label {{ $t('good.sku.form.input.label.specification_name') }}：
+              el-input.input(:placeholder="$t('hint.error.please_enter', { attribute: $t('good.sku.form.input.label.specification_name') })" v-model.trim="spec.value")
+              span.remove(@click="delSepc(index)") ×
 
-          .group_container
-            span.label 规格值：
-            el-popover(
-              placement="bottom"
-              width="200"
-              trigger="click"
-              v-for="(option, option_index) in spec.leaf" :key="option_index"
-            )
-              .popover
-                el-input(v-model.trim="option.value" style="width: 110px;")
-                avatar-image.upload(:file="option.file" :imgData="imgData" @getFile="e => getFile(e, index, option_index)" :height="36" :width="36")
-                el-tooltip(effect="dark" content="统一设置该规格图片，最新上传的将替换旧的图片" placement="top-start")
-                  i.el-icon-question
-              .sku_item(slot="reference")
-                span.remove(@click.stop="delOption(index, option_index)") ×
-                .text {{option.value}}
+            .group_container
+              span.label {{ $t('good.sku.form.input.label.specification_value') }}：
+              el-popover(
+                placement="bottom"
+                width="200"
+                trigger="click"
+                v-for="(option, option_index) in spec.leaf" :key="option_index"
+              )
+                .popover
+                  el-input(v-model.trim="option.value" style="width: 110px;")
+                  avatar-image.upload(:file="option.file" :imgData="imgData" @getFile="e => getFile(e, index, option_index)" :height="36" :width="36")
+                  el-tooltip(:content="$t('good.sku.form.tooltip.content.specification_value')" effect="dark" placement="top-start")
+                    i.el-icon-question
+                .sku_item(slot="reference")
+                  span.remove(@click.stop="delOption(index, option_index)") ×
+                  .text {{option.value}}
 
             el-input.input(
               suffix-icon="el-icon-plus"
               v-model="addValues[index]"
-              placeholder="多个产品属性以空格隔开"
+              :placeholder="$t('good.sku.form.input.placeholder.specification_value')"
               @keyup.native.enter='addOption(index)'
               @blur='addOption(index)'
             )
         .spec_title
-          el-button(type='info' :disabled='disabled' @click='addSpec') 添加规格项目
+          el-button(type='info' :disabled='disabled' @click='addSpec') {{ $t('good.sku.form.button.add') }}
   el-form-item(
-    label="统一设置"
+    :label="$t('good.sku.form.input.label.uniform_sets')"
     class="sku-unified-set"
   )
     el-input.input(
-      placeholder="成本价"
+      :placeholder="$t('good.sku.form.input.placeholder.cost_price')"
       v-model="allUnified.cost_price"
       clearable
       @input="e => updateUnifiedInput(e, 'cost_price')"
     )
     el-input.input(
-      placeholder="市场价"
+      :placeholder="$t('good.sku.form.input.placeholder.market_price')"
       v-model="allUnified.market_price"
       clearable
       @input="e => updateUnifiedInput(e, 'market_price')"
     )
     el-input.input(
-      placeholder="销售价"
+      :placeholder="$t('good.sku.form.input.placeholder.price')"
       v-model="allUnified.price"
       clearable
       @input="e => updateUnifiedInput(e, 'price')"
     )
     el-input.input(
-      placeholder="库存"
+      :placeholder="$t('good.sku.form.input.placeholder.inventory')"
       v-model="allUnified.inventory"
       clearable
       @input="e => updateUnifiedInput(e, 'inventory')"

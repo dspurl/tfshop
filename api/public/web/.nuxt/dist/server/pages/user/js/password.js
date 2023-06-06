@@ -1,41 +1,37 @@
 exports.ids = [51];
 exports.modules = {
 
-/***/ 222:
+/***/ 233:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(37);
+/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(44);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'user',
-
   head() {
     return {
-      title: '修改密码-个人中心'
+      title: `${this.$t('user.password')}-${this.$t('header.top.personal_center')}`
     };
   },
-
   data() {
     const validateNowPassword = (rule, value, callback) => {
       if (value === this.ruleForm.nowPassword) {
-        callback(new Error('新密码不能和旧密码相同!'));
+        callback(new Error(this.$t('password.not_identical')));
       } else {
         callback();
       }
     };
-
     const validatePassword = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error(this.$t('find_password.password.reenter')));
       } else if (value !== this.ruleForm.password) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error(this.$t('find_password.password.inconformity')));
       } else {
         callback();
       }
     };
-
     return {
       loading: false,
       ruleForm: {
@@ -46,12 +42,16 @@ __webpack_require__.r(__webpack_exports__);
       rules: {
         nowPassword: [{
           required: true,
-          message: '请输入当前密码',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('password.current_password')
+          }),
           trigger: 'blur'
         }],
         password: [{
           required: true,
-          message: '请输入新密码',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('find_password.new_password')
+          }),
           trigger: 'blur'
         }, {
           validator: validateNowPassword,
@@ -59,7 +59,9 @@ __webpack_require__.r(__webpack_exports__);
         }],
         rPassword: [{
           required: true,
-          message: '请输入确认密码',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('find_password.confirm_password')
+          }),
           trigger: 'blur'
         }, {
           validator: validatePassword,
@@ -68,9 +70,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-
   mounted() {},
-
   methods: {
     submitForm() {
       this.$refs['ruleForm'].validate(valid => {
@@ -80,7 +80,7 @@ __webpack_require__.r(__webpack_exports__);
             this.loading = false;
             this.$refs['ruleForm'].resetFields();
             this.$message({
-              message: '修改成功',
+              message: this.$t('common.success'),
               type: 'success'
             });
           }).catch(() => {
@@ -89,11 +89,9 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-
     resetForm(formName) {
       this.$refs[formName].resetFields();
     }
-
   }
 });
 

@@ -1,22 +1,20 @@
 exports.ids = [44];
 exports.modules = {
 
-/***/ 228:
+/***/ 239:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_goodIndent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(22);
+/* harmony import */ var _api_goodIndent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(27);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'user',
-
   head() {
     return {
-      title: '订单详情-个人中心'
+      title: `${this.$t('money.pay.order_details')}-${this.$t('header.top.personal_center')}`
     };
   },
-
   data() {
     return {
       loading: true,
@@ -30,29 +28,25 @@ __webpack_require__.r(__webpack_exports__);
       code_type: 0
     };
   },
-
   mounted() {
     this.getDetail();
   },
-
   methods: {
     async getDetail() {
       if (!$nuxt.$route.query.id) {
         this.$message({
-          message: '参数有误，请联系管理员',
+          message: this.$t('common.arguments'),
           type: 'error'
         });
         $nuxt.$router.go(-1);
         return false;
       }
-
       await Promise.all([Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* detail */ "e"])($nuxt.$route.query.id)]).then(([indentData]) => {
         this.indent = indentData;
         this.total = 0;
         let specification = null;
         this.indent.goods_list.forEach(item => {
           this.total += item.price * item.number;
-
           if (item.good_sku) {
             this.code_type = item.good_sku.code_type;
             specification = null;
@@ -65,7 +59,6 @@ __webpack_require__.r(__webpack_exports__);
             });
             item.specification = specification.substr(0, specification.length - 1);
           }
-
           if (item.good.type === 2 || item.good.type === 3) {
             this.isType = false;
           }
@@ -76,19 +69,20 @@ __webpack_require__.r(__webpack_exports__);
         this.loading = false;
       });
     },
-
     // 确认收货
     confirmReceipt() {
-      this.$confirm('是否确认收货？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm', {
+        attribute: this.$t('indent.receiving')
+      }), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true;
         Object(_api_goodIndent__WEBPACK_IMPORTED_MODULE_0__[/* receipt */ "j"])(this.indent.id).then(response => {
           this.buttonLoading = false;
           this.$message({
-            message: '操作成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
           this.getDetail();
@@ -97,22 +91,19 @@ __webpack_require__.r(__webpack_exports__);
         });
       }).catch(() => {});
     },
-
     goBack() {
       $nuxt.$router.go(-1);
     },
-
     doCopy(item) {
       this.$copyText(item).then(message => {
         this.$message({
-          message: '复制成功',
+          message: this.$t('indent.copy'),
           type: 'success'
         });
       }).catch(err => {
         console.log('失败');
       });
     },
-
     // 下载文件
     goDownload() {
       this.buttonLoading = true;
@@ -122,7 +113,6 @@ __webpack_require__.r(__webpack_exports__);
         this.buttonLoading = false;
       });
     }
-
   }
 });
 

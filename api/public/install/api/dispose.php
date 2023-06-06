@@ -161,6 +161,8 @@ switch ($_GET['step']) {
         alternateDomainName('mp-weixin/common', $envArr);
         alternateDomainName('platform/js', $envArr);
         alternateDomainName('template/static/js', $envArr);
+        alternateDomainName('web/.nuxt', $envArr);
+        alternateDomainName('docs', $envArr);
         $return = [
             'code' => 1,
             'step' => 'end',

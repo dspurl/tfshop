@@ -3,7 +3,7 @@ export default {
   middleware: 'auth',
   head () {
     return {
-      title: '支付成功' + '-' + process.env.APP_NAME,
+      title: this.$t('money.success') + '-' + process.env.APP_NAME,
     }
   },
   data() {
@@ -12,7 +12,7 @@ export default {
     }
   },
   mounted() {
-    $nuxt.$store.commit('setCartTitle', '支付成功');
+    $nuxt.$store.commit('setCartTitle', this.$t('money.success'));
   },
   methods: {
     go(path){

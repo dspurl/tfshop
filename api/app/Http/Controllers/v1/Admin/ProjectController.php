@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Models\v1\Project;
@@ -59,7 +68,7 @@ class ProjectController extends Controller
             $Resource->img = $Project->cover;
             $Resource->save();
         }, 5);
-        return resReturn(1, '更新成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
     }
 
     /**

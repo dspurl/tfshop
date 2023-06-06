@@ -2,15 +2,15 @@
   <div class="app-container">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="规格组名称">
-          <el-input v-model="listQuery.title" placeholder="规格组名称" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
+        <el-form-item :label="$t('specification_group.filter.form.input.label.title')">
+          <el-input :placeholder="$t('specification_group.filter.form.input.placeholder.title')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleFilter">搜索</el-button>
+          <el-button type="primary" @click="handleFilter">{{ $t('common.search') }}</el-button>
         </el-form-item>
       </el-form>
       <br>
-      <el-button v-permission="$store.jurisdiction.SpecificationGroupCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="$store.jurisdiction.SpecificationGroupCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('common.add') }}</el-button>
     </div>
 
     <el-table
@@ -24,22 +24,22 @@
       style="width: 100%;"
       @sort-change="sortChange"
       @selection-change="handleSelectionChange">
-      <el-table-column label="规格组名称" align="center" >
+      <el-table-column :label="$t('specification_group.table.column.label.name')" align="center" >
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="添加时间" align="center">
+      <el-table-column :label="$t('common.table.add_time')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="120" fixed="right">
+      <el-table-column :label="$t('common.operation')" class-name="small-padding fixed-width" width="120" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip v-permission="$store.jurisdiction.SpecificationGroupEdit" class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.SpecificationGroupEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.SpecificationGroupDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.SpecificationGroupDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -53,14 +53,14 @@
 
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="规格组名称" prop="name">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="200px" style="margin-left:20px;">
+        <el-form-item :label="$t('specification_group.dialog.form.input.label.name')" prop="name">
           <el-input v-model="temp.name" maxlength="30" clearable/>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">确定</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -143,8 +143,8 @@ export default {
       list: null,
       total: 0,
       textMap: {
-        update: '修改',
-        create: '添加'
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       imgData: {
         type: 1,
@@ -165,7 +165,7 @@ export default {
       temp: {},
       rules: {
         name: [
-          { required: true, message: '请输入属性名称', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('specification_group.dialog.form.input.label.name') }), trigger: 'blur' }
         ]
       }
     }
@@ -235,11 +235,11 @@ export default {
       this.multipleSelection = val
     },
     handleDelete(row) { // 删除
-      const title = '是否确认删除该内容?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const title = this.$t('hint.confirm.delete')
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -248,7 +248,7 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: win,
             type: 'success',
             duration: 2000
@@ -268,8 +268,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -290,8 +290,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })

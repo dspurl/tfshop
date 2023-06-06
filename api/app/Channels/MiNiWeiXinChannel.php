@@ -1,9 +1,19 @@
 <?php
-/**
- * 微信小程序模板消息
+/** +----------------------------------------------------------------------
+ * | 微信小程序模板消息
+ * +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
  */
 
 namespace App\Channels;
+
 use App\Models\v1\NotificationLog;
 use Carbon\Carbon;
 use EasyWeChat\Factory;
@@ -14,27 +24,29 @@ class MiNiWeiXinChannel
     private $config;
     private $app;
     private $information;
+
     public function __construct()
     {
         $this->config = config('wechat.mini_program.default');
         $this->app = Factory::miniProgram($this->config);
         $this->information = config('notification.miniweixin');
     }
+
     /**
      * 发送指定的通知.
      *
-     * @param  mixed $notifiable
-     * @param  \Illuminate\Notifications\Notification $notification
+     * @param mixed $notifiable
+     * @param \Illuminate\Notifications\Notification $notification
      * @return void
      */
     public function send($notifiable, Notification $notification)
     {
         $message = $notification->invoice['parameter'];
         //配置了微信小程序、miniweixin存在值、配置过模板ID
-        if($this->config['app_id'] && $notifiable->miniweixin){
-            if($this->information[$message['template']]){
-                $identification=convertUnderline($message['template']);
-                $this->$identification($notifiable,$message);
+        if ($this->config['app_id'] && $notifiable->miniweixin) {
+            if ($this->information[$message['template']]) {
+                $identification = convertUnderline($message['template']);
+                $this->$identification($notifiable, $message);
             }
         }
     }
@@ -47,7 +59,8 @@ class MiNiWeiXinChannel
      * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
      * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    protected function deliveryRelease($notifiable,$message){
+    protected function deliveryRelease($notifiable, $message)
+    {
         $data = [
             'template_id' => $this->information[$message['template']],
             'touser' => $notifiable->miniweixin,
@@ -71,13 +84,13 @@ class MiNiWeiXinChannel
             ],
         ];
         //发送记录
-        $send=$this->app->subscribe_message->send($data);
-        $NotificationLog =new NotificationLog();
+        $send = $this->app->subscribe_message->send($data);
+        $NotificationLog = new NotificationLog();
         $NotificationLog->user_id = $message['user_id'];
         $NotificationLog->type = NotificationLog::NOTIFICATION_LOG_TYPE_MINIWEIXIN;
         $NotificationLog->msg = json_encode($data);
         $NotificationLog->feedback = json_encode($send);
-        $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK: NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
+        $NotificationLog->state = $send['errcode'] == 0 ? NotificationLog::NOTIFICATION_LOG_STATE_OK : NotificationLog::NOTIFICATION_LOG_STATE_ERROR;
         $NotificationLog->save();
     }
     // 插件

@@ -1,7 +1,7 @@
 exports.ids = [22];
 exports.modules = {
 
-/***/ 169:
+/***/ 179:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -9,6 +9,16 @@ exports.modules = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return detail; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return goodCategory; });
 /* harmony import */ var _plugins_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 
 function getList(query) {
   return Object(_plugins_request__WEBPACK_IMPORTED_MODULE_0__[/* default */ "a"])({
@@ -33,13 +43,13 @@ function goodCategory(query) {
 
 /***/ }),
 
-/***/ 241:
+/***/ 210:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_good__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(169);
-/* harmony import */ var _api_banner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(38);
+/* harmony import */ var _api_good__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(179);
+/* harmony import */ var _api_banner__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(46);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -56,7 +66,6 @@ __webpack_require__.r(__webpack_exports__);
       recommendGoodList: []
     };
   },
-
   async asyncData(ctx) {
     try {
       let [goodData, bannerData, categoryData, recommendCategoryData] = await Promise.all([Object(_api_good__WEBPACK_IMPORTED_MODULE_0__[/* getList */ "b"])({
@@ -85,18 +94,15 @@ __webpack_require__.r(__webpack_exports__);
       ctx.$errorHandler(err);
     }
   },
-
   mounted() {
     this.categoryGood();
     this.getBanner();
   },
-
   methods: {
     // 分类切换
     naveCut(index) {
       if (index !== -1) {
         this.naveOn = index;
-
         if (this.categoryList[index].children) {
           //存在子类目
           if (this.categoryList[index].children[0].resources) {
@@ -112,7 +118,6 @@ __webpack_require__.r(__webpack_exports__);
         }
       }
     },
-
     // 获取分类商品
     categoryGood() {
       this.recommendCategoryList.forEach((item, index) => {
@@ -126,13 +131,11 @@ __webpack_require__.r(__webpack_exports__);
         });
       });
     },
-
     // 分类移出
     naveShiftOut() {
       this.naveOn = null;
       this.categoryStyle = 0;
     },
-
     // 首页广告
     getBanner() {
       Object(_api_banner__WEBPACK_IMPORTED_MODULE_1__[/* getList */ "a"])({
@@ -142,13 +145,11 @@ __webpack_require__.r(__webpack_exports__);
         sort: '+sort'
       }).then(response => {
         this.banner = response.data[0];
-
         if (this.banner) {
           this.banner.url = this.banner.url ? this.banner.url.replace('?id=', '/') : '';
         }
       });
     }
-
   }
 });
 

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Models\v1\GoodIndent;
@@ -39,17 +48,17 @@ class StatisticsController extends Controller
             if (array_key_exists('list', $summaryTrend)) {
                 if ($summaryTrend['list']) {
                     $return[] = array(
-                        'country' => '累计访问人数',
+                        'country' => __('statistics.visit.cumulative_number_of_visitors'),
                         'date' => $summaryTrend['list'][0]['ref_date'],
                         'value' => $summaryTrend['list'][0]['visit_total'],
                     );
                     $return[] = array(
-                        'country' => '转发次数',
+                        'country' => __('statistics.visit.number_of_forwarding'),
                         'date' => $summaryTrend['list'][0]['ref_date'],
                         'value' => $summaryTrend['list'][0]['share_pv'],
                     );
                     $return[] = array(
-                        'country' => '转发人数',
+                        'country' => __('statistics.visit.forwarding_number'),
                         'date' => $summaryTrend['list'][0]['ref_date'],
                         'value' => $summaryTrend['list'][0]['share_uv'],
                     );
@@ -73,12 +82,12 @@ class StatisticsController extends Controller
             $summaryTrend = $this->app->data_cube->dailyVisitTrend(date("Ymd", strtotime("-$i day")), date("Ymd", strtotime("-$i day")));
             if ($summaryTrend['list']) {
                 $return[] = array(
-                    'country' => '新增用户留存',
+                    'country' => __('statistics.visit.new_user_retention'),
                     'date' => $summaryTrend['list'][0]['ref_date'],
                     'value' => $summaryTrend['list'][0]['visit_uv_new'],
                 );
                 $return[] = array(
-                    'country' => '活跃用户留存',
+                    'country' => __('statistics.visit.active_user_retention'),
                     'date' => $summaryTrend['list'][0]['ref_date'],
                     'value' => $summaryTrend['list'][0]['visit_uv'],
                 );
@@ -154,44 +163,44 @@ class StatisticsController extends Controller
         $return = [];
         foreach ($GoodIndent as $G) {
             $time = $date ? date('Y-m-d', strtotime($G->created_at)) : date('Y-m-d H:00', strtotime($G->created_at));
-            if (array_key_exists('下单笔数' . $time, $return)) {
-                $return['下单笔数' . $time]['value'] += 1;
+            if (array_key_exists(__('statistics.pay.single_stroke') . $time, $return)) {
+                $return[__('statistics.pay.single_stroke') . $time]['value'] += 1;
             } else {
-                $return['下单笔数' . $time] = array(
-                    'country' => '下单笔数',
+                $return[__('statistics.pay.single_stroke') . $time] = array(
+                    'country' => __('statistics.pay.single_stroke'),
                     'date' => $time,
                     'value' => 1
                 );
             }
             if ($G->pay_time) {  //付款笔数
-                if (array_key_exists('付款笔数' . $time, $return)) {
-                    $return['付款笔数' . $time]['value'] += 1;
-                    $return['付款金额' . $time]['value'] += $G->total;
+                if (array_key_exists(__('statistics.pay.amount_of_payment') . $time, $return)) {
+                    $return[__('statistics.pay.amount_of_payment') . $time]['value'] += 1;
+                    $return[__('statistics.pay.payment_amount') . $time]['value'] += $G->total;
                 } else {
-                    $return['付款笔数' . $time] = array(
-                        'country' => '付款笔数',
+                    $return[__('statistics.pay.amount_of_payment') . $time] = array(
+                        'country' => __('statistics.pay.amount_of_payment'),
                         'date' => $time,
                         'value' => 1
                     );
-                    $return['付款金额' . $time] = array(
-                        'country' => '付款金额',
+                    $return[__('statistics.pay.payment_amount') . $time] = array(
+                        'country' => __('statistics.pay.payment_amount'),
                         'date' => $time,
                         'value' => $G->total
                     );
                 }
             }
             if ($G->refund_time) {  //退款笔数
-                if (array_key_exists('退款笔数' . $time, $return)) {
-                    $return['退款笔数' . $time]['value'] += 1;
-                    $return['退款金额' . $time]['value'] += $G->total;
+                if (array_key_exists(__('statistics.pay.amount_of_refund') . $time, $return)) {
+                    $return[__('statistics.pay.amount_of_refund') . $time]['value'] += 1;
+                    $return[__('statistics.pay.refund_amount') . $time]['value'] += $G->total;
                 } else {
-                    $return['退款笔数' . $time] = array(
-                        'country' => '退款笔数',
+                    $return[__('statistics.pay.amount_of_refund') . $time] = array(
+                        'country' => __('statistics.pay.amount_of_refund'),
                         'date' => $time,
                         'value' => 1
                     );
-                    $return['退款金额' . $time] = array(
-                        'country' => '退款金额',
+                    $return[__('statistics.pay.refund_amount') . $time] = array(
+                        'country' => __('statistics.pay.refund_amount'),
                         'date' => $time,
                         'value' => $G->total
                     );

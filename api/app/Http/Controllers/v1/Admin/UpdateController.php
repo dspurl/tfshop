@@ -1,11 +1,23 @@
 <?php
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
+use App\common\RedisService;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Storage;
 
 /**
@@ -22,18 +34,49 @@ class UpdateController extends Controller
      * @return string
      * @throws \Exception
      */
-    public function detail()
+    public function detail(Request $request)
     {
+        $redis = new RedisService();
+        $name = config('dsshop.marketApplySecret') . '.' . (new Controller())->getTopHost((new Controller())->scheme() . $_SERVER['HTTP_HOST']);
+        $redis->del($name);
+        $redis->del($name . '.result');
         // 需要处理跨版本升级
-        $update = config('dsshop.updateGithub');
         $appVersion = config('dsshop.appVersion');
         try {
             $client = new Client();
-            $respond = $client->get($update);
+            $params = [
+                'domain' => (new Controller())->getTopHost((new Controller())->scheme() . $_SERVER['HTTP_HOST']),
+                'version' => $appVersion,
+            ];
+            $headers = [
+                'apply-secret' => config('dsshop.marketApplySecret'),
+                'application-secret' => config('dsshop.marketApplicationSecret')
+            ];
+            $respond = $client->post(config('dsshop.marketUrl') . '/api/v1/app/market/update', ['form_params' => $params,'headers'=>$headers]);
             $Contents = json_decode($respond->getBody()->getContents(), true);
+            $Contents = $Contents['message'];
+            if(isset($Contents['state'])){
+                if($Contents['state'] == 2){
+                    return resReturn(1, [
+                        'state' => 2,
+                        'version' => $appVersion,
+                        'new_version' => $appVersion,
+                        'body' => $Contents,
+                        'zip' => ''
+                    ]);
+                }else if($Contents['state'] == 3){
+                    return resReturn(1, [
+                        'state' => 3,
+                        'version' => $appVersion,
+                        'new_version' => $appVersion,
+                        'body' => '',
+                        'zip' => ''
+                    ]);
+                }
+            }
             $index = -1;
             $new = [
-                'state' => 0,    //0:无更新 1：有更新 2:无法获取
+                'state' => 0,    //0:无更新 1：有更新 2:未授权
                 'version' => $appVersion,    //当前版本
                 'new_version' => $appVersion,  // 最新版本
                 'body' => '',    // 更新内容
@@ -64,11 +107,11 @@ class UpdateController extends Controller
             return resReturn(1, $new);
         } catch (\Exception $e) {
             return resReturn(1, [
-                'state' => 2,
+                'state' => 3,
                 'version' => $appVersion,
                 'new_version' => $appVersion,
-                'body' => '',
-                'zip' => '',
+                'body' => $e->getMessage(),
+                'zip' => ''
             ]);
         }
     }
@@ -92,17 +135,26 @@ class UpdateController extends Controller
             if ($request->new_version == $appVersion) {
                 return resReturn(1, [
                     'state' => 2, // 1:安装中2:已完成3：失败
-                    'message' => '<div style="color: #F56C6C;">误操作，请联系管理员</div>',
+                    'message' => '<div style="color: #F56C6C;">' . __('update.error') . '</div>',
                     'step' => 1
                 ]);
             }
             try {
                 $client = new Client();
-                $respond = $client->get($request->zip);
+                $params = [
+                    'domain' => (new Controller())->getTopHost((new Controller())->scheme() . $_SERVER['HTTP_HOST']),
+                    'version' => $appVersion,
+                    'zip' => $request->zip,
+                ];
+                $headers = [
+                    'apply-secret' => config('dsshop.marketApplySecret'),
+                    'application-secret' => config('dsshop.marketApplicationSecret')
+                ];
+                $respond = $client->post(config('dsshop.marketUrl') . '/api/v1/app/market/updateDownload', ['form_params' => $params, 'headers' => $headers]);
                 Storage::disk('root')->put('Update/' . $request->new_version . '.zip', $respond->getBody()->getContents());
                 return resReturn(1, [
                     'state' => 1,
-                    'message' => '<div>下载更新包<span style="color: #67C23A;margin-left: 20px;">成功</span></div>',
+                    'message' => '<div>' . __('update.download') . '<span style="color: #67c23a;margin-left: 20px;">' . __('common.succeed') . '</span></div>',
                     'step' => 1
                 ]);
             } catch (\Exception $e) {
@@ -115,13 +167,13 @@ class UpdateController extends Controller
             if (strstr($shell_exec, "Archive")) {
                 return resReturn(1, [
                     'state' => 1,
-                    'message' => '<div>解压更新包<span style="color: #67C23A;margin-left: 20px;">成功</span></div>',
+                    'message' => '<div>' . __('update.unzip') . '<span style="color: #67C23A;margin-left: 20px;">' . __('common.succeed') . '</span></div>',
                     'step' => 2
                 ]);
             } else {
                 return resReturn(1, [
                     'state' => 3,
-                    'message' => '<div style="color: #F56C6C;">更新包压缩包不存在</div>',
+                    'message' => '<div style="color: #F56C6C;">' . __('update.zip_nonentity') . '</div>',
                     'step' => 1
                 ]);
             }
@@ -132,7 +184,7 @@ class UpdateController extends Controller
             } else {
                 return resReturn(1, [
                     'state' => 3,
-                    'message' => '<div style="color: #F56C6C;">更新包目录不存在</div>',
+                    'message' => '<div style="color: #F56C6C;">' . __('update.zip_catalogue_nonentity') . '</div>',
                     'step' => 2
                 ]);
             }
@@ -143,7 +195,7 @@ class UpdateController extends Controller
                 foreach ($updateJson['file'] as $file) {
                     if ($file['behavior'] == 1) {
                         // 添加
-                        $step .= "<div>添加" . $file['file'] . '<span style="color: #67C23A;margin-left: 20px;">成功</span></div>';
+                        $step .= '<div>' . __('common.add') . $file['file'] . '<span style="color: #67C23A;margin-left: 20px;">' . __('common.succeed') . '</span></div>';
                         if (Storage::disk('root')->exists($catalogue[0] . '/Update' . $file['file'])) {
                             // 存在相同文件就删除
                             if (Storage::disk('root')->exists($file['file'])) {
@@ -157,13 +209,13 @@ class UpdateController extends Controller
                         } else {
                             return resReturn(1, [
                                 'state' => 3,
-                                'message' => '<div style="color: #F56C6C;">缺少文件/目录：' . $catalogue[0] . $file['file'] . '</div>',
+                                'message' => '<div style="color: #F56C6C;">' . __('update.catalogue_lack') . '：' . $catalogue[0] . $file['file'] . '</div>',
                                 'step' => 2
                             ]);
                         }
                     } else if ($file['behavior'] == 2) {
                         // 替换将先删除目标文件，再进行拷贝
-                        $step .= "<div>替换" . $file['file'] . '<span style="color: #67C23A;margin-left: 20px;">成功</span></div>';
+                        $step .= '<div>' . __('update.replace') . $file['file'] . '<span style="color: #67C23A;margin-left: 20px;">' . __('common.succeed') . '</span></div>';
                         // 保存目标文件
                         if (Storage::disk('root')->exists($file['file'])) {
                             if (!Storage::disk('root')->exists('/Update/backup/' . $request->new_version . $file['file'])) {
@@ -182,18 +234,24 @@ class UpdateController extends Controller
                         } else {
                             return resReturn(1, [
                                 'state' => 3,
-                                'message' => '<div style="color: #F56C6C;">缺少文件/目录：' . $catalogue[0] . $file['file'] . '</div>',
+                                'message' => '<div style="color: #F56C6C;">' . __('update.catalogue_lack') . '：' . $catalogue[0] . $file['file'] . '</div>',
                                 'step' => 2
                             ]);
                         }
                     } else if ($file['behavior'] == 3) {
                         // 移动将从原文件/目录移动到目标目录/文件
-                        $step .= '<div>' . $file['file'] . "移动到" . $file['to'] . '<span style="color: #67C23A;margin-left: 20px;">成功</span></div>';
+                        $step .= '<div>' . $file['file'] . __('update.set') . $file['to'] . '<span style="color: #67C23A;margin-left: 20px;">' . __('common.succeed') . '</span></div>';
+                        if (Storage::disk('root')->exists($file['file'])) {
+                            Storage::disk('root')->move($file['file'], $file['to']);
+                        }
+                    } else if ($file['behavior'] == 5) {
+                        // 重命名
+                        $step .= '<div>' . $file['file'] . __('update.set') . $file['to'] . '<span style="color: #67C23A;margin-left: 20px;">' . __('common.succeed') . '</span></div>';
                         if (Storage::disk('root')->exists($file['file'])) {
                             Storage::disk('root')->move($file['file'], $file['to']);
                         }
                     } else {
-                        $step .= '<div>删除' . $file['file'] . '<span style="color: #67C23A;margin-left: 20px;">成功</span></div>';
+                        $step .= '<div>' . __('common.delete') . $file['file'] . '<span style="color: #67C23A;margin-left: 20px;">' . __('common.succeed') . '</span></div>';
                         if (Storage::disk('root')->exists($file['file'])) {
                             if (!Storage::disk('root')->exists('/Update/backup/' . $request->new_version . $file['file'])) {
                                 Storage::disk('root')->copy($file['file'], '/Update/backup/' . $request->new_version . $file['file']);
@@ -206,9 +264,10 @@ class UpdateController extends Controller
                             Storage::disk('root')->delete($file['file']);
                         }
                     }
-
                 }
-                $step .= '<div style="color: #67C23A;margin-left: 20px;">成功更新到' . $request->new_version . '</div>';
+                // 执行数据迁移
+                Artisan::call('migrate');
+                $step .= '<div style="color: #67C23A;margin-left: 20px;">' . __('update.to') . $request->new_version . '</div>';
                 // 删除更新包
                 Storage::disk('root')->deleteDirectory("Update/" . $request->new_version);
                 // 修改dsshop的版本号
@@ -223,7 +282,7 @@ class UpdateController extends Controller
             } else {
                 return resReturn(1, [
                     'state' => 3,
-                    'message' => '<div style="color: #F56C6C;">更新包缺少update.json</div>',
+                    'message' => '<div style="color: #F56C6C;">' . __('update.lack') . 'update.json</div>',
                     'step' => 2
                 ]);
             }

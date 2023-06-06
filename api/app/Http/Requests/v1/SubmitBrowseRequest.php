@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -34,7 +43,6 @@ class SubmitBrowseRequest extends Request
         switch ($this->method()) {
             case 'POST':
                 return [
-                    'id' => 'required|integer',
                 ];
             case 'PUT':
             case 'PATCH':
@@ -50,8 +58,6 @@ class SubmitBrowseRequest extends Request
     public function messages()
     {
         return [
-            'id.required' => '商品ID不能为空',
-            'id.integer' => '商品ID格式有误',
         ];
     }
 }

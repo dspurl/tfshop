@@ -3,9 +3,9 @@
 		<view class="cu-list menu" v-if="user.notification">
 			<view class="cu-item">
 				<view class="content padding-tb-sm">
-					<view>邮件通知</view>
+					<view>{{$t('message.email')}}</view>
 					<view class="text-gray text-sm">
-						在邮箱上接收通知等重要消息
+						{{$t('message.email_explain')}}
 					</view>
 				</view>
 				<view class="action">
@@ -15,9 +15,9 @@
 			</view>
 			<view class="cu-item">
 				<view class="content padding-tb-sm">
-					<view>微信通知</view>
+					<view>{{$t('message.wechat')}}</view>
 					<view class="text-gray text-sm">
-						在微信上接收通知等重要消息
+						{{$t('message.wechat_explain')}}
 					</view>
 				</view>
 				<view class="action">
@@ -43,6 +43,9 @@
 		onShow(){
 			this.loginCheck()
 			this.getUser()
+			uni.setNavigationBarTitle({
+				title: this.$t('set.inform')
+			})
 		},
 		methods:{
 			...mapMutations(['loginCheck']),
@@ -57,7 +60,7 @@
 				const type = e.currentTarget.dataset.type
 				if(type === 'email'){
 					if(!this.user.email){
-						this.$api.msg(`请先绑定邮箱`)
+						this.$api.msg(this.$t('message.email.error'))
 						setTimeout(()=>{
 							uni.navigateTo({
 							    url: '/pages/userinfo/email'
@@ -67,7 +70,7 @@
 					}
 				}else if(type === 'wechat'){
 					if(!this.user.wechat){
-						this.$api.msg(`请先关注微信公众号`)
+						this.$api.msg(this.$t('message.wechat.error'))
 						setTimeout(()=>{
 							uni.navigateTo({
 							    url: '/pages/public/subscribe'

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -55,13 +64,13 @@ class Banner extends Model
                 return $this->attributes['type'];
             } else {
                 if ($this->attributes['type'] == static::BANNER_TYPE_INDEX_CAROUSEL) {
-                    return '首页轮播';
+                    return __('banner.type.carousel');
                 } else if ($this->attributes['type'] == static::BANNER_TYPE_INDEX_ADVERTISING) {
-                    return '首页广告';
+                    return __('banner.type.advertising');
                 } else if ($this->attributes['type'] == static::BANNER_TYPE_INDEX_LOGIN) {
-                    return '登录页广告';
+                    return __('banner.type.login');
                 } else if ($this->attributes['type'] == static::BANNER_TYPE_INDEX_LINK) {
-                    return '友情链接';
+                    return __('banner.type.link');
                 }
             }
         }
@@ -78,9 +87,9 @@ class Banner extends Model
                 return null;
             } else {
                 if ($this->attributes['state'] == static::BANNER_STAE_SHOW) {
-                    return '显示';
+                    return __('common.is_show');
                 } else if ($this->attributes['state'] == static::BANNER_STAE_HIDE) {
-                    return '隐藏';
+                    return __('common.is_hide');
                 }
             }
         }

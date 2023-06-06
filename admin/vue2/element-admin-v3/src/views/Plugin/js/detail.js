@@ -562,15 +562,15 @@ export default {
     // 删除表
     deleteDataTable(index) {
       const title = '是否确认删除该表?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.ruleForm.db.splice(index, 1)
         this.$notify({
-          title: this.$t('hint.succeed'),
+          title: this.$t('common.succeed'),
           message: win,
           type: 'success',
           duration: 2000
@@ -580,15 +580,15 @@ export default {
     // 删除观察者
     deleteObserverTable(index) {
       const title = '是否确认删除该观察者?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.ruleForm.observer.splice(index, 1)
         this.$notify({
-          title: this.$t('hint.succeed'),
+          title: this.$t('common.succeed'),
           message: win,
           type: 'success',
           duration: 2000
@@ -598,15 +598,15 @@ export default {
     // 删除关联文件
     deleteRelevanceTable(index) {
       const title = '是否确认删除该关联文件?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.ruleForm.relevance.splice(index, 1)
         this.$notify({
-          title: this.$t('hint.succeed'),
+          title: this.$t('common.succeed'),
           message: win,
           type: 'success',
           duration: 2000
@@ -616,14 +616,14 @@ export default {
     // 删除依赖插件
     deleteRelyOnTable(index) {
       const title = '是否确认删除该依赖插件?'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.ruleForm.relyOn.splice(index, 1)
         this.$notify({
-          title: this.$t('hint.succeed'),
+          title: this.$t('common.succeed'),
           message: '删除成功',
           type: 'success',
           duration: 2000

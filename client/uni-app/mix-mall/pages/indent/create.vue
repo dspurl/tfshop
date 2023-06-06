@@ -14,7 +14,7 @@
 					{{addressData.house}}</text>
 				</view>
 				<view class="cen" v-else>
-					<text class="text-left padding-left">选择地址</text>
+					<text class="text-left padding-left">{{$t('hint.error.select', { attribute: $t('address.address')})}}</text>
 				</view>
 				<text class="yticon icon-you"></text>
 			</view>
@@ -38,38 +38,38 @@
 		<!-- 金额明细 -->
 		<view class="yt-list">
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">商品金额</text>
-				<text class="cell-tip">￥{{total | 1000}}</text>
+				<text class="cell-tit clamp">{{$t('indent.total')}}</text>
+				<text class="cell-tip">{{$t('common.unit')}}{{total | 1000}}</text>
 			</view>
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">运费</text>
+				<text class="cell-tit clamp">{{$t('indent.freight')}}</text>
 				<text class="cell-tip">
 					<block v-if="addressData">
 						<block v-if="carriage > 0">
 							{{carriage | 1000}}
 						</block>
 						<block v-else>
-							免运费
+							{{$t('indent.free_shipping')}}
 						</block>
 					</block>
 					<block v-else>
-						请选择收货地址
+						{{$t('hint.error.selects', { attribute: $t('address.address')})}}
 					</block>
 				</text>
 			</view>
 			<view class="yt-list-cell desc-cell">
-				<text class="cell-tit clamp">备注</text>
-				<input class="desc" type="text" v-model="data.remark" placeholder="请填写备注信息" placeholder-class="placeholder" maxlength="200"/>
+				<text class="cell-tit clamp">{{$t('indent.remark')}}</text>
+				<input class="desc" type="text" v-model="data.remark" :placeholder="$t('hint.error.import',{attribute:$t('indent.remark')})" placeholder-class="placeholder" maxlength="200"/>
 			</view>
 		</view>
 		<!-- 底部 -->
 		<view class="footer">
 			<view class="price-content">
-				<text>实付款</text>
-				<text class="price-tip">￥</text>
+				<text>{{$t('indent.actual_payment')}}</text>
+				<text class="price-tip">{{$t('common.unit')}}</text>
 				<text class="price">{{outPocket | 1000}}</text>
 			</view>
-			<text class="submit" @click="submit">提交订单</text>
+			<text class="submit" @click="submit">{{$t('indent.submit')}}</text>
 		</view>
 	</view>
 </template>
@@ -98,9 +98,14 @@
 				isAddress: false
 			}
 		},
+		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('indent.create')
+			})
+		},
 		onLoad(option){
-      this.loginCheck()
-      this.loadData()
+			this.loginCheck()
+			this.loadData()
 		},
 		methods: {
 			...mapMutations(['loginCheck']),
@@ -138,7 +143,7 @@
 				this.goodList = cartList
 				// 是否需要地址
 				this.isAddress = cartList.some( function( item){
-				  return item.good.type === '普通商品';
+				  return item.good.type === that.$t('good.type.common');
 				})
 				that.data.indentCommodity = cartList
 				that.calcTotal()  //计算总价
@@ -163,7 +168,7 @@
 			},
 			submit(){
 				if(!this.addressData){
-					this.$api.msg('请选择地址')
+					this.$api.msg(this.$t('hint.error.selects', { attribute: this.$t('address.address')}))
 					return false
 				}
 				this.data.address = this.addressData

@@ -49,6 +49,11 @@
 		onLoad(){
 			this.loadData();
 		},
+		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('tab_bar.1')
+			})
+		},
 		methods: {
 			async loadData(){
 				const that = this

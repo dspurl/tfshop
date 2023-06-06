@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -79,12 +88,12 @@ class BrowseController extends Controller
             }, 5);
             RedisLock::unlock($redis, 'browse');
             if ($return == 1) {
-                return resReturn(1, '添加成功');
+                return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
             } else {
-                return resReturn(0, '添加失败', Code::CODE_MISUSE);
+                return resReturn(0, __('hint.succeed.fail', ['attribute' => __('common.add')]), Code::CODE_MISUSE);
             }
         } else {
-            return resReturn(0, '业务繁忙，请稍后再试', Code::CODE_SYSTEM_BUSY);
+            return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
     }
 }

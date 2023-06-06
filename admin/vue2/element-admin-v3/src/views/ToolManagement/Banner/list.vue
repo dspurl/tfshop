@@ -2,20 +2,20 @@
   <div class="app-container">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="轮播名称">
-          <el-input v-model="listQuery.name" placeholder="名称" clearable @keyup.enter.native="handleFilter"/>
+        <el-form-item :label="$t('banner.name')">
+          <el-input v-model="listQuery.name" clearable @keyup.enter.native="handleFilter"/>
         </el-form-item>
-        <el-form-item label="类型">
-          <el-select v-model="listQuery.type" placeholder="类型" clearable>
+        <el-form-item :label="$t('banner.type')">
+          <el-select v-model="listQuery.type" clearable>
             <el-option v-for="(item, index) in type" :key="index" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleFilter">搜索</el-button>
+          <el-button type="primary" @click="handleFilter">{{ $t('common.search') }}</el-button>
         </el-form-item>
       </el-form>
       <br>
-      <el-button v-permission="$store.jurisdiction.BannerCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-button v-permission="$store.jurisdiction.BannerCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('common.add') }}</el-button>
     </div>
 
     <el-table
@@ -33,17 +33,17 @@
         type="selection"
         width="55"
         fixed="left"/>
-      <el-table-column label="编号" sortable="custom" prop="id" fixed="left">
+      <el-table-column :label="$t('good.table.id')" width="100" sortable="custom" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="轮播名称">
+      <el-table-column :label="$t('banner.name')" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="轮播图片" width="200">
+      <el-table-column :label="$t('banner.img')" width="200">
         <template slot-scope="scope">
           <el-image
             v-if="scope.row.resources"
@@ -51,40 +51,40 @@
             :preview-src-list="[ scope.row.resources.img ]"
             style="width: 160px;"
             fit="contain"/>
-          <span v-else>无</span>
+          <span v-else>{{ $t('common.table.nothing') }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="轮播地址">
+      <el-table-column :label="$t('banner.url')" width="250">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="类型" align="center" sortable="custom" prop="type">
+      <el-table-column :label="$t('banner.type')" align="center" sortable="custom" prop="type" width="150">
         <template slot-scope="scope">
           <span>{{ scope.row.type_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="排序" align="center" sortable="custom" prop="sort">
+      <el-table-column :label="$t('common.table.sort')" align="center" sortable="custom" prop="sort" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="状态" align="center" sortable="custom" prop="state">
+      <el-table-column :label="$t('common.table.state')" align="center" sortable="custom" prop="state" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="时间" align="center" sortable="custom" prop="created_at">
+      <el-table-column :label="$t('common.time')" align="center" sortable="custom" prop="created_at" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作" class-name="small-padding fixed-width" width="120" fixed="right">
+      <el-table-column :label="$t('common.operation')" class-name="small-padding fixed-width" width="120" fixed="right">
         <template slot-scope="scope">
-          <el-tooltip v-permission="$store.jurisdiction.BannerEdit" class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.BannerEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.BannerDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.BannerDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -94,24 +94,24 @@
     <!--分页-->
     <div class="pagination-operation">
       <div class="operation">
-        <el-button size="mini" @click="handleCheckAllChange">全选/反选</el-button>
-        <el-button size="mini" type="danger" @click="handleAllDelete()">删除</el-button>
+        <el-button size="mini" @click="handleCheckAllChange">{{ $t('common.check_all') }}/{{ $t('common.inverse') }}</el-button>
+        <el-button size="mini" type="danger" @click="handleAllDelete()">{{ $t('common.delete') }}</el-button>
       </div>
       <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
     </div>
 
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible">
-      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="轮播名称" prop="name">
+      <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="160px" style="margin-left:20px;">
+        <el-form-item :label="$t('banner.name')" prop="name">
           <el-input v-model="temp.name" maxlength="16" clearable/>
         </el-form-item>
-        <el-form-item label="类型" prop="type">
-          <el-select v-model="temp.type" placeholder="请选择类型" clearable style="width:160px;">
+        <el-form-item :label="$t('banner.type')" prop="type">
+          <el-select :placeholder="$t('common.select')" v-model="temp.type" clearable style="width:160px;">
             <el-option v-for="(item, index) in type" :key="index" :label="item.label" :value="item.value"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="图片" prop="img">
+        <el-form-item :label="$t('banner.img')" prop="img">
           <el-upload
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -132,27 +132,27 @@
                 class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon"/>
             </span>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过500kb</div>
+            <div slot="tip" class="el-upload__tip">{{ $t('hint.tip.upload', { rmvb: 'jpg/png/gif', size: '500KB' } ) }}</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="轮播地址" prop="url">
-          <el-input v-model="temp.url" placeholder="为空不设置" clearable/>
+        <el-form-item :label="$t('banner.url')" prop="url">
+          <el-input :placeholder="$t('banner.url.null')" v-model="temp.url" clearable/>
         </el-form-item>
-        <el-form-item label="是否显示" prop="state">
+        <el-form-item :label="$t('common.is_show')" prop="state">
           <el-radio-group v-model="temp.state">
-            <el-radio :label="0">显示</el-radio>
-            <el-radio :label="1">隐藏</el-radio>
+            <el-radio :label="0">{{ $t('common.is_show') }}</el-radio>
+            <el-radio :label="1">{{ $t('common.is_hide') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="排序" prop="sort">
+        <el-form-item :label="$t('common.sort')" prop="sort">
           <el-radio-group v-model="temp.sort">
             <el-input v-model="temp.sort" maxlength="11" clearable style="width:80px;"/>
           </el-radio-group>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">确定</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -235,8 +235,8 @@ export default {
       list: null,
       total: 0,
       textMap: {
-        update: '修改',
-        create: '添加'
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       imgData: {
         type: 1,
@@ -352,11 +352,11 @@ export default {
       this.multipleSelection = val
     },
     handleDelete(row) { // 删除
-      const title = '是否确认删除该内容?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const title = this.$t('hint.confirm.delete')
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -365,7 +365,7 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: win,
             type: 'success',
             duration: 2000
@@ -378,10 +378,10 @@ export default {
     },
     handleAllDelete() { // 批量删除
       const title = '是否确认批量删除内容?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -390,7 +390,7 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: win,
             type: 'success',
             duration: 2000
@@ -410,8 +410,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -432,8 +432,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })
@@ -465,7 +465,7 @@ export default {
           'image/png',
           'image/bmp'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error(this.$t('hint.upload.img.rmvb'))
         return false
       }
       if (!isLt2M) {

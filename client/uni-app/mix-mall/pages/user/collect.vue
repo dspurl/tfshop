@@ -1,7 +1,7 @@
 <template>
 	<view class="container">
 		<!-- 列表 -->
-		<block v-if="cartList.length == 0"><view class="no-data flex justify-center">还没有收藏内容, 请添加~</view></block>
+		<block v-if="cartList.length == 0"><view class="no-data flex justify-center">{{$t('collect.no')}}~</view></block>
 		<view class="cart-list">
 			<block v-for="(item, index) in cartList" :key="index">
 				<view
@@ -44,6 +44,9 @@
 			this.loadData()
 		},
 		onLoad(option){
+			uni.setNavigationBarTitle({
+				title: this.$t('user.collect')
+			})
 			this.loginCheck()
 		},
 		methods: {

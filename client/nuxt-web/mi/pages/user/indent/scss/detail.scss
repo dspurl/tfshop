@@ -6,6 +6,9 @@
   flex-direction: row;
   justify-content: space-between;
   margin-top:20px;
+  .operation{
+    text-align: right;
+  }
 }
 .right{
   .li{
@@ -42,7 +45,7 @@
     line-height: 25px;
     font-size: 12px;
     .name{
-      width: 80px;
+      width: 120px;
       text-align: right;
     }
     .value{

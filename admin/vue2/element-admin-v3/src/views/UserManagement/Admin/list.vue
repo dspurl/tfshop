@@ -5,9 +5,9 @@
         <el-menu-item v-for="(item, index) of authGroupList" :key="index" :index="item.id.toString()">{{ item.introduction }}</el-menu-item>
       </el-menu>
       <br>
-      <el-input :placeholder="$t('user.queryTitle')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
-      <el-button v-permission="$store.jurisdiction.AdminCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">添加</el-button>
+      <el-input :placeholder="`${$t('common.table.id')}/${$t('admin.name')}`" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('common.search') }}</el-button>
+      <el-button v-permission="$store.jurisdiction.AdminCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('common.add') }}</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -18,49 +18,49 @@
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange">
-      <el-table-column :label="$t('usuel.id')" sortable="custom" align="center" width="65" prop="id">
+      <el-table-column :label="$t('common.table.id')" sortable="custom" align="center" width="65" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.name')" align="center">
+      <el-table-column :label="$t('admin.name')" align="center" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="头像" align="center">
+      <el-table-column :label="$t('admin.portrait')" align="center" width="120">
         <template slot-scope="scope">
           <el-avatar :size="45" :src="scope.row.portrait">
             <img src="@/assets/admin/3ea6beec64369c2642b92c6726f1epng.png">
           </el-avatar>
         </template>
       </el-table-column>
-      <el-table-column label="角色" align="center">
+      <el-table-column :label="$t('admin.group')" align="center" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.group }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.email')" align="center">
+      <el-table-column :label="$t('admin.email')" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.email }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.lastLogin')" align="center">
+      <el-table-column :label="$t('admin.last_login_at')" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.last_login_at | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.time')" sortable="custom" prop="time">
+      <el-table-column :label="$t('admin.time')" sortable="custom" prop="time" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at | parseTime('{y}-{m}-{d} {h}:{i}') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width">
+      <el-table-column :label="$t('common.operation')" align="center" class-name="small-padding fixed-width">
         <template slot-scope="scope">
-          <el-tooltip v-permission="$store.jurisdiction.AdminEdit" class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.AdminEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.AdminDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.AdminDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -71,16 +71,16 @@
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :close-on-click-modal="false" :visible.sync="dialogFormVisible">
       <el-form ref="dataForm" :rules="rules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item label="账号" prop="name">
+        <el-form-item :label="$t('admin.name')" prop="name">
           <el-input v-model="temp.name" maxlength="30" clearable/>
         </el-form-item>
-        <el-form-item label="邮箱" prop="email">
+        <el-form-item :label="$t('admin.email')" prop="email">
           <el-input v-model="temp.email" maxlength="255" clearable/>
         </el-form-item>
-        <el-form-item label="手机号" prop="cellphone">
+        <el-form-item :label="$t('admin.cellphone')" prop="cellphone">
           <el-input v-model="temp.cellphone" maxlength="11" clearable/>
         </el-form-item>
-        <el-form-item label="头像" prop="portrait">
+        <el-form-item :label="$t('admin.portrait')" prop="portrait">
           <el-upload
             :show-file-list="false"
             :on-success="handleAvatarSuccess"
@@ -101,17 +101,17 @@
                 class="avatar"/>
               <i v-else class="el-icon-plus avatar-uploader-icon"/>
             </span>
-            <div slot="tip" class="el-upload__tip">只能上传jpg/png/gif文件，且不超过500kb</div>
+            <div slot="tip" class="el-upload__tip">{{ $t('hint.tip.upload', { rmvb: 'jpg/png/gif', size: '500KB' } ) }}</div>
           </el-upload>
         </el-form-item>
-        <el-form-item label="密码" prop="password">
+        <el-form-item :label="$t('admin.password')" prop="password">
           <el-input v-model="temp.password" show-password maxlength="255" clearable/>
-          <div slot="tip" class="el-upload__tip">需要更新密码时才填写</div>
+          <div class="el-upload__tip">{{ $t('admin.password.tip') }}</div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">确定</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?create():edit()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -153,10 +153,10 @@ export default {
   data() {
     var validateMobile = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error(this.$t('hint.enterEmail')))
+        callback(new Error(this.$t('hint.error.please_enter', { attribute: this.$t('admin.email') })))
       } else {
         if (!(/^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/.test(value))) {
-          callback(new Error(this.$t('hint.EmailFormatWrong')))
+          callback(new Error(this.$t('hint.error.wrong_format', { attribute: this.$t('admin.email') })))
         }
         callback()
       }
@@ -180,8 +180,8 @@ export default {
       list: null,
       authGroupList: null,
       textMap: {
-        update: '修改',
-        create: '添加'
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       total: 0,
       listLoading: true,
@@ -200,21 +200,20 @@ export default {
       dialogStatus: '',
       rules: {
         name: [
-          { required: true, message: this.$t('hint.enterUsername'), trigger: 'blur' },
-          { min: 2, max: 16, message: '长度在 2 到 16 个字符', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('admin.name') }), trigger: 'blur' }
         ],
         email: [
-          { required: true, message: this.$t('hint.enterEmail'), trigger: 'blur' },
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('admin.email') }), trigger: 'blur' },
           { validator: validateMobile, trigger: 'blur' }
         ],
         cellphone: [
-          { required: true, message: '手机号不能为空', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('admin.cellphone') }), trigger: 'blur' }
         ],
         portrait: [
-          { required: true, message: '请选择头像', trigger: 'change' }
+          { required: true, message: this.$t('hint.error.please_upload', { attribute: this.$t('admin.portrait') }), trigger: 'change' }
         ],
         password: [
-          { required: true, message: this.$t('hint.enterCode'), trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('admin.password') }), trigger: 'blur' }
         ]
       },
       downloadLoading: false
@@ -238,7 +237,7 @@ export default {
         this.authGroupList = resp.data
         this.authGroupList.unshift({
           id: 0,
-          introduction: '全部'
+          introduction: this.$t('common.all')
         })
       })
     },
@@ -290,8 +289,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -313,8 +312,8 @@ export default {
             this.formLoading = false
             this.$store.dispatch('GetUserInfo').then(res => {}) // 更新管理员信息
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })
@@ -338,18 +337,17 @@ export default {
     },
     // 图片格式大小验证
     beforeAvatarUpload(file) {
-      const isLt2M = file.size / 1024 < 500
+      const isLt2M = file.size / 1024 / 1024 < 2
       if (
         ['image/jpeg',
           'image/gif',
-          'image/png',
-          'image/bmp'
+          'image/png'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error(this.$t('hint.upload.img.rmvb'))
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 500KB!')
+        this.$message.error(this.$t('hint.upload.img.can_not_surpass', { size: '2M' }))
       }
       this.imgProgress = true
       return isLt2M
@@ -361,9 +359,9 @@ export default {
       this.getList()
     },
     handleDelete(row) { // 删除
-      this.$confirm(this.$t('user.deleteAdmin'), this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(this.$t('admin.delete_prompt'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -372,8 +370,8 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
-            message: this.$t('hint.deletedSuccessful'),
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { attribute: this.$t('common.delete') }),
             type: 'success',
             duration: 2000
           })

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Http\Requests\v1\SubmitUserRequest;
@@ -41,9 +50,8 @@ class MemberController extends Controller
             $q->where('id', $request->title)->orWhere('cellphone', $request->title)->orWhere('name', 'like', '%' . $request->title . '%');
         }
         if ($request->timeInterval) {
-            $timeInterval = explode("至", $request->timeInterval);
-            $timeInterval[0] = $timeInterval[0] . ' 00:00:00';
-            $timeInterval[1] = $timeInterval[1] . ' 23:59:59';
+            $timeInterval[0] = $request->timeInterval[0] . ' 00:00:00';
+            $timeInterval[1] = $request->timeInterval[1] . ' 23:59:59';
             $q->where('created_at', '>=', $timeInterval[0]);
             $q->where('created_at', '<=', $timeInterval[1]);
         }
@@ -73,7 +81,7 @@ class MemberController extends Controller
         $User->gender = $request->gender;
         $User->password = bcrypt($request->password);
         $User->save();
-        return resReturn(1, '添加成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
     }
 
     /**
@@ -101,6 +109,6 @@ class MemberController extends Controller
         $User->nickname = $request->nickname;
         $User->gender = $request->gender;
         $User->save();
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.amend')]));
     }
 }

@@ -4,12 +4,12 @@
 		<view v-if="!hasLogin || empty===true" class="empty">
 			<image src="/static/emptyCart.jpg" mode="aspectFit"></image>
 			<view v-if="hasLogin" class="empty-tips">
-				空空如也
-				<navigator class="navigator" v-if="hasLogin" url="../index/index" open-type="switchTab">随便逛逛></navigator>
+				{{$t('cart.empty')}}
+				<navigator class="navigator" v-if="hasLogin" url="../index/index" open-type="switchTab">{{$t('cart.hang_around')}}></navigator>
 			</view>
 			<view v-else class="empty-tips">
-				空空如也
-				<view class="navigator" @click="navToLogin">去登陆></view>
+				{{$t('cart.empty')}}
+				<view class="navigator" @click="navToLogin">{{$t('go_log_in')}}></view>
 			</view>
 		</view>
 		<view v-else>
@@ -48,7 +48,7 @@
 			</view>
 			<view v-if="invalidGood.length>0" class="cu-bar bg-white solid-bottom margin-top">
 				<view class="action">
-					<text class="cuIcon-title text-orange "></text> 失效的商品
+					<text class="cuIcon-title text-orange "></text> {{$t('cart.invalid_commodity')}}
 				</view>
 			</view>
 			<view class="cart-list">
@@ -87,16 +87,16 @@
 						@click="check('all')"
 					></image>
 					<view class="clear-btn" :class="{show: allChecked}" @click="clearCart">
-						清空
+						{{$t('common.empty')}}
 					</view>
 				</view>
 				<view class="total-box">
-					<text class="price">¥{{total}}</text>
+					<text class="price">{{$t('common.unit')}}{{total}}</text>
 					<text class="coupon">
-						不包含配送费
+						{{$t('cart.delivery_is_not_included')}}
 					</text>
 				</view>
-				<button type="primary" class="no-border confirm-btn" @click="createOrder">去结算</button>
+				<button type="primary" class="no-border confirm-btn" @click="createOrder">{{$t('cart.settle')}}</button>
 			</view>
 		</view>
 		<!-- 规格-模态层弹窗 -->
@@ -130,14 +130,18 @@
 				empty: false, //空白页现实  true|false
 				cartList: [],
 				cartOriginalList: [],
-				data: ['苹果', '香蕉', '葡萄', '草莓', '西瓜'],
 				invalidGood: []
 			};
+		},
+		onLoad(){
 		},
 		onShow(){
 			if (this.hasLogin) {
 				this.loadData()
 			}
+			uni.setNavigationBarTitle({
+				title: this.$t('tab_bar.2')
+			})
 		},
 		watch:{
 
@@ -276,7 +280,7 @@
 			//清空
 			clearCart(){
 				uni.showModal({
-					content: '清空购物车？',
+					content: this.$t('cart.empty_cart'),
 					success: (e)=>{
 						if(e.confirm){
 							this.cartList = [];
@@ -331,7 +335,7 @@
 					}
 				})
 				if(goodsData.length <1){
-					this.$api.msg('未选择商品')
+					this.$api.msg(this.$t('cart.unselected'))
 					return false
 				}
 				uni.setStorageSync('dsshopOrderList', goodsData)

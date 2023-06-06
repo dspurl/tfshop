@@ -20,10 +20,13 @@
     padding-bottom: 5px;
     font-size: 14px;
     .card-list-title{
-      width:80px;
+      width:120px;
       text-align: right;
       margin-right:10px;
       color: #999999;
+    }
+    .card-list-data{
+      flex:1;
     }
   }
   .introduce{

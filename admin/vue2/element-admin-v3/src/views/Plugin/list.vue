@@ -21,7 +21,7 @@
             <p>1、插件安装需开发人员操作，安装插件前请备份项目及数据库，安装插件可能导致不可逆操作。</p>
             <p>2、插件安装请确保是开发模式下操作，因涉及文件修改、替换操作，需要人为操作环节。</p>
             <p>3、自己创建和下载的插件可以在本地列表中进行管理。</p>
-            <p>4、本地已安装插件更新步骤：市场更新插件(下载最新插件)->本地升级插件(更新本地插件)。</p>
+            <p>4、本地已安装插件更新步骤：下载最新插件->本地升级插件(更新本地插件)。</p>
             <p>5、插件安装后一闪而过的错误是正常现象，因项目文件发生变化，会重新加载，如刷新后还是报错，请重新运行`npm run dev`</p>
           </div>
           <i slot="reference" class="el-icon-question question"/>
@@ -87,7 +87,7 @@
             <template v-if="listQuery.activeIndex === '1'">
               <template v-if="item.local">
                 <router-link v-permission="$store.jurisdiction.PlugInEdit" :to="{ path: 'PlugInEdit', query: { name: item.abbreviation }}">
-                  <el-tooltip class="item" effect="dark" content="编辑" placement="top-start">
+                  <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
                     <el-button type="primary" icon="el-icon-edit" circle/>
                   </el-tooltip>
                 </router-link>
@@ -97,7 +97,7 @@
                 <el-tooltip v-permission="$store.jurisdiction.PlugInDownload" v-else :loading="butLoading" class="item" effect="dark" content="下载" placement="top-start">
                   <el-button :loading="formLoading" class="button" type="warning" icon="el-icon-download" circle @click="handleDownload(item.abbreviation)"/>
                 </el-tooltip>
-                <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" class="item" effect="dark" content="删除" placement="top-start">
+                <el-tooltip v-permission="$store.jurisdiction.PlugInDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
                   <el-button :loading="formLoading" class="button" type="danger" icon="el-icon-delete" circle @click="handleDelete(item.abbreviation)"/>
                 </el-tooltip>
               </template>
@@ -193,7 +193,7 @@
           label="目标文件"
           prop="to"/>
         <el-table-column
-          label="操作"
+          :label="$t('common.operation')"
           align="right"
           width="100">
           <template v-if="scope.row.state === 0" slot-scope="scope">

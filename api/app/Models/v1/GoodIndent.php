@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use App\common\RedisService;
@@ -83,10 +92,10 @@ class GoodIndent extends Model
             } else {
                 switch ($this->attributes['refund_way']) {
                     case static::GOOD_INDENT_REFUND_WAY_BALANCE:
-                        $return = '退到余额';
+                        $return = __('good_indent.refund_way.balance');
                         break;
                     case static::GOOD_INDENT_REFUND_WAY_BACK:
-                        $return = '原路退还';
+                        $return = __('good_indent.refund_way.back');
                         break;
                 }
             }
@@ -101,7 +110,7 @@ class GoodIndent extends Model
             if (!self::$withoutAppends) {
                 switch ($this->attributes['type']) {
                     case static::GOOD_INDENT_TYPE_COMMON:
-                        $return = '普通订单';
+                        $return = __('good_indent.type.common');
                         break;
                 }
             }
@@ -121,31 +130,31 @@ class GoodIndent extends Model
             if (!self::$withoutAppends) {
                 switch ($this->attributes['state']) {
                     case static::GOOD_INDENT_STATE_PAY:
-                        $return = '待付款';
+                        $return = __('good_indent.state.pay');
                         break;
                     case static::GOOD_INDENT_STATE_DELIVER:
-                        $return = '待发货';
+                        $return = __('good_indent.state.deliver');
                         break;
                     case static::GOOD_INDENT_STATE_TAKE:
-                        $return = '待收货';
+                        $return = __('good_indent.state.take');
                         break;
                     case static::GOOD_INDENT_STATE_FAILURE:
-                        $return = '已失效';
+                        $return = __('good_indent.state.failure');
                         break;
                     case static::GOOD_INDENT_STATE_ACCOMPLISH:
-                        $return = '已完成';
+                        $return = __('good_indent.state.accomplish');
                         break;
                     case static::GOOD_INDENT_STATE_CANCEL:
-                        $return = '已取消';
+                        $return = __('good_indent.state.cancel');
                         break;
                     case static::GOOD_INDENT_STATE_REFUND:
-                        $return = '已退款';
+                        $return = __('good_indent.state.refund');
                         break;
                     case static::GOOD_INDENT_STATE_REFUND_PROCESSING:
-                        $return = '退款处理中';
+                        $return = __('good_indent.state.refund_processing');
                         break;
                     case static::GOOD_INDENT_STATE_REFUND_FAILURE:
-                        $return = '退款失败';
+                        $return = __('good_indent.state.refund_failure');
                         break;
                 }
             }
@@ -299,7 +308,7 @@ class GoodIndent extends Model
     {
         $GoodIndent = GoodIndent::find($id);
         $redis = new RedisService();
-        $redis->setex('goodIndent.pay.type.' . $GoodIndent->id, 5, '微信支付');
+        $redis->setex('goodIndent.pay.type.' . $GoodIndent->id, 5, __('good_indent.state.notify'));
         $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
         $GoodIndent->pay_time = Carbon::now()->toDateTimeString();
         $GoodIndent->save();

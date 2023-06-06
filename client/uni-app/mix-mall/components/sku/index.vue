@@ -18,10 +18,10 @@
 			<image :src="specificationDefaultDisplay.img" @click="previewImage(specificationDefaultDisplay.img)"></image>
 			<view class="right">
 				<template v-if="getLists.price_show && specificationDefaultDisplay.price_show">
-					<text class="price" v-if="specificationDefaultDisplay.price_show.length > 1">¥{{specificationDefaultDisplay.price_show[0]}} - {{specificationDefaultDisplay.price_show[1]}}</text>
-					<text class="price" v-else-if="specificationDefaultDisplay.price_show.length === 1">¥{{specificationDefaultDisplay.price_show[0]}}</text>
+					<text class="price" v-if="specificationDefaultDisplay.price_show.length > 1">{{$t('common.unit')}}{{specificationDefaultDisplay.price_show[0]}} - {{specificationDefaultDisplay.price_show[1]}}</text>
+					<text class="price" v-else-if="specificationDefaultDisplay.price_show.length === 1">{{$t('common.unit')}}{{specificationDefaultDisplay.price_show[0]}}</text>
 				</template>
-				<text class="stock">库存：{{specificationDefaultDisplay.inventory_show}}件</text>
+				<text class="stock">{{$t('good.table.inventory')}}：{{specificationDefaultDisplay.inventory_show}}{{$t('good_indent.piece')}}</text>
 				<view class="selected">
 					<text class="selected-text" >{{ specificationDefaultDisplay.selected }}</text>
 				</view>
@@ -43,7 +43,7 @@
 				</view>
 			</view>
 			<view class="attr-list">
-				<text class="item-left">购买数量</text>
+				<text class="item-left">{{$t('good.quantity')}}</text>
 				<view class="item-right">
 					<uni-number-box
 						class="step"
@@ -57,7 +57,7 @@
 				</view>
 			</view>
 		</scroll-view>
-		<button class="btn" @click="cart">完成</button>
+		<button class="btn" @click="cart">{{$t('common.accomplish')}}</button>
 	</view>
 </template>
 
@@ -180,9 +180,9 @@ export default{
 					img: this.getLists.resources_many[0].img,
 					price_show: this.getLists.price_show,
 					inventory_show: this.getLists.inventory_show,
-					selected: '选择 ' + this.noSelectedName
+					selected: this.$t('common.select') + ' ' + this.noSelectedName
 				}
-				this.$emit('purchasePattern','选择 ' + this.noSelectedName)
+				this.$emit('purchasePattern',this.$t('common.select') + ' ' + this.noSelectedName)
 			}else{
 				this.specificationDefaultDisplay = {
 					img: this.getLists.resources_many[0].img,
@@ -195,7 +195,7 @@ export default{
 			if (typeof(this.specification[0].leaf[0]) != 'undefined'){
 				for (var i=0;i<this.specification.length;i++){
 					this.selectSpec(i, 0,this.specification[i].leaf[0])
-				}								
+				}
 			}
 		},
 		//初始化选中项
@@ -233,7 +233,7 @@ export default{
 						}
 					})
 				})
-				
+
 				this.productSkus = productSkus
 				// 获取可选集成
 				productSkus.forEach((item,ind)=>{
@@ -249,7 +249,7 @@ export default{
 				img: newVal.img,
 				price_show: [newVal.good_sku.price],
 				inventory_show: newVal.good_sku.inventory,
-				selected: '已选 ' + newVal.specification
+				selected: this.$t('common.selected') + ' ' + newVal.specification
 			}
 			// 处理不可选项
 			let selectedSkus =JSON.parse(JSON.stringify(this.selectedSku))
@@ -270,7 +270,7 @@ export default{
 				assemblyCache.sort(function(value1, value2) {
 					return parseInt(value1.replace("sku","")) - parseInt(value2.replace("sku",""));
 				})
-				
+
 				// assembly.push(assemblyCache.join("_"))
 				// 判断选择项是否在可选集合内
 				if(!this.SKUResult[assemblyCache.join("_")]){
@@ -301,7 +301,7 @@ export default{
 				if(this.specSelectedIndex[index] !== null){	//不等于null的时候把同个规格的其它参数设为未选中
 					this.$set(specification[index]['leaf'][this.specSelectedIndex[index]], 'selected',false)
 				}
-				
+
 				this.$set(specification[index]['leaf'][childIndex], 'selected', specification[index]['leaf'][childIndex]['selected'] ? false : true)
 				this.specSelectedIndex[index]=childIndex
 				// this.noSelectedName
@@ -311,23 +311,23 @@ export default{
 						this.noSelectedName.splice(indexs,1)
 					}
 				})
-				
+
 			}
-			
+
 			if(this.noSelectedName.length > 0){
 				this.specificationDefaultDisplay = {
 					img: this.getLists.resources_many[0].img,
 					price_show: this.getLists.price_show,
 					inventory_show: this.getLists.inventory_show,
-					selected: '选择 ' + this.noSelectedName
+					selected: this.$t('common.select') + ' ' + this.noSelectedName
 				}
 				if(!this.update){
-					this.$emit('purchasePattern','选择 ' + this.noSelectedName)
+					this.$emit('purchasePattern',this.$t('common.select') + ' ' + this.noSelectedName)
 				}
-				
+
 			}
 			//保存最新选择的位置
-			
+
 			//存储已选择
 			/**
 			 * 修复选择规格存储错误
@@ -340,23 +340,23 @@ export default{
 			let checkedBrother = []	//兄弟列表
 			let selectedSkus =JSON.parse(JSON.stringify(this.selectedSku))
 			this.specSelectedIndex.forEach((item,index)=>{
-				
+
 				if(item !== null){
 					this.specSelected.push(specification[index]['leaf'][item])
 					ids += specification[index]['id'] + '-' + specification[index]['leaf'][item]['id'] + '_'
 					checkedId.push(specification[index]['leaf'][item]['id'])
 					selectedSkus.splice(selectedSkus.indexOf(specification[index]['leaf'][item]['id']),1)
 					checkedBrother.push(index)
-					
+
 					chooseAll = true
 				}else {
 					chooseAll = false
 				}
 			})
-			
+
 			//判断属性是否可选
 			let assemblyCache = []	//组合临时存放
-			
+
 			// 去除选中后的可选项
 			selectedSkus.forEach(item=>{	//选把未选中的和选中的组合，如果是选中兄弟节点，把选中的值移除
 				assemblyCache = JSON.parse(JSON.stringify(checkedId))
@@ -380,8 +380,8 @@ export default{
 					specification[this.selectedSkuIndex[item].index].leaf[this.selectedSkuIndex[item].leaf].disabled = false
 				}
 			})
-			
-			
+
+
 			// console.log(ids.substr(0, ids.length - 1))
 			// 选项已选择
 			if(chooseAll === true){
@@ -398,11 +398,11 @@ export default{
 							img: this.productSkus[i].resources ? this.productSkus[i].resources.img : this.getLists.resources_many[0].img,
 							price_show: [this.productSkus[i].price],
 							inventory_show: this.productSkus[i].inventory,
-							selected: '已选 ' + selectedName.join(";"),
+							selected: this.$t('common.selected') + ' ' + selectedName.join(";"),
 							cost_price: this.productSkus[i].cost_price
 						}
 						if(!this.update){
-							this.$emit('purchasePattern','已选 ' + selectedName.join(";"))
+							this.$emit('purchasePattern',this.$t('common.selected') + ' ' + selectedName.join(";"))
 						}
 						this.cartGood.price = this.productSkus[i].price
 						this.shoppingAttributes = this.productSkus[i]
@@ -418,7 +418,7 @@ export default{
 		//加入购物车
 		cart(){
 			if (!this.hasLogin){
-				this.$api.msg('请先登录')
+				this.$api.msg(this.$t('please_login_first'))
 				setTimeout(function () {
 					uni.navigateTo({
 						url: `/pages/public/login`
@@ -432,13 +432,13 @@ export default{
 				if (!tmp.test(this.cartGood.price)) {
 					uni.showToast({
 						icon: 'none',
-					    title: '输入的金额有误',
+					    title: this.$t('sku.amount_error'),
 					    duration: 2000
 					})
 					return false
 				}
 				this.$emit('toggleSpec')
-				
+
 				if(this.order){	//订单更新，直接返回更新后的数据
 					// 非SKU商品不允许订单下修改，故不做处理
 					if(this.getLists.good_sku.length>0){
@@ -459,7 +459,7 @@ export default{
 						}
 						this.$emit('setOrder',cart)
 					}
-					
+
 				}else{
 					// uni.removeStorageSync('cartList')
 					let cartList =  uni.getStorageSync('dsshopCartList') || []
@@ -488,7 +488,7 @@ export default{
 							}else{
 								cartMap.get(this.shoppingAttributes.id).number+= this.cartGood.number
 							}
-							
+
 							//如果购物车商品购买数大于当前库存，将结果改成库存数量
 							if(cartMap.get(this.shoppingAttributes.id).number > this.specificationDefaultDisplay.inventory_show){
 								cartMap.get(this.shoppingAttributes.id).number = this.specificationDefaultDisplay.inventory_show
@@ -522,7 +522,7 @@ export default{
 							}else{
 								cartList['good_' + this.getLists.id].number+= this.cartGood.number
 							}
-							
+
 							//如果购物车商品购买数大于当前库存，将结果改成库存数量
 							if(cartList['good_' + this.getLists.id].number > this.getLists.inventory_show){
 								cartList['good_' + this.getLists.id].number = this.getLists.inventory_show
@@ -542,7 +542,7 @@ export default{
 								img: img
 							}
 						}
-						
+
 					}
 					// for(var key in cartList){
 					//     if(cartList[key] ===null){
@@ -559,8 +559,8 @@ export default{
 						})
 						uni.setStorageSync('dsshopCartList', [...cartMap.values()])
 					}
-					
-					
+
+
 				}
 				this.initList()
 				if(this.update){ //更新
@@ -571,16 +571,16 @@ export default{
 						})
 					}else{
 						uni.showToast({
-						    title: '成功加入购物车',
+						    title: this.$t('sku.cart_success'),
 						    duration: 2000
 						})
 					}
-					
+
 				}
 			} else{
 				uni.showToast({
 					icon: 'none',
-				    title: '请选择规格',
+				    title: this.$t('hint.error.selects', {attribute: this.$t('sku.specification')}),
 				    duration: 2000
 				})
 			}

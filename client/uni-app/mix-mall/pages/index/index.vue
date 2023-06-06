@@ -6,34 +6,34 @@
 			<view class="triangle-top"></view>
 			<view @click="popupBoot()" class="bg-black padding-sm margin-top flex">
 				<view><span @click.stop="setGuidanceMy" class="icon cuIcon-close text-gray"></span></view>
-				<view class="flex-twice text-center">添加到我的小程序，<span class="text-bold">红包、优惠券不错过</span></view>
+				<view class="flex-twice text-center">{{$t('index.guidance.add')}}<span class="text-bold">{{$t('index.guidance.info')}}</span></view>
 				<view><span class="icon cuIcon-right text-gray"></span></view>
 			</view>
 		</view>
 		<view class="cu-modal" :class="modalName=='guidanceMy'?'show':''">
 			<view class="guidance-modal">
 				<view class="triangle-top"></view>
-				<view class="title bg-red text-xl padding">点<image style="height: 60upx;position: relative;top:0;margin: 0 auto;" mode="heightFix" src="../../static/guidance-white.png"></image>添加小程序</view>
+				<view class="title bg-red text-xl padding">{{$t('index.guidance.dot')}}<image style="height: 60upx;position: relative;top:0;margin: 0 auto;" mode="heightFix" src="../../static/guidance-white.png"></image>{{$t('index.guidance.add_mini')}}</view>
 				<view class="list">
 					<view class="padding text-left min-title">
 						<span class="text-red">1、</span>
-						点右上
+						{{$t('index.guidance.right')}}
 						<image style="height: 60upx;position: relative;top:0;" mode="heightFix" src="../../static/guidance.png"></image>
-						添加到“我的小程序”
+						{{$t('index.guidance.add_my_mini')}}
 					</view>
 					<view>
 						<image src="../../static/guidance-1.png" style="height: 100upx;" mode="aspectFit"></image>
 					</view>
 					<view class="padding text-left min-title">
 						<span class="text-red">2、</span>
-						回到微信首页，向下拉动
+						{{$t('index.guidance.back')}}
 					</view>
 					<view>
 						<image src="../../static/guidance-2.png" style="height: 140upx;" mode="aspectFit"></image>
 					</view>
 					<view class="padding text-left min-title">
 						<span class="text-red">3、</span>
-						从“我的小程序”中，进入
+						{{$t('index.guidance.enter_into')}}
 					</view>
 					<view>
 						<image src="../../static/guidance-3.png" style="height: 140upx;" mode="aspectFit"></image>
@@ -72,7 +72,6 @@
 				<text>{{item.name}}</text>
 			</view>
 		</view>
-		
 		<view class="ad-1" v-if="adData.resources">
 			<image :src="adData.resources.img" mode="scaleToFill" lazy-load  @click="navTo(adData.url)"></image>
 		</view>
@@ -80,7 +79,7 @@
 		<view class="f-header m-t" v-if="goodsList.length">
 			<image src="/static/temp/h1.png"></image>
 			<view class="tit-box">
-				<text class="tit">为你推荐</text>
+				<text class="tit">{{$t('index.guidance.recommend')}}</text>
 				<text class="tit2">Recommend To You</text>
 			</view>
 		</view>

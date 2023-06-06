@@ -15,7 +15,7 @@
                                 <td class="content-cell" style="box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; max-width: 100vw; padding: 32px;">
                                     <h1 style=" box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; position: relative; color: #3d4852; font-size: 18px; font-weight: bold; margin-top: 0; text-align: left;">{{$title}}</h1>
                                     @if ($price)
-                                        <p style="color: #999;text-align:center;">付款金额</p>
+                                        <p style="color: #999;text-align:center;">{{__('statistics.pay.payment_amount')}}</p>
                                         <p style="text-align:center; ">¥<span style="font-size: 36px;">{{$price}}</span></p>
                                     @endif
                                     @if ($image)

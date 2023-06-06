@@ -5,7 +5,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '个人中心',
+      title: this.$t('header.top.personal_center'),
     }
   },
   async asyncData (ctx) {

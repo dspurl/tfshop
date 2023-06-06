@@ -1,7 +1,7 @@
 <template>
   <div class="dashboard-editor-container">
     <div v-if="is_update" class="tip" style="background-color: #fdf6ec;border-left: 5px solid #e6a23c;">
-      <p>检测到新版本，<el-link :underline="false" type="primary" @click="goPush('/maintain/updateDetail')">去更新</el-link> </p>
+      <p>{{ $t('dashboard.admin.index.update.new_version_detected') }}，<el-link :underline="false" type="primary" @click="goPush('/maintain/updateDetail')">{{ $t('dashboard.admin.index.update.update_immediately') }}</el-link> </p>
     </div>
     <el-row :gutter="40" class="panel-group">
       <el-col :xs="12" :sm="12" :lg="6" class="card-panel-col">
@@ -10,7 +10,7 @@
             <svg-icon icon-class="visitor" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">当日用户数</div>
+            <div class="card-panel-text">{{ $t('dashboard.admin.index.daily_number_user') }}</div>
             <count-to :start-val="0" :end-val="options.user" :duration="3000" class="card-panel-num"/>
           </div>
         </div>
@@ -21,7 +21,7 @@
             <svg-icon icon-class="Indent" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">当日订单数</div>
+            <div class="card-panel-text">{{ $t('dashboard.admin.index.day_order_number') }}</div>
             <count-to :start-val="0" :end-val="options.indent" :duration="3000" class="card-panel-num"/>
           </div>
         </div>
@@ -32,7 +32,7 @@
             <svg-icon icon-class="money" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">当日总收入</div>
+            <div class="card-panel-text">{{ $t('dashboard.admin.index.gross_revenue_today') }}</div>
             <count-to :start-val="0" :end-val="options.income/100" :duration="3000" class="card-panel-num"/>
           </div>
         </div>
@@ -43,7 +43,7 @@
             <svg-icon icon-class="expenditure" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">当日总支出</div>
+            <div class="card-panel-text">{{ $t('dashboard.admin.index.total_expenditure_today') }}</div>
             <count-to :start-val="0" :end-val="options.expend/100" :duration="3000" class="card-panel-num"/>
           </div>
         </div>
@@ -54,7 +54,7 @@
             <svg-icon icon-class="shipments" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">待发货数量</div>
+            <div class="card-panel-text">{{ $t('dashboard.admin.index.wait_delivery_amount') }}</div>
             <count-to :start-val="0" :end-val="options.send" :duration="3000" class="card-panel-num"/>
           </div>
         </div>
@@ -65,7 +65,7 @@
             <svg-icon icon-class="goods" class-name="card-panel-icon" />
           </div>
           <div class="card-panel-description">
-            <div class="card-panel-text">库存不足商品数量</div>
+            <div class="card-panel-text">{{ $t('dashboard.admin.index.understock') }}</div>
             <div class="card-panel-num">{{ options.inventoryLess }}</div>
           </div>
         </div>
@@ -74,14 +74,14 @@
     <el-row>
       <el-col :span="24" style="padding-bottom: 20px;">
         <el-card shadow="hover">
-          <broken-lin-more v-loading="analyze_loading" :title="name" :char-data="pandectData" :id="'c1'"/>
+          <broken-lin-more v-loading="analyze_loading" :title="$t('dashboard.admin.index.broken_lin_more.title.daily_statistics')" :char-data="pandectData" :id="'c1'"/>
         </el-card>
       </el-col>
     </el-row>
     <el-row :gutter="12">
       <el-col :span="8">
         <el-card id="inventory" shadow="hover">
-          <h3>低库存</h3>
+          <h3>{{ $t('dashboard.admin.index.low_inventory') }}</h3>
           <div v-for="(item, index) in options.inventoryList" :key="index" class="ll">
             <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id:item.id }}" :title="item.name" class="inventory_link">
               {{ item.name }} - {{ item.inventory }}
@@ -91,7 +91,7 @@
       </el-col>
       <el-col :span="8">
         <el-card shadow="hover">
-          <h3>商品访问榜</h3>
+          <h3>{{ $t('dashboard.admin.index.merchandise_visit_list') }}</h3>
           <div v-for="(item) in options.accessList" :key="item.id" class="ll">
             <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id: item.id }}" :title="item.name">
               {{ item.name }}
@@ -101,7 +101,7 @@
       </el-col>
       <el-col :span="8">
         <el-card shadow="hover">
-          <h3>商品收藏榜</h3>
+          <h3>{{ $t('dashboard.admin.index.commodity_collection_list') }}</h3>
           <div v-for="(item) in options.collectList" :key="item.id" class="ll">
             <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id: item.id }}" :title="item.name">
               {{ item.name }}
@@ -111,7 +111,7 @@
       </el-col>
       <el-col :span="8">
         <el-card shadow="hover">
-          <h3>商品销量榜</h3>
+          <h3>{{ $t('dashboard.admin.index.merchandise_sales_list') }}</h3>
           <div v-for="(item) in options.salesList" :key="item.id" class="ll">
             <router-link :to="{ path: '/commodityManagement/good/GoodEdit', query: { id: item.id }}" :title="item.name">
               {{ item.name }}
@@ -124,14 +124,12 @@
 </template>
 
 <script>
-import PanelGroup from './components/PanelGroup'
 import BrokenLinMore from '@/components/G2/G2Plot/BrokenLinMore.vue'
 import CountTo from 'vue-count-to'
 import { indexList } from '@/api/index'
 export default {
   name: 'DashboardAdmin',
   components: {
-    PanelGroup,
     BrokenLinMore,
     CountTo
   },
@@ -140,7 +138,6 @@ export default {
       listLoading: false,
       options: [],
       analyze_loading: false,
-      name: '当日统计',
       pandectData: [],
       is_update: false
     }
@@ -241,7 +238,7 @@ export default {
     .card-panel-description {
       float: right;
       font-weight: bold;
-      margin: 26px;
+      margin: 15px;
       margin-left: 0px;
       .card-panel-text {
         line-height: 18px;

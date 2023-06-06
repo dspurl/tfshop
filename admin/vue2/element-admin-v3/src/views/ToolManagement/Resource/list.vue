@@ -122,18 +122,18 @@ export default {
       })
     },
     handleDelete(row) { // 删除
-      const title = '请确保资源无效后再删除！'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const title = this.$t('resource.delete_prompt')
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         destroy(row.id).then(() => {
           this.getList()
           this.dialogFormVisible = false
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: win,
             type: 'success',
             duration: 2000

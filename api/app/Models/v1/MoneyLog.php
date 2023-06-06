@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -34,10 +43,10 @@ class MoneyLog extends Model
             $name = '';
             switch ($this->attributes['type']) {
                 case static::MONEY_LOG_TYPE_INCOME:
-                    $name = '收入';
+                    $name = __('money_log.type.income');
                     break;
                 case static::MONEY_LOG_TYPE_EXPEND:
-                    $name = '支出';
+                    $name = __('money_log.type.expend');
                     break;
             }
             return $name;

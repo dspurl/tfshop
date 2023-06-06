@@ -1,3 +1,13 @@
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 import configURL from './config.js'
 /**
  * @returns {string}
@@ -59,7 +69,7 @@ export function authMsg(tmplIds) {
             break;
           case 'ban':
             uni.showToast({
-              title: '订阅失败：被后台封禁',
+              title: this.$t('utils.subscription.error'),
               icon: 'none',
               duration: 2000
             })
@@ -70,7 +80,7 @@ export function authMsg(tmplIds) {
       },
       fail(res) {
         uni.showToast({
-          title: '错误码：' + res.errCode + ' 请联系管理员',
+          title: this.$t('utils.subscription.error_code', { code: res.errCode }),
           icon: 'none',
           duration: 2000
         })
@@ -115,13 +125,13 @@ export function getLogin() {
 					},
 					fail: res => {
 						uni.showToast({
-							title: '服务器无响应',
+							title: this.$t('request.no_response'),
 							duration: 2000
 						});
 					}
 				});
 			} else {
-				console.log('无响应');
+				console.log(this.$t('request.no_response'));
 			}
 		}
 	});

@@ -26,7 +26,7 @@ export default {
         goodList: goodData.data,
         total: goodData.total,
         listQuery: listQuery,
-        title: query.title ? query.title : '全部商品'
+        title: query.title ? query.title : this.$t('product.all')
       }
     } catch(err) {
       ctx.$errorHandler(err)
@@ -34,7 +34,7 @@ export default {
   },
   head () {
     return {
-      title: this.title + (this.listQuery.pid ? '-商品分类-': '-搜索结果-') + process.env.APP_NAME
+      title: this.title + (this.listQuery.pid ? `-${this.$t('product.classify')}-`: `-${this.$t('product.search_result')}-`) + process.env.APP_NAME
     }
   },
   methods: {

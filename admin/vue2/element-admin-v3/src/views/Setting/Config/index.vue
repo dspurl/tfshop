@@ -12,7 +12,7 @@
             :key="index2"
             :label="item2.name"
             :rules="item2.required ? [
-              { required: true, message: `请输入${item2.name}`, trigger: ['blur', 'change'] },
+              { required: true, message: $t('hint.error.please_enter', { attribute: item2.name }), trigger: ['blur', 'change'] },
             ] : []"
           >
             <template v-if="item2.children">
@@ -22,7 +22,7 @@
                 :key="index3"
                 :label="item3.name"
                 :rules="item3.required ? [
-                  { required: true, message: `请输入${item3.name}`, trigger: ['blur', 'change'] },
+                  { required: true, message: $t('hint.error.please_enter', { attribute: item3.name }), trigger: ['blur', 'change'] },
                 ] : []"
                 style="padding-bottom: 20px;"
               >
@@ -44,11 +44,11 @@
                         step: '00:01',
                         end: '23:59'
                       }"
-                      placeholder="选择时间"/>
+                      :placeholder="$t('hint.error.select', { specification: $t('common.time') })"/>
                     <el-select
                       v-else-if="item3.input_type === 'select'"
-                      v-model="item3.value"
-                      placeholder="请选择">
+                      :placeholder="$t('common.select')"
+                      v-model="item3.value">
                       <el-option
                         v-for="(optionItem, optionIndex) in item3.input_option"
                         :key="optionIndex"
@@ -58,7 +58,7 @@
                     <div class="remark">{{ item3.remark }}</div>
                   </el-col>
                   <el-col :span="2">
-                    <el-tag>{{ item3.keys }}</el-tag>
+                    <el-tag v-if="item3.keys">{{ item3.keys }}</el-tag>
                   </el-col>
                 </el-row>
               </el-form-item>
@@ -81,11 +81,11 @@
                     step: '00:01',
                     end: '23:59'
                   }"
-                  placeholder="选择时间"/>
+                  :placeholder="$t('hint.error.select', { specification: $t('common.time') })"/>
                 <el-select
                   v-else-if="item2.input_type === 'select'"
-                  v-model="item2.value"
-                  placeholder="请选择">
+                  :placeholder="$t('common.select')"
+                  v-model="item2.value">
                   <el-option
                     v-for="(optionItem, optionIndex) in item2.input_option"
                     :key="optionIndex"
@@ -95,12 +95,12 @@
                 <div class="remark">{{ item2.remark }}</div>
               </el-col>
               <el-col :span="2">
-                <el-tag>{{ item2.keys }}</el-tag>
+                <el-tag v-if="item2.keys">{{ item2.keys }}</el-tag>
               </el-col>
             </el-row>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm(`dataForm${index}`, item)">保存</el-button>
+            <el-button type="primary" @click="submitForm(`dataForm${index}`, item)">{{ $t('common.save') }}</el-button>
           </el-form-item>
         </el-form>
       </el-tab-pane>
@@ -139,7 +139,6 @@ export default {
       })
     },
     submitForm(formName, form) { // 更新
-      console.log('值', this.$refs[formName])
       this.formLoading = true
       this.$refs[formName][0].validate((valid) => {
         if (valid) {
@@ -148,8 +147,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })

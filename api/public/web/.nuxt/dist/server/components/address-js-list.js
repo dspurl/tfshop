@@ -1,7 +1,7 @@
 exports.ids = [1];
 exports.modules = {
 
-/***/ 173:
+/***/ 182:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12,8 +12,18 @@ exports.modules = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "e", function() { return freight; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return defaultSet; });
 /* harmony import */ var _plugins_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+/* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
 /* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(qs__WEBPACK_IMPORTED_MODULE_1__);
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 
 
 function getList(query) {
@@ -64,12 +74,12 @@ function defaultSet(data) {
 
 /***/ }),
 
-/***/ 174:
+/***/ 183:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_shipping__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(173);
+/* harmony import */ var _api_shipping__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(182);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AddressList',
@@ -79,29 +89,29 @@ __webpack_require__.r(__webpack_exports__);
       default: false
     }
   },
-
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error(this.$t('hint.error.import', {
+          attribute: this.$t('find_password.cellphone')
+        })));
       } else {
         const myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
-
         if (!myreg.test(value)) {
-          callback(new Error('手机号格式有误'));
+          callback(new Error(this.$t('hint.error.wrong_format', {
+            attribute: this.$t('find_password.cellphone')
+          })));
         }
-
         callback();
       }
     };
-
     return {
       src: 'https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=' + "BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC" + '&referer=myapp',
       // https://lbs.qq.com
       restaurants: [],
       buttonLoading: false,
       loading: false,
-      dialogTitle: '添加收货地址',
+      dialogTitle: this.$t('address.add'),
       centerDialogVisible: false,
       list: [],
       ruleForm: {
@@ -116,12 +126,16 @@ __webpack_require__.r(__webpack_exports__);
       rules: {
         name: [{
           required: true,
-          message: '请输入姓名',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('address.name')
+          }),
           trigger: 'blur'
         }],
         cellphone: [{
           required: true,
-          message: '请输入手机号',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('find_password.cellphone')
+          }),
           trigger: 'blur'
         }, {
           validator: validateCellphone,
@@ -129,20 +143,19 @@ __webpack_require__.r(__webpack_exports__);
         }],
         house: [{
           required: true,
-          message: '请输入门牌号',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('address.house')
+          }),
           trigger: 'blur'
         }]
       }
     };
   },
-
   watch: {},
-
   mounted() {
     this.getList();
     window.addEventListener('message', this.handleSelect);
   },
-
   methods: {
     async getList() {
       this.loading = true;
@@ -163,7 +176,6 @@ __webpack_require__.r(__webpack_exports__);
         this.loading = false;
       });
     },
-
     // 切换地址
     switchAddress(res) {
       if (this.select) {
@@ -175,12 +187,10 @@ __webpack_require__.r(__webpack_exports__);
         this.$forceUpdate();
       }
     },
-
     submitForm() {
       this.$refs['ruleForm'].validate(valid => {
         if (valid) {
           this.buttonLoading = true;
-
           if (this.ruleForm.id) {
             Object(_api_shipping__WEBPACK_IMPORTED_MODULE_0__[/* edit */ "d"])(this.ruleForm).then(response => {
               this.buttonLoading = false;
@@ -188,7 +198,9 @@ __webpack_require__.r(__webpack_exports__);
               this.$refs['ruleForm'].resetFields();
               this.getList();
               this.$message({
-                message: '修改成功',
+                message: this.$t('hint.succeed.win', {
+                  attribute: this.$t('common.amend')
+                }),
                 type: 'success'
               });
             }).catch(() => {
@@ -196,16 +208,19 @@ __webpack_require__.r(__webpack_exports__);
             });
           } else {
             if (!this.ruleForm.longitude) {
-              this.$message.error('请选择地址');
+              this.$message.error(this.$t('hint.error.selects', {
+                attribute: this.$t('address.location')
+              }));
             }
-
             Object(_api_shipping__WEBPACK_IMPORTED_MODULE_0__[/* create */ "a"])(this.ruleForm).then(response => {
               this.buttonLoading = false;
               this.centerDialogVisible = false;
               this.$refs['ruleForm'].resetFields();
               this.getList();
               this.$message({
-                message: '添加成功',
+                message: this.$t('hint.succeed.win', {
+                  attribute: this.$t('common.add')
+                }),
                 type: 'success'
               });
             }).catch(() => {
@@ -215,11 +230,10 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-
     defaultAddress(item) {
-      this.$confirm('是否设为默认？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('address.is_default'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true;
@@ -227,7 +241,7 @@ __webpack_require__.r(__webpack_exports__);
           this.buttonLoading = false;
           this.getList();
           this.$message({
-            message: '设置成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
         }).catch(() => {
@@ -235,19 +249,17 @@ __webpack_require__.r(__webpack_exports__);
         });
       }).catch(() => {});
     },
-
     deleteAddress(item) {
       if (item.defaults) {
         this.$message({
-          message: '默认地址无法删除',
+          message: this.$t('address.delete.confirm'),
           type: 'error'
         });
         return;
       }
-
-      this.$confirm('确定要删除该地址吗？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('address.delete.title'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true;
@@ -255,7 +267,9 @@ __webpack_require__.r(__webpack_exports__);
           this.buttonLoading = false;
           this.getList();
           this.$message({
-            message: '删除成功',
+            message: this.$t('hint.succeed.win', {
+              attribute: this.$t('common.delete')
+            }),
             type: 'success'
           });
         }).catch(() => {
@@ -263,11 +277,10 @@ __webpack_require__.r(__webpack_exports__);
         });
       }).catch(() => {});
     },
-
     updateAddress(item) {
       if (item.id) {
         this.ruleForm = item;
-        this.dialogTitle = '修改收货地址';
+        this.dialogTitle = this.$t('address.amend');
       } else {
         this.ruleForm = {
           location: '',
@@ -278,15 +291,12 @@ __webpack_require__.r(__webpack_exports__);
           latitude: '',
           longitude: ''
         };
-        this.dialogTitle = '添加收货地址';
+        this.dialogTitle = this.$t('address.add');
       }
-
       this.centerDialogVisible = true;
     },
-
     handleSelect(event) {
       const loc = event.data;
-
       if (loc && loc.module === 'locationPicker') {
         //防止其他应用也会向该页面post信息，需判断module是否为'locationPicker'
         this.ruleForm.location = loc.poiname;
@@ -295,7 +305,6 @@ __webpack_require__.r(__webpack_exports__);
         this.ruleForm.latitude = loc.latlng.lat;
       }
     }
-
   }
 });
 

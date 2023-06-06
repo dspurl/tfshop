@@ -26,8 +26,8 @@ export default {
       list: [],
       total: 0,
       textMap: {
-        update: '修改',
-        create: '添加'
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       category: ['插件'],
       imgProgressPercent: 0,
@@ -79,7 +79,7 @@ export default {
       conflictResolution(this.diffAbbreviation, { index: index, type: type }).then(response => {
         this.getDiff(this.diffName, this.diffAbbreviation)
         this.$notify({
-          title: this.$t('hint.succeed'),
+          title: this.$t('common.succeed'),
           message: '处理成功',
           type: 'success',
           duration: 2000
@@ -111,7 +111,7 @@ export default {
         this.formLoading = false
         this.getList()
         this.$notify({
-          title: this.$t('hint.succeed'),
+          title: this.$t('common.succeed'),
           message: '下载成功',
           type: 'success',
           duration: 2000
@@ -129,7 +129,7 @@ export default {
         this.formLoading = false
         this.getList()
         this.$notify({
-          title: this.$t('hint.succeed'),
+          title: this.$t('common.succeed'),
           message: type === 1 ? '更新成功' : '安装成功',
           type: 'success',
           duration: 2000
@@ -141,9 +141,9 @@ export default {
     },
     handleDelete(name) {
       const title = '是否确认删除该插件?'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.butLoading = true
@@ -153,7 +153,7 @@ export default {
           this.formLoading = false
           this.getList()
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: '删除成功',
             type: 'success',
             duration: 2000
@@ -166,9 +166,9 @@ export default {
     },
     handleUninstall(name) {
       const title = '存在冲突的插件卸载后相关文件也会被删除哦，是否确认卸载?'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.butLoading = true
@@ -178,7 +178,7 @@ export default {
           this.formLoading = false
           this.getList()
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: '已成功卸载',
             type: 'success',
             duration: 2000
@@ -197,7 +197,7 @@ export default {
         this.formLoading = false
         this.getList()
         this.$notify({
-          title: this.$t('hint.succeed'),
+          title: this.$t('common.succeed'),
           message: '发行成功',
           type: 'success',
           duration: 2000

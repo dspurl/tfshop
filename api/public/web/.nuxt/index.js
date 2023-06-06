@@ -14,6 +14,9 @@ import { createStore } from './store.js'
 /* Plugins */
 
 import nuxt_plugin_plugin_c1a88ef4 from 'nuxt_plugin_plugin_c1a88ef4' // Source: .\\components\\plugin.js (mode: 'all')
+import nuxt_plugin_pluginutils_3ce7e036 from 'nuxt_plugin_pluginutils_3ce7e036' // Source: .\\nuxt-i18n\\plugin.utils.js (mode: 'all')
+import nuxt_plugin_pluginrouting_64c837f0 from 'nuxt_plugin_pluginrouting_64c837f0' // Source: .\\nuxt-i18n\\plugin.routing.js (mode: 'all')
+import nuxt_plugin_pluginmain_db858d02 from 'nuxt_plugin_pluginmain_db858d02' // Source: .\\nuxt-i18n\\plugin.main.js (mode: 'all')
 import nuxt_plugin_axios_660174ae from 'nuxt_plugin_axios_660174ae' // Source: .\\axios.js (mode: 'all')
 import nuxt_plugin_workbox_0c14f485 from 'nuxt_plugin_workbox_0c14f485' // Source: .\\workbox.js (mode: 'client')
 import nuxt_plugin_metaplugin_f34cd7f6 from 'nuxt_plugin_metaplugin_f34cd7f6' // Source: .\\pwa\\meta.plugin.js (mode: 'all')
@@ -93,7 +96,7 @@ async function createApp(ssrContext, config = {}) {
   // here we inject the router and store to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = {
-    head: {"title":"DSSHOP商城-跨终端商城解决方案","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"hid":"index","name":"DSSHOP商城-跨终端商城解决方案","content":"商城网店系统,商城,网店,免费商城,免费网店"},{"name":"viewport","content":"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"},{"hid":"description","name":"description","content":"免费开源可商用，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端"},{"hid":"keywords","name":"keywords","content":"商城网店系统,商城,网店,免费商城,免费网店"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"shortcut icon","href":"\u002Ffavicon.ico"},{"rel":"apple-touch-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
+    head: {"title":"DSSHOP商城-轻量级易扩展低代码开源商城系统","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"hid":"index","name":"DSSHOP商城-轻量级易扩展低代码开源商城系统","content":"商城网店系统,商城,网店,免费商城,免费网店,低代码商城,轻量级商城"},{"name":"viewport","content":"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"},{"hid":"description","name":"description","content":"轻量级易扩展低代码开源商城系统，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端"},{"hid":"keywords","name":"keywords","content":"商城网店系统,商城,网店,免费商城,免费网店,低代码商城,轻量级商城"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"shortcut icon","href":"\u002Ffavicon.ico"},{"rel":"apple-touch-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
 
     store,
     router,
@@ -224,6 +227,18 @@ async function createApp(ssrContext, config = {}) {
 
   if (typeof nuxt_plugin_plugin_c1a88ef4 === 'function') {
     await nuxt_plugin_plugin_c1a88ef4(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_pluginutils_3ce7e036 === 'function') {
+    await nuxt_plugin_pluginutils_3ce7e036(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_pluginrouting_64c837f0 === 'function') {
+    await nuxt_plugin_pluginrouting_64c837f0(app.context, inject)
+  }
+
+  if (typeof nuxt_plugin_pluginmain_db858d02 === 'function') {
+    await nuxt_plugin_pluginmain_db858d02(app.context, inject)
   }
 
   if (typeof nuxt_plugin_axios_660174ae === 'function') {

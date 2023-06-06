@@ -8,11 +8,11 @@
         <img class="pic-404__child right" src="@/assets/404_images/404_cloud.png" alt="404">
       </div>
       <div class="bullshit">
-        <div class="bullshit__oops">无权限访问!</div>
+        <div class="bullshit__oops">{{ $t('404.error.access_denied') }}!</div>
 
-        <div class="bullshit__headline">{{ message }}</div>
-        <div class="bullshit__info">请检查您输入的网址是否正确，请点击以下按钮返回主页或者发送错误报告</div>
-        <router-link to="/" class="bullshit__return-home">返回首页</router-link>
+        <div class="bullshit__headline">{{ $t('404.error.message') }}</div>
+        <div class="bullshit__info">{{ $t('404.error.access_denied_msg') }}</div>
+        <router-link to="/" class="bullshit__return-home">{{ $t('404.error.home') }}</router-link>
       </div>
     </div>
   </div>
@@ -21,12 +21,7 @@
 <script>
 
 export default {
-  name: 'Page404',
-  computed: {
-    message() {
-      return '网管说这个页面你不能进......'
-    }
-  }
+  name: 'Page404'
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <div class="user-title">我的收藏</div>
+    <div class="user-title">{{$t('header.top.collection')}}</div>
     <div class="padding-top-20" v-loading="loading">
       <div class="recommend">
         <div class="list">
@@ -14,7 +14,7 @@
                   lazy/>
                 <div class="name">{{item.good.name}}</div>
               </NuxtLink>
-              <div class="delete" title="删除">
+              <div class="delete" :title="$t('common.delete')">
                 <i @click.stop="destroy(item.id)" class="iconfont dsshop-shanchu"></i>
               </div>
             </el-card>

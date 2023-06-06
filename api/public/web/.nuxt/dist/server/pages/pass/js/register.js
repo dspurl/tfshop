@@ -1,47 +1,45 @@
 exports.ids = [30];
 exports.modules = {
 
-/***/ 212:
+/***/ 223:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(37);
+/* harmony import */ var _api_login__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(44);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'login',
-
   head() {
     return {
-      title: '注册' + '-' + "DSSHOP商城-跨终端商城解决方案"
+      title: this.$t('header.top.register') + '-' + "DSSHOP商城-轻量级易扩展低代码开源商城系统"
     };
   },
-
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error(this.$t('hint.error.import', {
+          attribute: this.$t('find_password.cellphone')
+        })));
       } else {
         const myreg = /^1[3456789]\d{9}$/;
-
         if (!myreg.test(value)) {
-          callback(new Error('手机号格式有误'));
+          callback(new Error(this.$t('hint.error.wrong_format', {
+            attribute: this.$t('find_password.cellphone')
+          })));
         }
-
         callback();
       }
     };
-
     const validatePass = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请再次输入密码'));
+        callback(new Error(this.$t('find_password.password.reenter')));
       } else if (value !== this.ruleForm.password) {
-        callback(new Error('两次输入密码不一致!'));
+        callback(new Error(this.$t('find_password.password.inconformity')));
       } else {
         callback();
       }
     };
-
     return {
       ruleForm: {
         cellphone: '',
@@ -49,7 +47,7 @@ __webpack_require__.r(__webpack_exports__);
         code: '',
         rPassword: ''
       },
-      codename: '获取验证码',
+      codename: this.$t('find_password.get_code'),
       seconds: '',
       unit: '',
       loading: false,
@@ -61,20 +59,26 @@ __webpack_require__.r(__webpack_exports__);
         }],
         password: [{
           required: true,
-          message: '请输入密码',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('find_password.password')
+          }),
           trigger: 'blur'
         }, {
           min: 5,
-          message: '密码长度必须大于5位',
+          message: this.$t('find_password.password.length'),
           trigger: 'blur'
         }],
         code: [{
           required: true,
-          message: '请输入验证码',
+          message: this.$t('hint.error.import', {
+            attribute: this.$t('find_password.verification_code')
+          }),
           trigger: 'blur'
         }, {
           type: 'number',
-          message: '验证码必须为数字'
+          message: this.$t('find_password.verification_code.number', {
+            attribute: this.$t('find_password.verification_code')
+          })
         }],
         rPassword: [{
           validator: validatePass,
@@ -83,15 +87,15 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-
   methods: {
     // 获取验证码
     getCode() {
       if (!this.ruleForm.cellphone) {
-        this.$message.error('请输入手机号');
+        this.$message.error(this.$t('hint.error.import', {
+          attribute: this.$t('find_password.cellphone')
+        }));
         return false;
       }
-
       const that = this;
       Object(_api_login__WEBPACK_IMPORTED_MODULE_0__[/* cellphoneCode */ "b"])(this.ruleForm).then(response => {
         // 开始倒计时
@@ -101,30 +105,28 @@ __webpack_require__.r(__webpack_exports__);
         this.codeDisabled = true;
         this.timer = setInterval(function () {
           that.seconds = that.seconds - 1;
-
           if (that.seconds === 0) {
             // 读秒结束 清空计时器
             clearInterval(that.timer);
             that.seconds = '';
-            that.codename = '获取验证码';
+            that.codename = this.$t('find_password.get_code');
             that.unit = '';
             that.codeDisabled = false;
           }
-        }, 1000); // 模拟短信发送
-
+        }, 1000);
+        // 模拟短信发送
         if (response.code) {
           that.ruleForm.code = response.code;
         }
       }).catch(() => {});
     },
-
     toRegister() {
       this.$refs['ruleForm'].validate(valid => {
         if (valid) {
           this.loading = true;
           Object(_api_login__WEBPACK_IMPORTED_MODULE_0__[/* register */ "h"])(this.ruleForm).then(() => {
             this.$message({
-              message: '注册成功',
+              message: this.$t('find_password.registered_successfully'),
               type: 'success'
             });
             this.loading = false;
@@ -135,7 +137,6 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     }
-
   }
 });
 

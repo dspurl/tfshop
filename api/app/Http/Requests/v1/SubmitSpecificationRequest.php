@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -66,21 +75,20 @@ class SubmitSpecificationRequest extends Request
     public function messages()
     {
         return [
-            'name.required' =>'规格名称必须',
-            'name.string' =>'规格格式有误',
-            'name.max' =>'规格名不能超过30个字符',
-            'type.required' =>'规格类型必须',
-            'type.numeric' =>'规格类型格式有误',
-            'is_search.required' =>'是否可搜索必须',
-            'is_search.numeric' =>'是否可搜索格式有误',
-            'specification_group_id.required' =>'规格组必须',
-            'specification_group_id.numeric' =>'规格组格式有误',
-            'location.required' =>'显示位置必须',
-            'location.numeric' =>'显示位置格式有误',
-            'value.string' =>'属性值格式有误',
-            'sort.required' =>'排序必须',
-            'sort.numeric' =>'排序格式有误',
-            'sort.max' =>'排序不能超过11个字符',
+            'name.required' =>__('hint.error.not_null', ['attribute' => __('specification.name')]),
+            'name.string' =>__('hint.error.wrong_format', ['attribute' => __('specification.name')]),
+            'name.max' =>__('hint.error.max', ['attribute' => __('specification.name'), 'place' => 30]),
+            'type.required' =>__('hint.error.not_null', ['attribute' => __('specification.type')]),
+            'type.numeric' =>__('hint.error.wrong_format', ['attribute' => __('specification.type')]),
+            'is_search.required' =>__('hint.error.not_null', ['attribute' => __('specification.is_search')]),
+            'is_search.numeric' =>__('hint.error.wrong_format', ['attribute' => __('specification.is_search')]),
+            'specification_group_id.required' =>__('hint.error.not_null', ['attribute' => __('specification.specification_group_id')]),
+            'specification_group_id.numeric' =>__('hint.error.wrong_format', ['attribute' => __('specification.specification_group_id')]),
+            'location.required' =>__('hint.error.not_null', ['attribute' => __('specification.location')]),
+            'location.numeric' =>__('hint.error.wrong_format', ['attribute' => __('specification.location')]),
+            'value.string' =>__('hint.error.wrong_format', ['attribute' => __('specification.value')]),
+            'sort.required' =>__('hint.error.not_null', ['attribute' => __('common.sort')]),
+            'sort.numeric' =>__('hint.error.wrong_format', ['attribute' => __('common.sort')]),
         ];
     }
 }

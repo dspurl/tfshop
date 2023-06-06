@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -42,7 +51,7 @@ class BackupController extends Controller
             $zip_file = storage_path('app/'.config('backup.backup.name') .'/'. $fileName);
             $zipStatus = $zip->open($zip_file);
             if($zipStatus !== true){
-                throw new \Exception('无法打开ZIP文件。错误代码:'.$zipStatus, Code::CODE_INEXISTENCE);
+                throw new \Exception(__('backup.error.zip').$zipStatus, Code::CODE_INEXISTENCE);
             }
             // db
             if (strpos($zip->getNameIndex(0), 'db-dumps') !== false && $request->type == 'db') {
@@ -79,7 +88,7 @@ class BackupController extends Controller
         } else {
             Artisan::queue('backup:run --only-files');
         }
-        return resReturn(1, '成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -104,7 +113,7 @@ class BackupController extends Controller
         // 清除配置缓存
         $redis = new RedisService();
         $redis->del('config');
-        return resReturn(1, '成功');
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -125,6 +134,6 @@ class BackupController extends Controller
                 Storage::disk('root')->delete('/api/storage/app/'.config('backup.backup.name').'/' . $all['name']);
             }
         }
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

@@ -1,27 +1,27 @@
 <template>
 	<view class="container">
 		<view class="list-cell b-b m-t" @click="navTo('/pages/userinfo/userinfo')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">个人资料</text>
+			<text class="cell-tit">{{$t('set.personal')}}</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="list-cell b-b" @click="navTo('/pages/set/message')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">通知与提醒</text>
+			<text class="cell-tit">{{$t('set.inform')}}</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="list-cell b-b" @click="clearCache()" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">清除缓存</text>
+			<text class="cell-tit">{{$t('set.cache')}}</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="list-cell b-b" @click="navTo('/pages/set/about')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">关于我们</text>
+			<text class="cell-tit">{{$t('set.about')}}</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
-		<view class="list-cell" @click="navTo('/pages/set/cancel')" hover-class="cell-hover" :hover-stay-time="50">
-			<text class="cell-tit">注销服务</text>
+		<view class="list-cell b-b" @click="navTo('/pages/set/cancel')" hover-class="cell-hover" :hover-stay-time="50">
+			<text class="cell-tit">{{$t('set.cancel')}}</text>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="list-cell log-out-btn" @click="toLogout">
-			<text class="cell-tit">退出登录</text>
+			<text class="cell-tit">{{$t('set.out')}}</text>
 		</view>
 	</view>
 </template>
@@ -39,18 +39,21 @@
 		},
 		onShow(){
 			this.loginCheck()
+			uni.setNavigationBarTitle({
+				title: this.$t('user.set')
+			})
 		},
 		methods:{
 			...mapMutations(['logout','loginCheck']),
 			//检测版本
 			testVersion(){
-				this.$api.msg('已经最新了')
+				this.$api.msg(this.$t('set.newest'))
 			},
 			//清除缓存
 			clearCache(){
 				uni.removeStorageSync('dsshopOrderList')
 				uni.removeStorageSync('dsshopCartList')
-				this.$api.msg('缓存清除成功')
+				this.$api.msg(this.$t('set.clear_successfully'))
 			},
 			navTo(url){
 				uni.navigateTo({
@@ -64,7 +67,7 @@
 			toLogout(){
 				const that = this
 				uni.showModal({
-				    content: '确定要退出登录么',
+				    content: that.$t('set.logout'),
 				    success: (e)=>{
 				    	if(e.confirm){
 							Login.logout({},function(res){
@@ -77,12 +80,8 @@
 				    	}
 				    }
 				});
-			},
-			//switch
-			switchChange(e){
-				let statusTip = e.detail.value ? '打开': '关闭';
-				this.$api.msg(`${statusTip}消息推送`);
-			},
+			}
+
 
 		}
 	}

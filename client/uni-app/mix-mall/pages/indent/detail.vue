@@ -12,7 +12,7 @@
 						v-clipboard:copy="indentList.odd"
 						v-clipboard:success="onSuccess" 
 						v-clipboard:error="onError"
-						>复制</view>
+						>{{$t('common.copy')}}</view>
 					</view>
 				</view>
 			</view>
@@ -46,12 +46,10 @@
 			>
 				<image :src="item.img  | smallImage" lazy-load></image>
 				<view class="right">
-					<view class="tag-box" v-if="indentList.type === 1"><view class="seckill-tag">限时秒杀</view></view>
-					<view class="tag-box" v-else-if="indentList.type === 2"><view class="group-purchase-tag">拼单</view></view>
 					<text class="title clamp">{{ item.name }}</text>
 					<text class="spec">{{ item.specification }}</text>
 					<view class="price-box">
-						<text class="price">￥{{ item.price }}</text>
+						<text class="price">{{$t('common.unit')}}{{ item.price }}</text>
 						<text class="number">x {{ item.number }}</text>
 					</view>
 				</view>
@@ -60,59 +58,59 @@
 		<!-- 金额明细 -->
 		<view class="yt-list margin-bottom">
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">备注</text>
+				<text class="cell-tit clamp">{{$t('indent.remark')}}</text>
 				<text class="cell-tip">{{ indentList.remark ? indentList.remark : '' }}</text>
 			</view>
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">商品金额</text>
-				<text class="cell-tip">￥{{ total | 1000 }}</text>
+				<text class="cell-tit clamp">{{$t('indent.total')}}</text>
+				<text class="cell-tip">{{$t('common.unit')}}{{ total | 1000 }}</text>
 			</view>
 			<view class="yt-list-cell b-b" v-if="!indentList.integral_draw_log">
-				<text class="cell-tit clamp">运费</text>
+				<text class="cell-tit clamp">{{$t('indent.freight')}}</text>
 				<text class="cell-tip">
 					<block v-if="indentList.carriage > 0">{{ indentList.carriage | 1000 }}</block>
-					<block v-else>免运费</block>
+					<block v-else>{{$t('indent.free_shipping')}}</block>
 				</text>
 			</view>
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">实付款</text>
+				<text class="cell-tit clamp">{{$t('indent.actual_payment')}}</text>
 				<text class="cell-tip">{{ indentList.total | 1000 }}</text>
 			</view>
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">订单号</text>
+				<text class="cell-tit clamp">{{$t('indent.identification')}}</text>
 				<text class="cell-tip" v-clipboard:copy="indentList.identification"
         v-clipboard:success="onSuccess" 
         v-clipboard:error="onError">{{ indentList.identification }}</text>
 			</view>
 			<view class="yt-list-cell b-b">
-				<text class="cell-tit clamp">订单状态</text>
+				<text class="cell-tit clamp">{{$t('indent.status')}}</text>
 				<text class="cell-tip">{{ indentList.state_show }}</text>
 			</view>
 			<!-- 卡密-->
 			<template v-if="indentList.good_code.length">
 				<view class="yt-list-cell b-b">
-					<text class="cell-tit clamp">{{code_type ? '网盘' : '卡密'}}</text>
+					<text class="cell-tit clamp">{{code_type ? $t('good.code_type.web_disk') : $t('good.code_type.carmi')}}</text>
 					<text class="cell-tip"></text>
 				</view>
 				<view class="yt-list-cell b-b" v-for="(item,index) in indentList.good_code" :key="index">
-					<view class="cell-tit clamp"><template v-if="item.name">{{code_type ? '网盘地址' : '卡号'}}：{{ item.name }}<text class="text-gray cuIcon-copy" style="margin-left: 10rpx;" @tap="setClipboardData(item.name)"></text></template></view>
-					<view class="cell-tip">{{code_type ? '提取码' : '卡密'}}：{{ item.code }}<text class="text-gray cuIcon-copy" style="margin-left: 10rpx;" @tap="setClipboardData(item.code)"></text></view>
+					<view class="cell-tit clamp"><template v-if="item.name">{{code_type ? $t('good.good_code.url') : $t('good.good_code.card_number')}}：{{ item.name }}<text class="text-gray cuIcon-copy" style="margin-left: 10rpx;" @tap="setClipboardData(item.name)"></text></template></view>
+					<view class="cell-tip">{{code_type ? $t('good.web_disk.code') : $t('good.code_type.carmi')}}：{{ item.code }}<text class="text-gray cuIcon-copy" style="margin-left: 10rpx;" @tap="setClipboardData(item.code)"></text></view>
 				</view>
 			</template>
 			<view class="yt-list-cell b-b" v-if="indentList.receiving_time">
-				<text class="cell-tit clamp">订单自动收货时间</text>
+				<text class="cell-tit clamp">{{$t('indent.receiving_time')}}</text>
 				<text class="cell-tip" style="color: #fa436a;">{{ indentList.receiving_time }}</text>
 			</view>
 		</view>
 		<!-- 底部 -->
 		<view v-if="indentList.state === 1 || indentList.state === 3 || indentList.state === 10 || indentList.state === 12" class="footer">
 			<view class="price-content"></view>
-			<navigator v-if="indentList.state === 1" :url="'/pages/money/pay?id=' + indentList.id" hover-class="none" class="submit">立即支付</navigator>
-			<view v-else-if="indentList.state === 3" class="submit" @click="confirmReceipt(indentList)">确认收货</view>
+			<navigator v-if="indentList.state === 1" :url="'/pages/money/pay?id=' + indentList.id" hover-class="none" class="submit">{{$('indent.payment')}}</navigator>
+			<view v-else-if="indentList.state === 3" class="submit" @click="confirmReceipt(indentList)">{{$t('indent.confirm_receipt')}}</view>
 		</view>
 		<view class="footer" v-if="indentList.download">
 			<view class="price-content"></view>
-			<view class="submit" @click="goDownload">下载</view>
+			<view class="submit" @click="goDownload">{{$t('indent.download')}}</view>
 		</view>
 	</view>
 </template>
@@ -141,12 +139,15 @@ export default {
 	},
 	onLoad(option) {
 		if (!option.id) {
-			this.$api.msg('参数有误');
+			this.$api.msg(this.$t('common.arguments'));
 			return false;
 		}
 		this.id = option.id;
 	},
 	onShow(){
+		uni.setNavigationBarTitle({
+			title: this.$t('indent.details')
+		})
 		this.loginCheck()
 		//商品数据
 		this.getList();
@@ -188,10 +189,10 @@ export default {
 			this.total = Number(total.toFixed(2));
 		},
 		onSuccess: function (res) {
-			this.$api.msg('复制成功')
+			this.$api.msg(this.$t('hint.succeed.win', {attribute:this.$t('common.copy')}))
 	    },
 	    onError: function (err) {
-		    this.$api.msg('复制失败')
+		    this.$api.msg(this.$t('hint.succeed.fail', {attribute:this.$t('common.copy')}))
 	    },
 		confirmReceipt(item){
 			const that = this
@@ -216,12 +217,12 @@ export default {
 								
 								},
 								fail: function (ress) {
-									that.$api.msg('非文档类文件请通过pc端或h5访问下载')
+									that.$api.msg(that.$t('indent.download.error.not'))
 								}
 							})
 							
 						} else {
-							this.$api.msg('下载失败')
+							this.$api.msg(this.$t('indent.download.error'))
 						}
 					}
 				});

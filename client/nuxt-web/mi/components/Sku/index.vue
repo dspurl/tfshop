@@ -15,7 +15,7 @@
 <template>
 	<div>
     <div v-for="(item, index) in specification" :key="index" class="specification-list">
-      <div class="name">选择{{ item.value }}</div>
+      <div class="name">{{$t('hint.error.select', { attribute:item.value })}}</div>
       <div class="item-list">
         <div
           v-for="(childItem, childIndex) in item.leaf"
@@ -29,11 +29,11 @@
       </div>
     </div>
     <div class="purchase-quantity">
-      <div class="name">购买数量</div>
+      <div class="name">{{$t('sku.purchase_quantity')}}</div>
       <div class="quantity">
         <el-input-number v-model="cartGood.number>specificationDefaultDisplay.inventory_show?specificationDefaultDisplay.inventory_show:cartGood.number" @change="numberChange" :min="1" :max="getLists.purchase_number ? getLists.purchase_number : specificationDefaultDisplay.inventory_show"></el-input-number>
       </div>
-      <div class="inventory">件 (库存：{{specificationDefaultDisplay.inventory_show}}件)</div>
+      <div class="inventory">{{$t('good_indent.piece')}} ({{$t('good.table.inventory')}}：{{specificationDefaultDisplay.inventory_show}}{{$t('good_indent.piece')}})</div>
     </div>
 	</div>
 </template>

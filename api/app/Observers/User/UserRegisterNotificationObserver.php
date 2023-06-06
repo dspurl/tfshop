@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Observers\User;
 
 use App\common\RedisService;
@@ -53,23 +62,23 @@ class UserRegisterNotificationObserver
                 ];
                 $invoice = [
                     'type' => InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
-                    'title' => '您好，恭喜您成功注册帐号。',
+                    'title' => __('wechat_channel.registered_success.first'),
                     'list' => [
                         [
-                            'keyword' => '账号',
+                            'keyword' => __('admin.name'),
                             'data' => $parameter['phoneNumber']
                         ],
                         [
-                            'keyword' => '初始密码',
+                            'keyword' => __('observer.user_user_register_notification.invoice.password'),
                             'data' => $parameter['password'],
                             'copy' => true
                         ],
                         [
-                            'keyword' => '手机',
+                            'keyword' => __('admin.cellphone'),
                             'data' => $parameter['phoneNumber']
                         ]
                     ],
-                    'remark' => '您第一次授权登录我们平台，我们将为您生成初始密码，请妥善保管',
+                    'remark' => __('wechat_channel.registered_success.remark'),
                     'parameter' => $parameter,
                     'prefers' => ['database']
                 ];

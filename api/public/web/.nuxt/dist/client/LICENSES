@@ -19,9 +19,37 @@
  */
 
 /*!
+ * cookie
+ * Copyright(c) 2012-2014 Roman Shtylman
+ * Copyright(c) 2015 Douglas Christopher Wilson
+ * MIT Licensed
+ */
+
+/*!
  * vuex v3.6.2
  * (c) 2021 Evan You
  * @license MIT
+ */
+
+
+/*!
+ * vue-countdown v1.1.5
+ * https://fengyuanchen.github.io/vue-countdown
+ *
+ * Copyright 2018-present Chen Fengyuan
+ * Released under the MIT license
+ *
+ * Date: 2020-02-25T01:19:32.769Z
+ */
+
+/*!
+ * vue-qrcode v1.0.2
+ * https://fengyuanchen.github.io/vue-qrcode
+ *
+ * Copyright 2018-present Chen Fengyuan
+ * Released under the MIT license
+ *
+ * Date: 2020-01-18T06:04:33.222Z
  */
 
 
@@ -34,6 +62,12 @@ object-assign
 /*!
  * vue-client-only v0.0.0-semantic-release
  * (c) 2021-present egoist <0x142857@gmail.com>
+ * Released under the MIT License.
+ */
+
+/*!
+ * vue-i18n v8.28.2 
+ * (c) 2022 kazuya kawaguchi
  * Released under the MIT License.
  */
 
@@ -71,24 +105,3 @@ object-assign
  */
 
 //! moment.js
-
-
-/*!
- * vue-countdown v1.1.5
- * https://fengyuanchen.github.io/vue-countdown
- *
- * Copyright 2018-present Chen Fengyuan
- * Released under the MIT license
- *
- * Date: 2020-02-25T01:19:32.769Z
- */
-
-/*!
- * vue-qrcode v1.0.2
- * https://fengyuanchen.github.io/vue-qrcode
- *
- * Copyright 2018-present Chen Fengyuan
- * Released under the MIT license
- *
- * Date: 2020-01-18T06:04:33.222Z
- */

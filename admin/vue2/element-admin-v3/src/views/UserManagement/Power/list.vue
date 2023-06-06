@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-input :placeholder="$t('user.queryPowerTitle')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
+      <el-input :placeholder="`${$t('common.table.id')}/${$t('power.title')}/${$t('power.api')}`" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
       <el-cascader
         v-model="listQuery.pid"
         :options="options"
@@ -9,9 +9,9 @@
         filterable
         clearable
         style="top:-4px"/>
-      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('usuel.search') }}</el-button>
-      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="refresh">刷新权限</el-button>
-      <el-button v-permission="$store.jurisdiction.PowerCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('usuel.add') }}</el-button>
+      <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">{{ $t('common.search') }}</el-button>
+      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="refresh">{{ $t('manage.refresh_permission') }}</el-button>
+      <el-button v-permission="$store.jurisdiction.PowerCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate()">{{ $t('common.add') }}</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -22,45 +22,45 @@
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange">
-      <el-table-column :label="$t('usuel.id')" align="center" width="65" prop="id">
+      <el-table-column :label="$t('common.table.id')" align="center" width="65" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="菜单图标" align="center">
+      <el-table-column :label="$t('power.icon')" align="center">
         <template slot-scope="scope">
           <svg-icon v-if="scope.row.icon" :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.title')" align="center">
+      <el-table-column :label="$t('power.title')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="外链" align="center">
+      <el-table-column :label="$t('power.url')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.api')" align="center">
+      <el-table-column :label="$t('power.api')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.api }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="显示在菜单栏" align="center">
+      <el-table-column :label="$t('power.state')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="300">
+      <el-table-column :label="$t('common.operation')" align="center" class-name="small-padding fixed-width" width="300">
         <template slot-scope="scope">
-          <el-tooltip v-permission="$store.jurisdiction.PowerCreate" class="item" effect="dark" content="复制" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.PowerCreate" :content="$t('common.copy')" class="item" effect="dark" placement="top-start">
             <el-button type="success" icon="el-icon-document-copy" circle @click="handleCreate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.PowerEdit" class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.PowerEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.PowerDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.PowerDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -70,23 +70,19 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-      <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="120px" style="width: 400px; margin-left:50px;">
-        <el-form-item :label="$t('user.title')" prop="title">
+      <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="160px" style="margin-left:20px;">
+        <el-form-item :label="$t('power.title')" prop="title">
           <el-input v-model="temp.title" maxlength="30" clearable/>
         </el-form-item>
-        <el-form-item :label="$t('user.api')" prop="api">
+        <el-form-item :label="$t('power.api')" prop="api">
           <el-input v-model="temp.api" clearable/>
-          <el-alert
-            title="配置的权限如需在菜单显示，需要末尾包含“List”，不然将无法显示"
-            type="warning"/>
+          <div>{{ $t('power.api.tip') }}</div>
         </el-form-item>
-        <el-form-item label="外链" prop="url">
+        <el-form-item :label="$t('power.url')" prop="url">
           <el-input v-model="temp.url" clearable/>
-          <el-alert
-            title="如果是类目（不可点），需要指向外链地址为内链地址，如listTemplateList"
-            type="warning"/>
+          <div>{{ $t('power.url.tip') }}</div>
         </el-form-item>
-        <el-form-item :label="$t('user.grouping')" prop="pid">
+        <el-form-item :label="$t('power.pid')" prop="pid">
           <el-cascader
             v-model="temp.pid"
             :options="options"
@@ -94,32 +90,28 @@
             filterable
             clearable
             style="top:-4px"/>
-          <el-alert
-            title="层级大于两层的不会在菜单栏中显示"
-            type="warning"/>
+          <div>{{ $t('power.pid.tip') }}</div>
         </el-form-item>
-        <el-form-item label="排序" prop="sort" style="width:200px;">
+        <el-form-item :label="$t('common.sort')" prop="sort" style="width:200px;">
           <el-input v-model="temp.sort" clearable/>
         </el-form-item>
-        <el-form-item label="菜单图标" prop="icon" style="width:300px;">
+        <el-form-item :label="$t('power.icon')" prop="icon" style="width:300px;">
           <el-input v-model="temp.icon" clearable/>
           <div v-if="temp.icon">
             <svg-icon :icon-class="temp.icon" />
           </div>
         </el-form-item>
-        <el-form-item label="显示在菜单栏" prop="state">
+        <el-form-item :label="$t('power.state')" prop="state">
           <el-radio-group v-model="temp.state">
-            <el-radio :label="0">否</el-radio>
-            <el-radio :label="1">是</el-radio>
+            <el-radio :label="0">{{ $t('common.no') }}</el-radio>
+            <el-radio :label="1">{{ $t('common.yes') }}</el-radio>
           </el-radio-group>
-          <el-alert
-            title="如有子类，选择隐藏，将不会显示子类"
-            type="warning"/>
+          <div>{{ $t('power.state.tip') }}</div>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -143,9 +135,9 @@ export default {
     var validateApi = (rule, value, callback) => {
       if (value === '') {
         if (this.temp.pid === '') {
-          callback(new Error(this.$t('user.apiAndGroupAtLeastOneItemToFillIn')))
+          callback(new Error(this.$t('power.pid.error')))
         } else if (this.temp.pid > 0) {
-          callback(new Error(this.$t('user.apiCannotBeEmpty')))
+          callback(new Error(this.$t('hint.error.not_null', { attribute: this.$t('power.api') })))
         } else {
           callback()
         }
@@ -160,8 +152,8 @@ export default {
       list: null,
       total: 0,
       textMap: {
-        update: this.$t('usuel.amend'),
-        create: this.$t('usuel.add')
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       listLoading: true,
       listQuery: {
@@ -184,10 +176,10 @@ export default {
           { validator: validateApi, trigger: 'blur' }
         ],
         pid: [
-          { required: true, message: this.$t('user.thePermissionNameCannotBeEmpty'), trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('power.pid') }), trigger: 'blur' }
         ],
         title: [
-          { required: true, message: this.$t('user.thePermissionNameCannotBeEmpty'), trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('power.title') }), trigger: 'blur' }
         ]
       },
       downloadLoading: false
@@ -252,8 +244,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -274,8 +266,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })
@@ -298,9 +290,9 @@ export default {
       })
     },
     handleDelete(row) { // 删除
-      this.$confirm(this.$t('hint.deleteDetermine'), this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(this.$t('hint.deleteDetermine'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -309,8 +301,8 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
-            message: this.$t('hint.deletedSuccessful'),
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { attribute: this.$t('common.delete') }),
             type: 'success',
             duration: 2000
           })

@@ -1,7 +1,7 @@
 exports.ids = [41];
 exports.modules = {
 
-/***/ 249:
+/***/ 258:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -12,6 +12,16 @@ __webpack_require__.r(__webpack_exports__);
 var request = __webpack_require__(2);
 
 // CONCATENATED MODULE: ./api/moneyLog.js
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 
 function getList(query) {
   return Object(request["a" /* default */])({
@@ -30,13 +40,11 @@ function detail(id) {
 
 /* harmony default export */ var list = __webpack_exports__["default"] = ({
   layout: 'user',
-
   head() {
     return {
-      title: '我的账单-个人中心'
+      title: `${this.$t('user.bill')}-${this.$t('header.top.personal_center')}`
     };
   },
-
   data() {
     return {
       tableLoading: false,
@@ -53,11 +61,9 @@ function detail(id) {
       }
     };
   },
-
   mounted() {
     this.getList();
   },
-
   methods: {
     async getList() {
       this.loading = true;
@@ -69,12 +75,10 @@ function detail(id) {
         this.loading = false;
       });
     },
-
     getReloadList() {
       this.listQuery.page = 1;
       this.getList();
     }
-
   }
 });
 

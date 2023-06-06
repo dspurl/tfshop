@@ -159,7 +159,7 @@
       .cart-box{
         position: absolute;
         background-color: #ffffff;
-        width: 300px;
+        width: 400px;
         box-shadow: 0 2px 10px #999999;
         overflow: hidden;
         right: 0;
@@ -196,7 +196,7 @@
               color: $font-color-main;
             }
             .price{
-              width: 80px;
+              width: 160px;
             }
             .close{
               flex-shrink: 0;
@@ -247,9 +247,6 @@
                 font-size: 22px;
               }
             }
-          }
-          .operation{
-            width: 126px;
           }
         }
       }

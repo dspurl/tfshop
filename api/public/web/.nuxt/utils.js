@@ -200,7 +200,7 @@ export async function setContext (app, context) {
       payload: context.payload,
       error: context.error,
       base: app.router.options.base,
-      env: {"APP_ENV":"prod","APP_DEBUG":"false","APP_NAME":"DSSHOP商城-跨终端商城解决方案","APP_SHORT_NAME":"DSSHOP","APP_DESCRIPTION":"免费开源可商用，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端","APP_KEYWORD":"商城网店系统,商城,网店,免费商城,免费网店","APP_ICP":"浙ICP备110120119（本站为演示站，不出售任何商品，商品信息来源于网络）","API_URL_BROWSER":"http://dsshop.test/api/v1/app/","API_URL":"http://dsshop.test/api/v1/app/","H5_URL":"http://localhost:8082/h5","PROJECT_KEY":"base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM=","CACHE_PR":"DSSHOP-PC-","IBS_KEY":"BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC"}
+      env: {"APP_ENV":"prod","APP_DEBUG":"false","APP_NAME":"DSSHOP商城-轻量级易扩展低代码开源商城系统","APP_SHORT_NAME":"DSSHOP","APP_DESCRIPTION":"轻量级易扩展低代码开源商城系统，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端","APP_KEYWORD":"商城网店系统,商城,网店,免费商城,免费网店,低代码商城,轻量级商城","APP_ICP":"浙ICP备110120119（本站为演示站，不出售任何商品，商品信息来源于网络）","API_URL_BROWSER":"http://dsshop.test/api/v1/app/","API_URL":"http://dsshop.test/api/v1/app/","H5_URL":"http://dsshop.test/h5","PROJECT_KEY":"base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM=","CACHE_PR":"DSSHOP-PC-","IBS_KEY":"BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC"}
     }
     // Only set once
 

@@ -1,8 +1,8 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-button v-permission="$store.jurisdiction.ManageCreate" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('usuel.add') }}</el-button>
-      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="refresh">刷新权限</el-button>
+      <el-button v-permission="$store.jurisdiction.ManageCreate" class="filter-item" style="margin-left: 10px;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('common.add') }}</el-button>
+      <el-button class="filter-item" type="success" icon="el-icon-refresh-right" @click="refresh">{{ $t('manage.refresh_permission') }}</el-button>
     </div>
     <el-table
       v-loading="listLoading"
@@ -16,38 +16,38 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <el-form label-position="left" inline class="table-expand">
-            <el-form-item :label="$t('user.power')">
+            <el-form-item :label="$t('manage.power')">
               <span>{{ props.row.power.join(',') }}</span>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('usuel.id')" sortable="custom" align="center" width="65" prop="id">
+      <el-table-column :label="$t('common.table.id')" sortable="custom" align="center" width="65" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.groupName')" align="center">
+      <el-table-column :label="$t('manage.roles')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.roles }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.describe')" align="center">
+      <el-table-column :label="$t('manage.introduction')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.introduction }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('user.group')">
+      <el-table-column :label="$t('manage.name')">
         <template slot-scope="scope">
-          <span>{{ scope.row.groupname ? scope.row.groupname.join(',') : '未配置' }}</span>
+          <span>{{ scope.row.groupname ? scope.row.groupname.join(',') : $t('manage.name.not_configured') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('table.actions')" align="center" class-name="small-padding fixed-width" width="200">
+      <el-table-column :label="$t('common.operation')" align="center" class-name="small-padding fixed-width" width="200">
         <template slot-scope="scope">
-          <el-tooltip v-permission="$store.jurisdiction.ManageEdit" class="item" effect="dark" content="编辑" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.ManageEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-edit" circle @click="handleUpdate(scope.row)"/>
           </el-tooltip>
-          <el-tooltip v-permission="$store.jurisdiction.ManageDestroy" class="item" effect="dark" content="删除" placement="top-start">
+          <el-tooltip v-permission="$store.jurisdiction.ManageDestroy" :content="$t('common.delete')" class="item" effect="dark" placement="top-start">
             <el-button :loading="formLoading" type="danger" icon="el-icon-delete" circle @click="handleDelete(scope.row)"/>
           </el-tooltip>
         </template>
@@ -55,33 +55,31 @@
     </el-table>
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-      <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="80px">
-        <el-form-item :label="$t('user.groupName')" prop="roles">
+      <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="160px">
+        <el-form-item :label="$t('manage.roles')" prop="roles">
           <el-input v-model="temp.roles" maxlength="11" clearable style="width:200px"/>
         </el-form-item>
-        <el-form-item :label="$t('user.describe')" prop="introduction">
+        <el-form-item :label="$t('manage.introduction')" prop="introduction">
           <el-input v-model="temp.introduction" clearable/>
         </el-form-item>
-        <el-form-item :label="$t('user.group')" prop="group">
-          <el-select v-model="temp.group" multiple placeholder="请选择">
+        <el-form-item :label="$t('manage.name')" prop="group">
+          <el-select :placeholder="$t('common.select')" v-model="temp.group" multiple>
             <el-option
               v-for="item in options"
               :key="item.value"
               :label="item.label"
               :value="item.value"/>
           </el-select>
-          <el-alert
-            title="如果有二级及以下子类添加，请先将该权限移除，再添加"
-            type="warning"/>
+          <div>{{ $t('manage.tip') }}</div>
         </el-form-item>
-        <el-form-item :label="$t('user.power')" prop="rules">
+        <el-form-item :label="$t('manage.power')" prop="rules">
           <tree-transfer
             :title="title"
             :from_data="fromData"
             :to_data="toData"
             :default-props="{label:'label'}"
             :mode="mode"
-            :placeholder="$t('hint.pleaseEnterKeywordsForFiltering')"
+            :placeholder="$t('hint.keyword_filtering')"
             height="300px"
             filter
             open-all
@@ -90,8 +88,8 @@
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">{{ $t('usuel.cancel') }}</el-button>
-        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('usuel.confirm') }}</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button :loading="formLoading" type="primary" @click="dialogStatus==='create'?createData():updateData()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -137,8 +135,8 @@ export default {
       list: null,
       total: 0,
       textMap: {
-        update: this.$t('usuel.amend'),
-        create: this.$t('usuel.add')
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       listLoading: true,
       listQuery: {
@@ -163,19 +161,19 @@ export default {
       dialogStatus: '',
       adminRules: {
         roles: [
-          { required: true, message: this.$t('user.theRoleNameCannotBeEmpty'), trigger: 'blur' },
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('manage.roles') }), trigger: 'blur' },
           { validator: validateRoles, trigger: 'blur' }
         ],
         introduction: [
-          { required: true, message: this.$t('user.theRoleDescriptionCannotBeEmpty'), trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('manage.introduction') }), trigger: 'blur' }
         ],
         rules: [
-          { type: 'array', required: true, message: this.$t('user.pleaseAssignPermissions'), trigger: 'blur' }
+          { type: 'array', required: true, message: this.$t('hint.error.select', { attribute: this.$t('manage.power') }), trigger: 'change' }
 
         ]
       },
       downloadLoading: false,
-      title: [this.$t('usuel.undistributed'), this.$t('usuel.allocated')],
+      title: [this.$t('tree_transfer.undistributed'), this.$t('tree_transfer.allocated')],
       mode: 'transfer'
     }
   },
@@ -235,8 +233,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.creatingSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.add') }),
               type: 'success',
               duration: 2000
             })
@@ -257,8 +255,8 @@ export default {
             this.dialogFormVisible = false
             this.formLoading = false
             this.$notify({
-              title: this.$t('hint.succeed'),
-              message: this.$t('hint.updateSuccessful'),
+              title: this.$t('common.succeed'),
+              message: this.$t('hint.succeed.win', { attribute: this.$t('common.update') }),
               type: 'success',
               duration: 2000
             })
@@ -292,9 +290,9 @@ export default {
       })
     },
     handleDelete(row) { // 删除
-      this.$confirm(this.$t('hint.deleteDetermine'), this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      this.$confirm(this.$t('manage.delete_prompt'), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -303,8 +301,8 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
-            message: this.$t('hint.deletedSuccessful'),
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { attribute: this.$t('common.delete') }),
             type: 'success',
             duration: 2000
           })

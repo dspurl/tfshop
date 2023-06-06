@@ -3,7 +3,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '注销账户-个人中心',
+      title: `${this.$t('unsubscribe')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {
@@ -23,7 +23,7 @@ export default {
         this.loading = false;
         $nuxt.$store.commit('logout');
         this.$message({
-          message: '注销成功',
+          message: this.$t('unsubscribe.success'),
           type: 'success'
         });
         this.$router.replace('/')

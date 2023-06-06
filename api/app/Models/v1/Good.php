@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -192,16 +201,16 @@ class Good extends Model
             $name = "";
             switch ($this->attributes['type']) {
                 case static::GOOD_TYPE_COMMON:
-                    $name = '普通商品';
+                    $name = __('good.type.common');
                     break;
                 case static::GOOD_TYPE_VIRTUAL:
-                    $name = '虚拟商品';
+                    $name = __('good.type.virtual');
                     break;
                 case static::GOOD_TYPE_KEYS:
-                    $name = '卡密/网盘';
+                    $name = __('good.type.keys');
                     break;
                 case static::GOOD_TYPE_DOWNLOAD:
-                    $name = '下载商品';
+                    $name = __('good.type.download');
                     break;
             }
             return $name;
@@ -283,10 +292,10 @@ class Good extends Model
             } else {
                 switch ($this->attributes['is_inventory']) {
                     case self::GOOD_IS_INVENTORY_NO:
-                        return '拍下减库存';
+                        return __('good.is_inventory.no');
                         break;
                     case self::GOOD_IS_INVENTORY_FILM:
-                        return '付款减库存';
+                        return __('good.is_inventory.film');
                         break;
                 }
             }
@@ -307,13 +316,13 @@ class Good extends Model
             } else {
                 switch ($this->attributes['is_show']) {
                     case self::GOOD_SHOW_ENTREPOT:
-                        return '仓库中';
+                        return __('good.is_show.entrepot');
                         break;
                     case self::GOOD_SHOW_PUTAWAY:
-                        return '出售中';
+                        return __('good.is_show.putaway');
                         break;
                     case self::GOOD_SHOW_TIMING:
-                        return '待上架';
+                        return __('good.is_show.timing');
                         break;
                 }
             }

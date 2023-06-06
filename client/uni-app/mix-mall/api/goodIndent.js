@@ -1,7 +1,18 @@
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 import Network from '../utils/network.js'
+import i18n from '@/utils/lang/index'
 export default {
     getList(data,success,fail) {
-		Network.setGetMessage('goodIndent',data,'加载中', function (res) {
+		Network.setGetMessage('goodIndent',data,i18n.t('common.loading'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -12,7 +23,7 @@ export default {
 		})
     },
 	detail(id,success,fail) {
-		Network.setGetMessage('goodIndent/detail/' + id,{},'加载中', function (res) {
+		Network.setGetMessage('goodIndent/detail/' + id,{},i18n.t('common.loading'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -23,7 +34,7 @@ export default {
 		})
 	},
 	create(data,success,fail) {
-		Network.setPostMessage('goodIndent',data,'处理中', function (res) {
+		Network.setPostMessage('goodIndent',data,i18n.t('common.processing'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -34,7 +45,7 @@ export default {
 		})
 	},
 	synchronizationInventory(data, success,fail) {
-		Network.setPostMessage('goodIndent/synchronizationInventory',data,'加载中', function (res) {
+		Network.setPostMessage('goodIndent/synchronizationInventory',data,i18n.t('common.loading'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -58,7 +69,7 @@ export default {
 		})
 	},
 	pay(id, success,fail) {
-		Network.setGetMessage('goodIndent/pay/' + id,{},'加载中', function (res) {
+		Network.setGetMessage('goodIndent/pay/' + id,{},i18n.t('common.loading'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -69,7 +80,7 @@ export default {
 		})
 	},
 	receipt(id, success,fail) {
-		Network.setPostMessage('goodIndent/receipt/' + id,{},'加载中', function (res) {
+		Network.setPostMessage('goodIndent/receipt/' + id,{},i18n.t('common.loading'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -80,7 +91,7 @@ export default {
 		})
 	},
 	cancel(id, success,fail) {
-		Network.setPostMessage('goodIndent/cancel/' + id,{},'加载中', function (res) {
+		Network.setPostMessage('goodIndent/cancel/' + id,{},i18n.t('common.loading'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -91,7 +102,7 @@ export default {
 		})
 	},
 	destroy(id,success,fail){
-		Network.setPostMessage('goodIndent/destroy/' + id,{},'处理中', function (res) {
+		Network.setPostMessage('goodIndent/destroy/' + id,{},i18n.t('common.processing'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({
@@ -102,7 +113,7 @@ export default {
 		})
 	},
 	quantity(success,fail) {
-		Network.setGetMessage('goodIndent/quantity',{},'加载中', function (res) {
+		Network.setGetMessage('goodIndent/quantity',{},i18n.t('common.loading'), function (res) {
 		  success(res)
 		}, function (res) {
 		  uni.showToast({

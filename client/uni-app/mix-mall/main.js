@@ -3,6 +3,8 @@ import store from './store'
 import App from './App'
 import configURL from './utils/config.js'
 import filter from './utils/filter.js'
+import i18n from './utils/lang'
+Vue.prototype._i18n = i18n
 const msg = (title, duration=1500, mask=false, icon='none')=>{
 	//统一提示方便全局修改
 	if(Boolean(title) === false){
@@ -45,6 +47,7 @@ Vue.prototype.$api = {msg, prePage};
 App.mpType = 'app'
 
 const app = new Vue({
+	i18n,
     ...App
 })
 app.$mount()

@@ -2,16 +2,16 @@
   <div class="app-container">
     <div class="filter-container">
       <el-form :inline="true" :model="listQuery" class="demo-form-inline">
-        <el-form-item label="模板名称">
-          <el-input v-model="listQuery.title" placeholder="模板名称" clearable @keyup.enter.native="handleFilter" />
+        <el-form-item :label="$t('freight.name')">
+          <el-input :placeholder="$t('freight.placeholder.name')" v-model="listQuery.title" clearable @keyup.enter.native="handleFilter" />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="handleFilter">搜索</el-button>
+          <el-button type="primary" @click="handleFilter">{{ $t('common.search') }}</el-button>
         </el-form-item>
       </el-form>
       <br>
       <router-link v-permission="$store.jurisdiction.FreightCreate" :to="'FreightCreate'">
-        <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">添加</el-button>
+        <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">{{ $t('common.add') }}</el-button>
       </router-link>
       <br>
     </div>
@@ -21,14 +21,14 @@
           <el-row type="flex" class="row-bg" justify="space-between">
             <el-col :span="4"><b>{{ item.name }}</b></el-col>
             <el-col :span="20" style="text-align: right">
-              最后编辑时间：{{ item.updated_at }}
+              {{ $t('freight.updated_at') }}：{{ item.updated_at }}
               <router-link v-permission="$store.jurisdiction.FreightEdit" :to="{ path: 'FreightCreate', query: { id: item.id, copy: true }}">
-                <el-button type="text">复制模板</el-button>
+                <el-button type="text">{{ $t('freight.copy') }}</el-button>
               </router-link>
               <router-link v-permission="$store.jurisdiction.FreightEdit" :to="{ path: 'FreightEdit', query: { id: item.id }}">
-                <el-button type="text">修改</el-button>
+                <el-button type="text">{{ $t('common.amend') }}</el-button>
               </router-link>
-              <el-button :loading="formLoading" type="text" @click="handleDelete(item)">删除</el-button>
+              <el-button :loading="formLoading" type="text" @click="handleDelete(item)">{{ $t('common.delete') }}</el-button>
             </el-col>
           </el-row>
         </el-card>
@@ -42,27 +42,27 @@
           style="width: 100%;"
           @sort-change="sortChange"
           @selection-change="handleSelectionChange">
-          <el-table-column label="运送到" fixed="left">
+          <el-table-column :label="$t('freight.delivery')" fixed="left">
             <template slot-scope="scope">
               <span>{{ scope.row.location_name.join(",") }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="首件" align="center">
+          <el-table-column :label="$t('freight.first_piece')" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.first_piece }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="运费(元)" align="center">
+          <el-table-column :label="$t('freight.first_cost') + `(${$t('common.monetary_unit')})`" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.first_cost }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="费件" align="center">
+          <el-table-column :label="$t('freight.add_piece')" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.add_piece }}</span>
             </template>
           </el-table-column>
-          <el-table-column label="运费(元)" align="center">
+          <el-table-column :label="$t('freight.add_cost') + `(${$t('common.monetary_unit')})`" align="center">
             <template slot-scope="scope">
               <span>{{ scope.row.add_cost }}</span>
             </template>
@@ -159,8 +159,8 @@ export default {
       list: null,
       total: 0,
       textMap: {
-        update: '修改',
-        create: '添加'
+        update: this.$t('common.amend'),
+        create: this.$t('common.add')
       },
       imgData: {
         type: 1,
@@ -245,11 +245,11 @@ export default {
       this.multipleSelection = val
     },
     handleDelete(row) { // 删除
-      const title = '是否确认删除该内容?'
-      const win = '删除成功'
-      this.$confirm(title, this.$t('hint.hint'), {
-        confirmButtonText: this.$t('usuel.confirm'),
-        cancelButtonText: this.$t('usuel.cancel'),
+      const title = this.$t('hint.confirm.delete')
+      const win = this.$t('hint.succeed.win', { attribute: this.$t('common.delete') })
+      this.$confirm(title, this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.formLoading = true
@@ -258,7 +258,7 @@ export default {
           this.dialogFormVisible = false
           this.formLoading = false
           this.$notify({
-            title: this.$t('hint.succeed'),
+            title: this.$t('common.succeed'),
             message: win,
             type: 'success',
             duration: 2000

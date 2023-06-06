@@ -4,10 +4,10 @@
       <el-col :span="24" style="padding-bottom: 20px;">
         <el-card shadow="hover">
           <div class="title">
-            <h3>整体分析</h3>
-            <div class="right" @click="handleDownload('pay')">下载</div>
+            <h3>{{ $t('statistics.visit.integral_analysis') }}</h3>
+            <div class="right" @click="handleDownload('pay')">{{ $t('common.download') }}</div>
             <div>
-              <el-select v-model="payDate" placeholder="请选择" @change="setDate('pay')">
+              <el-select :placeholder="$t('common.select')" v-model="payDate" @change="setDate('pay')">
                 <el-option
                   v-for="item in pay"
                   :key="item.value"
@@ -44,13 +44,13 @@ export default {
       payShowDate: '',
       pay: [{
         value: 0,
-        lable: '今日'
+        lable: this.$t('statistics.visit.today')
       }, {
         value: 7,
-        lable: '最近7天'
+        lable: this.$t('statistics.visit.recently', { number: 7 })
       }, {
         value: 30,
-        lable: '最近30天'
+        lable: this.$t('statistics.visit.recently', { number: 30 })
       }]
     }
   },
@@ -60,7 +60,7 @@ export default {
   methods: {
     getPay() {
       this.analyze_loading = true
-      this.payShowDate = getBeforeDate(this.payDate) + '至' + getBeforeDate(1)
+      this.payShowDate = getBeforeDate(this.payDate) + this.$t('common.to') + getBeforeDate(1)
       pay({ date: this.payDate }).then(response => {
         this.payData = response.data
         const data = {}
@@ -90,7 +90,7 @@ export default {
     },
     setDate(item) {
       if (item === 'pay') {
-        this.payShowDate = getBeforeDate(this.payDate) + '至' + getBeforeDate(1)
+        this.payShowDate = getBeforeDate(this.payDate) + this.$t('common.to') + getBeforeDate(1)
         this.getPay()
       }
     },
@@ -101,8 +101,8 @@ export default {
         let data = []
         let filename = ''
         if (item === 'pay') {
-          tHeader = ['下单笔数', '付款笔数', '付款金额', '退款笔数', '退款金额', '时间']
-          filename = '交易分析'
+          tHeader = [this.$t('statistics.pay.single_stroke'), this.$t('statistics.pay.amount_of_payment'), this.$t('statistics.pay.payment_amount'), this.$t('statistics.pay.amount_of_refund'), this.$t('statistics.pay.refund_amount'), this.$t('common.time')]
+          filename = this.$t('statistics.visit.integral_analysis')
           data = this.payExcelData
         }
         excel.export_json_to_excel({

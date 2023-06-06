@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Middleware;
 
 use App\Code;
@@ -17,10 +26,10 @@ class LesseeVerify
     public function handle($request, Closure $next)
     {
         if (!$request->header('applyid')) {
-            return resReturn(0, '非法applyid', Code::CODE_INEXISTENCE);
+            return resReturn(0, __('middleware.lessee_verify.error.apply_id'), Code::CODE_INEXISTENCE);
         }
         if (!$request->header('versionid')) {
-            return resReturn(0, '非法versionid', Code::CODE_INEXISTENCE);
+            return resReturn(0, __('middleware.lessee_verify.error.version_id'), Code::CODE_INEXISTENCE);
         }
         return $next($request);
     }

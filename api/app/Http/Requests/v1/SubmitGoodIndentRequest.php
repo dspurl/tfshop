@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -61,25 +70,26 @@ class SubmitGoodIndentRequest extends Request
     public function messages()
     {
         return [
-            'address.nullable' => '收货地址必须',
-            'address.array' => '收货地址格式有误',
-            'carriage.required' => '运费必须',
-            'carriage.numeric' => '运费只能是数字',
-            'indentCommodity.required' => '订单商品必须',
-            'indentCommodity.*.price.required' => '商品价格必须',
-            'indentCommodity.*.price.numeric' => '商品价格格式有误',
-            'indentCommodity.*.number.required' => '商品数量必须',
-            'indentCommodity.*.number.integer' => '商品数量格式有误',
-            'indentCommodity.*.name.required' => '商品名称必须',
-            'indentCommodity.*.name.string' => '商品名称格式有误',
-            'indentCommodity.*.good_id.required' => '商品ID必须',
-            'indentCommodity.*.good_id.integer' => '商品ID格式有误',
-            'indentCommodity.*.good_sku_id.required' => '商品SKU必须',
-            'indentCommodity.*.good_sku_id.integer' => '商品SKU格式有误',
-            'indentCommodity.*.img.required' => '商品主图必须',
-            'indentCommodity.*.img.string' => '商品主图格式有误',
-            'remark.string' => '备注有误',
-            'remark.max' => '备注不能超过200个字符',
+            'type.integer' => __('hint.error.wrong_format', ['attribute' => __('good_indent.type')]),
+            'address.array' => __('hint.error.wrong_format', ['attribute' => __('good_indent.address')]),
+            'carriage.required' => __('hint.error.not_null', ['attribute' => __('good_indent.carriage')]),
+            'carriage.numeric' => __('hint.error.wrong_format', ['attribute' => __('good_indent.carriage')]),
+            'indentCommodity.required' => __('hint.error.not_null', ['attribute' => __('good_indent.indentCommodity')]),
+            'indentCommodity.array' => __('hint.error.wrong_format', ['attribute' => __('good_indent.indentCommodity')]),
+            'indentCommodity.*.price.required' => __('hint.error.not_null', ['attribute' => __('good_indent.indentCommodity.price')]),
+            'indentCommodity.*.price.numeric' => __('hint.error.wrong_format', ['attribute' => __('good_indent.indentCommodity.price')]),
+            'indentCommodity.*.number.required' => __('hint.error.not_null', ['attribute' => __('good_indent.indentCommodity.number')]),
+            'indentCommodity.*.number.integer' => __('hint.error.wrong_format', ['attribute' => __('good_indent.indentCommodity.number')]),
+            'indentCommodity.*.name.required' => __('hint.error.not_null', ['attribute' => __('good_indent.indentCommodity.name')]),
+            'indentCommodity.*.name.string' => __('hint.error.wrong_format', ['attribute' => __('good_indent.indentCommodity.name')]),
+            'indentCommodity.*.good_id.required' => __('hint.error.not_null', ['attribute' => __('good_indent.indentCommodity.good_id')]),
+            'indentCommodity.*.good_id.integer' => __('hint.error.wrong_format', ['attribute' => __('good_indent.indentCommodity.good_id')]),
+            'indentCommodity.*.good_sku_id.required' => __('hint.error.not_null', ['attribute' => __('good_indent.indentCommodity.good_sku_id')]),
+            'indentCommodity.*.good_sku_id.integer' => __('hint.error.wrong_format', ['attribute' => __('good_indent.indentCommodity.good_sku_id')]),
+            'indentCommodity.*.img.required' => __('hint.error.not_null', ['attribute' => __('good_indent.indentCommodity.img')]),
+            'indentCommodity.*.img.string' => __('hint.error.wrong_format', ['attribute' => __('good_indent.indentCommodity.img')]),
+            'remark.string' => __('hint.error.wrong_format', ['attribute' => __('good_indent.remark')]),
+            'remark.max' => __('hint.error.max', ['attribute' => __('good_indent.remark'), 'place' => 200]),
         ];
     }
 }

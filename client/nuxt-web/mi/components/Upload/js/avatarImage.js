@@ -53,11 +53,11 @@ export default{
       const isLt = file.size < this.imgData.size
       if (
         this.format.indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的文件格式')
+        this.$message.error(this.$t('good.file.error'))
         return false
       }
       if (!isLt) {
-        this.$message.error('上传文件大小不能超过 ' + file.size / 1024 / 1024 + 'MB!')
+        this.$message.error(this.$t('good.file.size.error') + file.size / 1024 / 1024 + 'MB!')
       }
       return isLt
     },

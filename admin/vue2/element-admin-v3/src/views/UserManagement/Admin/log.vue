@@ -9,39 +9,39 @@
       highlight-current-row
       style="width: 100%;"
       @sort-change="sortChange">
-      <el-table-column :label="$t('usuel.id')" sortable="custom" align="center" width="65" prop="id">
+      <el-table-column :label="$t('common.table.id')" sortable="custom" align="center" width="80" prop="id">
         <template slot-scope="scope">
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作员" align="center">
+      <el-table-column :label="$t('admin_log.admin_id')" align="center" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.admin_id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="操作路径" align="center">
+      <el-table-column :label="$t('admin_log.path')" width="300">
         <template slot-scope="scope">
           <span>{{ scope.row.path }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="方式" align="center">
+      <el-table-column :label="$t('admin_log.method')" align="center" width="100">
         <template slot-scope="scope">
           <span>{{ scope.row.method }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="IP" align="center">
+      <el-table-column :label="$t('admin_log.ip')" align="center" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.ip }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="提交的数据" align="center">
+      <el-table-column :label="$t('admin_log.data')" align="center">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" content="查看" placement="top-start">
+          <el-tooltip :content="$t('common.check')" class="item" effect="dark" placement="top-start">
             <el-button type="primary" icon="el-icon-mobile" circle @click="checkJson(scope.row)"/>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column label="时间" align="center">
+      <el-table-column :label="$t('common.time')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
@@ -50,7 +50,7 @@
     <!--分页-->
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" @pagination="getList" />
     <!--查看-->
-    <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" title="请求数据详情">
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" :title="$t('admin_log.info')">
       <json-viewer
         :value="jsonData"
         :expand-depth="5"
@@ -174,8 +174,8 @@ export default {
         data: {}
       },
       copyable: {
-        copyText: '复制',
-        copiedText: '复制中'
+        copyText: this.$t('common.copy'),
+        copiedText: this.$t('common.replication')
       },
       temp: {}
     }
@@ -188,6 +188,7 @@ export default {
       this.listLoading = true
       log(this.listQuery).then(response => {
         this.list = response.data.data
+        this.total = response.data.total
         this.listLoading = false
       })
     },

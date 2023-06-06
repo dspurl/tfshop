@@ -7,7 +7,7 @@ export default {
   layout: 'login',
   head () {
     return {
-      title: '登录' + '-' + process.env.APP_NAME
+      title: this.$t('header.top.login') + '-' + process.env.APP_NAME
     }
   },
   async asyncData (ctx) {
@@ -34,11 +34,11 @@ export default {
   data() {
     const validateCellphone = (rule, value, callback) => {
       if (value === '') {
-        callback(new Error('请输入手机号'));
+        callback(new Error(this.$t('hint.error.import', {attribute: this.$t('find_password.cellphone')})));
       } else {
         const myreg = /^1[3456789]\d{9}$/;
         if (!myreg.test(value)) {
-          callback(new Error('手机号格式有误'));
+          callback(new Error(this.$t('hint.error.wrong_format', {attribute: this.$t('find_password.cellphone')})));
         }
         callback();
       }
@@ -56,8 +56,8 @@ export default {
           { validator: validateCellphone, trigger: 'blur' }
         ],
         password: [
-          { required: true, message: '请输入密码', trigger: 'blur' },
-          { min: 5, message: '密码长度必须大于5位', trigger: 'blur' }
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('find_password.password')}), trigger: 'blur' },
+          { min: 5, message: this.$t('find_password.password.length'), trigger: 'blur' }
         ]
       },
       banner: {}
@@ -79,7 +79,7 @@ export default {
             response.remember = this.ruleForm.remember
             this.login(response);
             this.$message({
-              message: '登录成功',
+              message: this.$t('find_password.login_successfully'),
               type: 'success'
             });
             this.loading = false;

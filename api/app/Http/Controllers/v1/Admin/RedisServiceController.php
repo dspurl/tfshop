@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -138,7 +147,7 @@ class RedisServiceController extends Controller
     {
 
         if (!$request->has('type') || !$name) {
-            return resReturn(0, '参数有误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('common.arguments'), Code::CODE_PARAMETER_WRONG);
         }
         $redis = new RedisService($request->type);
         $data = null;
@@ -211,6 +220,6 @@ class RedisServiceController extends Controller
                 $redis->del($all['name']);
             }
         }
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

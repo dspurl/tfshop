@@ -2,13 +2,13 @@
 	<view class="content">
 		<view class="navbar" :style="{position:headerPosition,top:headerTop}">
 			<view class="nav-item" :class="{current: !filterIndex}" @click="tabClick()">
-				综合排序
+				{{$t('product.sort_synthesize')}}
 			</view>
 			<view class="nav-item" :class="{current: filterIndex === '-sales'}" @click="tabClick('sales')">
-				销量优先
+				{{$t('product.sort_sales')}}
 			</view>
 			<view class="nav-item" :class="{current: filterIndex === '-order_price' || filterIndex === '+order_price'}" @click="tabClick('order_price')">
-				<text>价格</text>
+				<text>{{$t('product.price')}}</text>
 				<view class="p-box">
 					<text :class="{active: filterIndex === '+order_price'}" class="yticon icon-shang"></text>
 					<text :class="{active: filterIndex === '-order_price'}" class="yticon icon-shang xia"></text>
@@ -74,7 +74,11 @@
 				page:1,
 			};
 		},
-
+		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('product.list')
+			})
+		},
 		onLoad(options){
 			// #ifdef H5
 			this.headerTop = '80upx';
@@ -181,7 +185,7 @@
 				})
 				this.loadData('refresh', 1);
 				uni.showLoading({
-					title: '正在加载'
+					title: this.$t('load_more.content_refresh')
 				})
 			},
 			//显示分类面板
@@ -203,7 +207,7 @@
 				})
 				this.loadData('refresh', 1);
 				uni.showLoading({
-					title: '正在加载'
+					title: this.$t('load_more.content_refresh')
 				})
 			},
 			//详情

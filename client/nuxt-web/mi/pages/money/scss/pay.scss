@@ -107,7 +107,8 @@
       li{
         display: flex;
         .label{
-          width: 80px;
+          width: 200px;
+          text-align: right;
         }
         .content{
           .on{

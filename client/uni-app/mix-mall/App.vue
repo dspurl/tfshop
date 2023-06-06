@@ -2,6 +2,7 @@
 /**
  * vuex管理登陆状态，具体可以参考官方登陆模板示例
  */
+import i18n from '@/utils/lang/index'
 import { mapMutations } from 'vuex';
 import { getPlatform,getLogin } from 'utils'
 import Login from '@/api/login.js'
@@ -17,7 +18,7 @@ export default {
 			getLogin();
 		}
 		// #endif
-		
+		this.setLanguage({code: uni.getStorageSync('language')})
 	},
 	methods: {
 		...mapMutations(['login']),
@@ -52,6 +53,35 @@ export default {
 				  index: 2
 				})
 			}
+		},
+		// 设置底部tab
+		setLanguage(res){
+			// 首次加载无法获取缓存中的语言
+			if(!res.code){
+				res.code = i18n.locale
+			}
+			uni.setStorageSync('language', res.code, 31536000)
+			i18n.locale = res.code
+			// 设置底部tab
+			uni.setTabBarItem({
+				index: 0,
+				text: i18n.t('tab_bar.0'),
+				complete: (e)=>{
+					console.log('e', e)
+				}
+			})
+			uni.setTabBarItem({
+				index: 1,
+				text: i18n.t('tab_bar.1')
+			})
+			uni.setTabBarItem({
+				index: 2,
+				text: i18n.t('tab_bar.2')
+			})
+			uni.setTabBarItem({
+				index: 3,
+				text: i18n.t('tab_bar.3')
+			})
 		}
 	},
 	onShow: function() {

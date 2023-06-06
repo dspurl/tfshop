@@ -16,12 +16,12 @@
         </template>
       </el-table-column>
       <el-table-column
+        :label="$t('good.sku.table.column.label.image')"
         prop="img"
-        label="图片"
         width="180">
         <template slot-scope="scope">
           <el-form :model="scope.row">
-            <el-form-item prop="cost_price">
+            <el-form-item prop="img">
               <el-upload
                 :show-file-list="false"
                 :on-success="(response, i)=> specificationMarketAvatarSuccess(response, scope.$index)"
@@ -38,66 +38,66 @@
         </template>
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="成本价(元)"
+        :label="$t('good.sku.table.column.label.cost_price')"
+        prop="cost_price"
         width="150">
         <template slot-scope="scope">
           <el-form :model="scope.row">
             <el-form-item prop="cost_price">
-              <el-input v-model="scope.row.cost_price" size="mini" placeholder="请输入成本价" clearable @input="e => updateInput(e, scope.$index, 'cost_price')"/>
+              <el-input :placeholder="$t('hint.error.please_enter', { attribute: $t('good.sku.table.column.label.cost_price') })" v-model="scope.row.cost_price" size="mini" clearable @input="e => updateInput(e, scope.$index, 'cost_price')"/>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="市场价(元)"
-        width="150">
+        :label="$t('good.sku.table.column.label.market_price')"
+        prop="market_price"
+        width="160">
         <template slot-scope="scope">
           <el-form :model="scope.row">
             <el-form-item prop="market_price">
-              <el-input v-model="scope.row.market_price" size="mini" placeholder="请输入市场价" clearable @input="e => updateInput(e, scope.$index, 'market_price')"/>
+              <el-input :placeholder="$t('hint.error.please_enter', { attribute: $t('good.sku.table.column.label.market_price') })" v-model="scope.row.market_price" size="mini" clearable @input="e => updateInput(e, scope.$index, 'market_price')"/>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
       <el-table-column
-        prop="address"
-        label="销售价(元)"
+        :label="$t('good.sku.table.column.label.price')"
+        prop="price"
         width="150">
         <template slot-scope="scope">
           <el-form :model="scope.row">
             <el-form-item prop="price">
-              <el-input v-model="scope.row.price" size="mini" placeholder="请输入销售价" clearable @input="e => updateInput(e, scope.$index, 'price')"/>
+              <el-input :placeholder="$t('hint.error.please_enter', { attribute: $t('good.sku.table.column.label.price') })" v-model="scope.row.price" size="mini" clearable @input="e => updateInput(e, scope.$index, 'price')"/>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
       <el-table-column
+        :label="$t('good.sku.table.column.label.inventory')"
         prop="address"
-        label="库存"
         width="150">
         <template slot-scope="scope">
           <el-form :model="scope.row">
             <el-form-item prop="inventory">
-              <el-input v-model="scope.row.inventory" size="mini" placeholder="请输入库存" clearable @input="e => updateInput(e, scope.$index, 'inventory')"/>
+              <el-input :placeholder="$t('hint.error.please_enter', { attribute: $t('good.sku.table.column.label.inventory') })" v-model="scope.row.inventory" size="mini" clearable @input="e => updateInput(e, scope.$index, 'inventory')"/>
             </el-form-item>
           </el-form>
         </template>
       </el-table-column>
       <el-table-column
         v-if="type === 2"
+        :label="$t('good.sku.table.column.label.good_code')"
         prop="good_code"
-        label="虚拟商品"
-        width="120">
+        width="140">
         <template slot-scope="scope">
-          <el-button size="mini" @click="addRuleForm(scope.row, scope.$index)">{{ scope.row.good_code ? '修改卡密' : '添加卡密' }}</el-button>
+          <el-button size="mini" @click="addRuleForm(scope.row, scope.$index)">{{ scope.row.good_code ? $t('good.sku.table.column.button.amend') : $t('good.sku.table.column.button.add') }}</el-button>
         </template>
       </el-table-column>
       <el-table-column
         v-if="type === 3"
+        :label="$t('good.sku.table.column.label.file')"
         prop="file"
-        label="文件"
         width="120">
         <template slot-scope="scope">
           <el-form :model="scope.row">
@@ -112,56 +112,56 @@
       </el-table-column>
     </el-table>
     <!-- 卡密-->
-    <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" center title="添加卡密">
+    <el-dialog :close-on-click-modal="false" :visible.sync="dialogFormVisible" :title="$t('good.sku.dialog.title.add_carmi')" center>
       <el-form ref="dataForm" :model="ruleForm" label-position="cente" label-width="120px">
-        <el-form-item label="卡密类型" prop="code_type">
+        <el-form-item :label="$t('good.sku.dialog.form.radio_group.code_type')" prop="code_type">
           <el-radio-group v-model="ruleForm.code_type">
-            <el-radio-button :label="0">卡密</el-radio-button>
-            <el-radio-button :label="1">网盘</el-radio-button>
+            <el-radio-button :label="0">{{ $t('good.sku.dialog.form.radio_group.code_type.carmi') }}</el-radio-button>
+            <el-radio-button :label="1">{{ $t('good.sku.dialog.form.radio_group.code_type.web_disk') }}</el-radio-button>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="是否固定卡密" prop="is_fixed" style="margin-top: 10px;">
+        <el-form-item :label="$t('good.sku.dialog.form.radio_group.is_fixed')" prop="is_fixed" style="margin-top: 10px;">
           <el-radio-group v-model="ruleForm.is_fixed" @change="changeIsFixed">
-            <el-radio-button :label="1">是</el-radio-button>
-            <el-radio-button :label="0">否</el-radio-button>
+            <el-radio-button :label="1">{{ $t('common.yes') }}</el-radio-button>
+            <el-radio-button :label="0">{{ $t('common.no') }}</el-radio-button>
           </el-radio-group>
-          <p>如果是非固定卡密，请确保库存和卡密数量相同</p>
+          <p>{{ $t('good.sku.dialog.form.radio_group.tip.is_fixed') }}}</p>
         </el-form-item>
         <el-form-item prop="good_code">
           <el-table
             :data="ruleForm.good_code"
             style="width: 100%;height: 200px;overflow-y: auto;">
             <el-table-column
-              :label="ruleForm.code_type === 1 ? '网盘地址' : '卡号'"
+              :label="ruleForm.code_type === 1 ? $t('good.sku.dialog.form.table.column.good_code.url') : $t('good.sku.dialog.form.table.column.good_code.card_number')"
               prop="name"
-              width="250">
+              width="300">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.name" :disabled="!!scope.row.state" :placeholder="ruleForm.code_type === 1 ? '请输入网盘地址' : '请输入卡号(非必填)'" size="mini" clearable/>
+                <el-input v-model="scope.row.name" :disabled="!!scope.row.state" :placeholder="ruleForm.code_type === 1 ? $t('hint.error.please_enter', { attribute: $t('good.sku.dialog.form.table.column.good_code.url') }) : $t('hint.error.please_enter', { attribute: $t('good.sku.dialog.form.table.column.good_code.card_number') }) + `(${$t('common.not_required')})`" size="mini" clearable/>
               </template>
             </el-table-column>
             <el-table-column
-              :label="ruleForm.code_type === 1 ? '提取码' : '卡密'"
+              :label="ruleForm.code_type === 1 ? $t('good.sku.dialog.form.table.column.code.code') : $t('good.sku.dialog.form.table.column.code.carmi')"
               prop="code"
-              width="250">
+              width="320">
               <template slot-scope="scope">
-                <el-input v-model="scope.row.code" :disabled="!!scope.row.state" :placeholder="ruleForm.code_type === 1 ? '请输入提取码' : '请输入卡密'" size="mini" clearable/>
+                <el-input v-model="scope.row.code" :disabled="!!scope.row.state" :placeholder="ruleForm.code_type === 1 ? $t('hint.error.please_enter', { attribute: $t('good.sku.dialog.form.table.column.code.code') }) : $t('hint.error.please_enter', { attribute: $t('good.sku.dialog.form.table.column.code.carmi') })" size="mini" clearable/>
               </template>
             </el-table-column>
             <el-table-column
-              label="操作"
-              width="80">
+              :label="$t('common.operation')"
+              width="90">
               <template slot-scope="scope">
-                <el-button v-if="!scope.row.state" size="mini" type="danger" @click="deleteGoodCode(scope.$index)">删除</el-button>
+                <el-button v-if="!scope.row.state" size="mini" type="danger" @click="deleteGoodCode(scope.$index)">{{ $t('common.delete') }}</el-button>
               </template>
             </el-table-column>
           </el-table>
-          <el-button v-if="(ruleForm.is_fixed === 1 && ruleForm.good_code.length === 0) || ruleForm.is_fixed === 0" size="mini" type="primary" icon="el-icon-plus" @click="addGoodCode()">新增</el-button>
-          <el-button v-if="ruleForm.is_fixed === 0" size="mini" icon="el-icon-plus" @click="importGoodCode()">导入卡密</el-button>
+          <el-button v-if="(ruleForm.is_fixed === 1 && ruleForm.good_code.length === 0) || ruleForm.is_fixed === 0" size="mini" type="primary" icon="el-icon-plus" @click="addGoodCode()">{{ $t('common.newly_increased') }}</el-button>
+          <el-button v-if="ruleForm.is_fixed === 0" size="mini" icon="el-icon-plus" @click="importGoodCode()">{{ $t('good.sku.dialog.form.button') }}</el-button>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取消</el-button>
-        <el-button type="primary" @click="saveGoodCode()">确定</el-button>
+        <el-button @click="dialogFormVisible = false">{{ $t('common.cancel') }}</el-button>
+        <el-button type="primary" @click="saveGoodCode()">{{ $t('common.confirm') }}</el-button>
       </div>
     </el-dialog>
   </div>
@@ -274,11 +274,11 @@ import AvatarImage from '@/components/Upload/AvatarImage'
           'image/png',
           'image/bmp'
         ].indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的图片格式')
+        this.$message.error(this.$t('hint.upload.img.rmvb'))
         return false
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$message.error(this.$t('hint.upload.img.can_not_surpass', { size: '2MB' }))
       }
       return isLt2M
     },
@@ -319,13 +319,13 @@ import AvatarImage from '@/components/Upload/AvatarImage'
     },
     // 导入卡密
     importGoodCode() {
-      let inputPlaceholder = '每行一条卡密，每行格式：卡号1:卡密1'
+      let inputPlaceholder = this.$t('good.sku.function.import_good_code_input_placeholder.one')
       if (this.ruleForm.code_type === 1) {
-        inputPlaceholder = '每行一条网盘数据，每行格式：网盘地址1:提取码1'
+        inputPlaceholder = this.$t('good.sku.function.import_good_code_input_placeholder.two')
       }
-      this.$prompt('请输入卡密', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
+      this.$prompt(this.$t('hint.error.please_enter', { attribute: this.$t('good.sku.function.import_good_code.prompt.carmi') }), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t(''),
         inputType: 'textarea',
         inputPlaceholder: inputPlaceholder
       }).then(({ value }) => {
@@ -336,7 +336,7 @@ import AvatarImage from '@/components/Upload/AvatarImage'
           if (line.length < 2) {
             this.$message({
               type: 'info',
-              message: '卡密格式有误'
+              message: this.$t('good.sku.function.import_good_code.message.carmi')
             })
             return false
           }

@@ -1,8 +1,24 @@
-<p align="center">
-  <img src="https://dspurl.github.io/image/dsshop_logo.jpg" width="150">
-</p>
-<p align="center">
-  <a href="https://github.com/laravel/framework">
+<div align="center" >
+    <img src="https://dspurl.github.io/image/dsshop_logo.jpg" width="150" />
+</div>
+<h3 align="center">
+DSSHOP商城系统
+</h3>
+<div align="center">
+一款轻量级商城开源系统
+</div>
+<div align="center">
+ **支持多语言** **易二开** **低代码** **跨终端**
+</div>
+
+<div align="center" >
+    <a href="https://www.dswjcms.com">
+        <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
+    </a>
+    <a href="https://www.dswjcms.com/download">
+        <img src="https://img.shields.io/badge/Edition-3.4.0-blue.svg" />
+    </a>
+      <a href="https://github.com/laravel/framework">
     <img src="https://img.shields.io/badge/laravel-7.30.6-brightgreen.svg" alt="laravel">
   </a>
   <a href="https://github.com/vuejs/vue">
@@ -11,163 +27,101 @@
   <a href="https://github.com/ElemeFE/element">
     <img src="https://img.shields.io/badge/element--ui-2.13.2-brightgreen.svg" alt="element-ui">
   </a>
-  <img src="https://img.shields.io/badge/License-MIT-yellow.svg">
-</p>
-<h3 align="center">DSSHOP电商商城</h3>
-<p align="center">前后端分离架构，VUE2.0+Laravel7，免费开源可商用。</p>
-<p align="center">官网: <a href="https://dsshoping.dswjcms.com" target="_blank">https://dsshoping.dswjcms.com</a></p>
+</div>
 
-更新说明
-------------
+#### 
 
-说明
-------------
-<p>master分支为稳定版本，推荐大多数用户下载，new分支为新版本，随时会有更新，未进行测试验收，不推荐用户使用</p>
-<p>如果因网络原因无法下载，可通过<a href="https://gitee.com/dswjcms/dsshop">https://gitee.com/dswjcms/dsshop</a>下载</p>
-<p>当前版本3.3.0</p>
+<div align="center">
 
-介绍
-------------
-DSSHOP是一套代代码多终端商城解决方案，它采用前后端分离，后端基于laravel,前端基于Vue。
+[官网](https://www.dswjcms.com/) |
+[在线体验](https://v3.dswjcms.com/admin/) |
+[帮助文档](https://dspurl.github.io/dsshop/)
+</div>
 
-我们不生成代码，我们只是代码的搬运工，60%的复制粘贴，30%的思考，10%的代码量。
+### 介绍
+DSSHOP是一款轻量级低代码商城系统，意在打造一款易二开易扩展的商城系统。开源版自带插件脚手架，帮助开发者减少70%-90%重复的代码书写量。
 
-演示
-------------
-- 后台演示地址：<a href="https://dsshop.dswjcms.com/admin">https://dsshop.dswjcms.com/admin</a>
-- 网站演示地址：<a href="https://dsshop.dswjcms.com">https://dsshop.dswjcms.com</a>
-- 小程序、h5、安卓演示（演示包含付费插件，开源以下载后功能为准）
-<table>
-    <tr>
-    	<td><img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg"></td>
-        <td><img src="https://dspurl.github.io/image/13.png"></td>
-        <td><img src="https://dspurl.github.io/image/1618405140569.png"></td>
-    </tr>
-</table>
-
-兼容
-------------
-<table>
-    <tr>
-    	<th>网站</th>
-        <th>管理后台</th>
-        <th>H5</th>
-        <th>小程序</th>
-        <th>APP</th>
-        <th>桌面</th>
-    </tr>
-    <tr>
-        <td>支持（nuxt服务器渲染，SEO更友好）</td>
-        <td>支持(基于vue-element-admin)</td>   
-        <td>支持(uni-app)</td>
-        <td>支持(除微信小程序外，其它的需要自行做兼容处理)</td>
-        <td>支持(uni-app)</td>
-        <td>支持(PWA)</td>
-    </tr>
-</table>
-
-要求
-------------
- - php >= 7.4
- - laravel = 7.22.6
- - mysql >= 5.7
- - vue = 2.5.17
- - node= 14.18.3
-
-<p><a href="https://dspurl.github.io/dsshop/guide/getting-started.html#%E5%82%BB%E7%93%9C%E5%BC%8F%E5%AE%89%E8%A3%85%E5%8C%85">点击查阅详细步骤</a></p>
-
-<p><a href="https://dswjcms_purl.gitee.io/dsshop/guide/getting-started.html#%E5%82%BB%E7%93%9C%E5%BC%8F%E5%AE%89%E8%A3%85%E5%8C%85">点击查阅详细步骤（上面访问慢的话，点击这里）</a></p>
+### 系统亮点
+~~~
+多 语 言：后台、网站、移动端全端支持多语言切换，自带中英文语言包；
+高 性 能：redis缓存、队列、长连接、多种云储存、支持集群部署；
+前后端分离：后端laravel7，管理端vue-element-admin，移动端uniapp；
+权限管理：内置强大灵活的权限管理，可以控制到每一个菜单和每一个按钮；
+开发配置：低代码增加配置、系统组合数据模块；
+二开效率：PHP快速生成后台、后端、移动端、网站数据库、接口文档，省去80%重复工作量；
+快速上手：详细帮助文档、接口文档、代码注释、一键安装；
+系统安全：系统操作日志、系统生产日志、数据备份
+~~~
 
 
+### 运行环境
 
-傻瓜式一键安装(其它安装方式见文档)
-------------
-
-```shell
-git clone https://gitee.com/dswjcms/dsshop.git
-cd dsshop
-# 配置伪静态(这里不做介绍，参考laravel)，最终能通过访问dsshop.test(这里必须可以通过dsshop.test访问，不然无法安装)访问到dsshop/public目录
-# 运行安装引导
-访问：http://dsshop.test/install
-# 填写必要信息后，即可完成安装，安装只包括后台、h5、小程序
-# 小程序可以直接用小程序开发工具打开dsshop/api/public/mp-weixin,打包好后的小程序无法使用地址配置的选择地址功能
-# 网站需要进入dsshop/api/public/web并执行
-npm install
-npm start
 ```
-常见错误
-------------
-<p><a href="https://dspurl.github.io/dsshop/guide/faq.html">https://dspurl.github.io/dsshop/guide/faq.html</a></p>
-<p><a href="https://dswjcms_purl.gitee.io/dsshop/guide/faq.html">https://dswjcms_purl.gitee.io/dsshop/guide/faq.html</a></p>
+php >= 7.4
+laravel = 7.22.6
+mysql >= 5.7
+vue = 2.5.17
+node= 14.18.3
+```
 
-文档
-------------
-<p><a href="https://dspurl.github.io/dsshop/">https://dspurl.github.io/dsshop/</a></p>
-<p><a href="https://dswjcms_purl.gitee.io/dsshop/">https://dswjcms_purl.gitee.io/dsshop/</a></p>
 
-官方插件
-------------
-> 插件可定制开发，也可自行开发，官方提供以下插件，开通会员后可免费使用以下插件
-<p>优惠券</p>
-<p>评价</p>
-<p>栏目文章</p>
-<p>分销功能</p>
-<p>产品参数模板</p>
-<p>扫码登录</p>
-<p>积分</p>
-<p>积分商城</p>
-<p>积分抽奖【大转盘、九宫格、老虎机】</p>
-<p>秒杀</p>
-<p>拼团</p>
-<p>快递查询</p>
-功能介绍
-------------
-- **RBAC权限** 支持为不同管理员分配不同的权限
-- **商品SKU** 支持为同一商品添加不同的SKU属性（设计为无限层，建议三级以内，层级越多，性能越差）
-- **运费模板** 可以根据不同地区设置不同的运费和免邮的区域
-- **购物车** 用户可以直接购买商品，也可以将商品添加到购物车，一起支付
-- **订单** 项目支持用户下单、取消订单、平台发货、平台退款
-- **授权登录** 支持小程序端手机号一键授权登录，默认支持微信小程序（其它小程序可参考文档快速接入）
-- **支付** 支持余额支付（暂时只支持退款入账，不支持后台添加用户余额）和在线支付（默认支持微信小程序支付，其它支付可参考文档快速接入）
-- **轮播** 可以为项目添加轮播和首页广告，并添加相应的URL
-- **模板通知** 集成微信小程序模板通知，平台发货时，用户将收到发货的模板通知
-- **短信验证码** 集成阿里云短信，用户注册、找回密码时需要用户获取短信完成验证(未配置短信时，用户点击获取验证码后，将自动填写验证码)
-- **统计** 接入微信小程序部分统计，结合项目本身数据统计，让你全方位了解项目的真实数据
-- **事务支持** 项目支持事务处理，并为必要的业务流程增加了事务的处理机制
-- **Redis支持** 项目部分数据采用Redis缓存和Redisis锁机制
-- **消息通知** 集成多种通知途径：站内信、小程序、微信公众号、邮件等
-- **注册协议** 自带隐私协议、注册协议（需添加栏目文章模块）
-- **关联微信公众号** 系统已集成引导用户关注公众号代码，用户可轻松绑定微信公众号
-- **邮件系统** 邮箱认证、绑定、消息通知发送
-- **备份还原系统** 可对项目和数据库进行备份，并支持保留指定天数，超出后自动清除旧备份
-- **API文档系统** 后台可直接查询API接口文档
-- **系统配置** 支持平台常用配置自定义
-- **可视化系统** 支持拖拽编辑移动端首页、导航和自定义页面（仅傻瓜式支持）
-效果图
-------------
-<p align="center">
-  <img src="https://dspurl.github.io/image/a12.png" width="100%">
-  <img src="https://dspurl.github.io/image/a01.png" width="100%">
-  <img src="https://dspurl.github.io/image/a02.png" width="100%">
-  <img src="https://dspurl.github.io/image/a03.png" width="100%">
-  <img src="https://dspurl.github.io/image/a04.png" width="100%">
-  <img src="https://dspurl.github.io/image/a05.png" width="100%">
-  <img src="https://dspurl.github.io/image/a06.png" width="100%">
-  <img src="https://dspurl.github.io/image/a07.png" width="100%">
-  <img src="https://dspurl.github.io/image/a08.png" width="100%">
-  <img src="https://dspurl.github.io/image/a09.png" width="100%">
-</p>
+> 温馨提示：不支持虚拟空间，如不会配环境及PHP扩展，可以采用基于docker来部署
 
-图标
-------------
-> 图标部分是svg，部分使用iconfont，iconfont并未明确可以免费用于商业用途，版权归图标作者所有，如对版权有要求的，请自行更换图标
-- 后端使用svg图标，路径在`admin/src/icons/svg`，根据文件名可以看出图标用途
-- 前端使用了用了1个ttf图标文件(https://at.alicdn.com/t/font_1078604_w4kpxh0rafi.ttf)
-- 在App.vue中引用，用[百度字体编辑器](http://fontstore.baidu.com/static/editor/index.html)可以查看和编辑字体
-- 预览使用: https://vkceyugu.cdn.bspapp.com/VKCEYUGU-market/872f2160-d6e1-11ea-81ea-f115fe74321c.html
+### 官方论坛
 
-基于以下扩展或组件(不分排名，这里只罗列部分名称，具体请查看package和composer)
-------------
+
+
+---
+
+
+###  系统演示
+
+### 开源版演示
+> 开源版小程序无演示，请查看H5的演示效果，和PRO的区别除了功能外，没区别
+
+
+管理后台： https://v3.dswjcms.com/admin 账号：demo 密码：dswjcms.com
+
+H5端：https://v3.dswjcms.com/h5（移动端打开）
+
+PC端：https://v3.dswjcms.com/（电脑端打开）
+
+### PRO版演示
+
+|微信小程序|H5|安卓|
+|-|-|-|
+|<img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg">|<img src="https://dspurl.github.io/image/13.png">|<img src="https://dspurl.github.io/image/1618405140569.png">|
+
+管理后台： https://dsshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
+
+H5端：https://dsshop.dswjcms.com/h5（移动端打开）
+
+PC端：https://dsshop.dswjcms.com/（电脑端打开）
+
+### 页面展示
+(页面仅展示部分UI)
+![](/image/a01.png)
+![](/image/a02.png)
+![](/image/a03.png)
+![](/image/a04.png)
+![](/image/a08.png)
+![](/image/a09.png)
+
+### 感谢参与开发者
+感谢大神们提交代码（排名不分先后）
+
+@IncaseDo，@NickCaiSen，@czhou，@czhou，@yangjingyu
+
+欢迎反馈问题 [反馈问题](https://github.com/dspurl/dsshop/issues)。
+
+欢迎提交代码 [提交代码](https://github.com/dspurl/dsshop/pulls)。
+
+欢迎加入我们的QQ频道
+<p><img src="/image/channel.png" width="250" /></p>
+
+### 特别鸣谢
+
+排名不分先后，感谢这些软件的开发者：
 - [laravel](https://learnku.com/docs/laravel/7.x "laravel")
 - [easywechat](https://www.easywechat.com/docs/4.1/mini-program/app_code "easywechat微信公众号")
 - [guzzle](https://guzzle-cn.readthedocs.io/zh_CN/latest/index.html "guzzle")
@@ -178,11 +132,32 @@ npm start
 - [vue-element-admin V3.*](https://github.com/PanJiaChen/vue-element-admin/blob/tag/3.11.0/README.zh-CN.md "vue-element-admin")
 - [element](https://element.eleme.cn/ "element")
 
-版权说明
-------------
-- 基于MIT协议，可以免费使用
-- 使用官方插件后需要支付会员费，或购买商业版，不然不允许使用
+### 核心开发团队
+产品：dswjcms、purl
 
-联系我们
-------------
-- 开源项目可能存在BUG，如发现问题，可通过Github的issue进行提交，请根据提问格式提问，不符合的一律不回答。
+技术：dswjcms、purl
+
+UI：dswjcms、purl
+
+测试：dswjcms、purl
+
+### 使用须知
+
+1.允许用于个人学习、毕业设计、教学案例、公益事业、商业使用;
+
+2.如果商用必须保留版权信息，请自觉遵守;
+
+3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
+
+### 版权信息
+
+使用本项目必须保留所有版权信息。
+
+本项目包含的第三方源码和二进制文件之版权信息另行标注。
+
+版权所有Copyright © 2020-2023 by DSSHOP(https://www.dswjcms.com)
+
+All rights reserved。
+
+著作权所有者为宁波市鄞州区天发网络科技有限公司。
+

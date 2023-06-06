@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Requests\v1;
 
 use App\Http\Requests\Request;
@@ -64,16 +73,16 @@ class SubmitBannerRequest extends Request
     public function messages()
     {
         return [
-            'name.required' => '轮播名称不能为空',
-            'name.string' => '轮播名称格式有误',
-            'name.unique' => '轮播名称已存在',
-            'name.max' => '轮播名称不能大于30个字符',
-            'type.required' => '轮播类型不能为空',
-            'type.integer' => '轮播类型格式有误',
-            'img.url' => '轮播图片格式有误',
-            'url.string' => '轮播地址格式有误',
-            'state.integer' => '轮播状态格式有误',
-            'sort.integer' => '轮播排序格式有误',
+            'name.required' => __('hint.error.not_null', ['attribute' => __('banner.name')]),
+            'name.string' => __('hint.error.wrong_format', ['attribute' => __('banner.name')]),
+            'name.unique' => __('hint.error.exist', ['attribute' => __('banner.name')]),
+            'name.max' => __('hint.error.max', ['attribute' => __('banner.name'), 'place' => 30]),
+            'type.required' => __('hint.error.not_null', ['attribute' => __('banner.type')]),
+            'type.integer' => __('hint.error.wrong_format', ['attribute' => __('banner.type')]),
+            'img.url' => __('hint.error.wrong_format', ['attribute' => __('banner.img')]),
+            'url.string' => __('hint.error.wrong_format', ['attribute' => __('banner.url')]),
+            'state.integer' => __('hint.error.wrong_format', ['attribute' => __('common.state')]),
+            'sort.integer' => __('hint.error.wrong_format', ['attribute' => __('common.sort')]),
         ];
     }
 }

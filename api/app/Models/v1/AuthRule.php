@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -57,9 +66,9 @@ class AuthRule extends Model
     {
         if (isset($this->attributes['state'])) {
             if ($this->attributes['state'] == AuthRule::AUTH_RULE_STATE_ON) {
-                return '显示';
+                return __('common.is_show');
             } else {
-                return '隐藏';
+                return __('common.is_hide');
             }
         }
 

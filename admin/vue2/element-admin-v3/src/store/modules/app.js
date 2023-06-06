@@ -30,7 +30,7 @@ const app = {
     },
     SET_LANGUAGE: (state, language) => {
       state.language = language
-      setToken('language', language)
+      setToken('language', language, 31536000)
     },
     SET_SIZE: (state, size) => {
       state.size = size

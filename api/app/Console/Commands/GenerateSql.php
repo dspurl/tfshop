@@ -1,5 +1,16 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | 生成数据
+ * +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
@@ -8,11 +19,6 @@ use Illuminate\Support\Facades\Storage;
 
 class GenerateSql extends Command
 {
-    /**
-     * 生成数据
-     *
-     * @var string
-     */
     protected $signature = 'generate:sql {name?}';
 
     /**
@@ -43,7 +49,7 @@ class GenerateSql extends Command
         $name = $this->argument('name') ? $this->argument('name') : 'demo';
         $fileName = "./$name.sql";
         if(!Storage::exists($fileName)){
-            throw new \Exception($fileName.'文件不存在');
+            throw new \Exception($fileName.__('console.generate_sql'));
         }
         $data = Storage::get($fileName);
         $data = str_replace("\r", "\n", $data);

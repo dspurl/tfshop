@@ -29,7 +29,7 @@
         props: {
             placeholder: {
                 type: String,
-                default: "请输入搜索内容"
+                default: this.$t('hint.error.import', { attribute: this.$t('search')})"请输入搜索内容"
             },
             radius: {
                 type: [Number, String],
@@ -45,7 +45,7 @@
             },
             cancelText: {
                 type: String,
-                default: '取消'
+                default: this.$t('common.cancel')
             },
             bgColor: {
                 type: String,

@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <div class="user-title">消息通知</div>
+    <div class="user-title">{{$t('header.top.message')}}</div>
     <div class="padding-top-20" v-loading="loading">
       <el-table
         :data="noticeList"
@@ -16,7 +16,7 @@
         </el-table-column>
         <el-table-column
           prop="data.title"
-          label="标题">
+          :label="$t('notice.title')">
           <template slot-scope="scope">
             <NuxtLink :class="{on: !scope.row.read_at}" :to="{ path: '/user/notice/detail', query: { id: scope.row.id }}">
               <span v-if="!scope.row.read_at">●</span>{{scope.row.data.title}}
@@ -25,20 +25,20 @@
         </el-table-column>
         <el-table-column
           prop="created_at"
-          label="时间"
+          :label="$t('notice.time')"
           width="180"
           sortable>
         </el-table-column>
         <el-table-column
           prop="data.typeShow"
-          label="类型"
-          width="120">
+          :label="$t('notice.type')"
+          width="140">
         </el-table-column>
       </el-table>
       <div class="operation">
-        <el-button size="mini" :loading="buttonLoading" @click="handleCheckAllChange">全选/反选</el-button>
-        <el-button size="mini" :loading="buttonLoading" @click="handleAllRead()">标记已读</el-button>
-        <el-button size="mini" :loading="buttonLoading" @click="handleAllDelete()">删除</el-button>
+        <el-button size="mini" :loading="buttonLoading" @click="handleCheckAllChange">{{$t('notice.select_reverse')}}</el-button>
+        <el-button size="mini" :loading="buttonLoading" @click="handleAllRead()">{{$t('notice.read')}}</el-button>
+        <el-button size="mini" :loading="buttonLoading" @click="handleAllDelete()">{{$t('common.delete')}}</el-button>
         <pagination v-if="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.limit" class="pagination" @pagination="getList"/>
       </div>
     </div>

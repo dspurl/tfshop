@@ -1,3 +1,13 @@
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 import { getPlatform,getLogin } from 'utils'
 import configURL from './config.js'
 import store from '@/store'
@@ -87,7 +97,8 @@ function requestLoading(url, method, params, header, message, success, fail) {
       'content-type': 'application/json',
       'apply-secret': configURL.secret,
       'openid': uni.getStorageSync('applyDsshopOpenid'),
-	  'Authorization': uni.getStorageSync('dsshopTokenType') + ' ' + applytoken
+	    'Authorization': uni.getStorageSync('dsshopTokenType') + ' ' + applytoken,
+      'Lang': uni.getStorageSync('language') || 'zh'
     },
     method: method ? method : 'get',
     success: function (res) {
@@ -104,7 +115,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
 		  }
 		  
 	  }else if (res.statusCode == 500) {
-		  if(res.data.message.indexOf('The refresh token is invalid') !== -1 || res.data.message.indexOf('Unauthenticated') !== -1 || res.data.message.indexOf('登录超时') !== -1){
+		  if(res.data.message.indexOf('The refresh token is invalid') !== -1 || res.data.message.indexOf('Unauthenticated') !== -1 || res.data.message.indexOf(this.$t('login.timed.out')) !== -1){
 			  store.commit('logout')
 			  setTimeout(()=>{
 			  	uni.navigateTo({
@@ -118,11 +129,11 @@ function requestLoading(url, method, params, header, message, success, fail) {
 		  // #ifdef MP
 		  getLogin()
 		  // #endif
-		  fail({message: '登录超时，请重新登录'})
+		  fail({message: this.$t('request.login.timed.out')})
 	  }else if (res.statusCode == 401) {
 		  fail({message: res.data.message})
       } else {
-        fail({message: '服务器异常，请重新尝试'})
+        fail({message: this.$t('request.server_exception')})
       }
 
     },
@@ -134,7 +145,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
       if(res.data){
       		fail({message: res.data.message})
       }else{
-      		fail({message: '服务器异常'})
+      		fail({message: this.$t('request.server_exception')})
       }
     },
     complete: function (res) {

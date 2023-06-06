@@ -1,6 +1,14 @@
 <?php
-
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Observers\GoodIndent;
 
 
@@ -50,7 +58,7 @@ class FinishPaymentMoneyLogObserver
             $Money->user_id = $goodIndent->user_id;
             $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;
             $Money->money = $goodIndent->total;
-            $Money->remark = '对订单：' . $goodIndent->identification . '的付款';
+            $Money->remark = __('observer.good_indent.finish_payment_money_log.remark', ['id'=>$goodIndent->identification]);
             $Money->save();
         }
     }

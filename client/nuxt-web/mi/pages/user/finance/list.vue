@@ -1,11 +1,11 @@
 <template>
   <div class="box">
-    <div class="user-title">我的账单</div>
+    <div class="user-title">{{$t('user.bill')}}</div>
     <div class="padding-top-20">
       <el-tabs v-model="listQuery.type" @tab-click="getReloadList">
-        <el-tab-pane label="全部" name="0"></el-tab-pane>
-        <el-tab-pane label="收入" name="1"></el-tab-pane>
-        <el-tab-pane label="支出" name="2"></el-tab-pane>
+        <el-tab-pane :label="$t('finance.all')" name="0"></el-tab-pane>
+        <el-tab-pane :label="$t('finance.income')" name="1"></el-tab-pane>
+        <el-tab-pane :label="$t('finance.disbursement')" name="2"></el-tab-pane>
       </el-tabs>
       <div class="indent-list">
         <el-table
@@ -15,18 +15,18 @@
           v-loading="loading"
           class="table">
           <el-table-column
-            label="说明">
+            :label="$t('finance.remark')">
             <template slot-scope="scope">
               {{scope.row.remark}}
             </template>
           </el-table-column>
           <el-table-column
             prop="type_show"
-            label="类型"
+            :label="$t('finance.type')"
             width="120">
           </el-table-column>
           <el-table-column
-            label="操作金额"
+            :label="$t('finance.money')"
             width="120">
             <template slot-scope="scope">
               {{scope.row.money_show | thousands}}
@@ -34,7 +34,7 @@
           </el-table-column>
           <el-table-column
             prop="created_at"
-            label="操作日期"
+            :label="$t('finance.date')"
             width="180">
           </el-table-column>
         </el-table>

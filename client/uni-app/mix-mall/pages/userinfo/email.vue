@@ -2,20 +2,20 @@
 	<view class="container">
 		<form>
 			<view class="cu-form-group" v-if="data.oldEmail">
-				<view class="title">当前绑定邮箱</view>
+				<view class="title">{{$t('email.title')}}</view>
 				{{data.oldEmail}}
 			</view>
 			<view class="cu-form-group">
-				<view class="title">新邮箱</view>
-				<input placeholder="请输入新邮箱" name="email" v-model="data.email"></input>
+				<view class="title">{{$t('email.email')}}</view>
+				<input :placeholder="$t('hint.error.import', { attribute: $t('email.email') })" name="email" v-model="data.email"></input>
 			</view>
 			<view class="cu-form-group">
-				<view class="title">验证码</view>
-				<input maxlength="5" placeholder="请输入验证码" name="code" v-model="data.code"></input>
+				<view class="title">{{$t('find_password.code')}}</view>
+				<input :placeholder="$t('hint.error.import', { attribute: $t('find_password.code') })" maxlength="5" name="code" v-model="data.code"></input>
 				<button class='cu-btn bg-red shadow round getcode' :disabled="disabled" @click="getCode">{{codename + seconds + unit}}</button>
 			</view>
 			<view class=" flex flex-direction padding">
-			  <button class="cu-btn round bg-red shadow lg" @click="verifyEmail">提交</button>
+			  <button class="cu-btn round bg-red shadow lg" @click="verifyEmail">{{$t('common.submit')}}</button>
 			</view>
 		</form>
 	</view>
@@ -27,7 +27,7 @@
 	export default {
 		data() {
 			return {
-				codename:'获取验证码',
+				codename:this.$t('find_password.get_code'),
 				disabled: false,
 				unit: '',
 				seconds: '',
@@ -39,15 +39,20 @@
 				}
 			};
 		},
+		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('email.modification')
+			})
+		},
 		onLoad(option){
 			if(option.email){
 				this.data.oldEmail = option.email
 				uni.setNavigationBarTitle({
-				    title: '修改邮箱'
+				    title: this.$t('email.modification')
 				});
 			}else{
 				uni.setNavigationBarTitle({
-				    title: '绑定邮箱'
+				    title: this.$t('email.binding')
 				});
 			}
 			this.loginCheck()
@@ -58,16 +63,16 @@
 			getCode(){
 				let that = this
 				if (!this.data.email){
-					this.$api.msg('请填写邮箱')
+					this.$api.msg(this.$t('email.write'))
 					return false;
 				}
 				var myreg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 				if (!myreg.test(this.data.email)) {
-					this.$api.msg('邮箱格式有误')
+					this.$api.msg(this.$t('email.error'))
 					return false;
 				}
 				Login.emailCode(this.data,function(res){
-					that.$api.msg('发送成功')
+					that.$api.msg(that.$t('email.send_successfully'))
 					// 开始倒计时
 					that.seconds = 60
 					that.codename = ''
@@ -79,7 +84,7 @@
 							// 读秒结束 清空计时器
 							clearInterval(that.timer)
 							that.seconds = ''
-							that.codename = '获取验证码'
+							that.codename = that.$t('find_password.get_code')
 							that.unit = ''
 							that.disabled = false
 						}
@@ -90,24 +95,24 @@
 				const data = this.data
 				const that = this
 				if (!data.email) {
-				  this.$api.msg('请填写邮箱')
+				  this.$api.msg(this.$t('email.write'))
 				  return false
 				}
 				var myreg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
 				if (!myreg.test(data.email)) {
-				  this.$api.msg('邮箱格式有误')
+				  this.$api.msg(this.$t('email.error'))
 				  return false
 				}
 				if (!data.code) {
-				  this.$api.msg('验证码必须')
+				  this.$api.msg(this.$t('email.must'))
 				  return false
 				}
 				if (data.code.length != 5) {
-				  this.$api.msg('验证码长度有误')
+				  this.$api.msg(this.$t('email.error.length'))
 				  return false
 				}
 				Login.verifyEmail(data,function(res){
-					that.$api.msg(`绑定成功`);
+					that.$api.msg(that.$t('email.binding_success'));
 					setTimeout(()=>{
 						uni.navigateBack({
 						    delta: 1

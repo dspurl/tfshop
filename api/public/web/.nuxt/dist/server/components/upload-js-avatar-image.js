@@ -1,12 +1,12 @@
 exports.ids = [12];
 exports.modules = {
 
-/***/ 243:
+/***/ 252:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _plugins_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(5);
+/* harmony import */ var _plugins_auth__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(4);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: 'AvatarImage',
@@ -32,7 +32,6 @@ __webpack_require__.r(__webpack_exports__);
       default: ''
     }
   },
-
   data() {
     return {
       url: "http://dsshop.test/api/v1/app/" + 'uploadPictures',
@@ -42,33 +41,25 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
   },
-
   watch: {},
-
   mounted() {},
-
   methods: {
     // 图片列表上传成功
     handleSuccessList(res, file) {
       this.$emit('getFile', file);
     },
-
     // 图片列表图片格式大小验证
     beforeUploadList(file) {
       const isLt = file.size < this.imgData.size;
-
       if (this.format.indexOf(file.type) === -1) {
-        this.$message.error('请上传正确的文件格式');
+        this.$message.error(this.$t('good.file.error'));
         return false;
       }
-
       if (!isLt) {
-        this.$message.error('上传文件大小不能超过 ' + file.size / 1024 / 1024 + 'MB!');
+        this.$message.error(this.$t('good.file.size.error') + file.size / 1024 / 1024 + 'MB!');
       }
-
       return isLt;
     }
-
   }
 });
 

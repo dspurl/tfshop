@@ -2,14 +2,14 @@
 	<view class="app">
 		<view v-if="orderInfo.state === 4">
 			<view class="price-box">
-				<text>订单已失效</text>
+				<text>{{$t('indent.lost_efficacy')}}</text>
 			</view>
 		</view>
 		<view v-else>
 			<view class="price-box">
-				<text>支付金额</text>
+				<text>{{$t('indent.payment_amount')}}</text>
 				<text class="price">{{orderInfo.total | 1000}}</text>
-				<text class="padding-top">订单失效时间</text>
+				<text class="padding-top">{{$t('indent.lost_efficacy_time')}}</text>
 				<uni-countdown color="#fa436a" splitorColor="#fa436a" :show-day="orderInfo.day ? true : false" :showColon="false" :day="orderInfo.day" :hour="orderInfo.hour" :minute="orderInfo.minute" :second="orderInfo.second"></uni-countdown>
 			</view>
 			
@@ -18,8 +18,8 @@
 				<view class="type-item b-b" @click="changePayType('weixin')">
 					<text class="icon yticon icon-weixinzhifu"></text>
 					<view class="con">
-						<text class="tit">微信支付</text>
-						<text>推荐使用微信支付</text>
+						<text class="tit">{{$t('payment_log.platform.weixin')}}</text>
+						<text>{{$t('payment_log.platform.recommend_weixin')}}</text>
 					</view>
 					<label class="radio">
 						<radio value="" color="#fa436a" :checked="payType == 'weixin'"/>
@@ -39,8 +39,8 @@
 				<view class="type-item" @click="changePayType(1)">
 					<text class="icon yticon icon-erjiye-yucunkuan"></text>
 					<view class="con">
-						<text class="tit">预存款支付</text>
-						<text>可用余额 ¥{{orderInfo.user.money | 1000}}</text>
+						<text class="tit">{{$t('payment_log.prepaid_deposit')}}</text>
+						<text>{{$t('payment_log.available_balance')}} {{common.unit}}{{orderInfo.user.money | 1000}}</text>
 					</view>
 					<label class="radio">
 						<radio value="" color="#fa436a" :checked="payType == 1" />
@@ -49,21 +49,21 @@
 				</view>
 			</view>
 			
-			<button class="mix-btn" :disabled="confirmDisabled" @click="confirm">确认支付</button>
+			<button class="mix-btn" :disabled="confirmDisabled" @click="confirm">{{$t('payment_log.confirm_payment')}}</button>
 			<view class="cu-modal" :class="modalName=='payHint'?'show':''">
 				<view class="cu-dialog">
 					<view class="cu-bar bg-white justify-end">
-						<view class="content">提醒</view>
+						<view class="content">{{$t('payment_log.remind')}}</view>
 						<view class="action" @tap="hideModal">
 							<text class="cuIcon-close text-red"></text>
 						</view>
 					</view>
 					<view class="padding-xl">
-						是否已完成支付
+						{{$t('payment_log.is_accomplish')}}
 					</view>
 					<view class="flex cu-bar bg-white justify-between">
-						<button class="margin-left cu-btn line-green text-green" @tap="goBack">取消</button>
-						<button class="margin-right cu-btn bg-green margin-left" @tap="goBack">已完成</button>
+						<button class="margin-left cu-btn line-green text-green" @tap="goBack">{{$t('common.cancel')}}</button>
+						<button class="margin-right cu-btn bg-green margin-left" @tap="goBack">{{$t('good_indent.state.accomplish')}}</button>
 					</view>
 				</view>
 			</view>
@@ -107,7 +107,7 @@
 		},
 		onLoad(options) {
 			if(!options.id){
-				this.$api.msg('参数有误')
+				this.$api.msg(this.$t('common.arguments'))
 				return false
 			}
 			this.id = options.id
@@ -118,6 +118,9 @@
 			// #endif
 		},
 		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('money.pay.title')
+			})
 			this.loginCheck()
 			this.getList()
 			this.getUser()
@@ -177,8 +180,8 @@
 						that.confirmDisabled = false
 						if(!that.user.email && !that.user.wechat){
 							uni.showModal({
-							  title: '提示',
-							  content: '您未打开通知功能，无法及时接收重要通知哦，是否现在去开启？',
+							  title: that.$t('common.hint'),
+							  content: that.$t('payment_log.notification_enabled'),
 							  success (res) {
 								if (res.confirm) {
 								  uni.redirectTo({
@@ -219,7 +222,7 @@
 								})
 							  },
 								fail(res) {
-									that.$api.msg('支付失败，请重新支付')
+									that.$api.msg(that.$t('payment_log.payment_failure'))
 								}
 							})
 						})
@@ -256,8 +259,8 @@
 							  authMsg(['4iOC-HyjJeKK5HiYORcOtrKHvu2Ho1ScVF0aqP3KkzQ'])
 							  if(!that.user.email && !that.user.wechat){
 							  	uni.showModal({
-							  	  title: '提示',
-							  	  content: '您未打开通知功能，无法及时接收重要通知哦，是否现在去开启？',
+							  	  title: that.$t('common.hint'),
+							  	  content: that.$t('payment_log.notification_enabled'),
 							  	  success (res) {
 							  	    if (res.confirm) {
 							  	      uni.redirectTo({
@@ -277,7 +280,7 @@
 							  }
 							},
 							fail(res) {
-								that.$api.msg('支付失败，请重新支付')
+								that.$api.msg(that.$t('payment_log.payment_failure'))
 								that.getList()
 							}
 						})

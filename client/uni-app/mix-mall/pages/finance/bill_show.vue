@@ -4,12 +4,12 @@
 			
 			<block v-if="details.type === 0">
 				<view class="cu-avatar round lg bg-green margin-bottom">
-					<text class="avatar-text">收</text>
+					<text class="avatar-text">{{$t('finance.income')}}</text>
 				</view>
 			</block>
 			<block v-else-if="details.type === 1">
 				<view class="cu-avatar round lg bg-red margin-bottom">
-					<text class="avatar-text">支</text>
+					<text class="avatar-text">{{$t('finance.disbursement')}}</text>
 				</view>
 			</block>
 			<view class="text-lg margin-bottom">
@@ -29,15 +29,15 @@
 		</view>
 		<view class="bg-white text-center margin-top-sm" v-if="details.good_indent">
 			<view class="flex  p-xs margin-bottom-sm mb-sm">
-				<view class="flex-sub padding-sm">订单单号</view>
+				<view class="flex-sub padding-sm">{{$t('finance.identification')}}</view>
 				<view class="flex-twice padding-sm text-left">{{details.good_indent.identification}}</view>
 			</view>
 			<view class="flex  p-xs margin-bottom-sm mb-sm">
-				<view class="flex-sub padding-sm">订单备注</view>
+				<view class="flex-sub padding-sm">{{$t('finance.remark')}}</view>
 				<view class="flex-twice padding-sm text-left">{{details.good_indent.remark}}</view>
 			</view>
 			<view class="flex  p-xs margin-bottom-sm mb-sm">
-				<view class="flex-sub padding-sm">收支日期</view>
+				<view class="flex-sub padding-sm">{{$t('finance.date')}}</view>
 				<view class="flex-twice padding-sm text-left">{{details.created_at}}</view>
 			</view>
 			
@@ -54,6 +54,11 @@
 			return {
 				details: []
 			}
+		},
+		onShow(){
+			uni.setNavigationBarTitle({
+				title: this.$t('user.details')
+			})
 		},
 		onLoad(options){
 			this.loginCheck()

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Observers\GoodIndent;
 
 use App\common\RedisService;
@@ -50,7 +59,7 @@ class FinishPaymentNotificationObserver
             $parameter = [
                 'id' => $goodIndent->id,  //订单ID
                 'identification' => $goodIndent->identification,  //订单号
-                'name' => $goodIndent->goodsList[0]->name . (count($goodIndent->goodsList) > 1 ? '等多件' : ''),    //商品名称
+                'name' => $goodIndent->goodsList[0]->name . (count($goodIndent->goodsList) > 1 ? __('observer.good_indent.finish_payment_notification.excessive_parts') : ''),    //商品名称
                 'total' => $goodIndent->total,    //订单金额
                 'type' => $type,
                 'template' => 'finish_payment',   //通知模板标识
@@ -59,30 +68,30 @@ class FinishPaymentNotificationObserver
             ];
             $invoice = [
                 'type' => InvoicePaid::NOTIFICATION_TYPE_DEAL,
-                'title' => '恭喜您！购买的商品已支付成功，我们会尽快安排发货哦！么么哒！~~',
+                'title' => __('observer.good_indent.finish_payment_notification.invoice.title'),
                 'list' => [
                     [
-                        'keyword' => '订单编号',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.identification'),
                         'data' => $parameter['identification']
                     ],
                     [
-                        'keyword' => '商品名称',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.name'),
                         'data' => $parameter['name']
                     ],
                     [
-                        'keyword' => '订单总额',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.total'),
                         'data' => sprintf("%01.2f", $parameter['total'] / 100),
                     ],
                     [
-                        'keyword' => '支付方式',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.type'),
                         'data' => $parameter['type']
                     ],
                     [
-                        'keyword' => '订单状态',
-                        'data' => '已支付'
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.state'),
+                        'data' => __('wechat_channel.finish_payment.paid')
                     ],
                     [
-                        'keyword' => '下单时间',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.time'),
                         'data' => $parameter['time']
                     ]
                 ],
@@ -104,34 +113,34 @@ class FinishPaymentNotificationObserver
             ];
             $invoice = [
                 'type' => InvoicePaid::NOTIFICATION_TYPE_SYSTEM_MESSAGES,
-                'title' => '您有一个新的待发货订单',
+                'title' => __('observer.good_indent.finish_payment_notification.invoice.system_title'),
                 'list' => [
                     [
-                        'keyword' => '订单编号',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.identification'),
                         'data' => $parameter['identification']
                     ],
                     [
-                        'keyword' => '订单总额',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.total'),
                         'data' => sprintf("%01.2f", $parameter['total'] / 100),
                     ],
                     [
-                        'keyword' => '买家',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.system_cellphone'),
                         'data' => $parameter['cellphone']
                     ],
                     [
-                        'keyword' => '支付方式',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.type'),
                         'data' => $parameter['type']
                     ],
                     [
-                        'keyword' => '订单状态',
-                        'data' => '已支付'
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.state'),
+                        'data' => __('wechat_channel.finish_payment.paid')
                     ],
                     [
-                        'keyword' => '付款时间',
+                        'keyword' => __('observer.good_indent.finish_payment_notification.invoice.system_time'),
                         'data' => $parameter['time']
                     ]
                 ],
-                'remark' => '客户已付款，尽快发货吧',
+                'remark' => __('observer.good_indent.finish_payment_notification.invoice.system.remark'),
                 'price' => $parameter['total'],
                 'url' => '/Indent/shipment?id=' . $parameter['id'],
                 'admin' => true,

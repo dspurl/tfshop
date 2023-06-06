@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Middleware;
 
 use App\Code;
@@ -18,7 +27,7 @@ class Authenticate extends Middleware
     {
         if (!$request->expectsJson()) {
 //            exit('密钥已失效，请清空本地缓存');
-            throw new \Exception('登录超时，请重新登录', 500);
+            throw new \Exception(__('middleware.authenticate.error'), 500);
         }
     }
 }

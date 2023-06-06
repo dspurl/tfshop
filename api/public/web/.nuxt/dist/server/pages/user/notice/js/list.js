@@ -1,7 +1,7 @@
 exports.ids = [56];
 exports.modules = {
 
-/***/ 187:
+/***/ 196:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -11,8 +11,18 @@ exports.modules = {
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "d", function() { return read; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return destroy; });
 /* harmony import */ var _plugins_request__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(2);
-/* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(7);
+/* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(8);
 /* harmony import */ var qs__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(qs__WEBPACK_IMPORTED_MODULE_1__);
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 
 
 function getList(query) {
@@ -54,22 +64,20 @@ function destroy(data) {
 
 /***/ }),
 
-/***/ 234:
+/***/ 245:
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _api_notification__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(187);
+/* harmony import */ var _api_notification__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(196);
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   layout: 'user',
-
   head() {
     return {
-      title: '消息通知-个人中心'
+      title: `${this.$t('header.top.message')}-${this.$t('header.top.personal_center')}`
     };
   },
-
   data() {
     return {
       tableLoading: false,
@@ -87,11 +95,9 @@ __webpack_require__.r(__webpack_exports__);
       multipleSelection: []
     };
   },
-
   mounted() {
     this.getList();
   },
-
   methods: {
     async getList() {
       this.tableLoading = true;
@@ -105,28 +111,26 @@ __webpack_require__.r(__webpack_exports__);
         this.tableLoading = false;
       });
     },
-
     handleCheckAllChange() {
       this.$refs.table.toggleAllSelection();
     },
-
     handleSelectionChange(val) {
       this.multipleSelection = val;
     },
-
     handleAllDelete() {
       // 批量删除
       if (this.multipleSelection.length === 0) {
         this.$message({
-          message: '请选择需要操作的内容',
+          message: this.$t('notice.all_delete'),
           type: 'error'
         });
         return false;
       }
-
-      this.$confirm('是否确认删除选中内容？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm', {
+        attribute: this.$t('common.delete')
+      }), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         this.buttonLoading = true;
@@ -134,7 +138,7 @@ __webpack_require__.r(__webpack_exports__);
           this.buttonLoading = false;
           this.handleFilter();
           this.$message({
-            message: '删除成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
         }).catch(() => {
@@ -142,36 +146,32 @@ __webpack_require__.r(__webpack_exports__);
         });
       }).catch(() => {});
     },
-
     handleAllRead() {
       // 批量标记为已读
       if (this.multipleSelection.length === 0) {
         this.$message({
-          message: '请选择需要操作的内容',
+          message: this.$t('notice.all_delete'),
           type: 'error'
         });
         return false;
       }
-
       this.buttonLoading = true;
       Object(_api_notification__WEBPACK_IMPORTED_MODULE_0__[/* read */ "d"])(this.multipleSelection).then(response => {
         this.buttonLoading = false;
         this.getList();
         this.$message({
-          message: '标记成功',
+          message: this.$t('common.success'),
           type: 'success'
         });
       }).catch(() => {
         this.buttonLoading = false;
       });
     },
-
     sortChange(data) {
       const {
         prop,
         order
       } = data;
-
       if (order === 'ascending') {
         this.listQuery.sort = '+' + prop;
       } else if (order === 'descending') {
@@ -179,15 +179,12 @@ __webpack_require__.r(__webpack_exports__);
       } else {
         this.listQuery.sort = null;
       }
-
       this.handleFilter();
     },
-
     handleFilter() {
       this.listQuery.page = 1;
       this.getList();
     }
-
   }
 });
 

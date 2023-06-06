@@ -1,39 +1,45 @@
+import {authorization} from '@/api/user'
 export default {
   middleware: 'auth',
   data() {
     return {
-      menuList: [
+      menuActive: -1,
+      copyright: '1'
+    }
+  },
+  computed: {
+    menuList() {
+      return [
         {
-          name: '个人中心',
+          name: this.$t('header.top.personal_center'),
           children: [
-            { name: '我的个人中心', path: '/user/portal', active: false },
-            { name: '消息通知', path: '/user/notice/list', active: false},
-            { name: '我的收藏', path: '/user/collect', active: false},
-            { name: '地址管理', path: '/user/address', active: false},
-            { name: '我的账单', path: '/user/finance/list', active: false}
+            { name: this.$t('user.centre'), path: '/user/portal', active: false },
+            { name: this.$t('header.top.message'), path: '/user/notice/list', active: false},
+            { name: this.$t('header.top.collection'), path: '/user/collect', active: false},
+            { name: this.$t('user.site'), path: '/user/address', active: false},
+            { name: this.$t('user.bill'), path: '/user/finance/list', active: false}
           ]
         },
         {
-          name: '订单管理',
+          name: this.$t('user.order'),
           children: [
-            { name: '我的订单', path: '/user/indent/list', active: false }
+            { name: this.$t('header.top.order'), path: '/user/indent/list', active: false }
           ]
         },
         {
-          name: '账户管理',
+          name: this.$t('user.account'),
           children: [
-            { name: '个人资料', path: '/user/userinfo', active: false },
-            { name: '修改密码', path: '/user/password', active: false },
-            { name: '修改手机号', path: '/user/cellphone', active: false },
-            { name: '注销服务', path: '/user/cancel', active: false}
+            { name: this.$t('user.info'), path: '/user/userinfo', active: false },
+            { name: this.$t('user.password'), path: '/user/password', active: false },
+            { name: this.$t('user.cellphone'), path: '/user/cellphone', active: false },
+            { name: this.$t('user.cancel'), path: '/user/cancel', active: false}
           ]
         }
-      ],
-      menuActive: -1
+      ]
     }
   },
   mounted() {
-    this.getMenuList();
+    this.getAuthorization();
   },
   watch: {
     $route: {
@@ -44,10 +50,15 @@ export default {
     }
   },
   methods: {
-    async getMenuList(){
-      this.setMenuActive($nuxt.$route.path)
+    async getAuthorization(){
+      authorization().then(response => {
+        this.copyright = response
+      })
     },
     setMenuActive(path) {
+      if($nuxt.$i18n.getLocaleCookie() !== 'ch'){
+        path = path.replace(`/${$nuxt.$i18n.getLocaleCookie()}`,'')
+      }
       for (let i = 0; i < this.menuList.length; i++) {
         if(this.menuList[i].children.length>0){
           for (let j = 0; j < this.menuList[i].children.length; j++) {
@@ -60,6 +71,7 @@ export default {
           }
         }
       }
+      this.$forceUpdate()
     }
   }
 }

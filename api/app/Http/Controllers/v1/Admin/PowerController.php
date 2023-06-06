@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -62,7 +71,7 @@ class PowerController extends Controller
 
         $paginate['options'] = collect(genTree($options, 'pid'))->prepend(array(
             'value' => 0,
-            'label' => '顶级分组'
+            'label' => __('category.top')
         ));
         return resReturn(1, $paginate);
     }
@@ -92,7 +101,7 @@ class PowerController extends Controller
         $authRule->pid = $pid > 0 ? $pid : 0;
         $authRule->state = $request->state;
         $authRule->save();
-        return resReturn(1, '添加成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
     }
 
     /**
@@ -122,7 +131,7 @@ class PowerController extends Controller
         $authRule->sort = $request->sort ? $request->sort : 0;
         $authRule->state = $request->state;
         $authRule->save();
-        return resReturn(1, '修改成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.amend')]));
     }
 
     /**
@@ -135,12 +144,12 @@ class PowerController extends Controller
     {
         DB::transaction(function () use ($id) {
             if (!$id) {
-                return resReturn(0, '参数错误', Code::CODE_PARAMETER_WRONG);
+                return resReturn(0, __('common.arguments'), Code::CODE_PARAMETER_WRONG);
             }
             $arr = (new AuthRule())->obtainAllChildPermissions($id);
             AuthRule::whereIn('id', $arr)->delete();
             AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
         }, 5);
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

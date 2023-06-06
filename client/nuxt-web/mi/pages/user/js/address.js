@@ -6,7 +6,7 @@ export default {
   },
   head () {
     return {
-      title: '地址管理-个人中心',
+      title: `${this.$t('user.site')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {

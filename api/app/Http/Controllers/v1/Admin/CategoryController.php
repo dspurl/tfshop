@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -116,9 +125,9 @@ class CategoryController extends Controller
             return 1;
         }, 5);
         if ($return == 1) {
-            return resReturn(1, '成功');
+            return resReturn(1, __('common.succeed'));
         } else {
-            return resReturn(0, '添加失败', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('hint.succeed.fail', ['attribute' => __('common.add')]), Code::CODE_PARAMETER_WRONG);
         }
     }
 
@@ -224,9 +233,9 @@ class CategoryController extends Controller
             return 1;
         }, 5);
         if ($return == 1) {
-            return resReturn(1, '更新成功');
+            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
         } else {
-            return resReturn(0, '更新失败', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('hint.succeed.fail', ['attribute' => __('common.update')]), Code::CODE_PARAMETER_WRONG);
         }
     }
 
@@ -236,10 +245,16 @@ class CategoryController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 分类ID
+     * @throws \Exception
      */
     public function destroy($id)
     {
+        // 判断是否存在子类目
+        $count = Category::where('pid', $id)->count();
+        if ($count) {
+            throw new \Exception(__('category.error.destroy'), Code::CODE_WRONG);
+        }
         Category::destroy($id);
-        return resReturn(1, '删除成功');
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

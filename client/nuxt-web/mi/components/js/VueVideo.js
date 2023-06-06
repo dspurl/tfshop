@@ -17,11 +17,16 @@ export default {
   },
   data() {
     return {
-      playsinline: true,
-      playerOptions: {
+      playsinline: true
+    }
+  },
+  computed: {
+    
+    playerOptions () {
+      return {
         // 播放器配置
         muted: false, // 是否静音
-        language: 'zh-CN',
+        language: this.$store.state.lang === 'zh' ? 'zh-CN' : this.$store.state.lang,
         aspectRatio: this.aspectRatio,
         playbackRates: [0.7, 1.0, 1.5, 2.0], // 播放速度
         controls: true,
@@ -34,7 +39,7 @@ export default {
           }
         ],
         poster: this.poster, // 封面图
-        notSupportedMessage: '此视频暂无法播放，请稍后再试',
+        notSupportedMessage: this.$t('video_player.not_supported_message'),
         controlBar: {
           timeDivider: true,
           durationDisplay: true,

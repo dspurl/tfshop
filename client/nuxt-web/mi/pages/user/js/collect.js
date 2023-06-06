@@ -3,7 +3,7 @@ export default {
   layout: 'user',
   head () {
     return {
-      title: '我的收藏-个人中心',
+      title: `${this.$t('header.top.collection')}-${this.$t('header.top.personal_center')}`,
     }
   },
   data() {
@@ -35,15 +35,15 @@ export default {
       })
     },
     destroy(id){
-      this.$confirm('是否确认删除？', '提示', {
-        confirmButtonText: '确认',
-        cancelButtonText: '取消',
+      this.$confirm(this.$t('hint.whether_confirm', {attribute:this.$t('common.delete') }), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
         type: 'warning'
       }).then(() => {
         destroy(id).then(response => {
           this.handleFilter();
           this.$message({
-            message: '删除成功',
+            message: this.$t('common.success'),
             type: 'success'
           });
         }).catch(() => {

@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Models\v1;
 
 use DateTimeInterface;
@@ -33,9 +42,9 @@ class Common extends Model
                 for ($i = 0; $i <= 24; $i++) {
                     if ($i < 10) {
                         $time = $name . date("Y-m-d 0$i");
-                        $date = '0' . $i . '点';
+                        $date = '0' . $i . ':00';
                     } else {
-                        $date = $i . '点';
+                        $date = $i . ':00';
                         $time = $name . date("Y-m-d $i");
                     }
                     $return[$time] = array(
@@ -46,13 +55,12 @@ class Common extends Model
                 }
                 break;
             case 7: //一周
-                $date = ['周一', '周二', '周三', '周四', '周五', '周六', '周七'];
                 $week = date('w', time());
                 for ($i = 0; $i < 7; $i++) {
                     $time[] = date('Y-m-d', strtotime('+' . ($i + 1 - $week) . 'days', time()));
                 }
                 break;
-            default:
+            /*default:
                 for ($i = $day; $i >= 0; $i--) {
                     if (date('y') == date('y', strtotime("-$i day", strtotime($request->date[1])))) {
                         $date[] = date('m月d日', strtotime("-$i day", strtotime($request->date[1])));
@@ -60,7 +68,7 @@ class Common extends Model
                         $date[] = date('m月d日(y年)', strtotime("-$i day", strtotime($request->date[1])));
                     }
                     $time[] = date('Y-m-d', strtotime("-$i day", strtotime($request->date[1])));
-                }
+                }*/
         }
         return $return;
     }

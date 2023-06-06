@@ -1,8 +1,16 @@
 <?php
-/**
- * 公众号、小程序统一入口类
+/** +----------------------------------------------------------------------
+ * |公众号、小程序统一入口类
+ * +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
  */
-
 namespace App\Services;
 
 
@@ -39,7 +47,7 @@ class Entrance
         if (method_exists(static::class, $client)) {
             return $this->$client();
         } else {
-            exit('未配置客户端');
+            exit(__('service.entrance.information_distribution'));
         }
     }
 
@@ -55,7 +63,7 @@ class Entrance
     {
         $config = config('wechat.official_account.default');
         if (!$config['token']) {
-            exit('未配置微信公众账号');
+            exit(__('service.entrance.wechat'));
         }
         $app = Factory::officialAccount($config);
         /*$app->menu->delete(); // 全部
@@ -109,10 +117,10 @@ class Entrance
         $config = config('wechat.mini_program.default');
         $officialConfig = config('wechat.official_account.default');
         if (!$config['token']) {
-            exit('未配置微信小程序账号');
+            exit(__('service.entrance.miniweixin_config'));
         }
         if (!$officialConfig['token']) {
-            exit('未配置微信公众账号');
+            exit(__('service.entrance.miniweixin_official_config'));
         }
         $app = Factory::miniProgram($config);
         $app->server->push(function ($message) use ($app, $officialConfig) {
@@ -120,7 +128,7 @@ class Entrance
             if ($message['MsgType'] == 'miniprogrampage' && $message['PagePath'] == 'pages/public/subscribe') {    //用户发送消息卡片，并且是开启微信提醒服务时才触发
                 $User = User::where('miniweixin', $message['FromUserName'])->first();
                 if (!$User) {
-                    $app->customer_service->message('请先登录后再开启微信提醒服务')->to($message['FromUserName'])->send();
+                    $app->customer_service->message(__('service.entrance.miniweixin_customer_service'))->to($message['FromUserName'])->send();
                 }
                 $official = Factory::officialAccount($officialConfig);
                 // 采用临时生成二维码

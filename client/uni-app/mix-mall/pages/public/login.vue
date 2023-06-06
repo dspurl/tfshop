@@ -6,41 +6,41 @@
 		<view class="wrapper">
 			<view class="left-top-sign">DSSHOP</view>
 			<view class="welcome">
-				欢迎回来！
+				{{$t('login.welcome')}}
 			</view>
 			<view class="bg-white">
 			  <form>
 			    <view class="cu-form-group">
-			      <view class="title">手机号码</view>
+			      <view class="title">{{$t('find_password.cellphone')}}</view>
 			      <input type="number" maxlength="11" v-model="ruleForm.cellphone" @input ="cellphoneInput"></input>
 			    </view>
 				<view class="cu-form-group">
-				  <view class="title">密码</view>
+				  <view class="title">{{$t('login.password')}}</view>
 				  <input type="password" password v-model="ruleForm.password" @input="passwordInput"></input>
 				</view>
 			  </form>
 			</view>
 			<view class=" flex flex-direction padding">
-			  <button class="cu-btn round bg-red shadow lg" :disabled="logining" @click="toLogin">登录</button>
+			  <button class="cu-btn round bg-red shadow lg" :disabled="logining" @click="toLogin">{{$t('login.login')}}</button>
 			</view>
 			<!--  #ifdef MP -->
 			<view class=" flex flex-direction padding">
-			  <button class="cu-btn round bg-orange shadow lg" @click="modalName = 'agreement'">授权登录</button>
+			  <button class="cu-btn round bg-orange shadow lg" @click="modalName = 'agreement'">{{$t('find_password.authorized_login')}}</button>
 			</view>
 			<!--  #endif -->
 			<view class="forget-section" @click="toFind">
-				忘记密码?
+				{{$t('login.forget_password')}}
 			</view>
 			<view class="register-section">
-				还没有账号?
-				<text @click="toRegist">马上注册</text>
+				{{$t('login.no_account')}}
+				<text @click="toRegist">{{$t('login.register')}}</text>
 			</view>
 			<!--  #ifdef MP -->
 			<view class=" flex flex-direction padding">
 			  <view class="cu-modal" :class="modalName=='agreement'?'show':''">
 			  	<view class="cu-dialog">
 			  		<view class="cu-bar bg-white justify-end">
-			  			<view class="content">注册协议及隐私政策</view>
+			  			<view class="content">{{$t('login.register_privacy')}}</view>
 			  		</view>
 			  		<view class="padding text-left">
 			  			<scroll-view scroll-y="true" class="scroll-Y">
@@ -48,14 +48,14 @@
 			  			</scroll-view>
 			  		</view>
 			  		<view class="bg-white text-left padding text-sm">
-			  			点击同意即表示您已阅读并同意
-			  			<span class="text-blue" @tap="goNavigator(2)">《dsshop用户注册协议》</span>
-			  			与
-			  			<span class="text-blue" @tap="goNavigator(1)">《dsshop隐私政策》</span>
+			  			{{$t('login.consent')}}
+			  			<span class="text-blue" @tap="goNavigator(2)">《dsshop{{$t('login.user_registration')}}》</span>
+			  			、
+			  			<span class="text-blue" @tap="goNavigator(1)">《dsshop{{$t('login.privacy')}}》</span>
 			  		</view>
 			  		<view class="grid bg-white col-2 solid-top">
-						<view class="bg-white" @click="modalName = ''"><button>不同意</button></view>
-			  			<view class="bg-red"><button class="bg-red" open-type="getPhoneNumber" @getphonenumber="decryptPhoneNumber">同意</button></view>
+						<view class="bg-white" @click="modalName = ''"><button>{{$t('login.disagree')}}</button></view>
+			  			<view class="bg-red"><button class="bg-red" open-type="getPhoneNumber" @getphonenumber="decryptPhoneNumber">{{$t('login.agreement')}}</button></view>
 			  		</view>
 			  	</view>
 			  </view>
@@ -75,8 +75,8 @@
 	export default{
 		data(){
 			return {
-				tabname:['微信授权','短信验证'],
-				codename:'获取验证码',
+				tabname:[this.$t('find_password.tab.authorization'),this.$t('find_password.tab.sms')],
+				codename:this.$t('find_password.get_code'),
 				unit: '',
 				TabCur: 0,
 				seconds: '', // 读秒
@@ -88,7 +88,7 @@
 					name: 'span',
 					children: [{
 						type: 'text',
-						text: '在您注册成为dsshop用户的过程中，您需要完成我们的注册流程并通过点击同意的形式在线签署以下协议，'
+						text: this.$t('login.rich.t1')
 					}],
 					},{
 					name: 'span',
@@ -97,21 +97,21 @@
 					},
 					children: [{
 						type: 'text',
-						text: '请您务必仔细阅读、充分理解协议中的条款内容后再点击同意（尤其是以粗体并下划线标识的条款，因为这些条款可能会明确您应履行的义务或对您的权利有所限制）：'
+						text: this.$t('login.rich.t2')
 					}],
 				},
 				{
 					name: 'p',
 					children: [{
 						type: 'text',
-						text: '《dsshop用户注册协议》'
+						text: this.$t('login.rich.t3')
 					}],
 				},
 				{
 					name: 'p',
 					children: [{
 						type: 'text',
-						text: '《dsshop隐私政策》'
+						text: this.$t('login.rich.t4')
 					}],
 				},
 				{
@@ -121,14 +121,14 @@
 					},
 					children: [{
 						type: 'text',
-						text: '【请您注意】如果您不同意上述协议或其中任何条款约定，请您停止注册。您停止注册后将仅可以浏览我们的商品信息但无法享受我们的产品或服务。如您按照注册流程提示填写信息、阅读并点击同意上述协议且完成全部注册流程后，即表示您已充分阅读、理解并接受协议的全部内容；并表明您也同意dsshop可以依据以上的隐私政策内容来处理您的个人信息。'
+						text: this.$t('login.rich.t5')
 					}],
 				},
 				{
 					name: 'span',
 					children: [{
 						type: 'text',
-						text: '如您对以上协议内容有任何疑问，您可随时与dsshop客服联系。'
+						text: this.$t('login.rich.t6')
 					}],
 				},
 				],
@@ -157,26 +157,26 @@
 				const ruleForm = this.ruleForm
 				const that = this
 				if (!ruleForm.cellphone) {
-				  this.$api.msg('请填写手机号码')
+				  this.$api.msg(this.$t('find_password.rule.cellphone'))
 				  return false
 				} else if (ruleForm.cellphone.length != 11) {
-				  this.$api.msg('手机号长度有误')
+				  this.$api.msg(this.$t('find_password.rule.cellphone.length'))
 				  return false;
 				}
-				var myreg = /^(((13[0-9]{1})|(15[0-9]{1})|(16[0-9]{1})|(18[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+				var myreg = /^1[3456789]\d{9}$/;
 				if (!myreg.test(ruleForm.cellphone)) {
-				  this.$api.msg('手机号有误')
+				  this.$api.msg(this.$t('find_password.rule.cellphone.reg'))
 				  return false
 				}
 				if (!ruleForm.password) {
-				  this.$api.msg('密码必须')
+				  this.$api.msg(this.$t('login.password_must'))
 				  return false
 				}
 				this.logining = true
 				Login.login(ruleForm,function(res){
 					that.login(res)
 					that.logining = false
-					that.$api.msg(`登录成功`);
+					that.$api.msg(that.$t('login.succeed'));
 					uni.navigateBack()
 				})
 			},
@@ -216,7 +216,7 @@
 			  // 协议
 			  goNavigator(id){
 			  	uni.navigateTo({
-			  	    url: `/pages/article/details?list=0&id=${id}`
+			  	    url: `/pages/article/detail?list=0&id=${id}`
 			  	});
 			  },
 			  //密码
@@ -241,11 +241,11 @@
 						platform: getPlatform()
 					  },function(res){
 						that.login(res)
-						that.$api.msg(`登录成功`);
+						that.$api.msg(that.$t('login.succeed'));
 						uni.navigateBack()
 					  })
 				  }else{
-					  that.$api.msg(`您选择了拒绝授权，无法完成登录`)
+					  that.$api.msg(that.$t('login.refusal_authorization'))
 				  }
 
 			  }
@@ -393,7 +393,7 @@
 		}
 	}
 	.cu-form-group .title{
-		width: 160upx;
+		width: 240upx;
 		text-align: right;
 	}
 </style>

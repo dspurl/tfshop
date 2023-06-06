@@ -1,5 +1,14 @@
 <?php
-
+/** +----------------------------------------------------------------------
+ * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * +----------------------------------------------------------------------
+ * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
+ * +----------------------------------------------------------------------
+ * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * +----------------------------------------------------------------------
+ * | Author: Purl <383354826@qq.com>
+ * +----------------------------------------------------------------------
+ */
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Http\Controllers\Controller;
@@ -25,22 +34,22 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $return['chart'] = array_merge(Common::getChartData('注册量', 1), Common::getChartData('订单量', 1), Common::getChartData('销售金额', 1));
+        $return['chart'] = array_merge(Common::getChartData(__('index.chart.register_quantity'), 1), Common::getChartData(__('index.chart.order_quantity'), 1), Common::getChartData(__('index.chart.sales_amount'), 1));
         $User = User::whereRaw('now()-created_at<86400')->get();
         foreach ($User as $u) {
-            $return['chart']['注册量' . date('Y-m-d H', strtotime($u->created_at))]['value'] += 1;
+            $return['chart'][__('index.chart.register_quantity') . date('Y-m-d H', strtotime($u->created_at))]['value'] += 1;
         }
         $return['user'] = $User->count();
         $GoodIndent = GoodIndent::whereRaw('now()-created_at<86400')->get();
 
         foreach ($GoodIndent as $g) {
-            $return['chart']['订单量' . date('Y-m-d H', strtotime($g->created_at))]['value'] += 1;
+            $return['chart'][__('index.chart.order_quantity') . date('Y-m-d H', strtotime($g->created_at))]['value'] += 1;
         }
         $return['indent'] = $GoodIndent->count();
         $MoneyLog = MoneyLog::whereRaw('now()-created_at<86400')
             ->where('type', MoneyLog::MONEY_LOG_TYPE_EXPEND)->get();
         foreach ($MoneyLog as $m) {
-            $return['chart']['销售金额' . date('Y-m-d H', strtotime($m->created_at))]['value'] += $m->money_show;
+            $return['chart'][__('index.chart.sales_amount') . date('Y-m-d H', strtotime($m->created_at))]['value'] += $m->money_show;
         }
         $return['income'] = $MoneyLog->sum('money');
         $return['expend'] = MoneyLog::whereRaw('now()-created_at<86400')->where('type', MoneyLog::MONEY_LOG_TYPE_INCOME)->sum('money');
