@@ -7,9 +7,9 @@ DSSHOP商城系统
 <div align="center">
 一款轻量级商城开源系统
 </div>
-<div align="center">
+<p align="center">
  <b>支持多语言</b> <b>易二开</b> <b>低代码</b> <b>跨终端</b>
-</div>
+</p>
 
 <div align="center" >
     <a href="https://www.dswjcms.com">
