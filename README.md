@@ -82,9 +82,9 @@ node= 14.18.3
 
 管理后台： https://v3.dswjcms.com/admin 账号：demo 密码：dswjcms.com
 
-H5端：https://v3.dswjcms.com/h5（移动端打开）
+H5端：[https://v3.dswjcms.com/h5](https://v3.dswjcms.com/h5)（移动端打开）
 
-PC端：https://v3.dswjcms.com/（电脑端打开）
+PC端：[https://v3.dswjcms.com/](https://v3.dswjcms.com/)（电脑端打开）
 
 ### PRO版演示
 
@@ -94,9 +94,9 @@ PC端：https://v3.dswjcms.com/（电脑端打开）
 
 管理后台： https://dsshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
 
-H5端：https://dsshop.dswjcms.com/h5（移动端打开）
+H5端：[https://dsshop.dswjcms.com/h5](https://dsshop.dswjcms.com/h5)（移动端打开）
 
-PC端：https://dsshop.dswjcms.com/（电脑端打开）
+PC端：[https://dsshop.dswjcms.com/](https://dsshop.dswjcms.com/)（电脑端打开）
 
 ### 页面展示
 (页面仅展示部分UI)
@@ -117,7 +117,7 @@ PC端：https://dsshop.dswjcms.com/（电脑端打开）
 欢迎提交代码 [提交代码](https://github.com/dspurl/dsshop/pulls)。
 
 欢迎加入我们的QQ频道
-<p><img src="/image/channel.png" width="250" /></p>
+<p><img src="https://dspurl.github.io/image/channel.png" width="250" /></p>
 
 ### 特别鸣谢
 
