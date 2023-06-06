@@ -1,4 +1,4 @@
-import i18n from "./plugins/i18n"
+import i18n from "./config/i18n"
 require('dotenv').config()
 // console.log(process.env.APP_ENV)
 export default {

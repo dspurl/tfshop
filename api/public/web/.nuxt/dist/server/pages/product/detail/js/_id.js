@@ -1442,15 +1442,15 @@ __webpack_require__.r(__webpack_exports__);
       meta: [{
         hid: 'index',
         name: this.goodDetail.name + '-' + "DSSHOP商城-轻量级易扩展低代码开源商城系统",
-        content: this.goodDetail.keywords ? this.goodDetail.keywords : "商城网店系统,商城,网店,免费商城,免费网店,低代码商城,轻量级商城"
+        content: this.goodDetail.keywords ? this.goodDetail.keywords : "DSSHOP,轻量级商城网店系统,免费商城,免费网店,低代码商城,轻量级商城,商城,网店"
       }, {
         hid: 'description',
         name: 'description',
-        content: this.goodDetail.short_description ? this.goodDetail.short_description : "轻量级易扩展低代码开源商城系统，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端"
+        content: this.goodDetail.short_description ? this.goodDetail.short_description : "一款轻量级商城开源系统，支持多语言，易二开，低代码，跨终端"
       }, {
         hid: 'keywords',
         name: 'keywords',
-        content: this.goodDetail.keywords ? this.goodDetail.keywords : "商城网店系统,商城,网店,免费商城,免费网店,低代码商城,轻量级商城"
+        content: this.goodDetail.keywords ? this.goodDetail.keywords : "DSSHOP,轻量级商城网店系统,免费商城,免费网店,低代码商城,轻量级商城,商城,网店"
       }]
     };
   },

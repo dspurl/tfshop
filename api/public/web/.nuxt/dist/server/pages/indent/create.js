@@ -124,7 +124,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
     return {
-      src: 'https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=' + "BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC" + '&referer=myapp',
+      src: 'https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=' + "" + '&referer=myapp',
       // https://lbs.qq.com
       restaurants: [],
       buttonLoading: false,

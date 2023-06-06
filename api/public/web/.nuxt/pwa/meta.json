@@ -23,7 +23,7 @@
     {
       "hid": "description",
       "name": "description",
-      "content": "轻量级易扩展低代码开源商城系统，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端"
+      "content": "一款轻量级商城开源系统，支持多语言，易二开，低代码，跨终端"
     },
     {
       "hid": "theme-color",
@@ -52,7 +52,7 @@
       "hid": "og:description",
       "name": "og:description",
       "property": "og:description",
-      "content": "轻量级易扩展低代码开源商城系统，快速搭建属于自己的独立商城网店系统，一次搭建适配多终端"
+      "content": "一款轻量级商城开源系统，支持多语言，易二开，低代码，跨终端"
     }
   ],
   "link": [
@@ -69,7 +69,7 @@
     },
     {
       "rel": "manifest",
-      "href": "/_nuxt/manifest.6db9e978.json",
+      "href": "/_nuxt/manifest.74dd4331.json",
       "hid": "manifest"
     }
   ],
