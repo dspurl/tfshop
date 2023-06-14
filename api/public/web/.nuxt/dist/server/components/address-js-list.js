@@ -106,7 +106,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     };
     return {
-      src: 'https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=' + "" + '&referer=myapp',
+      src: 'https://apis.map.qq.com/tools/locpicker?search=1&type=1&key=' + "lbs_qq_key" + '&referer=myapp',
       // https://lbs.qq.com
       restaurants: [],
       buttonLoading: false,

@@ -29,7 +29,7 @@ if (process.env.NODE_ENV === "development") {
 		//测试环境
 		const domainName = 'http://dsshop.test'
 		configURL = {
-			lbsQq: '',
+			lbsQq: 'lbs_qq_key',
 			DomainName: domainName,
 			BaseURL: domainName +INTERFACE,
 			secret: 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='
