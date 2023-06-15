@@ -43,7 +43,7 @@
 		<view class="list-cell b-b" @click="navTo('/pages/userinfo/email?email='+(user.email ? user.email : ''))" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">{{$t('userinfo.email')}}</text>
 			<view class="action">
-				{{user.email}}
+				{{user.email ? user.email : ''}}
 			</view>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
