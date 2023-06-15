@@ -41,11 +41,12 @@
     <div class="browse-box">
       <NuxtLink class="card" v-for="(item, index) in browseList" :key="index" :to="{ path: `/product/detail/${item.good_id}`}">
         <el-image
+          v-if="item.good"
           class="image"
           :src="item.good.resources.img | smallImage(200)"
           fit="cover"
           lazy/>
-        <div class="name">{{item.good.name}}</div>
+        <div v-if="item.good" class="name">{{item.good.name}}</div>
       </NuxtLink>
     </div>
   </div>
