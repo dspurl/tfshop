@@ -40,7 +40,7 @@
 					<text class="icon yticon icon-erjiye-yucunkuan"></text>
 					<view class="con">
 						<text class="tit">{{$t('payment_log.prepaid_deposit')}}</text>
-						<text>{{$t('payment_log.available_balance')}} {{common.unit}}{{orderInfo.user.money | 1000}}</text>
+						<text>{{$t('payment_log.available_balance')}} {{$t('common.unit')}}{{orderInfo.user.money | 1000}}</text>
 					</view>
 					<label class="radio">
 						<radio value="" color="#fa436a" :checked="payType == 1" />

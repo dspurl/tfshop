@@ -94,7 +94,7 @@
 					<image :src="item.resources.img | smallImage(250)" mode="aspectFill" lazy-load></image>
 				</view>
 				<text class="title clamp">{{item.name}}</text>
-				<text class="price">￥{{item.order_price | 1000}}</text>
+				<text class="price">{{$t('common.unit')}}{{item.order_price | 1000}}</text>
 			</view>
 		</view>
 		
