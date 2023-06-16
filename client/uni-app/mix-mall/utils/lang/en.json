@@ -2,6 +2,7 @@
   "common.loading": "Loading",
   "common.processing": "Processing",
   "common.sort": "Sort",
+  "common.search": "Search",
   "common.state": "State",
   "common.undistributed": "Undistributed",
   "common.is_show": "Visible",
@@ -238,6 +239,7 @@
   "set.inform": "Notice and reminder",
   "set.cache": "Clear cache",
   "set.about": "About Us",
+  "set.search": "Search good",
   "set.cancel": "Logout service",
   "set.out": "Log out",
   "set.newest": "It has been updated.",
@@ -273,5 +275,8 @@
   "tab_bar.1": "Classify",
   "tab_bar.2": "Cart",
   "tab_bar.3": "My",
-  "money.pay.title": "Payment"
+  "money.pay.title": "Payment",
+  "category.search": "Search product name",
+  "search.history": "Search history",
+  "product.search": "Search result"
 }

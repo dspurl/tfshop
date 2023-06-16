@@ -1,54 +1,19 @@
 <template>
 	<view class="container">
-		<!-- 引导添加小程序 -->
-		<!-- #ifdef MP-WEIXIN -->
-		<view class="guidance-my" v-if="guidanceMy">
-			<view class="triangle-top"></view>
-			<view @click="popupBoot()" class="bg-black padding-sm margin-top flex">
-				<view><span @click.stop="setGuidanceMy" class="icon cuIcon-close text-gray"></span></view>
-				<view class="flex-twice text-center">{{$t('index.guidance.add')}}<span class="text-bold">{{$t('index.guidance.info')}}</span></view>
-				<view><span class="icon cuIcon-right text-gray"></span></view>
+		<!-- 导航 -->
+		<view class="fixed cu-bar search bg-white" :style="{paddingTop:navHeight+'px',paddingBottom:'10px'}">
+			<view @click="navTo('/pages/search/index')" class="search-form round">
+				<text class="cuIcon-search"></text>
+				<input disabled :adjust-position="false" type="text" :placeholder="$t('category.search')" confirm-type="search"></input>
 			</view>
-		</view>
-		<view class="cu-modal" :class="modalName=='guidanceMy'?'show':''">
-			<view class="guidance-modal">
-				<view class="triangle-top"></view>
-				<view class="title bg-red text-xl padding">{{$t('index.guidance.dot')}}<image style="height: 60upx;position: relative;top:0;margin: 0 auto;" mode="heightFix" src="../../static/guidance-white.png"></image>{{$t('index.guidance.add_mini')}}</view>
-				<view class="list">
-					<view class="padding text-left min-title">
-						<span class="text-red">1、</span>
-						{{$t('index.guidance.right')}}
-						<image style="height: 60upx;position: relative;top:0;" mode="heightFix" src="../../static/guidance.png"></image>
-						{{$t('index.guidance.add_my_mini')}}
-					</view>
-					<view>
-						<image src="../../static/guidance-1.png" style="height: 100upx;" mode="aspectFit"></image>
-					</view>
-					<view class="padding text-left min-title">
-						<span class="text-red">2、</span>
-						{{$t('index.guidance.back')}}
-					</view>
-					<view>
-						<image src="../../static/guidance-2.png" style="height: 140upx;" mode="aspectFit"></image>
-					</view>
-					<view class="padding text-left min-title">
-						<span class="text-red">3、</span>
-						{{$t('index.guidance.enter_into')}}
-					</view>
-					<view>
-						<image src="../../static/guidance-3.png" style="height: 140upx;" mode="aspectFit"></image>
-					</view>
-				</view>
-				<view @tap="modalName = null" class="guidance-modal-close">
-					<view class="cuIcon-roundclose"></view>
+			<view @click="navTo('/pages/notice/notice')" class="action">
+				<view class='cuIcon cuIcon-notice'>
+					<view v-if="is_notice" class='cu-tag badge'></view>
 				</view>
 			</view>
-			
 		</view>
-		<official-account v-if="!wechat"></official-account>
-		<!-- #endif -->
 		<!-- 头部轮播 -->
-		<view class="carousel-section">
+		<view class="carousel-section" :style="{paddingTop: (navHeight+50)+'px'}">
 			<!-- 标题栏和状态栏占位符 -->
 			<view class="titleNview-placing"></view>
 			<!-- 背景色区域 -->
@@ -103,8 +68,9 @@
 </template>
 
 <script>
-import Good from '../../api/good'
-import Banner from '../../api/banner'
+import Good from '@/api/good'
+import Banner from '@/api/banner'
+import Notification from '@/api/notification'
 export default {
 		data() {
 			return {
@@ -118,11 +84,14 @@ export default {
 				goodsList: [],
 				adData: {},
 				ctegory:[],
+				is_notice: false,
+				navHeight: getApp().globalData.navHeight ? getApp().globalData.navHeight : 10,
 			};
 		},
 
 		onLoad() {
 			this.loadData()
+			this.notice()
 			// #ifdef MP-WEIXIN 
 			this.wechat=uni.getStorageSync('dsshopUserInfo').wechat
 			// #endif
@@ -200,46 +169,15 @@ export default {
 						url
 					})  
 				}
-			}, 
-			// #ifdef MP-WEIXIN
-			//弹出引导页
-			popupBoot(){
-				this.modalName = 'guidanceMy'
-				this.guidanceMy = false
-				uni.setStorageSync('applyDsshopGuidanceMy', true)
 			},
-			// 引导添加小程序
-			setGuidanceMy(){
-				this.guidanceMy = false
-				uni.setStorageSync('applyDsshopGuidanceMy', true)
-			},
-			// #endif
-		},
-		// #ifndef MP
-		// 标题栏input搜索框点击
-		onNavigationBarSearchInputClicked: async function(e) {
-			this.$api.msg('点击了搜索框');
-		},
-		//点击导航栏 buttons 时触发
-		onNavigationBarButtonTap(e) {
-			const index = e.index;
-			if (index === 0) {
-				this.$api.msg('点击了扫描');
-			} else if (index === 1) {
-				// #ifdef APP-PLUS
-				const pages = getCurrentPages();
-				const page = pages[pages.length - 1];
-				const currentWebview = page.$getAppWebview();
-				currentWebview.hideTitleNViewButtonRedDot({
-					index
-				});
-				// #endif
-				uni.navigateTo({
-					url: '/pages/notice/notice'
+			notice(){
+				const that = this
+				Notification.unread({},function(res){
+					that.is_notice = res ? true : false
 				})
-			}
+			},
 		}
-		// #endif
+		
 	}
 </script>
 

@@ -2,6 +2,7 @@
   "common.loading": "加载中",
   "common.processing": "处理中",
   "common.sort": "排序",
+  "common.search": "搜索",
   "common.state": "状态",
   "common.undistributed": "未分配",
   "common.is_show": "显示",
@@ -237,6 +238,7 @@
   "set.inform": "通知与提醒",
   "set.cache": "清除缓存",
   "set.about": "关于我们",
+  "set.search": "搜索商品",
   "set.cancel": "注销服务",
   "set.out": "退出登录",
   "set.newest": "已经最新了",
@@ -272,5 +274,8 @@
   "tab_bar.1": "分类",
   "tab_bar.2": "购物车",
   "tab_bar.3": "我的",
-  "money.pay.title": "支付"
+  "money.pay.title": "支付",
+  "category.search": "搜索商品名称",
+  "search.history": "搜索历史",
+  "product.search": "搜索结果"
 }

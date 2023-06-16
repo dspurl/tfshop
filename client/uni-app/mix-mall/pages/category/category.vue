@@ -1,31 +1,68 @@
 <template>
 	<view class="content">
-		<scroll-view scroll-y class="left-aside">
-			<view v-for="item in flist" :key="item.id" class="f-item b-b" :class="{active: item.id === currentId}" @click="tabtap(item)">
+		<view class="fixed cu-bar search bg-white" :style="{paddingTop:navHeight+'px',paddingBottom:'10px'}">
+			<view class="margin-left text-xl">
+				<text @click="goHome" class="cuIcon-shop text-black"></text>
+			</view>
+			<view @click="navTo('/pages/search/index')" class="search-form round">
+				<text class="cuIcon-search"></text>
+				<input disabled :adjust-position="false" type="text" :placeholder="$t('category.search')" confirm-type="search"></input>
+			</view>
+			<view @click="navTo('/pages/notice/notice')" class="action">
+				<view class='cuIcon cuIcon-notice'>
+					<view v-if="is_notice" class='cu-tag badge'></view>
+				</view>
+			</view>
+		</view>
+		<scroll-view scroll-y class="left-aside" :style="{paddingTop: (navHeight+50)+'px'}">
+			<view v-for="(item, index) in flist" :key="item.id" class="f-item" :class="{active: item.id === currentId}" @click="tabtap(item,index)">
 				{{item.name}}
 			</view>
 		</scroll-view>
-		<scroll-view scroll-with-animation scroll-y class="right-aside" @scroll="asideScroll" :scroll-top="tabScrollTop">
-			<template v-if="slist.length > 0">
-				<view v-for="item in slist" :key="item.id" class="s-list" :id="'main-'+item.id">
-					<text class="s-item">{{item.name}}</text>
-					<view class="t-list">
-						<view @click="navToList(item.id, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
-							<image :src="titem.resources.img  | smallImage(80)" lazy-load></image>
-							<text class="text-cut text-center">{{titem.name}}</text>
+		<scroll-view :style="{paddingTop: (navHeight+50)+'px'}" scroll-with-animation scroll-y class="right-aside" @scroll="asideScroll" :scroll-top="tabScrollTop" @scrolltolower="lower">
+			<template v-if="tlist.length > 0">
+				<template v-if="slist.length > 0">
+					<view v-for="item in slist" :key="item.id" class="s-list" :id="'main-'+item.id">
+						<text class="s-item">{{item.name}}</text>
+						<view class="t-list">
+							<view @click="navToList(item.id, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
+								<image :src="titem.resources.img  | smallImage(80)" lazy-load></image>
+								<text class="text-cut text-center">{{titem.name}}</text>
+							</view>
 						</view>
 					</view>
-				</view>
+				</template>
+				<template v-else>
+					<view v-for="item in flist" :key="item.id" class="s-list" :id="'main-'+item.id">
+						<text class="s-item"></text>
+						<view class="t-list">
+							<view @click="navToList(0, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
+								<image mode="aspectFit" :src="titem.resources.img  | smallImage(80)" lazy-load></image>
+								<text class="text-cut text-center">{{titem.name}}</text>
+							</view>
+						</view>
+					</view>
+				</template>
 			</template>
 			<template v-else>
-				<view v-for="item in flist" :key="item.id" class="s-list" :id="'main-'+item.id">
-					<text class="s-item"></text>
-					<view class="t-list">
-						<view @click="navToList(0, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
-							<image mode="aspectFit" :src="titem.resources.img  | smallImage(80)" lazy-load></image>
-							<text class="text-cut text-center">{{titem.name}}</text>
+				<!-- 只有一级菜单，直接显示商品列表-->
+				<!-- 商品列表 -->
+				<view class="good-list">
+					<view class="good-item" @click="navTo(`/pages/product/detail?id=${item.id}`)" v-for="(item,index) in goodsList" :key="index">
+						<view class="img">
+							<image :src="item.resources.img | smallImage" mode="aspectFill"></image>
+						</view>
+						<view class="info">
+							<view class="name">{{item.name}}</view>
+							<view class="price-box">
+								<view class="price text-red text-bold">{{$t('common.unit')}}{{item.order_price | 1000}}</view>
+								<button class="sm cu-btn cuIcon bg-red text-xxl">
+									<text class="cuIcon-cart"></text>
+								</button>
+							</view>
 						</view>
 					</view>
+					<uni-load-more :status="loadingType"></uni-load-more>
 				</view>
 			</template>
 		</scroll-view>
@@ -33,10 +70,16 @@
 </template>
 
 <script>
-	import Good from '../../api/good'
+	import Good from '@/api/good'
+	import Notification from '@/api/notification'
+	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
 	export default {
+		components: {
+			uniLoadMore
+		},
 		data() {
 			return {
+				navHeight: getApp().globalData.navHeight ? getApp().globalData.navHeight : 10,
 				sizeCalcState: false,
 				tabScrollTop: 0,
 				currentId: 49,	//一级类目默认选中的ID
@@ -44,10 +87,16 @@
 				slist: [],
 				tlist: [],
 				tap: 0,
+				goodsList: [],
+				page: 1,
+				loadingType: 'more',
+				filterIndex: '',
+				is_notice: false
 			}
 		},
 		onLoad(){
 			this.loadData();
+			this.notice()
 		},
 		onShow(){
 			uni.setNavigationBarTitle({
@@ -68,40 +117,110 @@
 							that.tlist.push(item); //3级分类
 						}
 					})
-					setTimeout(() => {
-					  if(!that.sizeCalcState){
-					  	that.calcSize();
-					  }
-					}, 1)
+					if(that.tlist.length === 0) {
+						if(that.flist.length > 0){
+							that.currentId = that.flist[0].id
+							that.getGood()
+						}
+						
+					}
+					that.$nextTick(() => {
+						if(!that.sizeCalcState && that.tlist.length > 0){
+							that.calcSize();
+						}
+					})
+				})
+			},
+			//加载商品 ，带下拉刷新和上滑加载
+			async getGood(type='add', loading) {
+				// 下拉刷新
+				if(type === 'refresh'){
+					this.page = 1
+					this.goodsList = [];
+				}
+				//没有更多直接返回
+				if(type === 'add'){
+					if(this.loadingType === 'nomore'){
+						return;
+					}
+					this.loadingType = 'loading';
+				}else{
+					this.loadingType = 'more'
+				}
+			
+				let goodsList = [];
+				let that =this
+				// 商品
+				await Good.getList({
+					limit: 10,
+					category_id: this.currentId,
+					page: this.page,
+					sort: this.filterIndex
+				},function(res){
+					that.goodsList = that.goodsList.concat(res.data)
+					if (res.last_page > that.page){
+						that.page ++
+						that.loadingType  = 'more'
+					} else {
+						that.loadingType  = 'nomore'
+					}
+				})
+			},
+			//筛选点击
+			tabClick(index){
+				if(index){
+					if(index === 'sales'){
+						this.filterIndex = '-sales'
+					}else{
+						if(this.filterIndex !== '+order_price'){
+							this.filterIndex = '+order_price'
+						}else{
+							this.filterIndex = '-order_price'
+						}
+					}
+				}else{
+					this.filterIndex = ''
+				}
+				uni.pageScrollTo({
+					duration: 300,
+					scrollTop: 0
+				})
+				this.getGood('refresh', 1);
+				uni.showLoading({
+					title: this.$t('load_more.content_refresh')
 				})
 			},
 			//一级分类点击
-			tabtap(item){
-				if(!this.sizeCalcState){
-					this.calcSize();
-				}
-				this.tap = 1
-				this.currentId = item.id;
-				if (this.slist.length>0) {
-					let index = this.slist.findIndex(sitem=>sitem.pid === item.id);
-					if(this.tabScrollTop === this.slist[index].top){
-						this.tabScrollTop = this.slist[index].top+1
-					}else{
-						this.tabScrollTop = this.slist[index].top
+			tabtap(item, index){
+				if(this.tlist.length){
+					if(!this.sizeCalcState){
+						this.calcSize();
 					}
-				} else {
-					let index = this.flist.findIndex(sitem=>sitem.id === item.id);
-					if(this.tabScrollTop === this.flist[index].top){
-						this.tabScrollTop = this.flist[index].top+1
-					}else{
-						this.tabScrollTop = this.flist[index].top
+					this.tap = 1
+					this.currentId = item.id;
+					if (this.slist.length>0) {
+						let index = this.slist.findIndex(sitem=>sitem.pid === item.id);
+						if(this.tabScrollTop === this.slist[index].top){
+							this.tabScrollTop = this.slist[index].top+1
+						}else{
+							this.tabScrollTop = this.slist[index].top
+						}
+					} else {
+						let index = this.flist.findIndex(sitem=>sitem.id === item.id);
+						if(this.tabScrollTop === this.flist[index].top){
+							this.tabScrollTop = this.flist[index].top+1
+						}else{
+							this.tabScrollTop = this.flist[index].top
+						}
 					}
+				}else{
+					this.currentId = item.id
+					this.getGood('refresh', 1);
 				}
-
 			},
 			//右侧栏滚动
 			asideScroll(e){
-				if(!this.sizeCalcState){
+				if(!this.sizeCalcState && this.tlist.length > 0){
 					this.calcSize();
 				}
 				let scrollTop = e.detail.scrollTop;
@@ -155,6 +274,27 @@
 				uni.navigateTo({
 					url: `/pages/product/list?fid=${this.currentId}&sid=${sid}&tid=${tid}`
 				})
+			},
+			notice(){
+				const that = this
+				Notification.unread({},function(res){
+					that.is_notice = res ? true : false
+				})
+			},
+			//加载更多
+			lower: function(e) {
+				this.getGood()
+			},
+			//返回首页
+			goHome(){
+				uni.switchTab({
+					url: '/pages/index/index'
+				})
+			},
+			navTo(url){
+				uni.navigateTo({  
+					url
+				})  
 			}
 		}
 	}
@@ -164,7 +304,7 @@
 	page,
 	.content {
 		height: 100%;
-		background-color: #f8f8f8;
+		background-color: #ffffff;
 	}
 
 	.content {
@@ -174,7 +314,7 @@
 		flex-shrink: 0;
 		width: 200upx;
 		height: 100%;
-		background-color: #fff;
+		background-color: #f6f8fa;
 	}
 	.f-item {
 		display: flex;
@@ -187,7 +327,7 @@
 		position: relative;
 		&.active{
 			color: $base-color;
-			background: #f8f8f8;
+			background: #ffffff;
 			&:before{
 				content: '';
 				position: absolute;
@@ -207,6 +347,7 @@
 		flex: 1;
 		overflow: hidden;
 		padding-left: 20upx;
+		position: relative;
 	}
 	.s-item{
 		display: flex;
@@ -245,6 +386,50 @@
 		}
 		.text-cut{
 			width: 176upx;
+		}
+	}
+	.good-list{
+		.good-item{
+			display: flex;
+			padding: 40rpx 20rpx 0 0;
+			.img{
+				width: 160rpx;
+				height: 160rpx;
+				overflow: hidden;
+				margin-right: 20rpx;
+				image{
+					width: 100%;
+					height: 100%;
+					opacity: 1;
+				}
+			}
+			.info{
+				flex: 1;
+				min-width:0;
+				.name{
+					overflow:hidden;
+					text-overflow:ellipsis;
+					display:-webkit-box;
+					-webkit-box-orient:vertical;
+					-webkit-line-clamp:2;
+					height: 76rpx;
+					margin-bottom: 30rpx;
+				}
+				.price-box{
+					display: flex;
+					align-items:center;
+					.price{
+						flex: 1;
+					}
+				}
+			}
+		}
+	}
+	.cuIcon{
+		position: relative;
+		.cu-tag{
+			top: auto;
+			right: auto;
 		}
 	}
 </style>

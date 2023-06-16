@@ -7,7 +7,13 @@ import { mapMutations } from 'vuex';
 import { getPlatform,getLogin } from 'utils'
 import Login from '@/api/login.js'
 import store from '@/store'
+import Vue from 'vue';
 export default {
+	globalData: {
+		statusBarHeight: 0, // 状态导航栏高度
+		navHeight: 0, // 总体高度
+		navigationBarHeight: 0, // 导航栏高度(标题栏高度)
+	},
 	onLaunch: function(options) {
 		// uni.clearStorage()
 		this.setSecret(options);
@@ -19,6 +25,16 @@ export default {
 		}
 		// #endif
 		this.setLanguage({code: uni.getStorageSync('language')})
+		// 状态栏高度
+		this.globalData.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
+		// #ifdef MP-WEIXIN
+		// 获取微信胶囊的位置信息 width,height,top,right,left,bottom
+		const custom = wx.getMenuButtonBoundingClientRect()
+		// 导航栏高度(标题栏高度) = 胶囊高度 + (顶部距离 - 状态栏高度) * 2
+		this.globalData.navigationBarHeight = custom.height + (custom.top - this.globalData.statusBarHeight) * 2
+		// 总体高度 = 状态栏高度 + 导航栏高度
+		this.globalData.navHeight = this.globalData.navigationBarHeight + this.globalData.statusBarHeight
+		// #endif
 	},
 	methods: {
 		...mapMutations(['login']),
