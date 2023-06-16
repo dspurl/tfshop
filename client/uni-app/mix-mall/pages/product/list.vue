@@ -31,7 +31,7 @@
 				</view>
 				<text class="title clamp">{{item.name}}</text>
 				<view class="price-box">
-					<text class="price">{{item.order_price | 1000}}</text>
+					<text class="price">{{$t('common.unit')}}{{item.order_price | 1000}}</text>
 				</view>
 			</view>
 		</view>
@@ -412,7 +412,6 @@
 			color: $uni-color-primary;
 			line-height: 1;
 			&:before{
-				content: '￥';
 				font-size: 26upx;
 			}
 		}

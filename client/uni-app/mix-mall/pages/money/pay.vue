@@ -8,7 +8,7 @@
 		<view v-else>
 			<view class="price-box">
 				<text>{{$t('indent.payment_amount')}}</text>
-				<text class="price">{{orderInfo.total | 1000}}</text>
+				<text class="price">{{$t('common.unit')}}{{orderInfo.total | 1000}}</text>
 				<text class="padding-top">{{$t('indent.lost_efficacy_time')}}</text>
 				<uni-countdown color="#fa436a" splitorColor="#fa436a" :show-day="orderInfo.day ? true : false" :showColon="false" :day="orderInfo.day" :hour="orderInfo.hour" :minute="orderInfo.minute" :second="orderInfo.second"></uni-countdown>
 			</view>
@@ -313,7 +313,6 @@
 			color: #303133;
 			margin-top: 12upx;
 			&:before{
-				content: '￥';
 				font-size: 40upx;
 			}
 		}
