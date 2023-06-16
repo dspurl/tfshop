@@ -6,7 +6,7 @@
           {{$t('header.top.nav_list.home')}}
         </NuxtLink>
       </el-breadcrumb-item>
-      <el-breadcrumb-item v-if="listQuery.pid">{{$t('product.classify')}}</el-breadcrumb-item>
+      <el-breadcrumb-item v-if="listQuery.category_id">{{$t('product.classify')}}</el-breadcrumb-item>
       <el-breadcrumb-item v-else>{{$t('product.search_result')}}</el-breadcrumb-item>
       <el-breadcrumb-item>{{title}}</el-breadcrumb-item>
     </el-breadcrumb>
@@ -28,7 +28,7 @@
       </div>
       <div class="product-list container" v-loading="loading">
         <div class="list">
-          <NuxtLink class="li" v-for="(item, index) in goodList" :key="index" :to="{ path: `/product/detail/${item.id}`}">
+          <NuxtLink class="li" v-for="(item, index) in list" :key="index" :to="{ path: `/product/detail/${item.id}`}">
             <el-card class="card" shadow="hover">
               <el-image
                 class="image"

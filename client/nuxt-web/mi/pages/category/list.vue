@@ -10,17 +10,17 @@
     </el-breadcrumb>
     <div class="category-box">
       <div class="category-list container" v-for="(item, index) in goodCategory" :key="index">
-        <NuxtLink class="title" :to="{ path: `/product/list/${item.id}`, query: { title: item.name }}">
+        <NuxtLink class="title" :to="{ path: `/product/list/${item.id}`, query: { name: item.name }}">
           {{item.name}}
         </NuxtLink>
         <template v-if="item.level === 3">
           <div class="category-list-box" v-for="(item2, index2) in item.children" :key="index2">
-            <NuxtLink class="min-title" :to="{ path: `/product/list/${item2.id}`, query: { title: item2.name }}">
+            <NuxtLink class="min-title" :to="{ path: `/product/list/${item2.id}`, query: { name: item2.name }}">
               {{item2.name}}
             </NuxtLink>
             <div class="list">
               <div class="li" v-for="(item3, index3) in item2.children" :key="index3">
-                <NuxtLink :to="{ path: `/product/list/${item3.id}`, query: { title: item3.name }}">
+                <NuxtLink :to="{ path: `/product/list/${item3.id}`, query: { name: item3.name }}">
                   <el-image
                     class="image"
                     :src="item3.resources.img"

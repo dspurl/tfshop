@@ -14,7 +14,6 @@ export const state = () => ({
   hasLogin: false,
   cartTitle: '',
   shoppingCartNumber: 0,
-  searchKeyword: '',
   lang: 'zh'
 })
 
@@ -40,9 +39,6 @@ export const mutations = {
   },
   setShoppingCartNumber(state, provider) {
     state.shoppingCartNumber = provider
-  },
-  setSearchKeyword(state, provider) {
-    state.searchKeyword = provider
   },
   logout(state) {
     store.remove(process.env.CACHE_PR + 'ApplyToken');

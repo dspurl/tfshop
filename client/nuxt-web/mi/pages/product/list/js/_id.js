@@ -2,7 +2,7 @@ import {getList as getGoodList} from '@/api/good'
 export default {
   data() {
     return {
-      goodList: [],
+      list: [],
       listQuery: {},
       loading: false,
       total: 0,
@@ -17,16 +17,16 @@ export default {
         page: 1,
         sort: '',
         category_id: params.id,
-        title: params.id ? '': query.title
+        title: query.title
       };
       let [goodData] = await Promise.all([
         getGoodList(listQuery)
       ])
       return {
-        goodList: goodData.data,
+        list: goodData.data,
         total: goodData.total,
         listQuery: listQuery,
-        title: query.title ? query.title : this.$t('product.all')
+        title: params.id ? query.name : query.title
       }
     } catch(err) {
       ctx.$errorHandler(err)
@@ -34,7 +34,16 @@ export default {
   },
   head () {
     return {
-      title: this.title + (this.listQuery.pid ? `-${this.$t('product.classify')}-`: `-${this.$t('product.search_result')}-`) + process.env.APP_NAME
+      title: this.title + (this.listQuery.category_id ? `-${this.$t('product.classify')}-`: `-${this.$t('product.search_result')}-`) + process.env.APP_NAME
+    }
+  },
+  watch: {
+    '$route.query.title': {
+      handler(newVal,oldVal){
+        this.title = this.listQuery.title = newVal
+        this.getList()
+      },
+      deep: true
     }
   },
   methods: {
@@ -43,7 +52,7 @@ export default {
       Promise.all([
         getGoodList(this.listQuery)
       ]).then(([goodData]) => {
-        this.goodList = goodData.data;
+        this.list = goodData.data;
         this.total = goodData.total;
         this.loading = false;
       }).catch((error) => {

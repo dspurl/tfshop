@@ -75,7 +75,7 @@
     <div class="recommend container" v-for="(fitem, findex) in recommendCategoryList" :key="findex">
       <div class="title-box">
         <div class="min-title">{{fitem.name}}</div>
-        <NuxtLink class="more" :to="{ path: `/product/list/${fitem.id}`, query: { title: fitem.name }}">{{$t('index.view_more')}}>></NuxtLink>
+        <NuxtLink class="more" :to="{ path: `/product/list/${fitem.id}`, query: { name: fitem.name }}">{{$t('index.view_more')}}>></NuxtLink>
       </div>
       <div class="list">
         <NuxtLink class="li" v-for="(item, index) in recommendGoodList[findex]" :key="index" :to="{ path: `/product/detail/${item.id}`}">
