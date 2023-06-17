@@ -277,5 +277,8 @@
   "money.pay.title": "支付",
   "category.search": "搜索商品名称",
   "search.history": "搜索历史",
-  "product.search": "搜索结果"
+  "product.search": "搜索结果",
+  "sku.cart_success": "成功加入购物车",
+  "sku.specification": "规格",
+  "sku.amount_error": "输入的金额有误"
 }

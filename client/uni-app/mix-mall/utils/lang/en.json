@@ -278,5 +278,8 @@
   "money.pay.title": "Payment",
   "category.search": "Search product name",
   "search.history": "Search history",
-  "product.search": "Search result"
+  "product.search": "Search result",
+  "sku.cart_success": "Successfully added to cart",
+  "sku.specification": "specification",
+  "sku.amount_error": "The amount entered is incorrect"
 }
