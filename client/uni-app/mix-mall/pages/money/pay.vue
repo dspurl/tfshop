@@ -223,8 +223,12 @@
 							  },
 								fail(res) {
 									that.$api.msg(that.$t('payment_log.payment_failure'))
+									that.confirmDisabled = false
 								}
 							})
+						},function(error){
+							that.$api.msg(error.message)
+							that.confirmDisabled = false
 						})
 					} else {
 						Pay.unifiedPayment({
@@ -236,6 +240,9 @@
 							that.confirmDisabled = false
 							that.showModal('payHint')
 							window.location.href = res.mweb_url
+						},function(error){
+							that.$api.msg(error.message)
+							that.confirmDisabled = false
 						})
 					}
 					// #endif
@@ -246,7 +253,6 @@
 						trade_type: 'JSAPI',
 						type: 'goodsIndent'
 					},function(res){
-						that.confirmDisabled = false
 						uni.requestPayment({
 							timeStamp: res.msg.timestamp,
 							nonceStr: res.msg.nonceStr,
@@ -285,6 +291,9 @@
 							}
 						})
 						
+					},function(error){
+						that.$api.msg(error.message)
+						that.confirmDisabled = false
 					})
 					// #endif
 				}
