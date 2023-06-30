@@ -11,6 +11,7 @@
 import { getPlatform,getLogin } from 'utils'
 import configURL from './config.js'
 import store from '@/store'
+import i18n from '@/utils/lang/index'
 function request(url, method, params, header, success, fail) {
   this.requestLoading(url, method, params, header, "", success, fail)
 }
@@ -115,7 +116,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
 		  }
 		  
 	  }else if (res.statusCode == 500) {
-		  if(res.data.message.indexOf('The refresh token is invalid') !== -1 || res.data.message.indexOf('Unauthenticated') !== -1 || res.data.message.indexOf(this.$t('login.timed.out')) !== -1){
+		  if(res.data.message.indexOf('The refresh token is invalid') !== -1 || res.data.message.indexOf('Unauthenticated') !== -1 || res.data.message.indexOf(i18n.t('login.timed.out')) !== -1){
 			  store.commit('logout')
 			  setTimeout(()=>{
 			  	uni.navigateTo({
@@ -129,11 +130,11 @@ function requestLoading(url, method, params, header, message, success, fail) {
 		  // #ifdef MP
 		  getLogin()
 		  // #endif
-		  fail({message: this.$t('request.login.timed.out')})
+		  fail({message: i18n.t('request.login.timed.out')})
 	  }else if (res.statusCode == 401) {
 		  fail({message: res.data.message})
       } else {
-        fail({message: this.$t('request.server_exception')})
+        fail({message: i18n.t('request.server_exception')})
       }
 
     },
@@ -145,7 +146,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
       if(res.data){
       		fail({message: res.data.message})
       }else{
-      		fail({message: this.$t('request.server_exception')})
+      		fail({message: i18n.t('request.server_exception')})
       }
     },
     complete: function (res) {

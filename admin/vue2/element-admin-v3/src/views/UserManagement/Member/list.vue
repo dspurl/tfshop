@@ -19,6 +19,7 @@
         <el-radio-button label="1">{{ $t('member.state.normal') }}</el-radio-button>
         <el-radio-button label="2">{{ $t('member.state.forbid') }}</el-radio-button>
       </el-radio-group>
+      <el-button v-permission="$store.jurisdiction.MemberExport" :loading="formLoading" class="filter-item" style="margin-left: 10px;float:right;" icon="el-icon-download" @click="handleExport">{{ $t('common.export') }}</el-button>
       <el-button v-permission="$store.jurisdiction.MemberCreate" class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit" @click="handleCreate">{{ $t('common.add') }}</el-button>
       <!--<el-button v-permisssion="jurisdiction.usersListExport" v-waves :loading="downloadLoading" class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">{{ $t('usuel.export') }}</el-button>-->
     </div>
@@ -169,7 +170,7 @@
   }
 </style>
 <script>
-import { getList, create, edit } from '@/api/member'
+import { getList, create, edit, exports } from '@/api/member'
 import waves from '@/directive/waves' // Waves directive
 import Pagination from '@/components/Pagination'
 
@@ -381,6 +382,14 @@ export default {
       }
       this.$nextTick(() => {
         this.$refs['dataForm'].clearValidate()
+      })
+    },
+    handleExport() {
+      this.formLoading = true
+      exports(this.listQuery).then(response => {
+        window.open(response.data)
+      }).finally(res => {
+        this.formLoading = false
       })
     }
   }

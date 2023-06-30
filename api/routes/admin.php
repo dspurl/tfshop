@@ -33,6 +33,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('member', 'MemberController@list')->name('admin.memberList')->middleware(['permissions:MemberList']);  //会员列表
         Route::post('member', 'MemberController@create')->name('admin.memberCreate')->middleware(['permissions:MemberCreate']);  //创建会员
         Route::post('member/{id}', 'MemberController@edit')->name('admin.memberEdit')->middleware(['permissions:MemberEdit']);  //保存会员
+        Route::post('member/export/all', 'MemberController@export')->name('admin.memberExport')->middleware(['permissions:MemberExport']);    //会员导出
         Route::get('manage', 'ManageController@list')->name('admin.manageList')->middleware(['permissions:ManageList']);  //管理组管理
         Route::post('manage', 'ManageController@create')->name('admin.manageCreate')->middleware(['permissions:ManageCreate']);  //创建管理组
         Route::post('manage/{id}', 'ManageController@edit')->name('admin.manageEdit')->middleware(['permissions:ManageEdit']);  //保存管理组
@@ -49,6 +50,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('good/{id}', 'GoodController@detail')->name('admin.goodDetail')->middleware(['permissions:GoodDetail']);    //商品详情
         Route::get('good/specification/{id}', 'GoodController@specification')->name('admin.specification')->middleware(['permissions:GoodEdit']);    //商品规格列表
         Route::post('good/state/{id}', 'GoodController@state')->name('admin.goodState')->middleware(['permissions:GoodEdit']);    //商品状态
+        Route::post('good/export/all', 'GoodController@export')->name('admin.goodExport')->middleware(['permissions:GoodExport']);    //商品导出
         Route::get('brand', 'BrandController@list')->name('admin.brandList')->middleware(['permissions:BrandList']);    //品牌列表
         Route::post('brand', 'BrandController@create')->name('admin.brandCreate')->middleware(['permissions:BrandCreate']);    //创建品牌
         Route::post('brand/{id}', 'BrandController@edit')->name('admin.brandEdit')->middleware(['permissions:BrandEdit']);    //保存品牌
@@ -81,6 +83,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('indent/refund/{id}', 'IndentController@refund')->name('admin.indentRefund')->middleware(['permissions:IndentRefund']); //退款
         Route::get('indent/query/{id}', 'IndentController@query')->name('admin.indentQuery')->middleware(['permissions:IndentDetail']);  //查询订单状态
         Route::post('indent/receiving', 'IndentController@receiving')->name('admin.indentReceiving')->middleware(['permissions:IndentShipment']); //延长收货时间
+        Route::post('indent/export/all', 'IndentController@export')->name('admin.indentExport')->middleware(['permissions:IndentExport']);    //订单导出
         Route::get('redis', 'RedisServiceController@list')->name('admin.redisServiceList')->middleware(['permissions:RedisServiceList']);    //Redis列表
         Route::get('redis/{name}', 'RedisServiceController@detail')->name('admin.redisServiceDetail')->middleware(['permissions:RedisServiceDetail']);    //Redis详情
         Route::post('redis/destroy/{id}', 'RedisServiceController@destroy')->name('admin.redisServiceDestroy')->middleware(['permissions:RedisServiceDestroy']);    //删除Redis
@@ -98,7 +101,7 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::get('plugin/install/{name}', 'PluginController@install')->name('admin.plugInInstall')->middleware(['permissions:PlugInInstall']);    //插件安装
         Route::post('plugin/destroy/{name}', 'PluginController@destroy')->name('admin.plugInDestroy')->middleware(['permissions:PlugInDestroy']);    //插件删除
         Route::post('plugin/publish/{name}', 'PluginController@publish')->name('admin.plugInPublish')->middleware(['permissions:PlugInPublish']);    //插件发行
-        Route::post('plugin/updatePack/{code}', 'PluginController@updatePack')->name('admin.plugInUpdatePack')->middleware(['permissions:PlugInInstall']);    //插件在线下载/更新
+        Route::get('plugin/updatePack/{code}', 'PluginController@updatePack')->name('admin.plugInUpdatePack')->middleware(['permissions:PlugInInstall']);    //插件在线下载/更新
         Route::get('plugin/routes/{type}', 'PluginController@routes')->name('admin.plugInRoutes')->middleware(['permissions:PlugInRoutes']);    //获取路由列表
         Route::get('plugin/models/all', 'PluginController@models')->name('admin.plugInModels')->middleware(['permissions:PlugInModels']);    //获取模型列表
         Route::post('plugin/jurisdiction/all', 'PluginController@jurisdiction')->name('admin.plugInJurisdiction')->middleware(['permissions:PlugInJurisdiction']);    //获取权限列表

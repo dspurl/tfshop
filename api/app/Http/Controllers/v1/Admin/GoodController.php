@@ -9,9 +9,11 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
+use App\Exports\v1\GoodExport;
 use App\Http\Requests\v1\SubmitGoodRequest;
 use App\Models\v1\Brand;
 use App\Models\v1\Freight;
@@ -26,6 +28,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * @group [ADMIN]Good(商品管理)
@@ -365,7 +368,7 @@ class GoodController extends Controller
     public function edit(SubmitGoodRequest $request, $id)
     {
         if (count($request->good_sku) == 0) {
-            return resReturn(0,  __('good.error.good_specification'), Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('good.error.good_specification'), Code::CODE_PARAMETER_WRONG);
         }
         if ($request->is_show == Good::GOOD_SHOW_TIMING && !$request->timing) {
             return resReturn(0, __('good.error.time'), Code::CODE_PARAMETER_WRONG);
@@ -729,5 +732,76 @@ class GoodController extends Controller
         } else {
             return resReturn(0, $return[0], $return[1]);
         }
+    }
+
+    /**
+     * GoodExport
+     * 商品导出
+     * @param Request $request
+     * @return string
+     */
+    public function export(Request $request)
+    {
+        $date = date('Ymd');
+        $title = __('good.list');
+        $name = "temporary/$title$date.xlsx";
+        $list = [];
+        Good::$withoutAppends = false;
+        GoodSku::$withoutAppends = false;
+        $q = Good::query();
+        if ($request->activeIndex != 1) {
+            if ($request->activeIndex == 2) {
+                $q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
+            } else if ($request->activeIndex == 3) {
+                $q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
+            } else if ($request->activeIndex == 4) {
+                $q->whereHas('goodSku', function ($query) {
+                    $query->groupBy('id')->having('inventory', '<', 10);
+                });
+            } else if ($request->activeIndex == 5) {
+                $q->whereHas('goodSku', function ($query) {
+                    $query->groupBy('id')->having('inventory', 0);
+                });
+            }
+        }
+        if ($request->title) {
+            $q->where(function ($q1) use ($request) {
+                $q1->where('name', 'like', '%' . $request->title . '%')
+                    ->orWhere('number', $request->title);
+            });
+        }
+        if ($request->cateId) {
+            $q->where('category_id', collect($request->cateId)->last());
+        }
+        if ($request->has('sort')) {
+            $sortFormatConversion = sortFormatConversion($request->sort);
+            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
+        $paginate = $q->with(['resources' => function ($q) {
+            $q->where('depict', 'like', '%_zimg');
+        }, 'goodSku' => function ($q) {
+            $q->select('good_id', 'price', 'inventory', 'cost_price');
+        }, 'category'])->get();
+        foreach ($paginate as $p){
+            $priceShow = (new Good())->getPriceShow($p);
+            $config[$p->type][] = '';
+            $list[$p->type][]=[
+                'id'=> $p->id,
+                'type'=> $p->type,
+                'name'=> $p->name,
+                'price'=> $priceShow[0],
+                'category'=> $p->category ? $p->category->name : __('common.nothing'),
+                'number'=> $p->number,
+                'inventory'=> (new Good())->getInventoryShow($p),
+                'sales'=> $p->sales,
+                'state'=> $p->putaway_show,
+                'is_inventory'=> $p->is_inventory_show,
+                'is_recommend'=> $p->is_recommend ? __('common.yes') : __('common.yes'),
+                'time'=> $p->time,
+                'updated_at'=> $p->updated_at,
+            ];
+        }
+        Excel::store(new GoodExport($list, $config, $title), "public/" . $name);
+        return resReturn(1, request()->root() . '/storage/' . $name);
     }
 }

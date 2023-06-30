@@ -11,10 +11,12 @@
  */
 namespace App\Http\Controllers\v1\Admin;
 
+use App\Exports\v1\MemberExport;
 use App\Http\Requests\v1\SubmitUserRequest;
 use App\Models\v1\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * @group [ADMIN]Member(会员管理)
@@ -110,5 +112,54 @@ class MemberController extends Controller
         $User->gender = $request->gender;
         $User->save();
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.amend')]));
+    }
+
+    /**
+     * MemberExport
+     * 会员导出
+     * @param Request $request
+     * @return string
+     */
+    public function export(Request $request)
+    {
+        $date = date('Ymd');
+        $title = __('user.list');
+        $name = "temporary/$title$date.xlsx";
+        $list = [];
+        User::$withoutAppends = false;
+        $q = User::query();
+        if ($request->has('sort')) {
+            $sortFormatConversion = sortFormatConversion($request->sort);
+            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
+        if ($request->state) {
+            $q->where('state', $request->state);
+        }
+        if ($request->title) {
+            $q->where('id', $request->title)->orWhere('cellphone', $request->title)->orWhere('name', 'like', '%' . $request->title . '%');
+        }
+        if ($request->timeInterval) {
+            $timeInterval[0] = $request->timeInterval[0] . ' 00:00:00';
+            $timeInterval[1] = $request->timeInterval[1] . ' 23:59:59';
+            $q->where('created_at', '>=', $timeInterval[0]);
+            $q->where('created_at', '<=', $timeInterval[1]);
+        }
+        $paginate = $q->get();
+        foreach ($paginate as $p){
+            $config[$p->type][] = '';
+            $list[$p->type][]=[
+                'id'=> $p->id,
+                'name'=> $p->name,
+                'nickname'=> $p->nickname,
+                'cellphone'=> $p->cellphone,
+                'gender'=> $p->gender_show,
+                'money'=> $p->money,
+                'state'=> $p->state_show,
+                'created_at'=> $p->created_at,
+                'updated_at'=> $p->updated_at,
+            ];
+        }
+        Excel::store(new MemberExport($list, $config, $title), "public/" . $name);
+        return resReturn(1, request()->root() . '/storage/' . $name);
     }
 }

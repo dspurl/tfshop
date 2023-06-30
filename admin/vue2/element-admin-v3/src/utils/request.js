@@ -8,6 +8,7 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+import i18n from '@/lang/index'
 import axios from 'axios'
 import { Message, MessageBox } from 'element-ui'
 import store from '@/store'
@@ -50,7 +51,7 @@ service.interceptors.response.use(
   response => {
     if (response.data.result === 'error') {
       Message({
-        message: '服务器返回格式有误',
+        message: i18n.t('request.server_return_error'),
         type: 'error',
         duration: 5 * 1000
       })
@@ -65,9 +66,9 @@ service.interceptors.response.use(
 
       if (res.status === 50002 || res.status === 50003) {
         // to re-login
-        MessageBox.confirm('长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-          confirmButtonText: '重新登录',
-          cancelButtonText: '取消',
+        MessageBox.confirm(i18n.t('request.no_operation_for_long_time'), i18n.t('request.definite_logout'), {
+          confirmButtonText: i18n.t('request.reLogin'),
+          cancelButtonText: i18n.t('common.cancel'),
           type: 'warning'
         }).then(() => {
           store.dispatch('LogOut').then()
@@ -83,9 +84,9 @@ service.interceptors.response.use(
   error => {
     // console.log('err' + error) // for debug
     if (error.response.data.status_code === 500 && (error.response.data.message.indexOf('The refresh token is invalid') !== -1 || error.response.data.message.indexOf('Unauthenticated') !== -1)) {
-      MessageBox.confirm('长时间未操作，你已被登出，可以取消继续留在该页面，或者重新登录', '确定登出', {
-        confirmButtonText: '重新登录',
-        cancelButtonText: '取消',
+      MessageBox.confirm(i18n.t('request.no_operation_for_long_time'), i18n.t('request.definite_logout'), {
+        confirmButtonText: i18n.t('request.reLogin'),
+        cancelButtonText: i18n.t('common.cancel'),
         type: 'warning'
       }).then(() => {
         store.dispatch('LogOut').then(() => {

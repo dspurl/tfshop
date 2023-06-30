@@ -121,7 +121,7 @@ class AdminController extends Controller
     public function destroy($id)
     {
         if (!$id) {
-            return resReturn(0, '参数错误', Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, __('common.arguments'), Code::CODE_PARAMETER_WRONG);
         }
         $Admin = Admin::find($id);
         Storage::delete('public/image/avatar/' . $Admin->portrait);    //删除头像
