@@ -71,6 +71,7 @@
 import Good from '@/api/good'
 import Banner from '@/api/banner'
 import Notification from '@/api/notification'
+import { mapState } from 'vuex';
 export default {
 		data() {
 			return {
@@ -88,10 +89,14 @@ export default {
 				navHeight: getApp().globalData.navHeight ? getApp().globalData.navHeight : 10,
 			};
 		},
-
+		computed: {
+			...mapState(['hasLogin'])
+		},
 		onLoad() {
 			this.loadData()
-			this.notice()
+			if(this.hasLogin){
+				this.notice()
+			}
 			// #ifdef MP-WEIXIN 
 			this.wechat=uni.getStorageSync('dsshopUserInfo').wechat
 			// #endif

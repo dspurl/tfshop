@@ -73,6 +73,7 @@
 	import Good from '@/api/good'
 	import Notification from '@/api/notification'
 	import uniLoadMore from '@/components/uni-load-more/uni-load-more.vue';
+	import { mapState } from 'vuex';
 	export default {
 		components: {
 			uniLoadMore
@@ -94,9 +95,14 @@
 				is_notice: false
 			}
 		},
+		computed: {
+			...mapState(['hasLogin'])
+		},
 		onLoad(){
 			this.loadData();
-			this.notice()
+			if(this.hasLogin){
+				this.notice()
+			}
 		},
 		onShow(){
 			uni.setNavigationBarTitle({
