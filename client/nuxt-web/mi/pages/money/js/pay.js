@@ -85,6 +85,7 @@ export default {
             message: this.$t('money.error'),
             type: 'error'
           });
+          this.buttonLoading = false
         })
       }
     }

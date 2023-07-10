@@ -73,3 +73,12 @@ export function specification(id) {
     method: 'GET'
   })
 }
+
+export function exports(data) {
+  data = Qs.parse(data)
+  return request({
+    url: 'good/export/all',
+    method: 'POST',
+    data
+  })
+}

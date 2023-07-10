@@ -67,3 +67,12 @@ export function receiving(data) {
     data
   })
 }
+
+export function exports(data) {
+  data = Qs.parse(data)
+  return request({
+    url: 'indent/export/all',
+    method: 'POST',
+    data
+  })
+}

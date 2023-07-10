@@ -8,7 +8,7 @@
 		<view v-else>
 			<view class="price-box">
 				<text>{{$t('indent.payment_amount')}}</text>
-				<text class="price">{{orderInfo.total | 1000}}</text>
+				<text class="price">{{$t('common.unit')}}{{orderInfo.total | 1000}}</text>
 				<text class="padding-top">{{$t('indent.lost_efficacy_time')}}</text>
 				<uni-countdown color="#fa436a" splitorColor="#fa436a" :show-day="orderInfo.day ? true : false" :showColon="false" :day="orderInfo.day" :hour="orderInfo.hour" :minute="orderInfo.minute" :second="orderInfo.second"></uni-countdown>
 			</view>
@@ -40,7 +40,7 @@
 					<text class="icon yticon icon-erjiye-yucunkuan"></text>
 					<view class="con">
 						<text class="tit">{{$t('payment_log.prepaid_deposit')}}</text>
-						<text>{{$t('payment_log.available_balance')}} {{common.unit}}{{orderInfo.user.money | 1000}}</text>
+						<text>{{$t('payment_log.available_balance')}} {{$t('common.unit')}}{{orderInfo.user.money | 1000}}</text>
 					</view>
 					<label class="radio">
 						<radio value="" color="#fa436a" :checked="payType == 1" />
@@ -223,8 +223,12 @@
 							  },
 								fail(res) {
 									that.$api.msg(that.$t('payment_log.payment_failure'))
+									that.confirmDisabled = false
 								}
 							})
+						},function(error){
+							that.$api.msg(error.message)
+							that.confirmDisabled = false
 						})
 					} else {
 						Pay.unifiedPayment({
@@ -236,6 +240,9 @@
 							that.confirmDisabled = false
 							that.showModal('payHint')
 							window.location.href = res.mweb_url
+						},function(error){
+							that.$api.msg(error.message)
+							that.confirmDisabled = false
 						})
 					}
 					// #endif
@@ -246,7 +253,6 @@
 						trade_type: 'JSAPI',
 						type: 'goodsIndent'
 					},function(res){
-						that.confirmDisabled = false
 						uni.requestPayment({
 							timeStamp: res.msg.timestamp,
 							nonceStr: res.msg.nonceStr,
@@ -285,6 +291,9 @@
 							}
 						})
 						
+					},function(error){
+						that.$api.msg(error.message)
+						that.confirmDisabled = false
 					})
 					// #endif
 				}
@@ -313,7 +322,6 @@
 			color: #303133;
 			margin-top: 12upx;
 			&:before{
-				content: '￥';
 				font-size: 40upx;
 			}
 		}

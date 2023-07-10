@@ -16,7 +16,7 @@ DSSHOP商城系统
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
     </a>
     <a href="https://www.dswjcms.com/download">
-        <img src="https://img.shields.io/badge/Edition-3.4.0-blue.svg" />
+        <img src="https://img.shields.io/badge/Edition-3.4.1-blue.svg" />
     </a>
       <a href="https://github.com/laravel/framework">
     <img src="https://img.shields.io/badge/laravel-7.30.6-brightgreen.svg" alt="laravel">
@@ -148,6 +148,8 @@ UI：dswjcms、purl
 2.如果商用必须保留版权信息，请自觉遵守;
 
 3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
+
+4.如何免费申请商业授权[点击查看](https://www.dswjcms.com/article/detail/72 "点击查看")
 
 ### 版权信息
 

@@ -88,7 +88,7 @@
         "sdkConfigs" : {
             "maps" : {
                 "qqmap" : {
-                    "key" : ""
+                    "key" : "lbs_qq_key"
                 }
             }
         }

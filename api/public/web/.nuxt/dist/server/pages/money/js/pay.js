@@ -153,6 +153,7 @@ var vue_qrcode_default = /*#__PURE__*/__webpack_require__.n(vue_qrcode_);
             message: this.$t('money.error'),
             type: 'error'
           });
+          this.buttonLoading = false;
         });
       }
     }

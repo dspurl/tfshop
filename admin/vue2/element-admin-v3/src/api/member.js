@@ -35,3 +35,12 @@ export function edit(data) {
     data
   })
 }
+
+export function exports(data) {
+  data = Qs.parse(data)
+  return request({
+    url: 'member/export/all',
+    method: 'POST',
+    data
+  })
+}

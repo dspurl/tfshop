@@ -13,7 +13,7 @@
 							<text class="cuIcon-unfold"></text>
 						</view>
 						<view class="text-gray text-sm">
-							{{$t('finance.expenditure')}}{{$t('common.unit')}}{{expend | 1000}}元 {{$t('finance.earning')}}￥{{income | 1000}}元
+							{{$t('finance.expenditure')}}{{$t('common.unit')}}{{expend | 1000}}{{$t('common.monetary_unit')}} {{$t('finance.earning')}}{{$t('common.unit')}}{{income | 1000}}{{$t('common.monetary_unit')}}
 						</view>
 					</view>
 					<!-- <view class="action text-grey">

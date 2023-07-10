@@ -408,15 +408,6 @@
 					color: $font-color-light;
 					padding: 10upx 12upx;
 				}
-				.price{
-					font-size: $font-base + 2upx;
-					color: $font-color-dark;
-					&:before{
-						content: '￥';
-						font-size: $font-sm;
-						margin: 0 2upx 0 8upx;
-					}
-				}
 			}
 		}
 		
@@ -430,15 +421,6 @@
 			.num{
 				margin: 0 8upx;
 				color: $font-color-dark;
-			}
-			.price{
-				font-size: $font-lg;
-				color: $font-color-dark;
-				&:before{
-					content: '￥';
-					font-size: $font-sm;
-					margin: 0 2upx 0 8upx;
-				}
 			}
 		}
 		.action-box{

@@ -11,6 +11,7 @@
         <el-menu-item index="7">{{ $t('good_indent.state.refund') }}</el-menu-item>
       </el-menu>
       <br>
+      <el-button v-permission="$store.jurisdiction.IndentExport" :loading="formLoading" class="filter-item" style="margin-left: 10px;float:right;" icon="el-icon-download" @click="handleExport">{{ $t('common.export') }}</el-button>
       <el-radio-group v-model="listQuery.type" size="small" style="margin-bottom: 10px;" @change="handleFilter">
         <el-radio-button :label="0">{{ $t('good_indent.type.common') }}</el-radio-button>
       </el-radio-group>
@@ -51,7 +52,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column :label="$t('good_indent.type')" width="120">
+            <el-table-column :label="$t('good.table.type')" width="120">
               <template slot-scope="props">
                 <div>{{ props.row.good.type }}</div>
               </template>
@@ -167,7 +168,7 @@
 </style>
 
 <script>
-import { getList } from '@/api/indent'
+import { getList, exports } from '@/api/indent'
 import Pagination from '@/components/Pagination'
 export default {
   name: 'IndentList',
@@ -234,6 +235,14 @@ export default {
         sort: '5',
         img: ''
       }
+    },
+    handleExport() {
+      this.formLoading = true
+      exports(this.listQuery).then(response => {
+        window.open(response.data)
+      }).finally(res => {
+        this.formLoading = false
+      })
     }
   }
 }

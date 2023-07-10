@@ -28,7 +28,8 @@
     "pages/money/paySuccess",
     "pages/notice/notice",
     "pages/category/category",
-    "pages/product/list"
+    "pages/product/list",
+    "pages/search/index"
   ],
   "subPackages": [],
   "window": {

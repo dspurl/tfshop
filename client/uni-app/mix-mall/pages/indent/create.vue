@@ -29,7 +29,7 @@
 					<text class="title clamp">{{item.name}}</text>
 					<text class="spec">{{item.specification}}</text>
 					<view class="price-box">
-						<text class="price">￥{{item.price}}</text>
+						<text class="price">{{$t('common.unit')}}{{item.price}}</text>
 						<text class="number">x {{item.number}}</text>
 					</view>
 				</view>

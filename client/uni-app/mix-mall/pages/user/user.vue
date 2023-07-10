@@ -58,7 +58,7 @@
 					<text>{{$t('user.browsing_history')}}</text>
 				</view>
 				<scroll-view scroll-x class="h-list">
-					<image v-for="(item, index) in browseList" :key="index" @click="navTo('/pages/product/detail?id=' + item.good_id)" :src="item.good.resources.img | smallImage" mode="aspectFill" lazy-load></image>
+					<image v-for="(item, index) in browseList" :key="index" v-if="item.good" @click="navTo('/pages/product/detail?id=' + item.good_id)" :src="item.good.resources.img | smallImage" mode="aspectFill" lazy-load></image>
 				</scroll-view>
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" :title="$t('user.bill')" @eventClick="navTo('/pages/finance/bill')"></list-cell>
 				<list-cell icon="icon-dizhi" iconColor="#5fcda2" :title="$t('user.site')" @eventClick="navTo('/pages/address/address')"></list-cell>
@@ -66,23 +66,21 @@
 				<list-cell icon="icon-comment" iconColor="#e07472" :title="$t('user.inform')" :tips="noticeNumber ? noticeNumber : null" @eventClick="navTo('/pages/notice/notice')"></list-cell>
 				<list-cell icon="icon-shezhi1" iconColor="#e07472" :title="$t('user.set')" @eventClick="navTo('/pages/set/set')"></list-cell>
 				<list-cell cuIcon="cuIcon-global" iconColor="#e07472" :title="$t('set.multilingual')" @eventClick="modalName = 'multilingualModal'"></list-cell>
-				<view class="cu-modal" :class="modalName=='multilingualModal'?'show':''" @tap="modalName = null">
-					<view class="cu-dialog" @tap.stop="">
-						<view class="cu-list menu text-left">
-							<view class="cu-item" v-for="(item,index) in locales" :key="index" @click="setLanguage(item)">
-								<label class="flex justify-between align-center flex-sub">
-									<view class="flex-sub">{{item.name}}</view>
-									<i v-if="language === item.code" class="text-green cuIcon-check"></i>
-								</label>
-							</view>
-						</view>
-					</view>
-				</view>
 			</view>
 			<view v-if="copyright !== '1'" style="padding-top: 40rpx;text-align: center;color: #c4c3c3;">DSWJCMS提供技术支持</view>
 		</view>
-			
-		
+		<view class="cu-modal" :class="modalName=='multilingualModal'?'show':''" @tap="modalName = null">
+			<view class="cu-dialog" @tap.stop="">
+				<view class="cu-list menu text-left">
+					<view class="cu-item" v-for="(item,index) in locales" :key="index" @click="setLanguage(item)">
+						<label class="flex justify-between align-center flex-sub">
+							<view class="flex-sub">{{item.name}}</view>
+							<i v-if="language === item.code" class="text-green cuIcon-check"></i>
+						</label>
+					</view>
+				</view>
+			</view>
+		</view>
     </view>  
 </template>  
 <script>  

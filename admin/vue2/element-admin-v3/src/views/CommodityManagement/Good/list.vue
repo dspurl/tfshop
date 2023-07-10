@@ -25,6 +25,7 @@
         </el-form-item>
       </el-form>
       <br>
+      <el-button v-permission="$store.jurisdiction.GoodExport" :loading="formLoading" class="filter-item" style="margin-left: 10px;float:right;" icon="el-icon-download" @click="handleExport">{{ $t('common.export') }}</el-button>
       <router-link v-permission="$store.jurisdiction.GoodCreate" :to="'GoodCreate'">
         <el-button class="filter-item" style="margin-left: 10px;float:right;" type="primary" icon="el-icon-edit">{{ $t('common.add') }}</el-button>
       </router-link>
@@ -206,7 +207,7 @@
 </style>
 
 <script>
-import { getList, destroy, state, count } from '@/api/good'
+import { getList, destroy, state, count, exports } from '@/api/good'
 import { getList as getCateList } from '@/api/category'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
@@ -404,6 +405,14 @@ export default {
           this.formLoading = false
         })
       }).catch(() => {
+      })
+    },
+    handleExport() {
+      this.formLoading = true
+      exports(this.listQuery).then(response => {
+        window.open(response.data)
+      }).finally(res => {
+        this.formLoading = false
       })
     }
   }

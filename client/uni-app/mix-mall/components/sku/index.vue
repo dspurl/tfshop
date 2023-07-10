@@ -152,6 +152,8 @@ export default{
 			// Sku
 			if (this.getLists.good_sku.length > 0) {
 				const { productSkus, specification } = param2Data(this.getLists.good_sku)
+				console.log('productSkus', productSkus)
+				console.log('specification', specification)
 				this.specification = specification
 				specification.forEach((item,index)=>{
 					this.specSelectedIndex.push(null)

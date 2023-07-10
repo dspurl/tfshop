@@ -15,11 +15,7 @@ export default {
 		Network.setPostMessage('unifiedPayment', data, i18n.t('common.processing'), function(res) {
 			success(res)
 		}, function(res) {
-			uni.showToast({
-				title: res.message,
-				icon: 'none',
-				duration: 2000
-			})
+			fail(res)
 		})
 	},
 	balancePay(data, success, fail) {

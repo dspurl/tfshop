@@ -75,7 +75,7 @@ export default {
       })
       // 是否需要地址
       this.isAddress = this.ruleForm.indentCommodity.some( function( item){
-          return item.good.type === this.$t('good.type.common');
+          return item.good.type === $nuxt.$t('good.type.common');
       })
     },
     // 选择的地址

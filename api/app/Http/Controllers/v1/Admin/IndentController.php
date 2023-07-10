@@ -9,10 +9,12 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\common\RedisService;
+use App\Exports\v1\IndentExport;
 use App\Models\v1\Good;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodIndentCommodity;
@@ -24,6 +26,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use App\common\RedisLock;
+use Maatwebsite\Excel\Facades\Excel;
 
 /**
  * @group [ADMIN]Indent(订单管理)
@@ -81,7 +84,7 @@ class IndentController extends Controller
             }
         }
         $paginate = $q->with(['goodsList' => function ($q) {
-            $q->with(['goodSku','good']);
+            $q->with(['goodSku', 'good']);
         }, 'GoodLocation', 'Dhl'])->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -259,5 +262,85 @@ class IndentController extends Controller
         } else {
             return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
         }
+    }
+
+    /**
+     * IndentExport
+     * 订单导出
+     * @param Request $request
+     * @return string
+     */
+    public function export(Request $request)
+    {
+        $date = date('Ymd');
+        $title = __('good_indent.name');
+        $name = "temporary/$title$date.xlsx";
+        $list = [];
+        GoodIndent::$withoutAppends = false;
+        Good::$withoutAppends = false;
+        GoodIndentCommodity::$withoutAppends = false;
+        $q = GoodIndent::query();
+        $q->withTrashed();
+        if ($request->activeIndex) {
+            if ($request->activeIndex == 7) {
+                $q->whereRaw('(state=7 OR state=8)');
+            } else {
+                $q->where('state', $request->activeIndex);
+            }
+        }
+        if ($request->has('type')) {
+            $q->where('type', $request->type);
+        }
+        if ($request->title) {
+            $q->where(function ($q1) use ($request) {
+                $q1->orWhere('identification', $request->title)
+                    ->orWhere('odd', $request->title);
+            });
+            $q->orWhereHas('GoodLocation', function ($query) use ($request) {
+                $query->where('cellphone', $request->title)->orWhere('name', $request->title);
+            });
+            $q->orWhereHas('goodsList', function ($query) use ($request) {
+                $query->where('name', 'like', "%$request->title%");
+            });
+        }
+        if ($request->has('sort')) {
+            if ($request->sort) {
+                $sortFormatConversion = sortFormatConversion($request->sort);
+                $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+            } else {
+                $q->orderBy('sort', 'ASC')->orderBy('id', 'ASC');
+            }
+        }
+        $paginate = $q->with(['goodsList' => function ($q) {
+            $q->with(['goodSku', 'good']);
+        }, 'GoodLocation', 'Dhl'])->get();
+        $config = [];
+        $number = 0;
+        foreach ($paginate as $p) {
+            foreach ($p->goodsList as $id => $g) {
+                $number += 1;
+                $config[$p->state_show][] = (count($p->goodsList) > 1 && $id == 0) ? $number . ':' . ($number + count($p->goodsList) - 1) : '';
+                $list[$p->state_show][] = [
+                    'identification' => ' ' . $p->identification,
+                    'type' => $p->type,
+                    'state' => $p->state_show,
+                    'total' => $p->total,
+                    'name' => $g->name,
+                    'good_type' => $g->good->type,
+                    'price' => $g->price,
+                    'number' => $g->number,
+                    'carriage' => $p->carriage ? $p->carriage : __('good_indent.freight_free'),
+                    'good_location_name' => $p->GoodLocation ? $p->GoodLocation->name : __('common.nothing'),
+                    'cellphone' => $p->GoodLocation ? $p->cellphone : __('common.nothing'),
+                    'good_location.location' => $p->GoodLocation ? $p->GoodLocation->location : __('common.nothing'),
+                    'dhl' => $p->Dhl ? $p->Dhl->name : __('common.nothing'),
+                    'odd' => ' ' . $p->odd,
+                    'remark' => $p->remark,
+                    'created_at' => $p->created_at
+                ];
+            }
+        }
+        Excel::store(new IndentExport($list, $config, $title), "public/" . $name);
+        return resReturn(1, request()->root() . '/storage/' . $name);
     }
 }

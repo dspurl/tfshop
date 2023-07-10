@@ -16,6 +16,10 @@
 			</view>
 			<text v-if="sid>0" class="cate-item yticon icon-fenlei1" @click="toggleCateMask('show')"></text>
 		</view>
+		<!-- 搜索结果 -->
+		<view v-if="title" class="flex justify-center margin-bottom-sm">
+			<view class="cu-tag round bg-orange">{{$t('product.search')}}: <text class="text-bold">{{title}}</text></view>
+		</view>
 		<view class="goods-list">
 			<view
 				v-for="(item, index) in goodsList" :key="index"
@@ -27,7 +31,7 @@
 				</view>
 				<text class="title clamp">{{item.name}}</text>
 				<view class="price-box">
-					<text class="price">{{item.order_price | 1000}}</text>
+					<text class="price">{{$t('common.unit')}}{{item.order_price | 1000}}</text>
 				</view>
 			</view>
 		</view>
@@ -72,6 +76,7 @@
 				cateList: [],
 				goodsList: [],
 				page:1,
+				title: ''
 			};
 		},
 		onShow(){
@@ -85,6 +90,7 @@
 			// #endif
 			this.cateId = options.tid;
 			this.sid = options.sid
+			this.title = options.title ? options.title : ''
 			this.loadCateList(options.fid,options.sid);
 			this.loadData();
 		},
@@ -142,7 +148,8 @@
 					limit: 6,
 					category_id: this.cateId,
 					page: this.page,
-					sort: this.filterIndex
+					sort: this.filterIndex,
+					title: this.title
 				},function(res){
 					that.goodsList = that.goodsList.concat(res.data)
 					if (res.last_page > that.page){
@@ -405,7 +412,6 @@
 			color: $uni-color-primary;
 			line-height: 1;
 			&:before{
-				content: '￥';
 				font-size: 26upx;
 			}
 		}
