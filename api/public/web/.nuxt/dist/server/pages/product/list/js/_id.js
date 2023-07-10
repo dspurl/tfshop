@@ -53,7 +53,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   data() {
     return {
-      goodList: [],
+      list: [],
       listQuery: {},
       loading: false,
       total: 0,
@@ -71,14 +71,14 @@ __webpack_require__.r(__webpack_exports__);
         page: 1,
         sort: '',
         category_id: params.id,
-        title: params.id ? '' : query.title
+        title: query.title
       };
       let [goodData] = await Promise.all([Object(_api_good__WEBPACK_IMPORTED_MODULE_0__[/* getList */ "b"])(listQuery)]);
       return {
-        goodList: goodData.data,
+        list: goodData.data,
         total: goodData.total,
         listQuery: listQuery,
-        title: query.title ? query.title : this.$t('product.all')
+        title: params.id ? query.name : query.title
       };
     } catch (err) {
       ctx.$errorHandler(err);
@@ -86,14 +86,23 @@ __webpack_require__.r(__webpack_exports__);
   },
   head() {
     return {
-      title: this.title + (this.listQuery.pid ? `-${this.$t('product.classify')}-` : `-${this.$t('product.search_result')}-`) + "DSSHOP商城-轻量级易扩展低代码开源商城系统"
+      title: this.title + (this.listQuery.category_id ? `-${this.$t('product.classify')}-` : `-${this.$t('product.search_result')}-`) + "DSSHOP商城-轻量级易扩展低代码开源商城系统"
     };
+  },
+  watch: {
+    '$route.query.title': {
+      handler(newVal, oldVal) {
+        this.title = this.listQuery.title = newVal;
+        this.getList();
+      },
+      deep: true
+    }
   },
   methods: {
     getList() {
       this.loading = true;
       Promise.all([Object(_api_good__WEBPACK_IMPORTED_MODULE_0__[/* getList */ "b"])(this.listQuery)]).then(([goodData]) => {
-        this.goodList = goodData.data;
+        this.list = goodData.data;
         this.total = goodData.total;
         this.loading = false;
       }).catch(error => {

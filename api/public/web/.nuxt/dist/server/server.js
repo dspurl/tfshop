@@ -50505,7 +50505,6 @@ const state = () => ({
   hasLogin: false,
   cartTitle: '',
   shoppingCartNumber: 0,
-  searchKeyword: '',
   lang: 'zh'
 });
 const mutations = {
@@ -50530,9 +50529,6 @@ const mutations = {
   },
   setShoppingCartNumber(state, provider) {
     state.shoppingCartNumber = provider;
-  },
-  setSearchKeyword(state, provider) {
-    state.searchKeyword = provider;
   },
   logout(state) {
     store.remove("DSSHOP-PC-" + 'ApplyToken');
@@ -51015,6 +51011,7 @@ __webpack_require__.r(__webpack_exports__);
     $route: {
       handler: function (val, oldVal) {
         this.setNavActive(val.path);
+        this.searchRuleForm.keyword = val.query.title ? val.query.title : '';
       },
       deep: true
     }
@@ -51025,7 +51022,6 @@ __webpack_require__.r(__webpack_exports__);
     if (this.$store.state.hasLogin) {
       this.getShoppingCart();
     }
-    this.searchRuleForm.keyword = $nuxt.$store.state.setSearchKeyword;
   },
   methods: {
     // 获取购物车
@@ -51119,7 +51115,6 @@ __webpack_require__.r(__webpack_exports__);
     search() {
       this.$refs['searchRuleForm'].validate(valid => {
         if (valid) {
-          $nuxt.$store.commit('setSearchKeyword', this.searchRuleForm.keyword);
           this.$router.push({
             path: `/product/list`,
             query: {

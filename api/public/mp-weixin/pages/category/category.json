@@ -1,4 +1,6 @@
 {
-  "navigationBarTitleText": "分类",
-  "usingComponents": {}
+  "navigationStyle": "custom",
+  "usingComponents": {
+    "uni-load-more": "/components/uni-load-more/uni-load-more"
+  }
 }

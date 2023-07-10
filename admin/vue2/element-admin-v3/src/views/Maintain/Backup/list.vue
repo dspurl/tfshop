@@ -12,8 +12,8 @@
       <el-tab-pane :label="$t('backup.file')" name="file">
         <div class="tip">
           <p>{{ $t('backup.file.tip.one') }}</p>
-          <p>{{ $t('backup.db.two') }}</p>
-          <p>{{ $t('backup.db.three') }}</p>
+          <p>{{ $t('backup.file.tip.two') }}</p>
+          <p>{{ $t('backup.file.tip.three') }}</p>
         </div>
       </el-tab-pane>
     </el-tabs>
