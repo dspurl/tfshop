@@ -264,9 +264,9 @@ INSERT INTO `auth_rules` (`id`, `api`, `url`, `icon`, `title`, `pid`, `state`, `
 (213, 'BackupEdit', '', '', '还原', 211, 0, 0),
 (214, 'BackupDestroy', '', '', '删除备份', 211, 0, 0),
 (215, 'BackupList', '', '', '备份列表', 211, 1, 5),
-(216, 'BackupList', '', '', '商品导出', 116, 1, 5),
-(217, 'BackupList', '', '', '订单导出', 127, 1, 5),
-(218, 'BackupList', '', '', '会员导出', 10, 1, 5);
+(216, 'GoodExport', '', '', '商品导出', 116, 1, 5),
+(217, 'IndentExport', '', '', '订单导出', 127, 1, 5),
+(218, 'MemberExport', '', '', '会员导出', 10, 1, 5);
 INSERT INTO `banners` (`id`, `type`, `name`, `url`, `sort`, `state`, `created_at`, `updated_at`) VALUES
 (4, 0, '测试', '/pages/product/detail?id=21', 5, 0, '2020-07-18 20:07:15', '2020-07-30 11:49:17'),
 (5, 0, '2', NULL, 5, 0, '2020-07-18 20:10:04', '2020-07-18 20:10:04'),
