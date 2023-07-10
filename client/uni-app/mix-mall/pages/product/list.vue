@@ -90,7 +90,7 @@
 			// #endif
 			this.cateId = options.tid;
 			this.sid = options.sid
-			this.title = options.title
+			this.title = options.title ? options.title : ''
 			this.loadCateList(options.fid,options.sid);
 			this.loadData();
 		},
