@@ -15,7 +15,7 @@ use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * @property int sms_service_id
+ * @property string sms_service
  * @property int phone
  * @property string data
  */
@@ -30,15 +30,5 @@ class SmsLog extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
-    }
-
-    // 日志插入
-    public function setSmsLog($data)
-    {
-        $SmsLog = new SmsLog();
-        $SmsLog->sms_service_id = $data['sms_service_id'];
-        $SmsLog->phone = $data['phone'];
-        $SmsLog->data = json_encode($data['data']);
-        $SmsLog->save();
     }
 }

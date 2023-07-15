@@ -334,11 +334,11 @@ class AppController extends Controller
     {
         $Aliyun = new Aliyun();
         $return = $Aliyun->sendCode($cellphone, $code);
-        (new SmsLog())->setSmsLog(array(
-            'sms_service' => $service,
-            'phone' => $cellphone,
-            'data' => $return
-        ));
+        $SmsLog = new SmsLog();
+        $SmsLog->sms_service = $service;
+        $SmsLog->phone = $cellphone;
+        $SmsLog->data = json_encode($return);
+        $SmsLog->save();
         return $return;
     }
 
