@@ -328,5 +328,10 @@
     "upload_pictures.admin_size.error": "您上传的文件大于后台配置的最大上传大小",
     "upload_pictures.mini_program.error": "图片含有敏感信息，请重新上传",
     "upload_pictures.specification_png.error": "多规格图片只支持png格式",
-    "upload_pictures.specification.error": "specification格式有误"
+    "upload_pictures.specification.error": "specification格式有误",
+    "region.name": "地区名称",
+    "region.value": "编码",
+    "region.parent_name": "上级名称",
+    "language.name": "名称",
+    "language.code": "编码"
 }

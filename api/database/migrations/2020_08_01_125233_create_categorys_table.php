@@ -25,6 +25,8 @@ class CreateCategorysTable extends Migration
     {
         Schema::create('categorys', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->string('name', 30)->comment('类目名称');
             $table->integer('pid')->default(0)->comment('上级类目');
             $table->integer('sort')->default(0)->comment('排序');

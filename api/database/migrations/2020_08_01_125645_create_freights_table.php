@@ -25,6 +25,8 @@ class CreateFreightsTable extends Migration
     {
         Schema::create('freights', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->string('name', 60)->comment('模板名称');
             $table->text('location')->comment('宝贝地址json');
             $table->text('pinkage')->comment('包邮地区JSON');

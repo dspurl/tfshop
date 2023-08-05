@@ -16,6 +16,7 @@ use App\Models\v1\Banner;
 use App\Models\v1\Resource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -52,6 +53,8 @@ class BannerController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
+        $q->where('lang', App::getLocale());
+        $q->with(['Language']);
         $paginate = $q->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -77,6 +80,8 @@ class BannerController extends Controller
             $Banner->url = $request->url;
             $Banner->sort = $request->sort;
             $Banner->state = $request->state;
+            $Banner->lang = $request->lang ?? App::getLocale();
+            $Banner->lang_parent_id = $request->lang_parent_id ?? 0;
             $Banner->save();
             if ($request->img) {
                 $Resource = new Resource();

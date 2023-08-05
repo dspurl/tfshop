@@ -14,6 +14,7 @@ namespace App\Http\Controllers\v1\Client;
 use App\Models\v1\Banner;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 
 /**
  * @group [CLIENT]Banner(轮播广告)
@@ -47,6 +48,7 @@ class BannerController extends Controller
             $q->where('state', $request->state);
         }
         $limit = $request->limit;
+        $q->where('lang', App::getLocale());
         $paginate = $q->with(['resources'])->paginate($limit);
         return resReturn(1, $paginate);
     }

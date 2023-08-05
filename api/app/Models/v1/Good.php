@@ -11,6 +11,7 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -42,12 +43,17 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string time
  * @property string timing
  * @property int freight_id
+ * @property string lang
+ * @property int lang_parent_id
  *
  * @method static find(int $id)
+ * @method static count()
+ * @method static where(string $string, string $getLocale)
  */
 class Good extends Model
 {
     use SoftDeletes;
+    use CommonTrait;
 
     public static $withoutAppends = true;
     const GOOD_TYPE_COMMON = 0; //类型：普通商品
@@ -442,5 +448,4 @@ class Good extends Model
     {
         $this->attributes['order_price'] = sprintf("%01.2f", $value) * 100;
     }
-
 }

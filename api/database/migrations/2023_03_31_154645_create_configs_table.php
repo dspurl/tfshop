@@ -24,6 +24,7 @@ class CreateConfigsTable extends Migration
     {
         Schema::create('configs', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
             $table->unsignedBigInteger('parent_id')->default('0')->comment('父级用户id');
             $table->string('name',30)->comment('配置名称');
             $table->unsignedTinyInteger('maxlength')->nullable()->comment('配置长度');

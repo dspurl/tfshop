@@ -9,8 +9,21 @@
  * +----------------------------------------------------------------------
  */
 import { getToken } from '@/plugins/auth'
-export default function ({store, route, redirect}) {
-  const lang = getToken('lang')
+export default function ({store, route, redirect, req, env}) {
+  function getcookiesInServer(req) {
+    let service_cookie = {};
+    req && req.headers.cookie && req.headers.cookie.split(';').forEach(function (val) {
+      let parts = val.split('=');
+      service_cookie[parts[0].trim()] = (parts[1] || '').trim();
+    });
+    return service_cookie;
+  }
+  let lang = null
+  if(process.server){ //服务端获取header头的cookie
+    lang = getcookiesInServer(req)[env.CACHE_PR + 'lang']
+  }else{
+    lang = getToken('lang')
+  }
   if (lang) {
     store.commit('setLang', lang)
   }

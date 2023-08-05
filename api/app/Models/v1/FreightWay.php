@@ -13,6 +13,7 @@ namespace App\Models\v1;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\App;
 
 /**
  * @property int freight_id
@@ -46,12 +47,12 @@ class FreightWay extends Model
     {
         if (!self::$withoutAppends) {
             if (isset($this->attributes['location'])) {
-                $provinces = config('provinces');
+                $provinces =Region::where('lang', App::getLocale())->get();
                 $provincesArray = [];
                 $location = json_decode($this->attributes['location'], true);
                 $locationNamej = [];
                 foreach ($provinces as $p) {
-                    $provincesArray[$p['value']] = $p['label'];
+                    $provincesArray[$p['id']] = $p['name'];
                 }
                 foreach ($location as $l) {
                     $locationNamej[] = $provincesArray[$l];

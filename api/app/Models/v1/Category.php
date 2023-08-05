@@ -11,6 +11,7 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -22,10 +23,15 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int state
  * @property string resources
  * @property int is_recommend
+ * @property string lang
+ * @property int lang_parent_id
+ * @method static get()
+ * @method static orderBy(string $string, string $string1)
  */
 class Category extends Model
 {
     use SoftDeletes;
+    use CommonTrait;
     public static $withoutAppends = false;
     const CATEGORY_STATE_YES = 0; //状态：正常
     const CATEGORY_STATE_NO = 1; //状态：隐藏
@@ -103,16 +109,14 @@ class Category extends Model
         if ($Category) {
             foreach ($Category as $p) {
                 $options[] = array(
+                    'lang' => $p['lang'],
                     'value' => $p['id'],
                     'label' => $p['name'],
                     'pid' => $p['pid'],
                     'id' => $p['id']
                 );
             }
-            return collect(genTree($options, 'pid'))->prepend(array(
-                'value' => 0,
-                'label' => __('category.top')
-            ));
+            return genTree($options, 'pid');
         } else {
             return true;
         }

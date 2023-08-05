@@ -15,7 +15,6 @@ namespace App\Http\Controllers\v1\Admin;
 use App\Code;
 use App\Exports\v1\GoodExport;
 use App\Http\Requests\v1\SubmitGoodRequest;
-use App\Models\v1\Brand;
 use App\Models\v1\Freight;
 use App\Models\v1\GoodCode;
 use App\Models\v1\GoodSku;
@@ -27,6 +26,7 @@ use App\Models\v1\Good;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -102,6 +102,8 @@ class GoodController extends Controller
                 $q->whereNotIn('id', $request->notInId);
             }
         }
+        $q->where('lang', App::getLocale());
+        $q->with(['Language']);
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
         }, 'goodSku' => function ($q) {
@@ -126,13 +128,13 @@ class GoodController extends Controller
     public function count()
     {
         $count = [
-            'all' => Good::count(), //全部
-            'sell' => Good::where('is_show', Good::GOOD_SHOW_PUTAWAY)->count(),    //出售
-            'warehouse' => Good::where('is_show', Good::GOOD_SHOW_ENTREPOT)->count(),   //仓库
-            'lowInventory' => Good::whereHas('goodSku', function ($query) {
+            'all' => Good::where('lang', App::getLocale())->count(), //全部
+            'sell' => Good::where('lang', App::getLocale())->where('is_show', Good::GOOD_SHOW_PUTAWAY)->count(),    //出售
+            'warehouse' => Good::where('lang', App::getLocale())->where('is_show', Good::GOOD_SHOW_ENTREPOT)->count(),   //仓库
+            'lowInventory' => Good::where('lang', App::getLocale())->whereHas('goodSku', function ($query) {
                 $query->groupBy('id')->having('inventory', '<', 10);
             })->count(),    //低库存
-            'sellOut' => Good::whereHas('goodSku', function ($query) {
+            'sellOut' => Good::where('lang', App::getLocale())->whereHas('goodSku', function ($query) {
                 $query->groupBy('id')->having('inventory', 0);
             })->count(), //已售完
         ];
@@ -192,6 +194,8 @@ class GoodController extends Controller
             if ($Good->type == Good::GOOD_TYPE_COMMON) {
                 $Good->freight_id = $request->freight_id;
             }
+            $Good->lang = $request->lang ?? App::getLocale();
+            $Good->lang_parent_id = $request->lang_parent_id ?? 0;
             $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
             $Good->is_inventory = $request->is_inventory;
             $Good->keywords = $request->keywords;
@@ -601,7 +605,7 @@ class GoodController extends Controller
      * GoodDetail
      * 商品详情
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return string
      * @queryParam  id int 商品ID
      */
     public function detail($id)
@@ -782,23 +786,23 @@ class GoodController extends Controller
         }, 'goodSku' => function ($q) {
             $q->select('good_id', 'price', 'inventory', 'cost_price');
         }, 'category'])->get();
-        foreach ($paginate as $p){
+        foreach ($paginate as $p) {
             $priceShow = (new Good())->getPriceShow($p);
             $config[$p->type][] = '';
-            $list[$p->type][]=[
-                'id'=> $p->id,
-                'type'=> $p->type,
-                'name'=> $p->name,
-                'price'=> $priceShow[0],
-                'category'=> $p->category ? $p->category->name : __('common.nothing'),
-                'number'=> $p->number,
-                'inventory'=> (new Good())->getInventoryShow($p),
-                'sales'=> $p->sales,
-                'state'=> $p->putaway_show,
-                'is_inventory'=> $p->is_inventory_show,
-                'is_recommend'=> $p->is_recommend ? __('common.yes') : __('common.yes'),
-                'time'=> $p->time,
-                'updated_at'=> $p->updated_at,
+            $list[$p->type][] = [
+                'id' => $p->id,
+                'type' => $p->type,
+                'name' => $p->name,
+                'price' => $priceShow[0],
+                'category' => $p->category ? $p->category->name : __('common.nothing'),
+                'number' => $p->number,
+                'inventory' => (new Good())->getInventoryShow($p),
+                'sales' => $p->sales,
+                'state' => $p->putaway_show,
+                'is_inventory' => $p->is_inventory_show,
+                'is_recommend' => $p->is_recommend ? __('common.yes') : __('common.yes'),
+                'time' => $p->time,
+                'updated_at' => $p->updated_at,
             ];
         }
         Excel::store(new GoodExport($list, $config, $title), "public/" . $name);

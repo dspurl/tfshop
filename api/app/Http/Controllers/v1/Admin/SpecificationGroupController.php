@@ -15,6 +15,7 @@ use App\Http\Requests\v1\SubmitSpecificationGroupRequest;
 use App\Models\v1\SpecificationGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 
 /**
  * @group [ADMIN]SpecificationGroup(规格组管理)
@@ -44,6 +45,8 @@ class SpecificationGroupController extends Controller
         if ($request->title) {
             $q->where('name', 'like', '%' . $request->title . '%');
         }
+        $q->where('lang', App::getLocale());
+        $q->with(['Language']);
         $paginate = $q->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -59,6 +62,8 @@ class SpecificationGroupController extends Controller
     {
         $Specification = new SpecificationGroup();
         $Specification->name = $request->name;
+        $Specification->lang = $request->lang ?? App::getLocale();
+        $Specification->lang_parent_id = $request->lang_parent_id ?? 0;
         $Specification->save();
         return resReturn(1, __('common.succeed'));
     }

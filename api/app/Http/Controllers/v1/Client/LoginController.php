@@ -20,6 +20,7 @@ use GuzzleHttp\Client;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -129,6 +130,7 @@ class LoginController extends Controller
                     $redis = new RedisService();
                     $redis->setex('password.register.' . $miniPhoneNumber['purePhoneNumber'], 5, $password);
                     $user = new User();
+                    $user->lang = $request->lang ?? App::getLocale();
                     $user->name = $miniPhoneNumber['purePhoneNumber'];
                     $user->cellphone = $miniPhoneNumber['purePhoneNumber'];
                     $user->password = bcrypt($password);
@@ -248,6 +250,7 @@ class LoginController extends Controller
         }
         $return = DB::transaction(function () use ($request) {
             $addUser = new User();
+            $addUser->lang = $request->lang ?? App::getLocale();
             $addUser->name = $request->cellphone;
             $addUser->cellphone = $request->cellphone;
             $addUser->password = bcrypt($request->password);

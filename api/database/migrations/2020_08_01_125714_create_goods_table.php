@@ -26,6 +26,8 @@ class CreateGoodsTable extends Migration
         Schema::create('goods', function (Blueprint $table) {
             $table->id();
             $table->string('identification',30)->comment('标识');
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->unsignedTinyInteger('type')->default(0)->comment('类型:0=普通商品-common,1=虚拟商品-virtual,2=卡密/网盘-keys,3=下载商品-download');
             $table->string('name',60)->comment('商品名称');
             $table->bigInteger('category_id')->default(0)->index()->comment('分类ID');

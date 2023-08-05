@@ -46,13 +46,13 @@ class SubmitPowerRequest extends Request
                 if (Request::has('id')) {   //更新
                     return [
                         'title' => 'bail|required|string|max:30',
-                        'api' => 'nullable|unique:auth_rules,api,' . $request['id'] . '|string|max:200',
+                        'api' => 'nullable|string|max:200',
                         'pid' => 'required|array',
                     ];
                 } else {
                     return [
                         'title' => 'bail|required|string|max:30',
-                        'api' => 'nullable|unique:auth_rules|string|max:200',
+                        'api' => 'nullable|string|max:200',
                         'pid' => 'required|array',
                     ];
                 }
@@ -72,7 +72,6 @@ class SubmitPowerRequest extends Request
             'title.max' => __('hint.error.exceed', ['specification' => __('power.title'), 'place' => 30]),
             'api.unique' => __('hint.error.exist', ['specification' => __('power.api')]),
             'api.max' => __('hint.error.exceed', ['specification' => __('power.api'), 'place' => 200]),
-            'pid.required' => __('hint.error.not_null', ['specification' => __('power.pid')]),
         ];
     }
 }

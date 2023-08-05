@@ -15,6 +15,7 @@ use App\Models\v1\Notification;
 use App\Models\v1\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 
 /**
  * @group [CLIENT]Notification(通知)
@@ -42,6 +43,7 @@ class NotificationController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
+        $q->where('data->lang', App::getLocale());
         $paginate = $q->paginate($limit);
         if (!$request->has('pc')) {
             // 标记为已读

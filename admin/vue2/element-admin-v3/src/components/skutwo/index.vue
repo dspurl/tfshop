@@ -45,13 +45,12 @@
     right: 10px
 
 .group_container
-  padding: 10px 10px 0
+  padding: 10px 10px 10px
 
   .input
     width: 250px
 
   .sku_item
-    background-color: #f8f8f8
     padding-left: 20px
     padding-right: 20px
     display: inline-block
@@ -61,6 +60,9 @@
     position: relative
     border-radius: 2px
     cursor: pointer
+    line-height: 25px
+    border: 1px solid #e5e5e5
+    background: #ffffff
 
     &:hover
       .remove

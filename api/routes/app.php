@@ -20,6 +20,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('verifyPlugin/{id}', 'PluginController@verify')->name('client.verifyPlugin');   //验证插件是否安装
         Route::get('indentDownload/{code}', 'GoodIndentController@showDownload')->name('client.orderShowDownload');    //订单文件下载
         Route::get('authorization', 'AppController@authorization')->name('client.authorization');   //获取授权状态
+        Route::get('lang', 'LanguageController@list')->name('admin.languageList');    //语言列表
     });
     // 需要secret验证
     Route::prefix('app')->namespace('Client')->middleware(['appverify'])->group(function () {
@@ -27,7 +28,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('cellphoneCode', 'AppController@cellphoneCode')->name('client.cellphoneCode');    //获取手机验证码
         Route::post('emailCode', 'AppController@emailCode')->name('client.emailCode');    //获取邮箱验证码
         Route::post('login', 'LoginController@login')->name('client.login');    //登录
-
+        Route::get('region', 'RegionController@list')->name('client.regionList');    //地区列表
         Route::post('register', 'LoginController@register')->name('client.register');    //注册
         Route::post('findPassword', 'LoginController@findPassword')->name('client.findPassword');    //找回密码
         Route::post('miniLogin', 'LoginController@miniLogin')->name('client.miniLogin');    //小程序换取openid
@@ -39,6 +40,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::get('goodCategory', 'GoodController@category')->name('client.goodCategory');    //商品分类展示
         Route::get('banner', 'BannerController@list')->name('client.bannerList');    //轮播列表
         Route::get('project/{id}', 'ProjectController@detail')->name('client.projectDetail');    //商城详情
+        Route::get('lang', 'LanguageController@list')->name('client.languageList');    //语言列表
     });
     // 需要用户登录验证
     Route::prefix('app')->namespace('Client')->middleware(['appverify', 'auth:web'])->group(function () {

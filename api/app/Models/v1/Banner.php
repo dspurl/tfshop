@@ -11,6 +11,7 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
@@ -22,9 +23,12 @@ use Illuminate\Database\Eloquent\Model;
  * @property int type
  * @property string url
  * @property int state
+ * @property string lang
+ * @property int lang_parent_id
  */
 class Banner extends Model
 {
+    use CommonTrait;
     public static $withoutAppends = true;
     const BANNER_TYPE_INDEX_CAROUSEL = 0; //类型：首页轮播
     const BANNER_TYPE_INDEX_ADVERTISING = 1; //类型：首页广告

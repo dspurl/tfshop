@@ -8,7 +8,8 @@ const app = {
     },
     device: 'desktop',
     language: getToken('language') || 'zh',
-    size: getToken('size') || 'medium'
+    size: getToken('size') || 'medium',
+    lang_list: getToken('lang_list') ? JSON.parse(getToken('lang_list')) : []
   },
   mutations: {
     TOGGLE_SIDEBAR: state => {
@@ -35,6 +36,10 @@ const app = {
     SET_SIZE: (state, size) => {
       state.size = size
       setToken('size', size)
+    },
+    SET_LANG_LIST(state, lang_list) {
+      setToken('lang_list', JSON.stringify(lang_list), 31536000)
+      state.lang_list = lang_list
     }
   },
   actions: {
@@ -52,6 +57,9 @@ const app = {
     },
     setSize({ commit }, size) {
       commit('SET_SIZE', size)
+    },
+    setLangList({ commit }, lang) {
+      commit('SET_LANG_LIST', lang)
     }
   }
 }

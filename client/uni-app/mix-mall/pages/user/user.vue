@@ -263,6 +263,8 @@
 				getApp().setLanguage(res)
 				this.modalName = null
 				this.language = res.code
+				this.getlist()
+				this.getAuthorization()
 				uni.setNavigationBarTitle({
 					title: this.$t('tab_bar.3')
 				})

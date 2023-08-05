@@ -332,6 +332,7 @@
   "address.add_new": "Add new address",
   "address.name": "Contact",
   "address.location": "Location",
+  "address.address": "Detailed address",
   "address.location.tip": "Please select the address in the map",
   "address.house": "House number",
   "address.add": "Add the shipping address",

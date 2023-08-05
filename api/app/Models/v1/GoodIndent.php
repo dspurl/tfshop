@@ -12,6 +12,7 @@
 namespace App\Models\v1;
 
 use App\common\RedisService;
+use App\Traits\CommonTrait;
 use Carbon\Carbon;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
@@ -42,6 +43,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class GoodIndent extends Model
 {
     use SoftDeletes;
+    use CommonTrait;
 
     const GOOD_INDENT_STATE_PAY = 1; //状态：待付款
     const GOOD_INDENT_STATE_DELIVER = 2; //状态：待发货

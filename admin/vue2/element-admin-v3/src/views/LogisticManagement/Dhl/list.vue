@@ -40,10 +40,15 @@
       </el-table-column>
       <el-table-column :label="$t('dhl.is_default')" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.is_default == 1 ? $t('common.yes') : $t('common.no') }}</span>
+          <span>{{ scope.row.is_default === 1 ? $t('common.yes') : $t('common.no') }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.date_time')" align="center" sortable="custom" prop="created_at">
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('common.date_time')" align="center" sortable="custom" prop="created_at" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
         </template>
@@ -156,9 +161,10 @@
 import { getList, create, edit, destroy } from '@/api/dhl'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
+import LangTranslate from '@/components/LangTranslate'
 export default {
   name: 'DhlList',
-  components: { Pagination },
+  components: { Pagination, LangTranslate },
   data() {
     return {
       formLoading: false,
@@ -192,7 +198,13 @@ export default {
         sort: '+id',
         activeIndex: '1'
       },
-      temp: {},
+      temp: {
+        state: 0,
+        is_default: 0,
+        sort: '5',
+        name: '',
+        abbreviation: ''
+      },
       rules: {
         name: [
           { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('dhl.name') }), trigger: 'blur' }
@@ -246,8 +258,14 @@ export default {
         abbreviation: ''
       }
     },
-    handleCreate() {
+    handleCreate(item) {
       this.resetTemp()
+      if (item) {
+        this.temp = {
+          ...item,
+          ...this.temp
+        }
+      }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -365,6 +383,13 @@ export default {
       }
       this.imgProgress = true
       return isLt2M
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        this.handleUpdate(value)
+      } else {
+        this.handleCreate(item)
+      }
     }
   }
 }

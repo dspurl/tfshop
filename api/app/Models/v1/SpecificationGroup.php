@@ -11,16 +11,21 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * @property string name
+ * @property string lang
+ * @property int lang_parent_id
+ * @method static select(string $string, string $string1, string $string2)
  */
 class SpecificationGroup extends Model
 {
     use SoftDeletes;
+    use CommonTrait;
 
     /**
      * Prepare a date for array / JSON serialization.

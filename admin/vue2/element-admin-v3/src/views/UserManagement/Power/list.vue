@@ -4,8 +4,8 @@
       <el-input :placeholder="`${$t('common.table.id')}/${$t('power.title')}/${$t('power.api')}`" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
       <el-cascader
         v-model="listQuery.pid"
-        :options="options"
-        :props="{ checkStrictly: true }"
+        :options="optionsLang"
+        :props="{ value: 'id', label: 'title', checkStrictly: true }"
         filterable
         clearable
         style="top:-4px"/>
@@ -27,32 +27,37 @@
           <span>{{ scope.row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('power.icon')" align="center">
+      <el-table-column :label="$t('power.icon')" align="center" width="120">
         <template slot-scope="scope">
           <svg-icon v-if="scope.row.icon" :icon-class="scope.row.icon" />
         </template>
       </el-table-column>
-      <el-table-column :label="$t('power.title')" align="center">
+      <el-table-column :label="$t('power.title')" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.title }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('power.url')" align="center">
+      <el-table-column :label="$t('power.url')" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.url }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('power.api')" align="center">
+      <el-table-column :label="$t('power.api')" width="300">
         <template slot-scope="scope">
           <span>{{ scope.row.api }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('power.state')" align="center">
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
+      <el-table-column :label="$t('power.state')" align="center" width="120">
         <template slot-scope="scope">
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('common.operation')" align="center" class-name="small-padding fixed-width" width="300">
+      <el-table-column :label="$t('common.operation')" class-name="small-padding fixed-width" width="200">
         <template slot-scope="scope">
           <el-tooltip v-permission="$store.jurisdiction.PowerCreate" :content="$t('common.copy')" class="item" effect="dark" placement="top-start">
             <el-button type="success" icon="el-icon-document-copy" circle @click="handleCreate(scope.row)"/>
@@ -85,8 +90,8 @@
         <el-form-item :label="$t('power.pid')" prop="pid">
           <el-cascader
             v-model="temp.pid"
-            :options="options"
-            :props="{ checkStrictly: true }"
+            :options="optionsLang"
+            :props="{ value: 'id', label: 'title', checkStrictly: true }"
             filterable
             clearable
             style="top:-4px"/>
@@ -124,12 +129,13 @@
 
 <script>
 import { getList, create, edit, destroy } from '@/api/power'
-import waves from '@/directive/waves' // Waves directiveimport { jurisdiction } from '@/utils'
+import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
+import LangTranslate from '@/components/LangTranslate'
 
 export default {
   name: 'PowerList',
-  components: { Pagination },
+  components: { Pagination, LangTranslate },
   directives: { waves },
   data() {
     var validateApi = (rule, value, callback) => {
@@ -185,6 +191,17 @@ export default {
       downloadLoading: false
     }
   },
+  computed: {
+    optionsLang() {
+      const lang = this.temp.lang ? this.temp.lang : this.$store.state.app.language
+      const options = this.options.filter((element) => { return element.lang === lang })
+      options.unshift({
+        id: 0,
+        title: this.$t('category.top', lang)
+      })
+      return options
+    }
+  },
   created() {
     this.getList()
   },
@@ -192,9 +209,9 @@ export default {
     getList() {
       this.listLoading = true
       getList(this.listQuery).then(response => {
-        this.list = response.data.data
+        this.list = response.data.data.data
         this.options = response.data.options
-        this.total = response.data.total
+        this.total = response.data.data.total
         this.listLoading = false
       })
     },
@@ -223,11 +240,17 @@ export default {
         sort: 0
       }
     },
-    handleCreate(row = null) {
+    handleCreate(row = null, item) {
       if (!row) {
         this.resetTemp()
       } else {
         this.temp = Object.assign({}, row)
+      }
+      if (item) {
+        this.temp = {
+          ...item,
+          ...this.temp
+        }
       }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -283,6 +306,9 @@ export default {
     handleUpdate(row) { // 修改
       row.password = ''
       this.temp = Object.assign({}, row) // copy obj
+      if (this.temp.pid === 0) {
+        this.temp.pid = [0]
+      }
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -319,6 +345,13 @@ export default {
     },
     refresh() {
       location.reload()
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        this.handleUpdate(value)
+      } else {
+        this.handleCreate(item)
+      }
     }
   }
 }

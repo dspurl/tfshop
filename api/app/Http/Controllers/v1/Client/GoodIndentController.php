@@ -22,6 +22,7 @@ use App\Models\v1\GoodIndentCommodity;
 use App\Models\v1\GoodSku;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
@@ -61,6 +62,7 @@ class GoodIndentController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
+        $q->where('lang', App::getLocale());
         $paginate = $q->with(['goodsList' => function ($q) {
             $q->with(['goodSku', 'good' => function ($q) {
                 $q->select('name', 'id', 'type');
@@ -380,7 +382,7 @@ class GoodIndentController extends Controller
      */
     public function quantity()
     {
-        $GoodIndent = GoodIndent::where('user_id', auth('web')->user()->id)->get();
+        $GoodIndent = GoodIndent::where('user_id', auth('web')->user()->id)->where('lang', App::getLocale())->get();
         $return = [
             'all' => 0, //全部订单
             'obligation' => 0, //待付款

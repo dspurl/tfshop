@@ -25,6 +25,8 @@ class CreateBrandsTable extends Migration
     {
         Schema::create('brands', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->string('name', 30)->comment('品牌名称');
             $table->integer('sort', 0)->comment('排序');
             $table->softDeletes();

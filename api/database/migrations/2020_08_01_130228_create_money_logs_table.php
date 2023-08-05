@@ -25,6 +25,7 @@ class CreateMoneyLogsTable extends Migration
     {
         Schema::create('money_logs', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
             $table->bigInteger('user_id')->default(0)->index()->comment('用户ID');
             $table->tinyInteger('type')->default(0)->comment('类型0:收入1：支出');
             $table->integer('money')->default(0)->comment('操作金额');

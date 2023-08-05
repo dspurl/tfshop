@@ -24,6 +24,7 @@ use App\Models\v1\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use App\common\RedisLock;
 use Maatwebsite\Excel\Facades\Excel;
@@ -83,6 +84,7 @@ class IndentController extends Controller
                 $q->orderBy('sort', 'ASC')->orderBy('id', 'ASC');
             }
         }
+        $q->where('lang', App::getLocale());
         $paginate = $q->with(['goodsList' => function ($q) {
             $q->with(['goodSku', 'good']);
         }, 'GoodLocation', 'Dhl'])->paginate($limit);

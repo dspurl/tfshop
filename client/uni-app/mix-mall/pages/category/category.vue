@@ -99,12 +99,13 @@
 			...mapState(['hasLogin'])
 		},
 		onLoad(){
+			
+		},
+		onShow(){
 			this.loadData();
 			if(this.hasLogin){
 				this.notice()
 			}
-		},
-		onShow(){
 			uni.setNavigationBarTitle({
 				title: this.$t('tab_bar.1')
 			})
@@ -112,6 +113,9 @@
 		methods: {
 			async loadData(){
 				const that = this
+				that.flist = []
+				that.slist = []
+				that.tlist = []
 				// 分类
 				await Good.goodCategory({},function(res){
 					res.forEach(item=>{

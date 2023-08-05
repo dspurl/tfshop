@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int user_id
  * @property int good_id
+ * @property string lang
  */
 class Collect extends Model
 {

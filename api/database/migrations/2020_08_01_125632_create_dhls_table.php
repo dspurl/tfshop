@@ -25,6 +25,8 @@ class CreateDhlsTable extends Migration
     {
         Schema::create('dhls', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->string('name', 30)->comment('快递公司名称');
             $table->string('abbreviation', 80)->comment('快递公司英文缩写');
             $table->tinyInteger('is_default')->default(0)->comment('是否默认 0 普通 1默认');

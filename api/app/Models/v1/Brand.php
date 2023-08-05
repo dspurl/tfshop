@@ -9,8 +9,10 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -20,10 +22,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int id
  * @property int sort
  * @property string resources
+ * @property string lang
+ * @property int lang_parent_id
  */
 class Brand extends Model
 {
     use SoftDeletes;
+    use CommonTrait;
 
     /**
      * Prepare a date for array / JSON serialization.

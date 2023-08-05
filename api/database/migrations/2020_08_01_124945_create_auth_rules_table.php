@@ -24,6 +24,8 @@ class CreateAuthRulesTable extends Migration
     {
         Schema::create('auth_rules', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->string('api', 200)->comment('对应前端的模板名');
             $table->string('url', 255)->nullable()->comment('外链地址');
             $table->string('icon', 20)->nullable()->comment('菜单小图标');

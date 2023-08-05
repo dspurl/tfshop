@@ -19,6 +19,7 @@ use App\Models\v1\AuthRule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Carbon\Carbon;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -135,7 +136,7 @@ class LoginController extends Controller
         //获取该权限组的菜单
         $AuthRule = AuthRule::with(['AuthGroup' => function ($query) {
             $query->select('roles');
-        }])->orderBy('pid', 'ASC')->orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
+        }])->where('lang', App::getLocale())->orderBy('pid', 'ASC')->orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
         $data['asyncRouterMap'] = [];   //菜单
         $data['jurisdiction'] = []; //权限列表
         $asyncRouterMap = [];

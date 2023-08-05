@@ -19,6 +19,7 @@ use App\Models\v1\Category;
 use App\Models\v1\Resource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -32,7 +33,7 @@ class CategoryController extends Controller
      * CategoryList
      * 分类列表
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return string
      * @queryParam  title string 品牌名称
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
@@ -58,13 +59,13 @@ class CategoryController extends Controller
         } else {
             $q->where('pid', 0);
         }
+        $q->where('lang', App::getLocale());
+        $q->with(['Language'=>function($q){
+            $q->with(['SpecificationOn', 'BrandOn']);
+        }]);
         $paginate = $q->with(['resources', 'SpecificationOn', 'BrandOn'])->paginate($limit);
-        foreach ($paginate as $id => $p) {
-            $paginate[$id]['specification'] = $p->SpecificationOn->pluck('id');
-            $paginate[$id]['brand'] = $p->BrandOn->pluck('id');
-        }
         $return['options'] = (new Category())->getAllCategory();
-        $return['brand'] = Brand::with(['resources'])->select('id', 'name')->get();
+        $return['brand'] = Brand::with(['resources'])->select('id', 'name', 'lang')->get();
         $return['paginate'] = $paginate;
         $return['specification'] = Specification::orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
         return resReturn(1, $return);
@@ -92,6 +93,8 @@ class CategoryController extends Controller
             $Category->sort = $request->sort;
             $Category->is_recommend = $request->is_recommend;
             $Category->state = $request->state;
+            $Category->lang = $request->lang ?? App::getLocale();
+            $Category->lang_parent_id = $request->lang_parent_id ?? 0;
             $Category->save();
             if ($request->logo) {
                 $Resource = new Resource();

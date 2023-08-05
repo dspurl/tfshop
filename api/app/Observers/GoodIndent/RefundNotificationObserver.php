@@ -16,6 +16,7 @@ use App\Models\v1\MoneyLog;
 use App\Models\v1\User;
 use App\Notifications\InvoicePaid;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 /**
  * finish payment
@@ -55,6 +56,7 @@ class RefundNotificationObserver
         // 当状态为已退款时触发
         if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_REFUND) {
             $Money = new MoneyLog();
+            $Money->lang = $goodIndent->lang;
             $Money->user_id = $goodIndent->user_id;
             $Money->type = MoneyLog::MONEY_LOG_TYPE_INCOME;
             $Money->money = $goodIndent->refund_money;

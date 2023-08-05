@@ -107,6 +107,11 @@
           <span>{{ scope.row.is_recommend === 1 ? $t('common.yes') : $t('common.no') }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('good.table.time')" sortable="custom" prop="time" width="160">
         <template slot-scope="scope">
           <span>{{ scope.row.time ? scope.row.time : $t('good.table.unpublished') }}</span>
@@ -211,10 +216,11 @@ import { getList, destroy, state, count, exports } from '@/api/good'
 import { getList as getCateList } from '@/api/category'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
+import LangTranslate from '@/components/LangTranslate'
 
 export default {
   name: 'GoodList',
-  components: { Pagination },
+  components: { Pagination, LangTranslate },
   data() {
     return {
       formLoading: false,
@@ -414,6 +420,13 @@ export default {
       }).finally(res => {
         this.formLoading = false
       })
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        this.$router.push({ name: 'GoodEdit', query: { id: value.id, page: this.listQuery.page, activeIndex: this.listQuery.activeIndex }})
+      } else {
+        this.$router.push({ name: 'GoodCreate', params: item })
+      }
     }
   }
 }

@@ -15,6 +15,7 @@ namespace App\Observers\GoodIndent;
 use App\Models\v1\GoodIndent;
 use App\Models\v1\MoneyLog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 
 /**
  * finish payment money log
@@ -55,6 +56,7 @@ class FinishPaymentMoneyLogObserver
         // 当状态为待发货时触发
         if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_DELIVER) {
             $Money = new MoneyLog();
+            $Money->lang = $goodIndent->lang;
             $Money->user_id = $goodIndent->user_id;
             $Money->type = MoneyLog::MONEY_LOG_TYPE_EXPEND;
             $Money->money = $goodIndent->total;

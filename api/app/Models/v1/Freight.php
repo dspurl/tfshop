@@ -11,6 +11,7 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,9 +20,13 @@ use Illuminate\Database\Eloquent\Model;
  * @property array location
  * @property array pinkage
  * @property int valuation
+ * @property string lang
+ * @property int lang_parent_id
+ * @method static get()
  */
 class Freight extends Model
 {
+    use CommonTrait;
     public static $withoutAppends = true;
 
     /**

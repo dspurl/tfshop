@@ -11,6 +11,7 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,12 +20,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property mixed api
  * @property mixed pid
  * @property int state
+ * @property string lang
+ * @property int lang_parent_id
  * @property mixed|string url
  * @property mixed|string icon
  * @property mixed|string sort
  */
 class AuthRule extends Model
 {
+    use CommonTrait;
     const UPDATED_AT = null;
     const CREATED_AT = null;
     const AUTH_RULE_STATE_ON = 1;
@@ -89,5 +93,15 @@ class AuthRule extends Model
             }
         }
         return $arr;
+    }
+
+    public function child()
+    {
+        return $this->hasMany(get_class($this), 'pid');
+    }
+
+    public function children()
+    {
+        return $this->child()->with('children');
     }
 }

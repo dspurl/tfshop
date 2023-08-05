@@ -18,6 +18,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\App;
 
 //class InvoicePaid extends Notification implements ShouldQueue
 class InvoicePaid extends Notification
@@ -152,6 +153,7 @@ class InvoicePaid extends Notification
     public function toArray($notifiable)
     {
         return [
+            'lang' => App::getLocale(),
             'type' => array_key_exists("type", $this->invoice) ? $this->invoice['type'] : static::NOTIFICATION_TYPE_SYSTEM_MESSAGES,    //通知类型：1系统消息（默认）2交易3活动
             'url' => array_key_exists("url", $this->invoice) ? $this->invoice['url'] : '',   //跳转地址
             'image' => array_key_exists("image", $this->invoice) ? $this->invoice['image'] : '',   //带图

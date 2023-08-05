@@ -156,4 +156,8 @@ class User extends Authenticatable implements HasLocalePreference
             return $return > 0 ? $return : 0;
         }
     }
+
+    public function Language(){
+        return $this->hasOne(Language::class, 'code','lang');
+    }
 }

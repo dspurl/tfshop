@@ -19,6 +19,7 @@ use App\Models\v1\Collect;
 use App\Models\v1\Good;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -47,6 +48,7 @@ class CollectController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
+        $q->where('lang', App::getLocale());
         $paginate = $q->with(['Good' => function ($q) {
             $q->select('id', 'order_price', 'name')->with(['resources']);
         }])->paginate($limit);

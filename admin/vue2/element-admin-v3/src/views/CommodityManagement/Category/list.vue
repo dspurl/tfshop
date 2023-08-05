@@ -4,7 +4,7 @@
       <el-input :placeholder="$t('category.filter.form.cascader.placeholder.pid')" v-model="listQuery.title" style="width: 200px;" class="filter-item" clearable @keyup.enter.native="handleFilter"/>
       <el-cascader
         v-model="listQuery.pid"
-        :options="options"
+        :options="optionLang"
         :props="{ checkStrictly: true }"
         filterable
         clearable
@@ -52,6 +52,11 @@
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.operation')" align="center" class-name="small-padding fixed-width" width="220">
         <template slot-scope="scope">
           <el-tooltip v-permission="$store.jurisdiction.CategoryCreate" :content="$t('common.copy')" class="item" effect="dark" placement="top-start">
@@ -75,14 +80,14 @@
 
     <!--添加-->
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" :close-on-click-modal="false">
-      <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="120px" style="width:90%;">
+      <el-form ref="dataForm" :rules="adminRules" :model="temp" label-position="left" label-width="120px">
         <el-form-item :label="$t('category.dialog.form.input.label.name')" prop="name" style="width:400px;">
           <el-input v-model="temp.name" maxlength="30" clearable/>
         </el-form-item>
         <el-form-item :label="$t('category.dialog.form.cascader.label.pid')" prop="pid">
           <el-cascader
             v-model="temp.pid"
-            :options="options"
+            :options="optionLang"
             :props="{ checkStrictly: true }"
             filterable
             clearable
@@ -139,7 +144,7 @@
           <el-transfer
             :filter-method="filterMethod"
             :titles="[$t('common.unselected'), $t('common.selected')]"
-            :data="data"
+            :data="dataLang"
             :filter-placeholder="$t('category.dialog.form.transfer.filter_placeholder.specification')"
             v-model="temp.specification"
             filterable/>
@@ -150,7 +155,7 @@
         <el-form-item :label="$t('category.dialog.form.transfer.label.brand')" prop="brand">
           <el-transfer
             :titles="[$t('common.unselected'), $t('common.selected')]"
-            :data="dataBrand"
+            :data="dataBrandLang"
             :filter-placeholder="$t('category.dialog.form.transfer.filter_placeholder.brand')"
             v-model="temp.brand"
             filterable/>
@@ -206,10 +211,11 @@ import { getList, create, edit, destroy } from '@/api/category'
 import waves from '@/directive/waves'
 import Pagination from '@/components/Pagination'
 import { getToken } from '@/utils/auth'
+import LangTranslate from '@/components/LangTranslate'
 
 export default {
   name: 'CategoryList',
-  components: { Pagination },
+  components: { Pagination, LangTranslate },
   directives: { waves },
   data() {
     return {
@@ -274,6 +280,25 @@ export default {
       parameterList: []
     }
   },
+  computed: {
+    optionLang() {
+      const lang = this.temp.lang ? this.temp.lang : this.$store.state.app.language
+      const options = this.options.filter((element) => { return element.lang === lang })
+      options.unshift({
+        value: 0,
+        label: this.$t('category.top', lang)
+      })
+      return options
+    },
+    dataLang() {
+      const lang = this.temp.lang ? this.temp.lang : this.$store.state.app.language
+      return this.data.filter((element) => { return element.lang === lang })
+    },
+    dataBrandLang() {
+      const lang = this.temp.lang ? this.temp.lang : this.$store.state.app.language
+      return this.dataBrand.filter((element) => { return element.lang === lang })
+    }
+  },
   created() {
     this.getList()
   },
@@ -287,19 +312,26 @@ export default {
         this.listLoading = false
         const that = this
         that.data = []
+        this.list.forEach(item => {
+          item.brand = item.brand_on.map(res => { return res.id })
+          item.specification = item.specification_on.map(res => { return res.id })
+        })
         response.data.specification.forEach((res, index) => {
           that.data.push({
             label: res.label,
-            key: res.id
+            key: res.id,
+            lang: res.lang
           })
         })
         that.dataBrand = []
         response.data.brand.forEach((res, index) => {
           that.dataBrand.push({
             label: res.name,
-            key: res.id
+            key: res.id,
+            lang: res.lang
           })
         })
+        this.list = JSON.parse(JSON.stringify(this.list))
       })
     },
     handleFilter() {
@@ -331,11 +363,15 @@ export default {
         parameter: []
       }
     },
-    handleCreate(row = null) {
+    handleCreate(row = null, item) {
       if (!row) {
         this.resetTemp()
-      } else {
-        this.temp = Object.assign({}, row)
+      }
+      if (item) {
+        this.temp = {
+          ... item,
+          ... this.temp
+        }
       }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
@@ -463,6 +499,16 @@ export default {
       }
       this.imgProgress = true
       return isLt2M
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        value.brand = value.brand_on.map(item => { return item.id })
+        value.specification = value.specification_on.map(item => { return item.id })
+        value = JSON.parse(JSON.stringify(value))
+        this.handleUpdate(value)
+      } else {
+        this.handleCreate(null, item)
+      }
     }
   }
 }
