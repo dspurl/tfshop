@@ -80,11 +80,12 @@ class SubmitBrandRequest extends Request
 
     public function messages()
     {
+
         return [
             'name.required' => __('hint.error.not_null', ['attribute' => __('brand.name')]),
             'name.string' => __('hint.error.wrong_format', ['attribute' => __('brand.name')]),
             'name.unique' => __('hint.error.exist', ['attribute' => __('brand.name')]),
-            'name.max' => _('hint.error.max', ['attribute' => __('brand.name'), 'place' => 30]),
+            'name.max' => __('hint.error.max', ['attribute' => __('brand.name'), 'place' => 30]),
             'sort.required' => __('hint.error.not_null', ['attribute' => __('common.sort')]),
             'sort.numeric' => __('hint.error.wrong_format', ['attribute' => __('common.sort')]),
         ];

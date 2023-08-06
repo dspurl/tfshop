@@ -50,7 +50,7 @@ class SubmitManageRequest extends Request
                     ];
                 } else {
                     return [
-                        'roles' => 'bail|required|unique:auth_groups|string|max:11',
+                        'roles' => 'bail|required|string|max:11',
                         'introduction' => 'required|string|max:80',
                         'rules' => 'required',
                     ];

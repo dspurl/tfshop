@@ -45,6 +45,11 @@
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.table.add_time')" align="center" sortable="custom" prop="created_at">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
@@ -168,10 +173,11 @@
 import { getList, create, edit, destroy } from '@/api/brand'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
+import LangTranslate from '@/components/LangTranslate'
 
 export default {
   name: 'BrandList',
-  components: { Pagination },
+  components: { Pagination, LangTranslate },
   data() {
     return {
       formLoading: false,
@@ -206,6 +212,7 @@ export default {
         activeIndex: '1'
       },
       temp: {},
+      lang_list: [],
       rules: {
         name: [
           { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('brand.dialog.form.input.label.name') }), trigger: 'blur' }
@@ -218,6 +225,8 @@ export default {
   },
   created() {
     this.getList()
+  },
+  mounted() {
   },
   methods: {
     getList() {
@@ -252,8 +261,14 @@ export default {
         logo: ''
       }
     },
-    handleCreate() {
+    handleCreate(item) {
       this.resetTemp()
+      if (item) {
+        this.temp = {
+          ...item,
+          ...this.temp
+        }
+      }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -375,6 +390,13 @@ export default {
       }
       this.imgProgress = true
       return isLt2M
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        this.handleUpdate(value)
+      } else {
+        this.handleCreate(item)
+      }
     }
   }
 }

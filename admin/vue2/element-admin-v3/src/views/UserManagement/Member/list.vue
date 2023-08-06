@@ -62,6 +62,11 @@
           {{ scope.row.gender_show }}
         </template>
       </el-table-column>
+      <el-table-column :label="$t('common.language')" align="center" width="120">
+        <template slot-scope="scope">
+          {{ scope.row.language.name }}
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('member.money')" align="center" width="200">
         <template slot-scope="scope">
           {{ scope.row.money|1000 }}

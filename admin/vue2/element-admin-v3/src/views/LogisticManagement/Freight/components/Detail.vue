@@ -7,9 +7,11 @@
       </el-form-item>
       <el-form-item :label="$t('freight.location')" prop="location">
         <el-cascader
+          v-loading="pcasLoading"
           ref="cascaderAddr"
           :options="options"
-          v-model="ruleForm.location"/>
+          v-model="ruleForm.location"
+          :props="{ value: 'id', label: 'name' }"/>
       </el-form-item>
       <el-form-item :label="$t('freight.valuation')" prop="valuation">
         <el-radio-group v-model="ruleForm.valuation">
@@ -44,7 +46,8 @@
             :label="$t('freight.add_cost')"
             prop="add_cost"/>
           <el-table-column
-            :label="$t('common.operation')">
+            :label="$t('common.operation')"
+            width="120">
             <template slot-scope="scope">
               <el-tooltip :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
                 <el-button type="primary" icon="el-icon-edit" circle @click="distributionArea(scope.row, scope.$index)"/>
@@ -64,16 +67,16 @@
     </el-form>
     <!--添加-->
     <el-dialog :visible.sync="dialogFormVisible" :title="$t('freight.valuation.volume.no_free_delivery_area')">
-      <el-form :rules="distribution_rules" label-position="left" label-width="80px" style="margin-left:50px;">
+      <el-form :rules="distribution_rules" label-position="left" label-width="150px" style="margin-left:50px;">
         <el-form-item :label="$t('freight.valuation.volume.distribution_area')" prop="location">
           <el-tag
             v-for="(item, index) in provinces"
             v-if="!item.hide || item.itself"
-            :key="item.label"
+            :key="item.name"
             :effect="item.on ? 'dark' : 'plain'"
             class="distribution-tag"
             @click="setTag(index)">
-            {{ item.label }}
+            {{ item.name }}
           </el-tag>
         </el-form-item>
         <el-form-item :label="$t('freight.valuation.distribution_cost')">
@@ -144,8 +147,7 @@
 </style>
 <script>
 import { detail, create, edit } from '@/api/freight'
-const pcas = require('../../../../assets/pcas-code')
-const provinces = require('../../../../assets/provinces')
+import { getList } from '@/api/region'
 export default {
   name: 'FreightDetail',
   props: {
@@ -164,11 +166,12 @@ export default {
       distributionStatus: 'create',
       dialogFormVisible: false,
       effect: 'plain',
-      options: pcas,
-      provinces: provinces,
+      options: [],
+      provinces: [],
       selectedOptions: [],
       dialogVisible: false,
       loading: false,
+      pcasLoading: false,
       id: '',
       temp: {
         location: [],
@@ -230,9 +233,30 @@ export default {
       this.copy = this.$route.query.copy
       this.id = this.$route.query.id
     }
+    this.getPcas()
     this.getList()
   },
   methods: {
+    getPcas() {
+      this.pcasLoading = true
+      getList({
+        parent_id: 0,
+        all: true
+      }).then(response => {
+        if (response.data.length) {
+          this.options = response.data[0].children
+          this.getProvinces(response.data[0])
+        }
+      })
+    },
+    getProvinces(parent) {
+      getList({
+        parent_id: parent.id
+      }).then(response => {
+        this.provinces = response.data
+        this.pcasLoading = false
+      })
+    },
     getList() {
       this.loading = true
       this.initProvinces()
@@ -284,7 +308,7 @@ export default {
         this.distributionStatus = 'update'
         this.distributionIndexOn = index
         for (const index in this.provinces) {
-          if (row.location.indexOf(this.provinces[index].value) !== -1) {
+          if (row.location.indexOf(this.provinces[index].id) !== -1) {
             this.provinces[index].itself = true
             this.provinces[index].on = true
           }
@@ -322,8 +346,8 @@ export default {
             if (this.provinces[index].on) {
               this.provinces[index].hide = true
               this.$set(this.provinces, index, this.provinces[index])
-              location.push(this.provinces[index].value)
-              locationName.push(this.provinces[index].label)
+              location.push(this.provinces[index].id)
+              locationName.push(this.provinces[index].name)
             }
           }
           this.temp.location = location
@@ -359,7 +383,7 @@ export default {
           this.ruleForm.pinkage = []
           for (const index in this.provinces) {
             if (!this.provinces[index].hide) {
-              this.ruleForm.pinkage.push(this.provinces[index].value)
+              this.ruleForm.pinkage.push(this.provinces[index].id)
             }
           }
           create(this.ruleForm).then(() => {
@@ -388,7 +412,7 @@ export default {
           this.ruleForm.pinkage = []
           for (const index in this.provinces) {
             if (!this.provinces[index].hide) {
-              this.ruleForm.pinkage.push(this.provinces[index].value)
+              this.ruleForm.pinkage.push(this.provinces[index].id)
             }
           }
           edit(this.ruleForm).then(() => {

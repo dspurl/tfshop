@@ -17,6 +17,7 @@ use App\Http\Resources\ConfigResources;
 use App\Models\v1\Config;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -40,6 +41,9 @@ class ConfigController extends Controller
     {
         Config::$withoutAppends = false;
         $q = Config::query();
+        $q->where('parent_id', 0);
+        $q->with(['children']);
+        $q->where('lang', App::getLocale());
         $paginate = $q->where('parent_id', 0)->with(['children'])->get();
         return resReturn(1, ConfigResources::collection($paginate));
     }

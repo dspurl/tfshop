@@ -53,6 +53,10 @@ export const componentsMap = {
   UpdateDetail: () => import('@/views/Maintain/Update/index'),
   Backup: () => import('@/views/Maintain/Backup/index'),
   BackupList: () => import('@/views/Maintain/Backup/list'),
+  Region: () => import('@/views/Maintain/Region/index'),
+  RegionList: () => import('@/views/Maintain/Region/list'),
+  Language: () => import('@/views/Maintain/Language/index'),
+  LanguageList: () => import('@/views/Maintain/Language/list'),
   // 插件列表
   // 插件
   PlugIn: () => import('@/views/Plugin/index'),

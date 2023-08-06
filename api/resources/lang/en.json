@@ -329,5 +329,10 @@
     "upload_pictures.admin_size.error": "The file you uploaded is larger than the maximum size configured on the background",
     "upload_pictures.mini_program.error": "The picture contains sensitive information. Please upload it again",
     "upload_pictures.specification_png.error": "Images of multiple specifications can only be in png format",
-    "upload_pictures.specification.error": "Incorrect specification format"
+    "upload_pictures.specification.error": "Incorrect specification format",
+    "region.name": "Area name",
+    "region.value": "Coding",
+    "region.parent_name": "Parent name",
+    "language.name": "Name",
+    "language.code": "Code"
 }

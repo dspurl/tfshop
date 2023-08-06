@@ -9,10 +9,12 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Providers;
 
 use App\common\RedisService;
 use App\Models\v1\Config;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -35,7 +37,7 @@ class ConfigServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        if (Schema::hasTable('configs')){
+        if (Schema::hasTable('configs')) {
             $this->loadMyConfig();
         }
     }
@@ -53,10 +55,10 @@ class ConfigServiceProvider extends ServiceProvider
                 $this->addConfig($config);
             }
             // 获取配置
-            $config = Config::where('keys', '!=', null)->select('keys', 'value')->get()->toArray();
+            $config = Config::where('keys', '!=', null)->select('keys', 'value', 'lang')->get()->toArray();
             $redis->set('config', json_encode($config));
         } else {
-            $config = json_decode($redis->get('config'), true);
+            $config = collect(json_decode($redis->get('config'), true))->where('lang', App::getLocale())->toArray();
         }
         // 合并配置文件和数据库配置文件
         foreach ($config as $c) {
@@ -71,6 +73,7 @@ class ConfigServiceProvider extends ServiceProvider
             $Config = new Config();
             $Config->parent_id = $id;
             $Config->name = $c['name'];
+            $Config->lang = $c['lang'] ?? App::getLocale();
             $Config->maxlength = isset($c['maxlength']) ? $c['maxlength'] : null;
             $Config->required = isset($c['required']) ? $c['required'] : 0;
             $Config->remark = isset($c['remark']) ? $c['remark'] : null;

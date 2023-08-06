@@ -25,6 +25,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
             $table->char('uuid',36)->index()->comment('uuid');
             $table->string('api_token',80)->comment('token');
             $table->tinyInteger('state')->default(1)->comment('状态1正常2禁止访问');

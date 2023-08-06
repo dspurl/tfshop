@@ -9,6 +9,7 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -17,6 +18,7 @@ use App\Models\v1\Brand;
 use App\Models\v1\Resource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -47,6 +49,8 @@ class BrandController extends Controller
         if ($request->name) {
             $q->where('name', 'like', '%' . $request->name . '%');
         }
+        $q->where('lang', App::getLocale());
+        $q->with(['Language']);
         $paginate = $q->with('resources')->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -65,6 +69,8 @@ class BrandController extends Controller
             $Brand = new Brand();
             $Brand->name = $request->name;
             $Brand->sort = $request->sort;
+            $Brand->lang = $request->lang ?? App::getLocale();
+            $Brand->lang_parent_id = $request->lang_parent_id ?? 0;
             $Brand->save();
             if ($request->logo) {
                 $Resource = new Resource();
@@ -88,7 +94,7 @@ class BrandController extends Controller
      * BrandEdit
      * 保存品牌
      * @param SubmitBrandRequest|Request $request
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 品牌ID
      * @queryParam  name string 品牌名称
@@ -130,7 +136,7 @@ class BrandController extends Controller
     /**
      * BrandDestroy
      * 删除品牌
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 品牌ID
      */

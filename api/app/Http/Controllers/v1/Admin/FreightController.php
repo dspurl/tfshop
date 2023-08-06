@@ -16,6 +16,7 @@ use App\Models\v1\Freight;
 use App\Models\v1\FreightWay;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -33,7 +34,7 @@ class FreightController extends Controller
      * @queryParam  sort string 排序
      * @queryParam  page string 页码
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return string
      */
     public function list(Request $request)
     {
@@ -48,6 +49,8 @@ class FreightController extends Controller
         }
         $q->with(['FreightWay']);
         $limit = $request->limit;
+        $q->where('lang', App::getLocale());
+        $q->with(['Language']);
         $paginate = $q->paginate($limit);
         return resReturn(1, $paginate);
     }
@@ -76,6 +79,7 @@ class FreightController extends Controller
             $Freight->location = $request->location;
             $Freight->pinkage = $request->pinkage;
             $Freight->valuation = $request->valuation;
+            $Freight->lang = $request->lang ?? App::getLocale();
             $Freight->save();
             if (count($request->freight_way) > 0) {
                 foreach ($request->freight_way as $freight_way) {

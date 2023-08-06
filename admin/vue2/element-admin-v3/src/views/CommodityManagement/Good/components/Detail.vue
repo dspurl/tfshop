@@ -20,7 +20,7 @@
       <el-form-item v-if="ruleForm.type === 0" :label="$t('good.detail.form.select.label.type')" prop="freight_id">
         <el-select v-model="ruleForm.freight_id" :placeholder="$t('common.select')" clearable>
           <el-option
-            v-for="item in freight"
+            v-for="item in freightLang"
             :key="item.id"
             :label="item.name"
             :value="item.id"/>
@@ -88,7 +88,7 @@
       <el-form-item :label="$t('good.detail.form.cascader.label.category_id')" prop="category_id">
         <el-cascader
           v-model="ruleForm.category_id"
-          :options="goods_type"
+          :options="goodsTypeLang"
           :props="{ expandTrigger: 'hover', emitPath: false }"
           clearable
           @change="goodsType"/>
@@ -97,7 +97,7 @@
       <el-form-item v-if="goods_brand.length > 0" :label="$t('good.detail.form.select.label.brand_id')" prop="brand_id">
         <el-select :placeholder="$t('common.select')" v-model="ruleForm.brand_id" clearable @change="change($event)">
           <el-option
-            v-for="item in goods_brand"
+            v-for="item in goodsBrandLang"
             :key="item.id"
             :label="item.name"
             :value="item.id"/>
@@ -396,11 +396,27 @@ export default {
           fullscreenToggle: true // 全屏按钮
         }
       }
+    },
+    freightLang() {
+      const lang = this.ruleForm.lang ? this.ruleForm.lang : this.$store.state.app.language
+      return this.freight.filter((element) => { return element.lang === lang })
+    },
+    goodsTypeLang() {
+      const lang = this.ruleForm.lang ? this.ruleForm.lang : this.$store.state.app.language
+      return this.goods_type.filter((element) => { return element.lang === lang })
+    },
+    goodsBrandLang() {
+      const lang = this.ruleForm.lang ? this.ruleForm.lang : this.$store.state.app.language
+      return this.goods_brand.filter((element) => { return element.lang === lang })
     }
   },
   created() {
     if (this.isEdit) {
       this.id = this.$route.query.id
+    }
+    if (this.$route.params.lang) {
+      const params = this.$route.params
+      this.ruleForm = { ...params, ...this.ruleForm }
     }
     this.getList()
   },

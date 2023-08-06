@@ -5,7 +5,6 @@
   margin-top:40px;
   width: 1210px;
   position: relative;
-  left: 5px;
   .title-box{
     display: flex;
     .min-title{
@@ -18,7 +17,7 @@
       font-size: 16px;
       line-height: 58px;
       color: #424242;
-      width: 95px;
+      margin-right: 5px;
     }
     .more:hover{
       color: $font-color-main;

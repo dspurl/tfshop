@@ -25,6 +25,7 @@ class CreateGoodIndentsTable extends Migration
     {
         Schema::create('good_indents', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
             $table->bigInteger('user_id')->default(0)->index()->comment('用户ID');
             $table->string('consignee', 30)->nullable()->comment('收货人名称');
             $table->unsignedTinyInteger('type')->default(0)->comment('类型:0=普通订单-common,1=秒杀订单-seckill,2=拼团订单-group_purchase');

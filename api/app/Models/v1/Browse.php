@@ -18,6 +18,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int user_id
  * @property int good_id
  * @property int updated_at
+ * @property string lang
  */
 class Browse extends Model
 {

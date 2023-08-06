@@ -9,15 +9,15 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Admin;
 
-use App\Code;
 use App\Http\Requests\v1\SubmitSpecificationRequest;
 use App\Models\v1\Specification;
 use App\Models\v1\SpecificationGroup;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\App;
 
 /**
  * @group [ADMIN]Specification(规格管理)
@@ -30,7 +30,7 @@ class SpecificationController extends Controller
      * SpecificationList
      * 规格列表
      * @param Request $request
-     * @return \Illuminate\Http\Response
+     * @return string
      * @queryParam  title string 规格名称
      * @queryParam  limit int 每页显示条数
      * @queryParam  sort string 排序
@@ -47,10 +47,12 @@ class SpecificationController extends Controller
         if ($request->title) {
             $q->where('name', 'like', '%' . $request->title . '%');
         }
+        $q->where('lang', App::getLocale());
+        $q->with(['Language']);
         $paginate = $q->with(['SpecificationGroup'])->paginate($limit);
         $return = [];
         $return['paginate'] = $paginate;
-        $return['SpecificationGroup'] = SpecificationGroup::select('id', 'name')->get();
+        $return['SpecificationGroup'] = SpecificationGroup::select('id', 'name', 'lang')->get();
         return resReturn(1, $return);
     }
 
@@ -79,6 +81,8 @@ class SpecificationController extends Controller
         $Specification->specification_group_id = $request->specification_group_id ?? 0;
         $Specification->value = $request->value;
         $Specification->sort = $request->sort;
+        $Specification->lang = $request->lang ?? App::getLocale();
+        $Specification->lang_parent_id = $request->lang_parent_id ?? 0;
         $Specification->save();
         return resReturn(1, __('common.succeed'));
     }
@@ -87,7 +91,7 @@ class SpecificationController extends Controller
      * SpecificationEdit
      * 保存规格
      * @param SubmitSpecificationRequest|Request $request
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 规格ID
      * @queryParam  name string 规格名称
@@ -117,7 +121,7 @@ class SpecificationController extends Controller
     /**
      * SpecificationDestroy
      * 删除规格
-     * @param  int $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      * @queryParam  id int 规格ID
      */

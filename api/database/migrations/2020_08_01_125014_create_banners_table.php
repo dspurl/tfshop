@@ -25,6 +25,8 @@ class CreateBannersTable extends Migration
     {
         Schema::create('banners', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->tinyInteger('type')->default(0)->comment('0首页轮播1首页广告2登录页广告3友情链接');
             $table->string('name', 30)->comment('轮播名称');
             $table->string('url', 255)->nullable()->comment('轮播地址');

@@ -15,6 +15,7 @@ use App\Http\Requests\v1\SubmitDhlRequest;
 use App\Models\v1\Dhl;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -47,9 +48,11 @@ class DhlController extends Controller
                 $q->where('name', 'like', '%' . $request->title . '%');
             }
             $limit = $request->limit;
+            $q->where('lang', App::getLocale());
+            $q->with(['Language']);
             $paginate = $q->paginate($limit);
         } else {
-            $paginate = Dhl::get();
+            $paginate = Dhl::where('lang', App::getLocale())->get();
         }
         return resReturn(1, $paginate);
     }
@@ -75,6 +78,8 @@ class DhlController extends Controller
         $Dhl->state = $request->state;
         $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
+        $Dhl->lang = $request->lang ?? App::getLocale();
+        $Dhl->lang_parent_id = $request->lang_parent_id ?? 0;
         $Dhl->save();
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
     }

@@ -11,6 +11,7 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,10 +25,14 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int specification_group_id
  * @property string label
  * @property string sort
+ * @property string lang
+ * @property int lang_parent_id
+ * @method static orderBy(string $string, string $string1)
  */
 class Specification extends Model
 {
     use SoftDeletes;
+    use CommonTrait;
     const SPECIFICATION_TYPE_TEXT = 1; //规格类型：文本
     const SPECIFICATION_TYPE_RADIO = 2; //规格类型：单选
     const SPECIFICATION_TYPE_CHECK = 3; //规格类型：多选
@@ -93,5 +98,4 @@ class Specification extends Model
     {
         return $this->belongsTo(SpecificationGroup::class);
     }
-
 }

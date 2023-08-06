@@ -51,6 +51,8 @@
   "common.select_delete": "Please select what you want to delete",
   "common.is_delete": "Do you confirm to delete this product?",
   "common.is_delete_batch": "Do you want to delete content in batches?",
+  "common.language": "Language",
+  "category.top": "Top level grouping",
   "hint.error.please_enter": "Please enter {attribute}",
   "hint.error.please_upload": "Please upload {attribute}",
   "hint.error.nonentity": "{attribute} does not exist",
@@ -67,6 +69,7 @@
   "hint.error.select": "Please select {specification}",
   "hint.tip.upload": "Upload only {rmvb} files, and do not exceed {size}",
   "hint.tip.upload_recommend": "Upload only {rmvb} files, and do not exceed {size}, {recommend}",
+  "hint.confirm.delete": "This action will permanently delete the content. Do you want to continue?",
   "hint.succeed.win": "{attribute} success ",
   "hint.succeed.fail": "{attribute} failed",
   "hint.upload.img.rmvb": "Please upload the correct picture format",
@@ -507,5 +510,13 @@
   "backup.update": "Restore",
   "backup.delete_prompt": "Do you want to delete content in batches?",
   "good.type.keys": "Carmi/Web disk",
-  "good.type.download": "Download goods"
+  "good.type.download": "Download goods",
+  "region.name": "Area name",
+  "region.value": "Coding",
+  "region.nation": "Nation",
+  "region.all_nation": "All countries",
+  "region.parent_name": "Parent name",
+  "switch.language": "Switch Language Success",
+  "language.name": "Name",
+  "language.code": "Code"
 }

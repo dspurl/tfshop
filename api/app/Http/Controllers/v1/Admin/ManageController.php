@@ -18,6 +18,7 @@ use App\Models\v1\AuthGroup;
 use App\Models\v1\AuthRule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -47,7 +48,7 @@ class ManageController extends Controller
             }
         }
         //查询API列表
-        $auth_rule = AuthRule::orderBy('pid', 'asc')->orderBy('sort', 'asc')->orderBy('id')->get(['id', 'title', 'pid']);
+        $auth_rule = AuthRule::orderBy('pid', 'asc')->orderBy('sort', 'asc')->orderBy('id')->get(['id', 'title', 'pid', 'lang']);
         if ($auth_rule) {
             $auth_ruleArray = [];
             foreach ($auth_rule as $a) {
@@ -56,13 +57,15 @@ class ManageController extends Controller
                     'label' => $a->title,
                     'value' => $a->id,
                     'pid' => $a->pid,
-                    'id' => $a->id
+                    'id' => $a->id,
+                    'lang' => $a->lang,
                 );
                 $fromData[] = array(
                     'label' => $a->title,
                     'value' => $a->id,
                     'pid' => $a->pid,
-                    'id' => $a->id
+                    'id' => $a->id,
+                    'lang' => $a->lang,
                 );
             }
         }
@@ -71,6 +74,12 @@ class ManageController extends Controller
             $query->select('id', 'name');
         }, 'AuthRule' => function ($query) {
             $query->select('id', 'title', 'pid');
+        }])->where('lang', App::getLocale())->with(['Language'=>function($q){
+            $q->with(['Admin' => function ($query) {
+                $query->select('id', 'name');
+            },'AuthRule' => function ($query) {
+                $query->select('id', 'title', 'pid');
+            }]);
         }])->orderBy('id')->get(['id', 'roles', 'introduction'])->toArray();
         foreach ($auth_groups as $id => $a) {
             $toData = [];
@@ -113,6 +122,50 @@ class ManageController extends Controller
             $auth_groups[$id]['toData'] = unsetMultiKeys(array('value'), genTree($toData, 'pid'));
 
             unset($auth_groups[$id]['users']);
+            // 多语言
+            if($a['language']){
+                foreach ($a['language'] as $ids => $language){
+                    $language['rules'] = [];
+                    foreach ($language['admin'] as $groupname) {
+                        $auth_groups[$id]['language'][$ids]['groupname'][] = $groupname['name'];
+                        $auth_groups[$id]['language'][$ids]['group'][] = $groupname['id'];
+                        $auth_groups[$id]['language'][$ids]['oldGroupValue'][] = $groupname['id'];
+                        $auth_groups[$id]['language'][$ids]['oldGroup'][] = array(
+                            'label' => $groupname['name'],
+                            'value' => $groupname['id']
+                        );
+                    }
+                    foreach ($language['auth_rule'] as $rules) {
+                        $auth_groups[$id]['language'][$ids]['rules'][] = $language['rules'][] = $rules['id'];
+                        $auth_groups[$id]['language'][$ids]['power'][] = $rule[$rules['id']];
+                        //获取已选中数组
+                        $toData[$rules['id']] = $auth_ruleArray[$rules['id']];
+                    }
+
+                    //获取未选中的内容
+                    $fromDatas = [];
+                    foreach ($fromData as $s => $f) {
+                        if (!in_array($f['id'], $language['rules']) || !in_array($f['pid'], $language['rules'])) {
+                            $fromDatas[] = $f;
+                        }
+                    }
+                    $auth_groups[$id]['language'][$ids]['fromData'] = unsetMultiKeys(array('value'), genTree($fromDatas, 'pid'));
+
+                    if ($auth_groups[$id]['language'][$ids]['fromData']) {
+                        foreach ($auth_groups[$id]['language'][$ids]['fromData'] as $s => $f) {
+
+                            if (!array_key_exists('children', $f)) {
+                                unset($auth_groups[$id]['language'][$ids]['fromData'][$s]);
+                            }
+                        }
+                        $auth_groups[$id]['language'][$ids]['fromData'] = array_values($auth_groups[$id]['language'][$ids]['fromData']);
+                    }
+
+                    $auth_groups[$id]['language'][$ids]['toData'] = unsetMultiKeys(array('value'), genTree($toData, 'pid'));
+
+                    unset($auth_groups[$id]['language'][$ids]['users']);
+                }
+            }
         }
         $data['data'] = $auth_groups;
         $data['options'] = $options;
@@ -137,6 +190,8 @@ class ManageController extends Controller
             $authGroup = new AuthGroup;
             $authGroup->roles = $request->roles;
             $authGroup->introduction = $request->introduction;
+            $authGroup->lang = $request->lang ?? App::getLocale();
+            $authGroup->lang_parent_id = $request->lang_parent_id ?? 0;
             $rules = $authGroup->returnRulesData($request->rules);
             $authGroup->save();
             //关联表操作

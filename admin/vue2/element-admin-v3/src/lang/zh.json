@@ -51,6 +51,8 @@
   "common.select_delete": "请选择要删除的内容",
   "common.is_delete": "是否确认删除该商品?",
   "common.is_delete_batch": "是否确认批量删除内容?",
+  "common.language": "语言",
+  "category.top": "顶级分组",
   "hint.error.please_enter": "请输入 {attribute}",
   "hint.error.please_upload": "请上传 {attribute}",
   "hint.error.nonentity": "{attribute} 不存在",
@@ -67,6 +69,7 @@
   "hint.error.select": "请选择 {specification}",
   "hint.tip.upload": "只能上传{rmvb}文件，且不超过{size}",
   "hint.tip.upload_recommend": "只能上传{rmvb}文件，且不超过{size}，推荐尺寸{recommend}",
+  "hint.confirm.delete": "此操作将永久删除该内容, 是否继续?",
   "hint.succeed.win": "{attribute} 成功",
   "hint.succeed.fail": "{attribute} 失败",
   "hint.upload.img.rmvb": "请上传正确的图片格式",
@@ -507,5 +510,13 @@
   "backup.update": "还原",
   "backup.delete_prompt": "是否确认批量删除内容?",
   "good.type.keys": "卡密/网盘",
-  "good.type.download": "下载商品"
+  "good.type.download": "下载商品",
+  "region.name": "地区名称",
+  "region.value": "编码",
+  "region.nation": "国家",
+  "region.all_nation": "所有国家",
+  "region.parent_name": "上级名称",
+  "switch.language": "切换语言成功",
+  "language.name": "名称",
+  "language.code": "编码"
 }

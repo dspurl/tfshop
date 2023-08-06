@@ -20,6 +20,7 @@ use App\Models\v1\Shipping;
 use App\common\RedisLock;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -47,6 +48,7 @@ class ShippingController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
+        $q->where('lang', App::getLocale());
         $paginate = $q->paginate($limit);
         return resReturn(1, $paginate);
     }

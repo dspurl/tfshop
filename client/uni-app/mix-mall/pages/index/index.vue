@@ -83,7 +83,9 @@ export default {
 				swiperLength: 0,
 				carouselList: [],
 				goodsList: [],
-				adData: {},
+				adData: {
+					resources: null
+				},
 				ctegory:[],
 				is_notice: false,
 				navHeight: getApp().globalData.navHeight ? getApp().globalData.navHeight : 10,
@@ -93,6 +95,10 @@ export default {
 			...mapState(['hasLogin'])
 		},
 		onLoad() {
+			
+		},
+		onShow(){
+			getApp().showDsshopCartNumber()
 			this.loadData()
 			if(this.hasLogin){
 				this.notice()
@@ -103,9 +109,6 @@ export default {
 			if(!uni.getStorageSync('applyDsshopGuidanceMy')){
 				this.guidanceMy = true
 			}
-		},
-		onShow(){
-			getApp().showDsshopCartNumber()
 		},
 		methods: {
 			/**
@@ -130,7 +133,9 @@ export default {
 					state: 0,
 					sort: '+sort'
 				},function(res){
-					that.adData = res.data[0]
+					if(res.data.length){
+						that.adData = res.data[0]
+					}
 				})
 				// 推荐商品
 				await Good.getList({

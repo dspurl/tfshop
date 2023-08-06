@@ -57,6 +57,7 @@ class MemberController extends Controller
             $q->where('created_at', '>=', $timeInterval[0]);
             $q->where('created_at', '<=', $timeInterval[1]);
         }
+        $q->with(['Language']);
         $paginate = $q->paginate($limit);
         return resReturn(1, $paginate);
     }

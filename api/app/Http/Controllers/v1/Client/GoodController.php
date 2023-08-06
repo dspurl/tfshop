@@ -16,6 +16,7 @@ use App\Models\v1\Category;
 use App\Models\v1\Good;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 
 /**
  * @group [CLIENT]Goods(商品)
@@ -93,6 +94,7 @@ class GoodController extends Controller
                 $q->whereIn('category_id', $allSublevel);
             }
         }
+        $q->where('lang', App::getLocale());
         $paginate = $q->with(['resources' => function ($q) {
             $q->where('depict', 'like', '%_zimg');
         }, 'goodSku' => function ($q) {
@@ -157,6 +159,7 @@ class GoodController extends Controller
         } else {
             $q->orderBy('sort', 'ASC')->orderBy('id', 'ASC');
         }
+        $q->where('lang', App::getLocale());
         $paginate = $q->with(['resources'])->get();
         if ($request->has('tree')) {
             $paginate = genTree($paginate->toArray(), 'pid');

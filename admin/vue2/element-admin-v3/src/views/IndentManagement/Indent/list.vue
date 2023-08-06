@@ -175,6 +175,7 @@ export default {
   components: { Pagination },
   data() {
     return {
+      formLoading: false,
       dialogVisible: false,
       ruleForm: [],
       checkAll: false,

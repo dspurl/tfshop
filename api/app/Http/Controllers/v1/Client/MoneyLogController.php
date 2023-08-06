@@ -14,6 +14,7 @@ namespace App\Http\Controllers\v1\Client;
 use App\Models\v1\MoneyLog;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 
 /**
  * @group [CLIENT]MoneyLog(资金记录)
@@ -53,6 +54,7 @@ class MoneyLogController extends Controller
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
         $limit = $request->limit;
+        $q->where('lang', App::getLocale());
         $get = $q->get();
 
         $return['paginate'] = $q->paginate($limit);

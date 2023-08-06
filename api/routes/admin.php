@@ -19,6 +19,8 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('refreshToken', 'LoginController@refresh')->name('admin.refreshToken');  //刷新token
         Route::get('plugin/download/{name}', 'PluginController@download')->name('admin.plugInDownload');    //插件下载
         Route::post('verifyPlugin/{id}', 'PluginController@verify')->name('admin.verifyPlugin');   //验证插件是否安装
+        Route::get('lang', 'LanguageController@list')->name('admin.languageList');    //语言列表
+
     });
     Route::prefix('admin')->namespace('Admin')->middleware(['auth:api'])->group(function () {
         Route::post('uploadPictures', 'IndexController@uploadPictures')->name('admin.uploadPictures');  //上传
@@ -126,5 +128,13 @@ Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.v
         Route::post('backup', 'BackupController@create')->name('admin.backupCreate')->middleware(['permissions:BackupCreate']);    //备份
         Route::post('backup/{id}', 'BackupController@edit')->name('admin.backupEdit')->middleware(['permissions:BackupEdit']);    //还原
         Route::post('backup/destroy/{id}', 'BackupController@destroy')->name('admin.backupDestroy')->middleware(['permissions:BackupDestroy']);    //删除备份
+        Route::get('region', 'RegionController@list')->name('admin.regionList')->middleware(['permissions:RegionList']);    //地区列表
+        Route::post('region', 'RegionController@create')->name('admin.regionCreate')->middleware(['permissions:RegionCreate']);    //创建地区
+        Route::post('region/{id}', 'RegionController@edit')->name('admin.regionEdit')->middleware(['permissions:RegionEdit']);    //保存地区
+        Route::post('region/destroy/{id}', 'RegionController@destroy')->name('admin.regionDestroy')->middleware(['permissions:RegionDestroy']);    //删除地区
+        Route::get('language', 'LanguageController@list')->name('admin.languageList')->middleware(['permissions:LanguageList']);    //语言列表
+        Route::post('language', 'LanguageController@create')->name('admin.languageCreate')->middleware(['permissions:LanguageCreate']);    //语言地区
+        Route::post('language/{id}', 'LanguageController@edit')->name('admin.languageEdit')->middleware(['permissions:LanguageEdit']);    //保存语言
+        Route::post('language/destroy/{id}', 'LanguageController@destroy')->name('admin.languageDestroy')->middleware(['permissions:LanguageDestroy']);    //删除语言
     });
 });

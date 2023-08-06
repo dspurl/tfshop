@@ -20,6 +20,7 @@ use App\Models\v1\Browse;
 use App\Models\v1\Good;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -48,6 +49,7 @@ class BrowseController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
+        $q->where('lang', App::getLocale());
         $paginate = $q->with(['Good' => function ($q) {
             $q->select('id', 'order_price', 'name')->with(['resources']);
         }])->paginate($limit);
@@ -78,6 +80,7 @@ class BrowseController extends Controller
                 }
                 $Browse->user_id = $user_id;
                 $Browse->good_id = $request->id;
+                $Browse->lang = $request->lang ?? App::getLocale();
                 $Browse->save();
                 // 浏览记录方式二：所有的浏览记录都添加，用于后期的用户行为分析
                 //            $Browse = new Browse();

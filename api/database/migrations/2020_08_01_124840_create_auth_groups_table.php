@@ -24,6 +24,8 @@ class CreateAuthGroupsTable extends Migration
     {
         Schema::create('auth_groups', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->string('roles', 30);
             $table->string('introduction', 80);
             $table->timestamps();

@@ -29,6 +29,11 @@
           <span>{{ scope.row.name }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.table.add_time')" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
@@ -125,10 +130,11 @@
 import { getList, create, edit, destroy } from '@/api/specificationGroup'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
+import LangTranslate from '@/components/LangTranslate'
 
 export default {
   name: 'SpecificationGroupList',
-  components: { Pagination },
+  components: { Pagination, LangTranslate },
   data() {
     return {
       formLoading: false,
@@ -162,7 +168,16 @@ export default {
         sort: '+id',
         activeIndex: '1'
       },
-      temp: {},
+      temp: {
+        name: '',
+        type: '',
+        is_search: 0,
+        value: '',
+        label: '',
+        sort: 5,
+        specification_group_id: '',
+        location: 0
+      },
       rules: {
         name: [
           { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('specification_group.dialog.form.input.label.name') }), trigger: 'blur' }
@@ -211,8 +226,14 @@ export default {
         location: 0
       }
     },
-    handleCreate() {
+    handleCreate(item) {
       this.resetTemp()
+      if (item) {
+        this.temp = {
+          ...item,
+          ...this.temp
+        }
+      }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -302,6 +323,13 @@ export default {
           this.formLoading = false
         }
       })
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        this.handleUpdate(value)
+      } else {
+        this.handleCreate(item)
+      }
     }
   }
 }

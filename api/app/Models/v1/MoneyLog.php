@@ -19,6 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int type
  * @property int money
  * @property string remark
+ * @property string lang
  */
 class MoneyLog extends Model
 {

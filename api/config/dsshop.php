@@ -47,6 +47,17 @@ return [
                     'value' => env('PROJECT_KEY', 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM=')
                 ],
                 [
+                    'name' => '默认语言',
+                    'remark' => '设置系统默认语言，默认为zh',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'style' => [
+                        'width' => 200
+                    ],
+                    'keys' => 'dsshop.defaultLanguage',
+                    'value' => 'zh'
+                ],
+                [
                     'name' => '调试模式',
                     'remark' => '开启后，接口错误信息将全部返回，正式环境请保持关闭状态',
                     'input_type' => 'switch',
@@ -663,6 +674,726 @@ return [
                 ],
             ]
         ],
+        // 英文
+        [
+            'lang' => 'en',
+            'name' => 'Development configuration',
+            'remark' =>'Do not modify development configurations. Otherwise, the project may fail to run properly',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'Client key',
+                    'remark' => 'For communication between the back-end and the client, the client key needs to be changed after modification',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'style' => [
+                        'width' => 200
+                    ],
+                    'keys' => 'dsshop.applySecret',
+                    'value' => env('PROJECT_KEY', 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM=')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Default language',
+                    'remark' => 'Set the default system language. The default language is zh',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'style' => [
+                        'width' => 200
+                    ],
+                    'keys' => 'dsshop.defaultLanguage',
+                    'value' => 'zh'
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Debug mode',
+                    'remark' => 'After this function is enabled, all interface error messages are returned. In the formal environment, keep the function disabled',
+                    'input_type' => 'switch',
+                    'input_option' => [
+                        [
+                            'name'=> 'Close',
+                            'value'=> false
+                        ],
+                        [
+                            'name'=> 'Open',
+                            'value'=> true
+                        ]
+                    ],
+                    'required' => true,
+                    'keys' => 'app.debug',
+                    'value' => env('APP_DEBUG')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Configuration reset',
+                    'remark' => 'After this function is enabled, all background configurations will be restored to the configuration content in the config directory. After the reset, you cannot retrieve the configuration content.',
+                    'input_type' => 'switch',
+                    'input_option' => [
+                        [
+                            'name'=> 'No',
+                            'value'=> false
+                        ],
+                        [
+                            'name'=> 'Yes',
+                            'value'=> true
+                        ]
+                    ],
+                    'required' => true,
+                    'keys' => 'dsshop.reset',
+                    'value' => false
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Mailbox configuration',
+            'remark' =>'The email notification function is enabled only after the mailbox is configured',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'E-mail Address',
+                    'input_type' => 'input',
+                    'maxlength' => 255,
+                    'required' => true,
+                    'style' => [
+                        'width' => 300
+                    ],
+                    'keys' => 'mail.host',
+                    'value' => env('MAIL_HOST')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Mailbox service',
+                    'input_type' => 'input',
+                    'maxlength' => 20,
+                    'required' => true,
+                    'style' => [
+                        'width' => 100
+                    ],
+                    'keys' => 'mail.driver',
+                    'value' => env('MAIL_DRIVER')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Mailbox port',
+                    'input_type' => 'input',
+                    'maxlength' => 20,
+                    'required' => true,
+                    'style' => [
+                        'width' => 100
+                    ],
+                    'keys' => 'mail.port',
+                    'value' => env('MAIL_PORT')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Email accounts',
+                    'input_type' => 'input',
+                    'maxlength' => 255,
+                    'required' => true,
+                    'style' => [
+                        'width' => 300
+                    ],
+                    'keys' => 'mail.username',
+                    'value' => env('MAIL_USERNAME')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Email password',
+                    'input_type' => 'inputShowPassword',
+                    'maxlength' => 255,
+                    'required' => true,
+                    'style' => [
+                        'width' => 300
+                    ],
+                    'keys' => 'mail.password',
+                    'value' => env('MAIL_PASSWORD')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Mailbox encryption protocol',
+                    'input_type' => 'input',
+                    'maxlength' => 50,
+                    'required' => true,
+                    'style' => [
+                        'width' => 100
+                    ],
+                    'keys' => 'mail.encryption',
+                    'value' => env('MAIL_ENCRYPTION')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Email Sender',
+                    'input_type' => 'input',
+                    'maxlength' => 255,
+                    'required' => true,
+                    'style' => [
+                        'width' => 300
+                    ],
+                    'keys' => 'mail.from.address',
+                    'value' => env('MAIL_FROM_ADDRESS')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Senders name',
+                    'input_type' => 'input',
+                    'maxlength' => 200,
+                    'required' => true,
+                    'style' => [
+                        'width' => 200
+                    ],
+                    'keys' => 'mail.from.name',
+                    'value' => env('MAIL_FROM_NAME')
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Small program configuration',
+            'remark' =>'Small program related configuration, you need to configure small program information for different platforms',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'WeChat Mini Program',
+                    'remark' =>'Wechat small program related configuration',
+                    'children' => [
+                        [
+                            'lang' => 'en',
+                            'name' => 'ID',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat mini program ID',
+                            'required' => false,
+                            'keys' => 'wechat.mini_program.default.app_id',
+                            'value' => env('WECHAT_MINI_PROGRAM_APPID')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Keys',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat small program key',
+                            'required' => false,
+                            'keys' => 'wechat.mini_program.default.secret',
+                            'value' => env('WECHAT_MINI_PROGRAM_SECRET')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'token',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat small program token',
+                            'required' => false,
+                            'keys' => 'wechat.mini_program.default.token',
+                            'value' => env('WECHAT_MINI_PROGRAM_TOKEN')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Message encryption key',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat small program message encryption key',
+                            'required' => false,
+                            'keys' => 'wechat.mini_program.default.aes_key',
+                            'value' => env('WECHAT_MINI_PROGRAM_AES_KEY')
+                        ],
+                    ]
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Alipay mini program',
+                    'remark' =>'Alipay small program related configuration',
+                    'children' => [
+                        [
+                            'lang' => 'en',
+                            'name' => 'ID',
+                            'input_type' => 'input',
+                            'remark' =>'Alipay mini program ID',
+                            'required' => false,
+                            'keys' => 'miniprogram.alipay.app_id',
+                            'value' => env('ALIPAY_MINI_PROGRAM_APPID')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Address',
+                            'input_type' => 'input',
+                            'remark' =>'Alipay applet address',
+                            'required' => false,
+                            'keys' => 'miniprogram.alipay.gatewayUrl',
+                            'value' => env('ALIPAY_MINI_PROGRAM_GATEWAY_URL', 'https://openapi.alipay.com/gateway.do')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Private key',
+                            'input_type' => 'input',
+                            'remark' =>'Alipay small program private key',
+                            'required' => false,
+                            'keys' => 'miniprogram.alipay.rsaPrivateKey',
+                            'value' => env('ALIPAY_MINI_PROGRAM_RSA_PRIVATE_KEY')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Public key',
+                            'input_type' => 'input',
+                            'remark' =>'Alipay small program public key',
+                            'required' => false,
+                            'keys' => 'miniprogram.alipay.rsaPublicKey',
+                            'value' => env('ALIPAY_MINI_PROGRAM_RSA_PUBLIC_KEY')
+                        ],
+                    ]
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Headline applet',
+                    'remark' =>'Headline small program related configuration',
+                    'children' => [
+                        [
+                            'lang' => 'en',
+                            'name' => 'ID',
+                            'input_type' => 'input',
+                            'remark' =>'Headline applet ID',
+                            'required' => false,
+                            'keys' => 'miniprogram.toutiao.app_id',
+                            'value' => env('TOUTIAO_MINI_PROGRAM_APPID')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Keys',
+                            'input_type' => 'input',
+                            'remark' =>'Headline small program key',
+                            'required' => false,
+                            'keys' => 'miniprogram.toutiao.secret',
+                            'value' => env('TOUTIAO_MINI_PROGRAM_SECRET')
+                        ],
+                    ]
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Public platform configuration',
+            'remark' =>'Public platform related configuration, need to configure the small program information of different platforms',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'Wechat',
+                    'remark' =>'Wechat public platform related configuration',
+                    'children' => [
+                        [
+                            'lang' => 'en',
+                            'name' => 'ID',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat public platform ID',
+                            'required' => false,
+                            'keys' => 'wechat.official_account.default.app_id',
+                            'value' => env('WECHAT_OFFICIAL_ACCOUNT_APPID')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Keys',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat public platform key',
+                            'required' => false,
+                            'keys' => 'wechat.official_account.default.secret',
+                            'value' => env('WECHAT_OFFICIAL_ACCOUNT_SECRET')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'token',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat public platform token',
+                            'required' => false,
+                            'keys' => 'wechat.official_account.default.token',
+                            'value' => env('WECHAT_OFFICIAL_ACCOUNT_TOKEN')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Message encryption key',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat public platform message encryption key',
+                            'required' => false,
+                            'keys' => 'wechat.official_account.default.aes_key',
+                            'value' => env('WECHAT_OFFICIAL_ACCOUNT_AES_KEY')
+                        ],
+                    ]
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Payment allocation',
+            'remark' =>'Payment related configuration',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'WeChat Pay',
+                    'children' => [
+                        [
+                            'lang' => 'en',
+                            'name' => 'AppID',
+                            'input_type' => 'input',
+                            'remark' =>'The AppID of the wechat Pay account',
+                            'required' => true,
+                            'keys' => 'wechat.payment.default.app_id',
+                            'value' => env('WECHAT_PAYMENT_APPID')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'MCHID',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat Pay merchant number',
+                            'required' => true,
+                            'keys' => 'wechat.payment.default.mch_id',
+                            'value' => env('WECHAT_PAYMENT_MCH_ID')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Keys',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat Pay key',
+                            'required' => true,
+                            'keys' => 'wechat.payment.default.key',
+                            'value' => env('WECHAT_PAYMENT_KEY')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Wechat Pay public key',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat Pay public key absolute address, located in the storage directory, you need to upload',
+                            'required' => true,
+                            'keys' => 'wechat.payment.default.cert_path',
+                            'value' => env('WECHAT_PAYMENT_CERT_PATH')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Wechat Pay private key',
+                            'input_type' => 'input',
+                            'remark' =>'Wechat Pay private key absolute address, located in the storage directory, you need to upload',
+                            'required' => true,
+                            'keys' => 'wechat.payment.default.key_path',
+                            'value' => env('WECHAT_PAYMENT_KEY_PATH')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Sandbox environment',
+                            'input_type' => 'switch',
+                            'input_option' => [
+                                [
+                                    'name'=> 'No',
+                                    'value'=> false
+                                ],
+                                [
+                                    'name'=> 'Yes',
+                                    'value'=> true
+                                ]
+                            ],
+                            'remark' =>'In the sandbox environment, the payment interface will not be pulled up, and the successful state will be returned regardless of whether the payment is successful',
+                            'required' => true,
+                            'keys' => 'wechat.payment.default.sandbox',
+                            'value' => env('WECHAT_PAYMENT_SANDBOX')
+                        ],
+                    ]
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Template message',
+            'remark' =>'Small program, public platform subscription, template related message configuration',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'Wechat mini program subscribe message',
+                    'remark' =>'Subscription messages need to be initiated by the user',
+                    'children' => [
+                        [
+                            'lang' => 'en',
+                            'name' => 'Delivery release',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'notification.miniweixin.delivery_release',
+                            'value' => env('MINIWEIXIN_SUBSCRIPTION_INFORMATION_SHIPMENTS')
+                        ],
+                    ]
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Wechat public platform template message',
+                    'remark' =>'Wechat public platform template message, users need to pay attention to the public number, you can take the initiative to send a message',
+                    'children' => [
+                        [
+                            'lang' => 'en',
+                            'name' => 'Order payment success notification',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'notification.wechat.finish_payment',
+                            'value' => env('WECHAT_SUBSCRIPTION_INFORMATION_FINISH_PAYMENT')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Order confirmation receipt notice',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'notification.wechat.order_confirm_receipt',
+                            'value' => env('WECHAT_SUBSCRIPTION_INFORMATION_ORDER_CONFIRM_RECEIPT')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Delivery release',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'notification.wechat.delivery_release',
+                            'value' => env('WECHAT_SUBSCRIPTION_INFORMATION_SHIPMENTS')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Refund success notice',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'notification.wechat.refund_success',
+                            'value' => env('WECHAT_SUBSCRIPTION_INFORMATION_REFUND_SUCCESS')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Alert for shipment',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'notification.wechat.admin_order_send_good',
+                            'value' => env('WECHAT_SUBSCRIPTION_INFORMATION_ADMIN_ORDER_SEND_GOOD')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Order completion notice',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'notification.wechat.admin_order_completion',
+                            'value' => env('WECHAT_SUBSCRIPTION_INFORMATION_ADMIN_ORDER_COMPLETION')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Receiving account number',
+                            'remark' =>'Some template messages are sent to the platform, and it is necessary to configure the subject to receive messages (fill in the ID of the subject to be received through user management, and separate multiple accounts with English commas).',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'notification.wechat.finish_payment',
+                            'value' => env('WECHAT_SUBSCRIPTION_INFORMATION_FINISH_PAYMENT')
+                        ],
+                    ]
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'SMS configuration',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'Facilitator',
+                    'remark' =>'Please ensure that the selected service provider is properly configured, otherwise it will not be sent',
+                    'input_type' => 'select',
+                    'input_option' => [
+                        [
+                            'name'=> 'Aliyun',
+                            'value'=> 'aliyun'
+                        ]
+                    ],
+                    'required' => false,
+                    'keys' => 'sms.service',
+                    'value' => env('SMS_SERVICE', 'aliyun')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Aliyun',
+                    'children' => [
+                        [
+                            'lang' => 'en',
+                            'name' => 'Account ID',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'sms.aliyun.access_id',
+                            'value' => env('SMS_ALIYUN_ACCESS_ID')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Keys',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'sms.aliyun.secret',
+                            'value' => env('SMS_ALIYUN_SECRET')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Signature',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'sms.aliyun.signature',
+                            'value' => env('SMS_ALIYUN_SIGNATURE')
+                        ],
+                        [
+                            'lang' => 'en',
+                            'name' => 'Verification CODE template code',
+                            'input_type' => 'input',
+                            'required' => false,
+                            'keys' => 'sms.aliyun.verification_code',
+                            'value' => env('SMS_ALIYUN_VERIFICATION_CODE')
+                        ],
+                    ]
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Backup configuration',
+            'remark' =>'Project backup and database backup can be configured daily. If you need to back up both items, you only need to set Backup Time. Generally, you only need to back up the database',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'Backup switch',
+                    'remark' =>'Whether to enable backup',
+                    'input_type' => 'switch',
+                    'input_option' => [
+                        [
+                            'name'=> 'Close',
+                            'value'=> false
+                        ],
+                        [
+                            'name'=> 'Open',
+                            'value'=> true
+                        ]
+                    ],
+                    'required' => true,
+                    'keys' => 'backup.switch',
+                    'value' => env('BACKUP_SWITCH')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Backup time',
+                    'remark' =>'The database and project will be backed up after setting',
+                    'input_type' => 'timeSelect',
+                    'required' => false,
+                    'keys' => 'backup.time',
+                    'value' => env('BACKUP_TIME')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Database backup time',
+                    'remark' =>'After the configuration, only the database is backed up, and the backup time becomes invalid',
+                    'input_type' => 'timeSelect',
+                    'required' => false,
+                    'keys' => 'backup.db_time',
+                    'value' => env('BACKUP_DB_TIME')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Project backup time',
+                    'remark' =>'After the configuration, only items are backed up and the backup time becomes invalid',
+                    'input_type' => 'timeSelect',
+                    'required' => false,
+                    'keys' => 'backup.files_time',
+                    'value' => env('BACKUP_FILES_TIME')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Backup elimination time',
+                    'remark' =>'The backup automatically deletes the oldest backup at setup time until the configured storage size is reached',
+                    'input_type' => 'timeSelect',
+                    'required' => false,
+                    'keys' => 'backup.clean_time',
+                    'value' => env('BACKUP_CLEAN_TIME')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Backup notification receive email',
+                    'remark' =>'An email is sent to the account after the account is backed up and cleared every day. The email configuration must be complete',
+                    'input_type' => 'input',
+                    'required' => false,
+                    'keys' => 'backup.notifications.mail.to',
+                    'value' => env('BACKUP_RECEIVE_MAIL')
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Order allocation',
+            'remark' =>'Order-related configuration',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'Order timeout',
+                    'remark' =>'Order timeout time, unit: minute',
+                    'input_type' => 'input',
+                    'required' => false,
+                    'keys' => 'dsshop.orderOvertime',
+                    'value' => env('ORDER_OVERTIME', 1440)
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Automatic receipt',
+                    'remark' =>'After the automatic delivery is enabled, the system will automatically help the customer receive the goods how many days after the order',
+                    'input_type' => 'switch',
+                    'input_option' => [
+                        [
+                            'name'=> 'Close',
+                            'value'=> false
+                        ],
+                        [
+                            'name'=> 'Open',
+                            'value'=> true
+                        ]
+                    ],
+                    'required' => false,
+                    'keys' => 'dsshop.automaticReceivingState',
+                    'value' => env('AUTOMATIC_RECEIVING_STATE', true)
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'How many days will automatically receive the goods',
+                    'remark' =>'How many days after automatic delivery, automatic delivery is only effective',
+                    'input_type' => 'input',
+                    'required' => false,
+                    'keys' => 'dsshop.automaticReceiving',
+                    'value' => env('AUTOMATIC_RECEIVING', 7)
+                ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Upload configuration',
+            'children' => [
+                [
+                    'lang' => 'en',
+                    'name' => 'Maximum upload size of the image',
+                    'remark' =>'Unit :b',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'keys' => 'dsshop.file.image.size',
+                    'value' => env('FILE_IMAGE_SIZE', 3 * 1024 * 1024)
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Supported formats for images',
+                    'remark' =>'Separate with English comma',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'keys' => 'dsshop.file.image.extension',
+                    'value' => env('FILE_IMAGE_EXTENSION', 'gif,jpg,jpeg,bmp,png')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Customize the maximum upload size',
+                    'remark' =>'Unit :b',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'keys' => 'dsshop.file.custom.size',
+                    'value' => env('FILE_CUSTOM_SIZE', 'gif,jpg,jpeg,bmp,png,zip,html,txt,json')
+                ],
+                [
+                    'lang' => 'en',
+                    'name' => 'Customize supported formats',
+                    'remark' =>'Separate with English comma',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'keys' => 'dsshop.file.custom.extension',
+                    'value' => env('FILE_CUSTOM_EXTENSION', 'gif,jpg,jpeg,bmp,png,zip,html,txt,json')
+                ],
+            ]
+        ],
     ],
     /*
     |--------------------------------------------------------------------------
@@ -676,12 +1407,13 @@ return [
     'homestead' => env('HOMESTEAD_WINDOWS', false),
     'failuretime' => env('VERIFICATION_CODE_FAILURE_TIME', 60), // 验证码失效时间秒，默认60秒
     'versions' => env('API_VERSIONS', 1),   //当前版本
-    'appVersion' => '3.4.1',   //当前应用版本，此为固定值，用于版本升级所用，请不要随意修改
+    'appVersion' => '3.4.2',   //当前应用版本，此为固定值，用于版本升级所用，请不要随意修改
     'applySecret' => env('PROJECT_KEY', 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='), //API密钥串
     'orderOvertime' => env('ORDER_OVERTIME', 1440),  // 订单超时时间(分钟)
     'automaticReceivingState' => env('AUTOMATIC_RECEIVING_STATE', true),  // 是否开启自动收货
     'automaticReceiving' => env('AUTOMATIC_RECEIVING', 7),  // 多少天后自动收货(天)
     'maxFileUploadSize' => env('MAX_FILE_UPLOAD_SIZE', 2 * 1024 * 1024),
+    'defaultLanguage' => 'zh',  // 默认语言
     'down' => env('APP_DOWN', false),   // 维护模式
     'file' => [
         'image' => [

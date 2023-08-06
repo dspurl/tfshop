@@ -42,6 +42,11 @@
           <span>{{ scope.row.groupname ? scope.row.groupname.join(',') : $t('manage.name.not_configured') }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.operation')" align="center" class-name="small-padding fixed-width" width="200">
         <template slot-scope="scope">
           <el-tooltip v-permission="$store.jurisdiction.ManageEdit" :content="$t('common.redact')" class="item" effect="dark" placement="top-start">
@@ -111,12 +116,13 @@
 </style>
 <script>
 import { getList, create, edit, destroy } from '@/api/manage'
-import waves from '@/directive/waves' // Waves directive
+import waves from '@/directive/waves'
+import LangTranslate from '@/components/LangTranslate'
 import treeTransfer from 'el-tree-transfer'
 
 export default {
   name: 'ManageList',
-  components: { treeTransfer },
+  components: { treeTransfer, LangTranslate },
   directives: { waves },
   data() {
     var validateRoles = (rule, value, callback) => {
@@ -145,9 +151,11 @@ export default {
         sort: '+id',
         timeInterval: ''
       },
-      fromData: [],
+      data: {
+        fromData: [],
+        toData: []
+      },
       oldFromData: [],
-      toData: [],
       temp: {
         roles: '',
         introduction: '',
@@ -166,15 +174,23 @@ export default {
         ],
         introduction: [
           { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('manage.introduction') }), trigger: 'blur' }
-        ],
-        rules: [
-          { type: 'array', required: true, message: this.$t('hint.error.select', { attribute: this.$t('manage.power') }), trigger: 'change' }
-
         ]
       },
       downloadLoading: false,
       title: [this.$t('tree_transfer.undistributed'), this.$t('tree_transfer.allocated')],
       mode: 'transfer'
+    }
+  },
+  computed: {
+    toData() {
+      const lang = this.temp.lang ? this.temp.lang : this.$store.state.app.language
+      const toData = this.temp.toData ? this.temp.toData : this.data.toData
+      return toData.filter((element) => { return element.lang === lang })
+    },
+    fromData() {
+      const lang = this.temp.lang ? this.temp.lang : this.$store.state.app.language
+      const fromData = this.temp.fromData ? this.temp.fromData : this.data.fromData
+      return fromData.filter((element) => { return element.lang === lang })
     }
   },
   created() {
@@ -187,9 +203,9 @@ export default {
         this.list = response.data.data
         this.options = response.data.options
         this.oldOptions = response.data.options
-        this.fromData = response.data.fromData
         this.oldFromData = response.data.fromData
-        this.toData = response.data.toData
+        this.data.fromData = response.data.fromData ? response.data.fromData : []
+        this.data.toData = response.data.toData ? response.data.toData : []
         this.listLoading = false
       })
     },
@@ -214,10 +230,14 @@ export default {
       }
     },
     // 添加控件
-    handleCreate() {
+    handleCreate(item) {
       this.resetTemp()
-      this.fromData = this.oldFromData
-      this.toData = []
+      if (item) {
+        this.temp = {
+          ...item,
+          ...this.temp
+        }
+      }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -270,19 +290,6 @@ export default {
     },
     handleUpdate(row) { // 修改
       this.temp = Object.assign({}, row) // copy obj
-      // this.temp.group = this.temp.group ? this.temp.group : []
-      this.toData = []
-      if (this.temp.toData) {
-        this.toData = this.temp.toData
-      }
-      this.fromData = []
-      if (this.temp.fromData) {
-        this.fromData = this.temp.fromData
-      }
-      /*
-      if (this.temp.oldGroup) {
-        this.options = this.oldOptions.concat(this.temp.oldGroup)
-      }*/
       this.dialogStatus = 'update'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -334,6 +341,13 @@ export default {
     },
     refresh() {
       location.reload()
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        this.handleUpdate(value)
+      } else {
+        this.handleCreate(item)
+      }
     }
   }
 }

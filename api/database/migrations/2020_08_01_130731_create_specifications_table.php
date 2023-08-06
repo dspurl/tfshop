@@ -25,6 +25,8 @@ class CreateSpecificationsTable extends Migration
     {
         Schema::create('specifications', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
+            $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->integer('specification_group_id')->default(0)->index()->comment('规格组ID');
             $table->string('name',30)->comment('规格名称');
             $table->tinyInteger('type')->comment('规格类型1文本2单选3多选');

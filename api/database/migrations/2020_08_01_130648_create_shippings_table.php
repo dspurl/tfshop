@@ -25,13 +25,14 @@ class CreateShippingsTable extends Migration
     {
         Schema::create('shippings', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
             $table->bigInteger('user_id')->default(0)->index()->comment('用户ID');
             $table->string('cellphone',11)->comment('手机');
             $table->string('name',50)->comment('姓名');
             $table->string('location',255)->comment('地址');
             $table->string('address',255)->comment('详情地址');
-            $table->string('latitude',50)->comment('纬度');
-            $table->string('longitude',50)->comment('经度');
+            $table->string('latitude',50)->nullable()->comment('纬度');
+            $table->string('longitude',50)->nullable()->comment('经度');
             $table->string('house',100)->comment('门牌号');
             $table->tinyInteger('defaults')->default(0)->comment('是否默认1是0否');
             $table->timestamps();

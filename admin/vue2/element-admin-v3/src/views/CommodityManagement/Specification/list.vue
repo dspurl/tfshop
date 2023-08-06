@@ -69,6 +69,11 @@
           <span>{{ scope.row.sort }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.table.add_time')" align="center" width="180">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
@@ -117,7 +122,7 @@
         <el-form-item :label="$t('specification.dialog.form.select.label.specification_group_id')" prop="specification_group_id">
           <el-select v-model="temp.specification_group_id" clearable style="width:160px;">
             <el-option
-              v-for="(item,index) in SpecificationGroup"
+              v-for="(item,index) in SpecificationGroupLang"
               :key="index"
               :label="item.name"
               :value="item.id"/>
@@ -208,10 +213,11 @@
 import { getList, create, edit, destroy } from '@/api/specification'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
+import LangTranslate from '@/components/LangTranslate'
 
 export default {
   name: 'SpecificationList',
-  components: { Pagination },
+  components: { Pagination, LangTranslate },
   data() {
     return {
       formLoading: false,
@@ -246,7 +252,16 @@ export default {
         sort: '+id',
         activeIndex: '1'
       },
-      temp: {},
+      temp: {
+        name: '',
+        type: '',
+        is_search: 0,
+        value: '',
+        label: '',
+        sort: 5,
+        specification_group_id: '',
+        location: ''
+      },
       rules: {
         name: [
           { required: true, message: this.$t('hint.error.nonentity', { attribute: this.$t('specification.dialog.form.input.label.name') }), trigger: 'blur' }
@@ -264,6 +279,12 @@ export default {
           { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('common.sort') }), trigger: 'blur' }
         ]
       }
+    }
+  },
+  computed: {
+    SpecificationGroupLang() {
+      const lang = this.temp.lang ? this.temp.lang : this.$store.state.app.language
+      return this.SpecificationGroup.filter((element) => { return element.lang === lang })
     }
   },
   created() {
@@ -308,8 +329,14 @@ export default {
         location: ''
       }
     },
-    handleCreate() {
+    handleCreate(item) {
       this.resetTemp()
+      if (item) {
+        this.temp = {
+          ...item,
+          ...this.temp
+        }
+      }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -399,6 +426,13 @@ export default {
           this.formLoading = false
         }
       })
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        this.handleUpdate(value)
+      } else {
+        this.handleCreate(item)
+      }
     }
   }
 }

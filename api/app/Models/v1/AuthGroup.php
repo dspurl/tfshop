@@ -11,6 +11,7 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,6 +24,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AuthGroup extends Model
 {
+    use CommonTrait;
     /**
      * Prepare a date for array / JSON serialization.
      *

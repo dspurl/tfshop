@@ -25,6 +25,7 @@ class CreateCollectsTable extends Migration
     {
         Schema::create('collects', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
             $table->bigInteger('user_id')->default(0)->index()->comment('用户ID');
             $table->bigInteger('good_id')->default(0)->index()->comment('商品ID');
             $table->timestamps();

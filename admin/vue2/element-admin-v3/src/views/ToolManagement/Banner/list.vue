@@ -74,6 +74,11 @@
           <span>{{ scope.row.state_show }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('common.language')" width="200">
+        <template slot-scope="scope">
+          <lang-translate v-model="scope.row" @translate="handleTranslate"/>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('common.time')" align="center" sortable="custom" prop="created_at" width="200">
         <template slot-scope="scope">
           <span>{{ scope.row.created_at }}</span>
@@ -217,10 +222,11 @@
 import { getList, create, edit, destroy } from '@/api/banner'
 import { getToken } from '@/utils/auth'
 import Pagination from '@/components/Pagination'
+import LangTranslate from '@/components/LangTranslate'
 
 export default {
   name: 'BannerList',
-  components: { Pagination },
+  components: { Pagination, LangTranslate },
   data() {
     return {
       formLoading: false,
@@ -325,8 +331,14 @@ export default {
         img: ''
       }
     },
-    handleCreate() {
+    handleCreate(item) {
       this.resetTemp()
+      if (item) {
+        this.temp = {
+          ...item,
+          ...this.temp
+        }
+      }
       this.dialogStatus = 'create'
       this.dialogFormVisible = true
       this.$nextTick(() => {
@@ -473,6 +485,13 @@ export default {
       }
       this.imgProgress = true
       return isLt2M
+    },
+    handleTranslate(value, item) {
+      if (value) {
+        this.handleUpdate(value)
+      } else {
+        this.handleCreate(item)
+      }
     }
   }
 }

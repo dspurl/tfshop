@@ -26,7 +26,11 @@ use Illuminate\Database\Eloquent\Model;
  * @property string keys
  * @property string value
  * @property string style
+ * @property string lang
  *
+ * @method static count()
+ * @method static where(string $string, string $string1, $null)
+ * @method static find(mixed $id)
  */
 class Config extends Model
 {

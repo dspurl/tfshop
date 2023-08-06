@@ -332,6 +332,7 @@
   "address.add_new": "添加新地址",
   "address.name": "联系人",
   "address.location": "地址",
+  "address.address": "详细地址",
   "address.location.tip": "请在地图中选择地址",
   "address.house": "门牌号",
   "address.add": "添加收货地址",

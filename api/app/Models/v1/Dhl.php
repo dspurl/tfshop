@@ -11,6 +11,7 @@
  */
 namespace App\Models\v1;
 
+use App\Traits\CommonTrait;
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -21,10 +22,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer sort
  * @property integer state
  * @property integer is_default
+ * @property string lang
+ * @property int lang_parent_id
  */
 class Dhl extends Model
 {
     use SoftDeletes;
+    use CommonTrait;
     const DHL_IS_DEFAULT_NO = 0; //是否默认：否
     const DHL_IS_DEFAULT_YES = 1; //是否默认：是
     public static $withoutAppends = true;

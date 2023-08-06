@@ -9,6 +9,7 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
@@ -17,6 +18,7 @@ use App\Models\v1\AuthGroupAuthRule;
 use App\Models\v1\AuthRule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -38,6 +40,28 @@ class PowerController extends Controller
      */
     public function list(Request $request)
     {
+        /*$AuthRuleAll = AuthRule::where('pid', 0)->with(['children'])->get();
+        function children($data, $pid=0){
+            foreach ($data as $a){
+                $AuthRule = new AuthRule();
+                $AuthRule->title = $a->title;
+                $AuthRule->url = $a->url;
+                $AuthRule->icon = $a->icon;
+                $AuthRule->sort = $a->sort;
+                $AuthRule->api = $a->api;
+                $AuthRule->pid = $pid;
+                $AuthRule->state = $a->state;
+                $AuthRule->lang = 'en';
+                $AuthRule->lang_parent_id = $a->id;
+                $AuthRule->save();
+                if(isset($a->children)){
+                    children($a->children, $AuthRule->id);
+                }
+            }
+        }
+        children($AuthRuleAll);*/
+
+
         $q = AuthRule::query();
         $limit = $request->limit;
         $q->orderBy('pid', 'asc');
@@ -49,30 +73,10 @@ class PowerController extends Controller
         if (isset($request->pid)) {
             $q->where('pid', collect($request->pid)->last());
         }
-        $paginate = $q->paginate($limit)->toArray();
-        $array = AuthRule::with(['AuthGroup'])->get()->toArray();
-        if ($array) {
-            foreach ($array as $id => $a) {
-                $grouping[$a['id']] = $a['title'];
-                $options[] = array(
-                    'value' => $a['id'],
-                    'label' => $a['title'],
-                    'pid' => $a['pid'],
-                    'id' => $a['id']
-                );
-            }
-        }
-        foreach ($paginate['data'] as $id => $d) {
-            $paginate['data'][$id]['pid'] = getParentClassHierarchy($d['pid'], $options);
-            if (count($paginate['data'][$id]['pid']) < 1) {
-                $paginate['data'][$id]['pid'] = [0];
-            }
-        }
-
-        $paginate['options'] = collect(genTree($options, 'pid'))->prepend(array(
-            'value' => 0,
-            'label' => __('category.top')
-        ));
+        $q->where('lang', App::getLocale());
+        $q->with(['Language']);
+        $paginate['data'] = $q->paginate($limit)->toArray();
+        $paginate['options'] = AuthRule::where('pid', 0)->with(['children'])->get();
         return resReturn(1, $paginate);
     }
 
@@ -100,6 +104,8 @@ class PowerController extends Controller
         $pid = collect($request->pid)->last();
         $authRule->pid = $pid > 0 ? $pid : 0;
         $authRule->state = $request->state;
+        $authRule->lang = $request->lang ?? App::getLocale();
+        $authRule->lang_parent_id = $request->lang_parent_id ?? 0;
         $authRule->save();
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
     }

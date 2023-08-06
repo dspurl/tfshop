@@ -25,6 +25,7 @@ class CreateBrowsesTable extends Migration
     {
         Schema::create('browses', function (Blueprint $table) {
             $table->id();
+            $table->string('lang', 60)->default('zh')->comment('语言');
             $table->bigInteger('user_id')->index()->comment('用户ID');
             $table->bigInteger('good_id')->index()->comment('商品ID');
             $table->timestamps();
