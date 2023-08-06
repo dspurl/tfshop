@@ -484,6 +484,7 @@ const options = {
         "address.add_new": "添加新地址",
         "address.name": "联系人",
         "address.location": "地址",
+        "address.address": "详细地址",
         "address.location.tip": "请在地图中选择地址",
         "address.house": "门牌号",
         "address.add": "添加收货地址",
@@ -1007,6 +1008,7 @@ const options = {
         "address.add_new": "Add new address",
         "address.name": "Contact",
         "address.location": "Location",
+        "address.address": "Detailed address",
         "address.location.tip": "Please select the address in the map",
         "address.house": "House number",
         "address.add": "Add the shipping address",
@@ -51666,9 +51668,23 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = (function ({
   store,
   route,
-  redirect
+  redirect,
+  req,
+  env
 }) {
-  const lang = Object(_plugins_auth__WEBPACK_IMPORTED_MODULE_0__[/* getToken */ "a"])('lang');
+  function getcookiesInServer(req) {
+    let service_cookie = {};
+    req && req.headers.cookie && req.headers.cookie.split(';').forEach(function (val) {
+      let parts = val.split('=');
+      service_cookie[parts[0].trim()] = (parts[1] || '').trim();
+    });
+    return service_cookie;
+  }
+  let lang = null;
+  if (true) {
+    //服务端获取header头的cookie
+    lang = getcookiesInServer(req)[env.CACHE_PR + 'lang'];
+  } else {}
   if (lang) {
     store.commit('setLang', lang);
   }
@@ -65894,6 +65910,10 @@ async function createApp(ssrContext, config = {}) {
         "hid": "index",
         "name": "DSSHOP商城-轻量级易扩展低代码开源商城系统",
         "content": "DSSHOP,轻量级商城网店系统,免费商城,免费网店,低代码商城,轻量级商城,商城,网店"
+      }, {
+        "hid": "author",
+        "name": "author",
+        "content": "www.dswjcms.com"
       }, {
         "name": "viewport",
         "content": "width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"

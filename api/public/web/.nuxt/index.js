@@ -96,7 +96,7 @@ async function createApp(ssrContext, config = {}) {
   // here we inject the router and store to all child components,
   // making them available everywhere as `this.$router` and `this.$store`.
   const app = {
-    head: {"title":"DSSHOP商城-轻量级易扩展低代码开源商城系统","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"hid":"index","name":"DSSHOP商城-轻量级易扩展低代码开源商城系统","content":"DSSHOP,轻量级商城网店系统,免费商城,免费网店,低代码商城,轻量级商城,商城,网店"},{"name":"viewport","content":"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"},{"hid":"description","name":"description","content":"一款轻量级商城开源系统，支持多语言，易二开，低代码，跨终端"},{"hid":"keywords","name":"keywords","content":"DSSHOP,轻量级商城网店系统,免费商城,免费网店,低代码商城,轻量级商城,商城,网店"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"shortcut icon","href":"\u002Ffavicon.ico"},{"rel":"apple-touch-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
+    head: {"title":"DSSHOP商城-轻量级易扩展低代码开源商城系统","htmlAttrs":{"lang":"en"},"meta":[{"charset":"utf-8"},{"hid":"index","name":"DSSHOP商城-轻量级易扩展低代码开源商城系统","content":"DSSHOP,轻量级商城网店系统,免费商城,免费网店,低代码商城,轻量级商城,商城,网店"},{"hid":"author","name":"author","content":"www.dswjcms.com"},{"name":"viewport","content":"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"},{"hid":"description","name":"description","content":"一款轻量级商城开源系统，支持多语言，易二开，低代码，跨终端"},{"hid":"keywords","name":"keywords","content":"DSSHOP,轻量级商城网店系统,免费商城,免费网店,低代码商城,轻量级商城,商城,网店"}],"link":[{"rel":"icon","type":"image\u002Fx-icon","href":"\u002Ffavicon.ico"},{"rel":"shortcut icon","href":"\u002Ffavicon.ico"},{"rel":"apple-touch-icon","href":"\u002Ffavicon.ico"}],"style":[],"script":[]},
 
     store,
     router,

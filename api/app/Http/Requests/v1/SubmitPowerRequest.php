@@ -47,13 +47,13 @@ class SubmitPowerRequest extends Request
                     return [
                         'title' => 'bail|required|string|max:30',
                         'api' => 'nullable|string|max:200',
-                        'pid' => 'required|array',
+                        'pid' => 'required',
                     ];
                 } else {
                     return [
                         'title' => 'bail|required|string|max:30',
                         'api' => 'nullable|string|max:200',
-                        'pid' => 'required|array',
+                        'pid' => 'required',
                     ];
                 }
             case 'GET':

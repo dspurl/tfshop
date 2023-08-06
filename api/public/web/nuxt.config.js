@@ -45,6 +45,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { hid: 'index', name: process.env.APP_NAME, content: process.env.APP_KEYWORD },
+      { hid: 'author', name: 'author', content: 'www.dswjcms.com' },
       { name: 'viewport', content: 'width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0' },
       { hid: 'description', name: 'description', content: process.env.APP_DESCRIPTION },
       { hid: 'keywords', name: 'keywords', content: process.env.APP_KEYWORD }
