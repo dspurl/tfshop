@@ -27,7 +27,7 @@ class CreateRegionsTable extends Migration
             $table->string('lang', 60)->default('zh')->comment('语言');
             $table->unsignedBigInteger('parent_id')->default('0')->comment('父级id');
             $table->string('name',200)->comment('名称');
-            $table->string('value',100)->comment('编码');
+            $table->string('value',100)->nullable()->comment('编码');
             $table->timestamps();
         });
         DB::statement("ALTER TABLE `regions` COMMENT='地区'");
