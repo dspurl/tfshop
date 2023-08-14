@@ -686,32 +686,32 @@ class Plugin
             unset($targetPath);
             unset($file_get_contents);
         }
-        // 路由语言包
-        if (array_key_exists('routeLangAdmin', $routes) || array_key_exists('routeLangClient', $routes)) {
-            $targetPath = '/api/resources/lang/zn/route.php';
-            $file_get_contents = Storage::disk('root')->get($targetPath);
-            //去除已存在的插件代码
-            $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
-            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-            if (array_key_exists('routeLangAdmin', $routes)) {
-                // 添加新的插件代码
-                $file_get_contents = str_replace("admin插件", $dsshop['name'] . "_s
-    " . $routes['routeLangAdmin'] . "
-        // " . $dsshop['name'] . "_e
-        // admin插件", $file_get_contents);
-            }
-            if (array_key_exists('routeLangClient', $routes)) {
-                // 添加新的插件代码
-                $file_get_contents = str_replace("client插件", $dsshop['name'] . "_s
-    " . $routes['routeLangClient'] . "
-        // " . $dsshop['name'] . "_e
-        // client插件", $file_get_contents);
-            }
-            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
-            Storage::disk('root')->put($targetPath, $file_get_contents);
-            unset($targetPath);
-            unset($file_get_contents);
-        }
+//        // 路由语言包
+//        if (array_key_exists('routeLangAdmin', $routes) || array_key_exists('routeLangClient', $routes)) {
+//            $targetPath = '/api/resources/lang/zh.json';
+//            $file_get_contents = Storage::disk('root')->get($targetPath);
+//            //去除已存在的插件代码
+//            $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+//            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+//            if (array_key_exists('routeLangAdmin', $routes)) {
+//                // 添加新的插件代码
+//                $file_get_contents = str_replace("admin插件", $dsshop['name'] . "_s
+//    " . $routes['routeLangAdmin'] . "
+//    // " . $dsshop['name'] . "_e
+//    // admin插件", $file_get_contents);
+//            }
+//            if (array_key_exists('routeLangClient', $routes)) {
+//                // 添加新的插件代码
+//                $file_get_contents = str_replace("client插件", $dsshop['name'] . "_s
+//    " . $routes['routeLangClient'] . "
+//    // " . $dsshop['name'] . "_e
+//    // client插件", $file_get_contents);
+//            }
+//            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
+//            Storage::disk('root')->put($targetPath, $file_get_contents);
+//            unset($targetPath);
+//            unset($file_get_contents);
+//        }
 
         //写入本地插件列表
         $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
