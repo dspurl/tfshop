@@ -281,5 +281,6 @@
   "product.search": "Search result",
   "sku.cart_success": "Successfully added to cart",
   "sku.specification": "specification",
-  "sku.amount_error": "The amount entered is incorrect"
+  "sku.amount_error": "The amount entered is incorrect",
+  "please_login_first": "Please log in first"
 }
