@@ -56,7 +56,7 @@ class ShipmentNotificationObserver
             $parameter = [
                 'id' => $goodIndent->id,  //订单ID
                 'identification' => $goodIndent->identification,  //订单号
-                'dhl' => $Dhl->name,  //快递公司
+                'dhl' => $Dhl ? $Dhl->name : __('common.nothing'),  //快递公司
                 'odd' => $goodIndent->odd,   // 快递单号
                 'total' => $goodIndent->total,    //订单金额
                 'shipping_time' => $goodIndent->shipping_time,    //发货时间
@@ -86,7 +86,7 @@ class ShipmentNotificationObserver
                     ],
                     [
                         'keyword' => __('observer.good_indent.shipment_notification.invoice.location'),
-                        'data' => $parameter['location']->name . ' ' . $parameter['location']->cellphone . ' ' . $parameter['location']->location . $parameter['location']->house
+                        'data' => $parameter['location'] ? $parameter['location']->name . ' ' . $parameter['location']->cellphone . ' ' . $parameter['location']->location . $parameter['location']->house : __('common.nothing')
                     ],
                 ],
                 'remark' => __('observer.good_indent.shipment_notification.invoice.remark'),
