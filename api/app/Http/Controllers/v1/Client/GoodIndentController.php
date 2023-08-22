@@ -100,7 +100,7 @@ class GoodIndentController extends Controller
                         }
                     }
                     if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_NO) { //拍下减库存
-                        if (!$indentCommodity['good_sku_id']) { //非SKU商品
+                        if (!isset($indentCommodity['good_sku_id'])) { //非SKU商品
                             if ($Good->inventory - $indentCommodity['number'] < 0) {
                                 return array(__('good_indent.deficient_commodity'), Code::CODE_PARAMETER_WRONG);
                             }
@@ -178,7 +178,7 @@ class GoodIndentController extends Controller
         $redisData = $shoppingCart ? json_decode($shoppingCart, true) : [];
         if (count($redisData) > 0) {
             foreach ($redisData as $id => $all) {
-                if ($all['good_sku_id']) { //sku商品
+                if (isset($all['good_sku_id'])) { //sku商品
                     $Good = Good::find($all['good_id']);
                     if ($Good->is_show == Good::GOOD_SHOW_ENTREPOT || $Good->deleted_at) {
                         $redisData[$id]['invalid'] = true;  //标记为失效
@@ -229,17 +229,12 @@ class GoodIndentController extends Controller
                 $q->with(['resourcesMany', 'goodSku' => function ($q) {
                     $q->with('resources')->where('inventory', '>', 0);
                 }]);
-            }, 'goodSku' => function ($q) {
-                $q->with(['resources' => function ($q) {
-                    $q->where('depict', 'product_sku_file');
-                }]);
-            }]);
+            }, 'goodSku']);
         }, 'GoodLocation', 'GoodCode', 'Dhl'])->find($id);
         foreach ($GoodIndent->goodsList as $commodity) {
-            if ($commodity->goodSku->resources) {
+            if ($commodity->good->type == Good::GOOD_TYPE_DOWNLOAD) {
                 $GoodIndent->download = true;
             }
-            unset($commodity->goodSku->resources);
         }
         return resReturn(1, $GoodIndent);
     }

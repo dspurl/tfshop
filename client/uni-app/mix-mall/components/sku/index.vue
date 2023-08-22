@@ -194,11 +194,14 @@ export default{
 				this.cartGood.price = this.getLists.price
 			}
 			//自动选择默认第一项规格
-			if (typeof(this.specification[0].leaf[0]) != 'undefined'){
-				for (var i=0;i<this.specification.length;i++){
-					this.selectSpec(i, 0,this.specification[i].leaf[0])
+			if (this.specification.length > 0) {
+				if (typeof(this.specification[0].leaf[0]) != 'undefined'){
+					for (var i=0;i<this.specification.length;i++){
+						this.selectSpec(i, 0,this.specification[i].leaf[0])
+					}
 				}
 			}
+			
 		},
 		//初始化选中项
 		initSelectSpec(newVal){
@@ -518,31 +521,31 @@ export default{
 						}
 					}else{
 						// 现只有sku商品，故这里不做处理
-						if(cartList['good_' + this.getLists.id]){
+						if(cartMap.get(this.getLists.id)){
 							if(this.update){ //更新
-								cartList['good_' + this.getLists.id].number= this.cartGood.number
+								cartMap.get(this.getLists.id).number= this.cartGood.number
 							}else{
-								cartList['good_' + this.getLists.id].number+= this.cartGood.number
+								cartMap.get(this.getLists.id).number+= this.cartGood.number
 							}
 
 							//如果购物车商品购买数大于当前库存，将结果改成库存数量
-							if(cartList['good_' + this.getLists.id].number > this.getLists.inventory_show){
-								cartList['good_' + this.getLists.id].number = this.getLists.inventory_show
+							if(cartMap.get(this.getLists.id).number > this.getLists.inventory_show){
+								cartMap.get(this.getLists.id).number = this.getLists.inventory_show
 							}
-							cartList['good_' + this.getLists.id].price = this.cartGood.price
-							cartList['good_' + this.getLists.id].name = this.getLists.name
-							cartList['good_' + this.getLists.id].good_id = this.getLists.id
-							cartList['good_' + this.getLists.id].good = this.getLists
-							cartList['good_' + this.getLists.id].img = img
+							cartMap.get(this.getLists.id).price = this.cartGood.price
+							cartMap.get(this.getLists.id).name = this.getLists.name
+							cartMap.get(this.getLists.id).good_id = this.getLists.id
+							cartMap.get(this.getLists.id).good = this.getLists
+							cartMap.get(this.getLists.id).img = img
 						}else{
-							cartList['good_' + this.getLists.id]={
+							cartMap.set(this.getLists.id,{
 								price: this.cartGood.price,
 								number: this.cartGood.number,
 								name: this.getLists.name,
 								good_id: this.getLists.id,
 								good: this.getLists,
 								img: img
-							}
+							})
 						}
 
 					}

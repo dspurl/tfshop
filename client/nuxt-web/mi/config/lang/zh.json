@@ -400,5 +400,8 @@
   "integral_draw_log.state.untreated": "未兑换",
   "integral_draw.check_order": "查看订单",
   "date_picker.start_placeholder": "开始日期",
-  "date_picker.end_placeholder": "结束日期"
+  "date_picker.end_placeholder": "结束日期",
+  "sku.amount_error": "输入的金额有误",
+  "sku.cart_success": "成功加入购物车",
+  "sku.specification": "规格"
 }

@@ -14,19 +14,6 @@
       <el-form-item :label="$t('good.detail.form.input.label.name')" prop="name" style="width:600px;">
         <el-input v-model="ruleForm.name" maxlength="60" clearable/>
       </el-form-item>
-      <el-form-item :label="$t('good.detail.form.input.label.number')" prop="number" style="width:400px;">
-        <el-input v-model="ruleForm.number" maxlength="50" clearable/>
-      </el-form-item>
-      <el-form-item v-if="ruleForm.type === 0" :label="$t('good.detail.form.select.label.type')" prop="freight_id">
-        <el-select v-model="ruleForm.freight_id" :placeholder="$t('common.select')" clearable>
-          <el-option
-            v-for="item in freightLang"
-            :key="item.id"
-            :label="item.name"
-            :value="item.id"/>
-        </el-select>
-        <div class="el-upload__tip">{{ $t('good.detail.form.select.tip.type') }}</div>
-      </el-form-item>
       <el-form-item :label="$t('good.detail.form.upload.label.img')" prop="img">
         <el-upload
           :show-file-list="false"
@@ -84,6 +71,18 @@
       <el-form-item :label="$t('good.detail.form.input.label.short_description')" prop="short_description" style="width:600px;">
         <el-input v-model="ruleForm.short_description" maxlength="160" clearable/>
       </el-form-item>
+      <h3>{{ $t('good.detail.sales_attribute') }}</h3>
+      <el-form-item :label="$t('good.detail.fixed_price')" prop="price" style="width:400px;">
+        <el-input v-model="ruleForm.price" maxlength="9" clearable/>
+        <p>{{ $t('good.detail.fixed_price.tip') }}</p>
+      </el-form-item>
+      <el-form-item :label="$t('good.detail.total_quantity')" prop="inventory" style="width:400px;">
+        <el-input v-model="ruleForm.inventory" maxlength="11" clearable/>
+        <p>{{ $t('good.detail.total_quantity.tip') }}</p>
+      </el-form-item>
+      <el-form-item :label="$t('good.detail.form.input.label.number')" prop="number" style="width:400px;">
+        <el-input v-model="ruleForm.number" maxlength="50" clearable/>
+      </el-form-item>
       <h3>{{ $t('good.detail.form.title.specification') }}</h3>
       <el-form-item :label="$t('good.detail.form.cascader.label.category_id')" prop="category_id">
         <el-cascader
@@ -130,6 +129,19 @@
           :url="actionurl"
           :header="imgHeaders"/>
       </el-form-item>
+      <div v-if="ruleForm.type === 0">
+        <h3>{{ $t('good.detail.logistics_information') }}</h3>
+        <el-form-item :label="$t('good.detail.form.select.label.type')" prop="freight_id">
+          <el-select v-model="ruleForm.freight_id" :placeholder="$t('common.select')" clearable>
+            <el-option
+              v-for="item in freightLang"
+              :key="item.id"
+              :label="item.name"
+              :value="item.id"/>
+          </el-select>
+          <div class="el-upload__tip">{{ $t('good.detail.form.select.tip.type') }}</div>
+        </el-form-item>
+      </div>
       <h3>{{ $t('good.detail.form.title.set') }}</h3>
       <el-form-item :label="$t('good.detail.form.radio_group.label.is_show')" prop="is_show">
         <el-radio-group v-model="ruleForm.is_show">
@@ -275,6 +287,8 @@ export default {
         if (!pattern.test(value)) {
           callback(new Error(this.$t('good.detail.form.validate_price')))
         }
+      } else {
+        callback(new Error(this.$t('good.detail.form.validate_price')))
       }
       callback()
     }
@@ -335,9 +349,6 @@ export default {
         name: [
           { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good.detail.name') }), trigger: 'blur' }
         ],
-        number: [
-          { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('good.detail.keypoint') }), trigger: 'blur' }
-        ],
         freight_id: [
           { required: true, message: this.$t('hint.error.select', { specification: this.$t('good.detail.form.select.label.type') }), trigger: 'change' }
         ],
@@ -351,10 +362,10 @@ export default {
           { required: false, validator: validatePrice, message: this.$t('good.detail.form.validate_price'), trigger: 'blur' }
         ],
         price: [
-          { required: false, validator: validatePrice, message: this.$t('good.detail.form.validate_price'), trigger: 'blur' }
+          { required: true, validator: this.validateFields, message: this.$t('good.detail.form.validate_price'), trigger: 'blur' }
         ],
         inventory: [
-          { required: false, message: this.$t('good.detail.inventory_integer'), trigger: 'blur' }
+          { required: true, validator: this.validateInventoryFields, message: this.$t('good.detail.inventory_integer'), trigger: 'blur' }
         ],
         brand_id: [
           { required: true, message: this.$t('hint.error.select', { specification: this.$t('good.detail.form.select.label.brand_id') }), trigger: 'blur' }
@@ -421,6 +432,20 @@ export default {
     this.getList()
   },
   methods: {
+    validateFields(rule, value, callback) {
+      if (this.ruleForm.price || this.getSkuData().length) {
+        callback()
+      } else {
+        callback(new Error(this.$t('hint.error.not_null', { attribute: this.$t('good.detail.fixed_price') })))
+      }
+    },
+    validateInventoryFields(rule, value, callback) {
+      if (this.ruleForm.inventory || this.getSkuData().length) {
+        callback()
+      } else {
+        callback(new Error(this.$t('hint.error.not_null', { attribute: this.$t('good.detail.total_quantity') })))
+      }
+    },
     getList() {
       this.loading = true
       detail(this.id ? this.id : 0, { category: getToken('applyCategory') }).then(response => {

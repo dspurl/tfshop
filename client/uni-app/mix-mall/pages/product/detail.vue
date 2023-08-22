@@ -21,7 +21,7 @@
 					<text class="price" v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</text>
 					<text class="price" v-else-if="getList.price_show.length === 1">{{ getList.price_show[0] }}</text>
 				</template>
-				<template v-if="getList.market_price_show">
+				<template v-if="getList.good_sku.length > 0 && getList.market_price_show">
 					<text class="m-price" v-if="getList.market_price_show.length > 1">{{$t('common.unit')}}{{ getList.market_price_show[1] }}</text>
 					<text class="m-price" v-else-if="getList.market_price_show.length === 1">{{$t('common.unit')}}{{ getList.market_price_show[0] }}</text>
 				</template>
@@ -115,7 +115,8 @@ export default {
 			specificationDefaultDisplay: '', // 规格默认显示
 			getList:{
 				is_delete:0,
-				is_show:1
+				is_show:1,
+				good_sku: []
 			},
 			inventoryFlag: true, //true有货; false 无货
 			shoppingAttributes: [], //购物属性
@@ -180,8 +181,10 @@ export default {
 					})
 				}
 				that.getList = res
-				if(that.getList.good_sku.length<=0){
-					that.inventoryFlag = false
+				if(that.getList.good_sku.length === 0){
+					if(that.getList.inventory === 0){
+						that.inventoryFlag = false
+					}
 				}
 				if (that.hasLogin){
 					that.browse()

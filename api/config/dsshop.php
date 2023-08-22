@@ -662,7 +662,7 @@ return [
                     'input_type' => 'input',
                     'required' => true,
                     'keys' => 'dsshop.file.custom.size',
-                    'value' => env('FILE_CUSTOM_SIZE', 'gif,jpg,jpeg,bmp,png,zip,html,txt,json')
+                    'value' => env('FILE_CUSTOM_SIZE', 5 * 1024 * 1024)
                 ],
                 [
                     'name' => '自定义支持的格式',
@@ -1381,7 +1381,7 @@ return [
                     'input_type' => 'input',
                     'required' => true,
                     'keys' => 'dsshop.file.custom.size',
-                    'value' => env('FILE_CUSTOM_SIZE', 'gif,jpg,jpeg,bmp,png,zip,html,txt,json')
+                    'value' => env('FILE_CUSTOM_SIZE', 5 * 1024 * 1024)
                 ],
                 [
                     'lang' => 'en',

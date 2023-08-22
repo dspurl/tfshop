@@ -122,6 +122,7 @@
         .spec_title
           el-button(type='info' :disabled='disabled' @click='addSpec') {{ $t('good.sku.form.button.add') }}
   el-form-item(
+    v-if="(specification.length)"
     :label="$t('good.sku.form.input.label.uniform_sets')"
     class="sku-unified-set"
   )
@@ -149,7 +150,7 @@
       clearable
       @input="e => updateUnifiedInput(e, 'inventory')"
     )
-  el-form-item
+  el-form-item(v-if="(specification.length)")
       .sku_container
         SkuTable(:specification.sync="specificationFilter" :type="type" :productSkus.sync="productSkus" ref="SkuTable")
 </template>
@@ -213,7 +214,7 @@ class EditSku extends Vue {
 
   // 父组件调用，获取 sku-table 的数据
   _getData() {
-    return this.$refs.SkuTable.data
+    return this.$refs.SkuTable ? this.$refs.SkuTable.data : []
   }
 
   addSpec() {

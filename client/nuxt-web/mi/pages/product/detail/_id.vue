@@ -46,7 +46,7 @@
                   <div class="price" v-if="goodDetail.price_show.length > 1"><span class="symbol">{{$t('common.unit')}}</span>{{ goodDetail.price_show[0] | thousands }} - {{ goodDetail.price_show[1] | thousands }}</div>
                   <div class="price" v-else-if="goodDetail.price_show.length === 1"><span class="symbol">{{$t('common.unit')}}</span>{{ goodDetail.price_show[0] | thousands }}</div>
                 </template>
-                <template v-if="goodDetail.market_price_show">
+                <template v-if="goodDetail.good_sku.length > 0 && goodDetail.market_price_show">
                   <div class="m-price" v-if="goodDetail.market_price_show.length > 1"><span class="symbol">{{$t('common.unit')}}</span>{{ goodDetail.market_price_show[1] | thousands }}</div>
                   <div class="m-price" v-else-if="goodDetail.market_price_show.length === 1"><span class="symbol">{{$t('common.unit')}}</span>{{ goodDetail.market_price_show[0] | thousands }}</div>
                 </template>

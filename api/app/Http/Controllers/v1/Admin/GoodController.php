@@ -168,9 +168,6 @@ class GoodController extends Controller
      */
     public function create(SubmitGoodRequest $request)
     {
-        if (count($request->good_sku) == 0) {
-            return resReturn(0, __('good.error.good_specification'), Code::CODE_PARAMETER_WRONG);
-        }
         if ($request->is_show == Good::GOOD_SHOW_TIMING && !$request->timing) {
             return resReturn(0, __('good.error.time'), Code::CODE_PARAMETER_WRONG);
         }
@@ -189,7 +186,7 @@ class GoodController extends Controller
             } else {
                 $Good->category_id = $request->category_id;
             }
-            $Good->number = $request->number;
+            $Good->number = $request->number ?? '';
             $Good->type = $request->type;
             if ($Good->type == Good::GOOD_TYPE_COMMON) {
                 $Good->freight_id = $request->freight_id;
@@ -209,6 +206,10 @@ class GoodController extends Controller
             $Good->time = $request->is_show == 1 ? Carbon::now()->toDateTimeString() : null;
             $Good->timing = $request->timing;
             $Good->order_price = $request->price;
+            if (count($request->good_sku) == 0) {
+                $Good->price = $request->price;
+                $Good->inventory = $request->inventory;
+            }
             $Good->save();
             // 商品规格处理
             if (count($request->good_specification) > 0) {
@@ -371,9 +372,6 @@ class GoodController extends Controller
      */
     public function edit(SubmitGoodRequest $request, $id)
     {
-        if (count($request->good_sku) == 0) {
-            return resReturn(0, __('good.error.good_specification'), Code::CODE_PARAMETER_WRONG);
-        }
         if ($request->is_show == Good::GOOD_SHOW_TIMING && !$request->timing) {
             return resReturn(0, __('good.error.time'), Code::CODE_PARAMETER_WRONG);
         }
@@ -391,7 +389,7 @@ class GoodController extends Controller
                 $Good->category_id = $request->category_id;
             }
             $Good->name = $request->name;
-            $Good->number = $request->number;
+            $Good->number = $request->number ?? '';
             $Good->type = $request->type;
             if ($Good->type == Good::GOOD_TYPE_COMMON) {
                 $Good->freight_id = $request->freight_id;

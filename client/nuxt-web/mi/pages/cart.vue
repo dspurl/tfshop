@@ -67,7 +67,7 @@
             width="150"
             align="center">
             <template slot-scope="scope">
-              <el-input-number @change="numberChange(scope.$index)" size="mini" v-model="scope.row.number" :min="1" :max="scope.row.good_sku.inventory"></el-input-number>
+              <el-input-number @change="numberChange(scope.$index)" size="mini" v-model="scope.row.number" :min="1" :max="scope.row.good_sku ? scope.row.good_sku.inventory : scope.row.inventory"></el-input-number>
             </template>
           </el-table-column>
           <el-table-column
