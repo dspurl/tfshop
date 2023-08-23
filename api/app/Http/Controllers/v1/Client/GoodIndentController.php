@@ -95,12 +95,12 @@ class GoodIndentController extends Controller
                 foreach ($request->indentCommodity as $indentCommodity) {
                     $Good = Good::select('id', 'is_inventory', 'inventory', 'type')->find($indentCommodity['good_id']);
                     if ($Good->type === Good::GOOD_TYPE_COMMON) {
-                        if (!$request->address) {
+                        if (!isset($request->shipping_id)) {
                             throw new \Exception(__('hint.error.not_null', ['attribute' => __('shipping.location')]), Code::CODE_WRONG);
                         }
                     }
                     if ($Good && $Good->is_inventory == Good::GOOD_IS_INVENTORY_NO) { //拍下减库存
-                        if (!isset($indentCommodity['good_sku_id'])) { //非SKU商品
+                        if ($indentCommodity['good_sku_id'] == 0) { //非SKU商品
                             if ($Good->inventory - $indentCommodity['number'] < 0) {
                                 return array(__('good_indent.deficient_commodity'), Code::CODE_PARAMETER_WRONG);
                             }

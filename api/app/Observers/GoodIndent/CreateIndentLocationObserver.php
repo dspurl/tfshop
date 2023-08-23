@@ -14,6 +14,7 @@ namespace App\Observers\GoodIndent;
 
 use App\Models\v1\GoodIndent;
 use App\Models\v1\GoodLocation;
+use App\Models\v1\Shipping;
 use Illuminate\Http\Request;
 
 /**
@@ -51,16 +52,17 @@ class CreateIndentLocationObserver
     public function created(GoodIndent $goodIndent)
     {
         // 当状态为待付款时触发
-        if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_PAY && array_key_exists('cellphone', $this->request->address)) {
+        if (($this->execute || app()->runningInConsole()) && $goodIndent->state == GoodIndent::GOOD_INDENT_STATE_PAY && $this->request->shipping_id) {
             $GoodLocation = new GoodLocation();
+            $shipping = Shipping::find($this->request->shipping_id);
             $GoodLocation->good_indent_id = $goodIndent->id;
-            $GoodLocation->cellphone = $this->request->address['cellphone'];
-            $GoodLocation->name = $this->request->address['name'];
-            $GoodLocation->location = $this->request->address['location'];
-            $GoodLocation->address = $this->request->address['address'];
-            $GoodLocation->latitude = $this->request->address['latitude'];
-            $GoodLocation->longitude = $this->request->address['longitude'];
-            $GoodLocation->house = $this->request->address['house'];
+            $GoodLocation->cellphone = $shipping->cellphone;
+            $GoodLocation->name = $shipping->name;
+            $GoodLocation->location = $shipping->location;
+            $GoodLocation->address = $shipping->address;
+            $GoodLocation->latitude = $shipping->latitude ?? '';
+            $GoodLocation->longitude = $shipping->longitude ?? '';
+            $GoodLocation->house = $shipping->house;
             $GoodLocation->save();
         }
     }

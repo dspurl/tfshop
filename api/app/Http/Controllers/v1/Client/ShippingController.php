@@ -9,6 +9,7 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -16,6 +17,7 @@ use App\common\RedisService;
 use App\Http\Requests\v1\SubmitShippingRequest;
 use App\Models\v1\Freight;
 use App\Models\v1\FreightWay;
+use App\Models\v1\Region;
 use App\Models\v1\Shipping;
 use App\common\RedisLock;
 use Illuminate\Http\Request;
@@ -184,24 +186,24 @@ class ShippingController extends Controller
             } else {
                 $name = explode("市", $return['shipping']['address'])[0] . '市';
             }
-            $provinces = config('provinces');
+            $Region = Region::where('lang', App::getLocale())->where('parent_id', 0)->with(['child'])->first();
             $value = '';
-            foreach ($provinces as $p) {
-                if ($p['label'] == $name) {
-                    $value = $p['value'];
-                    break;
+            if ($Region->child) {
+                foreach ($Region->child as $child) {
+                    if ($child->name == $name) {
+                        $value = $child->id;
+                        break;
+                    }
                 }
             }
             $carriage = 0;
             $list = [];
             foreach ($request->all() as $all) {
-                if (is_array($all)) {
-                    if (isset($all['good'])) {
-                        if (array_key_exists($all['good']['freight_id'], $list)) {
-                            $list[$all['good']['freight_id']] += $all['number'];
-                        } else {
-                            $list[$all['good']['freight_id']] = $all['number'];
-                        }
+                if ($all['freight_id']) {
+                    if (array_key_exists($all['freight_id'], $list)) {
+                        $list[$all['freight_id']] += $all['number'];
+                    } else {
+                        $list[$all['freight_id']] = $all['number'];
                     }
                 }
             }
@@ -210,7 +212,7 @@ class ShippingController extends Controller
                     Freight::$withoutAppends = false;
                     FreightWay::$withoutAppends = false;
                     $Freight = Freight::with(['FreightWay'])->find($index);
-                    if($Freight){
+                    if ($Freight) {
                         if (!in_array($value, $Freight['pinkage'])) { //不包邮
                             foreach ($Freight['FreightWay'] as $way) {
                                 if (in_array($value, $way->location)) { //获取不包邮实际运费
@@ -223,11 +225,9 @@ class ShippingController extends Controller
                                             $number = ceil(($l - $way->first_piece) / $way->add_piece);
                                             $carriage += $way->first_cost + $way->add_cost * $number;
                                         }
-
                                     }
                                     break;
                                 }
-
                             }
                         }
                     }

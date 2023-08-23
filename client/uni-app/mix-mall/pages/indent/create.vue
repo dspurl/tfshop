@@ -154,7 +154,10 @@
 			//获取默认收货地址
 			getOne(){
 				const that = this
-				Shipping.freight(0,this.goodList, function(res){
+				const indentCommodity = this.goodList.map(item => {
+					return { number: item.number, freight_id: item.good.freight_id }
+				})
+				Shipping.freight(0,indentCommodity, function(res){
 					that.addressData = res.shipping ? res.shipping : ''
 					that.carriage = res.carriage ? res.carriage : 0
 					that.outPocketTotal() //实付金额
@@ -171,9 +174,23 @@
 					this.$api.msg(this.$t('hint.error.selects', { attribute: this.$t('address.address')}))
 					return false
 				}
-				this.data.address = this.addressData
-				this.data.carriage = this.carriage
-				GoodIndent.create(this.data,function(res){
+				const indentCommodity = this.data.indentCommodity.map(item => {
+					return {
+						number: item.number,
+						name: item.name,
+						good_id: item.good_id,
+						img: item.img,
+						good_sku_id: item.good_sku_id ? item.good_sku_id : 0,
+						freight_id: item.good.freight_id,
+						price: item.price
+					};
+				});
+				GoodIndent.create({
+					indentCommodity,
+					remark: this.data.remark,
+					carriage: this.carriage,
+					shipping_id: this.addressData.id
+				},function(res){
 					//比对购物车, 清除已下单的商品
 					const cartList  =  uni.getStorageSync('dsshopCartList') || {}
 					for(var i=0;i<cartList.length;i++){
@@ -199,7 +216,10 @@
 			//地址选择回调
 			refreshAddress(item){
 				const that = this
-				Shipping.freight(item.id,this.goodList, function(res){
+				const indentCommodity = this.goodList.map(item => {
+					return { number: item.number, freight_id: item.good.freight_id }
+				})
+				Shipping.freight(item.id,indentCommodity, function(res){
 					that.carriage = res.carriage ? res.carriage : 0
 					that.outPocketTotal() //实付金额
 				})
