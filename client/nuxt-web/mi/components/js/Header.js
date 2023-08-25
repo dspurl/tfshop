@@ -133,7 +133,7 @@ export default {
     userInfo(){
       if($nuxt.$store.state.hasLogin){
         const userInfo = $nuxt.store.get(process.env.CACHE_PR + 'UserInfo')
-        if(userInfo.cellphone){
+        if(userInfo){
           this.user = userInfo
         }else{
           detail().then(response => {
