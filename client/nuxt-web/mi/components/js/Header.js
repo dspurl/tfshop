@@ -1,4 +1,5 @@
 import { addShoppingCart, synchronizationInventory } from '@/api/goodIndent'
+import {detail} from '@/api/user'
 export default {
   data() {
     const validateRemark = (rule, value, callback) => {
@@ -131,7 +132,14 @@ export default {
     },
     userInfo(){
       if($nuxt.$store.state.hasLogin){
-        this.user = $nuxt.store.get(process.env.CACHE_PR + 'UserInfo')
+        const userInfo = $nuxt.store.get(process.env.CACHE_PR + 'UserInfo')
+        if(userInfo.cellphone){
+          this.user = userInfo
+        }else{
+          detail().then(response => {
+            $nuxt.store.set(process.env.CACHE_PR + 'UserInfo', response)
+          })
+        }
       }
     },
     // 删除商品
