@@ -113,9 +113,11 @@ export default{
         this.cartGood.price = this.getLists.price
       }
       //自动选择默认第一项规格
-      if (typeof(this.specification[0].leaf[0]) != 'undefined'){
-        for (var i=0;i<this.specification.length;i++){
-          this.selectSpec(i, 0,this.specification[i].leaf[0])
+      if (this.specification.length > 0) {
+        if (typeof(this.specification[0].leaf[0]) != 'undefined'){
+          for (var i=0;i<this.specification.length;i++){
+            this.selectSpec(i, 0,this.specification[i].leaf[0])
+          }
         }
       }
     },
@@ -170,7 +172,7 @@ export default{
         img: newVal.img,
         price_show: [newVal.good_sku.price],
         inventory_show: newVal.good_sku.inventory,
-        selected: '已选 ' + newVal.specification
+        selected: this.$t('common.selected') + ' ' + newVal.specification
       }
       // 处理不可选项
       let selectedSkus =JSON.parse(JSON.stringify(this.selectedSku))
@@ -240,7 +242,7 @@ export default{
           img: this.getLists.resources_many[0].img,
           price_show: this.getLists.price_show,
           inventory_show: this.getLists.inventory_show,
-          selected: '选择 ' + this.noSelectedName
+          selected: this.$t('common.chosen') + ' ' + this.noSelectedName
         }
         if(!this.update){
           this.$emit('purchasePattern',this.specificationDefaultDisplay)
@@ -319,7 +321,7 @@ export default{
               img: this.productSkus[i].resources ? this.productSkus[i].resources.img : this.getLists.resources_many[0].img,
               price_show: [this.productSkus[i].price],
               inventory_show: this.productSkus[i].inventory,
-              selected: '已选 ' + selectedName.join(";"),
+              selected: this.$t('common.selected') + ' ' + selectedName.join(";"),
               cost_price: this.productSkus[i].cost_price
             }
             if(!this.update){
@@ -342,7 +344,7 @@ export default{
       if(this.shoppingAttributes.id > 0 || this.getLists.good_sku.length === 0){
         const tmp = /^\d+\.?\d{0,2}$/
         if (!tmp.test(this.cartGood.price)) {
-          this.$message.error('输入的金额有误')
+          this.$message.error(this.$t('sku.amount_error'))
           return false
         }
         this.$emit('toggleSpec')
@@ -376,7 +378,11 @@ export default{
             cartList = []
           }
           cartList.forEach(item=>{
-            cartMap.set(item.good_sku_id,item)
+            if (item.good_sku_id >0) {
+              cartMap.set('sku_id' + item.good_sku_id,item)
+            } else {
+              cartMap.set('id' + item.good_id,item)
+            }
           })
           let img = this.getLists.resources_many[0].img;
           //Sku
@@ -387,31 +393,31 @@ export default{
             if(this.update){ //更新
               // 判断用户是否更改了SKU
               if(this.good_sku.id !== this.shoppingAttributes.id){
-                cartMap.delete(this.good_sku.id)
+                cartMap.delete('sku_id' + this.good_sku.id)
               }
             }
-            if(cartMap.get(this.shoppingAttributes.id)){	//已存在，更新其它属性，增加新添加的数量
+            if(cartMap.get('sku_id' + this.shoppingAttributes.id)){	//已存在，更新其它属性，增加新添加的数量
               if(this.update){ //更新
-                cartMap.get(this.shoppingAttributes.id).number= this.cartGood.number
+                cartMap.get('sku_id' + this.shoppingAttributes.id).number= this.cartGood.number
               }else{
-                cartMap.get(this.shoppingAttributes.id).number+= this.cartGood.number
+                cartMap.get('sku_id' + this.shoppingAttributes.id).number+= this.cartGood.number
               }
 
               //如果购物车商品购买数大于当前库存，将结果改成库存数量
-              if(cartMap.get(this.shoppingAttributes.id).number > this.specificationDefaultDisplay.inventory_show){
-                cartMap.get(this.shoppingAttributes.id).number = this.specificationDefaultDisplay.inventory_show
+              if(cartMap.get('sku_id' + this.shoppingAttributes.id).number > this.specificationDefaultDisplay.inventory_show){
+                cartMap.get('sku_id' + this.shoppingAttributes.id).number = this.specificationDefaultDisplay.inventory_show
               }
-              cartMap.get(this.shoppingAttributes.id).price = this.cartGood.price
-              cartMap.get(this.shoppingAttributes.id).name = this.getLists.name
-              cartMap.get(this.shoppingAttributes.id).good_id = this.getLists.id
+              cartMap.get('sku_id' + this.shoppingAttributes.id).price = this.cartGood.price
+              cartMap.get('sku_id' + this.shoppingAttributes.id).name = this.getLists.name
+              cartMap.get('sku_id' + this.shoppingAttributes.id).good_id = this.getLists.id
               const good = JSON.parse(JSON.stringify(this.getLists))
               delete good.details
-              cartMap.get(this.shoppingAttributes.id).good = good
-              cartMap.get(this.shoppingAttributes.id).good_sku_id = this.shoppingAttributes.id
-              cartMap.get(this.shoppingAttributes.id).good_sku = this.shoppingAttributes
-              cartMap.get(this.shoppingAttributes.id).img = img
+              cartMap.get('sku_id' + this.shoppingAttributes.id).good = good
+              cartMap.get('sku_id' + this.shoppingAttributes.id).good_sku_id = this.shoppingAttributes.id
+              cartMap.get('sku_id' + this.shoppingAttributes.id).good_sku = this.shoppingAttributes
+              cartMap.get('sku_id' + this.shoppingAttributes.id).img = img
             }else{
-              cartMap.set(this.shoppingAttributes.id,{
+              cartMap.set('sku_id' + this.shoppingAttributes.id,{
                 price: this.cartGood.price,
                 number: this.cartGood.number,
                 name: this.getLists.name,
@@ -423,36 +429,34 @@ export default{
               })
             }
           }else{
-            // 现只有sku商品，故这里不做处理
-            if(cartList['good_' + this.getLists.id]){
+            if(cartMap.get('id' + this.getLists.id)){
               if(this.update){ //更新
-                cartList['good_' + this.getLists.id].number= this.cartGood.number
+                cartMap.get('id' + this.getLists.id).number= this.cartGood.number
               }else{
-                cartList['good_' + this.getLists.id].number+= this.cartGood.number
+                cartMap.get('id' + this.getLists.id).number+= this.cartGood.number
               }
 
               //如果购物车商品购买数大于当前库存，将结果改成库存数量
-              if(cartList['good_' + this.getLists.id].number > this.getLists.inventory_show){
-                cartList['good_' + this.getLists.id].number = this.getLists.inventory_show
+              if(cartMap.get('id' + this.getLists.id).number > this.getLists.inventory_show){
+                cartMap.get('id' + this.getLists.id).number = this.getLists.inventory_show
               }
-              cartList['good_' + this.getLists.id].price = this.cartGood.price
-              cartList['good_' + this.getLists.id].name = this.getLists.name
-              cartList['good_' + this.getLists.id].good_id = this.getLists.id
-              cartList['good_' + this.getLists.id].good = this.getLists
-              cartList['good_' + this.getLists.id].img = img
+              cartMap.get('id' + this.getLists.id).price = this.cartGood.price
+              cartMap.get('id' + this.getLists.id).name = this.getLists.name
+              cartMap.get('id' + this.getLists.id).good_id = this.getLists.id
+              cartMap.get('id' + this.getLists.id).good = this.getLists
+              cartMap.get('id' + this.getLists.id).img = img
             }else{
-              cartList['good_' + this.getLists.id]={
+              cartMap.set('id' + this.getLists.id,{
                 price: this.cartGood.price,
                 number: this.cartGood.number,
                 name: this.getLists.name,
                 good_id: this.getLists.id,
                 good: this.getLists,
                 img: img
-              }
+              })
             }
 
           }
-
           if(buyState){	//直接购买
             store.set(process.env.CACHE_PR + 'OrderList', [...cartMap.values()])
           }else{
@@ -471,7 +475,7 @@ export default{
             this.$router.replace('/indent/create')
           }else{
             this.$message({
-              message: '成功加入购物车',
+              message: this.$t('sku.cart_success'),
               type: 'success'
             })
           }
@@ -479,7 +483,7 @@ export default{
         }
 
       } else{
-        this.$message.error('请选择规格')
+        this.$message.error(this.$t('hint.error.selects', {attribute: this.$t('sku.specification')}))
       }
 
     },

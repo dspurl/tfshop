@@ -82,7 +82,10 @@ export default {
     selectedAddress(res){
       this.buttonLoading = true;
       this.ruleForm.address = res
-      freight(res.id, this.ruleForm.indentCommodity).then(response => {
+      const indentCommodity = this.ruleForm.indentCommodity.map(item => {
+        return { number: item.number, freight_id: item.good.freight_id };
+      });
+      freight(res.id, indentCommodity).then(response => {
         this.ruleForm.carriage = response.carriage
         this.buttonLoading = false;
       })
@@ -99,7 +102,23 @@ export default {
             return false
           }
           this.buttonLoading = true;
-          create(this.ruleForm).then(response => {
+          const indentCommodity = this.ruleForm.indentCommodity.map(item => {
+            return {
+              number: item.number,
+              name: item.name,
+              good_id: item.good_id,
+              img: item.img,
+              good_sku_id: item.good_sku_id ? item.good_sku_id : 0,
+              freight_id: item.good.freight_id,
+              price: item.price
+            };
+          });
+          create({
+            indentCommodity,
+            remark: this.ruleForm.remark,
+            carriage: this.ruleForm.carriage,
+            shipping_id: this.ruleForm.address.id
+          }).then(response => {
             this.buttonLoading = false;
             this.store.remove(process.env.CACHE_PR + 'CartList')
             this.store.remove(process.env.CACHE_PR + 'OrderList')

@@ -400,5 +400,8 @@
   "integral_draw_log.state.untreated": "Unconverted",
   "integral_draw.check_order": "View order",
   "date_picker.start_placeholder": "Start date",
-  "date_picker.end_placeholder": "Ending date"
+  "date_picker.end_placeholder": "Ending date",
+  "sku.amount_error": "The amount entered is incorrect",
+  "sku.cart_success": "Successfully added to cart",
+  "sku.specification": "specification"
 }

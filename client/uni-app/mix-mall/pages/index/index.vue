@@ -192,6 +192,9 @@ export default {
 </script>
 
 <style lang="scss">
+	.action{
+		position: relative;
+	}
 	.mp-search-box{
 		position:absolute;
 		left: 0;

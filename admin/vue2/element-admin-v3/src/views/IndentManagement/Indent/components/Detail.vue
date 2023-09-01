@@ -550,33 +550,51 @@ export default {
     },
     shipmentSubmit() {
       this.shipmentLoading = true
-      this.$refs['dataForm'].validate((valid) => {
-        if (valid) {
-          this.temp.id = this.list.id
-          shipment(this.temp).then(() => {
-            this.dialogFormVisible = false
+      if (this.list.dhl_id > 0) {
+        this.$refs['dataForm'].validate((valid) => {
+          if (valid) {
+            this.temp.id = this.list.id
+            shipment(this.temp).then(() => {
+              this.dialogFormVisible = false
+              this.shipmentLoading = false
+              this.$notify({
+                title: this.$t('common.succeed'),
+                message: this.$t('hint.succeed.win', { attribute: this.$t('good_indent.operation.shipments') }),
+                type: 'success',
+                duration: 2000
+              })
+              setTimeout(this.$router.back(-1), 2000)
+            }).catch(() => {
+              this.shipmentLoading = false
+            })
+          } else {
             this.shipmentLoading = false
+            this.$refs.odd.focus()
             this.$notify({
-              title: this.$t('common.succeed'),
-              message: this.$t('hint.succeed.win', { attribute: this.$t('good_indent.operation.shipments') }),
-              type: 'success',
+              title: '',
+              message: this.$t('hint.error.please_enter', { attribute: this.$t('good_indent.logistics_information') }),
+              type: 'warning',
               duration: 2000
             })
-            setTimeout(this.$router.back(-1), 2000)
-          }).catch(() => {
-            this.shipmentLoading = false
-          })
-        } else {
+          }
+        })
+      } else {
+        shipment({
+          id: this.list.id
+        }).then(() => {
+          this.dialogFormVisible = false
           this.shipmentLoading = false
-          this.$refs.odd.focus()
           this.$notify({
-            title: '',
-            message: this.$t('hint.error.please_enter', { attribute: this.$t('good_indent.logistics_information') }),
-            type: 'warning',
+            title: this.$t('common.succeed'),
+            message: this.$t('hint.succeed.win', { attribute: this.$t('good_indent.operation.shipments') }),
+            type: 'success',
             duration: 2000
           })
-        }
-      })
+          setTimeout(this.$router.back(-1), 2000)
+        }).catch(() => {
+          this.shipmentLoading = false
+        })
+      }
     },
     refundData() { // 退款
       this.shipmentLoading = true

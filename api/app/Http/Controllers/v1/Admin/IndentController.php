@@ -161,9 +161,13 @@ class IndentController extends Controller
     public function shipment(Request $request)
     {
         $return = DB::transaction(function () use ($request) {
-            $GoodIndent = GoodIndent::with(['User', 'GoodLocation'])->find($request->id);
-            $GoodIndent->dhl_id = $request->dhl_id;
-            $GoodIndent->odd = $request->odd;
+            if ($request->has('dhl_id')) {
+                $GoodIndent = GoodIndent::with(['User', 'GoodLocation'])->find($request->id);
+                $GoodIndent->dhl_id = $request->dhl_id;
+                $GoodIndent->odd = $request->odd;
+            } else {
+                $GoodIndent = GoodIndent::with(['User'])->find($request->id);
+            }
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_TAKE;
             $GoodIndent->shipping_time = Carbon::now()->toDateTimeString();
             if (config('dsshop.automaticReceivingState')) {

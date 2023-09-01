@@ -1,4 +1,4 @@
-import {detail, receipt, download} from '@/api/goodIndent'
+import {detail, receipt, download, cancel} from '@/api/goodIndent'
 export default {
   layout: 'user',
   head () {
@@ -104,6 +104,27 @@ export default {
       }).finally(() => {
         this.buttonLoading = false
       })
-    }
+    },
+    //取消订单
+    cancelOrder(){
+      this.$confirm(this.$t('hint.whether_confirm',{attribute:this.$t('indent.cancel_order')}), this.$t('common.hint'), {
+        confirmButtonText: this.$t('common.confirm'),
+        cancelButtonText: this.$t('common.cancel'),
+        type: 'warning'
+      }).then(() => {
+        this.buttonLoading = true
+        cancel(this.indent.id).then(response => {
+          this.buttonLoading = false;
+          this.$message({
+            message: this.$t('common.success'),
+            type: 'success'
+          });
+          this.getDetail()
+        }).catch(() => {
+          this.buttonLoading = false
+        })
+      }).catch(() => {
+      })
+    },
   }
 }

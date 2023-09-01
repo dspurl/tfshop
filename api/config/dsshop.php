@@ -662,7 +662,7 @@ return [
                     'input_type' => 'input',
                     'required' => true,
                     'keys' => 'dsshop.file.custom.size',
-                    'value' => env('FILE_CUSTOM_SIZE', 'gif,jpg,jpeg,bmp,png,zip,html,txt,json')
+                    'value' => env('FILE_CUSTOM_SIZE', 5 * 1024 * 1024)
                 ],
                 [
                     'name' => '自定义支持的格式',
@@ -1381,7 +1381,7 @@ return [
                     'input_type' => 'input',
                     'required' => true,
                     'keys' => 'dsshop.file.custom.size',
-                    'value' => env('FILE_CUSTOM_SIZE', 'gif,jpg,jpeg,bmp,png,zip,html,txt,json')
+                    'value' => env('FILE_CUSTOM_SIZE', 5 * 1024 * 1024)
                 ],
                 [
                     'lang' => 'en',
@@ -1407,7 +1407,7 @@ return [
     'homestead' => env('HOMESTEAD_WINDOWS', false),
     'failuretime' => env('VERIFICATION_CODE_FAILURE_TIME', 60), // 验证码失效时间秒，默认60秒
     'versions' => env('API_VERSIONS', 1),   //当前版本
-    'appVersion' => '3.4.2.1',   //当前应用版本，此为固定值，用于版本升级所用，请不要随意修改
+    'appVersion' => '3.4.3',   //当前应用版本，此为固定值，用于版本升级所用，请不要随意修改
     'applySecret' => env('PROJECT_KEY', 'base64:szoJ3mSx/5U7zOsJfU7s4pSahiwdh01x6badmz5FtCM='), //API密钥串
     'orderOvertime' => env('ORDER_OVERTIME', 1440),  // 订单超时时间(分钟)
     'automaticReceivingState' => env('AUTOMATIC_RECEIVING_STATE', true),  // 是否开启自动收货

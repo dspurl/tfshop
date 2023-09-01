@@ -6,7 +6,7 @@
       <div class="top">
         <div class="order-number">{{$t('money.pay.order_number')}}：{{indent.identification}}</div>
         <div class="operation">
-          <div style="margin-bottom: 5px;" v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini">{{$t('indent.cancel_order')}}</el-button></div>
+          <div style="margin-bottom: 5px;" v-if="indent.state === 1"><el-button :loading="buttonLoading" @click="cancelOrder()" size="mini">{{$t('indent.cancel_order')}}</el-button></div>
           <NuxtLink :to="{ path: '/money/pay', query: { id: indent.id }}" v-if="indent.state === 1"><el-button :loading="buttonLoading" size="mini" type="danger">{{$t('indent.payment')}}</el-button></NuxtLink>
           <div v-if="indent.state === 3"><el-button :loading="buttonLoading" size="mini" type="danger" @click="confirmReceipt()">{{$t('indent.confirm_receipt')}}</el-button></div>
         </div>

@@ -55,7 +55,7 @@ class CreateIndentCommodityObserver
                 $GoodIndentCommodity = new GoodIndentCommodity();
                 $GoodIndentCommodity->good_indent_id = $goodIndent->id;
                 $GoodIndentCommodity->good_id = $indentCommodity['good_id'];
-                $GoodIndentCommodity->good_sku_id = $indentCommodity['good_sku_id'];
+                $GoodIndentCommodity->good_sku_id = $indentCommodity['good_sku_id'] ? $indentCommodity['good_sku_id'] : 0;
                 $GoodIndentCommodity->img = $indentCommodity['img'];
                 $GoodIndentCommodity->name = $indentCommodity['name'];
                 $GoodIndentCommodity->price = $indentCommodity['price'];

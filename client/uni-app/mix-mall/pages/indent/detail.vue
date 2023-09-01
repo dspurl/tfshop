@@ -105,7 +105,7 @@
 		<!-- 底部 -->
 		<view v-if="indentList.state === 1 || indentList.state === 3 || indentList.state === 10 || indentList.state === 12" class="footer">
 			<view class="price-content"></view>
-			<navigator v-if="indentList.state === 1" :url="'/pages/money/pay?id=' + indentList.id" hover-class="none" class="submit">{{$('indent.payment')}}</navigator>
+			<navigator v-if="indentList.state === 1" :url="'/pages/money/pay?id=' + indentList.id" hover-class="none" class="submit">{{$t('indent.payment')}}</navigator>
 			<view v-else-if="indentList.state === 3" class="submit" @click="confirmReceipt(indentList)">{{$t('indent.confirm_receipt')}}</view>
 		</view>
 		<view class="footer" v-if="indentList.download">
@@ -174,7 +174,6 @@ export default {
 						that.isType = false
 					}
 				}
-				
 				that.indentList = res;
 				that.calcTotal();
 			});

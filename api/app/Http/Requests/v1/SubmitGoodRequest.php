@@ -57,7 +57,7 @@ class SubmitGoodRequest extends Request
                             'max:60',
                         ],
                         'number' => [
-                            'required',
+                            'nullable',
                             Rule::unique('goods')->where(function ($query) use ($request) {
                                 $query->where('deleted_at', null)->where('id', '!=', $request['id']);
                             }),
@@ -101,7 +101,7 @@ class SubmitGoodRequest extends Request
                             'max:60',
                         ],
                         'number' => [
-                            'required',
+                            'nullable',
                             Rule::unique('goods')->where(function ($query) {
                                 $query->where('deleted_at', null);
                             }),

@@ -280,5 +280,6 @@
   "product.search": "搜索结果",
   "sku.cart_success": "成功加入购物车",
   "sku.specification": "规格",
-  "sku.amount_error": "输入的金额有误"
+  "sku.amount_error": "输入的金额有误",
+  "please_login_first": "请先登录"
 }
