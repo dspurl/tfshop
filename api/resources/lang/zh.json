@@ -333,5 +333,7 @@
     "region.value": "编码",
     "region.parent_name": "上级名称",
     "language.name": "名称",
-    "language.code": "编码"
+    "language.code": "编码",
+    "balance.pay": "余额支付",
+    "online.pay": "在线支付"
 }

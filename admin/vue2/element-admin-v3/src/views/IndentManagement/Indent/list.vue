@@ -95,6 +95,11 @@
           <span>{{ scope.row.total ? scope.row.total : 0 | 1000 }}</span>
         </template>
       </el-table-column>
+      <el-table-column :label="$t('mode.payment')">
+        <template slot-scope="scope">
+          <span>{{ scope.row.pay_way }}</span>
+        </template>
+      </el-table-column>
       <el-table-column :label="$t('good_indent.carriage')" width="80">
         <template slot-scope="scope">
           <span v-if="scope.row.carriage">{{ scope.row.carriage | 1000 }}</span>

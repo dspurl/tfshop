@@ -39,6 +39,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string confirm_time
  * @property string refund_time
  * @property string overtime
+ * @property int pay_way
  */
 class GoodIndent extends Model
 {
@@ -59,6 +60,8 @@ class GoodIndent extends Model
     const GOOD_INDENT_IS_AUTOMATIC_RECEIVING_YES = 1; //自动发货：是
     const GOOD_INDENT_IS_AUTOMATIC_RECEIVING_NO = 0; //自动发货：否
     const GOOD_INDENT_TYPE_COMMON = 0; //普通订单
+    const GOOD_INDENT_PAY_WAY_BALANCE = 0; //支付方式：余额
+    const GOOD_INDENT_PAY_WAY_ONLINE = 1; //支付方式：在线支付
     public static $withoutAppends = true;
     protected $appends = ['state_show'];
 
@@ -157,6 +160,24 @@ class GoodIndent extends Model
                         break;
                     case static::GOOD_INDENT_STATE_REFUND_FAILURE:
                         $return = __('good_indent.state.refund_failure');
+                        break;
+                }
+            }
+            return $return;
+        }
+    }
+
+    public function getPayWayAttribute()
+    {
+        if (isset($this->attributes['pay_way'])) {
+            $return = '';
+            if (!self::$withoutAppends) {
+                switch ($this->attributes['pay_way']) {
+                    case static::GOOD_INDENT_PAY_WAY_BALANCE:
+                        $return = __('balance.pay');
+                        break;
+                    case static::GOOD_INDENT_PAY_WAY_ONLINE:
+                        $return = __('online.pay');
                         break;
                 }
             }
@@ -312,6 +333,7 @@ class GoodIndent extends Model
         $redis = new RedisService();
         $redis->setex('goodIndent.pay.type.' . $GoodIndent->id, 5, __('good_indent.state.notify'));
         $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_DELIVER;
+        $GoodIndent->pay_way = static::GOOD_INDENT_PAY_WAY_ONLINE;
         $GoodIndent->pay_time = Carbon::now()->toDateTimeString();
         $GoodIndent->save();
     }

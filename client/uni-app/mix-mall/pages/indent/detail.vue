@@ -86,6 +86,10 @@
 				<text class="cell-tit clamp">{{$t('indent.status')}}</text>
 				<text class="cell-tip">{{ indentList.state_show }}</text>
 			</view>
+			<view class="yt-list-cell b-b" v-if="indentList.state !== 1">
+				<text class="cell-tit clamp">{{$t('mode.payment')}}</text>
+				<text class="cell-tip">{{ indentList.pay_way }}</text>
+			</view>
 			<!-- 卡密-->
 			<template v-if="indentList.good_code.length">
 				<view class="yt-list-cell b-b">

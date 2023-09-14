@@ -524,5 +524,8 @@
   "region.parent_name": "Parent name",
   "switch.language": "Switch Language Success",
   "language.name": "Name",
-  "language.code": "Code"
+  "language.code": "Code",
+  "mode.payment": "Mode payment",
+  "balance.pay": "Balance payment",
+  "online.pay": "online payment"
 }
