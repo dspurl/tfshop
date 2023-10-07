@@ -9,6 +9,7 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -232,8 +233,10 @@ class GoodIndentController extends Controller
             }, 'goodSku']);
         }, 'GoodLocation', 'GoodCode', 'Dhl'])->find($id);
         foreach ($GoodIndent->goodsList as $commodity) {
-            if ($commodity->good->type == Good::GOOD_TYPE_DOWNLOAD) {
-                $GoodIndent->download = true;
+            if ($commodity->good) {
+                if ($commodity->good->type == Good::GOOD_TYPE_DOWNLOAD) {
+                    $GoodIndent->download = true;
+                }
             }
         }
         return resReturn(1, $GoodIndent);

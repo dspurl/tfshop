@@ -16,7 +16,7 @@ DSSHOP商城系统
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
     </a>
     <a href="https://www.dswjcms.com/download">
-        <img src="https://img.shields.io/badge/Edition-3.4.3-blue.svg" />
+        <img src="https://img.shields.io/badge/Edition-3.4.4-blue.svg" />
     </a>
       <a href="https://github.com/laravel/framework">
     <img src="https://img.shields.io/badge/laravel-7.30.6-brightgreen.svg" alt="laravel">
@@ -93,6 +93,8 @@ PC端：[https://v3.dswjcms.com/](https://v3.dswjcms.com/)（电脑端打开）
 |<img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg">|<img src="https://dspurl.github.io/image/13.png">|<img src="https://dspurl.github.io/image/1618405140569.png">|
 
 管理后台： https://dsshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
+
+收银台： https://dsshop.dswjcms.com/cashier 账号：abcd12345 密码：abcd12345
 
 H5端：[https://dsshop.dswjcms.com/h5](https://dsshop.dswjcms.com/h5)（移动端打开）
 

@@ -38,6 +38,7 @@ class CreateGoodIndentsTable extends Migration
             $table->string('remark', 200)->nullable()->comment('备注');
             $table->integer('refund_money')->default(0)->comment('退款金额');
             $table->tinyInteger('refund_way')->default(0)->comment('退款方式0余额1原路退回');
+            $table->tinyInteger('pay_way')->default(0)->comment('支付方式0余额1在线支付');
             $table->softDeletes();
             $table->string('refund_reason', 500)->nullable()->comment('退款原因');
             $table->timestamp('overtime')->nullable()->comment('超时时间');

@@ -334,5 +334,7 @@
     "region.value": "Coding",
     "region.parent_name": "Parent name",
     "language.name": "Name",
-    "language.code": "Code"
+    "language.code": "Code",
+    "balance.pay": "Balance payment",
+    "online.pay": "online payment"
 }

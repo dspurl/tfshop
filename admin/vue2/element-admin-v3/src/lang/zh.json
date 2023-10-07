@@ -524,5 +524,8 @@
   "region.parent_name": "上级名称",
   "switch.language": "切换语言成功",
   "language.name": "名称",
-  "language.code": "编码"
+  "language.code": "编码",
+  "mode.payment": "支付方式",
+  "balance.pay": "余额支付",
+  "online.pay": "在线支付"
 }

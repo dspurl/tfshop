@@ -170,6 +170,10 @@
       </div>
       <div class="address">
         <div class="min-title">{{$t('indent.other')}}</div>
+        <div class="li" v-if="indent.state !== 1">
+          <div class="name">{{$t('mode.payment')}}：</div>
+          <div class="value">{{indent.pay_way}}</div>
+        </div>
         <div class="li">
           <div class="name">{{$t('indent.remark')}}：</div>
           <div class="value">{{indent.remark ? indent.remark : $t('indent.without')}}</div>

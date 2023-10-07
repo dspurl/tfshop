@@ -38,9 +38,6 @@
   "JsVueVideo": {
     "description": "Auto imported from components/js/VueVideo.js"
   },
-  "Pagination": {
-    "description": "Auto imported from components/Pagination/index.vue"
-  },
   "Sku": {
     "description": "Auto imported from components/Sku/index.vue"
   },
@@ -50,20 +47,23 @@
   "SkuUtils": {
     "description": "Auto imported from components/Sku/utils.js"
   },
+  "AddressJsList": {
+    "description": "Auto imported from components/Address/js/list.js"
+  },
+  "SkuJs": {
+    "description": "Auto imported from components/Sku/js/index.js"
+  },
+  "Pagination": {
+    "description": "Auto imported from components/Pagination/index.vue"
+  },
+  "PaginationJs": {
+    "description": "Auto imported from components/Pagination/js/index.js"
+  },
   "UploadAvatarImage": {
     "description": "Auto imported from components/Upload/AvatarImage.vue"
   },
   "UploadInsertImage": {
     "description": "Auto imported from components/Upload/InsertImage.vue"
-  },
-  "AddressJsList": {
-    "description": "Auto imported from components/Address/js/list.js"
-  },
-  "PaginationJs": {
-    "description": "Auto imported from components/Pagination/js/index.js"
-  },
-  "SkuJs": {
-    "description": "Auto imported from components/Sku/js/index.js"
   },
   "UploadJsAvatarImage": {
     "description": "Auto imported from components/Upload/js/avatarImage.js"

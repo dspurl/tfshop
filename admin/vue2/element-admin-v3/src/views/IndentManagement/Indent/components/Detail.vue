@@ -15,12 +15,13 @@
         <el-col :span="2" style="color: rgba(0, 0, 0, 0.447)">{{ $t('good_indent.total') }}</el-col>
       </el-row>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
-        <el-col :span="10">{{ $t('good_indent.remark') }}：{{ list.remark ? list.remark : $t('common.table.nothing') }}</el-col>
+        <el-col :span="10">{{ $t('mode.payment') }}：{{ list.state !== 1 ? list.pay_way : '' }}</el-col>
         <el-col :span="10">{{ $t('good_indent.contact_way') }}：{{ list.good_location ? list.good_location.cellphone : '' }}</el-col>
         <el-col :span="2" style="font-weight: bold;font-size: 18px;">{{ list.state_show }}</el-col>
         <el-col :span="2" style="font-weight: bold;font-size: 18px;">¥ {{ list.total | 1000 }}</el-col>
       </el-row>
       <el-row type="flex" style="line-height: 35px;font-size: 14px;">
+        <el-col :span="10">{{ $t('good_indent.remark') }}：{{ list.remark ? list.remark : $t('common.table.nothing') }}</el-col>
         <el-col v-if="list.good_location" :span="10">{{ $t('good_indent.location') }}：{{ list.good_location.location }} ({{ list.good_location.address }})</el-col>
       </el-row>
     </el-card>
@@ -90,7 +91,7 @@
       </el-table>
     </el-card>
     <!-- 在线支付记录 -->
-    <el-card shadow="always" style="margin-top: 25px">
+    <el-card v-if="list.pay_way === $t('online.pay')" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
         <span>{{ $t('good_indent.payment_record') }}</span>
       </div>
@@ -170,7 +171,7 @@
     <!-- 延长收货时间 -->
     <el-card v-if="list.state === 3 && list.automaticReceivingState" shadow="always" style="margin-top: 25px">
       <div slot="header" class="clearfix">
-        <span>{{ $('good_indent.overtime') }}</span>
+        <span>{{ $t('good_indent.overtime') }}</span>
       </div>
       <div>
         <el-form ref="receivingForm" :rules="receivingRules" :model="receivingTemp" label-width="120px" style="width: 400px; margin-left:50px;">
