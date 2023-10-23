@@ -6,7 +6,7 @@ FROM php:7.4-fpm
 # pdo_pgsql pdo_sqlite pgsql phar posix pspell readline recode reflection
 # session shmop simplexml snmp soap sockets sodium spl standard sysvmsg sysvsem
 # sysvshm tidy tokenizer wddx xml xmlreader xmlrpc xmlwriter xsl zend_test zip
-COPY sources.list.stretch /etc/apt/sources.list
+RUN sed -i 's/deb.debian.org/mirrors.163.com/g' /etc/apt/sources.list
 RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y nano \
@@ -26,7 +26,10 @@ RUN apt-get update \
     && docker-php-ext-install mysqli \
     && docker-php-ext-install zip \
     && docker-php-ext-install pdo \
-    && docker-php-ext-install pdo_mysql
+    && docker-php-ext-install pdo_mysql \
+    && libmagickwand-dev \
+    && pecl install imagick \
+    && docker-php-ext-enable imagick
 RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini
 RUN php -r "copy('https://install.phpcomposer.com/installer', 'composer-setup.php');"
 RUN php composer-setup.php
