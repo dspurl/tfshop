@@ -96,6 +96,23 @@ return [
             ]
         ],
         [
+            'name' => '商品配置',
+            'remark' =>'涉及商品的相关配置',
+            'children' => [
+                [
+                    'name' => '低库存数量',
+                    'remark' => '低于该值，刚标记为低库存商品',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'style' => [
+                        'width' => 200
+                    ],
+                    'keys' => 'dsshop.lowInventory',
+                    'value' => env('LOW_INVENTORY', 10)
+                ]
+            ]
+        ],
+        [
             'name' => '邮箱配置',
             'remark' =>'邮箱配置后项目才会开启邮件相关通知',
             'children' => [
@@ -742,6 +759,24 @@ return [
                     'keys' => 'dsshop.reset',
                     'value' => false
                 ],
+            ]
+        ],
+        [
+            'lang' => 'en',
+            'name' => 'Commodity allocation',
+            'remark' =>'Related to the allocation of goods',
+            'children' => [
+                [
+                    'name' => 'Low inventory quantity',
+                    'remark' => 'Below this value, it is just marked as a low stock item',
+                    'input_type' => 'input',
+                    'required' => true,
+                    'style' => [
+                        'width' => 200
+                    ],
+                    'keys' => 'dsshop.lowInventory',
+                    'value' => env('LOW_INVENTORY', 10)
+                ]
             ]
         ],
         [
