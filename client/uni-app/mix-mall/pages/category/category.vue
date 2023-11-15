@@ -6,7 +6,7 @@
 			</view>
 			<view @click="navTo('/pages/search/index')" class="search-form round">
 				<text class="cuIcon-search"></text>
-				<input disabled :adjust-position="false" type="text" :placeholder="$t('category.search')" confirm-type="search"></input>
+				<input :adjust-position="false" type="text" :placeholder="$t('category.search')" confirm-type="search"></input>
 			</view>
 			<view @click="navTo('/pages/notice/notice')" class="action">
 				<view class='cuIcon cuIcon-notice'>
