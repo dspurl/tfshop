@@ -61,13 +61,21 @@ class GoodController extends Controller
             } else if ($request->activeIndex == 3) {
                 $q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
             } else if ($request->activeIndex == 4) {
-                $q->whereHas('goodSku', function ($query) {
-                    $query->groupBy('id')->having('inventory', '<', 10);
-                });
+                $q->where('inventory', '<', config('dsshop.lowInventory'))
+                    ->where(function ($query) {
+                        $query->whereHas('goodSku', function ($subquery) {
+                            $subquery->where('inventory', '<', config('dsshop.lowInventory'));
+                        })
+                            ->orWhereDoesntHave('goodSku');
+                    });
             } else if ($request->activeIndex == 5) {
-                $q->whereHas('goodSku', function ($query) {
-                    $query->groupBy('id')->having('inventory', 0);
-                });
+                $q->where('inventory', 0)
+                    ->where(function ($query) {
+                        $query->whereHas('goodSku', function ($subquery) {
+                            $subquery->where('inventory', 0);
+                        })
+                            ->orWhereDoesntHave('goodSku');
+                    });
             }
 
         }
@@ -131,12 +139,20 @@ class GoodController extends Controller
             'all' => Good::where('lang', App::getLocale())->count(), //全部
             'sell' => Good::where('lang', App::getLocale())->where('is_show', Good::GOOD_SHOW_PUTAWAY)->count(),    //出售
             'warehouse' => Good::where('lang', App::getLocale())->where('is_show', Good::GOOD_SHOW_ENTREPOT)->count(),   //仓库
-            'lowInventory' => Good::where('lang', App::getLocale())->whereHas('goodSku', function ($query) {
-                $query->groupBy('id')->having('inventory', '<', 10);
-            })->count(),    //低库存
-            'sellOut' => Good::where('lang', App::getLocale())->whereHas('goodSku', function ($query) {
-                $query->groupBy('id')->having('inventory', 0);
-            })->count(), //已售完
+            'lowInventory' => Good::where('lang', App::getLocale())->where('inventory', '<', config('dsshop.lowInventory'))
+                ->where(function ($query) {
+                    $query->whereHas('goodSku', function ($subquery) {
+                        $subquery->where('inventory', '<', config('dsshop.lowInventory'));
+                    })
+                        ->orWhereDoesntHave('goodSku');
+                })->count(),    //低库存
+            'sellOut' => Good::where('lang', App::getLocale())->where('inventory', 0)
+                ->where(function ($query) {
+                    $query->whereHas('goodSku', function ($subquery) {
+                        $subquery->where('inventory', 0);
+                    })
+                        ->orWhereDoesntHave('goodSku');
+                })->count(), //已售完
         ];
         return resReturn(1, $count);
     }
