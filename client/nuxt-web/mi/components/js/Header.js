@@ -138,6 +138,7 @@ export default {
         }else{
           detail().then(response => {
             $nuxt.store.set(process.env.CACHE_PR + 'UserInfo', response)
+            this.user = response
           })
         }
       }

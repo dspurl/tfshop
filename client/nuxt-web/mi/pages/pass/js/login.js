@@ -1,4 +1,4 @@
-import {login} from '@/api/login'
+import {register, cellphoneCode} from '@/api/login'
 import {getList as bannerList} from '@/api/banner'
 import {
   mapMutations
@@ -47,18 +47,22 @@ export default {
       method: 1,
       ruleForm: {
         cellphone: '',
-        password: '',
+        code: '',
         remember: false
       },
+      codename:this.$t('find_password.get_code'),
+      seconds: '',
+      unit: '',
+      loading: false,
+      codeDisabled: false,
       loading: false,
       rules: {
         cellphone: [
           { validator: validateCellphone, trigger: 'blur' }
         ],
-        password: [
-          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('find_password.password')}), trigger: 'blur' },
-          { min: 5, message: this.$t('find_password.password.length'), trigger: 'blur' }
-        ]
+        code: [
+          { required: true, message: this.$t('hint.error.import', {attribute: this.$t('find_password.verification_code')}), trigger: 'blur' },
+        ],
       },
       banner: {}
     }
@@ -71,11 +75,43 @@ export default {
     setMethod(index){
       this.method = index
     },
-    toLogin(){
+    // 获取验证码
+    getCode(){
+      if(!this.ruleForm.cellphone){
+        this.$message.error(this.$t('hint.error.import', {attribute: this.$t('find_password.cellphone')}));
+        return false
+      }
+      const that = this;
+      cellphoneCode(this.ruleForm).then(response => {
+        // 开始倒计时
+        this.seconds = 60;
+        this.codename = '';
+        this.unit = 's';
+        this.codeDisabled = true;
+        this.timer = setInterval(function () {
+          that.seconds = that.seconds - 1;
+          if (that.seconds === 0) {
+            // 读秒结束 清空计时器
+            clearInterval(that.timer);
+            that.seconds = '';
+            that.codename = this.$t('find_password.get_code');
+            that.unit = '';
+            that.codeDisabled = false
+          }
+        }, 1000);
+        // 模拟短信发送
+        if(response.code){
+          that.ruleForm.code = response.code
+        }
+      }).catch(() => {
+
+      })
+    },
+    toRegister(){
       this.$refs['ruleForm'].validate((valid) => {
         if (valid) {
           this.loading = true;
-          login(this.ruleForm).then(response => {
+          register(this.ruleForm).then(response => {
             response.remember = this.ruleForm.remember
             this.login(response);
             this.$message({

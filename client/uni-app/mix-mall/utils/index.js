@@ -112,8 +112,13 @@ export function getLogin() {
 					success: res => {
 						if (res.statusCode === 200) {
 							if (res.data.result === 'ok') {
-								uni.setStorageSync('applyDsshopSession_key', res.data.message.session_key);
-								uni.setStorageSync('applyDsshopOpenid', res.data.message.openid);
+								const message = res.data.message
+								uni.setStorageSync('applyDsshopSession_key', message.session_key);
+								uni.setStorageSync('applyDsshopOpenid', message.openid);
+								uni.setStorageSync('dsshopApplytoken', message.access_token)
+								uni.setStorageSync('dsshopExpiresIn', (new Date()).getTime() + message.expires_in * 1000)
+								uni.setStorageSync('dsshopRefreshToken', message.refresh_token)
+								uni.setStorageSync('dsshopTokenType', message.token_type)
 							}
 						} else {
 							uni.showToast({

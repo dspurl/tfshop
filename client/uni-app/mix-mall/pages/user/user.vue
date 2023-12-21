@@ -8,7 +8,8 @@
 					<image class="portrait" :src="user.portrait || '/static/missing-face.png'" lazy-load></image>
 				</view>
 				<view class="info-box">
-					<text class="username">{{user.nickname || user.cellphone || $t('user.tourist')}}</text>
+					<text v-if="user.nickname || user.platform" class="username">{{user.nickname || user.platform + '用户'}}</text>
+					<text @click="navTo()" class="username" v-else>去登录</text>
 				</view>
 			</view>
 		</view>

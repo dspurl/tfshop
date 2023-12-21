@@ -43,7 +43,6 @@
             </template>
             <template v-else>
               <div class="li" @click="goLogin">{{$t('header.top.login')}}</div>
-              <NuxtLink class="li" to="/pass/register">{{$t('header.top.register')}}</NuxtLink>
             </template>
             <NuxtLink class="li" to="/user/notice/list">{{$t('header.top.message')}}</NuxtLink>
             <NuxtLink

@@ -26,12 +26,17 @@
         color: $font-color-main;
       }
     }
+    .code-button{
+      position: absolute;
+      right: 5px;
+      top:6px;
+    }
     .button{
       width: 100%;
     }
     .other{
-      margin-top:50px;
-      text-align: center;
+      margin-top:10px;
+      color: #999;
     }
     .other a{
       color: #999;

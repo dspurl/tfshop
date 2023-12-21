@@ -55,19 +55,8 @@ export default {
 			})
 		})
 	},
-	findPassword(data, success, fail) {
-		Network.setPostMessage('findPassword', data, i18n.t('common.processing'), function(res) {
-			success(res)
-		}, function(res) {
-			uni.showToast({
-				title: res.message,
-				icon: 'none',
-				duration: 2000
-			})
-		})
-	},
-	authorization(data, success, fail) {
-		Network.setPost('authorization', data, function(res) {
+	changeCellphone(data, success, fail) {
+		Network.setPost('changeCellphone', data, function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({
@@ -109,5 +98,16 @@ export default {
 				duration: 2000
 			})
 		})
-	}
+	},
+	miniLogin(data,success, fail){
+		Network.setPost('miniLogin', data, function(res) {
+			success(res)
+		}, function(res) {
+			uni.showToast({
+				title: res.message,
+				icon: 'none',
+				duration: 2000
+			})
+		})
+	},
 };

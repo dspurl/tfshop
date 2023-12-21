@@ -16,20 +16,19 @@
                       <i slot="prefix" class="iconfont dsshop-ziyuan"></i>
                     </el-input>
                   </el-form-item>
-                  <el-form-item prop="password">
-                    <el-input v-model="ruleForm.password" :placeholder="$t('hint.error.import', {attribute: $t('find_password.password')})" show-password clearable>
-                      <i slot="prefix" class="iconfont dsshop-mima"></i>
+                  <el-form-item prop="code">
+                    <el-input v-model="ruleForm.code" maxlength="5" :placeholder="$t('hint.error.import', {attribute: $t('find_password.verification_code')})" clearable>
+                      <i slot="prefix" class="iconfont dsshop-duanxinyanzhengma"></i>
                     </el-input>
+                    <el-button class="code-button" type="danger" round size="mini" :disabled="codeDisabled" @click="getCode">{{codename + seconds + unit}}</el-button>
                   </el-form-item>
                   <el-form-item>
                     <el-checkbox v-model="ruleForm.remember">{{$t('login.rememb')}}</el-checkbox>
                   </el-form-item>
-                  <el-button class="button" type="danger" :loading="loading" @click="toLogin">{{$t('header.top.login')}}</el-button>
+                  <el-button class="button" type="danger" :loading="loading" @click="toRegister">{{$t('header.top.login')}}</el-button>
                 </el-form>
                 <div class="other">
-                  <NuxtLink to="/pass/register">{{$t('login.register')}}</NuxtLink>
-                  <el-divider direction="vertical"></el-divider>
-                  <NuxtLink to="/pass/findPassword">{{$t('login.forget_password')}}</NuxtLink>
+                  首次登录会注册
                 </div>
               </div>
             </el-card>

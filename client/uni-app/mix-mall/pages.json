@@ -47,6 +47,11 @@
 			"style": {
 				"navigationBarTitleText": "修改邮箱"
 			}
+		},{
+			"path": "pages/userinfo/cellphone",
+			"style": {
+				"navigationBarTitleText": "修改手机号"
+			}
 		}, {
 			"path": "pages/cart/cart",
 			"style": {
@@ -65,17 +70,6 @@
 			"path": "pages/public/register",
 			"style": {
 				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
-				"app-plus": {
-					"titleNView": false,
-					"animationType": "slide-in-bottom"
-				}
-			}
-		}, {
-			"path": "pages/public/findPassword",
-			"style": {
-				"navigationBarTitleText": "",
-				"navigationStyle": "custom",
 				"app-plus": {
 					"titleNView": false,
 					"animationType": "slide-in-bottom"

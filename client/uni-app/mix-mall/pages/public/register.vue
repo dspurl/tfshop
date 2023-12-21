@@ -6,8 +6,9 @@
 		<view class="wrapper">
 			<view class="left-top-sign">DSSHOP</view>
 			<view class="welcome">
-				注册
+				手机号登录
 			</view>
+			<view class="text-gray" style="margin-left:50rpx;">首次登录会注册</view>
 			<view class="bg-white">
 			  <form>
 			    <view class="cu-form-group">
@@ -19,22 +20,10 @@
 			      <input type="number" maxlength="5" v-model="ruleForm.code" @input="codeInput"></input>
 			      <button class="cu-btn bg-red shadow round getcode" :disabled="disabled" @click="getCode">{{codename + seconds + unit}}</button>
 			    </view>
-			    <view class="cu-form-group">
-			      <view class="title">{{$t('login.password')}}</view>
-			      <input type="password" password v-model="ruleForm.password" @input="passwordInput"></input>
-			    </view>
-				<view class="cu-form-group">
-				  <view class="title">{{$t('register.r_password')}}</view>
-				  <input type="password" password v-model="ruleForm.rPassword" @input="rPasswordInput"></input>
-				</view>
 			  </form>
 			</view>
 			<view class=" flex flex-direction padding">
-			  <button class="cu-btn round bg-red shadow lg" @click="toRegister">{{$t('register.register')}}</button>
-			</view>
-			<view class="register-section">
-				{{$t('find_password.existing_account')}}
-				<text @click="toLogin">{{$t('find_password.log_in_now')}}</text>
+			  <button class="cu-btn round bg-red shadow lg" @click="toRegister">立即登录</button>
 			</view>
 			<view class="cu-modal" :class="modalName=='agreement'?'show':''">
 				<view class="cu-dialog">
@@ -179,34 +168,17 @@
 					  this.$api.msg(this.$t('find_password.rule.code.length'))
 					  return false
 					}
-					if (!ruleForm.password) {
-					  this.$api.msg(this.$t('login.password_must'))
-					  return false
-					}
-					if (!ruleForm.rPassword) {
-					  this.$api.msg(this.$t('register.duplicate_password'))
-					  return false
-					}
-					if (ruleForm.password != ruleForm.rPassword) {
-					  this.$api.msg(this.$t('register.duplicate_password_inconformity'))
-					  return false
-					}
 				}
 				Login.register(ruleForm,function(res){
-					that.$api.msg(this.$t('register.succeed'));
-					uni.redirectTo({
-						url: `/pages/public/login`
-					})
+					that.login(res)
+					that.logining = false
+					that.$api.msg(that.$t('login.succeed'));
+					uni.navigateBack()
 				})
 			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id
 				this.scrollLeft = (e.currentTarget.dataset.id - 1) * 60
-			},
-			toLogin(){
-				uni.redirectTo({
-					url: `/pages/public/login`
-				})
 			},
 			// 协议
 			goNavigator(id){

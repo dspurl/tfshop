@@ -1,9 +1,14 @@
 <template>
 	<view class="container">
-		<view class="list-cell b-b m-t" @click="setPortrait" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell b-b m-t" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">{{$t('userinfo.portrait')}}</text>
 			<view class="action">
-				<view v-if="user.portrait" class="cu-avatar round" :style="'background-image:url('+user.portrait+');'"></view>
+				<button class="avatar" style="border:none;" plain open-type="chooseAvatar" @chooseavatar="onChooseAvatar">
+				  <view v-if="user.portrait" class="cu-avatar round" :style="'background-image:url('+user.portrait+');'"></view>
+				  <view v-else  class="cu-avatar round">
+					  <text class="cuIcon-people"></text>
+				  </view>
+				</button> 
 			</view>
 			<text class="cell-more yticon icon-you"></text>
 		</view>
@@ -15,7 +20,7 @@
 			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="cu-modal" :class="modalName=='DialogModal1'?'show':''">
-			<view class="cu-dialog">
+			<form class="cu-dialog" @submit="setUser">
 				<view class="cu-bar bg-white justify-end">
 					<view class="content">{{$t('userinfo.nickname')}}</view>
 					<view class="action" @tap="hideModal">
@@ -23,22 +28,23 @@
 					</view>
 				</view>
 				<view class="padding-xl">
-					<input class="input" v-model="user.nickname" :placeholder="$t('userinfo.nickname')" placeholder-class="placeholder" maxlength="60"/>
+					<input type="nickname" class="input" name="nickname" :placeholder="$t('userinfo.nickname')" placeholder-class="placeholder" maxlength="60"/>
 				</view>
 				<view class="cu-bar bg-white justify-end">
 					<view class="action">
 						<button class="cu-btn line-red text-red" @tap="hideModal">{{$t('common.cancel')}}</button>
-						<button class="cu-btn bg-red margin-left" @tap="setUser(1)">{{$t('common.confirm')}}</button>
+						<button form-type="submit" class="cu-btn bg-red margin-left">{{$t('common.confirm')}}</button>
 		
 					</view>
 				</view>
-			</view>
+			</form>
 		</view>
-		<view class="list-cell b-b" hover-class="cell-hover" :hover-stay-time="50">
+		<view class="list-cell b-b" @click="navTo('/pages/userinfo/cellphone?cellphone='+(user.cellphone ? user.cellphone : ''))" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">{{$t('userinfo.cellphone')}}</text>
 			<view class="action">
-				{{user.cellphone}}
+				{{user.cellphone ? user.cellphone : ''}}
 			</view>
+			<text class="cell-more yticon icon-you"></text>
 		</view>
 		<view class="list-cell b-b" @click="navTo('/pages/userinfo/email?email='+(user.email ? user.email : ''))" hover-class="cell-hover" :hover-stay-time="50">
 			<text class="cell-tit">{{$t('userinfo.email')}}</text>
@@ -78,6 +84,31 @@
 			setPortrait(){
 				this.ChooseImage()
 			},
+			onChooseAvatar(e){
+				const that = this
+				uni.uploadFile({
+				  url: that.configURL.BaseURL + 'uploadPictures',
+				  filePath: e.detail.avatarUrl,
+				  name: 'file',
+				  header: {
+					'apply-secret': that.configURL.secret,
+					'Authorization': 'Bearer ' + uni.getStorageSync('dsshopApplytoken')
+				  },
+				  formData: {
+					type: 1,
+					size: 1024 * 500
+				  },
+				  success(res) {
+					User.edit({portrait:res.data},function(r){
+						that.user.portrait = r
+					})
+				  },
+				  fail(res) {
+					that.$api.msg(res.message);
+					return false
+				  }
+				})
+			},
 			ChooseImage() {
 				let that = this
 				let uploadFile = ''
@@ -115,15 +146,12 @@
 					url
 				})  
 			},
-			setUser(type){
+			setUser(e){
 				const that = this
-				let data = {}
-				if(type === 1){ // 昵称
-					data = {
-						nickname: this.user.nickname
-					}
-				}
-				User.edit(data,function(res){
+				this.user.nickname  = e.detail.value.nickname
+				User.edit({
+					nickname: this.user.nickname
+				},function(res){
 					that.hideModal()
 				})
 			},
@@ -140,6 +168,9 @@
 <style lang="scss">
 	page{
 		background: $page-color-base;
+	}
+	.avatar{
+		border: none;
 	}
 	.list-cell{
 		display:flex;

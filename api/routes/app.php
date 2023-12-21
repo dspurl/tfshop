@@ -30,9 +30,7 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('login', 'LoginController@login')->name('client.login');    //登录
         Route::get('region', 'RegionController@list')->name('client.regionList');    //地区列表
         Route::post('register', 'LoginController@register')->name('client.register');    //注册
-        Route::post('findPassword', 'LoginController@findPassword')->name('client.findPassword');    //找回密码
         Route::post('miniLogin', 'LoginController@miniLogin')->name('client.miniLogin');    //小程序换取openid
-        Route::post('authorization', 'LoginController@authorization')->name('client.authorization');    //授权登录
         Route::post('verifyEmail', 'AppController@verifyEmail')->name('client.verifyEmail');    //绑定邮箱
         Route::post('user/notification', 'UserController@notification')->name('client.notification');    //更新通知状态
         Route::get('good', 'GoodController@list')->name('client.goodList');    //商品列表
@@ -83,7 +81,6 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('notification/read/{id}', 'NotificationController@read')->name('client.notificationRead');    //标记为已读
         Route::get('notification/detail/{id}', 'NotificationController@detail')->name('client.notificationDetail');    //通知详情
         Route::post('changeCellphone', 'AppController@changeCellphone')->name('client.changeCellphone');    //更换手机号
-        Route::post('amendPassword', 'LoginController@amendPassword')->name('client.amendPassword');    //修改密码
         Route::get('serviceConfig', 'ServiceController@config')->name('client.serviceConfig');    //获取客服配置
     });
 });
