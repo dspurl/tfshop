@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 
 /**
+ * @property mixed name
  * @property mixed email
  * @property int money
  * @property mixed portrait

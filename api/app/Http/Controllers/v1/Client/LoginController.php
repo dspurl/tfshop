@@ -130,6 +130,13 @@ class LoginController extends Controller
         if (!$request->has('cellphone')) {
             return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.cellphone')]), Code::CODE_WRONG);
         }
+        $user = User::where('cellphone', $request->cellphone)->first();
+        if ($user) {
+            if ($user->unsubscribe == User::USER_UNSUBSCRIBE_YES) {
+                return resReturn(0, __('user.cellphone.error.cancelled'), Code::CODE_WRONG);
+            }
+            return resReturn(0, __('user.cellphone.error.exist'), Code::CODE_WRONG);
+        }
         $redis = new RedisService();
         $code = $redis->get('code.register.' . $request->cellphone);
         if (!$code) {
