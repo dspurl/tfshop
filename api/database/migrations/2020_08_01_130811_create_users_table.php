@@ -37,8 +37,6 @@ class CreateUsersTable extends Migration
             $table->string('email',255)->nullable()->comment('邮箱');
             $table->string('cellphone',11)->nullable()->comment('手机');
             $table->string('portrait',255)->nullable()->comment('头像');
-            $table->string('platform',150)->nullable()->comment('平台标识');
-            $table->string('openid',255)->nullable()->comment('openid');
             $table->json('notification')->nullable()->comment('用户通知接收状态');
             $table->timestamps();
             $table->unique('id');

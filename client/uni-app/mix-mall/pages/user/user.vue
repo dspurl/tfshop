@@ -8,7 +8,7 @@
 					<image class="portrait" :src="user.portrait || '/static/missing-face.png'" lazy-load></image>
 				</view>
 				<view class="info-box">
-					<text v-if="user.nickname || user.platform" class="username">{{user.nickname || user.platform + '用户'}}</text>
+					<text v-if="user.nickname || user.user_platform.platform" class="username">{{user.nickname || user.user_platform.platform + '用户'}}</text>
 					<text @click="navTo()" class="username" v-else>去登录</text>
 				</view>
 			</view>
@@ -104,7 +104,11 @@
 				coverTransition: '0s',
 				moving: false,
 				browseList: [],
-				user: {},
+				user: {
+					user_platform: {
+						platform: ''
+					}
+				},
 				noticeNumber: null,
 				copyright: '1',
 				quantity: {

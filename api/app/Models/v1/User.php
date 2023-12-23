@@ -22,7 +22,6 @@ use Laravel\Passport\HasApiTokens;
  * @property mixed name
  * @property mixed email
  * @property int money
- * @property mixed portrait
  * @property mixed cellphone
  * @property string nickname
  * @property int state
@@ -169,5 +168,9 @@ class User extends Authenticatable implements HasLocalePreference
 
     public function Language(){
         return $this->hasOne(Language::class, 'code','lang');
+    }
+    public function UserPlatform()
+    {
+        return $this->hasOne(UserPlatform::class, 'user_id', 'id');
     }
 }

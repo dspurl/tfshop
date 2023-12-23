@@ -55,7 +55,6 @@ export default {
       unit: '',
       loading: false,
       codeDisabled: false,
-      loading: false,
       rules: {
         cellphone: [
           { validator: validateCellphone, trigger: 'blur' }

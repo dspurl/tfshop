@@ -169,12 +169,32 @@
 					  return false
 					}
 				}
+				ruleForm.platform = getPlatform()
+				// #ifdef  MP
+				uni.login({
+					success(res) {
+						if (res.code) {
+							that.logining = true
+							ruleForm.login_code = res.code
+							Login.register(ruleForm,function(res){
+								that.login(res)
+								that.logining = false
+								that.$api.msg(that.$t('login.succeed'));
+								uni.navigateBack()
+							})
+						}
+					}
+				})
+				// #endif
+				// #ifndef  MP
+				that.logining = true
 				Login.register(ruleForm,function(res){
 					that.login(res)
 					that.logining = false
 					that.$api.msg(that.$t('login.succeed'));
 					uni.navigateBack()
 				})
+				// #endif
 			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id

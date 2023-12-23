@@ -15,6 +15,7 @@ use App\Code;
 use App\common\RedisService;
 use App\Models\v1\MiniProgram;
 use App\Models\v1\User;
+use App\Models\v1\UserPlatform;
 use Carbon\Carbon;
 use GuzzleHttp\Client;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -81,12 +82,11 @@ class LoginController extends Controller
         if (!$request->has('cellphone')) {
             return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.cellphone')]), Code::CODE_WRONG);
         }
-        $user = User::where('cellphone', $request->cellphone)->first();
-        if ($user) {
-            if ($user->unsubscribe == User::USER_UNSUBSCRIBE_YES) {
+        $User = User::where('cellphone', $request->cellphone)->first();
+        if ($User) {
+            if ($User->unsubscribe == User::USER_UNSUBSCRIBE_YES) {
                 return resReturn(0, __('user.cellphone.error.cancelled'), Code::CODE_WRONG);
             }
-            return resReturn(0, __('user.cellphone.error.exist'), Code::CODE_WRONG);
         }
         $redis = new RedisService();
         $code = $redis->get('code.register.' . $request->cellphone);
@@ -96,32 +96,64 @@ class LoginController extends Controller
         if ($code != $request->code) {
             return resReturn(0, __('user.email_code.error'), Code::CODE_MISUSE);
         }
-        // 没用用户就注册，有则登录
-        $User = User::where('cellphone', $request->cellphone)->first();
-        $client = new Client();
-        $url = request()->root() . '/oauth/token';
-        if (!$User) {
-            $User = new User();
-            $User->lang = $request->lang ?? App::getLocale();
-            $User->name = $request->cellphone;
-            $User->cellphone = $request->cellphone;
-            $User->password = bcrypt($request->password);
-            $User->uuid = (string) Uuid::generate();
-            $User->save();
-        } else {
-            // 修改登录时间
-            $User->updated_at = Carbon::now()->toDateTimeString();
-            $User->save();
+        // 小程序手机号登录
+        if ($request->has('login_code')) {
+            if (!in_array($request->platform, ['miniWeixin', 'miniAlipay', 'miniToutiao'])) {
+                return resReturn(1, []);
+            }
+            $MiniProgram = new MiniProgram();
+            $mini = $MiniProgram->mini($request->platform, $request->login_code);
+            if ($mini['result'] == 'ok') {
+                $platform = strtolower($request->platform);
+                // 注册临时用户
+                $UserPlatform = UserPlatform::where('platform', $platform)->where('openid', $mini['openid'])->first();
+                $client = new Client();
+                $url = request()->root() . '/oauth/token';
+                if ($UserPlatform) {
+                    // 如果第三方账号已存在，用户也已经注册，则将用户同步到第三方账号（第一次第三方账号创建的用户将失效）
+                    if ($User) {
+                        $UserPlatform->user_id = $User->id;
+                        $UserPlatform->save();
+                    }
+                    // 修改登录时间
+                    $User = User::find($UserPlatform->user_id);
+                    $User->updated_at = Carbon::now()->toDateTimeString();
+                    $User->save();
+                } else {
+                    // 如果手机号未注册，则注册第三方账号和用户
+                    if (!$User) {
+                        $password = substr(MD5(time()), 5, 6);
+                        $User = new User();
+                        $User->lang = $request->lang ?? App::getLocale();
+                        $User->uuid = (string) Uuid::generate();
+                        $User->name = $User->uuid;
+                        $User->password = bcrypt($password);
+                        $User->save();
+                    }
+                    $UserPlatform = new UserPlatform();
+                    $UserPlatform->lang = $request->lang ?? App::getLocale();
+                    $UserPlatform->user_id = $User->id;
+                    $UserPlatform->platform = $platform;
+                    $UserPlatform->openid = $mini['openid'];
+                    $UserPlatform->save();
+                }
+                $params = array_merge(config('passport.web.proxy'), [
+                    'username' => $User->name,
+                    'password' => $User->password,
+                ]);
+                $respond = $client->post($url, ['form_params' => $params]);
+                $access_token = json_decode($respond->getBody()->getContents(), true);
+                $mini['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
+                $mini['access_token'] = $access_token['access_token'];
+                $mini['refresh_token'] = $access_token['refresh_token'];
+                $mini['expires_in'] = $access_token['expires_in'];
+                $mini['token_type'] = $access_token['token_type'];
+                $redis->del('code.register.' . $request->cellphone);
+                return resReturn(1, $mini);
+            } else {
+                return resReturn(0, $mini['msg'], Code::CODE_WRONG);
+            }
         }
-        $params = array_merge(config('passport.web.proxy'), [
-            'username' => $User->name,
-            'password' => $User->password,
-        ]);
-        $respond = $client->post($url, ['form_params' => $params]);
-        $access_token = json_decode($respond->getBody()->getContents(), true);
-        $access_token['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
-        $redis->del('code.register.' . $request->cellphone);
-        return resReturn(1, $access_token);
     }
 
     /**
@@ -143,23 +175,29 @@ class LoginController extends Controller
         if ($mini['result'] == 'ok') {
             $platform = strtolower($request->platform);
             // 注册临时用户
-            $User = User::where('platform', $platform)->where('openid', $mini['openid'])->first();
+            $UserPlatform = UserPlatform::where('platform', $platform)->where('openid', $mini['openid'])->first();
             $client = new Client();
             $url = request()->root() . '/oauth/token';
-            if ($User) {
+            if ($UserPlatform) {
                 // 修改登录时间
+                $User = User::find($UserPlatform->user_id);
                 $User->updated_at = Carbon::now()->toDateTimeString();
                 $User->save();
             } else {
+                // 授权登录，如果没有注册过，直接注册用户及第三方账号
                 $password = substr(MD5(time()), 5, 6);
                 $User = new User();
                 $User->lang = $request->lang ?? App::getLocale();
                 $User->uuid = (string) Uuid::generate();
                 $User->name = $User->uuid;
                 $User->password = bcrypt($password);
-                $User->platform = $platform;
-                $User->openid = $mini['openid'];
                 $User->save();
+                $UserPlatform = new UserPlatform();
+                $UserPlatform->lang = $request->lang ?? App::getLocale();
+                $UserPlatform->user_id = $User->id;
+                $UserPlatform->platform = $platform;
+                $UserPlatform->openid = $mini['openid'];
+                $UserPlatform->save();
             }
             $params = array_merge(config('passport.web.proxy'), [
                 'username' => $User->name,

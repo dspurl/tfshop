@@ -37,7 +37,7 @@ class UserController extends Controller
     public function detail()
     {
         User::$withoutAppends = false;
-        $User = User::select('cellphone', 'nickname', 'portrait', 'money', 'uuid', 'email', 'notification', 'platform', 'openid')->find(auth('web')->user()->id);
+        $User = User::select('cellphone', 'nickname', 'portrait', 'money', 'uuid', 'email', 'notification')->with(['UserPlatform'])->find(auth('web')->user()->id);
         return resReturn(1, $User);
     }
 
