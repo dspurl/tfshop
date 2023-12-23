@@ -98,9 +98,6 @@
 			// #endif
 		},
 		onShow(){
-			// #ifdef MP
-			getLogin();
-			// #endif
 		},
 		methods: {
 			...mapMutations(['login']),

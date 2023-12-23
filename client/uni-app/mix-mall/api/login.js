@@ -11,17 +11,6 @@
 import Network from '../utils/network.js'
 import i18n from '@/utils/lang/index'
 export default {
-	login(data, success, fail) {
-		Network.setPostMessage('login', data, i18n.t('common.processing'), function(res) {
-			success(res)
-		}, function(res) {
-			uni.showToast({
-				title: res.message,
-				icon: 'none',
-				duration: 2000
-			})
-		})
-	},
 	register(data, success, fail) {
 		Network.setPostMessage('register', data, i18n.t('common.processing'), function(res) {
 			success(res)

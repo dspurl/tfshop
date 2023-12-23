@@ -35,55 +35,6 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
     /**
-     * Login
-     * 登录
-     * @param Request $request
-     * @return string
-     * @queryParam  cellphone int 手机号
-     * @queryParam  password string 密码
-     */
-    public function login(Request $request)
-    {
-        if (!$request->has('cellphone')) {
-            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.cellphone')]), Code::CODE_WRONG);
-        }
-        if (!$request->has('password')) {
-            return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.password')]), Code::CODE_WRONG);
-        }
-        $user = User::where('cellphone', $request->cellphone)->first();
-        if (!$user) {
-            return resReturn(0, __('user.cellphone.error.unregistered'), Code::CODE_WRONG);
-        }
-        if ($user->unsubscribe == User::USER_UNSUBSCRIBE_YES) {
-            return resReturn(0, __('user.cellphone.error.cancelled'), Code::CODE_WRONG);
-        }
-        if ($user->state == User::USER_STATE_FORBID) {
-            return resReturn(0, __('user.cellphone.error.forbidden'), Code::CODE_WRONG);
-        }
-        if (!Hash::check($request->password, $user->password)) {
-            return resReturn(0, __('hint.error.mistake', ['attribute' => __('user.password')]), Code::CODE_WRONG);
-        }
-        if (!$user->api_token) {
-            $user->api_token = hash('sha256', Str::random(60));
-        }
-        $user->updated_at = Carbon::now()->toDateTimeString();
-        $user->save();
-        $client = new Client();
-        $url = request()->root() . '/oauth/token';
-        $params = array_merge(config('passport.web.proxy'), [
-            'username' => $request->cellphone,
-            'password' => $request->password,
-        ]);
-        $respond = $client->post($url, ['form_params' => $params]);
-        $access_token = json_decode($respond->getBody()->getContents(), true);
-        $access_token['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
-        $access_token['nickname'] = $user->nickname;
-        $access_token['cellphone'] = $user->cellphone;
-        $access_token['wechat'] = $user->wechat;
-        return resReturn(1, $access_token);
-    }
-
-    /**
      * token刷新
      * @param Request $request
      * @return string

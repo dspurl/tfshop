@@ -29,7 +29,6 @@ use App\Observers\PaymentLog\GoodIndentPaymentCreateObserver;
 use App\Observers\PaymentLog\GoodIndentPaymentSucceedObserver;
 use App\Observers\PaymentLog\GoodIndentRefundObserver;
 use App\Observers\User\UserLogObserver;
-use App\Observers\User\UserRegisterNotificationObserver;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Schema;
 class AppServiceProvider extends ServiceProvider
@@ -52,7 +51,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Schema::defaultStringLength(191);
         User::observe(UserLogObserver::class);
-        User::observe(UserRegisterNotificationObserver::class);
         GoodIndent::observe(ReceiptNotificationObserver::class);
         GoodIndent::observe(FinishPaymentNotificationObserver::class);
         GoodIndent::observe(FinishPaymentMoneyLogObserver::class);

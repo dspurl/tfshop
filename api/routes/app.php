@@ -27,7 +27,6 @@ Route::prefix('v'.config('dsshop.versions'))->namespace('v'.config('dsshop.versi
         Route::post('uploadPictures', 'AppController@uploadPictures')->name('client.uploadPictures');  //上传
         Route::post('cellphoneCode', 'AppController@cellphoneCode')->name('client.cellphoneCode');    //获取手机验证码
         Route::post('emailCode', 'AppController@emailCode')->name('client.emailCode');    //获取邮箱验证码
-        Route::post('login', 'LoginController@login')->name('client.login');    //登录
         Route::get('region', 'RegionController@list')->name('client.regionList');    //地区列表
         Route::post('register', 'LoginController@register')->name('client.register');    //注册
         Route::post('miniLogin', 'LoginController@miniLogin')->name('client.miniLogin');    //小程序换取openid

@@ -26,7 +26,7 @@ class UserLogObserver
 {
     protected $request;
     protected $route = [
-        'app/login',
+        'app/miniLogin',
         'app/register',
         'app/authorization',
         'app/logout',
