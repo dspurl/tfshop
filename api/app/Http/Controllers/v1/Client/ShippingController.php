@@ -17,6 +17,7 @@ use App\common\RedisService;
 use App\Http\Requests\v1\SubmitShippingRequest;
 use App\Models\v1\Freight;
 use App\Models\v1\FreightWay;
+use App\Models\v1\Good;
 use App\Models\v1\Region;
 use App\Models\v1\Shipping;
 use App\common\RedisLock;
@@ -200,11 +201,16 @@ class ShippingController extends Controller
             $list = [];
             foreach ($request->all() as $all) {
                 if ($all['freight_id']) {
+                    // 运费模板
                     if (array_key_exists($all['freight_id'], $list)) {
                         $list[$all['freight_id']] += $all['number'];
                     } else {
                         $list[$all['freight_id']] = $all['number'];
                     }
+                }else{
+                    // 固定运费
+                    $Good = Good::find($all['good_id']);
+                    $carriage += $Good->freight;
                 }
             }
             if ($value) {

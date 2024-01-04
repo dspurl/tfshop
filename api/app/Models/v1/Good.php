@@ -45,6 +45,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int freight_id
  * @property string lang
  * @property int lang_parent_id
+ * @property int freight_type
+ * @property int freight
  *
  * @method static find(int $id)
  * @method static count()
@@ -71,6 +73,8 @@ class Good extends Model
     const GOOD_HOT_YES = 1; //热销：是
     const GOOD_IS_INVENTORY_NO = 0; //减库存方式：拍下减库存
     const GOOD_IS_INVENTORY_FILM = 1; //减库存方式：付款减库存
+    const GOOD_FREIGHT_TYPE_FIXED = 0; //运费方式：固定邮费
+    const GOOD_FREIGHT_TYPE_TEMPLATE = 1; //运费方式：运费模板
 
     protected $appends = ['putaway_show', 'is_inventory_show'];
 

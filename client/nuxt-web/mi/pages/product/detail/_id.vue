@@ -65,6 +65,7 @@
               <el-button type="danger" plain @click="buy(true)" :disabled="goodDetail.state === 0">{{$t('product.buy')}}</el-button>
               <template>
                 <template v-if="goodDetail.type !== this.$t('product.type.keys') && goodDetail.type !== this.$t('product.type.download')">
+                  <el-button type="danger" @click="buy(false)">{{$t('product.add_cart')}}</el-button>
                 </template>
               </template>
               <template>

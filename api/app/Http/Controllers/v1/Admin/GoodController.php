@@ -181,6 +181,8 @@ class GoodController extends Controller
      * @queryParam  timing string 定时上架时间
      * @queryParam  good_specification array 商品规格
      * @queryParam  good_sku array 商品SKU
+     * @queryParam  freight_type int 运费方式:0固定邮费,1运费模板
+     * @queryParam  freight int 运费
      */
     public function create(SubmitGoodRequest $request)
     {
@@ -205,7 +207,7 @@ class GoodController extends Controller
             $Good->number = $request->number ?? '';
             $Good->type = $request->type;
             if ($Good->type == Good::GOOD_TYPE_COMMON) {
-                $Good->freight_id = $request->freight_id;
+                $Good->freight_id = $request->freight_type === Good::GOOD_FREIGHT_TYPE_TEMPLATE ? $request->freight_id : 0;
             }
             $Good->lang = $request->lang ?? App::getLocale();
             $Good->lang_parent_id = $request->lang_parent_id ?? 0;
@@ -222,6 +224,8 @@ class GoodController extends Controller
             $Good->time = $request->is_show == 1 ? Carbon::now()->toDateTimeString() : null;
             $Good->timing = $request->timing;
             $Good->order_price = $request->price;
+            $Good->freight_type = $request->freight_type;
+            $Good->freight = $request->freight_type === Good::GOOD_FREIGHT_TYPE_FIXED ? $request->freight : 0;
             if (count($request->good_sku) == 0) {
                 $Good->price = $request->price;
                 $Good->inventory = $request->inventory;
@@ -385,6 +389,8 @@ class GoodController extends Controller
      * @queryParam  timing string 定时上架时间
      * @queryParam  good_specification array 商品规格
      * @queryParam  good_sku array 商品SKU
+     * @queryParam  freight_type int 运费方式:0固定邮费,1运费模板
+     * @queryParam  freight int 运费
      */
     public function edit(SubmitGoodRequest $request, $id)
     {
@@ -408,7 +414,7 @@ class GoodController extends Controller
             $Good->number = $request->number ?? '';
             $Good->type = $request->type;
             if ($Good->type == Good::GOOD_TYPE_COMMON) {
-                $Good->freight_id = $request->freight_id;
+                $Good->freight_id = $request->freight_type === Good::GOOD_FREIGHT_TYPE_TEMPLATE ? $request->freight_id : 0;
             }
             $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
             $Good->is_inventory = $request->is_inventory;
@@ -423,6 +429,8 @@ class GoodController extends Controller
             $Good->time = $request->is_show == 1 ? Carbon::now()->toDateTimeString() : null;
             $Good->timing = $request->timing;
             $Good->order_price = $request->price;
+            $Good->freight_type = $request->freight_type;
+            $Good->freight = $request->freight_type === Good::GOOD_FREIGHT_TYPE_FIXED ? $request->freight : 0;
             $Good->save();
             // 商品规格处理
             if (count($request->good_specification) > 0) {

@@ -83,7 +83,7 @@ export default {
       this.buttonLoading = true;
       this.ruleForm.address = res
       const indentCommodity = this.ruleForm.indentCommodity.map(item => {
-        return { number: item.number, freight_id: item.good.freight_id };
+        return { number: item.number, freight_id: item.good.freight_id, good_id: item.good.id };
       });
       freight(res.id, indentCommodity).then(response => {
         this.ruleForm.carriage = response.carriage

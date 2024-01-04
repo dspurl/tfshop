@@ -159,7 +159,7 @@
 			getOne(){
 				const that = this
 				const indentCommodity = this.goodList.map(item => {
-					return { number: item.number, freight_id: item.good.freight_id }
+					return { number: item.number, freight_id: item.good.freight_id, good_id: item.good.id }
 				})
 				Shipping.freight(0,indentCommodity, function(res){
 					that.addressData = res.shipping ? res.shipping : ''
@@ -224,7 +224,7 @@
 			refreshAddress(item){
 				const that = this
 				const indentCommodity = this.goodList.map(item => {
-					return { number: item.number, freight_id: item.good.freight_id }
+					return { number: item.number, freight_id: item.good.freight_id, good_id: item.good.id }
 				})
 				Shipping.freight(item.id,indentCommodity, function(res){
 					that.carriage = res.carriage ? res.carriage : 0
