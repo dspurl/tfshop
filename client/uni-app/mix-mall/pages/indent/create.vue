@@ -95,7 +95,8 @@
 					remark: '',
 					carriage: 0,
 				},
-				isAddress: false
+				isAddress: false,
+				type: 'direct'
 			}
 		},
 		onShow(){
@@ -104,6 +105,9 @@
 			})
 		},
 		onLoad(option){
+			if(option.type){
+				this.type = option.type
+			}
 			this.loginCheck()
 			this.loadData()
 		},
@@ -170,6 +174,7 @@
 				this.payType = type;
 			},
 			submit(){
+				const that = this
 				if(!this.addressData){
 					this.$api.msg(this.$t('hint.error.selects', { attribute: this.$t('address.address')}))
 					return false
@@ -191,15 +196,17 @@
 					carriage: this.carriage,
 					shipping_id: this.addressData.id
 				},function(res){
-					//比对购物车, 清除已下单的商品
-					const cartList  =  uni.getStorageSync('dsshopCartList') || {}
-					for(var i=0;i<cartList.length;i++){
-						if(cartList[i].checked){
-						   cartList.splice(i--, 1);
+					if(that.type === 'cart'){
+						//比对购物车, 清除已下单的商品
+						const cartList  =  uni.getStorageSync('dsshopCartList') || {}
+						for(var i=0;i<cartList.length;i++){
+							if(cartList[i].checked){
+							   cartList.splice(i--, 1);
+							}
 						}
+						uni.setStorageSync('dsshopCartList', cartList)
+						GoodIndent.addShoppingCart(cartList,function(res){})
 					}
-					uni.setStorageSync('dsshopCartList', cartList)
-					GoodIndent.addShoppingCart(cartList,function(res){})
 					//清除购买列表
 					uni.removeStorageSync('dsshopOrderList')
 					uni.redirectTo({
