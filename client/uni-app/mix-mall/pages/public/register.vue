@@ -52,7 +52,8 @@
 </template>
 
 <script>
-	import Login from '../../api/login'
+	import Login from '@/api/login'
+	import { getPlatform } from '@/utils'
 	import {
         mapMutations
     } from 'vuex';
