@@ -96,6 +96,7 @@ class LoginController extends Controller
         if ($code != $request->code) {
             return resReturn(0, __('user.email_code.error'), Code::CODE_MISUSE);
         }
+        $password = substr(MD5(time()), 5, 6);
         // 小程序手机号登录
         if ($request->has('login_code')) {
             if (!in_array($request->platform, ['miniWeixin', 'miniAlipay', 'miniToutiao'])) {
@@ -107,8 +108,6 @@ class LoginController extends Controller
                 $platform = strtolower($request->platform);
                 // 注册临时用户
                 $UserPlatform = UserPlatform::where('platform', $platform)->where('openid', $mini['openid'])->first();
-                $client = new Client();
-                $url = request()->root() . '/oauth/token';
                 if ($UserPlatform) {
                     // 如果第三方账号已存在，用户也已经注册，则将用户同步到第三方账号（第一次第三方账号创建的用户将失效）
                     if ($User) {
@@ -122,7 +121,6 @@ class LoginController extends Controller
                 } else {
                     // 如果手机号未注册，则注册第三方账号和用户
                     if (!$User) {
-                        $password = substr(MD5(time()), 5, 6);
                         $User = new User();
                         $User->lang = $request->lang ?? App::getLocale();
                         $User->uuid = (string) Uuid::generate();
@@ -137,23 +135,40 @@ class LoginController extends Controller
                     $UserPlatform->openid = $mini['openid'];
                     $UserPlatform->save();
                 }
-                $params = array_merge(config('passport.web.proxy'), [
-                    'username' => $User->name,
-                    'password' => $User->password,
-                ]);
-                $respond = $client->post($url, ['form_params' => $params]);
-                $access_token = json_decode($respond->getBody()->getContents(), true);
-                $mini['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
-                $mini['access_token'] = $access_token['access_token'];
-                $mini['refresh_token'] = $access_token['refresh_token'];
-                $mini['expires_in'] = $access_token['expires_in'];
-                $mini['token_type'] = $access_token['token_type'];
-                $redis->del('code.register.' . $request->cellphone);
-                return resReturn(1, $mini);
             } else {
-                return resReturn(0, $mini['msg'], Code::CODE_WRONG);
+                throw new \Exception($mini['msg'], Code::CODE_WRONG);
+            }
+        } else {
+            // 非小程序登录
+            if ($User) {
+                $User->updated_at = Carbon::now()->toDateTimeString();
+                $User->save();
+            } else {
+                $User = new User();
+                $User->lang = $request->lang ?? App::getLocale();
+                $User->uuid = (string) Uuid::generate();
+                $User->name = $User->uuid;
+                $User->cellphone = $request->cellphone;
+                $User->password = bcrypt($password);
+                $User->save();
             }
         }
+        // 获取登录密钥
+        $client = new Client();
+        $url = request()->root() . '/oauth/token';
+        $params = array_merge(config('passport.web.proxy'), [
+            'username' => $User->name,
+            'password' => $User->password,
+        ]);
+        $respond = $client->post($url, ['form_params' => $params]);
+        $access_token = json_decode($respond->getBody()->getContents(), true);
+        $mini['refresh_expires_in'] = config('passport.refresh_expires_in') / 60 / 60 / 24;
+        $mini['access_token'] = $access_token['access_token'];
+        $mini['refresh_token'] = $access_token['refresh_token'];
+        $mini['expires_in'] = $access_token['expires_in'];
+        $mini['token_type'] = $access_token['token_type'];
+        $redis->del('code.register.' . $request->cellphone);
+        return resReturn(1, $mini);
     }
 
     /**
