@@ -431,6 +431,10 @@ class GoodController extends Controller
             $Good->order_price = $request->price;
             $Good->freight_type = $request->freight_type;
             $Good->freight = $request->freight_type === Good::GOOD_FREIGHT_TYPE_FIXED ? $request->freight : 0;
+            if (count($request->good_sku) == 0) {
+                $Good->price = $request->price;
+                $Good->inventory = $request->inventory;
+            }
             $Good->save();
             // 商品规格处理
             if (count($request->good_specification) > 0) {
