@@ -97,6 +97,7 @@ class LoginController extends Controller
             return resReturn(0, __('user.email_code.error'), Code::CODE_MISUSE);
         }
         $password = substr(MD5(time()), 5, 6);
+        $platform = strtolower($request->platform);
         // 小程序手机号登录
         if ($request->has('login_code')) {
             if (!in_array($request->platform, ['miniWeixin', 'miniAlipay', 'miniToutiao'])) {
@@ -105,7 +106,6 @@ class LoginController extends Controller
             $MiniProgram = new MiniProgram();
             $mini = $MiniProgram->mini($request->platform, $request->login_code);
             if ($mini['result'] == 'ok') {
-                $platform = strtolower($request->platform);
                 // 注册临时用户
                 $UserPlatform = UserPlatform::where('platform', $platform)->where('openid', $mini['openid'])->first();
                 if ($UserPlatform) {
@@ -151,6 +151,11 @@ class LoginController extends Controller
                 $User->cellphone = $request->cellphone;
                 $User->password = bcrypt($password);
                 $User->save();
+                $UserPlatform = new UserPlatform();
+                $UserPlatform->lang = $request->lang ?? App::getLocale();
+                $UserPlatform->user_id = $User->id;
+                $UserPlatform->platform = $platform;
+                $UserPlatform->save();
             }
         }
         // 获取登录密钥

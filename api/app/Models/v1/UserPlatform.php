@@ -31,6 +31,8 @@ class UserPlatform extends Model
     const USER_PLATFORM_PLATFORM_MINI_WEIXIN = 'miniweixin'; //平台标识:微信小程序
     const USER_PLATFORM_PLATFORM_MINI_ALIPAY = 'minialipay'; //平台标识:支付宝小程序
     const USER_PLATFORM_PLATFORM_MINI_TOUTIAO = 'minitoutiao'; //平台标识:头条小程序
+    const USER_PLATFORM_PLATFORM_PC = 'pc'; //平台标识:网站
+    const USER_PLATFORM_PLATFORM_H5 = 'h5'; //平台标识:H5
     public static $withoutAppends = true;
 
     /**
@@ -52,6 +54,10 @@ class UserPlatform extends Model
                 return '支付宝小程序';
             } else if ($this->attributes['platform'] == static::USER_PLATFORM_PLATFORM_MINI_TOUTIAO) {
                 return '头条小程序';
+            } else if ($this->attributes['platform'] == static::USER_PLATFORM_PLATFORM_PC) {
+                return '网站';
+            } else if ($this->attributes['platform'] == static::USER_PLATFORM_PLATFORM_H5) {
+                return 'H5';
             }
         }
     }

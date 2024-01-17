@@ -175,7 +175,11 @@
 					that.getQuantity()
 				} else {
 					that.browseList = []
-					that.user = {}
+					that.user = {
+						user_platform: {
+							platform: ''
+						}
+					}
 					that.noticeNumber = null
 					that.quantity = {
 						all: 0,
