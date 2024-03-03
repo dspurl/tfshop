@@ -17,13 +17,7 @@ export default {
 	onLaunch: function(options) {
 		// uni.clearStorage()
 		this.setSecret(options);
-		// #ifdef MP
-		if (uni.getStorageSync('applyDsshopOpenid')) {
-			this.checkSession();
-		} else {
-			getLogin();
-		}
-		// #endif
+		
 		this.setLanguage({code: uni.getStorageSync('language')})
 		// 状态栏高度
 		this.globalData.statusBarHeight = uni.getSystemInfoSync().statusBarHeight
@@ -45,16 +39,6 @@ export default {
 				userInfo.update = 1
 				this.login(userInfo)
 			}
-		},
-		// 检测登录状态是否过期
-		checkSession() {
-			let that = this;
-			uni.checkSession({
-				success() {},
-				fail() {
-					getLogin();
-				}
-			});
 		},
 		// 获取购物车角标
 		showDsshopCartNumber(){

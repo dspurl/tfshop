@@ -36,24 +36,9 @@ class UserController extends Controller
      */
     public function detail()
     {
-        $redis = new RedisService();
-        $lock = RedisLock::lock($redis, 'dsShopUser');
         User::$withoutAppends = false;
-        $User = User::select('cellphone', 'nickname', 'portrait', 'money', 'uuid', 'email', 'notification', 'wechat')->find(auth('web')->user()->id);
-        // 做uuid兼容
-        if (!$User->uuid) {
-            if ($lock) {
-                $uuid = (string)Uuid::generate();
-                User::where('id', auth('web')->user()->id)->update(['uuid' => $uuid]);
-                $User->uuid = $uuid;
-                RedisLock::unlock($redis, 'dsShopUser');
-            } else {
-                return resReturn(0, __('common.busy'), Code::CODE_SYSTEM_BUSY);
-            }
-        }
+        $User = User::select('cellphone', 'nickname', 'portrait', 'money', 'uuid', 'email', 'notification')->with(['UserPlatform'])->find(auth('web')->user()->id);
         return resReturn(1, $User);
-
-
     }
 
     /**

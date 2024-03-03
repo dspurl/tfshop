@@ -138,22 +138,18 @@ export default {
         }else{
           detail().then(response => {
             $nuxt.store.set(process.env.CACHE_PR + 'UserInfo', response)
+            this.user = response
           })
         }
       }
     },
     // 删除商品
     deleteCart(index){
-      if(this.shoppingCart[index].good_sku_id){
-        delete this.cartOriginalList[this.shoppingCart[index].good_sku_id]
-      }else{
-        delete this.cartOriginalList['good_'+this.shoppingCart[index].good_id]
-      }
-
       this.shoppingCart.splice(index, 1)
-      this.store.set(process.env.CACHE_PR + 'CartList',this.cartOriginalList)
-      addShoppingCart(this.cartOriginalList)
-      this.getShoppingCart()
+      this.$forceUpdate()
+      this.store.set(process.env.CACHE_PR + 'CartList',this.shoppingCart)
+      addShoppingCart(this.shoppingCart)
+      $nuxt.$store.commit('setShoppingCartNumber', this.shoppingCart.length)
     },
     // 搜索
     search(){

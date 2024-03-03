@@ -129,9 +129,20 @@
           :url="actionurl"
           :header="imgHeaders"/>
       </el-form-item>
-      <div v-if="ruleForm.type === 0">
+      <template v-if="ruleForm.type === 0">
         <h3>{{ $t('good.detail.logistics_information') }}</h3>
-        <el-form-item :label="$t('good.detail.form.select.label.type')" prop="freight_id">
+        <el-form-item label="运费方式" prop="freight_type">
+          <el-radio-group v-model="ruleForm.freight_type">
+            <el-radio :label="0">固定邮费</el-radio>
+            <el-radio :label="1">运费模板</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="ruleForm.freight_type === 0" label="运费" prop="freight">
+          <el-radio-group v-model="ruleForm.freight">
+            <el-input v-model="ruleForm.freight" maxlength="11" clearable style="width:80px;"/>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-else :label="$t('good.detail.form.select.label.type')" prop="freight_id">
           <el-select v-model="ruleForm.freight_id" :placeholder="$t('common.select')" clearable>
             <el-option
               v-for="item in freightLang"
@@ -141,7 +152,7 @@
           </el-select>
           <div class="el-upload__tip">{{ $t('good.detail.form.select.tip.type') }}</div>
         </el-form-item>
-      </div>
+      </template>
       <h3>{{ $t('good.detail.form.title.set') }}</h3>
       <el-form-item :label="$t('good.detail.form.radio_group.label.is_show')" prop="is_show">
         <el-radio-group v-model="ruleForm.is_show">
@@ -340,7 +351,9 @@ export default {
         is_hot: 0,
         is_inventory: 0,
         sort: 5,
-        freight_id: ''
+        freight_id: '',
+        freight_type: 0,
+        freight: 0
       },
       imgProgress: false,
       dialogStatus: 'create',
@@ -378,6 +391,12 @@ export default {
         ],
         sort: [
           { required: true, message: this.$t('hint.error.please_enter', { attribute: this.$t('common.sort') }), trigger: 'blur' }
+        ],
+        freight_type: [
+          { required: true, message: '请选择运费方式', trigger: 'change' }
+        ],
+        freight: [
+          { required: true, message: '运费不能为空', trigger: 'blur' }
         ]
       }
     }

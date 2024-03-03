@@ -32,7 +32,9 @@ class CreateGoodsTable extends Migration
             $table->string('name',60)->comment('商品名称');
             $table->bigInteger('category_id')->default(0)->index()->comment('分类ID');
             $table->string('number',50)->comment('货号');
+            $table->unsignedTinyInteger('freight_type')->default(0)->comment('运费方式:0=固定邮费-fixed,1=运费模板-template');
             $table->bigInteger('freight_id')->default(0)->index()->comment('运费模板ID');
+            $table->integer('freight')->default(0)->comment('运费');
             $table->bigInteger('brand_id')->default(0)->index()->comment('品牌ID');
             $table->integer('inventory')->default(0)->comment('库存');
             $table->integer('market_price')->default(0)->comment('市场价');

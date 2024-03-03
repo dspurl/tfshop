@@ -71,6 +71,11 @@ class ConfigController extends Controller
                     Config::where('id', '>', 0)->delete();
                     $redis->del('config');
                     return true;
+                } else if ($children['keys'] == 'dsshop.sync' && $children['value']) {
+                    // 同步
+                    $config = config('dsshop.config');
+                    $this->addConfig($config);
+                    return true;
                 }
                 // 有子级的，父类不更新
                 if (isset($children['children'])) {
@@ -91,5 +96,33 @@ class ConfigController extends Controller
             }
         }, 5);
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
+    }
+
+    protected function addConfig($configs, $ids = 0)
+    {
+        $id = $ids;
+        foreach ($configs as $c) {
+            $lang = $c['lang'] ?? App::getLocale();
+            $Config = Config::where('lang', $lang)->where('name', $c['name'])->first();
+            // 已存在的不进行处理
+            if (!$Config) {
+                $Config = new Config();
+                $Config->name = $c['name'];
+                $Config->lang = $lang;
+                $Config->parent_id = $id;
+                $Config->maxlength = isset($c['maxlength']) ? $c['maxlength'] : null;
+                $Config->required = isset($c['required']) ? $c['required'] : 0;
+                $Config->remark = isset($c['remark']) ? $c['remark'] : null;
+                $Config->input_type = isset($c['input_type']) ? $c['input_type'] : null;
+                $Config->input_option = isset($c['input_option']) ? $c['input_option'] : null;
+                $Config->keys = isset($c['keys']) ? $c['keys'] : null;
+                $Config->value = isset($c['value']) ? $c['value'] : null;
+                $Config->style = isset($c['style']) ? $c['style'] : null;
+                $Config->save();
+                if (isset($c['children'])) {
+                    $this->addConfig($c['children'], $Config->id);
+                }
+            }
+        }
     }
 }

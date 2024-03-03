@@ -8,57 +8,12 @@
 			<view class="welcome">
 				{{$t('login.welcome')}}
 			</view>
-			<view class="bg-white">
-			  <form>
-			    <view class="cu-form-group">
-			      <view class="title">{{$t('find_password.cellphone')}}</view>
-			      <input type="number" maxlength="11" v-model="ruleForm.cellphone" @input ="cellphoneInput"></input>
-			    </view>
-				<view class="cu-form-group">
-				  <view class="title">{{$t('login.password')}}</view>
-				  <input type="password" password v-model="ruleForm.password" @input="passwordInput"></input>
-				</view>
-			  </form>
-			</view>
-			<view class=" flex flex-direction padding">
-			  <button class="cu-btn round bg-red shadow lg" :disabled="logining" @click="toLogin">{{$t('login.login')}}</button>
+			<view class="flex flex-direction padding">
+			  <button class="cu-btn round bg-red shadow lg" :loading="logining" :disabled="logining" @click="toRegist">手机号登录</button>
 			</view>
 			<!--  #ifdef MP -->
 			<view class=" flex flex-direction padding">
-			  <button class="cu-btn round bg-orange shadow lg" @click="modalName = 'agreement'">{{$t('find_password.authorized_login')}}</button>
-			</view>
-			<!--  #endif -->
-			<view class="forget-section" @click="toFind">
-				{{$t('login.forget_password')}}
-			</view>
-			<view class="register-section">
-				{{$t('login.no_account')}}
-				<text @click="toRegist">{{$t('login.register')}}</text>
-			</view>
-			<!--  #ifdef MP -->
-			<view class=" flex flex-direction padding">
-			  <view class="cu-modal" :class="modalName=='agreement'?'show':''">
-			  	<view class="cu-dialog">
-			  		<view class="cu-bar bg-white justify-end">
-			  			<view class="content">{{$t('login.register_privacy')}}</view>
-			  		</view>
-			  		<view class="padding text-left">
-			  			<scroll-view scroll-y="true" class="scroll-Y">
-			  				<rich-text :nodes="nodes"></rich-text>
-			  			</scroll-view>
-			  		</view>
-			  		<view class="bg-white text-left padding text-sm">
-			  			{{$t('login.consent')}}
-			  			<span class="text-blue" @tap="goNavigator(2)">《dsshop{{$t('login.user_registration')}}》</span>
-			  			、
-			  			<span class="text-blue" @tap="goNavigator(1)">《dsshop{{$t('login.privacy')}}》</span>
-			  		</view>
-			  		<view class="grid bg-white col-2 solid-top">
-						<view class="bg-white" @click="modalName = ''"><button>{{$t('login.disagree')}}</button></view>
-			  			<view class="bg-red"><button class="bg-red" open-type="getPhoneNumber" @getphonenumber="decryptPhoneNumber">{{$t('login.agreement')}}</button></view>
-			  		</view>
-			  	</view>
-			  </view>
+			  <button class="cu-btn round bg-orange shadow lg" :loading="logining" :disabled="logining" @click="toMiniLogin">{{$t('find_password.authorized_login')}}</button>
 			</view>
 			<!--  #endif -->
 		</view>
@@ -66,8 +21,8 @@
 </template>
 
 <script>
-	import Login from '../../api/login'
-	import { getPlatform,getLogin } from '../../utils'
+	import Login from '@/api/login'
+	import { getPlatform,getLogin } from '@/utils'
 	import {
         mapMutations
     } from 'vuex';
@@ -134,7 +89,7 @@
 				],
 				disabled: false,
 				modalName: null,
-				logining: true
+				logining: false
 			}
 		},
 		onLoad(options){
@@ -143,9 +98,6 @@
 			// #endif
 		},
 		onShow(){
-			// #ifdef MP
-			getLogin();
-			// #endif
 		},
 		methods: {
 			...mapMutations(['login']),
@@ -173,12 +125,7 @@
 				  return false
 				}
 				this.logining = true
-				Login.login(ruleForm,function(res){
-					that.login(res)
-					that.logining = false
-					that.$api.msg(that.$t('login.succeed'));
-					uni.navigateBack()
-				})
+				
 			},
 			tabSelect(e) {
 				this.TabCur = e.currentTarget.dataset.id
@@ -198,57 +145,26 @@
 					url: `/pages/public/register`
 				})
 			},
-			toFind(){
-				uni.redirectTo({
-					url: `/pages/public/findPassword`
+			toMiniLogin(){
+				const that = this
+				uni.login({
+					success(res) {
+						if (res.code) {
+							that.logining = true
+							Login.miniLogin({
+								code: res.code,
+								platform: getPlatform()
+							},function(res){
+								that.login(res)
+								that.logining = false
+								that.$api.msg(that.$t('login.succeed'));
+								uni.navigateBack()
+							})
+						}
+					}
 				})
-			},
-			//手机号
-			  cellphoneInput: function (e) {
-			    var ruleForm = this.ruleForm
-			    ruleForm.cellphone = e.detail.value
-				if (this.ruleForm.cellphone && this.ruleForm.password){
-					this.logining = false
-				}else{
-					this.logining = true
-				}
-			  },
-			  // 协议
-			  goNavigator(id){
-			  	uni.navigateTo({
-			  	    url: `/pages/article/detail?list=0&id=${id}`
-			  	});
-			  },
-			  //密码
-			  passwordInput: function (e) {
-			    var ruleForm = this.ruleForm
-			    ruleForm.password = e.detail.value
-				if (this.ruleForm.cellphone && this.ruleForm.password){
-					this.logining = false
-				}else{
-					this.logining = true
-				}
-			  },
-			  //授权登录
-			  decryptPhoneNumber(e){
-				  this.modalName = ''
-				  const that = this
-				  if(e.detail.iv){
-					  Login.authorization({
-						iv: e.detail.iv,
-						encryptedData: e.detail.encryptedData,
-						session_key: uni.getStorageSync('applyDsshopSession_key'),
-						platform: getPlatform()
-					  },function(res){
-						that.login(res)
-						that.$api.msg(that.$t('login.succeed'));
-						uni.navigateBack()
-					  })
-				  }else{
-					  that.$api.msg(that.$t('login.refusal_authorization'))
-				  }
-
-			  }
+				
+			}
 		}
 
 	}

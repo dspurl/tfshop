@@ -147,11 +147,7 @@ class AppController extends Controller
             return resReturn(0, __('hint.error.not_null', ['attribute'=>__('user.cellphone')]), Code::CODE_WRONG);
         }
         $user = User::where('cellphone', $request->cellphone)->first();
-        if (!$request->has('state')) {
-            if ($user) {
-                return resReturn(0, __('user.cellphone.error.exist'), Code::CODE_WRONG);
-            }
-        } else {
+        if ($request->has('state')) {
             if ($request->state == 2) {
                 if ($user) {
                     if ($user->id != auth('web')->user()->id) {
@@ -286,7 +282,7 @@ class AppController extends Controller
      */
     public function changeCellphone(Request $request)
     {
-        if (!$request->cellphone) {
+        if (!$request->has('cellphone')) {
             return resReturn(0, __('hint.error.not_null', ['attribute' => __('user.cellphone')]), Code::CODE_WRONG);
         }
         if (auth('web')->user()->cellphone == $request->cellphone) {

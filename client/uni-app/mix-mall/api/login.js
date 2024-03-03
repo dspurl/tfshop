@@ -11,17 +11,6 @@
 import Network from '../utils/network.js'
 import i18n from '@/utils/lang/index'
 export default {
-	login(data, success, fail) {
-		Network.setPostMessage('login', data, i18n.t('common.processing'), function(res) {
-			success(res)
-		}, function(res) {
-			uni.showToast({
-				title: res.message,
-				icon: 'none',
-				duration: 2000
-			})
-		})
-	},
 	register(data, success, fail) {
 		Network.setPostMessage('register', data, i18n.t('common.processing'), function(res) {
 			success(res)
@@ -55,19 +44,8 @@ export default {
 			})
 		})
 	},
-	findPassword(data, success, fail) {
-		Network.setPostMessage('findPassword', data, i18n.t('common.processing'), function(res) {
-			success(res)
-		}, function(res) {
-			uni.showToast({
-				title: res.message,
-				icon: 'none',
-				duration: 2000
-			})
-		})
-	},
-	authorization(data, success, fail) {
-		Network.setPost('authorization', data, function(res) {
+	changeCellphone(data, success, fail) {
+		Network.setPost('changeCellphone', data, function(res) {
 			success(res)
 		}, function(res) {
 			uni.showToast({
@@ -109,5 +87,16 @@ export default {
 				duration: 2000
 			})
 		})
-	}
+	},
+	miniLogin(data,success, fail){
+		Network.setPost('miniLogin', data, function(res) {
+			success(res)
+		}, function(res) {
+			uni.showToast({
+				title: res.message,
+				icon: 'none',
+				duration: 2000
+			})
+		})
+	},
 };

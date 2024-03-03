@@ -109,7 +109,7 @@ switch ($_GET['step']) {
             'msg' => $shell
         ];
         if (!strstr($env, "PASSPORT_CLIENT_ID=1")) {
-            $shell .= sellCode('php artisan passport:client --password --provider=admins');
+            $shell .= sellCode('php artisan passport:client --name=dsshop --password --provider=admins');
             if (strstr($shell, "Password grant client created successfully")) {
                 $content = explode("\n", $shell);
                 foreach ($content as $c) {
@@ -129,7 +129,7 @@ switch ($_GET['step']) {
         }
         $env = file_get_contents("../../../.env");
         if (!strstr($env, "PASSPORT_WEB_ID=2")) {
-            $shell = sellCode('php artisan passport:client --password --provider=users');
+            $shell = sellCode('php artisan passport:client --name=dsshop --password --provider=users');
             if (strstr($shell, "Password grant client created successfully")) {
                 $content = explode("\n", $shell);
                 foreach ($content as $c) {

@@ -19,20 +19,16 @@ use Illuminate\Support\Facades\Hash;
 use Laravel\Passport\HasApiTokens;
 
 /**
- * @property string password
  * @property mixed name
  * @property mixed email
  * @property int money
- * @property mixed portrait
- * @property int type
  * @property mixed cellphone
- * @property string api_token
  * @property string nickname
  * @property int state
  * @property int gender
- * @property string miniweixin
+ * @property string portrait
  * @property string uuid
- * @property string wechat
+ * @property string openid
  */
 class User extends Authenticatable implements HasLocalePreference
 {
@@ -46,8 +42,9 @@ class User extends Authenticatable implements HasLocalePreference
     const USER_UNSUBSCRIBE_NO = 0; //注销状态：0否
     const USER_NOTIFICATION_EMAIL = 'email';  //通知类型：邮件
     const USER_NOTIFICATION_WECHAT = 'wechat';  //通知类型：微信公众号模板消息
-    const USER_WECHAT_SUBSCRIBE_YES = 1;  //是否关注微信公众平台：是
-    const USER_WECHAT_SUBSCRIBE_NO = 0;  //是否关注微信公众平台：否
+    const USER_PLATFORM_MINI_WEIXIN = 'miniweixin'; //平台标识:微信小程序
+    const USER_PLATFORM_MINI_ALIPAY = 'minialipay'; //平台标识:支付宝小程序
+    const USER_PLATFORM_MINI_TOUTIAO = 'minitoutiao'; //平台标识:头条小程序
     protected $appends = ['gender_show', 'state_show'];
     public static $withoutAppends = true;
 
@@ -156,8 +153,24 @@ class User extends Authenticatable implements HasLocalePreference
             return $return > 0 ? $return : 0;
         }
     }
+    public function getPlatformAttribute()
+    {
+        if (isset($this->attributes['platform'])) {
+            if ($this->attributes['platform'] == static::USER_PLATFORM_MINI_WEIXIN) {
+                return '微信小程序';
+            } else if ($this->attributes['platform'] == static::USER_PLATFORM_MINI_ALIPAY) {
+                return '支付宝小程序';
+            } else if ($this->attributes['platform'] == static::USER_PLATFORM_MINI_TOUTIAO) {
+                return '头条小程序';
+            }
+        }
+    }
 
     public function Language(){
         return $this->hasOne(Language::class, 'code','lang');
+    }
+    public function UserPlatform()
+    {
+        return $this->hasOne(UserPlatform::class, 'user_id', 'id');
     }
 }

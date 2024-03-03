@@ -340,7 +340,7 @@
 				}
 				uni.setStorageSync('dsshopOrderList', goodsData)
 				uni.navigateTo({
-					url: `/pages/indent/create`
+					url: `/pages/indent/create?type=cart`
 				})
 			}
 		}

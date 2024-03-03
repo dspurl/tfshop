@@ -50,26 +50,10 @@ export function verifyEmail(data) {
     data
   })
 }
-export function findPassword(data) {
-  data = Qs.parse(data)
-  return request({
-    url: 'findPassword',
-    method: 'POST',
-    data
-  })
-}
 export function changeCellphone(data) {
   data = Qs.parse(data)
   return request({
     url: 'changeCellphone',
-    method: 'POST',
-    data
-  })
-}
-export function amendPassword(data) {
-  data = Qs.parse(data)
-  return request({
-    url: 'amendPassword',
     method: 'POST',
     data
   })

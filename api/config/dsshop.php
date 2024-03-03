@@ -93,6 +93,24 @@ return [
                     'keys' => 'dsshop.reset',
                     'value' => false
                 ],
+                [
+                    'name' => '配置同步',
+                    'remark' => '开启后，config目录下配置的内容如果不存在数据库中，则会添加',
+                    'input_type' => 'switch',
+                    'input_option' => [
+                        [
+                            'name'=> '否',
+                            'value'=> false
+                        ],
+                        [
+                            'name'=> '是',
+                            'value'=> true
+                        ]
+                    ],
+                    'required' => true,
+                    'keys' => 'dsshop.sync',
+                    'value' => false
+                ],
             ]
         ],
         [
@@ -757,6 +775,24 @@ return [
                     ],
                     'required' => true,
                     'keys' => 'dsshop.reset',
+                    'value' => false
+                ],
+                [
+                    'name' => 'Configuration synchronization',
+                    'remark' => 'If the information configured in the config directory does not exist in the database, it is added to the database',
+                    'input_type' => 'switch',
+                    'input_option' => [
+                        [
+                            'name'=> 'No',
+                            'value'=> false
+                        ],
+                        [
+                            'name'=> 'Yes',
+                            'value'=> true
+                        ]
+                    ],
+                    'required' => true,
+                    'keys' => 'dsshop.sync',
                     'value' => false
                 ],
             ]

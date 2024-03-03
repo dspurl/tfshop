@@ -31,9 +31,6 @@ export const mutations = {
         setToken('expires_in', (new Date()).getTime() + provider.expires_in * 1000, refresh_expires_in)
         setToken('refresh_token',provider.refresh_token, refresh_expires_in);
         setToken('token_type',provider.token_type, refresh_expires_in);
-        if (provider.cellphone) {
-          store.set(process.env.CACHE_PR + 'UserInfo', provider)
-        }
       }
     }
   },

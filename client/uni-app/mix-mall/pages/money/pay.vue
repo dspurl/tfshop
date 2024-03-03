@@ -49,7 +49,7 @@
 				</view>
 			</view>
 			
-			<button class="mix-btn" :disabled="confirmDisabled" @click="confirm">{{$t('payment_log.confirm_payment')}}</button>
+			<button class="mix-btn" :loading="confirmDisabled" :disabled="confirmDisabled" @click="confirm">{{$t('payment_log.confirm_payment')}}</button>
 			<view class="cu-modal" :class="modalName=='payHint'?'show':''">
 				<view class="cu-dialog">
 					<view class="cu-bar bg-white justify-end">
@@ -177,7 +177,6 @@
 						id: this.id
 					},function(res){
 						authMsg(['4iOC-HyjJeKK5HiYORcOtrKHvu2Ho1ScVF0aqP3KkzQ'])
-						that.confirmDisabled = false
 						if(!that.user.email && !that.user.wechat){
 							uni.showModal({
 							  title: that.$t('common.hint'),
@@ -200,6 +199,7 @@
 							})
 						}
 					})
+					that.confirmDisabled = false
 				} else {
 					// #ifdef H5
 					if(micromessenger()){

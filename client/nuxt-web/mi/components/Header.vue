@@ -43,7 +43,6 @@
             </template>
             <template v-else>
               <div class="li" @click="goLogin">{{$t('header.top.login')}}</div>
-              <NuxtLink class="li" to="/pass/register">{{$t('header.top.register')}}</NuxtLink>
             </template>
             <NuxtLink class="li" to="/user/notice/list">{{$t('header.top.message')}}</NuxtLink>
             <NuxtLink
@@ -51,11 +50,11 @@
               v-for="locale in availableLocales"
               :key="locale.code"
               :to="switchLocalePath(locale.code)"><span @click="handleChangeLang(locale.code)">{{ locale.name }}</span></NuxtLink>
-            <div class="li cart" :class="{ on: shoppingCart.length > 0 }" @mouseenter="userCart" @mouseleave="userCartOut">
-              <NuxtLink :to="{ path: '/cart'}"><div class="cart-navigation"><i class="iconfont" :class="shoppingCart.length > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>{{$t('header.top.cart')}}({{$nuxt.$store.state.shoppingCartNumber}})</div></NuxtLink>
+            <div class="li cart" :class="{ on: $nuxt.$store.state.shoppingCartNumber }" @mouseenter="userCart" @mouseleave="userCartOut">
+              <NuxtLink :to="{ path: '/cart'}"><div class="cart-navigation"><i class="iconfont" :class="$nuxt.$store.state.shoppingCartNumber > 0 ? 'dsshop-gouwuche1' : 'dsshop-gouwuche'"></i>{{$t('header.top.cart')}}({{$nuxt.$store.state.shoppingCartNumber}})</div></NuxtLink>
               <el-collapse-transition>
                 <div class="cart-box" v-show="cartActive" v-loading="cartLoading">
-                <template v-if="shoppingCart.length > 0">
+                <template v-if="$nuxt.$store.state.shoppingCartNumber">
                   <div class="cart-list">
                     <div class="cart-li" v-for="(item, index) in shoppingCart" :key="index">
                       <NuxtLink class="image" :to="{ path: `/product/detail/${item.good_id}`}">

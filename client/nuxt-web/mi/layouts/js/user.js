@@ -30,7 +30,6 @@ export default {
           name: this.$t('user.account'),
           children: [
             { name: this.$t('user.info'), path: '/user/userinfo', active: false },
-            { name: this.$t('user.password'), path: '/user/password', active: false },
             { name: this.$t('user.cellphone'), path: '/user/cellphone', active: false },
             { name: this.$t('user.cancel'), path: '/user/cancel', active: false}
           ]
