@@ -48,7 +48,8 @@ export default {
       ruleForm: {
         cellphone: '',
         code: '',
-        remember: false
+        remember: false,
+        platform: 'pc'
       },
       codename:this.$t('find_password.get_code'),
       seconds: '',
