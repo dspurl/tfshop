@@ -116,8 +116,7 @@ PC端：[https://tfshop.dswjcms.com/](https://tfshop.dswjcms.com/)（电脑端�
 
 欢迎提交代码 [提交代码](https://github.com/dspurl/tfshop/pulls)。
 
-欢迎加入我们的QQ频道
-<p><img src="https://dspurl.github.io/image/channel.png" width="250" /></p>
+技术交流群： 634522451
 
 ### 特别鸣谢
 
