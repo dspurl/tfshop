@@ -2,11 +2,11 @@
 /** +----------------------------------------------------------------------
  * | 插件
  * +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -76,25 +76,25 @@ class Plugin
         Storage::disk('root')->makeDirectory($this->pluginListPath);
         $data = Storage::disk('root')->directories($this->pluginListPath);
         $list = [];
-        $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
+        $json_tfshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/tfshop.json'), true);
         foreach ($data as $value) {
-            $dsshop = json_decode(Storage::disk('root')->get($value . '/dsshop.json'), true);
+            $tfshop = json_decode(Storage::disk('root')->get($value . '/tfshop.json'), true);
             if (Storage::disk('root')->exists($value . '/diff.json')) {
-                $dsshop['diff_count'] = 0;
+                $tfshop['diff_count'] = 0;
                 $diff = json_decode(Storage::disk('root')->get($value . '/diff.json'), true);
                 foreach ($diff as $d) {
                     if ($d['state'] != 1) {
-                        $dsshop['diff_count'] += 1;
+                        $tfshop['diff_count'] += 1;
                     }
                 }
             }
-            foreach ($json_dsshop as $js) {
-                if ($js['name'] == $dsshop['abbreviation']) {
-                    $dsshop['locality_versions'] = $js['versions'];
-                    $dsshop['is_delete'] = $js['is_delete'];
+            foreach ($json_tfshop as $js) {
+                if ($js['name'] == $tfshop['abbreviation']) {
+                    $tfshop['locality_versions'] = $js['versions'];
+                    $tfshop['is_delete'] = $js['is_delete'];
                 }
             }
-            $list[] = $dsshop;
+            $list[] = $tfshop;
         }
         $page = $request->has('page') ? $request->page : 1;
         $limit = $request->has('limit') ? $request->limit : 20;
@@ -113,23 +113,23 @@ class Plugin
     public function getOnLinePlugin()
     {
         $client = new Client(['verify' => false]);
-        $url = config('dsshop.marketUrl') . '/api/v1/app/market';
+        $url = config('tfshop.marketUrl') . '/api/v1/app/market';
         $params = [
-            'version' => config('dsshop.appVersion')
+            'version' => config('tfshop.appVersion')
         ];
         $headers = [
-            'apply-secret' => config('dsshop.marketApplySecret'),
-            'application-secret' => config('dsshop.marketApplicationSecret'),
+            'apply-secret' => config('tfshop.marketApplySecret'),
+            'application-secret' => config('tfshop.marketApplicationSecret'),
         ];
         try {
             $respond = $client->get($url, ['query' => $params, 'headers' => $headers]);
             $list = json_decode($respond->getBody()->getContents(), true);
-            $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
+            $json_tfshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/tfshop.json'), true);
             $scandir = Storage::disk('root')->directories($this->pluginListPath);
             foreach ($list['message']['data'] as &$message) {
                 // 已安装
-                if (collect($json_dsshop)->contains('name', $message['abbreviation'])) {
-                    $data = collect($json_dsshop)->first(function ($value) use ($message) {
+                if (collect($json_tfshop)->contains('name', $message['abbreviation'])) {
+                    $data = collect($json_tfshop)->first(function ($value) use ($message) {
                         return $value['name'] == $message['abbreviation'];
                     });
                     // 获取当前插件是否卸载过和当前版本
@@ -138,18 +138,18 @@ class Plugin
                     $message['state'] = $data['is_delete'] == 1 ? 3 : 2;
                     $message['current_version'] = $data['versions'];
                 } else if (in_array('plugin/list/' . $message['abbreviation'], $scandir)) {  // 已下载
-                    $dsshop = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $message['abbreviation'] . '/dsshop.json'), true);
-                    $local = array_key_exists('local', $dsshop) ? $dsshop['local'] : 0;  //是否本地
-                    $publish = array_key_exists('publish', $dsshop) ? $dsshop['publish'] : 0;    // 是否发布
+                    $tfshop = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $message['abbreviation'] . '/tfshop.json'), true);
+                    $local = array_key_exists('local', $tfshop) ? $tfshop['local'] : 0;  //是否本地
+                    $publish = array_key_exists('publish', $tfshop) ? $tfshop['publish'] : 0;    // 是否发布
                     $message['local'] = $local ? 1 : 0;
                     $message['publish'] = $publish ? 1 : 0;
                     // 不是本地创建的插件，获取更新状态
                     if (!$local) {
-                        $message['update'] = $dsshop['versions'] == $message['versions'] ? 0 : 1;
+                        $message['update'] = $tfshop['versions'] == $message['versions'] ? 0 : 1;
                     } else {
                         $message['update'] = 0;
                     }
-                    $message['current_version'] = $dsshop['versions'];
+                    $message['current_version'] = $tfshop['versions'];
                     $message['state'] = 1;
                 } else {
                     $message['state'] = 0;
@@ -180,19 +180,19 @@ class Plugin
             throw new \Exception('插件配置信息不完整', Code::CODE_WRONG);
         }
         $client = new Client(['verify' => false]);
-        $url = config('dsshop.marketUrl') . '/api/v1/app/market/download/' . $code;
+        $url = config('tfshop.marketUrl') . '/api/v1/app/market/download/' . $code;
         $params = [
             'suffix' => $request->suffix ? true : false
         ];
         $headers = [
-            'apply-secret' => config('dsshop.marketApplySecret'),
-            'application-secret' => config('dsshop.marketApplicationSecret'),
+            'apply-secret' => config('tfshop.marketApplySecret'),
+            'application-secret' => config('tfshop.marketApplicationSecret'),
         ];
         try {
             $respond = $client->get($url, ['query' => $params, 'headers' => $headers]);
             // 下载远程作品到临时目录
             if ($request->suffix) {
-                Storage::disk('plugin')->put('temporary/' . $code . '/dsshop.json', $respond->getBody()->getContents());
+                Storage::disk('plugin')->put('temporary/' . $code . '/tfshop.json', $respond->getBody()->getContents());
             } else {
                 Storage::disk('plugin')->put('temporary/' . $code . '.zip', $respond->getBody()->getContents());
             }
@@ -200,19 +200,19 @@ class Plugin
             $shell_exec = '';
             if (!$request->suffix) {
                 $shell_exec .= shell_exec('cd ' . $temporary_path . ' && unzip ' . $code . '.zip -d ' . $code . '/');
-                $config = json_decode(Storage::disk('plugin')->get('temporary/' . $code . '/dsshop.json'), true);
+                $config = json_decode(Storage::disk('plugin')->get('temporary/' . $code . '/tfshop.json'), true);
                 //修改插件信息
                 $config['img'] = $request->img;
                 $config['author'] = $request->author;
                 $config['author_url'] = $request->author_url;
                 $config['portrait'] = $request->portrait;
                 $config['category'] = $request->category;
-                Storage::disk('plugin')->put('temporary/' . $code . '/dsshop.json', json_encode($config));
+                Storage::disk('plugin')->put('temporary/' . $code . '/tfshop.json', json_encode($config));
                 Storage::disk('plugin')->deleteDirectory("list/" . $config['abbreviation']);
                 Storage::disk('plugin')->move("temporary/" . $code, "list/" . $config['abbreviation']);
                 Storage::disk('plugin')->delete("temporary/" . $code . ".zip");
             } else {
-                $config = json_decode(Storage::disk('plugin')->get('temporary/' . $code . '/dsshop.json'), true);
+                $config = json_decode(Storage::disk('plugin')->get('temporary/' . $code . '/tfshop.json'), true);
                 if (!Storage::disk('plugin')->exists("list/" . $config['abbreviation'])) {
                     throw new \Exception('请先进行安装插件', Code::CODE_WRONG);
                 }
@@ -231,7 +231,7 @@ class Plugin
      */
     public function models()
     {
-        $data = Storage::disk('root')->files('/api/app/Models/v' . config('dsshop.versions'));
+        $data = Storage::disk('root')->files('/api/app/Models/v' . config('tfshop.versions'));
         $return = [];
         foreach ($data as $value) {
             $name = explode("/", str_replace(".php", "", $value));
@@ -259,9 +259,9 @@ class Plugin
 
             foreach ($list as $l) {
                 try {
-                    $path = Storage::disk('root')->get('/' . $l . '/dsshop.config.json');
+                    $path = Storage::disk('root')->get('/' . $l . '/tfshop.config.json');
                 } catch (\Exception $e) {
-                    throw new \Exception('缺少dsshop.config.json配置文件', Code::CODE_WRONG);
+                    throw new \Exception('缺少tfshop.config.json配置文件', Code::CODE_WRONG);
                 }
                 $config = json_decode($path, true);
                 $return[$value]['children'][] = $config;
@@ -333,7 +333,7 @@ class Plugin
         }
         // 创建插件时，先清除插件创建过的文件和目录
         $this->destroy($request->abbreviation);
-        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $request->abbreviation . '/dsshop.json')) {
+        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $request->abbreviation . '/tfshop.json')) {
             throw new \Exception('创建的插件已经存在', Code::CODE_PARAMETER_WRONG);
         }
         $this->generatePlugInDirectory();
@@ -447,8 +447,8 @@ class Plugin
      */
     public function publish($name)
     {
-        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $name . '/dsshop.json')) {
-            $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
+        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $name . '/tfshop.json')) {
+            $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/tfshop.json'), true);
             // 清空插件打包产生的相关文件
             Storage::disk('root')->deleteDirectory($this->pluginListPath . '/' . $name . '/admin');
             Storage::disk('root')->deleteDirectory($this->pluginListPath . '/' . $name . '/api');
@@ -490,8 +490,8 @@ class Plugin
      */
     public function download($name)
     {
-        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $name . '/dsshop.json')) {
-            $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
+        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $name . '/tfshop.json')) {
+            $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/tfshop.json'), true);
             $pluginPath = $this->pluginListPath . '/' . $path['abbreviation'];
             $newPath = '/api/storage/app/public/plugin/' . $name;
             $newPluginPath = 'plugin/' . $name;
@@ -510,7 +510,7 @@ class Plugin
                 'author' => $path['author'],
                 'relyOn' => $path['relyOn'],
             ];
-            $disk->put($newPluginPath . '/dsshop.json', json_encode($json));
+            $disk->put($newPluginPath . '/tfshop.json', json_encode($json));
             $disk->put($newPluginPath . '/README.md', $path['instructions']);
 
             $zip_file = storage_path('app/public/plugin/' . $name) . '.zip';
@@ -539,7 +539,7 @@ class Plugin
      */
     public function details($name)
     {
-        $path = $this->pluginListPath . '/' . $name . '/dsshop.json';
+        $path = $this->pluginListPath . '/' . $name . '/tfshop.json';
         $path = Storage::disk('root')->get($path);
         return json_decode($path);
     }
@@ -554,21 +554,21 @@ class Plugin
     public function autoPlugin($name, $template = false)
     {
         $path = $this->pluginListPath . '/' . $name;
-        $dsshop = $path . '/dsshop.json';
+        $tfshop = $path . '/tfshop.json';
         $routes = $path . '/routes.json';
 
         if (!Storage::disk('root')->exists($routes)) {
             throw new \Exception('插件缺少routes.json文件', Code::CODE_PARAMETER_WRONG);
         }
-        if (!Storage::disk('root')->exists($dsshop)) {
-            throw new \Exception('插件缺少dsshop.json文件', Code::CODE_PARAMETER_WRONG);
+        if (!Storage::disk('root')->exists($tfshop)) {
+            throw new \Exception('插件缺少tfshop.json文件', Code::CODE_PARAMETER_WRONG);
         }
         $this->fileDestroy($path . '/diff.json');
-        $dsshop = json_decode(Storage::disk('root')->get($dsshop), true);
+        $tfshop = json_decode(Storage::disk('root')->get($tfshop), true);
         $routes = json_decode(Storage::disk('root')->get($routes), true);
         // 依赖插件
-        if (array_key_exists('relyOn', $dsshop)) {
-            foreach ($dsshop['relyOn'] as $relyOn) {
+        if (array_key_exists('relyOn', $tfshop)) {
+            foreach ($tfshop['relyOn'] as $relyOn) {
                 // 不存在依赖插件且设置了必须安装依赖插件时
                 if (!$this->has($relyOn['name']) && $this->has($relyOn['must'])) {
                     throw new \Exception('请先安装' . $relyOn['name'] . '插件', Code::CODE_WRONG);
@@ -576,9 +576,9 @@ class Plugin
             }
         }
         $this->fileDeployment($path . '/api/config', '/api/config');
-        $this->fileDeployment($path . '/api/models', '/api/app/Models/v' . config('dsshop.versions'));
-        $this->fileDeployment($path . '/api/plugin', '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin');
-        $this->fileDeployment($path . '/api/requests', '/api/app/Http/Requests/v' . config('dsshop.versions'));
+        $this->fileDeployment($path . '/api/models', '/api/app/Models/v' . config('tfshop.versions'));
+        $this->fileDeployment($path . '/api/plugin', '/api/app/Http/Controllers/v' . config('tfshop.versions') . '/Plugin');
+        $this->fileDeployment($path . '/api/requests', '/api/app/Http/Requests/v' . config('tfshop.versions'));
         $this->fileDeployment($path . '/api/observers', '/api/app/Observers');
         $this->fileDeployment($path . '/database', '/api/database/migrations');
         if (count($routes['adminTemplate']) > 0 && $template) {
@@ -605,25 +605,25 @@ class Plugin
             $targetPath = '/api/routes/plugin.php';
             $file_get_contents = Storage::disk('root')->get($targetPath);
             //去除已存在的插件代码
-            $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+            $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             // 添加新的插件代码
             if (array_key_exists('admin', $routes)) {
-                $file_get_contents = str_replace("前台插件列表", $dsshop['name'] . "_s
+                $file_get_contents = str_replace("前台插件列表", $tfshop['name'] . "_s
             " . $routes['admin'] . "
-            // " . $dsshop['name'] . "_e
+            // " . $tfshop['name'] . "_e
             // 前台插件列表", $file_get_contents);
             }
             if (array_key_exists('notValidatedApp', $routes)) {
-                $file_get_contents = str_replace("APP无需验证插件列表", $dsshop['name'] . "_s
+                $file_get_contents = str_replace("APP无需验证插件列表", $tfshop['name'] . "_s
             " . $routes['notValidatedApp'] . "
-            // " . $dsshop['name'] . "_e
+            // " . $tfshop['name'] . "_e
             // APP无需验证插件列表", $file_get_contents);
             }
             if (array_key_exists('app', $routes)) {
-                $file_get_contents = str_replace("APP验证插件列表", $dsshop['name'] . "_s
+                $file_get_contents = str_replace("APP验证插件列表", $tfshop['name'] . "_s
             " . $routes['app'] . "
-            // " . $dsshop['name'] . "_e
+            // " . $tfshop['name'] . "_e
             // APP验证插件列表", $file_get_contents);
             }
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
@@ -638,12 +638,12 @@ class Plugin
                     $targetPath = '/' . $admin . '/src/store/modules/permission.js';
                     $file_get_contents = Storage::disk('root')->get($targetPath);
                     //去除已存在的插件代码
-                    $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+                    $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
                     $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
                     // 添加新的插件代码
-                    $file_get_contents = str_replace("插件列表", $dsshop['name'] . "_s
+                    $file_get_contents = str_replace("插件列表", $tfshop['name'] . "_s
   " . $routes['permission'][$admin] . "
-  // " . $dsshop['name'] . "_e
+  // " . $tfshop['name'] . "_e
   // 插件列表", $file_get_contents);
                     $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
                     Storage::disk('root')->put($targetPath, $file_get_contents);
@@ -657,12 +657,12 @@ class Plugin
             $targetPath = '/api/app/Providers/AppServiceProvider.php';
             $file_get_contents = Storage::disk('root')->get($targetPath);
             //去除已存在的插件代码
-            $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+            $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             // 添加新的插件代码
-            $file_get_contents = str_replace("插件", $dsshop['name'] . "_s
+            $file_get_contents = str_replace("插件", $tfshop['name'] . "_s
         " . $routes['observers'] . "
-        // " . $dsshop['name'] . "_e
+        // " . $tfshop['name'] . "_e
         // 插件", $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             Storage::disk('root')->put($targetPath, $file_get_contents);
@@ -674,12 +674,12 @@ class Plugin
             $targetPath = '/api/app/Channels/WechatChannel.php';
             $file_get_contents = Storage::disk('root')->get($targetPath);
             //去除已存在的插件代码
-            $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+            $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             // 添加新的插件代码
-            $file_get_contents = str_replace("插件", $dsshop['name'] . "_s
+            $file_get_contents = str_replace("插件", $tfshop['name'] . "_s
     " . $routes['wechatChannel'] . "
-    // " . $dsshop['name'] . "_e
+    // " . $tfshop['name'] . "_e
     // 插件", $file_get_contents);
             $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
             Storage::disk('root')->put($targetPath, $file_get_contents);
@@ -691,20 +691,20 @@ class Plugin
 //            $targetPath = '/api/resources/lang/zh.json';
 //            $file_get_contents = Storage::disk('root')->get($targetPath);
 //            //去除已存在的插件代码
-//            $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+//            $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
 //            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
 //            if (array_key_exists('routeLangAdmin', $routes)) {
 //                // 添加新的插件代码
-//                $file_get_contents = str_replace("admin插件", $dsshop['name'] . "_s
+//                $file_get_contents = str_replace("admin插件", $tfshop['name'] . "_s
 //    " . $routes['routeLangAdmin'] . "
-//    // " . $dsshop['name'] . "_e
+//    // " . $tfshop['name'] . "_e
 //    // admin插件", $file_get_contents);
 //            }
 //            if (array_key_exists('routeLangClient', $routes)) {
 //                // 添加新的插件代码
-//                $file_get_contents = str_replace("client插件", $dsshop['name'] . "_s
+//                $file_get_contents = str_replace("client插件", $tfshop['name'] . "_s
 //    " . $routes['routeLangClient'] . "
-//    // " . $dsshop['name'] . "_e
+//    // " . $tfshop['name'] . "_e
 //    // client插件", $file_get_contents);
 //            }
 //            $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
@@ -714,24 +714,24 @@ class Plugin
 //        }
 
         //写入本地插件列表
-        $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
-        if (collect($json_dsshop)->firstWhere('name', $name)) {
-            foreach ($json_dsshop as $id => $js) {
-                if ($js['name'] == $dsshop['abbreviation']) {
-                    $json_dsshop[$id]['versions'] = $dsshop['versions'];
-                    $json_dsshop[$id]['is_delete'] = 0;
-                    $json_dsshop[$id]['time'] = date('Y-m-d H:i:s');
+        $json_tfshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/tfshop.json'), true);
+        if (collect($json_tfshop)->firstWhere('name', $name)) {
+            foreach ($json_tfshop as $id => $js) {
+                if ($js['name'] == $tfshop['abbreviation']) {
+                    $json_tfshop[$id]['versions'] = $tfshop['versions'];
+                    $json_tfshop[$id]['is_delete'] = 0;
+                    $json_tfshop[$id]['time'] = date('Y-m-d H:i:s');
                 }
             }
         } else {
-            $json_dsshop[] = array(
+            $json_tfshop[] = array(
                 'name' => $name,
-                'versions' => $dsshop['versions'],
+                'versions' => $tfshop['versions'],
                 'is_delete' => 0,
                 'time' => date('Y-m-d H:i:s')
             );
         }
-        Storage::disk('root')->put($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
+        Storage::disk('root')->put($this->pluginPath . '/tfshop.json', json_encode($json_tfshop));
         // 生成权限
         if (count($routes['packagingJurisdiction']) > 0) {
             $routes['packagingJurisdiction'] = $this->installPermissions($routes['packagingJurisdiction']);
@@ -749,8 +749,8 @@ class Plugin
      */
     public function destroy($name)
     {
-        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $name . '/dsshop.json')) {
-            $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/dsshop.json'), true);
+        if (Storage::disk('root')->exists($this->pluginListPath . '/' . $name . '/tfshop.json')) {
+            $path = json_decode(Storage::disk('root')->get($this->pluginListPath . '/' . $name . '/tfshop.json'), true);
             $abbreviation = ucwords($name);
             if ($path['db']) {
                 //                Artisan::call('migrate:rollback');
@@ -758,10 +758,10 @@ class Plugin
                     $names = $this->convertUnderline(rtrim($db['name'], 's'));
                     $n = $this->convertUnderline(rtrim($db['name'], 's'), true);
                     $this->fileDestroy($this->getLocalMigrations('create_' . $db['name'] . '_table'));
-                    $this->fileDestroy('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Admin/' . $names . 'Controller.php');
-                    $this->fileDestroy('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Client/' . $names . 'Controller.php');
-                    $this->fileDestroy('/api/app/Models/v' . config('dsshop.versions') . '/' . $names . '.php');
-                    $this->fileDestroy('/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $names . 'Request.php');
+                    $this->fileDestroy('/api/app/Http/Controllers/v' . config('tfshop.versions') . '/Plugin/Admin/' . $names . 'Controller.php');
+                    $this->fileDestroy('/api/app/Http/Controllers/v' . config('tfshop.versions') . '/Plugin/Client/' . $names . 'Controller.php');
+                    $this->fileDestroy('/api/app/Models/v' . config('tfshop.versions') . '/' . $names . '.php');
+                    $this->fileDestroy('/api/app/Http/Requests/v' . config('tfshop.versions') . '/Submit' . $names . 'Request.php');
                     $this->clearJurisdiction($db);
                     //删除后台模板（目录移动过将不会进行删除）
                     if (count($path['adminTemplate']) > 0) {
@@ -813,16 +813,16 @@ class Plugin
         $names = $this->convertUnderline($name);
         $path = $this->pluginListPath . '/' . $name;
         $routes = $this->pluginListPath . '/' . $name . '/routes.json';
-        $dsshop = $this->pluginListPath . '/' . $name . '/dsshop.json';
+        $tfshop = $this->pluginListPath . '/' . $name . '/tfshop.json';
         if (!Storage::disk('root')->exists($routes)) {
             throw new \Exception('插件缺少routes.json文件', Code::CODE_PARAMETER_WRONG);
         }
-        if (!Storage::disk('root')->exists($dsshop)) {
-            throw new \Exception('插件缺少dsshop.json文件', Code::CODE_PARAMETER_WRONG);
+        if (!Storage::disk('root')->exists($tfshop)) {
+            throw new \Exception('插件缺少tfshop.json文件', Code::CODE_PARAMETER_WRONG);
         }
 
-        $dsshop = json_decode(Storage::disk('root')->get($dsshop), true);
-        $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
+        $tfshop = json_decode(Storage::disk('root')->get($tfshop), true);
+        $json_tfshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/tfshop.json'), true);
         $routes = json_decode(Storage::disk('root')->get($routes), true);
         // 删除权限
         if (count($routes['packagingJurisdiction']) > 0) {
@@ -832,7 +832,7 @@ class Plugin
         //去除API路由
         $targetPath = '/api/routes/plugin.php';
         $file_get_contents = Storage::disk('root')->get($targetPath);
-        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
         $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
         Storage::disk('root')->put($targetPath, $file_get_contents);
         unset($targetPath);
@@ -840,7 +840,7 @@ class Plugin
         //去除observers注册代码
         $targetPath = '/api/app/Providers/AppServiceProvider.php';
         $file_get_contents = Storage::disk('root')->get($targetPath);
-        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
         $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
         Storage::disk('root')->put($targetPath, $file_get_contents);
         unset($targetPath);
@@ -848,7 +848,7 @@ class Plugin
         // 去除微信公众号模板消息
         $targetPath = '/api/app/Channels/WechatChannel.php';
         $file_get_contents = Storage::disk('root')->get($targetPath);
-        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
         $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
         Storage::disk('root')->put($targetPath, $file_get_contents);
         unset($targetPath);
@@ -856,15 +856,15 @@ class Plugin
         //去除路由语言包
         $targetPath = '/api/resources/lang/zn/route.php';
         $file_get_contents = Storage::disk('root')->get($targetPath);
-        $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+        $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
         $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
         Storage::disk('root')->put($targetPath, $file_get_contents);
         unset($targetPath);
         unset($file_get_contents);
         $this->fileUninstall($path . '/api/config', '/api/config');
-        $this->fileUninstall($path . '/api/models', '/api/app/Models/v' . config('dsshop.versions'));
-        $this->fileUninstall($path . '/api/plugin', '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin');
-        $this->fileUninstall($path . '/api/requests', '/api/app/Http/Requests/v' . config('dsshop.versions'));
+        $this->fileUninstall($path . '/api/models', '/api/app/Models/v' . config('tfshop.versions'));
+        $this->fileUninstall($path . '/api/plugin', '/api/app/Http/Controllers/v' . config('tfshop.versions') . '/Plugin');
+        $this->fileUninstall($path . '/api/requests', '/api/app/Http/Requests/v' . config('tfshop.versions'));
         $this->fileUninstall($path . '/api/observers', '/api/app/Observers');
         $this->fileUninstall($path . '/database', '/api/database/migrations');
         if ($template && count($routes['adminTemplate']) > 0) {
@@ -872,7 +872,7 @@ class Plugin
                 //去除后台路由
                 $targetPath = '/' . $c . '/src/store/modules/permission.js';
                 $file_get_contents = Storage::disk('root')->get($targetPath);
-                $file_get_contents = preg_replace('/\/\/ ' . $dsshop['name'] . '_s(.*?)\/\/ ' . $dsshop['name'] . '_e/is', '', $file_get_contents);
+                $file_get_contents = preg_replace('/\/\/ ' . $tfshop['name'] . '_s(.*?)\/\/ ' . $tfshop['name'] . '_e/is', '', $file_get_contents);
                 $file_get_contents = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $file_get_contents);
                 Storage::disk('root')->put($targetPath, $file_get_contents);
                 unset($targetPath);
@@ -900,12 +900,12 @@ class Plugin
                 Storage::disk('root')->delete($relevance);
             }
         }
-        foreach ($json_dsshop as $id => $json) {
+        foreach ($json_tfshop as $id => $json) {
             if ($json['name'] == $name) {
-                $json_dsshop[$id]['is_delete'] = 1;
+                $json_tfshop[$id]['is_delete'] = 1;
             }
         }
-        Storage::disk('root')->put($this->pluginPath . '/dsshop.json', json_encode($json_dsshop));
+        Storage::disk('root')->put($this->pluginPath . '/tfshop.json', json_encode($json_tfshop));
         if ($routes['db']) {
             foreach ($routes['db'] as $db) {
                 $this->clearJurisdiction($db);
@@ -983,7 +983,7 @@ class Plugin
         $name = $request['name'];
         $routes = [];
         $routesPath = $this->pluginListPath . '/' . $request['abbreviation'] . '/routes.json';
-        $dsshopPath = $this->pluginListPath . '/' . $request['abbreviation'] . '/dsshop.json';
+        $tfshopPath = $this->pluginListPath . '/' . $request['abbreviation'] . '/tfshop.json';
         $pluginPath = '/api/routes/plugin.php';
 
         $langPath = '/api/resources/lang/zn/route.php';
@@ -1058,9 +1058,9 @@ class Plugin
         $routes['packagingJurisdiction'] = $request['packagingJurisdiction'];
         Storage::disk('root')->put($routesPath, json_encode($routes));
         // 修改配置信息
-        $dsshop_file_get_contents = json_decode(Storage::disk('root')->get($dsshopPath), true);
-        $dsshop_file_get_contents['publish'] = true;
-        Storage::disk('root')->put($dsshopPath, json_encode($dsshop_file_get_contents));
+        $tfshop_file_get_contents = json_decode(Storage::disk('root')->get($tfshopPath), true);
+        $tfshop_file_get_contents['publish'] = true;
+        Storage::disk('root')->put($tfshopPath, json_encode($tfshop_file_get_contents));
     }
 
     /**
@@ -1076,10 +1076,10 @@ class Plugin
         $dbNames = $this->convertUnderline(rtrim($db['name'], 's'), true);
         $abbreviation = ucwords($name);
         // 后端
-        $this->copyProcessing('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Admin/' . $dbName . 'Controller.php', $this->pluginListPath . '/' . $name . '/api/plugin/Admin/' . $dbName . 'Controller.php');
-        $this->copyProcessing('/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/Client/' . $dbName . 'Controller.php', $this->pluginListPath . '/' . $name . '/api/plugin/Client/' . $dbName . 'Controller.php');
-        $this->copyProcessing('/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $dbName . 'Request.php', $this->pluginListPath . '/' . $name . '/api/requests/Submit' . $dbName . 'Request.php');
-        $this->copyProcessing('/api/app/Models/v' . config('dsshop.versions') . '/' . $dbName . '.php', $this->pluginListPath . '/' . $name . '/api/models/' . $dbName . '.php');
+        $this->copyProcessing('/api/app/Http/Controllers/v' . config('tfshop.versions') . '/Plugin/Admin/' . $dbName . 'Controller.php', $this->pluginListPath . '/' . $name . '/api/plugin/Admin/' . $dbName . 'Controller.php');
+        $this->copyProcessing('/api/app/Http/Controllers/v' . config('tfshop.versions') . '/Plugin/Client/' . $dbName . 'Controller.php', $this->pluginListPath . '/' . $name . '/api/plugin/Client/' . $dbName . 'Controller.php');
+        $this->copyProcessing('/api/app/Http/Requests/v' . config('tfshop.versions') . '/Submit' . $dbName . 'Request.php', $this->pluginListPath . '/' . $name . '/api/requests/Submit' . $dbName . 'Request.php');
+        $this->copyProcessing('/api/app/Models/v' . config('tfshop.versions') . '/' . $dbName . '.php', $this->pluginListPath . '/' . $name . '/api/models/' . $dbName . '.php');
         // 后台
         //获取支持的后台
         if (count($request['adminTemplate']) > 0) {
@@ -1182,7 +1182,7 @@ class Plugin
             '/{{ packages }}/'
         ], [
             $observer['models'],
-            config('dsshop.versions'),
+            config('tfshop.versions'),
             $observer['name'],
             $observer['explain'],
             $name,
@@ -1569,7 +1569,7 @@ class Plugin
             if ($request->observer) {
                 foreach ($request->observer as $observer) {
                     $providerRoutes .= '
-        \App\Models\v' . config('dsshop.versions') . '\\' . $observer['models'] . '::observe(\App\Observers\\' . $observer['models'] . '\\' . $this->convertUnderline($observer['name']) . 'Observer::class);
+        \App\Models\v' . config('tfshop.versions') . '\\' . $observer['models'] . '::observe(\App\Observers\\' . $observer['models'] . '\\' . $this->convertUnderline($observer['name']) . 'Observer::class);
                     ';
                 }
             }
@@ -1772,7 +1772,7 @@ class Plugin
             'routes' => $request->routes,
             'relyOn' => $request->relyOn,
         ];
-        Storage::disk('root')->put($path . '/dsshop.json', json_encode($json));
+        Storage::disk('root')->put($path . '/tfshop.json', json_encode($json));
     }
 
     /**
@@ -1783,7 +1783,7 @@ class Plugin
     protected function editPlugInJson($request)
     {
         // 插件目录
-        $path = $this->pluginListPath . '/' . $request->abbreviation . '/dsshop.json';
+        $path = $this->pluginListPath . '/' . $request->abbreviation . '/tfshop.json';
         if ($request->relevance) {
             foreach ($request->relevance as $relevance) {
                 if (!Storage::disk('root')->exists($relevance['file'])) {
@@ -1823,7 +1823,7 @@ class Plugin
         // 控制器名称为去掉尾部s每个单词首字母大写
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
         // 控制器文件
-        $path = '/api/app/Http/Requests/v' . config('dsshop.versions') . '/Submit' . $name . 'Request.php';
+        $path = '/api/app/Http/Requests/v' . config('tfshop.versions') . '/Submit' . $name . 'Request.php';
         if (!Storage::disk('root')->exists($controller)) {
             throw new \Exception('缺少requests.api.ds文件', Code::CODE_INEXISTENCE);
         }
@@ -1833,7 +1833,7 @@ class Plugin
             '/{{ versions }}/',
             '/{{ name }}/'
         ], [
-            config('dsshop.versions'),
+            config('tfshop.versions'),
             $name
         ], $content);
         $content = preg_replace("/(^[\r\n]*|[\r\n]+)[\s\t]*[\r\n]+/", "\n", $content);
@@ -1852,7 +1852,7 @@ class Plugin
         // 控制器名称为去掉尾部s首字母大写
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
         // 控制器文件
-        $path = '/api/app/Models/v' . config('dsshop.versions') . '/' . $name . '.php';
+        $path = '/api/app/Models/v' . config('tfshop.versions') . '/' . $name . '.php';
         if (!Storage::disk('root')->exists($controller)) {
             throw new \Exception('缺少models.api.ds文件', Code::CODE_INEXISTENCE);
         }
@@ -1925,7 +1925,7 @@ class Plugin
             '/{{ get }}/',
             '/{{ timestamps }}/'
         ], [
-            config('dsshop.versions'),
+            config('tfshop.versions'),
             $constant,
             $name,
             $SoftDeletes,
@@ -1951,7 +1951,7 @@ class Plugin
         // 控制器名称为去掉尾部s首字母大写
         $name = $this->convertUnderline(rtrim($db['name'], 's'));
         // 控制器文件
-        $path = '/api/app/Http/Controllers/v' . config('dsshop.versions') . '/Plugin/' . $this->convertUnderline($type) . '/' . $name . 'Controller.php';
+        $path = '/api/app/Http/Controllers/v' . config('tfshop.versions') . '/Plugin/' . $this->convertUnderline($type) . '/' . $name . 'Controller.php';
 
         if (!Storage::disk('root')->exists($controller)) {
             throw new \Exception('缺少controller.api.' . $type . '.ds文件', Code::CODE_INEXISTENCE);
@@ -1976,7 +1976,7 @@ class Plugin
                 '/{{ attribute }}/',
                 '/{{ queryParam }}/',
             ], [
-                config('dsshop.versions'),
+                config('tfshop.versions'),
                 $name,
                 $db['annotation'],
                 $attribute,
@@ -1988,7 +1988,7 @@ class Plugin
                 '/{{ name }}/',
                 '/{{ annotation }}/'
             ], [
-                config('dsshop.versions'),
+                config('tfshop.versions'),
                 $name,
                 $db['annotation']
             ], $content);
@@ -2002,7 +2002,7 @@ class Plugin
      */
     protected function generatePlugInDirectory()
     {
-        $path = '/api/app/Http/Controllers/v' . config('dsshop.versions');
+        $path = '/api/app/Http/Controllers/v' . config('tfshop.versions');
         $pathArr = [
             $path . '/Plugin',
             $path . '/Plugin/Admin',
@@ -2188,12 +2188,12 @@ class Plugin
      */
     public function has($name)
     {
-        if (!Storage::disk('root')->exists($this->pluginPath . '/dsshop.json')) {
-            throw new \Exception('缺少dsshop.json文件', Code::CODE_INEXISTENCE);
+        if (!Storage::disk('root')->exists($this->pluginPath . '/tfshop.json')) {
+            throw new \Exception('缺少tfshop.json文件', Code::CODE_INEXISTENCE);
         }
-        $dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
-        $dsshop = collect($dsshop)->pluck('name')->toArray();
-        return in_array($name, $dsshop);
+        $tfshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/tfshop.json'), true);
+        $tfshop = collect($tfshop)->pluck('name')->toArray();
+        return in_array($name, $tfshop);
     }
 
     /**
@@ -2205,15 +2205,15 @@ class Plugin
      */
     public function hasAll($name)
     {
-        if (!Storage::disk('root')->exists($this->pluginPath . '/dsshop.json')) {
-            throw new \Exception('缺少dsshop.json文件', Code::CODE_INEXISTENCE);
+        if (!Storage::disk('root')->exists($this->pluginPath . '/tfshop.json')) {
+            throw new \Exception('缺少tfshop.json文件', Code::CODE_INEXISTENCE);
         }
-        $dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
-        $dsshop = collect($dsshop)->pluck('name')->toArray();
+        $tfshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/tfshop.json'), true);
+        $tfshop = collect($tfshop)->pluck('name')->toArray();
         $nameAll = explode(",", $name);
         $return = [];
         foreach ($nameAll as $n) {
-            $return[$n] = in_array($n, $dsshop);
+            $return[$n] = in_array($n, $tfshop);
         }
         return $return;
     }
@@ -2260,10 +2260,10 @@ class Plugin
      */
     public function installList()
     {
-        if (!Storage::disk('root')->exists($this->pluginPath . '/dsshop.json')) {
-            throw new \Exception('项目目录结构有误，缺少plugin目录和dsshop.json文件', Code::CODE_INEXISTENCE);
+        if (!Storage::disk('root')->exists($this->pluginPath . '/tfshop.json')) {
+            throw new \Exception('项目目录结构有误，缺少plugin目录和tfshop.json文件', Code::CODE_INEXISTENCE);
         }
-        $json_dsshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/dsshop.json'), true);
-        return collect($json_dsshop)->where('is_delete', 0);
+        $json_tfshop = json_decode(Storage::disk('root')->get($this->pluginPath . '/tfshop.json'), true);
+        return collect($json_tfshop)->where('is_delete', 0);
     }
 }

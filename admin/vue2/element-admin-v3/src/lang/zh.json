@@ -509,7 +509,7 @@
   "backup.file": "系统备份",
   "backup.file.tip.one": "文件备份可通过配置中进行定期备份",
   "backup.file.tip.two": "系统备份耗时较大，所以采用队列形式处理，备份成功提示后并不会时时同步备份数据，建议过个几分钟后再进行查看",
-  "backup.file.tip.three": "系统备份无法在线还原，请自行手动进行还原，备份位于:项目根目录/storage/app/dsshop目录下，不以'db-'命名",
+  "backup.file.tip.three": "系统备份无法在线还原，请自行手动进行还原，备份位于:项目根目录/storage/app/tfshop目录下，不以'db-'命名",
   "backup.name": "文件名",
   "backup.size": "文件大小",
   "backup.time": "备份时间",

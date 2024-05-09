@@ -509,7 +509,7 @@
   "backup.file": "System backup",
   "backup.file.tip.one": "File backup You can periodically back up files in the configuration",
   "backup.file.tip.two": "System backup takes a long time. Therefore, the system processes backup data in a queue. After a successful backup message is displayed, backup data is not synchronized from time to time",
-  "backup.file.tip.three": "You are advised to check the system backup after a few minutes. The system backup cannot be restored online. You need to manually restore the system backup. The backup file is stored in: project root directory /storage/app/dsshop and is not named 'db-'",
+  "backup.file.tip.three": "You are advised to check the system backup after a few minutes. The system backup cannot be restored online. You need to manually restore the system backup. The backup file is stored in: project root directory /storage/app/tfshop and is not named 'db-'",
   "backup.name": "Filename",
   "backup.size": "File size",
   "backup.time": "Backup time",

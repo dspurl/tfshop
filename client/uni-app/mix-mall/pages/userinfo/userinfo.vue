@@ -92,7 +92,7 @@
 				  name: 'file',
 				  header: {
 					'apply-secret': that.configURL.secret,
-					'Authorization': 'Bearer ' + uni.getStorageSync('dsshopApplytoken')
+					'Authorization': 'Bearer ' + uni.getStorageSync('tfshopApplytoken')
 				  },
 				  formData: {
 					type: 1,
@@ -122,7 +122,7 @@
 						  name: 'file',
 						  header: {
 							'apply-secret': that.configURL.secret,
-							'Authorization': 'Bearer ' + uni.getStorageSync('dsshopApplytoken')
+							'Authorization': 'Bearer ' + uni.getStorageSync('tfshopApplytoken')
 						  },
 						  formData: {
 							type: 1,

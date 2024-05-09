@@ -4,7 +4,7 @@
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign">DSSHOP</view>
+			<view class="left-top-sign">TFSHOP</view>
 			<view class="welcome">
 				手机号登录
 			</view>
@@ -37,9 +37,9 @@
 					</view>
 					<view class="bg-white text-left padding text-sm">
 						{{$t('login.consent')}}
-						<span class="text-blue" @tap="goNavigator(2)">《dsshop{{$t('login.user_registration')}}》</span>
+						<span class="text-blue" @tap="goNavigator(2)">《tfshop{{$t('login.user_registration')}}》</span>
 						、
-						<span class="text-blue" @tap="goNavigator(1)">《dsshop{{$t('login.privacy')}}》</span>
+						<span class="text-blue" @tap="goNavigator(1)">《tfshop{{$t('login.privacy')}}》</span>
 					</view>
 					<view class="grid bg-white col-2 solid-top">
 						<view class="padding" @click="toLogin">{{$t('login.disagree')}}</view>

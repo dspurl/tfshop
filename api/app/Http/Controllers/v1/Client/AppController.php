@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -165,7 +165,7 @@ class AppController extends Controller
             return resReturn(0, __('user.code.error.no_failure'), Code::CODE_WRONG);
         }
         $code = rand(10000, 99999);
-        $redis->setex('code.register.' . $request->cellphone, config('dsshop.failuretime'), $code);
+        $redis->setex('code.register.' . $request->cellphone, config('tfshop.failuretime'), $code);
         $Config = config('sms');
         if (!$Config[$Config['service']]['access_id']) {    //没有配置短信账号，直接返回验证码
             return resReturn(1, ['code' => $code]);
@@ -216,7 +216,7 @@ class AppController extends Controller
             return resReturn(0, __('user.email.error.no_failure'), Code::CODE_WRONG);
         }
         $code = rand(10000, 99999);
-        $redis->setex('code.register.' . $request->email, config('dsshop.failuretime'), $code);
+        $redis->setex('code.register.' . $request->email, config('tfshop.failuretime'), $code);
         Mail::to($request->email)->send(new VerificationCode($code));
         return resReturn(1, __('common.succeed'));
     }
@@ -421,6 +421,6 @@ class AppController extends Controller
      */
     public function authorization(){
         $redis = new RedisService();
-        return resReturn(1, $redis->get(config('dsshop.marketApplySecret') . '.' . $this->getTopHost($this->scheme() . $_SERVER['HTTP_HOST']) . '.result'));
+        return resReturn(1, $redis->get(config('tfshop.marketApplySecret') . '.' . $this->getTopHost($this->scheme() . $_SERVER['HTTP_HOST']) . '.result'));
     }
 }

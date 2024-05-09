@@ -1,5 +1,5 @@
 {
-    "name" : "DSSHOP电商商城",
+    "name" : "TFSHOP电商商城",
     "appid" : "__UNI__3D2DD00",
     "description" : "",
     "versionName" : "1.0.0",
@@ -60,7 +60,7 @@
     "mp-weixin" : {
         /* 小程序特有相关 */
         "usingComponents" : true,
-        "appid" : "11111",
+        "appid" : "wxc31e70f47087660b",
         "setting" : {
             "urlCheck" : true,
             "minified" : true,
@@ -75,7 +75,7 @@
     },
     "h5" : {
         "devServer" : {},
-        "title" : "DSSHOP电商商城",
+        "title" : "TFSHOP电商商城",
         "domain" : "",
         "router" : {
             "base" : "/h5/"

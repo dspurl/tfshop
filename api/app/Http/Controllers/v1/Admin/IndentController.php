@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -110,7 +110,7 @@ class IndentController extends Controller
         }, 'GoodLocation', 'Dhl', 'PaymentLogAll' => function ($q) {
             $q->select('id', 'type', 'name', 'money', 'number', 'platform', 'state', 'pay_id', 'pay_type', 'created_at', 'transaction_id');
         }, 'GoodCode'])->find($id);
-        $GoodIndent->automaticReceivingState = config('dsshop.automaticReceivingState');
+        $GoodIndent->automaticReceivingState = config('tfshop.automaticReceivingState');
         return resReturn(1, $GoodIndent);
     }
 
@@ -170,8 +170,8 @@ class IndentController extends Controller
             }
             $GoodIndent->state = GoodIndent::GOOD_INDENT_STATE_TAKE;
             $GoodIndent->shipping_time = Carbon::now()->toDateTimeString();
-            if (config('dsshop.automaticReceivingState')) {
-                $automaticReceiving = config('dsshop.automaticReceiving');
+            if (config('tfshop.automaticReceivingState')) {
+                $automaticReceiving = config('tfshop.automaticReceiving');
                 $GoodIndent->receiving_time = date('Y-m-d 00:00:00', strtotime("+$automaticReceiving day"));
             }
             $GoodIndent->save();

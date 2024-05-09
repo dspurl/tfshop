@@ -2,7 +2,7 @@
     <img src="https://dspurl.github.io/image/dsshop_logo.jpg" width="150" />
 </div>
 <h3 align="center">
-DSSHOP商城系统
+TFSHOP商城系统
 </h3>
 <div align="center">
 一款轻量级商城开源系统
@@ -35,11 +35,11 @@ DSSHOP商城系统
 
 [官网](https://www.dswjcms.com/) |
 [在线体验](https://v3.dswjcms.com/admin/) |
-[帮助文档](https://dspurl.github.io/dsshop/)
+[帮助文档](https://dspurl.github.io/tfshop/)
 </div>
 
 ### 介绍
-DSSHOP是一款轻量级低代码商城系统，意在打造一款易二开易扩展的商城系统。开源版自带插件脚手架，帮助开发者减少70%-90%重复的代码书写量。
+TFSHOP是一款轻量级低代码商城系统，意在打造一款易二开易扩展的商城系统。开源版自带插件脚手架，帮助开发者减少70%-90%重复的代码书写量。
 
 ### 系统亮点
 ~~~
@@ -92,13 +92,13 @@ PC端：[https://v3.dswjcms.com/](https://v3.dswjcms.com/)（电脑端打开）
 |-|-|-|
 |<img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg">|<img src="https://dspurl.github.io/image/13.png">|<img src="https://dspurl.github.io/image/1618405140569.png">|
 
-管理后台： https://dsshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
+管理后台： https://tfshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
 
-收银台： https://dsshop.dswjcms.com/cashier 账号：abcd12345 密码：abcd12345
+收银台： https://tfshop.dswjcms.com/cashier 账号：abcd12345 密码：abcd12345
 
-H5端：[https://dsshop.dswjcms.com/h5](https://dsshop.dswjcms.com/h5)（移动端打开）
+H5端：[https://tfshop.dswjcms.com/h5](https://tfshop.dswjcms.com/h5)（移动端打开）
 
-PC端：[https://dsshop.dswjcms.com/](https://dsshop.dswjcms.com/)（电脑端打开）
+PC端：[https://tfshop.dswjcms.com/](https://tfshop.dswjcms.com/)（电脑端打开）
 
 ### 页面展示
 (页面仅展示部分UI)
@@ -114,9 +114,9 @@ PC端：[https://dsshop.dswjcms.com/](https://dsshop.dswjcms.com/)（电脑端�
 
 @IncaseDo，@NickCaiSen，@czhou，@czhou，@yangjingyu
 
-欢迎反馈问题 [反馈问题](https://github.com/dspurl/dsshop/issues)。
+欢迎反馈问题 [反馈问题](https://github.com/dspurl/tfshop/issues)。
 
-欢迎提交代码 [提交代码](https://github.com/dspurl/dsshop/pulls)。
+欢迎提交代码 [提交代码](https://github.com/dspurl/tfshop/pulls)。
 
 欢迎加入我们的QQ频道
 <p><img src="https://dspurl.github.io/image/channel.png" width="250" /></p>
@@ -159,7 +159,7 @@ UI：dswjcms、purl
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2020-2024 by DSSHOP(https://www.dswjcms.com)
+版权所有Copyright © 2020-2024 by TFSHOP(https://www.dswjcms.com)
 
 All rights reserved。
 

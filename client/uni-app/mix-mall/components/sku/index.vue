@@ -465,7 +465,7 @@ export default{
 
 				}else{
 					// uni.removeStorageSync('cartList')
-					let cartList =  uni.getStorageSync('dsshopCartList') || []
+					let cartList =  uni.getStorageSync('tfshopCartList') || []
 					let cartMap = new Map()
 					if(this.buyState){	//直接购买
 						cartList = []
@@ -556,14 +556,14 @@ export default{
 					//     }
 					// }
 					if(this.buyState){	//直接购买
-						uni.setStorageSync('dsshopOrderList', [...cartMap.values()])
+						uni.setStorageSync('tfshopOrderList', [...cartMap.values()])
 					}else{
 						const that = this
 						// 发送给后台
 						GoodIndent.addShoppingCart([...cartMap.values()],function(res){
 							that.$emit('loadCart') //重载数据
 						})
-						uni.setStorageSync('dsshopCartList', [...cartMap.values()])
+						uni.setStorageSync('tfshopCartList', [...cartMap.values()])
 					}
 
 

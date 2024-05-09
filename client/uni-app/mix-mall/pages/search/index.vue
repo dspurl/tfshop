@@ -31,7 +31,7 @@
 		data() {
 			return {
 				name: '',
-				search: uni.getStorageSync('dsshopSearch') ? uni.getStorageSync('dsshopSearch') : []
+				search: uni.getStorageSync('tfshopSearch') ? uni.getStorageSync('tfshopSearch') : []
 			};
 		},
 		onShow(){
@@ -44,7 +44,7 @@
 		},
 		methods:{
 			empty(){
-				uni.removeStorageSync('dsshopSearch');
+				uni.removeStorageSync('tfshopSearch');
 				this.search = []
 			},
 			clickSearch(e){
@@ -58,7 +58,7 @@
 					}else{
 						this.search.unshift(this.name)
 					}
-					uni.setStorageSync('dsshopSearch', this.search)
+					uni.setStorageSync('tfshopSearch', this.search)
 				}
 				uni.navigateTo({
 					url: `/pages/product/list?title=${this.name}`

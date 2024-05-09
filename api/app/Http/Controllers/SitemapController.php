@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -35,7 +35,7 @@ class SitemapController extends Controller
         $data = [];
         foreach ($this->sitemap as $s) {
             if ($s['model']) {
-                $model = '\\App\\Models\\v'.config('dsshop.versions').'\\' . $s['model'];
+                $model = '\\App\\Models\\v'.config('tfshop.versions').'\\' . $s['model'];
                 $first = $model::orderBy('updated_at', 'desc')->first();
                 if($first){
                     $s['updated_at'] = date("Y-m-d",strtotime($first->updated_at));
@@ -60,7 +60,7 @@ class SitemapController extends Controller
     {
         $sitemap = $this->sitemap[$id];
         if ($sitemap['model']) {
-            $model = '\\App\\Models\\v'.config('dsshop.versions').'\\' . $sitemap['model'];
+            $model = '\\App\\Models\\v'.config('tfshop.versions').'\\' . $sitemap['model'];
             $where = [];
             foreach ($sitemap['where'] as $w) {
                 $where[] = [$w['column'], $w['operator'], $w['value']];

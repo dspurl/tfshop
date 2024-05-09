@@ -41,7 +41,7 @@ class Kernel extends ConsoleKernel
                 $schedule->command('backup:run')->dailyAt(config('backup.time'));
             }
         }
-        if (config('dsshop.automaticReceivingState')) {    //是否开启自动收货
+        if (config('tfshop.automaticReceivingState')) {    //是否开启自动收货
             $schedule->command('automatic:receiving')->dailyAt('00:20');
         }
         //订单失效处理

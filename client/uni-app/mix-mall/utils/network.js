@@ -1,9 +1,9 @@
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -82,7 +82,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
 	// #endif
   }
 
-  let applytoken = uni.getStorageSync('dsshopApplytoken')
+  let applytoken = uni.getStorageSync('tfshopApplytoken')
   // #ifndef MP
   // 微信内部加载H5时
 	// if(getUrlKey('api_token')){
@@ -98,7 +98,7 @@ function requestLoading(url, method, params, header, message, success, fail) {
       'content-type': 'application/json',
       'apply-secret': configURL.secret,
       'openid': uni.getStorageSync('applyDsshopOpenid'),
-	    'Authorization': uni.getStorageSync('dsshopTokenType') + ' ' + applytoken,
+	    'Authorization': uni.getStorageSync('tfshopTokenType') + ' ' + applytoken,
       'Lang': uni.getStorageSync('language') || 'zh'
     },
     method: method ? method : 'get',
