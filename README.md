@@ -1,8 +1,8 @@
 <div align="center" >
-    <img src="https://dspurl.github.io/image/dsshop_logo.jpg" width="150" />
+    <img src="https://dspurl.github.io/tfshop/image/logo-w.png" width="150" />
 </div>
 <h3 align="center">
-DSSHOP商城系统
+TFSHOP商城系统
 </h3>
 <div align="center">
 一款轻量级商城开源系统
@@ -34,12 +34,12 @@ DSSHOP商城系统
 <div align="center">
 
 [官网](https://www.dswjcms.com/) |
-[在线体验](https://v3.dswjcms.com/admin/) |
-[帮助文档](https://dspurl.github.io/dsshop/)
+[在线体验]无 |
+[帮助文档](https://dspurl.github.io/tfshop/)
 </div>
 
 ### 介绍
-DSSHOP是一款轻量级低代码商城系统，意在打造一款易二开易扩展的商城系统。开源版自带插件脚手架，帮助开发者减少70%-90%重复的代码书写量。
+TFSHOP是一款轻量级低代码商城系统，意在打造一款易二开易扩展的商城系统。开源版自带插件脚手架，帮助开发者减少70%-90%重复的代码书写量。
 
 ### 系统亮点
 ~~~
@@ -79,47 +79,41 @@ node= 14.18.3
 ### 开源版演示
 > 开源版小程序无演示，请查看H5的演示效果，和PRO的区别除了功能外，没区别
 
-
-管理后台： https://v3.dswjcms.com/admin 账号：demo 密码：dswjcms.com
-
-H5端：[https://v3.dswjcms.com/h5](https://v3.dswjcms.com/h5)（移动端打开）
-
-PC端：[https://v3.dswjcms.com/](https://v3.dswjcms.com/)（电脑端打开）
+暂无体验，请自行下载体验或查看PRO演示
 
 ### PRO版演示
 
-|微信小程序|H5|安卓|
-|-|-|-|
-|<img src="https://dspurl.github.io/image/gh_e79e7cd855e7_258.jpg">|<img src="https://dspurl.github.io/image/13.png">|<img src="https://dspurl.github.io/image/1618405140569.png">|
+|微信小程序|H5|
+|-|-|
+|<img src="https://dspurl.github.io/tfshop/image/gh_e79e7cd855e7_258.jpg">|<img src="https://dspurl.github.io/tfshop/image/13.png">|
 
-管理后台： https://dsshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
+管理后台： https://tfshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
 
-收银台： https://dsshop.dswjcms.com/cashier 账号：abcd12345 密码：abcd12345
+收银台： https://tfshop.dswjcms.com/cashier 账号：abcd12345 密码：abcd12345
 
-H5端：[https://dsshop.dswjcms.com/h5](https://dsshop.dswjcms.com/h5)（移动端打开）
+H5端：[https://tfshop.dswjcms.com/h5](https://tfshop.dswjcms.com/h5)（移动端打开）
 
-PC端：[https://dsshop.dswjcms.com/](https://dsshop.dswjcms.com/)（电脑端打开）
+PC端：[https://tfshop.dswjcms.com/](https://tfshop.dswjcms.com/)（电脑端打开）
 
 ### 页面展示
 (页面仅展示部分UI)
-![](https://dspurl.github.io/image/a01.png)
-![](https://dspurl.github.io/image/a02.png)
-![](https://dspurl.github.io/image/a03.png)
-![](https://dspurl.github.io/image/a04.png)
-![](https://dspurl.github.io/image/a08.png)
-![](https://dspurl.github.io/image/a09.png)
+![](https://dspurl.github.io/tfshop/image/a01.png)
+![](https://dspurl.github.io/tfshop/image/a02.png)
+![](https://dspurl.github.io/tfshop/image/a03.png)
+![](https://dspurl.github.io/tfshop/image/a04.png)
+![](https://dspurl.github.io/tfshop/image/a08.png)
+![](https://dspurl.github.io/tfshop/image/a09.png)
 
 ### 感谢参与开发者
 感谢大神们提交代码（排名不分先后）
 
 @IncaseDo，@NickCaiSen，@czhou，@czhou，@yangjingyu
 
-欢迎反馈问题 [反馈问题](https://github.com/dspurl/dsshop/issues)。
+欢迎反馈问题 [反馈问题](https://github.com/dspurl/tfshop/issues)。
 
-欢迎提交代码 [提交代码](https://github.com/dspurl/dsshop/pulls)。
+欢迎提交代码 [提交代码](https://github.com/dspurl/tfshop/pulls)。
 
-欢迎加入我们的QQ频道
-<p><img src="https://dspurl.github.io/image/channel.png" width="250" /></p>
+技术交流群： 634522451
 
 ### 特别鸣谢
 
@@ -147,11 +141,7 @@ UI：dswjcms、purl
 
 1.允许用于个人学习、毕业设计、教学案例、公益事业、商业使用;
 
-2.如果商用必须保留版权信息，请自觉遵守;
-
-3.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
-
-4.如何免费申请商业授权[点击查看](https://www.dswjcms.com/article/detail/72 "点击查看")
+2.禁止将本项目的代码和资源进行任何形式的出售，产生的一切任何后果责任由侵权者自负。
 
 ### 版权信息
 
@@ -159,7 +149,7 @@ UI：dswjcms、purl
 
 本项目包含的第三方源码和二进制文件之版权信息另行标注。
 
-版权所有Copyright © 2020-2024 by DSSHOP(https://www.dswjcms.com)
+版权所有Copyright © 2020-2024 by TFSHOP(https://www.dswjcms.com)
 
 All rights reserved。
 

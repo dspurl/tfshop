@@ -1,9 +1,9 @@
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -24,23 +24,23 @@ const store = new Vuex.Store({
 			state.hasLogin = true
 			state.userInfo = provider;
 			if(!provider.update){
-				uni.setStorageSync('dsshopApplytoken', provider.access_token)
-				uni.setStorageSync('dsshopExpiresIn', (new Date()).getTime() + provider.expires_in * 1000)
-				uni.setStorageSync('dsshopRefreshToken', provider.refresh_token)
-				uni.setStorageSync('dsshopTokenType', provider.token_type)
-				uni.setStorageSync('dsshopUserInfo', provider)
+				uni.setStorageSync('tfshopApplytoken', provider.access_token)
+				uni.setStorageSync('tfshopExpiresIn', (new Date()).getTime() + provider.expires_in * 1000)
+				uni.setStorageSync('tfshopRefreshToken', provider.refresh_token)
+				uni.setStorageSync('tfshopTokenType', provider.token_type)
+				uni.setStorageSync('tfshopUserInfo', provider)
 			}
 			// console.log(state.userInfo);
 		},
 		logout(state) {
-			uni.removeStorageSync('dsshopApplytoken')
-			uni.removeStorageSync('dsshopExpiresIn')
-			uni.removeStorageSync('dsshopRefreshToken')
-			uni.removeStorageSync('dsshopTokenType')
+			uni.removeStorageSync('tfshopApplytoken')
+			uni.removeStorageSync('tfshopExpiresIn')
+			uni.removeStorageSync('tfshopRefreshToken')
+			uni.removeStorageSync('tfshopTokenType')
 			uni.removeStorageSync('applyDsshopSession_key')
 			uni.removeStorageSync('applyDsshopOpenid')
-			uni.removeStorageSync('dsshopUserInfo')
-			uni.removeStorageSync('dsshopCartList')
+			uni.removeStorageSync('tfshopUserInfo')
+			uni.removeStorageSync('tfshopCartList')
 			state.hasLogin = false;
 			state.userInfo = {};
 		},
@@ -51,7 +51,7 @@ const store = new Vuex.Store({
 					url:'/pages/public/login'
 				}) 
 			}else{
-				if(new Date().getTime() >= uni.getStorageSync('dsshopExpiresIn')){
+				if(new Date().getTime() >= uni.getStorageSync('tfshopExpiresIn')){
 					uni.navigateTo({
 						url:'/pages/public/login'
 					}) 

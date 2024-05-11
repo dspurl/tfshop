@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //如果有版本控制的话，请复制以下代码，修改版本号;访问地址把v1换成设置的版本号即可
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('v' . config('dsshop.versions'))->namespace('v' . config('dsshop.versions'))->group(function () {
+Route::prefix('v' . config('tfshop.versions'))->namespace('v' . config('tfshop.versions'))->group(function () {
     // 后台API
     Route::prefix('admin')->namespace('Admin')->group(function () {
         Route::post('login', 'LoginController@index')->name('admin.login');  //登录

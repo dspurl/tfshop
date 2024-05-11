@@ -117,7 +117,7 @@
 			async loadData(){
 				this.cartList = []
 				this.invalidGood = []
-				let cartList =  uni.getStorageSync('dsshopOrderList') || []
+				let cartList =  uni.getStorageSync('tfshopOrderList') || []
 				const that = this
 				const data = []
 				for(var k in cartList){
@@ -198,17 +198,17 @@
 				},function(res){
 					if(that.type === 'cart'){
 						//比对购物车, 清除已下单的商品
-						const cartList  =  uni.getStorageSync('dsshopCartList') || {}
+						const cartList  =  uni.getStorageSync('tfshopCartList') || {}
 						for(var i=0;i<cartList.length;i++){
 							if(cartList[i].checked){
 							   cartList.splice(i--, 1);
 							}
 						}
-						uni.setStorageSync('dsshopCartList', cartList)
+						uni.setStorageSync('tfshopCartList', cartList)
 						GoodIndent.addShoppingCart(cartList,function(res){})
 					}
 					//清除购买列表
-					uni.removeStorageSync('dsshopOrderList')
+					uni.removeStorageSync('tfshopOrderList')
 					uni.redirectTo({
 						url: '/pages/money/pay?id='+res
 					})

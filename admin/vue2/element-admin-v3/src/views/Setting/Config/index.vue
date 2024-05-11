@@ -122,7 +122,7 @@ export default {
       listLoading: false,
       list: [],
       sys: {
-        dsshop_applySecret: ''
+        tfshop_applySecret: ''
       }
     }
   },

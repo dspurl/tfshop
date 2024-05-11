@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -37,11 +37,11 @@ class UpdateController extends Controller
     public function detail(Request $request)
     {
         $redis = new RedisService();
-        $name = config('dsshop.marketApplySecret') . '.' . (new Controller())->getTopHost((new Controller())->scheme() . $_SERVER['HTTP_HOST']);
+        $name = config('tfshop.marketApplySecret') . '.' . (new Controller())->getTopHost((new Controller())->scheme() . $_SERVER['HTTP_HOST']);
         $redis->del($name);
         $redis->del($name . '.result');
         // 需要处理跨版本升级
-        $appVersion = config('dsshop.appVersion');
+        $appVersion = config('tfshop.appVersion');
         try {
             $client = new Client();
             $params = [
@@ -49,10 +49,10 @@ class UpdateController extends Controller
                 'version' => $appVersion,
             ];
             $headers = [
-                'apply-secret' => config('dsshop.marketApplySecret'),
-                'application-secret' => config('dsshop.marketApplicationSecret')
+                'apply-secret' => config('tfshop.marketApplySecret'),
+                'application-secret' => config('tfshop.marketApplicationSecret')
             ];
-            $respond = $client->post(config('dsshop.marketUrl') . '/api/v1/app/market/update', ['form_params' => $params,'headers'=>$headers]);
+            $respond = $client->post(config('tfshop.marketUrl') . '/api/v1/app/market/update', ['form_params' => $params,'headers'=>$headers]);
             $Contents = json_decode($respond->getBody()->getContents(), true);
             $Contents = $Contents['message'];
             if(isset($Contents['state'])){
@@ -129,7 +129,7 @@ class UpdateController extends Controller
      */
     public function edit($step, Request $request)
     {
-        $appVersion = config('dsshop.appVersion');
+        $appVersion = config('tfshop.appVersion');
         if ($step == 0) {
             // 下载更新包
             if ($request->new_version == $appVersion) {
@@ -147,10 +147,10 @@ class UpdateController extends Controller
                     'zip' => $request->zip,
                 ];
                 $headers = [
-                    'apply-secret' => config('dsshop.marketApplySecret'),
-                    'application-secret' => config('dsshop.marketApplicationSecret')
+                    'apply-secret' => config('tfshop.marketApplySecret'),
+                    'application-secret' => config('tfshop.marketApplicationSecret')
                 ];
-                $respond = $client->post(config('dsshop.marketUrl') . '/api/v1/app/market/updateDownload', ['form_params' => $params, 'headers' => $headers]);
+                $respond = $client->post(config('tfshop.marketUrl') . '/api/v1/app/market/updateDownload', ['form_params' => $params, 'headers' => $headers]);
                 Storage::disk('root')->put('Update/' . $request->new_version . '.zip', $respond->getBody()->getContents());
                 return resReturn(1, [
                     'state' => 1,
@@ -270,10 +270,10 @@ class UpdateController extends Controller
                 $step .= '<div style="color: #67C23A;margin-left: 20px;">' . __('update.to') . $request->new_version . '</div>';
                 // 删除更新包
                 Storage::disk('root')->deleteDirectory("Update/" . $request->new_version);
-                // 修改dsshop的版本号
-                $dsshop = Storage::disk('root')->get('api/config/dsshop.php');
-                $dsshop = str_replace("'appVersion' => '$appVersion'", "'appVersion' => '$request->new_version'", $dsshop);
-                Storage::disk('root')->put('api/config/dsshop.php', $dsshop);
+                // 修改tfshop的版本号
+                $tfshop = Storage::disk('root')->get('api/config/tfshop.php');
+                $tfshop = str_replace("'appVersion' => '$appVersion'", "'appVersion' => '$request->new_version'", $tfshop);
+                Storage::disk('root')->put('api/config/tfshop.php', $tfshop);
                 return resReturn(1, [
                     'state' => 2,
                     'message' => $step,

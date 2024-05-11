@@ -1,4 +1,4 @@
-[program:dsshop-worker]
+[program:tfshop-worker]
 process_name=%(program_name)s_%(process_num)02d
 command=php /var/www/html/artisan queue:work --sleep=3 --tries=3 --daemon
 autostart=true

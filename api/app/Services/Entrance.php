@@ -2,11 +2,11 @@
 /** +----------------------------------------------------------------------
  * |公众号、小程序统一入口类
  * +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -66,39 +66,6 @@ class Entrance
             exit(__('service.entrance.wechat'));
         }
         $app = Factory::officialAccount($config);
-        /*$app->menu->delete(); // 全部
-        $buttons = [
-            [
-                "name"       => "小程序",
-                "sub_button" => [
-                    [
-                        "type" => "miniprogram",
-                        "name" => "DSSHOP商城",
-                        "url"  => "https://dsshop.dswjcms.com/h5/#/",
-                        "appid"=>"wxc31e70f47087660b",
-                        "pagepath"=>"pages/index/index"
-                    ],
-                    [
-                        "type" => "miniprogram",
-                        "name" => "宜云码",
-                        "url"  => "https://api.yyunma.cn/h5/#/",
-                        "appid"=>"wx1428c90c0926d491",
-                        "pagepath"=>"pages/index/index"
-                    ]
-                ],
-            ],
-            [
-                "name"       => "h5",
-                "sub_button" => [
-                    [
-                        "type" => "view",
-                        "name" => "DSSHOP商城",
-                        "url"  => "https://dsshop.dswjcms.com/h5/#/"
-                    ]
-                ],
-            ],
-        ];
-        $app->menu->create($buttons);*/
         $app->server->push(SubscribeHandler::class, Message::EVENT); // 事件消息
         $app->server->push(OtherMessageHandler::class, Message::TEXT | Message::IMAGE | Message::VOICE | Message::VIDEO | Message::SHORT_VIDEO); // 其它消息
         return $app->server->serve();

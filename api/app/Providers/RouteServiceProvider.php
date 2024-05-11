@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -52,7 +52,6 @@ class RouteServiceProvider extends ServiceProvider
     {
 //        $this->mapApiRoutes();
         $this->down();
-        $this->cpy();
         $this->mapAdminRoutes();
         $this->mapAppRoutes();
         $this->mapPluginRoutes();
@@ -70,33 +69,8 @@ class RouteServiceProvider extends ServiceProvider
      */
     protected function down()
     {
-        if (config('dsshop.down')) {
+        if (config('tfshop.down')) {
             throw new \Exception(__('providers.route_service.down'), Response::HTTP_SERVICE_UNAVAILABLE);
-        }
-    }
-
-    protected function cpy()
-    {
-        if (isset($_SERVER["HTTP_HOST"])) {
-            $redis = new RedisService();
-            $name = config('dsshop.marketApplySecret') . '.' . (new Controller())->getTopHost((new Controller())->scheme() . $_SERVER['HTTP_HOST']);
-            $t = $redis->get($name) ? $redis->get($name) : 0;
-            if (!$redis->get($name . '.result') && time() > $t) {
-                $client = new Client();
-                $url = config('dsshop.marketUrl') . '/api/v1/app/market/authorization';
-                $respond = $client->post($url, ['form_params' => [
-                    'domain' => (new Controller())->getTopHost((new Controller())->scheme() . $_SERVER['HTTP_HOST']),
-                    'secret' => config('dsshop.marketApplicationSecret')
-                ]]);
-                $data = json_decode($respond->getBody()->getContents(), true);
-                if ($data['message'] == 1) {
-                    $redis->set($name . '.result', 1);
-                    $redis->set($name, time() + 2592000);
-                } else {
-                    $redis->set($name . '.result', -1);
-                    $redis->set($name, time() + 3600);
-                }
-            }
         }
     }
 

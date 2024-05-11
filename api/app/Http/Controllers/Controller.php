@@ -2,11 +2,11 @@
 /** +----------------------------------------------------------------------
  * | 公共方法
  * +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -69,11 +69,11 @@ class Controller extends BaseController
         } else {
             return resReturn(0, __('upload_pictures.type_inexistence.error'), Code::CODE_PARAMETER_WRONG);
         }
-        if (!in_array($extension, explode(',', config("dsshop.file.$name.extension")))) {
+        if (!in_array($extension, explode(',', config("tfshop.file.$name.extension")))) {
             return resReturn(0, __('upload_pictures.extension.error'), Code::CODE_PARAMETER_WRONG);
         }
-        if ($request->file->getSize() > config("dsshop.file.$name.size")) {
-            return resReturn(0, __('upload_pictures.admin_size.error') . (config("dsshop.file.$name.size") / 1024 / 1024) . 'M', Code::CODE_PARAMETER_WRONG);
+        if ($request->file->getSize() > config("tfshop.file.$name.size")) {
+            return resReturn(0, __('upload_pictures.admin_size.error') . (config("tfshop.file.$name.size") / 1024 / 1024) . 'M', Code::CODE_PARAMETER_WRONG);
         }
         $url = $this->uploadFiles($file, $request);
         if ($url['state'] != 'SUCCESS') {

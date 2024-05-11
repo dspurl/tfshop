@@ -33,8 +33,8 @@ export default {
 	methods: {
 		...mapMutations(['login']),
 		setSecret(options) {
-			let userInfo = uni.getStorageSync('dsshopUserInfo') || '';
-			if (userInfo && uni.getStorageSync('dsshopApplytoken')) {
+			let userInfo = uni.getStorageSync('tfshopUserInfo') || '';
+			if (userInfo && uni.getStorageSync('tfshopApplytoken')) {
 				//更新登陆状态
 				userInfo.update = 1
 				this.login(userInfo)
@@ -42,11 +42,11 @@ export default {
 		},
 		// 获取购物车角标
 		showDsshopCartNumber(){
-			const dsshopCartNumber = uni.getStorageSync('dsshopCartList') ? Object.keys(uni.getStorageSync('dsshopCartList')).length + '' : ''
-			if(dsshopCartNumber && dsshopCartNumber != '0'){
+			const tfshopCartNumber = uni.getStorageSync('tfshopCartList') ? Object.keys(uni.getStorageSync('tfshopCartList')).length + '' : ''
+			if(tfshopCartNumber && tfshopCartNumber != '0'){
 				uni.setTabBarBadge({
 				  index: 2,
-				  text: dsshopCartNumber
+				  text: tfshopCartNumber
 				})
 			}else{
 				uni.removeTabBarBadge({
@@ -89,13 +89,13 @@ export default {
 		uni.addInterceptor('request', {
 			invoke(args) {
 			    if(args.url.indexOf('refreshToken') === -1){
-			    	if(uni.getStorageSync('dsshopExpiresIn') && !store.state.refresh){
-			    		if ((new Date()).getTime() >= uni.getStorageSync('dsshopExpiresIn') - 300 * 1000) { // token失效前5分钟会自动刷新token
+			    	if(uni.getStorageSync('tfshopExpiresIn') && !store.state.refresh){
+			    		if ((new Date()).getTime() >= uni.getStorageSync('tfshopExpiresIn') - 300 * 1000) { // token失效前5分钟会自动刷新token
 							store.commit('setRefresh',true)
 							// 计时器的作用是防止刷新token早于其它接口触发前触发导致接口数据获取失效，可用vue-router或是服务端配置token的时间
 							setTimeout(function(){
 								Login.refreshToken({
-									refresh_token: uni.getStorageSync('dsshopRefreshToken')
+									refresh_token: uni.getStorageSync('tfshopRefreshToken')
 								},function(res){
 									store.commit('login',res)
 									store.commit('setRefresh',false)

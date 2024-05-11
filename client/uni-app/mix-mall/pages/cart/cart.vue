@@ -191,8 +191,8 @@
 					}
 					that.cartOriginalList = res
 					that.cartList = cartList
-					uni.setStorageSync('dsshopCartList', res)
-					uni.setStorageSync('dsshopOrderList', res)
+					uni.setStorageSync('tfshopCartList', res)
+					uni.setStorageSync('tfshopOrderList', res)
 					getApp().showDsshopCartNumber()
 					that.calcTotal();  //计算总价
 				})
@@ -238,8 +238,8 @@
 					this.allChecked = checked;
 				}
 				this.calcTotal(type);
-				uni.setStorageSync('dsshopCartList', this.cartList)
-				uni.setStorageSync('dsshopOrderList', this.cartList)
+				uni.setStorageSync('tfshopCartList', this.cartList)
+				uni.setStorageSync('tfshopOrderList', this.cartList)
 				GoodIndent.addShoppingCart(this.cartList,function(res){})
 			},
 			//删除
@@ -249,11 +249,11 @@
 				let id = row.id;
 				const that = this
 				this.cartOriginalList.splice(row.index, 1)
-				uni.setStorageSync('dsshopCartList', this.cartOriginalList)
-				uni.setStorageSync('dsshopOrderList', this.cartOriginalList)
+				uni.setStorageSync('tfshopCartList', this.cartOriginalList)
+				uni.setStorageSync('tfshopOrderList', this.cartOriginalList)
 				if(this.cartOriginalList.length === 0){
-					uni.removeStorageSync('dsshopCartList')
-					uni.removeStorageSync('dsshopOrderList')
+					uni.removeStorageSync('tfshopCartList')
+					uni.removeStorageSync('tfshopOrderList')
 				}
 				this.cartList.splice(index, 1);
 				this.calcTotal();
@@ -270,8 +270,8 @@
 				let id = row.id;
 				const that = this
 				this.cartOriginalList.splice(row.index, 1)
-				uni.setStorageSync('dsshopCartList', this.cartOriginalList)
-				uni.setStorageSync('dsshopOrderList', this.cartOriginalList)
+				uni.setStorageSync('tfshopCartList', this.cartOriginalList)
+				uni.setStorageSync('tfshopOrderList', this.cartOriginalList)
 				GoodIndent.addShoppingCart(this.cartOriginalList,function(res){
 					that.loadData()
 				})
@@ -286,8 +286,8 @@
 							this.cartList = [];
 							this.total = 0;
 							this.empty = true;
-							uni.removeStorageSync('dsshopCartList')
-							uni.removeStorageSync('dsshopOrderList')
+							uni.removeStorageSync('tfshopCartList')
+							uni.removeStorageSync('tfshopOrderList')
 							getApp().showDsshopCartNumber()
 							GoodIndent.clearShoppingCart([],function(res){})
 						}
@@ -338,7 +338,7 @@
 					this.$api.msg(this.$t('cart.unselected'))
 					return false
 				}
-				uni.setStorageSync('dsshopOrderList', goodsData)
+				uni.setStorageSync('tfshopOrderList', goodsData)
 				uni.navigateTo({
 					url: `/pages/indent/create?type=cart`
 				})

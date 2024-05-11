@@ -4,7 +4,7 @@
 		<view class="right-top-sign"></view>
 		<!-- 设置白色背景防止软键盘把下部绝对定位元素顶上来盖住输入框等 -->
 		<view class="wrapper">
-			<view class="left-top-sign">DSSHOP</view>
+			<view class="left-top-sign">TFSHOP</view>
 			<view class="welcome">
 				{{$t('login.welcome')}}
 			</view>

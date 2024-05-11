@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -67,13 +67,13 @@ class ConfigController extends Controller
                     throw new \Exception(__('hint.error.not_null', ['attribute' => $children['name']]), Code::CODE_WRONG);
                 }
                 // 重置
-                if ($children['keys'] == 'dsshop.reset' && $children['value']) {
+                if ($children['keys'] == 'tfshop.reset' && $children['value']) {
                     Config::where('id', '>', 0)->delete();
                     $redis->del('config');
                     return true;
-                } else if ($children['keys'] == 'dsshop.sync' && $children['value']) {
+                } else if ($children['keys'] == 'tfshop.sync' && $children['value']) {
                     // 同步
-                    $config = config('dsshop.config');
+                    $config = config('tfshop.config');
                     $this->addConfig($config);
                     return true;
                 }

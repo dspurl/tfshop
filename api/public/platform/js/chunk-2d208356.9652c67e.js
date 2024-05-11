@@ -1,2 +1,0 @@
-(window["webpackJsonp"]=window["webpackJsonp"]||[]).push([["chunk-2d208356"],{a48e:function(a,e,n){"use strict";n.r(e);var o=function(){var a=this,e=a.$createElement,n=a._self._c||e;return n("SideBar",{attrs:{groups:a.groups}})},t=[],r=n("81e6"),s={components:{SideBar:r["a"]},data:function(){return{groups:[{label:"模拟商品",list:[{name:"全部商品",path:"/mall/goods/goods-manager"},{name:"全部分类",path:"/mall/goods/group-manager"}]}]}}},l=s,u=n("2877"),p=Object(u["a"])(l,o,t,!1,null,null,null);e["default"]=p.exports}}]);
-//# sourceMappingURL=chunk-2d208356.9652c67e.js.map

@@ -1,4 +1,4 @@
-[program:dsshop-scheduler]
+[program:tfshop-scheduler]
 process_name=%(program_name)s_%(process_num)02d
 command=/bin/sh -c "while [ true ]; do (php /var/www/html/artisan schedule:run --verbose --no-interaction &); sleep 60; done"
 autostart=true

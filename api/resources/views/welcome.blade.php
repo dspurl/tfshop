@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
         <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
         <script src="https://unpkg.com/element-ui/lib/index.js"></script>
-        <title>DSSHOP-易开发、易扩展完全免费的商城系统</title>
+        <title>TFSHOP-易开发、易扩展完全免费的商城系统</title>
     </head>
     <body>
     <div id="app">

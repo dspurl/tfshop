@@ -1,43 +1,43 @@
 version: '2.3'
 volumes:
-  dsshop_redis_data:
-  dsshop_mysql_data:
+  tfshop_redis_data:
+  tfshop_mysql_data:
 networks:
-  dsshop-network:
+  tfshop-network:
     driver: bridge
 services:
   mysql:
-    container_name: dsshop-mysql
+    container_name: tfshop-mysql
     restart: on-failure
     volumes:
-      - dsshop_mysql_data:/var/lib/mysql
+      - tfshop_mysql_data:/var/lib/mysql
     image: mysql:5.7
     command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
     environment:
       - MYSQL_ROOT_PASSWORD=123
-      - MYSQL_DATABASE=dsshop
+      - MYSQL_DATABASE=tfshop
     ports:
       - "3306:3306"
     networks:
-      dsshop-network:
+      tfshop-network:
         aliases:
-          - mysql.dsshop
+          - mysql.tfshop
   redis:
-    container_name: dsshop-redis
+    container_name: tfshop-redis
     restart: on-failure
     volumes:
-      - dsshop_redis_data:/data:rw
+      - tfshop_redis_data:/data:rw
     image: redis:5.0.8
     command: redis-server --appendonly yes
     ports:
       - "6379:6379"
     networks:
-      dsshop-network:
+      tfshop-network:
         aliases:
-          - redis.dsshop
+          - redis.tfshop
 
   php:
-    container_name: "dsshop-php-fpm"
+    container_name: "tfshop-php-fpm"
     depends_on:
       - redis
       - mysql
@@ -48,12 +48,12 @@ services:
       - ./docker/supervisor/conf.d:/etc/supervisor/conf.d/:rw
     restart: on-failure
     networks:
-      dsshop-network:
+      tfshop-network:
         aliases:
-          - php-fpm.dsshop
+          - php-fpm.tfshop
 
   nginx:
-    container_name: "dsshop-nginx"
+    container_name: "tfshop-nginx"
     depends_on:
       - php
     image: nginx
@@ -66,11 +66,11 @@ services:
       - ./docker/nginx/ssl:/etc/nginx/ssl/:rw
     restart: on-failure
     networks:
-      dsshop-network:
+      tfshop-network:
         aliases:
-          - nginx.dsshop
+          - nginx.tfshop
   web:
-    container_name: "dsshop-web"
+    container_name: "tfshop-web"
     build:
       context: ./docker/web/
     ports:
@@ -79,8 +79,8 @@ services:
       - ./web:/src/
     # restart: on-failure
     networks:
-      dsshop-network:
+      tfshop-network:
         aliases:
-          - web.dsshop
+          - web.tfshop
     stdin_open: true
     tty: true

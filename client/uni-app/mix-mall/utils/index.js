@@ -1,9 +1,9 @@
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -115,10 +115,10 @@ export function getLogin() {
 								const message = res.data.message
 								uni.setStorageSync('applyDsshopSession_key', message.session_key);
 								uni.setStorageSync('applyDsshopOpenid', message.openid);
-								uni.setStorageSync('dsshopApplytoken', message.access_token)
-								uni.setStorageSync('dsshopExpiresIn', (new Date()).getTime() + message.expires_in * 1000)
-								uni.setStorageSync('dsshopRefreshToken', message.refresh_token)
-								uni.setStorageSync('dsshopTokenType', message.token_type)
+								uni.setStorageSync('tfshopApplytoken', message.access_token)
+								uni.setStorageSync('tfshopExpiresIn', (new Date()).getTime() + message.expires_in * 1000)
+								uni.setStorageSync('tfshopRefreshToken', message.refresh_token)
+								uni.setStorageSync('tfshopTokenType', message.token_type)
 							}
 						} else {
 							uni.showToast({

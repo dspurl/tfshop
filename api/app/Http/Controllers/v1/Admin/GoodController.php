@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -61,10 +61,10 @@ class GoodController extends Controller
             } else if ($request->activeIndex == 3) {
                 $q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
             } else if ($request->activeIndex == 4) {
-                $q->where('inventory', '<', config('dsshop.lowInventory'))
+                $q->where('inventory', '<', config('tfshop.lowInventory'))
                     ->where(function ($query) {
                         $query->whereHas('goodSku', function ($subquery) {
-                            $subquery->where('inventory', '<', config('dsshop.lowInventory'));
+                            $subquery->where('inventory', '<', config('tfshop.lowInventory'));
                         })
                             ->orWhereDoesntHave('goodSku');
                     });
@@ -139,10 +139,10 @@ class GoodController extends Controller
             'all' => Good::where('lang', App::getLocale())->count(), //全部
             'sell' => Good::where('lang', App::getLocale())->where('is_show', Good::GOOD_SHOW_PUTAWAY)->count(),    //出售
             'warehouse' => Good::where('lang', App::getLocale())->where('is_show', Good::GOOD_SHOW_ENTREPOT)->count(),   //仓库
-            'lowInventory' => Good::where('lang', App::getLocale())->where('inventory', '<', config('dsshop.lowInventory'))
+            'lowInventory' => Good::where('lang', App::getLocale())->where('inventory', '<', config('tfshop.lowInventory'))
                 ->where(function ($query) {
                     $query->whereHas('goodSku', function ($subquery) {
-                        $subquery->where('inventory', '<', config('dsshop.lowInventory'));
+                        $subquery->where('inventory', '<', config('tfshop.lowInventory'));
                     })
                         ->orWhereDoesntHave('goodSku');
                 })->count(),    //低库存

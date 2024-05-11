@@ -2,7 +2,7 @@
     <div>
         <header>
             <div class="header">
-                <h1>DSSHOP</h1>
+                <h1>TFSHOP</h1>
                 <el-menu
                   :default-active="activeIndex2"
                   class="el-menu-header"
@@ -20,7 +20,7 @@
                     <div class="description">
                         <el-row :gutter="12">
                             <el-col class="left" :lg="6">
-                                <h1>DSSHOP</h1>
+                                <h1>TFSHOP</h1>
                                 <h4>易开发、易扩展、完全免费的商城系统</h4>
                             </el-col>
                             <el-col class="right" :lg="6">

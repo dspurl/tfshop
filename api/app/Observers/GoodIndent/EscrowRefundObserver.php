@@ -1,10 +1,10 @@
 <?php
 /** +----------------------------------------------------------------------
- * | DSSHOP [ 轻量级易扩展低代码开源商城系统 ]
+ * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
  * | Copyright (c) 2020~2023 https://www.dswjcms.com All rights reserved.
  * +----------------------------------------------------------------------
- * | Licensed 未经许可不能去掉DSSHOP相关版权
+ * | Licensed 未经许可不能去掉TFSHOP相关版权
  * +----------------------------------------------------------------------
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
@@ -63,7 +63,7 @@ class EscrowRefundObserver
                 $PaymentLog->pay_id = $goodIndent->id; //订单ID
                 $PaymentLog->type = PaymentLog::PAYMENT_LOG_TYPE_GOODS_INDENT_REFUND;
                 $PaymentLog->platform = $goodIndent->PaymentLog->platform;
-                $PaymentLog->pay_type = 'App\Models\v'.config('dsshop.versions').'\GoodIndent';
+                $PaymentLog->pay_type = 'App\Models\v'.config('tfshop.versions').'\GoodIndent';
                 $PaymentLog->state = PaymentLog::PAYMENT_LOG_STATE_CREATE;
                 $PaymentLog->save();
             }

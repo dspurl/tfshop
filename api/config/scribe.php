@@ -9,12 +9,12 @@ return [
     /*
      * The HTML <title> for the generated documentation. If this is empty, Scribe will infer it from config('app.name').
      */
-    'title' => 'DSSHOP接口文档',
+    'title' => 'TFSHOP接口文档',
 
     /*
      * A short description of your API. Will be included in the docs webpage, Postman collection and OpenAPI spec.
      */
-    'description' => 'DSSHOP所有API接口文档',
+    'description' => 'TFSHOP所有API接口文档',
 
     /*
      * The base URL displayed in the docs. If this is empty, Scribe will use the value of config('app.url').

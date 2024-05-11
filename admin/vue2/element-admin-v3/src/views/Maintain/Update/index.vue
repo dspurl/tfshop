@@ -9,7 +9,7 @@
       </div>
       <div style="text-align: center;">
         <img src="@/assets/ver.svg" style="height:140px">
-        <h2 style="margin-top: 15px;">DSSHOP</h2>
+        <h2 style="margin-top: 15px;">TFSHOP</h2>
         <div v-loading="loading">
           <p style="margin-top: 5px;">{{ $t('update.current_version') }}：{{ data.version }}</p>
           <p style="margin-top: 5px;">{{ $t('update.latest_version') }}：{{ data.new_version }}</p>

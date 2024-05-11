@@ -104,7 +104,7 @@ export default {
 				this.notice()
 			}
 			// #ifdef MP-WEIXIN 
-			this.wechat=uni.getStorageSync('dsshopUserInfo').wechat
+			this.wechat=uni.getStorageSync('tfshopUserInfo').wechat
 			// #endif
 			if(!uni.getStorageSync('applyDsshopGuidanceMy')){
 				this.guidanceMy = true
