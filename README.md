@@ -34,7 +34,7 @@ TFSHOP商城系统
 <div align="center">
 
 [官网](https://www.dswjcms.com/) |
-[在线体验](https://v3.dswjcms.com/admin/) |
+[在线体验]无 |
 [帮助文档](https://dspurl.github.io/tfshop/)
 </div>
 
@@ -79,10 +79,7 @@ node= 14.18.3
 ### 开源版演示
 > 开源版小程序无演示，请查看H5的演示效果，和PRO的区别除了功能外，没区别
 
-
-管理后台： https://v3.dswjcms.com/admin 账号：demo 密码：dswjcms.com
-
-H5端：[https://v3.dswjcms.com/h5](https://v3.dswjcms.com/h5)（移动端打开）
+暂无体验，请自行下载体验或查看PRO演示
 
 ### PRO版演示
 
