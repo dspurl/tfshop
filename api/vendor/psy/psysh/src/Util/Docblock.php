@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -74,7 +74,10 @@ class Docblock
     public function __construct(\Reflector $reflector)
     {
         $this->reflector = $reflector;
-        $this->setComment($reflector->getDocComment());
+
+        if ($reflector instanceof \ReflectionClass || $reflector instanceof \ReflectionClassConstant || $reflector instanceof \ReflectionFunctionAbstract || $reflector instanceof \ReflectionProperty) {
+            $this->setComment($reflector->getDocComment());
+        }
     }
 
     /**
@@ -82,7 +85,7 @@ class Docblock
      *
      * @param string $comment The docblock
      */
-    protected function setComment($comment)
+    protected function setComment(string $comment)
     {
         $this->desc = '';
         $this->tags = [];
@@ -98,7 +101,7 @@ class Docblock
      *
      * @return int Prefix length
      */
-    protected static function prefixLength(array $lines)
+    protected static function prefixLength(array $lines): int
     {
         // find only lines with interesting things
         $lines = \array_filter($lines, function ($line) {
@@ -132,7 +135,7 @@ class Docblock
      *
      * @param string $comment The docblock
      */
-    protected function parseComment($comment)
+    protected function parseComment(string $comment)
     {
         // Strip the opening and closing tags of the docblock
         $comment = \substr($comment, 3, -2);
@@ -198,10 +201,8 @@ class Docblock
      * Whether or not a docblock contains a given @tag.
      *
      * @param string $tag The name of the @tag to check for
-     *
-     * @return bool
      */
-    public function hasTag($tag)
+    public function hasTag(string $tag): bool
     {
         return \is_array($this->tags) && \array_key_exists($tag, $this->tags);
     }
@@ -211,9 +212,9 @@ class Docblock
      *
      * @param string $tag
      *
-     * @return array
+     * @return array|null
      */
-    public function tag($tag)
+    public function tag(string $tag): ?array
     {
         return $this->hasTag($tag) ? $this->tags[$tag] : null;
     }
@@ -222,10 +223,8 @@ class Docblock
      * Whether or not a string begins with a @tag.
      *
      * @param string $str
-     *
-     * @return bool
      */
-    public static function isTagged($str)
+    public static function isTagged(string $str): bool
     {
         return isset($str[1]) && $str[0] === '@' && !\preg_match('/[^A-Za-z]/', $str[1]);
     }
@@ -237,7 +236,7 @@ class Docblock
      *
      * @return string|null
      */
-    public static function strTag($str)
+    public static function strTag(string $str)
     {
         if (\preg_match('/^@[a-z0-9_]+/', $str, $matches)) {
             return $matches[0];

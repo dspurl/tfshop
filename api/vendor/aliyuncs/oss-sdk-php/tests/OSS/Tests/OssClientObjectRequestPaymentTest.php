@@ -354,7 +354,7 @@ class OssClientObjectRequestPaymentTest extends TestOssClientBase
          */
         $part_size = 1 * 1024 * 1024;
         $upload_file = __FILE__;
-        $upload_filesize = filesize($upload_file);
+        $upload_filesize = sprintf('%u',filesize($upload_file));
         $pieces = $this->payerClient->generateMultiuploadParts($upload_filesize, $part_size);
         $response_upload_part = array();
         $upload_position = 0;
@@ -451,12 +451,12 @@ class OssClientObjectRequestPaymentTest extends TestOssClientBase
     {
         parent::setUp();
         $this->payerClient = new OssClient(
-            getenv('OSS_PAYER_ACCESS_KEY_ID'),
-            getenv('OSS_PAYER_ACCESS_KEY_SECRET'),
-            getenv('OSS_ENDPOINT'), false);
+            Common::getPayerAccessKeyId(),
+            Common::getPayerAccessKeySecret(),
+            Common::getEndpoint(), false);
 
         $policy = '{"Version":"1","Statement":[{"Action":["oss:*"],"Effect": "Allow",'.
-                  '"Principal":["' . getenv('OSS_PAYER_UID') . '"],'.
+                  '"Principal":["' . Common::getPayerUid() . '"],'.
                   '"Resource": ["acs:oss:*:*:' . $this->bucket . '","acs:oss:*:*:' . $this->bucket . '/*"]}]}';
 
         $this->ossClient->putBucketPolicy($this->bucket, $policy);

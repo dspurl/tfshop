@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -15,7 +15,6 @@ namespace Composer\Plugin;
 use Composer\EventDispatcher\Event;
 use Composer\Repository\RepositoryInterface;
 use Composer\DependencyResolver\Request;
-use Composer\Package\PackageInterface;
 use Composer\Package\BasePackage;
 
 /**
@@ -54,11 +53,11 @@ class PrePoolCreateEvent extends Event
      */
     private $rootReferences;
     /**
-     * @var PackageInterface[]
+     * @var BasePackage[]
      */
     private $packages;
     /**
-     * @var PackageInterface[]
+     * @var BasePackage[]
      */
     private $unacceptableFixedPackages;
 
@@ -69,13 +68,15 @@ class PrePoolCreateEvent extends Event
      * @param int[]                 $stabilityFlags         array of package name => BasePackage::STABILITY_* value
      * @param array[]               $rootAliases            array of package => version => [alias, alias_normalized]
      * @param string[]              $rootReferences
+     * @param BasePackage[]         $packages
+     * @param BasePackage[]         $unacceptableFixedPackages
      *
      * @phpstan-param array<string, BasePackage::STABILITY_*> $acceptableStabilities
      * @phpstan-param array<string, BasePackage::STABILITY_*> $stabilityFlags
      * @phpstan-param array<string, array<string, array{alias: string, alias_normalized: string}>> $rootAliases
      * @phpstan-param array<string, string> $rootReferences
      */
-    public function __construct($name, array $repositories, Request $request, array $acceptableStabilities, array $stabilityFlags, array $rootAliases, array $rootReferences, array $packages, array $unacceptableFixedPackages)
+    public function __construct(string $name, array $repositories, Request $request, array $acceptableStabilities, array $stabilityFlags, array $rootAliases, array $rootReferences, array $packages, array $unacceptableFixedPackages)
     {
         parent::__construct($name);
 
@@ -92,15 +93,12 @@ class PrePoolCreateEvent extends Event
     /**
      * @return RepositoryInterface[]
      */
-    public function getRepositories()
+    public function getRepositories(): array
     {
         return $this->repositories;
     }
 
-    /**
-     * @return Request
-     */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }
@@ -109,7 +107,7 @@ class PrePoolCreateEvent extends Event
      * @return int[] array of stability => BasePackage::STABILITY_* value
      * @phpstan-return array<string, BasePackage::STABILITY_*>
      */
-    public function getAcceptableStabilities()
+    public function getAcceptableStabilities(): array
     {
         return $this->acceptableStabilities;
     }
@@ -118,7 +116,7 @@ class PrePoolCreateEvent extends Event
      * @return int[] array of package name => BasePackage::STABILITY_* value
      * @phpstan-return array<string, BasePackage::STABILITY_*>
      */
-    public function getStabilityFlags()
+    public function getStabilityFlags(): array
     {
         return $this->stabilityFlags;
     }
@@ -127,7 +125,7 @@ class PrePoolCreateEvent extends Event
      * @return array[] of package => version => [alias, alias_normalized]
      * @phpstan-return array<string, array<string, array{alias: string, alias_normalized: string}>>
      */
-    public function getRootAliases()
+    public function getRootAliases(): array
     {
         return $this->rootAliases;
     }
@@ -136,39 +134,39 @@ class PrePoolCreateEvent extends Event
      * @return string[]
      * @phpstan-return array<string, string>
      */
-    public function getRootReferences()
+    public function getRootReferences(): array
     {
         return $this->rootReferences;
     }
 
     /**
-     * @return PackageInterface[]
+     * @return BasePackage[]
      */
-    public function getPackages()
+    public function getPackages(): array
     {
         return $this->packages;
     }
 
     /**
-     * @return PackageInterface[]
+     * @return BasePackage[]
      */
-    public function getUnacceptableFixedPackages()
+    public function getUnacceptableFixedPackages(): array
     {
         return $this->unacceptableFixedPackages;
     }
 
     /**
-     * @param PackageInterface[] $packages
+     * @param BasePackage[] $packages
      */
-    public function setPackages(array $packages)
+    public function setPackages(array $packages): void
     {
         $this->packages = $packages;
     }
 
     /**
-     * @param PackageInterface[] $packages
+     * @param BasePackage[] $packages
      */
-    public function setUnacceptableFixedPackages(array $packages)
+    public function setUnacceptableFixedPackages(array $packages): void
     {
         $this->unacceptableFixedPackages = $packages;
     }

@@ -13,6 +13,8 @@ return [
             'payment_app_id' => env('TT_PAYMENT_APP_ID'),
             'payment_merchant_id' => env('TT_PAYMENT_MERCHANT_ID'),
             'payment_secret' => env('TT_PAYMENT_SECRET'),
+            'payment_salt' => env('TT_PAYMENT_SALT'),
+            'payment_token' => env('TT_PAYMENT_TOKEN'),
         ]
     ],
 ];

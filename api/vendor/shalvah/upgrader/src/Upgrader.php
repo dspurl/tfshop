@@ -52,7 +52,7 @@ class Upgrader
      */
     public function dontTouch(string ...$keys): self
     {
-        $this->dontTouchKeys += $keys;
+        $this->dontTouchKeys = [...$this->dontTouchKeys, ...$keys];
         return $this;
     }
 

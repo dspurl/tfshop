@@ -52,7 +52,7 @@ class UploadedFile extends BaseUploadedFile
     /**
      * {@inheritdoc}
      */
-    public function move($directory, $name = null): File
+    public function move(string $directory, string $name = null): File
     {
         if (!$this->isValid() || $this->test) {
             return parent::move($directory, $name);
@@ -61,7 +61,7 @@ class UploadedFile extends BaseUploadedFile
         $target = $this->getTargetFile($directory, $name);
 
         try {
-            $this->psrUploadedFile->moveTo($target);
+            $this->psrUploadedFile->moveTo((string) $target);
         } catch (\RuntimeException $e) {
             throw new FileException(sprintf('Could not move the file "%s" to "%s" (%s)', $this->getPathname(), $target, $e->getMessage()), 0, $e);
         }

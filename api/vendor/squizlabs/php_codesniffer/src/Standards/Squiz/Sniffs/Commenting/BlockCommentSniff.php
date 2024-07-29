@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting;
@@ -27,7 +27,7 @@ class BlockCommentSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function register()
     {
@@ -69,11 +69,22 @@ class BlockCommentSniff implements Sniff
         // If this is a function/class/interface doc block comment, skip it.
         // We are only interested in inline doc block comments.
         if ($tokens[$stackPtr]['code'] === T_DOC_COMMENT_OPEN_TAG) {
-            $nextToken = $phpcsFile->findNext(Tokens::$emptyTokens, ($stackPtr + 1), null, true);
-            $ignore    = [
+            $nextToken = $stackPtr;
+            do {
+                $nextToken = $phpcsFile->findNext(Tokens::$emptyTokens, ($nextToken + 1), null, true);
+                if ($tokens[$nextToken]['code'] === T_ATTRIBUTE) {
+                    $nextToken = $tokens[$nextToken]['attribute_closer'];
+                    continue;
+                }
+
+                break;
+            } while (true);
+
+            $ignore = [
                 T_CLASS     => true,
                 T_INTERFACE => true,
                 T_TRAIT     => true,
+                T_ENUM      => true,
                 T_FUNCTION  => true,
                 T_PUBLIC    => true,
                 T_PRIVATE   => true,
@@ -83,6 +94,7 @@ class BlockCommentSniff implements Sniff
                 T_ABSTRACT  => true,
                 T_CONST     => true,
                 T_VAR       => true,
+                T_READONLY  => true,
             ];
             if (isset($ignore[$tokens[$nextToken]['code']]) === true) {
                 return;
@@ -363,6 +375,7 @@ class BlockCommentSniff implements Sniff
         if ((isset($tokens[$contentBefore]['scope_closer']) === true
             && $tokens[$contentBefore]['scope_opener'] === $contentBefore)
             || $tokens[$contentBefore]['code'] === T_OPEN_TAG
+            || $tokens[$contentBefore]['code'] === T_OPEN_TAG_WITH_ECHO
         ) {
             if (($tokens[$stackPtr]['line'] - $tokens[$contentBefore]['line']) !== 1) {
                 $error = 'Empty line not required before block comment';

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -13,7 +13,7 @@
 namespace Composer\Command;
 
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Composer\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Composer\Downloader\ChangeReportInterface;
 use Composer\Downloader\DvcsDownloaderInterface;
@@ -32,21 +32,21 @@ use Composer\Util\ProcessExecutor;
  */
 class StatusCommand extends BaseCommand
 {
-    const EXIT_CODE_ERRORS = 1;
-    const EXIT_CODE_UNPUSHED_CHANGES = 2;
-    const EXIT_CODE_VERSION_CHANGES = 4;
+    private const EXIT_CODE_ERRORS = 1;
+    private const EXIT_CODE_UNPUSHED_CHANGES = 2;
+    private const EXIT_CODE_VERSION_CHANGES = 4;
 
     /**
      * @throws \Symfony\Component\Console\Exception\InvalidArgumentException
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('status')
-            ->setDescription('Shows a list of locally modified packages.')
-            ->setDefinition(array(
+            ->setDescription('Shows a list of locally modified packages')
+            ->setDefinition([
                 new InputOption('verbose', 'v|vv|vvv', InputOption::VALUE_NONE, 'Show modified files for each directory that contains changes.'),
-            ))
+            ])
             ->setHelp(
                 <<<EOT
 The status command displays a list of dependencies that have
@@ -58,14 +58,9 @@ EOT
         ;
     }
 
-    /**
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
-     * @return int
-     */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $composer = $this->getComposer();
+        $composer = $this->requireComposer();
 
         $commandEvent = new CommandEvent(PluginEvents::COMMAND, 'status', $input, $output);
         $composer->getEventDispatcher()->dispatch($commandEvent->getName(), $commandEvent);
@@ -81,40 +76,39 @@ EOT
         return $exitCode;
     }
 
-    /**
-     * @param  InputInterface $input
-     * @return int
-     */
-    private function doExecute(InputInterface $input)
+    private function doExecute(InputInterface $input): int
     {
         // init repos
-        $composer = $this->getComposer();
+        $composer = $this->requireComposer();
 
         $installedRepo = $composer->getRepositoryManager()->getLocalRepository();
 
         $dm = $composer->getDownloadManager();
         $im = $composer->getInstallationManager();
 
-        $errors = array();
+        $errors = [];
         $io = $this->getIO();
-        $unpushedChanges = array();
-        $vcsVersionChanges = array();
+        $unpushedChanges = [];
+        $vcsVersionChanges = [];
 
         $parser = new VersionParser;
-        $guesser = new VersionGuesser($composer->getConfig(), new ProcessExecutor($io), $parser);
+        $guesser = new VersionGuesser($composer->getConfig(), $composer->getLoop()->getProcessExecutor() ?? new ProcessExecutor($io), $parser);
         $dumper = new ArrayDumper;
 
         // list packages
         foreach ($installedRepo->getCanonicalPackages() as $package) {
             $downloader = $dm->getDownloaderForPackage($package);
             $targetDir = $im->getInstallPath($package);
+            if ($targetDir === null) {
+                continue;
+            }
 
             if ($downloader instanceof ChangeReportInterface) {
                 if (is_link($targetDir)) {
                     $errors[$targetDir] = $targetDir . ' is a symbolic link.';
                 }
 
-                if ($changes = $downloader->getLocalChanges($package, $targetDir)) {
+                if (null !== ($changes = $downloader->getLocalChanges($package, $targetDir))) {
                     $errors[$targetDir] = $changes;
                 }
             }
@@ -134,17 +128,17 @@ EOT
 
                     $currentVersion = $guesser->guessVersion($dumper->dump($package), $targetDir);
 
-                    if ($previousRef && $currentVersion && $currentVersion['commit'] !== $previousRef) {
-                        $vcsVersionChanges[$targetDir] = array(
-                            'previous' => array(
+                    if ($previousRef && $currentVersion && $currentVersion['commit'] !== $previousRef && $currentVersion['pretty_version'] !== $previousRef) {
+                        $vcsVersionChanges[$targetDir] = [
+                            'previous' => [
                                 'version' => $package->getPrettyVersion(),
                                 'ref' => $previousRef,
-                            ),
-                            'current' => array(
+                            ],
+                            'current' => [
                                 'version' => $currentVersion['pretty_version'],
                                 'ref' => $currentVersion['commit'],
-                            ),
-                        );
+                            ],
+                        ];
                     }
                 }
             }
@@ -168,7 +162,7 @@ EOT
 
             foreach ($errors as $path => $changes) {
                 if ($input->getOption('verbose')) {
-                    $indentedChanges = implode("\n", array_map(function ($line) {
+                    $indentedChanges = implode("\n", array_map(static function ($line): string {
                         return '    ' . ltrim($line);
                     }, explode("\n", $changes)));
                     $io->write('<info>'.$path.'</info>:');
@@ -184,7 +178,7 @@ EOT
 
             foreach ($unpushedChanges as $path => $changes) {
                 if ($input->getOption('verbose')) {
-                    $indentedChanges = implode("\n", array_map(function ($line) {
+                    $indentedChanges = implode("\n", array_map(static function ($line): string {
                         return '    ' . ltrim($line);
                     }, explode("\n", $changes)));
                     $io->write('<info>'.$path.'</info>:');

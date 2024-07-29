@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -12,51 +12,50 @@
 
 namespace Composer\Platform;
 
+use Composer\Pcre\Preg;
+
 /**
  * @author Lars Strojny <lars@strojny.net>
  */
 class Version
 {
     /**
-     * @param  string      $opensslVersion
-     * @param  bool        $isFips
-     * @return string|null
+     * @param bool $isFips Set by the method
+     *
+     * @param-out bool $isFips
      */
-    public static function parseOpenssl($opensslVersion, &$isFips)
+    public static function parseOpenssl(string $opensslVersion, ?bool &$isFips): ?string
     {
         $isFips = false;
 
-        if (!preg_match('/^(?<version>[0-9.]+)(?<patch>[a-z]{0,2})?(?<suffix>(?:-?(?:dev|pre|alpha|beta|rc|fips)[\d]*)*)?(?<garbage>-\w+)?$/', $opensslVersion, $matches)) {
+        if (!Preg::isMatchStrictGroups('/^(?<version>[0-9.]+)(?<patch>[a-z]{0,2})(?<suffix>(?:-?(?:dev|pre|alpha|beta|rc|fips)[\d]*)*)(?:-\w+)?(?: \(.+?\))?$/', $opensslVersion, $matches)) {
             return null;
         }
 
-        $isFips = strpos($matches['suffix'], 'fips') !== false;
-        $suffix = strtr('-'.ltrim($matches['suffix'], '-'), array('-fips' => '', '-pre' => '-alpha'));
-        $patch = self::convertAlphaVersionToIntVersion($matches['patch']);
+        // OpenSSL 1 used 1.2.3a style versioning, 3+ uses semver
+        $patch = '';
+        if (version_compare($matches['version'], '3.0.0', '<')) {
+            $patch = '.'.self::convertAlphaVersionToIntVersion($matches['patch']);
+        }
 
-        return rtrim($matches['version'].'.'.$patch.$suffix, '-');
+        $isFips = strpos($matches['suffix'], 'fips') !== false;
+        $suffix = strtr('-'.ltrim($matches['suffix'], '-'), ['-fips' => '', '-pre' => '-alpha']);
+
+        return rtrim($matches['version'].$patch.$suffix, '-');
     }
 
-    /**
-     * @param  string      $libjpegVersion
-     * @return string|null
-     */
-    public static function parseLibjpeg($libjpegVersion)
+    public static function parseLibjpeg(string $libjpegVersion): ?string
     {
-        if (!preg_match('/^(?<major>\d+)(?<minor>[a-z]*)$/', $libjpegVersion, $matches)) {
+        if (!Preg::isMatchStrictGroups('/^(?<major>\d+)(?<minor>[a-z]*)$/', $libjpegVersion, $matches)) {
             return null;
         }
 
         return $matches['major'].'.'.self::convertAlphaVersionToIntVersion($matches['minor']);
     }
 
-    /**
-     * @param  string      $zoneinfoVersion
-     * @return string|null
-     */
-    public static function parseZoneinfoVersion($zoneinfoVersion)
+    public static function parseZoneinfoVersion(string $zoneinfoVersion): ?string
     {
-        if (!preg_match('/^(?<year>\d{4})(?<revision>[a-z]*)$/', $zoneinfoVersion, $matches)) {
+        if (!Preg::isMatchStrictGroups('/^(?<year>\d{4})(?<revision>[a-z]*)$/', $zoneinfoVersion, $matches)) {
             return null;
         }
 
@@ -65,34 +64,23 @@ class Version
 
     /**
      * "" => 0, "a" => 1, "zg" => 33
-     *
-     * @param  string $alpha
-     * @return int
      */
-    private static function convertAlphaVersionToIntVersion($alpha)
+    private static function convertAlphaVersionToIntVersion(string $alpha): int
     {
         return strlen($alpha) * (-ord('a') + 1) + array_sum(array_map('ord', str_split($alpha)));
     }
 
-    /**
-     * @param  int    $versionId
-     * @return string
-     */
-    public static function convertLibxpmVersionId($versionId)
+    public static function convertLibxpmVersionId(int $versionId): string
     {
         return self::convertVersionId($versionId, 100);
     }
 
-    /**
-     * @param  int    $versionId
-     * @return string
-     */
-    public static function convertOpenldapVersionId($versionId)
+    public static function convertOpenldapVersionId(int $versionId): string
     {
         return self::convertVersionId($versionId, 100);
     }
 
-    private static function convertVersionId($versionId, $base)
+    private static function convertVersionId(int $versionId, int $base): string
     {
         return sprintf(
             '%d.%d.%d',

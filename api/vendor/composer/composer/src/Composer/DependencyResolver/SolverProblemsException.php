@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -14,20 +14,23 @@ namespace Composer\DependencyResolver;
 
 use Composer\Util\IniHelper;
 use Composer\Repository\RepositorySet;
-use Composer\Package\PackageInterface;
 
 /**
  * @author Nils Adermann <naderman@naderman.de>
+ *
+ * @method self::ERROR_DEPENDENCY_RESOLUTION_FAILED getCode()
  */
 class SolverProblemsException extends \RuntimeException
 {
+    public const ERROR_DEPENDENCY_RESOLUTION_FAILED = 2;
+
     /** @var Problem[] */
     protected $problems;
     /** @var array<Rule[]> */
     protected $learnedPool;
 
     /**
-     * @param Problem[]          $problems
+     * @param Problem[] $problems
      * @param array<Rule[]> $learnedPool
      */
     public function __construct(array $problems, array $learnedPool)
@@ -35,24 +38,22 @@ class SolverProblemsException extends \RuntimeException
         $this->problems = $problems;
         $this->learnedPool = $learnedPool;
 
-        parent::__construct('Failed resolving dependencies with '.count($problems).' problems, call getPrettyString to get formatted details', 2);
+        parent::__construct('Failed resolving dependencies with '.count($problems).' problems, call getPrettyString to get formatted details', self::ERROR_DEPENDENCY_RESOLUTION_FAILED);
     }
 
-    public function getPrettyString(RepositorySet $repositorySet, Request $request, Pool $pool, $isVerbose, $isDevExtraction = false)
+    public function getPrettyString(RepositorySet $repositorySet, Request $request, Pool $pool, bool $isVerbose, bool $isDevExtraction = false): string
     {
         $installedMap = $request->getPresentMap(true);
-        $hasExtensionProblems = false;
+        $missingExtensions = [];
         $isCausedByLock = false;
 
-        $problems = array();
+        $problems = [];
         foreach ($this->problems as $problem) {
             $problems[] = $problem->getPrettyString($repositorySet, $request, $pool, $isVerbose, $installedMap, $this->learnedPool)."\n";
 
-            if (!$hasExtensionProblems && $this->hasExtensionProblems($problem->getReasons())) {
-                $hasExtensionProblems = true;
-            }
+            $missingExtensions = array_merge($missingExtensions, $this->getExtensionProblems($problem->getReasons()));
 
-            $isCausedByLock |= $problem->isCausedByLock($repositorySet, $request, $pool);
+            $isCausedByLock = $isCausedByLock || $problem->isCausedByLock($repositorySet, $request, $pool);
         }
 
         $i = 1;
@@ -61,13 +62,13 @@ class SolverProblemsException extends \RuntimeException
             $text .= "  Problem ".($i++).$problem;
         }
 
-        $hints = array();
+        $hints = [];
         if (!$isDevExtraction && (strpos($text, 'could not be found') || strpos($text, 'no matching package found'))) {
             $hints[] = "Potential causes:\n - A typo in the package name\n - The package is not available in a stable-enough version according to your minimum-stability setting\n   see <https://getcomposer.org/doc/04-schema.md#minimum-stability> for more details.\n - It's a private package and you forgot to add a custom repository to find it\n\nRead <https://getcomposer.org/doc/articles/troubleshooting.md> for further common problems.";
         }
 
-        if ($hasExtensionProblems) {
-            $hints[] = $this->createExtensionHint();
+        if (!empty($missingExtensions)) {
+            $hints[] = $this->createExtensionHint($missingExtensions);
         }
 
         if ($isCausedByLock && !$isDevExtraction && !$request->getUpdateAllowTransitiveRootDependencies()) {
@@ -91,37 +92,57 @@ class SolverProblemsException extends \RuntimeException
         return $text;
     }
 
-    public function getProblems()
+    /**
+     * @return Problem[]
+     */
+    public function getProblems(): array
     {
         return $this->problems;
     }
 
-    private function createExtensionHint()
+    /**
+     * @param string[] $missingExtensions
+     */
+    private function createExtensionHint(array $missingExtensions): string
     {
         $paths = IniHelper::getAll();
 
-        if (count($paths) === 1 && empty($paths[0])) {
-            return '';
+        if ('' === $paths[0]) {
+            if (count($paths) === 1) {
+                return '';
+            }
+
+            array_shift($paths);
         }
+
+        $ignoreExtensionsArguments = implode(" ", array_map(static function ($extension) {
+            return "--ignore-platform-req=$extension";
+        }, array_unique($missingExtensions)));
 
         $text = "To enable extensions, verify that they are enabled in your .ini files:\n    - ";
         $text .= implode("\n    - ", $paths);
-        $text .= "\nYou can also run `php --ini` inside terminal to see which files are used by PHP in CLI mode.";
+        $text .= "\nYou can also run `php --ini` in a terminal to see which files are used by PHP in CLI mode.";
+        $text .= "\nAlternatively, you can run Composer with `$ignoreExtensionsArguments` to temporarily ignore these required extensions.";
 
         return $text;
     }
 
-    private function hasExtensionProblems(array $reasonSets)
+    /**
+     * @param Rule[][] $reasonSets
+     * @return string[]
+     */
+    private function getExtensionProblems(array $reasonSets): array
     {
+        $missingExtensions = [];
         foreach ($reasonSets as $reasonSet) {
             foreach ($reasonSet as $rule) {
                 $required = $rule->getRequiredPackage();
                 if (null !== $required && 0 === strpos($required, 'ext-')) {
-                    return true;
+                    $missingExtensions[$required] = 1;
                 }
             }
         }
 
-        return false;
+        return array_keys($missingExtensions);
     }
 }

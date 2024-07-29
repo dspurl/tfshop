@@ -43,7 +43,93 @@ class Payment
         $data['sign'] = $this->sign($data);
 
         return $data;
+    }
 
+    /**
+     * 预下单
+     */
+    public function createOrder(array $params): array
+    {
+        $opt = array_merge([
+            'app_id' => $this->app->getAppId(),
+        ], $params);
+        $opt['sign'] = $this->signPay($opt);
+        $result = $this->app->http->json('https://developer.toutiao.com/api/apps/ecpay/v1/create_order', $opt)->getBody();
+
+        return @json_decode($result, true) ?: $result;
+    }
+
+    /**
+     * 订单查询
+     */
+    public function queryOrder(string $out_order_no): array
+    {
+        $opt = [
+            'app_id' => $this->app->getAppId(),
+            'out_order_no' => $out_order_no,
+        ];
+        $opt['sign'] = $this->signPay($opt);
+        $result = $this->app->http->json('https://developer.toutiao.com/api/apps/ecpay/v1/query_order', $opt)->getBody();
+
+        return @json_decode($result, true) ?: $result;
+    }
+
+    /**
+     * 退款请求
+     */
+    public function createRefund(array $params): array
+    {
+        $opt = array_merge([
+            'app_id' => $this->app->getAppId(),
+        ], $params);
+        $opt['sign'] = $this->signPay($opt);
+        $result = $this->app->http->json('https://developer.toutiao.com/api/apps/ecpay/v1/create_refund', $opt)->getBody();
+
+        return @json_decode($result, true) ?: $result;
+    }
+
+    /**
+     * 查询退款
+     */
+    public function queryRefund(string $out_refund_no): array
+    {
+        $opt = [
+            'app_id' => $this->app->getAppId(),
+            'out_refund_no' => $out_refund_no,
+        ];
+        $opt['sign'] = $this->signPay($opt);
+        $result = $this->app->http->json('https://developer.toutiao.com/api/apps/ecpay/v1/query_refund', $opt)->getBody();
+
+        return @json_decode($result, true) ?: $result;
+    }
+
+    /**
+     * 分账请求
+     */
+    public function settle(array $params): array
+    {
+        $opt = array_merge([
+            'app_id' => $this->app->getAppId(),
+        ], $params);
+        $opt['sign'] = $this->signPay($opt);
+        $result = $this->app->http->json('https://developer.toutiao.com/api/apps/ecpay/v1/settle', $opt)->getBody();
+
+        return @json_decode($result, true) ?: $result;
+    }
+
+    /**
+     * 查询分账
+     */
+    public function querySettle(string $out_settle_no): array
+    {
+        $opt = [
+            'app_id' => $this->app->getAppId(),
+            'out_settle_no' => $out_settle_no,
+        ];
+        $opt['sign'] = $this->signPay($opt);
+        $result = $this->app->http->json('https://developer.toutiao.com/api/apps/ecpay/v1/query_settle', $opt)->getBody();
+
+        return @json_decode($result, true) ?: $result;
     }
 
     public function sign(array $data)
@@ -65,4 +151,49 @@ class Payment
         return md5($signData . $this->app->getPaymentSecret());
     }
 
+    /**
+     * 担保支付的请求签名算法
+     *
+     * 官方文档地址：
+     * https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/server/ecpay/appendix#%E8%AF%B7%E6%B1%82%E7%AD%BE%E5%90%8D%E7%AE%97%E6%B3%95
+     */
+    public function signPay(array $data): string
+    {
+        unset($data['app_id'], $data['thirdparty_id'], $data['sign']);
+
+        $signData = '';
+        $data['salt'] = $this->app->getPaymentSalt();
+        sort($data, SORT_STRING);
+        foreach ($data as $v) {
+            if (is_array($v)) {
+                $val = json_encode($v, JSON_UNESCAPED_UNICODE);
+            }
+            $val = trim($v);
+            if ($val === '') {
+                continue;
+            }
+            $signData .= '&' . $val;
+        }
+        $signData = substr($signData, 1);
+        return md5($signData);
+    }
+
+    /**
+     * 回调签名算法
+     *
+     * 官方文档地址：
+     * https://microapp.bytedance.com/docs/zh-CN/mini-app/develop/server/ecpay/appendix#%E5%9B%9E%E8%B0%83%E7%AD%BE%E5%90%8D%E7%AE%97%E6%B3%95
+     */
+    public function signCallback(array $param): bool
+    {
+        $data = [
+            $param['timestamp'],
+            $param['nonce'],
+            $param['msg'],
+            $this->app->getPaymentToken(),
+        ];
+        sort($data, SORT_STRING);
+        $str = implode('', $data);
+        return !strcmp(sha1($str), $param['msg_signature']);
+    }
 }

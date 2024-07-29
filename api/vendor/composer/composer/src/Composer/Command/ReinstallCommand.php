@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -17,11 +17,14 @@ use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\DependencyResolver\Transaction;
 use Composer\Package\AliasPackage;
 use Composer\Package\BasePackage;
+use Composer\Pcre\Preg;
 use Composer\Plugin\CommandEvent;
 use Composer\Plugin\PluginEvents;
+use Composer\Script\ScriptEvents;
+use Composer\Util\Platform;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\InputArgument;
+use Composer\Console\Input\InputOption;
+use Composer\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -29,17 +32,18 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ReinstallCommand extends BaseCommand
 {
-    protected function configure()
+    use CompletionTrait;
+
+    protected function configure(): void
     {
         $this
             ->setName('reinstall')
             ->setDescription('Uninstalls and reinstalls the given package names')
-            ->setDefinition(array(
+            ->setDefinition([
                 new InputOption('prefer-source', null, InputOption::VALUE_NONE, 'Forces installation from package sources when possible, including VCS information.'),
                 new InputOption('prefer-dist', null, InputOption::VALUE_NONE, 'Forces installation from package dist (default behavior).'),
-                new InputOption('prefer-install', null, InputOption::VALUE_REQUIRED, 'Forces installation from package dist|source|auto (auto chooses source for dev versions, dist for the rest).'),
+                new InputOption('prefer-install', null, InputOption::VALUE_REQUIRED, 'Forces installation from package dist|source|auto (auto chooses source for dev versions, dist for the rest).', null, $this->suggestPreferInstall()),
                 new InputOption('no-autoloader', null, InputOption::VALUE_NONE, 'Skips autoloader generation'),
-                new InputOption('no-scripts', null, InputOption::VALUE_NONE, 'Skips the execution of all scripts defined in composer.json file.'),
                 new InputOption('no-progress', null, InputOption::VALUE_NONE, 'Do not output download progress.'),
                 new InputOption('optimize-autoloader', 'o', InputOption::VALUE_NONE, 'Optimize autoloader during autoloader dump'),
                 new InputOption('classmap-authoritative', 'a', InputOption::VALUE_NONE, 'Autoload classes from the classmap only. Implicitly enables `--optimize-autoloader`.'),
@@ -47,8 +51,8 @@ class ReinstallCommand extends BaseCommand
                 new InputOption('apcu-autoloader-prefix', null, InputOption::VALUE_REQUIRED, 'Use a custom prefix for the APCu autoloader cache. Implicitly enables --apcu-autoloader'),
                 new InputOption('ignore-platform-req', null, InputOption::VALUE_REQUIRED | InputOption::VALUE_IS_ARRAY, 'Ignore a specific platform requirement (php & ext- packages).'),
                 new InputOption('ignore-platform-reqs', null, InputOption::VALUE_NONE, 'Ignore all platform requirements (php & ext- packages).'),
-                new InputArgument('packages', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'List of package names to reinstall, can include a wildcard (*) to match any substring.'),
-            ))
+                new InputArgument('packages', InputArgument::IS_ARRAY | InputArgument::REQUIRED, 'List of package names to reinstall, can include a wildcard (*) to match any substring.', null, $this->suggestInstalledPackage(false)),
+            ])
             ->setHelp(
                 <<<EOT
 The <info>reinstall</info> command looks up installed packages by name,
@@ -64,21 +68,20 @@ EOT
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = $this->getIO();
 
-        $composer = $this->getComposer(true, $input->getOption('no-plugins'));
-        $composer->getEventDispatcher()->setRunScripts(!$input->getOption('no-scripts'));
+        $composer = $this->requireComposer();
 
         $localRepo = $composer->getRepositoryManager()->getLocalRepository();
-        $packagesToReinstall = array();
-        $packageNamesToReinstall = array();
+        $packagesToReinstall = [];
+        $packageNamesToReinstall = [];
         foreach ($input->getArgument('packages') as $pattern) {
             $patternRegexp = BasePackage::packageNameToRegexp($pattern);
             $matched = false;
             foreach ($localRepo->getCanonicalPackages() as $package) {
-                if (preg_match($patternRegexp, $package->getName())) {
+                if (Preg::isMatch($patternRegexp, $package->getName())) {
                     $matched = true;
                     $packagesToReinstall[] = $package;
                     $packageNamesToReinstall[] = $package->getName();
@@ -96,7 +99,7 @@ EOT
             return 1;
         }
 
-        $uninstallOperations = array();
+        $uninstallOperations = [];
         foreach ($packagesToReinstall as $package) {
             $uninstallOperations[] = new UninstallOperation($package);
         }
@@ -113,27 +116,26 @@ EOT
         $installOperations = $transaction->getOperations();
 
         // reverse-sort the uninstalls based on the install order
-        $installOrder = array();
+        $installOrder = [];
         foreach ($installOperations as $index => $op) {
             if ($op instanceof InstallOperation && !$op->getPackage() instanceof AliasPackage) {
                 $installOrder[$op->getPackage()->getName()] = $index;
             }
         }
-        usort($uninstallOperations, function ($a, $b) use ($installOrder) {
+        usort($uninstallOperations, static function ($a, $b) use ($installOrder): int {
             return $installOrder[$b->getPackage()->getName()] - $installOrder[$a->getPackage()->getName()];
         });
 
         $commandEvent = new CommandEvent(PluginEvents::COMMAND, 'reinstall', $input, $output);
-        $composer->getEventDispatcher()->dispatch($commandEvent->getName(), $commandEvent);
+        $eventDispatcher = $composer->getEventDispatcher();
+        $eventDispatcher->dispatch($commandEvent->getName(), $commandEvent);
 
         $config = $composer->getConfig();
-        list($preferSource, $preferDist) = $this->getPreferredInstallOptions($config, $input);
+        [$preferSource, $preferDist] = $this->getPreferredInstallOptions($config, $input);
 
         $installationManager = $composer->getInstallationManager();
         $downloadManager = $composer->getDownloadManager();
         $package = $composer->getPackage();
-
-        $ignorePlatformReqs = $input->getOption('ignore-platform-reqs') ?: ($input->getOption('ignore-platform-req') ?: false);
 
         $installationManager->setOutputProgress(!$input->getOption('no-progress'));
         if ($input->getOption('no-plugins')) {
@@ -143,8 +145,13 @@ EOT
         $downloadManager->setPreferSource($preferSource);
         $downloadManager->setPreferDist($preferDist);
 
-        $installationManager->execute($localRepo, $uninstallOperations, true);
-        $installationManager->execute($localRepo, $installOperations, true);
+        $devMode = $localRepo->getDevMode() !== null ? $localRepo->getDevMode() : true;
+
+        Platform::putEnv('COMPOSER_DEV_MODE', $devMode ? '1' : '0');
+        $eventDispatcher->dispatchScript(ScriptEvents::PRE_INSTALL_CMD, $devMode);
+
+        $installationManager->execute($localRepo, $uninstallOperations, $devMode);
+        $installationManager->execute($localRepo, $installOperations, $devMode);
 
         if (!$input->getOption('no-autoloader')) {
             $optimize = $input->getOption('optimize-autoloader') || $config->get('optimize-autoloader');
@@ -155,9 +162,20 @@ EOT
             $generator = $composer->getAutoloadGenerator();
             $generator->setClassMapAuthoritative($authoritative);
             $generator->setApcu($apcu, $apcuPrefix);
-            $generator->setIgnorePlatformRequirements($ignorePlatformReqs);
-            $generator->dump($config, $localRepo, $package, $installationManager, 'composer', $optimize);
+            $generator->setPlatformRequirementFilter($this->getPlatformRequirementFilter($input));
+            $generator->dump(
+                $config,
+                $localRepo,
+                $package,
+                $installationManager,
+                'composer',
+                $optimize,
+                null,
+                $composer->getLocker()
+            );
         }
+
+        $eventDispatcher->dispatchScript(ScriptEvents::POST_INSTALL_CMD, $devMode);
 
         return 0;
     }

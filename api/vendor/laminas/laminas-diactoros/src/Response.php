@@ -7,10 +7,13 @@ namespace Laminas\Diactoros;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\StreamInterface;
 
+use function get_class;
 use function gettype;
 use function is_float;
 use function is_numeric;
+use function is_object;
 use function is_scalar;
+use function is_string;
 use function sprintf;
 
 /**
@@ -24,17 +27,15 @@ class Response implements ResponseInterface
 {
     use MessageTrait;
 
-    const MIN_STATUS_CODE_VALUE = 100;
-    const MAX_STATUS_CODE_VALUE = 599;
+    public const MIN_STATUS_CODE_VALUE = 100;
+    public const MAX_STATUS_CODE_VALUE = 599;
 
     /**
      * Map of standard HTTP status code/reason phrases
      *
-     * @var array
-     *
      * @psalm-var array<positive-int, non-empty-string>
      */
-    private $phrases = [
+    private array $phrases = [
         // INFORMATIONAL CODES
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -75,14 +76,14 @@ class Response implements ResponseInterface
         410 => 'Gone',
         411 => 'Length Required',
         412 => 'Precondition Failed',
-        413 => 'Payload Too Large',
+        413 => 'Content Too Large',
         414 => 'URI Too Long',
         415 => 'Unsupported Media Type',
         416 => 'Range Not Satisfiable',
         417 => 'Expectation Failed',
         418 => 'I\'m a teapot',
         421 => 'Misdirected Request',
-        422 => 'Unprocessable Entity',
+        422 => 'Unprocessable Content',
         423 => 'Locked',
         424 => 'Failed Dependency',
         425 => 'Too Early',
@@ -103,26 +104,20 @@ class Response implements ResponseInterface
         506 => 'Variant Also Negotiates',
         507 => 'Insufficient Storage',
         508 => 'Loop Detected',
-        510 => 'Not Extended',
+        510 => 'Not Extended (OBSOLETED)',
         511 => 'Network Authentication Required',
         599 => 'Network Connect Timeout Error',
     ];
 
-    /**
-     * @var string
-     */
-    private $reasonPhrase;
+    private string $reasonPhrase;
 
-    /**
-     * @var int
-     */
-    private $statusCode;
+    private int $statusCode;
 
     /**
      * @param string|resource|StreamInterface $body Stream identifier and/or actual stream resource
      * @param int $status Status code for the response, if any.
      * @param array $headers Headers for the response, if any.
-     * @throws Exception\InvalidArgumentException on any invalid element.
+     * @throws Exception\InvalidArgumentException On any invalid element.
      */
     public function __construct($body = 'php://memory', int $status = 200, array $headers = [])
     {
@@ -134,7 +129,7 @@ class Response implements ResponseInterface
     /**
      * {@inheritdoc}
      */
-    public function getStatusCode() : int
+    public function getStatusCode(): int
     {
         return $this->statusCode;
     }
@@ -142,7 +137,7 @@ class Response implements ResponseInterface
     /**
      * {@inheritdoc}
      */
-    public function getReasonPhrase() : string
+    public function getReasonPhrase(): string
     {
         return $this->reasonPhrase;
     }
@@ -150,7 +145,7 @@ class Response implements ResponseInterface
     /**
      * {@inheritdoc}
      */
-    public function withStatus($code, $reasonPhrase = '') : Response
+    public function withStatus($code, $reasonPhrase = ''): Response
     {
         $new = clone $this;
         $new->setStatusCode($code, $reasonPhrase);
@@ -162,11 +157,12 @@ class Response implements ResponseInterface
      *
      * @param int $code
      * @param string $reasonPhrase
-     * @throws Exception\InvalidArgumentException on an invalid status code.
+     * @throws Exception\InvalidArgumentException On an invalid status code.
      */
-    private function setStatusCode($code, $reasonPhrase = '') : void
+    private function setStatusCode($code, $reasonPhrase = ''): void
     {
-        if (! is_numeric($code)
+        if (
+            ! is_numeric($code)
             || is_float($code)
             || $code < static::MIN_STATUS_CODE_VALUE
             || $code > static::MAX_STATUS_CODE_VALUE
@@ -191,6 +187,6 @@ class Response implements ResponseInterface
         }
 
         $this->reasonPhrase = $reasonPhrase;
-        $this->statusCode = (int) $code;
+        $this->statusCode   = (int) $code;
     }
 }

@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting;
@@ -30,7 +30,7 @@ class DocCommentAlignmentSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function register()
     {
@@ -64,6 +64,8 @@ class DocCommentAlignmentSniff implements Sniff
         $ignore    = [
             T_CLASS     => true,
             T_INTERFACE => true,
+            T_ENUM      => true,
+            T_ENUM_CASE => true,
             T_FUNCTION  => true,
             T_PUBLIC    => true,
             T_PRIVATE   => true,
@@ -74,6 +76,7 @@ class DocCommentAlignmentSniff implements Sniff
             T_OBJECT    => true,
             T_PROTOTYPE => true,
             T_VAR       => true,
+            T_READONLY  => true,
         ];
 
         if ($nextToken === false || isset($ignore[$tokens[$nextToken]['code']]) === false) {
@@ -109,9 +112,15 @@ class DocCommentAlignmentSniff implements Sniff
             }
 
             if ($tokens[$i]['column'] !== $requiredColumn) {
-                $error = 'Expected %s space(s) before asterisk; %s found';
+                $pluralizeSpace = 's';
+                if (($requiredColumn - 1) === 1) {
+                    $pluralizeSpace = '';
+                }
+
+                $error = 'Expected %s space%s before asterisk; %s found';
                 $data  = [
                     ($requiredColumn - 1),
+                    $pluralizeSpace,
                     ($tokens[$i]['column'] - 1),
                 ];
                 $fix   = $phpcsFile->addFixableError($error, $i, 'SpaceBeforeStar', $data);
@@ -123,7 +132,7 @@ class DocCommentAlignmentSniff implements Sniff
                         $phpcsFile->fixer->replaceToken(($i - 1), $padding);
                     }
                 }
-            }
+            }//end if
 
             if ($tokens[$i]['code'] !== T_DOC_COMMENT_STAR) {
                 continue;

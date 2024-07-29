@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -12,14 +12,10 @@
 
 namespace Composer;
 
-use Composer\Package\RootPackageInterface;
 use Composer\Package\Locker;
-use Composer\Util\Loop;
-use Composer\Repository\RepositoryManager;
-use Composer\Installer\InstallationManager;
+use Composer\Pcre\Preg;
 use Composer\Plugin\PluginManager;
 use Composer\Downloader\DownloadManager;
-use Composer\EventDispatcher\EventDispatcher;
 use Composer\Autoload\AutoloadGenerator;
 use Composer\Package\Archiver\ArchiveManager;
 
@@ -28,10 +24,12 @@ use Composer\Package\Archiver\ArchiveManager;
  * @author Konstantin Kudryashiv <ever.zet@gmail.com>
  * @author Nils Adermann <naderman@naderman.de>
  */
-class Composer
+class Composer extends PartialComposer
 {
     /*
      * Examples of the following constants in the various configurations they can be in
+     *
+     * You are probably better off using Composer::getVersion() though as that will always return something usable
      *
      * releases (phar):
      * const VERSION = '1.8.2';
@@ -50,11 +48,13 @@ class Composer
      * const BRANCH_ALIAS_VERSION = '@package_branch_alias_version@';
      * const RELEASE_DATE = '@release_date@';
      * const SOURCE_VERSION = '1.8-dev+source';
+     *
+     * @see getVersion()
      */
-    const VERSION = '2.1.9';
-    const BRANCH_ALIAS_VERSION = '';
-    const RELEASE_DATE = '2021-10-05 09:47:38';
-    const SOURCE_VERSION = '';
+    public const VERSION = '2.7.7';
+    public const BRANCH_ALIAS_VERSION = '';
+    public const RELEASE_DATE = '2024-06-10 22:11:12';
+    public const SOURCE_VERSION = '';
 
     /**
      * Version number of the internal composer-runtime-api package
@@ -65,9 +65,9 @@ class Composer
      *
      * @var string
      */
-    const RUNTIME_API_VERSION = '2.1.0';
+    public const RUNTIME_API_VERSION = '2.2.2';
 
-    public static function getVersion()
+    public static function getVersion(): string
     {
         // no replacement done, this must be a source checkout
         if (self::VERSION === '@package_version'.'@') {
@@ -75,7 +75,7 @@ class Composer
         }
 
         // we have a branch alias and version is a commit id, this must be a snapshot build
-        if (self::BRANCH_ALIAS_VERSION !== '' && preg_match('{^[a-f0-9]{40}$}', self::VERSION)) {
+        if (self::BRANCH_ALIAS_VERSION !== '' && Preg::isMatch('{^[a-f0-9]{40}$}', self::VERSION)) {
             return self::BRANCH_ALIAS_VERSION.'+'.self::VERSION;
         }
 
@@ -83,24 +83,9 @@ class Composer
     }
 
     /**
-     * @var RootPackageInterface
+     * @var Locker
      */
-    private $package;
-
-    /**
-     * @var ?Locker
-     */
-    private $locker = null;
-
-    /**
-     * @var Loop
-     */
-    private $loop;
-
-    /**
-     * @var Repository\RepositoryManager
-     */
-    private $repositoryManager;
+    private $locker;
 
     /**
      * @var Downloader\DownloadManager
@@ -108,24 +93,9 @@ class Composer
     private $downloadManager;
 
     /**
-     * @var Installer\InstallationManager
-     */
-    private $installationManager;
-
-    /**
      * @var Plugin\PluginManager
      */
     private $pluginManager;
-
-    /**
-     * @var Config
-     */
-    private $config;
-
-    /**
-     * @var EventDispatcher
-     */
-    private $eventDispatcher;
 
     /**
      * @var Autoload\AutoloadGenerator
@@ -137,179 +107,52 @@ class Composer
      */
     private $archiveManager;
 
-    /**
-     * @param  RootPackageInterface $package
-     * @return void
-     */
-    public function setPackage(RootPackageInterface $package)
-    {
-        $this->package = $package;
-    }
-
-    /**
-     * @return RootPackageInterface
-     */
-    public function getPackage()
-    {
-        return $this->package;
-    }
-
-    /**
-     * @param Config $config
-     */
-    public function setConfig(Config $config)
-    {
-        $this->config = $config;
-    }
-
-    /**
-     * @return Config
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * @param Locker $locker
-     */
-    public function setLocker(Locker $locker)
+    public function setLocker(Locker $locker): void
     {
         $this->locker = $locker;
     }
 
-    /**
-     * @return ?Locker
-     */
-    public function getLocker()
+    public function getLocker(): Locker
     {
         return $this->locker;
     }
 
-    /**
-     * @param Loop $loop
-     */
-    public function setLoop(Loop $loop)
-    {
-        $this->loop = $loop;
-    }
-
-    /**
-     * @return Loop
-     */
-    public function getLoop()
-    {
-        return $this->loop;
-    }
-
-    /**
-     * @param RepositoryManager $manager
-     */
-    public function setRepositoryManager(RepositoryManager $manager)
-    {
-        $this->repositoryManager = $manager;
-    }
-
-    /**
-     * @return RepositoryManager
-     */
-    public function getRepositoryManager()
-    {
-        return $this->repositoryManager;
-    }
-
-    /**
-     * @param DownloadManager $manager
-     */
-    public function setDownloadManager(DownloadManager $manager)
+    public function setDownloadManager(DownloadManager $manager): void
     {
         $this->downloadManager = $manager;
     }
 
-    /**
-     * @return DownloadManager
-     */
-    public function getDownloadManager()
+    public function getDownloadManager(): DownloadManager
     {
         return $this->downloadManager;
     }
 
-    /**
-     * @param ArchiveManager $manager
-     */
-    public function setArchiveManager(ArchiveManager $manager)
+    public function setArchiveManager(ArchiveManager $manager): void
     {
         $this->archiveManager = $manager;
     }
 
-    /**
-     * @return ArchiveManager
-     */
-    public function getArchiveManager()
+    public function getArchiveManager(): ArchiveManager
     {
         return $this->archiveManager;
     }
 
-    /**
-     * @param InstallationManager $manager
-     */
-    public function setInstallationManager(InstallationManager $manager)
-    {
-        $this->installationManager = $manager;
-    }
-
-    /**
-     * @return InstallationManager
-     */
-    public function getInstallationManager()
-    {
-        return $this->installationManager;
-    }
-
-    /**
-     * @param PluginManager $manager
-     */
-    public function setPluginManager(PluginManager $manager)
+    public function setPluginManager(PluginManager $manager): void
     {
         $this->pluginManager = $manager;
     }
 
-    /**
-     * @return PluginManager
-     */
-    public function getPluginManager()
+    public function getPluginManager(): PluginManager
     {
         return $this->pluginManager;
     }
 
-    /**
-     * @param EventDispatcher $eventDispatcher
-     */
-    public function setEventDispatcher(EventDispatcher $eventDispatcher)
-    {
-        $this->eventDispatcher = $eventDispatcher;
-    }
-
-    /**
-     * @return EventDispatcher
-     */
-    public function getEventDispatcher()
-    {
-        return $this->eventDispatcher;
-    }
-
-    /**
-     * @param AutoloadGenerator $autoloadGenerator
-     */
-    public function setAutoloadGenerator(AutoloadGenerator $autoloadGenerator)
+    public function setAutoloadGenerator(AutoloadGenerator $autoloadGenerator): void
     {
         $this->autoloadGenerator = $autoloadGenerator;
     }
 
-    /**
-     * @return AutoloadGenerator
-     */
-    public function getAutoloadGenerator()
+    public function getAutoloadGenerator(): AutoloadGenerator
     {
         return $this->autoloadGenerator;
     }

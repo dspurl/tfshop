@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -25,7 +25,7 @@ namespace Composer\DependencyResolver;
 class RuleWatchGraph
 {
     /** @var array<int, RuleWatchChain> */
-    protected $watchChains = array();
+    protected $watchChains = [];
 
     /**
      * Inserts a rule node into the appropriate chains within the graph
@@ -39,14 +39,14 @@ class RuleWatchGraph
      *
      * @param RuleWatchNode $node The rule node to be inserted into the graph
      */
-    public function insert(RuleWatchNode $node)
+    public function insert(RuleWatchNode $node): void
     {
         if ($node->getRule()->isAssertion()) {
             return;
         }
 
         if (!$node->getRule() instanceof MultiConflictRule) {
-            foreach (array($node->watch1, $node->watch2) as $literal) {
+            foreach ([$node->watch1, $node->watch2] as $literal) {
                 if (!isset($this->watchChains[$literal])) {
                     $this->watchChains[$literal] = new RuleWatchChain;
                 }
@@ -87,7 +87,7 @@ class RuleWatchGraph
      *                                   register decisions resulting from propagation
      * @return Rule|null If a conflict is found the conflicting rule is returned
      */
-    public function propagateLiteral($decidedLiteral, $level, $decisions)
+    public function propagateLiteral(int $decidedLiteral, int $level, Decisions $decisions): ?Rule
     {
         // we invert the decided literal here, example:
         // A was decided => (-A|B) now requires B to be true, so we look for
@@ -109,13 +109,13 @@ class RuleWatchGraph
                 if (!$node->getRule()->isDisabled() && !$decisions->satisfy($otherWatch)) {
                     $ruleLiterals = $node->getRule()->getLiterals();
 
-                    $alternativeLiterals = array_filter($ruleLiterals, function ($ruleLiteral) use ($literal, $otherWatch, $decisions) {
+                    $alternativeLiterals = array_filter($ruleLiterals, static function ($ruleLiteral) use ($literal, $otherWatch, $decisions): bool {
                         return $literal !== $ruleLiteral &&
                             $otherWatch !== $ruleLiteral &&
                             !$decisions->conflict($ruleLiteral);
                     });
 
-                    if ($alternativeLiterals) {
+                    if (\count($alternativeLiterals) > 0) {
                         reset($alternativeLiterals);
                         $this->moveWatch($literal, current($alternativeLiterals), $node);
                         continue;
@@ -154,7 +154,7 @@ class RuleWatchGraph
      * @param int           $toLiteral   A literal the node should watch now
      * @param RuleWatchNode $node        The rule node to be moved
      */
-    protected function moveWatch($fromLiteral, $toLiteral, RuleWatchNode $node)
+    protected function moveWatch(int $fromLiteral, int $toLiteral, RuleWatchNode $node): void
     {
         if (!isset($this->watchChains[$toLiteral])) {
             $this->watchChains[$toLiteral] = new RuleWatchChain;

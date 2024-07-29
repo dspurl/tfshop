@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -40,21 +40,21 @@ class Event extends BaseEvent
     private $devMode;
 
     /**
-     * @var BaseEvent
+     * @var BaseEvent|null
      */
     private $originatingEvent;
 
     /**
      * Constructor.
      *
-     * @param string      $name     The event name
-     * @param Composer    $composer The composer object
-     * @param IOInterface $io       The IOInterface object
-     * @param bool        $devMode  Whether or not we are in dev mode
-     * @param array       $args     Arguments passed by the user
-     * @param array       $flags    Optional flags to pass data not as argument
+     * @param string $name The event name
+     * @param Composer $composer The composer object
+     * @param IOInterface $io The IOInterface object
+     * @param bool $devMode Whether or not we are in dev mode
+     * @param array<string|int|float|bool|null> $args Arguments passed by the user
+     * @param mixed[] $flags Optional flags to pass data not as argument
      */
-    public function __construct($name, Composer $composer, IOInterface $io, $devMode = false, array $args = array(), array $flags = array())
+    public function __construct(string $name, Composer $composer, IOInterface $io, bool $devMode = false, array $args = [], array $flags = [])
     {
         parent::__construct($name, $args, $flags);
         $this->composer = $composer;
@@ -64,30 +64,24 @@ class Event extends BaseEvent
 
     /**
      * Returns the composer instance.
-     *
-     * @return Composer
      */
-    public function getComposer()
+    public function getComposer(): Composer
     {
         return $this->composer;
     }
 
     /**
      * Returns the IO instance.
-     *
-     * @return IOInterface
      */
-    public function getIO()
+    public function getIO(): IOInterface
     {
         return $this->io;
     }
 
     /**
      * Return the dev mode flag
-     *
-     * @return bool
      */
-    public function isDevMode()
+    public function isDevMode(): bool
     {
         return $this->devMode;
     }
@@ -97,7 +91,7 @@ class Event extends BaseEvent
      *
      * @return ?BaseEvent
      */
-    public function getOriginatingEvent()
+    public function getOriginatingEvent(): ?BaseEvent
     {
         return $this->originatingEvent;
     }
@@ -105,10 +99,9 @@ class Event extends BaseEvent
     /**
      * Set the originating event.
      *
-     * @param  BaseEvent $event
      * @return $this
      */
-    public function setOriginatingEvent(BaseEvent $event)
+    public function setOriginatingEvent(BaseEvent $event): self
     {
         $this->originatingEvent = $this->calculateOriginatingEvent($event);
 
@@ -117,11 +110,8 @@ class Event extends BaseEvent
 
     /**
      * Returns the upper-most event in chain.
-     *
-     * @param  BaseEvent $event
-     * @return BaseEvent
      */
-    private function calculateOriginatingEvent(BaseEvent $event)
+    private function calculateOriginatingEvent(BaseEvent $event): BaseEvent
     {
         if ($event instanceof Event && $event->getOriginatingEvent()) {
             return $this->calculateOriginatingEvent($event->getOriginatingEvent());

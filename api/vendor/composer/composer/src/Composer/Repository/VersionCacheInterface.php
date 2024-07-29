@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -15,9 +15,7 @@ namespace Composer\Repository;
 interface VersionCacheInterface
 {
     /**
-     * @param  string           $version
-     * @param  string           $identifier
-     * @return array|null|false Package version data if found, false to indicate the identifier is known but has no package, null for an unknown identifier
+     * @return mixed[]|null|false Package version data if found, false to indicate the identifier is known but has no package, null for an unknown identifier
      */
-    public function getVersionPackage($version, $identifier);
+    public function getVersionPackage(string $version, string $identifier);
 }

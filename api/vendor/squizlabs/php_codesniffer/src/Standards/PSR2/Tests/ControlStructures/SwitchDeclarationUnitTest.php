@@ -4,14 +4,19 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\PSR2\Tests\ControlStructures;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
-class SwitchDeclarationUnitTest extends AbstractSniffUnitTest
+/**
+ * Unit test class for the SwitchDeclaration sniff.
+ *
+ * @covers \PHP_CodeSniffer\Standards\PSR2\Sniffs\ControlStructures\SwitchDeclarationSniff
+ */
+final class SwitchDeclarationUnitTest extends AbstractSniffUnitTest
 {
 
 
@@ -49,6 +54,15 @@ class SwitchDeclarationUnitTest extends AbstractSniffUnitTest
             260 => 1,
             300 => 1,
             311 => 1,
+            346 => 1,
+            350 => 1,
+            356 => 1,
+            362 => 1,
+            384 => 1,
+            528 => 1,
+            541 => 1,
+            558 => 1,
+            575 => 1,
         ];
 
     }//end getErrorList()

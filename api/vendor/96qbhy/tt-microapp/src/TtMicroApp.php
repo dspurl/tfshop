@@ -50,6 +50,16 @@ class TtMicroApp extends Foundation
         return $this->getConfig('payment_merchant_id');
     }
 
+    public function getPaymentSalt()
+    {
+        return $this->getConfig('payment_salt');
+    }
+
+    public function getPaymentToken()
+    {
+        return $this->getConfig('payment_token');
+    }
+
     public function rebind(string $id, $value)
     {
         $this->offsetUnset($id);

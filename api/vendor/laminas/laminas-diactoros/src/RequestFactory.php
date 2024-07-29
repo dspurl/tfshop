@@ -12,7 +12,7 @@ class RequestFactory implements RequestFactoryInterface
     /**
      * {@inheritDoc}
      */
-    public function createRequest(string $method, $uri) : RequestInterface
+    public function createRequest(string $method, $uri): RequestInterface
     {
         return new Request($uri, $method);
     }

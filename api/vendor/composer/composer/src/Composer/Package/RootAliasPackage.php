@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -27,7 +27,7 @@ class RootAliasPackage extends CompleteAliasPackage implements RootPackageInterf
      * @param string      $version       The version the alias must report
      * @param string      $prettyVersion The alias's non-normalized version
      */
-    public function __construct(RootPackage $aliasOf, $version, $prettyVersion)
+    public function __construct(RootPackage $aliasOf, string $version, string $prettyVersion)
     {
         parent::__construct($aliasOf, $version, $prettyVersion);
     }
@@ -41,176 +41,176 @@ class RootAliasPackage extends CompleteAliasPackage implements RootPackageInterf
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getAliases()
+    public function getAliases(): array
     {
         return $this->aliasOf->getAliases();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getMinimumStability()
+    public function getMinimumStability(): string
     {
         return $this->aliasOf->getMinimumStability();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getStabilityFlags()
+    public function getStabilityFlags(): array
     {
         return $this->aliasOf->getStabilityFlags();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getReferences()
+    public function getReferences(): array
     {
         return $this->aliasOf->getReferences();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getPreferStable()
+    public function getPreferStable(): bool
     {
         return $this->aliasOf->getPreferStable();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->aliasOf->getConfig();
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setRequires(array $require)
+    public function setRequires(array $requires): void
     {
-        $this->requires = $this->replaceSelfVersionDependencies($require, Link::TYPE_REQUIRE);
+        $this->requires = $this->replaceSelfVersionDependencies($requires, Link::TYPE_REQUIRE);
 
-        $this->aliasOf->setRequires($require);
+        $this->aliasOf->setRequires($requires);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setDevRequires(array $devRequire)
+    public function setDevRequires(array $devRequires): void
     {
-        $this->devRequires = $this->replaceSelfVersionDependencies($devRequire, Link::TYPE_DEV_REQUIRE);
+        $this->devRequires = $this->replaceSelfVersionDependencies($devRequires, Link::TYPE_DEV_REQUIRE);
 
-        $this->aliasOf->setDevRequires($devRequire);
+        $this->aliasOf->setDevRequires($devRequires);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setConflicts(array $conflicts)
+    public function setConflicts(array $conflicts): void
     {
         $this->conflicts = $this->replaceSelfVersionDependencies($conflicts, Link::TYPE_CONFLICT);
         $this->aliasOf->setConflicts($conflicts);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setProvides(array $provides)
+    public function setProvides(array $provides): void
     {
         $this->provides = $this->replaceSelfVersionDependencies($provides, Link::TYPE_PROVIDE);
         $this->aliasOf->setProvides($provides);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setReplaces(array $replaces)
+    public function setReplaces(array $replaces): void
     {
         $this->replaces = $this->replaceSelfVersionDependencies($replaces, Link::TYPE_REPLACE);
         $this->aliasOf->setReplaces($replaces);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setAutoload(array $autoload)
+    public function setAutoload(array $autoload): void
     {
         $this->aliasOf->setAutoload($autoload);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setDevAutoload(array $devAutoload)
+    public function setDevAutoload(array $devAutoload): void
     {
         $this->aliasOf->setDevAutoload($devAutoload);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setStabilityFlags(array $stabilityFlags)
+    public function setStabilityFlags(array $stabilityFlags): void
     {
         $this->aliasOf->setStabilityFlags($stabilityFlags);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setMinimumStability($minimumStability)
+    public function setMinimumStability(string $minimumStability): void
     {
         $this->aliasOf->setMinimumStability($minimumStability);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setPreferStable($preferStable)
+    public function setPreferStable(bool $preferStable): void
     {
         $this->aliasOf->setPreferStable($preferStable);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setConfig(array $config)
+    public function setConfig(array $config): void
     {
         $this->aliasOf->setConfig($config);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setReferences(array $references)
+    public function setReferences(array $references): void
     {
         $this->aliasOf->setReferences($references);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setAliases(array $aliases)
+    public function setAliases(array $aliases): void
     {
         $this->aliasOf->setAliases($aliases);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setSuggests(array $suggests)
+    public function setSuggests(array $suggests): void
     {
         $this->aliasOf->setSuggests($suggests);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setExtra(array $extra)
+    public function setExtra(array $extra): void
     {
         $this->aliasOf->setExtra($extra);
     }

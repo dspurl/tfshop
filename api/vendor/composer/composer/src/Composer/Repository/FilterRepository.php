@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -14,40 +14,40 @@ namespace Composer\Repository;
 
 use Composer\Package\PackageInterface;
 use Composer\Package\BasePackage;
+use Composer\Pcre\Preg;
 
 /**
  * Filters which packages are seen as canonical on this repo by loadPackages
  *
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class FilterRepository implements RepositoryInterface
+class FilterRepository implements RepositoryInterface, AdvisoryProviderInterface
 {
     /** @var ?string */
     private $only = null;
-    /** @var ?string */
+    /** @var ?non-empty-string */
     private $exclude = null;
     /** @var bool */
     private $canonical = true;
     /** @var RepositoryInterface */
     private $repo;
 
+    /**
+     * @param array{only?: array<string>, exclude?: array<string>, canonical?: bool} $options
+     */
     public function __construct(RepositoryInterface $repo, array $options)
     {
         if (isset($options['only'])) {
             if (!is_array($options['only'])) {
                 throw new \InvalidArgumentException('"only" key for repository '.$repo->getRepoName().' should be an array');
             }
-            $this->only = '{^(?:'.implode('|', array_map(function ($val) {
-                return BasePackage::packageNameToRegexp($val, '%s');
-            }, $options['only'])) .')$}iD';
+            $this->only = BasePackage::packageNamesToRegexp($options['only']);
         }
         if (isset($options['exclude'])) {
             if (!is_array($options['exclude'])) {
                 throw new \InvalidArgumentException('"exclude" key for repository '.$repo->getRepoName().' should be an array');
             }
-            $this->exclude = '{^(?:'.implode('|', array_map(function ($val) {
-                return BasePackage::packageNameToRegexp($val, '%s');
-            }, $options['exclude'])) .')$}iD';
+            $this->exclude = BasePackage::packageNamesToRegexp($options['exclude']);
         }
         if ($this->exclude && $this->only) {
             throw new \InvalidArgumentException('Only one of "only" and "exclude" can be specified for repository '.$repo->getRepoName());
@@ -62,33 +62,31 @@ class FilterRepository implements RepositoryInterface
         $this->repo = $repo;
     }
 
-    public function getRepoName()
+    public function getRepoName(): string
     {
         return $this->repo->getRepoName();
     }
 
     /**
      * Returns the wrapped repositories
-     *
-     * @return RepositoryInterface
      */
-    public function getRepository()
+    public function getRepository(): RepositoryInterface
     {
         return $this->repo;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function hasPackage(PackageInterface $package)
+    public function hasPackage(PackageInterface $package): bool
     {
         return $this->repo->hasPackage($package);
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function findPackage($name, $constraint)
+    public function findPackage($name, $constraint): ?BasePackage
     {
         if (!$this->isAllowed($name)) {
             return null;
@@ -98,46 +96,46 @@ class FilterRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function findPackages($name, $constraint = null)
+    public function findPackages($name, $constraint = null): array
     {
         if (!$this->isAllowed($name)) {
-            return array();
+            return [];
         }
 
         return $this->repo->findPackages($name, $constraint);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function loadPackages(array $packageMap, array $acceptableStabilities, array $stabilityFlags, array $alreadyLoaded = array())
+    public function loadPackages(array $packageNameMap, array $acceptableStabilities, array $stabilityFlags, array $alreadyLoaded = []): array
     {
-        foreach ($packageMap as $name => $constraint) {
+        foreach ($packageNameMap as $name => $constraint) {
             if (!$this->isAllowed($name)) {
-                unset($packageMap[$name]);
+                unset($packageNameMap[$name]);
             }
         }
 
-        if (!$packageMap) {
-            return array('namesFound' => array(), 'packages' => array());
+        if (!$packageNameMap) {
+            return ['namesFound' => [], 'packages' => []];
         }
 
-        $result = $this->repo->loadPackages($packageMap, $acceptableStabilities, $stabilityFlags, $alreadyLoaded);
+        $result = $this->repo->loadPackages($packageNameMap, $acceptableStabilities, $stabilityFlags, $alreadyLoaded);
         if (!$this->canonical) {
-            $result['namesFound'] = array();
+            $result['namesFound'] = [];
         }
 
         return $result;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function search($query, $mode = 0, $type = null)
+    public function search(string $query, int $mode = 0, ?string $type = null): array
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->repo->search($query, $mode, $type) as $package) {
             if ($this->isAllowed($package['name'])) {
@@ -149,11 +147,11 @@ class FilterRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getPackages()
+    public function getPackages(): array
     {
-        $result = array();
+        $result = [];
         foreach ($this->repo->getPackages() as $package) {
             if ($this->isAllowed($package->getName())) {
                 $result[] = $package;
@@ -164,11 +162,11 @@ class FilterRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getProviders($packageName)
+    public function getProviders($packageName): array
     {
-        $result = array();
+        $result = [];
         foreach ($this->repo->getProviders($packageName) as $name => $provider) {
             if ($this->isAllowed($provider['name'])) {
                 $result[$name] = $provider;
@@ -179,10 +177,9 @@ class FilterRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         if ($this->repo->count() > 0) {
             return count($this->getPackages());
@@ -191,16 +188,47 @@ class FilterRepository implements RepositoryInterface
         return 0;
     }
 
-    private function isAllowed($name)
+    public function hasSecurityAdvisories(): bool
+    {
+        if (!$this->repo instanceof AdvisoryProviderInterface) {
+            return false;
+        }
+
+        return $this->repo->hasSecurityAdvisories();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSecurityAdvisories(array $packageConstraintMap, bool $allowPartialAdvisories = false): array
+    {
+        if (!$this->repo instanceof AdvisoryProviderInterface) {
+            return ['namesFound' => [], 'advisories' => []];
+        }
+
+        foreach ($packageConstraintMap as $name => $constraint) {
+            if (!$this->isAllowed($name)) {
+                unset($packageConstraintMap[$name]);
+            }
+        }
+
+        return $this->repo->getSecurityAdvisories($packageConstraintMap, $allowPartialAdvisories);
+    }
+
+    private function isAllowed(string $name): bool
     {
         if (!$this->only && !$this->exclude) {
             return true;
         }
 
         if ($this->only) {
-            return (bool) preg_match($this->only, $name);
+            return Preg::isMatch($this->only, $name);
         }
 
-        return !preg_match($this->exclude, $name);
+        if ($this->exclude === null) {
+            return true;
+        }
+
+        return !Preg::isMatch($this->exclude, $name);
     }
 }

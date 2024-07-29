@@ -14,6 +14,7 @@ namespace Symfony\Component\Cache\DependencyInjection;
 use Symfony\Component\Cache\Adapter\AbstractAdapter;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Cache\Adapter\ChainAdapter;
+use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\Cache\Adapter\ParameterNormalizer;
 use Symfony\Component\Cache\Messenger\EarlyExpirationDispatcher;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -144,7 +145,7 @@ class CachePoolPass implements CompilerPassInterface
                         $chainedPool->replaceArgument($i++, new Reference(static::getServiceProvider($container, $chainedTags[0]['provider'])));
                     }
 
-                    if (isset($tags[0]['namespace']) && ArrayAdapter::class !== $adapter->getClass()) {
+                    if (isset($tags[0]['namespace']) && !\in_array($adapter->getClass(), [ArrayAdapter::class, NullAdapter::class], true)) {
                         $chainedPool->replaceArgument($i++, $tags[0]['namespace']);
                     }
 
@@ -180,7 +181,7 @@ class CachePoolPass implements CompilerPassInterface
                         ),
                     ]);
                     $pool->addTag($this->reversibleTag);
-                } elseif ('namespace' !== $attr || ArrayAdapter::class !== $class) {
+                } elseif ('namespace' !== $attr || !\in_array($class, [ArrayAdapter::class, NullAdapter::class], true)) {
                     $argument = $tags[0][$attr];
 
                     if ('default_lifetime' === $attr && !is_numeric($argument)) {
@@ -208,10 +209,10 @@ class CachePoolPass implements CompilerPassInterface
         }
 
         $notAliasedCacheClearerId = $this->cacheClearerId;
-        while ($container->hasAlias($this->cacheClearerId)) {
-            $this->cacheClearerId = (string) $container->getAlias($this->cacheClearerId);
+        while ($container->hasAlias($notAliasedCacheClearerId)) {
+            $notAliasedCacheClearerId = (string) $container->getAlias($notAliasedCacheClearerId);
         }
-        if ($container->hasDefinition($this->cacheClearerId)) {
+        if ($container->hasDefinition($notAliasedCacheClearerId)) {
             $clearers[$notAliasedCacheClearerId] = $allPools;
         }
 
@@ -229,8 +230,18 @@ class CachePoolPass implements CompilerPassInterface
             }
         }
 
+        $allPoolsKeys = array_keys($allPools);
+
         if ($container->hasDefinition('console.command.cache_pool_list')) {
-            $container->getDefinition('console.command.cache_pool_list')->replaceArgument(0, array_keys($allPools));
+            $container->getDefinition('console.command.cache_pool_list')->replaceArgument(0, $allPoolsKeys);
+        }
+
+        if ($container->hasDefinition('console.command.cache_pool_clear')) {
+            $container->getDefinition('console.command.cache_pool_clear')->addArgument($allPoolsKeys);
+        }
+
+        if ($container->hasDefinition('console.command.cache_pool_delete')) {
+            $container->getDefinition('console.command.cache_pool_delete')->addArgument($allPoolsKeys);
         }
     }
 
@@ -242,7 +253,7 @@ class CachePoolPass implements CompilerPassInterface
     /**
      * @internal
      */
-    public static function getServiceProvider(ContainerBuilder $container, $name)
+    public static function getServiceProvider(ContainerBuilder $container, string $name)
     {
         $container->resolveEnvPlaceholders($name, null, $usedEnvs);
 

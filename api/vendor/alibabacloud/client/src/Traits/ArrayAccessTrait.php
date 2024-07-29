@@ -17,6 +17,7 @@ trait ArrayAccessTrait
      *
      * @return mixed|null
      */
+    #[\ReturnTypeWillChange]
     public function & offsetGet($offset)
     {
         if (isset($this->data[$offset])) {
@@ -32,6 +33,7 @@ trait ArrayAccessTrait
      * @param string       $offset
      * @param string|mixed $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($offset, $value)
     {
         $this->data[$offset] = $value;
@@ -42,6 +44,7 @@ trait ArrayAccessTrait
      *
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($offset)
     {
         return isset($this->data[$offset]);
@@ -50,6 +53,7 @@ trait ArrayAccessTrait
     /**
      * @param string $offset
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($offset)
     {
         unset($this->data[$offset]);

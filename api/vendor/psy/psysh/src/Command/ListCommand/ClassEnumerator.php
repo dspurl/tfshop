@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,7 +22,7 @@ class ClassEnumerator extends Enumerator
     /**
      * {@inheritdoc}
      */
-    protected function listItems(InputInterface $input, \Reflector $reflector = null, $target = null)
+    protected function listItems(InputInterface $input, ?\Reflector $reflector = null, $target = null): array
     {
         // if we have a reflector, ensure that it's a namespace reflector
         if (($target !== null || $reflector !== null) && !$reflector instanceof ReflectionNamespace) {
@@ -66,7 +66,7 @@ class ClassEnumerator extends Enumerator
      *
      * @return array
      */
-    protected function filterClasses($key, $classes, $internal, $user, $prefix = null)
+    protected function filterClasses(string $key, array $classes, bool $internal, bool $user, ?string $prefix = null): array
     {
         $ret = [];
 
@@ -110,7 +110,7 @@ class ClassEnumerator extends Enumerator
      *
      * @return array
      */
-    protected function prepareClasses(array $classes)
+    protected function prepareClasses(array $classes): array
     {
         \natcasesort($classes);
 

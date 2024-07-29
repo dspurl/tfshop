@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -12,6 +12,8 @@
 
 namespace Composer\Repository;
 
+use Composer\Package\BasePackage;
+use Composer\Package\PackageInterface;
 use Composer\Package\Version\VersionParser;
 use Composer\Semver\Constraint\ConstraintInterface;
 use Composer\Semver\Constraint\Constraint;
@@ -30,7 +32,12 @@ use Composer\Package\Link;
  */
 class InstalledRepository extends CompositeRepository
 {
-    public function findPackagesWithReplacersAndProviders($name, $constraint = null)
+    /**
+     * @param ConstraintInterface|string|null $constraint
+     *
+     * @return BasePackage[]
+     */
+    public function findPackagesWithReplacersAndProviders(string $name, $constraint = null): array
     {
         $name = strtolower($name);
 
@@ -39,7 +46,7 @@ class InstalledRepository extends CompositeRepository
             $constraint = $versionParser->parseConstraints($constraint);
         }
 
-        $matches = array();
+        $matches = [];
         foreach ($this->getRepositories() as $repo) {
             foreach ($repo->getPackages() as $candidate) {
                 if ($name === $candidate->getName()) {
@@ -52,7 +59,7 @@ class InstalledRepository extends CompositeRepository
                 foreach (array_merge($candidate->getProvides(), $candidate->getReplaces()) as $link) {
                     if (
                         $name === $link->getTarget()
-                        && ($constraint === null || $link->getConstraint() === null || $constraint->matches($link->getConstraint()))
+                        && ($constraint === null || $constraint->matches($link->getConstraint()))
                     ) {
                         $matches[] = $candidate;
                         continue 2;
@@ -75,12 +82,14 @@ class InstalledRepository extends CompositeRepository
      * @param  bool                     $invert        Whether to invert matches to discover reasons for the package *NOT* to be installed.
      * @param  bool                     $recurse       Whether to recursively expand the requirement tree up to the root package.
      * @param  string[]                 $packagesFound Used internally when recurring
-     * @return array                    An associative array of arrays as described above.
+     *
+     * @return array[] An associative array of arrays as described above.
+     * @phpstan-return array<array{0: PackageInterface, 1: Link, 2: mixed[]|bool}>
      */
-    public function getDependents($needle, $constraint = null, $invert = false, $recurse = true, $packagesFound = null)
+    public function getDependents($needle, ?ConstraintInterface $constraint = null, bool $invert = false, bool $recurse = true, ?array $packagesFound = null): array
     {
         $needles = array_map('strtolower', (array) $needle);
-        $results = array();
+        $results = [];
 
         // initialize the array with the needles before any recursion occurs
         if (null === $packagesFound) {
@@ -117,12 +126,12 @@ class InstalledRepository extends CompositeRepository
                             if ($constraint === null || ($link->getConstraint()->matches($constraint) === true)) {
                                 // already displayed this node's dependencies, cutting short
                                 if (in_array($link->getTarget(), $packagesInTree)) {
-                                    $results[] = array($package, $link, false);
+                                    $results[] = [$package, $link, false];
                                     continue;
                                 }
                                 $packagesInTree[] = $link->getTarget();
-                                $dependents = $recurse ? $this->getDependents($link->getTarget(), null, false, true, $packagesInTree) : array();
-                                $results[] = array($package, $link, $dependents);
+                                $dependents = $recurse ? $this->getDependents($link->getTarget(), null, false, true, $packagesInTree) : [];
+                                $results[] = [$package, $link, $dependents];
                                 $needles[] = $link->getTarget();
                             }
                         }
@@ -142,12 +151,12 @@ class InstalledRepository extends CompositeRepository
                         if ($constraint === null || ($link->getConstraint()->matches($constraint) === !$invert)) {
                             // already displayed this node's dependencies, cutting short
                             if (in_array($link->getSource(), $packagesInTree)) {
-                                $results[] = array($package, $link, false);
+                                $results[] = [$package, $link, false];
                                 continue;
                             }
                             $packagesInTree[] = $link->getSource();
-                            $dependents = $recurse ? $this->getDependents($link->getSource(), null, false, true, $packagesInTree) : array();
-                            $results[] = array($package, $link, $dependents);
+                            $dependents = $recurse ? $this->getDependents($link->getSource(), null, false, true, $packagesInTree) : [];
+                            $results[] = [$package, $link, $dependents];
                         }
                     }
                 }
@@ -159,7 +168,7 @@ class InstalledRepository extends CompositeRepository
                     foreach ($this->findPackages($link->getTarget()) as $pkg) {
                         $version = new Constraint('=', $pkg->getVersion());
                         if ($link->getConstraint()->matches($version) === $invert) {
-                            $results[] = array($package, $link, false);
+                            $results[] = [$package, $link, false];
                         }
                     }
                 }
@@ -171,7 +180,7 @@ class InstalledRepository extends CompositeRepository
                     foreach ($this->findPackages($link->getTarget()) as $pkg) {
                         $version = new Constraint('=', $pkg->getVersion());
                         if ($link->getConstraint()->matches($version) === $invert) {
-                            $results[] = array($package, $link, false);
+                            $results[] = [$package, $link, false];
                         }
                     }
                 }
@@ -187,7 +196,7 @@ class InstalledRepository extends CompositeRepository
 
                         $platformPkg = $this->findPackage($link->getTarget(), '*');
                         $description = $platformPkg ? 'but '.$platformPkg->getPrettyVersion().' is installed' : 'but it is missing';
-                        $results[] = array($package, new Link($package->getName(), $link->getTarget(), new MatchAllConstraint, Link::TYPE_REQUIRE, $link->getPrettyConstraint().' '.$description), false);
+                        $results[] = [$package, new Link($package->getName(), $link->getTarget(), new MatchAllConstraint, Link::TYPE_REQUIRE, $link->getPrettyConstraint().' '.$description), false];
 
                         continue;
                     }
@@ -214,17 +223,17 @@ class InstalledRepository extends CompositeRepository
                             if ($rootPackage) {
                                 foreach (array_merge($rootPackage->getRequires(), $rootPackage->getDevRequires()) as $rootReq) {
                                     if (in_array($rootReq->getTarget(), $pkg->getNames()) && !$rootReq->getConstraint()->matches($link->getConstraint())) {
-                                        $results[] = array($package, $link, false);
-                                        $results[] = array($rootPackage, $rootReq, false);
+                                        $results[] = [$package, $link, false];
+                                        $results[] = [$rootPackage, $rootReq, false];
                                         continue 3;
                                     }
                                 }
 
-                                $results[] = array($package, $link, false);
-                                $results[] = array($rootPackage, new Link($rootPackage->getName(), $link->getTarget(), new MatchAllConstraint, Link::TYPE_DOES_NOT_REQUIRE, 'but ' . $pkg->getPrettyVersion() . ' is installed'), false);
+                                $results[] = [$package, $link, false];
+                                $results[] = [$rootPackage, new Link($rootPackage->getName(), $link->getTarget(), new MatchAllConstraint, Link::TYPE_DOES_NOT_REQUIRE, 'but ' . $pkg->getPrettyVersion() . ' is installed'), false];
                             } else {
                                 // no root so let's just print whatever we found
-                                $results[] = array($package, $link, false);
+                                $results[] = [$package, $link, false];
                             }
                         }
 
@@ -239,18 +248,17 @@ class InstalledRepository extends CompositeRepository
         return $results;
     }
 
-    public function getRepoName()
+    public function getRepoName(): string
     {
-        return 'installed repo ('.implode(', ', array_map(function ($repo) {
+        return 'installed repo ('.implode(', ', array_map(static function ($repo): string {
             return $repo->getRepoName();
         }, $this->getRepositories())).')';
     }
 
     /**
-     * Add a repository.
-     * @param RepositoryInterface $repository
+     * @inheritDoc
      */
-    public function addRepository(RepositoryInterface $repository)
+    public function addRepository(RepositoryInterface $repository): void
     {
         if (
             $repository instanceof LockArrayRepository
@@ -258,7 +266,9 @@ class InstalledRepository extends CompositeRepository
             || $repository instanceof RootPackageRepository
             || $repository instanceof PlatformRepository
         ) {
-            return parent::addRepository($repository);
+            parent::addRepository($repository);
+
+            return;
         }
 
         throw new \LogicException('An InstalledRepository can not contain a repository of type '.get_class($repository).' ('.$repository->getRepoName().')');

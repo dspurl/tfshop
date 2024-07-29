@@ -28,9 +28,8 @@ class EmptyResponse extends Response
      * Create an empty response with the given headers.
      *
      * @param array $headers Headers for the response.
-     * @return EmptyResponse
      */
-    public static function withHeaders(array $headers) : EmptyResponse
+    public static function withHeaders(array $headers): EmptyResponse
     {
         return new static(204, $headers);
     }

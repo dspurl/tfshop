@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -13,9 +13,11 @@
 namespace Composer\Util;
 
 use Composer\CaBundle\CaBundle;
+use Composer\Pcre\Preg;
 
 /**
  * @author Chris Smith <chris@cs278.org>
+ * @deprecated Use composer/ca-bundle and composer/composer 2.2 if you still need PHP 5 compatibility, this class will be removed in Composer 3.0
  */
 final class TlsHelper
 {
@@ -25,10 +27,8 @@ final class TlsHelper
      * @param mixed  $certificate X.509 certificate
      * @param string $hostname    Hostname in the URL
      * @param string $cn          Set to the common name of the certificate iff match found
-     *
-     * @return bool
      */
-    public static function checkCertificateHost($certificate, $hostname, &$cn = null)
+    public static function checkCertificateHost($certificate, string $hostname, ?string &$cn = null): bool
     {
         $names = self::getCertificateNames($certificate);
 
@@ -36,7 +36,7 @@ final class TlsHelper
             return false;
         }
 
-        $combinedNames = array_merge($names['san'], array($names['cn']));
+        $combinedNames = array_merge($names['san'], [$names['cn']]);
         $hostname = strtolower($hostname);
 
         foreach ($combinedNames as $certName) {
@@ -59,7 +59,7 @@ final class TlsHelper
      *
      * @return array{cn: string, san: string[]}|null
      */
-    public static function getCertificateNames($certificate)
+    public static function getCertificateNames($certificate): ?array
     {
         if (is_array($certificate)) {
             $info = $certificate;
@@ -72,24 +72,29 @@ final class TlsHelper
         }
 
         $commonName = strtolower($info['subject']['commonName']);
-        $subjectAltNames = array();
+        $subjectAltNames = [];
 
         if (isset($info['extensions']['subjectAltName'])) {
-            $subjectAltNames = preg_split('{\s*,\s*}', $info['extensions']['subjectAltName']);
-            $subjectAltNames = array_filter(array_map(function ($name) {
-                if (0 === strpos($name, 'DNS:')) {
-                    return strtolower(ltrim(substr($name, 4)));
-                }
+            $subjectAltNames = Preg::split('{\s*,\s*}', $info['extensions']['subjectAltName']);
+            $subjectAltNames = array_filter(
+                array_map(static function ($name): ?string {
+                    if (0 === strpos($name, 'DNS:')) {
+                        return strtolower(ltrim(substr($name, 4)));
+                    }
 
-                return null;
-            }, $subjectAltNames));
+                    return null;
+                }, $subjectAltNames),
+                function (?string $san) {
+                    return $san !== null;
+                }
+            );
             $subjectAltNames = array_values($subjectAltNames);
         }
 
-        return array(
+        return [
             'cn' => $commonName,
             'san' => $subjectAltNames,
-        );
+        ];
     }
 
     /**
@@ -130,13 +135,14 @@ final class TlsHelper
      * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
      * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
      * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-     *
-     * @param string $certificate
-     * @return string
      */
-    public static function getCertificateFingerprint($certificate)
+    public static function getCertificateFingerprint(string $certificate): string
     {
-        $pubkeydetails = openssl_pkey_get_details(openssl_get_publickey($certificate));
+        $pubkey = openssl_get_publickey($certificate);
+        if ($pubkey === false) {
+            throw new \RuntimeException('Failed to retrieve the public key from certificate');
+        }
+        $pubkeydetails = openssl_pkey_get_details($pubkey);
         $pubkeypem = $pubkeydetails['key'];
         //Convert PEM to DER before SHA1'ing
         $start = '-----BEGIN PUBLIC KEY-----';
@@ -152,10 +158,8 @@ final class TlsHelper
      *
      * This checks if OpenSSL extensions is vulnerable to remote code execution
      * via the exploit documented as CVE-2013-6420.
-     *
-     * @return bool
      */
-    public static function isOpensslParseSafe()
+    public static function isOpensslParseSafe(): bool
     {
         return CaBundle::isOpensslParseSafe();
     }
@@ -164,16 +168,14 @@ final class TlsHelper
      * Convert certificate name into matching function.
      *
      * @param string $certName CN/SAN
-     *
-     * @return callable|null
      */
-    private static function certNameMatcher($certName)
+    private static function certNameMatcher(string $certName): ?callable
     {
         $wildcards = substr_count($certName, '*');
 
         if (0 === $wildcards) {
             // Literal match.
-            return function ($hostname) use ($certName) {
+            return static function ($hostname) use ($certName): bool {
                 return $hostname === $certName;
             };
         }
@@ -197,8 +199,8 @@ final class TlsHelper
             $wildcardRegex = str_replace('\\*', '[a-z0-9-]+', $wildcardRegex);
             $wildcardRegex = "{^{$wildcardRegex}$}";
 
-            return function ($hostname) use ($wildcardRegex) {
-                return 1 === preg_match($wildcardRegex, $hostname);
+            return static function ($hostname) use ($wildcardRegex): bool {
+                return Preg::isMatch($wildcardRegex, $hostname);
             };
         }
 

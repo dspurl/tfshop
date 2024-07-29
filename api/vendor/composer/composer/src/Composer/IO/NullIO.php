@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -20,75 +20,75 @@ namespace Composer\IO;
 class NullIO extends BaseIO
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function isInteractive()
+    public function isInteractive(): bool
     {
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function isVerbose()
+    public function isVerbose(): bool
     {
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function isVeryVerbose()
+    public function isVeryVerbose(): bool
     {
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function isDebug()
+    public function isDebug(): bool
     {
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function isDecorated()
+    public function isDecorated(): bool
     {
         return false;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function write($messages, $newline = true, $verbosity = self::NORMAL)
+    public function write($messages, bool $newline = true, int $verbosity = self::NORMAL): void
     {
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function writeError($messages, $newline = true, $verbosity = self::NORMAL)
+    public function writeError($messages, bool $newline = true, int $verbosity = self::NORMAL): void
     {
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function overwrite($messages, $newline = true, $size = 80, $verbosity = self::NORMAL)
+    public function overwrite($messages, bool $newline = true, ?int $size = null, int $verbosity = self::NORMAL): void
     {
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function overwriteError($messages, $newline = true, $size = 80, $verbosity = self::NORMAL)
+    public function overwriteError($messages, bool $newline = true, ?int $size = null, int $verbosity = self::NORMAL): void
     {
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function ask($question, $default = null)
     {
@@ -96,15 +96,15 @@ class NullIO extends BaseIO
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function askConfirmation($question, $default = true)
+    public function askConfirmation($question, $default = true): bool
     {
         return $default;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function askAndValidate($question, $validator, $attempts = null, $default = null)
     {
@@ -112,15 +112,15 @@ class NullIO extends BaseIO
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function askAndHideAnswer($question)
+    public function askAndHideAnswer($question): ?string
     {
         return null;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function select($question, $choices, $default, $attempts = false, $errorMessage = 'Value "%s" is invalid', $multiselect = false)
     {

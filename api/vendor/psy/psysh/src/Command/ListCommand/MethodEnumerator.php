@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,7 +21,7 @@ class MethodEnumerator extends Enumerator
     /**
      * {@inheritdoc}
      */
-    protected function listItems(InputInterface $input, \Reflector $reflector = null, $target = null)
+    protected function listItems(InputInterface $input, ?\Reflector $reflector = null, $target = null): array
     {
         // only list methods when a Reflector is present.
         if ($reflector === null) {
@@ -55,13 +55,13 @@ class MethodEnumerator extends Enumerator
     /**
      * Get defined methods for the given class or object Reflector.
      *
-     * @param bool       $showAll   Include private and protected methods
-     * @param \Reflector $reflector
-     * @param bool       $noInherit Exclude inherited methods
+     * @param bool             $showAll   Include private and protected methods
+     * @param \ReflectionClass $reflector
+     * @param bool             $noInherit Exclude inherited methods
      *
      * @return array
      */
-    protected function getMethods($showAll, \Reflector $reflector, $noInherit = false)
+    protected function getMethods(bool $showAll, \ReflectionClass $reflector, bool $noInherit = false): array
     {
         $className = $reflector->getName();
 
@@ -90,7 +90,7 @@ class MethodEnumerator extends Enumerator
      *
      * @return array
      */
-    protected function prepareMethods(array $methods)
+    protected function prepareMethods(array $methods): array
     {
         // My kingdom for a generator.
         $ret = [];
@@ -112,10 +112,8 @@ class MethodEnumerator extends Enumerator
      * Get a label for the particular kind of "class" represented.
      *
      * @param \ReflectionClass $reflector
-     *
-     * @return string
      */
-    protected function getKindLabel(\ReflectionClass $reflector)
+    protected function getKindLabel(\ReflectionClass $reflector): string
     {
         if ($reflector->isInterface()) {
             return 'Interface Methods';
@@ -130,10 +128,8 @@ class MethodEnumerator extends Enumerator
      * Get output style for the given method's visibility.
      *
      * @param \ReflectionMethod $method
-     *
-     * @return string
      */
-    private function getVisibilityStyle(\ReflectionMethod $method)
+    private function getVisibilityStyle(\ReflectionMethod $method): string
     {
         if ($method->isPublic()) {
             return self::IS_PUBLIC;

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -20,6 +20,7 @@ use Composer\Package\PackageInterface;
 use Composer\Package\CompletePackageInterface;
 use Composer\Package\Version\VersionParser;
 use Composer\Package\Version\StabilityFilter;
+use Composer\Pcre\Preg;
 use Composer\Semver\Constraint\ConstraintInterface;
 use Composer\Semver\Constraint\Constraint;
 
@@ -30,15 +31,18 @@ use Composer\Semver\Constraint\Constraint;
  */
 class ArrayRepository implements RepositoryInterface
 {
-    /** @var ?array<PackageInterface&BasePackage> */
+    /** @var ?array<BasePackage> */
     protected $packages = null;
 
     /**
-     * @var ?array<PackageInterface&BasePackage> indexed by package unique name and used to cache hasPackage calls
+     * @var ?array<BasePackage> indexed by package unique name and used to cache hasPackage calls
      */
     protected $packageMap = null;
 
-    public function __construct(array $packages = array())
+    /**
+     * @param array<PackageInterface> $packages
+     */
+    public function __construct(array $packages = [])
     {
         foreach ($packages as $package) {
             $this->addPackage($package);
@@ -51,18 +55,18 @@ class ArrayRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function loadPackages(array $packageMap, array $acceptableStabilities, array $stabilityFlags, array $alreadyLoaded = array())
+    public function loadPackages(array $packageNameMap, array $acceptableStabilities, array $stabilityFlags, array $alreadyLoaded = [])
     {
         $packages = $this->getPackages();
 
-        $result = array();
-        $namesFound = array();
+        $result = [];
+        $namesFound = [];
         foreach ($packages as $package) {
-            if (array_key_exists($package->getName(), $packageMap)) {
+            if (array_key_exists($package->getName(), $packageNameMap)) {
                 if (
-                    (!$packageMap[$package->getName()] || $packageMap[$package->getName()]->matches(new Constraint('==', $package->getVersion())))
+                    (!$packageNameMap[$package->getName()] || $packageNameMap[$package->getName()]->matches(new Constraint('==', $package->getVersion())))
                     && StabilityFilter::isPackageAcceptable($acceptableStabilities, $stabilityFlags, $package->getNames(), $package->getStability())
                     && !isset($alreadyLoaded[$package->getName()][$package->getVersion()])
                 ) {
@@ -87,13 +91,13 @@ class ArrayRepository implements RepositoryInterface
             }
         }
 
-        return array('namesFound' => array_keys($namesFound), 'packages' => $result);
+        return ['namesFound' => array_keys($namesFound), 'packages' => $result];
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function findPackage($name, $constraint)
+    public function findPackage(string $name, $constraint)
     {
         $name = strtolower($name);
 
@@ -115,13 +119,13 @@ class ArrayRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function findPackages($name, $constraint = null)
+    public function findPackages(string $name, $constraint = null)
     {
         // normalize name
         $name = strtolower($name);
-        $packages = array();
+        $packages = [];
 
         if (null !== $constraint && !$constraint instanceof ConstraintInterface) {
             $versionParser = new VersionParser();
@@ -140,29 +144,48 @@ class ArrayRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function search($query, $mode = 0, $type = null)
+    public function search(string $query, int $mode = 0, ?string $type = null)
     {
-        $regex = '{(?:'.implode('|', preg_split('{\s+}', $query)).')}i';
+        if ($mode === self::SEARCH_FULLTEXT) {
+            $regex = '{(?:'.implode('|', Preg::split('{\s+}', preg_quote($query))).')}i';
+        } else {
+            // vendor/name searches expect the caller to have preg_quoted the query
+            $regex = '{(?:'.implode('|', Preg::split('{\s+}', $query)).')}i';
+        }
 
-        $matches = array();
+        $matches = [];
         foreach ($this->getPackages() as $package) {
             $name = $package->getName();
+            if ($mode === self::SEARCH_VENDOR) {
+                [$name] = explode('/', $name);
+            }
             if (isset($matches[$name])) {
                 continue;
             }
-            if (preg_match($regex, $name)
-                || ($mode === self::SEARCH_FULLTEXT && $package instanceof CompletePackageInterface && preg_match($regex, implode(' ', (array) $package->getKeywords()) . ' ' . $package->getDescription()))
-            ) {
-                if (null !== $type && $package->getType() !== $type) {
-                    continue;
-                }
+            if (null !== $type && $package->getType() !== $type) {
+                continue;
+            }
 
-                $matches[$name] = array(
-                    'name' => $package->getPrettyName(),
-                    'description' => $package instanceof CompletePackageInterface ? $package->getDescription() : null,
-                );
+            if (Preg::isMatch($regex, $name)
+                || ($mode === self::SEARCH_FULLTEXT && $package instanceof CompletePackageInterface && Preg::isMatch($regex, implode(' ', (array) $package->getKeywords()) . ' ' . $package->getDescription()))
+            ) {
+                if ($mode === self::SEARCH_VENDOR) {
+                    $matches[$name] = [
+                        'name' => $name,
+                        'description' => null,
+                    ];
+                } else {
+                    $matches[$name] = [
+                        'name' => $package->getPrettyName(),
+                        'description' => $package instanceof CompletePackageInterface ? $package->getDescription() : null,
+                    ];
+
+                    if ($package instanceof CompletePackageInterface && $package->isAbandoned()) {
+                        $matches[$name]['abandoned'] = $package->getReplacementPackage() ?: true;
+                    }
+                }
             }
         }
 
@@ -170,12 +193,12 @@ class ArrayRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function hasPackage(PackageInterface $package)
     {
         if ($this->packageMap === null) {
-            $this->packageMap = array();
+            $this->packageMap = [];
             foreach ($this->getPackages() as $repoPackage) {
                 $this->packageMap[$repoPackage->getUniqueName()] = $repoPackage;
             }
@@ -187,10 +210,13 @@ class ArrayRepository implements RepositoryInterface
     /**
      * Adds a new package to the repository
      *
-     * @param PackageInterface $package
+     * @return void
      */
     public function addPackage(PackageInterface $package)
     {
+        if (!$package instanceof BasePackage) {
+            throw new \InvalidArgumentException('Only subclasses of BasePackage are supported');
+        }
         if (null === $this->packages) {
             $this->initialize();
         }
@@ -209,11 +235,11 @@ class ArrayRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getProviders($packageName)
+    public function getProviders(string $packageName)
     {
-        $result = array();
+        $result = [];
 
         foreach ($this->getPackages() as $candidate) {
             if (isset($result[$candidate->getName()])) {
@@ -221,11 +247,11 @@ class ArrayRepository implements RepositoryInterface
             }
             foreach ($candidate->getProvides() as $link) {
                 if ($packageName === $link->getTarget()) {
-                    $result[$candidate->getName()] = array(
+                    $result[$candidate->getName()] = [
                         'name' => $candidate->getName(),
                         'description' => $candidate instanceof CompletePackageInterface ? $candidate->getDescription() : null,
                         'type' => $candidate->getType(),
-                    );
+                    ];
                     continue 2;
                 }
             }
@@ -235,10 +261,9 @@ class ArrayRepository implements RepositoryInterface
     }
 
     /**
-     * @phpstan-param PackageInterface&BasePackage $package
      * @return AliasPackage|CompleteAliasPackage
      */
-    protected function createAliasPackage(PackageInterface $package, $alias, $prettyAlias)
+    protected function createAliasPackage(BasePackage $package, string $alias, string $prettyAlias)
     {
         while ($package instanceof AliasPackage) {
             $package = $package->getAliasOf();
@@ -255,6 +280,8 @@ class ArrayRepository implements RepositoryInterface
      * Removes package from repository.
      *
      * @param PackageInterface $package package instance
+     *
+     * @return void
      */
     public function removePackage(PackageInterface $package)
     {
@@ -273,7 +300,7 @@ class ArrayRepository implements RepositoryInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function getPackages()
     {
@@ -291,10 +318,9 @@ class ArrayRepository implements RepositoryInterface
     /**
      * Returns the number of packages in this repository
      *
-     * @return int Number of packages
+     * @return 0|positive-int Number of packages
      */
-    #[\ReturnTypeWillChange]
-    public function count()
+    public function count(): int
     {
         if (null === $this->packages) {
             $this->initialize();
@@ -305,9 +331,11 @@ class ArrayRepository implements RepositoryInterface
 
     /**
      * Initializes the packages array. Mostly meant as an extension point.
+     *
+     * @return void
      */
     protected function initialize()
     {
-        $this->packages = array();
+        $this->packages = [];
     }
 }

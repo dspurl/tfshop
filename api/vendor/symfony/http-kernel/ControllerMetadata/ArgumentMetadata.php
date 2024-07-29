@@ -107,9 +107,9 @@ class ArgumentMetadata
     /**
      * Returns the default value of the argument.
      *
-     * @throws \LogicException if no default value is present; {@see self::hasDefaultValue()}
-     *
      * @return mixed
+     *
+     * @throws \LogicException if no default value is present; {@see self::hasDefaultValue()}
      */
     public function getDefaultValue()
     {
@@ -137,7 +137,7 @@ class ArgumentMetadata
     /**
      * @return object[]
      */
-    public function getAttributes(string $name = null, int $flags = 0): array
+    public function getAttributes(?string $name = null, int $flags = 0): array
     {
         if (!$name) {
             return $this->attributes;

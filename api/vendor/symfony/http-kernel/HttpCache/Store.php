@@ -29,17 +29,28 @@ class Store implements StoreInterface
     private $keyCache;
     /** @var array<string, resource> */
     private $locks = [];
+    private $options;
 
     /**
+     * Constructor.
+     *
+     * The available options are:
+     *
+     *   * private_headers  Set of response headers that should not be stored
+     *                      when a response is cached. (default: Set-Cookie)
+     *
      * @throws \RuntimeException
      */
-    public function __construct(string $root)
+    public function __construct(string $root, array $options = [])
     {
         $this->root = $root;
         if (!is_dir($this->root) && !@mkdir($this->root, 0777, true) && !is_dir($this->root)) {
             throw new \RuntimeException(sprintf('Unable to create the store directory (%s).', $this->root));
         }
         $this->keyCache = new \SplObjectStorage();
+        $this->options = array_merge([
+            'private_headers' => ['Set-Cookie'],
+        ], $options);
     }
 
     /**
@@ -186,7 +197,7 @@ class Store implements StoreInterface
             if ($this->getPath($digest) !== $response->headers->get('X-Body-File')) {
                 throw new \RuntimeException('X-Body-File and X-Content-Digest do not match.');
             }
-            // Everything seems ok, omit writing content to disk
+        // Everything seems ok, omit writing content to disk
         } else {
             $digest = $this->generateContentDigest($response);
             $response->headers->set('X-Content-Digest', $digest);
@@ -215,6 +226,10 @@ class Store implements StoreInterface
 
         $headers = $this->persistResponse($response);
         unset($headers['age']);
+
+        foreach ($this->options['private_headers'] as $h) {
+            unset($headers[strtolower($h)]);
+        }
 
         array_unshift($entries, [$storedEnv, $headers]);
 
@@ -460,15 +475,25 @@ class Store implements StoreInterface
     /**
      * Restores a Response from the HTTP headers and body.
      */
-    private function restoreResponse(array $headers, string $path = null): Response
+    private function restoreResponse(array $headers, ?string $path = null): ?Response
     {
         $status = $headers['X-Status'][0];
         unset($headers['X-Status']);
+        $content = null;
 
         if (null !== $path) {
             $headers['X-Body-File'] = [$path];
+            unset($headers['x-body-file']);
+
+            if ($headers['X-Body-Eval'] ?? $headers['x-body-eval'] ?? false) {
+                $content = file_get_contents($path);
+                \assert(HttpCache::BODY_EVAL_BOUNDARY_LENGTH === 24);
+                if (48 > \strlen($content) || substr($content, -24) !== substr($content, 0, 24)) {
+                    return null;
+                }
+            }
         }
 
-        return new Response($path, $status, $headers);
+        return new Response($content, $status, $headers);
     }
 }

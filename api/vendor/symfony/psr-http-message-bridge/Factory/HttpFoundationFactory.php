@@ -41,6 +41,8 @@ class HttpFoundationFactory implements HttpFoundationFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return Request
      */
     public function createRequest(ServerRequestInterface $psrRequest, bool $streamed = false)
     {
@@ -121,6 +123,8 @@ class HttpFoundationFactory implements HttpFoundationFactoryInterface
 
     /**
      * {@inheritdoc}
+     *
+     * @return Response
      */
     public function createResponse(ResponseInterface $psrResponse, bool $streamed = false)
     {
@@ -217,13 +221,13 @@ class HttpFoundationFactory implements HttpFoundationFactoryInterface
         return new Cookie(
             $cookieName,
             $cookieValue,
-            isset($cookieExpire) ? $cookieExpire : 0,
-            isset($cookiePath) ? $cookiePath : '/',
-            isset($cookieDomain) ? $cookieDomain : null,
+            $cookieExpire ?? 0,
+            $cookiePath ?? '/',
+            $cookieDomain ?? null,
             isset($cookieSecure),
             isset($cookieHttpOnly),
             true,
-            isset($samesite) ? $samesite : null
+            $samesite ?? null
         );
     }
 

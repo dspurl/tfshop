@@ -92,6 +92,13 @@ abstract class AbstractEncoder
     abstract protected function processAvif();
 
     /**
+     * Processes and returns image as Heic encoded string
+     *
+     * @return string
+     */
+    abstract protected function processHeic();
+
+    /**
      * Process a given image
      *
      * @param  Image   $image
@@ -124,6 +131,7 @@ abstract class AbstractEncoder
 
             case 'jpg':
             case 'jpeg':
+            case 'jfif':
             case 'image/jp2':
             case 'image/jpg':
             case 'image/jpeg':
@@ -141,7 +149,6 @@ abstract class AbstractEncoder
                 $this->result = $this->processTiff();
                 break;
 
-            case 'bmp':
             case 'bmp':
             case 'ms-bmp':
             case 'x-bitmap':
@@ -181,6 +188,12 @@ abstract class AbstractEncoder
             case 'avif':
             case 'image/avif':
                 $this->result = $this->processAvif();
+                break;
+
+            case 'heic':
+            case 'image/heic':
+            case 'image/heif':
+                $this->result = $this->processHeic();
                 break;
                 
             default:

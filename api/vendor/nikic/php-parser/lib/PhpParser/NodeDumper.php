@@ -39,7 +39,7 @@ class NodeDumper
      *
      * @return string Dumped value
      */
-    public function dump($node, string $code = null) : string {
+    public function dump($node, ?string $code = null) : string {
         $this->code = $code;
         return $this->dumpRecursive($node);
     }
@@ -127,6 +127,9 @@ class NodeDumper
         }
         if ($flags & Class_::MODIFIER_FINAL) {
             $strs[] = 'MODIFIER_FINAL';
+        }
+        if ($flags & Class_::MODIFIER_READONLY) {
+            $strs[] = 'MODIFIER_READONLY';
         }
 
         if ($strs) {

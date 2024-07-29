@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -24,9 +24,9 @@ interface DvcsDownloaderInterface
     /**
      * Checks for unpushed changes to a current branch
      *
-     * @param  PackageInterface $package package directory
+     * @param  PackageInterface $package package instance
      * @param  string           $path    package directory
      * @return string|null      changes or null
      */
-    public function getUnpushedChanges(PackageInterface $package, $path);
+    public function getUnpushedChanges(PackageInterface $package, string $path): ?string;
 }

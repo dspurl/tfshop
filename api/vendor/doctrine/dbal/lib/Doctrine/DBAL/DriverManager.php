@@ -8,14 +8,11 @@ use Doctrine\DBAL\Driver\IBMDB2;
 use Doctrine\DBAL\Driver\Mysqli;
 use Doctrine\DBAL\Driver\OCI8;
 use Doctrine\DBAL\Driver\PDO;
-use Doctrine\DBAL\Driver\PDO\Statement as PDODriverStatement;
 use Doctrine\DBAL\Driver\SQLAnywhere;
 use Doctrine\DBAL\Driver\SQLSrv;
-use Doctrine\Deprecations\Deprecation;
 
 use function array_keys;
 use function array_merge;
-use function assert;
 use function class_implements;
 use function in_array;
 use function is_string;
@@ -45,6 +42,7 @@ use function substr;
  *     platform?: Platforms\AbstractPlatform,
  *     port?: int,
  *     user?: string,
+ *     unix_socket?: string,
  * }
  * @psalm-type Params = array{
  *     charset?: string,
@@ -69,6 +67,7 @@ use function substr;
  *     slaves?: array<OverrideParams>,
  *     user?: string,
  *     wrapperClass?: class-string<Connection>,
+ *     unix_socket?: string,
  * }
  */
 final class DriverManager
@@ -244,14 +243,7 @@ final class DriverManager
         }
 
         if (isset($params['pdo'])) {
-            Deprecation::trigger(
-                'doctrine/dbal',
-                'https://github.com/doctrine/dbal/pull/3554',
-                'Passing a user provided PDO instance directly to Doctrine is deprecated.'
-            );
-
             $params['pdo']->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-            $params['pdo']->setAttribute(\PDO::ATTR_STATEMENT_CLASS, [PDODriverStatement::class, []]);
             $params['driver'] = 'pdo_' . $params['pdo']->getAttribute(\PDO::ATTR_DRIVER_NAME);
         }
 
@@ -346,8 +338,6 @@ final class DriverManager
 
         // (pdo_)?sqlite3?:///... => (pdo_)?sqlite3?://localhost/... or else the URL will be invalid
         $url = preg_replace('#^((?:pdo_)?sqlite3?):///#', '$1://localhost/', $params['url']);
-        assert(is_string($url));
-
         $url = parse_url($url);
 
         if ($url === false) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -12,9 +12,6 @@
 
 namespace Composer\DependencyResolver;
 
-use Composer\Package\BasePackage;
-use Composer\Package\Link;
-
 /**
  * @author Nils Adermann <naderman@naderman.de>
  *
@@ -22,11 +19,11 @@ use Composer\Package\Link;
  */
 class MultiConflictRule extends Rule
 {
-    /** @var int[] */
+    /** @var list<int> */
     protected $literals;
 
     /**
-     * @param int[]            $literals
+     * @param list<int> $literals
      */
     public function __construct(array $literals, $reason, $reasonData)
     {
@@ -42,11 +39,17 @@ class MultiConflictRule extends Rule
         $this->literals = $literals;
     }
 
-    public function getLiterals()
+    /**
+     * @return list<int>
+     */
+    public function getLiterals(): array
     {
         return $this->literals;
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getHash()
     {
         $data = unpack('ihash', md5('c:'.implode(',', $this->literals), true));
@@ -62,7 +65,7 @@ class MultiConflictRule extends Rule
      * @param  Rule $rule The rule to check against
      * @return bool Whether the rules are equal
      */
-    public function equals(Rule $rule)
+    public function equals(Rule $rule): bool
     {
         if ($rule instanceof MultiConflictRule) {
             return $this->literals === $rule->getLiterals();
@@ -71,28 +74,30 @@ class MultiConflictRule extends Rule
         return false;
     }
 
-    public function isAssertion()
+    public function isAssertion(): bool
     {
         return false;
     }
 
-    public function disable()
+    /**
+     * @return never
+     * @throws \RuntimeException
+     */
+    public function disable(): void
     {
         throw new \RuntimeException("Disabling multi conflict rules is not possible. Please contact composer at https://github.com/composer/composer to let us debug what lead to this situation.");
     }
 
     /**
      * Formats a rule as a string of the format (Literal1|Literal2|...)
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         // TODO multi conflict?
         $result = $this->isDisabled() ? 'disabled(multi(' : '(multi(';
 
         foreach ($this->literals as $i => $literal) {
-            if ($i != 0) {
+            if ($i !== 0) {
                 $result .= '|';
             }
             $result .= $literal;

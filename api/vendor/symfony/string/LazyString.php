@@ -75,7 +75,7 @@ class LazyString implements \Stringable, \JsonSerializable
      */
     final public static function isStringable($value): bool
     {
-        return \is_string($value) || $value instanceof self || (\is_object($value) ? method_exists($value, '__toString') : is_scalar($value));
+        return \is_string($value) || $value instanceof self || (\is_object($value) ? method_exists($value, '__toString') : \is_scalar($value));
     }
 
     /**
@@ -148,7 +148,7 @@ class LazyString implements \Stringable, \JsonSerializable
         } elseif ($callback instanceof \Closure) {
             $r = new \ReflectionFunction($callback);
 
-            if (false !== strpos($r->name, '{closure}') || !$class = $r->getClosureScopeClass()) {
+            if (str_contains($r->name, '{closure') || !$class = \PHP_VERSION_ID >= 80111 ? $r->getClosureCalledClass() : $r->getClosureScopeClass()) {
                 return $r->name;
             }
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,7 +32,7 @@ class CodeFormatter implements ReflectorFormatter
     const HIGHLIGHT_CONST = 'const';
     const HIGHLIGHT_NUMBER = 'number';
     const HIGHLIGHT_STRING = 'string';
-    const HIGHLIGHT_COMMENT = 'comment';
+    const HIGHLIGHT_COMMENT = 'code_comment';
     const HIGHLIGHT_INLINE_HTML = 'inline_html';
 
     private static $tokenMap = [
@@ -76,12 +76,11 @@ class CodeFormatter implements ReflectorFormatter
     /**
      * Format the code represented by $reflector for shell output.
      *
-     * @param \Reflector  $reflector
-     * @param string|null $colorMode (deprecated and ignored)
+     * @param \Reflector $reflector
      *
      * @return string formatted code
      */
-    public static function format(\Reflector $reflector, $colorMode = null)
+    public static function format(\Reflector $reflector): string
     {
         if (self::isReflectable($reflector)) {
             if ($code = @\file_get_contents($reflector->getFileName())) {
@@ -104,7 +103,7 @@ class CodeFormatter implements ReflectorFormatter
      *
      * @return string formatted code
      */
-    public static function formatCode($code, $startLine = 1, $endLine = null, $markLine = null)
+    public static function formatCode(string $code, int $startLine = 1, ?int $endLine = null, ?int $markLine = null): string
     {
         $spans = self::tokenizeSpans($code);
         $lines = self::splitLines($spans, $startLine, $endLine);
@@ -122,10 +121,8 @@ class CodeFormatter implements ReflectorFormatter
      * This is typehinted as \Reflector but we've narrowed the input via self::isReflectable already.
      *
      * @param \ReflectionClass|\ReflectionFunctionAbstract $reflector
-     *
-     * @return int
      */
-    private static function getStartLine(\Reflector $reflector)
+    private static function getStartLine(\Reflector $reflector): int
     {
         $startLine = $reflector->getStartLine();
 
@@ -148,7 +145,7 @@ class CodeFormatter implements ReflectorFormatter
      *
      * @return \Generator [$spanType, $spanText] highlight spans
      */
-    private static function tokenizeSpans($code)
+    private static function tokenizeSpans(string $code): \Generator
     {
         $spanType = null;
         $buffer = '';
@@ -209,7 +206,7 @@ class CodeFormatter implements ReflectorFormatter
      *
      * @return \Generator lines, each an array of [$spanType, $spanText] pairs
      */
-    private static function splitLines(\Generator $spans, $startLine = 1, $endLine = null)
+    private static function splitLines(\Generator $spans, int $startLine = 1, ?int $endLine = null): \Generator
     {
         $lineNum = 1;
         $buffer = [];
@@ -247,7 +244,7 @@ class CodeFormatter implements ReflectorFormatter
      *
      * @return \Generator Formatted lines
      */
-    private static function formatLines(\Generator $spanLines)
+    private static function formatLines(\Generator $spanLines): \Generator
     {
         foreach ($spanLines as $lineNum => $spanLine) {
             $line = '';
@@ -276,7 +273,7 @@ class CodeFormatter implements ReflectorFormatter
      *
      * @return \Generator Numbered, formatted lines
      */
-    private static function numberLines(\Generator $lines, $markLine = null)
+    private static function numberLines(\Generator $lines, ?int $markLine = null): \Generator
     {
         $lines = \iterator_to_array($lines);
 
@@ -302,18 +299,18 @@ class CodeFormatter implements ReflectorFormatter
                 $mark = ($markLine === $lineNum) ? self::LINE_MARKER : self::NO_LINE_MARKER;
             }
 
-            yield \sprintf("%s<aside>%${pad}s</aside>: %s", $mark, $lineNum, $line);
+            yield \sprintf("%s<aside>%{$pad}s</aside>: %s", $mark, $lineNum, $line);
         }
     }
 
     /**
      * Check whether a Reflector instance is reflectable by this formatter.
      *
-     * @param \Reflector $reflector
+     * @phpstan-assert-if-true \ReflectionClass|\ReflectionFunctionAbstract $reflector
      *
-     * @return bool
+     * @param \Reflector $reflector
      */
-    private static function isReflectable(\Reflector $reflector)
+    private static function isReflectable(\Reflector $reflector): bool
     {
         return ($reflector instanceof \ReflectionClass || $reflector instanceof \ReflectionFunctionAbstract) && \is_file($reflector->getFileName());
     }

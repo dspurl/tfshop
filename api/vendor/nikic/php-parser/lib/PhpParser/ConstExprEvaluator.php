@@ -2,6 +2,7 @@
 
 namespace PhpParser;
 
+use function array_merge;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Scalar;
 
@@ -36,7 +37,7 @@ class ConstExprEvaluator
      *
      * @param callable|null $fallbackEvaluator To call if subexpression cannot be evaluated
      */
-    public function __construct(callable $fallbackEvaluator = null) {
+    public function __construct(?callable $fallbackEvaluator = null) {
         $this->fallbackEvaluator = $fallbackEvaluator ?? function(Expr $expr) {
             throw new ConstExprEvaluationException(
                 "Expression of type {$expr->getType()} cannot be evaluated"
@@ -150,6 +151,8 @@ class ConstExprEvaluator
         foreach ($expr->items as $item) {
             if (null !== $item->key) {
                 $array[$this->evaluate($item->key)] = $this->evaluate($item->value);
+            } elseif ($item->unpack) {
+                $array = array_merge($array, $this->evaluate($item->value));
             } else {
                 $array[] = $this->evaluate($item->value);
             }

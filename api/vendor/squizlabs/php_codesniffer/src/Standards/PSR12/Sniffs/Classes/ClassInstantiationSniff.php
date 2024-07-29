@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\PSR12\Sniffs\Classes;
@@ -20,7 +20,7 @@ class ClassInstantiationSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function register()
     {
@@ -48,6 +48,7 @@ class ClassInstantiationSniff implements Sniff
             T_NS_SEPARATOR             => T_NS_SEPARATOR,
             T_SELF                     => T_SELF,
             T_STATIC                   => T_STATIC,
+            T_PARENT                   => T_PARENT,
             T_VARIABLE                 => T_VARIABLE,
             T_DOLLAR                   => T_DOLLAR,
             T_OBJECT_OPERATOR          => T_OBJECT_OPERATOR,
@@ -63,6 +64,16 @@ class ClassInstantiationSniff implements Sniff
                 continue;
             }
 
+            // Bow out when this is an anonymous class.
+            // Anonymous classes are the only situation which would allow for an attribute
+            // or for the readonly keyword between "new" and the class "name".
+            if ($tokens[$i]['code'] === T_ATTRIBUTE
+                || $tokens[$i]['code'] === T_READONLY
+                || $tokens[$i]['code'] === T_ANON_CLASS
+            ) {
+                return;
+            }
+
             if ($tokens[$i]['code'] === T_OPEN_SQUARE_BRACKET
                 || $tokens[$i]['code'] === T_OPEN_CURLY_BRACKET
             ) {
@@ -72,19 +83,19 @@ class ClassInstantiationSniff implements Sniff
 
             $classNameEnd = $i;
             break;
-        }
+        }//end for
 
         if ($classNameEnd === null) {
             return;
         }
 
-        if ($tokens[$classNameEnd]['code'] === T_ANON_CLASS) {
-            // Ignore anon classes.
+        if ($tokens[$classNameEnd]['code'] === T_OPEN_PARENTHESIS) {
+            // Using parenthesis.
             return;
         }
 
-        if ($tokens[$classNameEnd]['code'] === T_OPEN_PARENTHESIS) {
-            // Using parenthesis.
+        if ($classNameEnd === $stackPtr) {
+            // Failed to find the class name.
             return;
         }
 

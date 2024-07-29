@@ -9,10 +9,11 @@ use Throwable;
 
 class InvalidStreamPointerPositionException extends RuntimeException implements ExceptionInterface
 {
+    /** {@inheritDoc} */
     public function __construct(
         string $message = 'Invalid pointer position',
-        $code = 0,
-        Throwable $previous = null
+        int $code = 0,
+        ?Throwable $previous = null
     ) {
         parent::__construct($message, $code, $previous);
     }

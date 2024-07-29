@@ -9,10 +9,10 @@ use function preg_match;
 /**
  * Return HTTP protocol version (X.Y) as discovered within a `$_SERVER` array.
  *
- * @throws Exception\UnrecognizedProtocolVersionException if the
+ * @throws Exception\UnrecognizedProtocolVersionException If the
  *     $server['SERVER_PROTOCOL'] value is malformed.
  */
-function marshalProtocolVersionFromSapi(array $server) : string
+function marshalProtocolVersionFromSapi(array $server): string
 {
     if (! isset($server['SERVER_PROTOCOL'])) {
         return '1.1';

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -12,6 +12,7 @@
 
 namespace Composer\Downloader;
 
+use React\Promise\PromiseInterface;
 use Composer\Package\PackageInterface;
 
 /**
@@ -22,9 +23,9 @@ use Composer\Package\PackageInterface;
 class PharDownloader extends ArchiveDownloader
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function extract(PackageInterface $package, $file, $path)
+    protected function extract(PackageInterface $package, string $file, string $path): PromiseInterface
     {
         // Can throw an UnexpectedValueException
         $archive = new \Phar($file);
@@ -35,6 +36,6 @@ class PharDownloader extends ArchiveDownloader
          * http://blog.kotowicz.net/2010/08/hardening-php-how-to-securely-include.html
          */
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 }

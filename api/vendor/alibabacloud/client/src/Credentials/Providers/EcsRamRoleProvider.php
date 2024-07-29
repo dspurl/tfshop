@@ -3,7 +3,7 @@
 namespace AlibabaCloud\Client\Credentials\Providers;
 
 use Exception;
-use Stringy\Stringy;
+use AlibabaCloud\Client\Support\Stringy;
 use AlibabaCloud\Client\SDK;
 use AlibabaCloud\Client\Result\Result;
 use Psr\Http\Message\ResponseInterface;
@@ -112,7 +112,7 @@ class EcsRamRoleProvider extends Provider
         try {
             return RpcRequest::createClient()->request('GET', $url, $options);
         } catch (GuzzleException $exception) {
-            if (Stringy::create($exception->getMessage())->contains('timed')) {
+            if (Stringy::contains($exception->getMessage(), 'timed')) {
                 $message = 'Timeout or instance does not belong to Alibaba Cloud';
             } else {
                 $message = $exception->getMessage();

@@ -5,7 +5,6 @@ namespace Lcobucci\JWT\Validation\Constraint;
 
 use Lcobucci\JWT\Signer;
 use Lcobucci\JWT\Token;
-use Lcobucci\JWT\UnencryptedToken;
 use Lcobucci\JWT\Validation\Constraint;
 use Lcobucci\JWT\Validation\ConstraintViolation;
 
@@ -22,7 +21,7 @@ final class SignedWith implements Constraint
 
     public function assert(Token $token): void
     {
-        if (! $token instanceof UnencryptedToken) {
+        if (! $token instanceof Token\Plain) {
             throw new ConstraintViolation('You should pass a plain token');
         }
 

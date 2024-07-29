@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -21,10 +21,8 @@ class Json
      *
      * @param mixed $val
      * @param int   $opt
-     *
-     * @return string
      */
-    public static function encode($val, $opt = 0)
+    public static function encode($val, int $opt = 0): string
     {
         $opt |= \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE;
 

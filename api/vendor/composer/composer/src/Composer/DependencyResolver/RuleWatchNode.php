@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -53,7 +53,7 @@ class RuleWatchNode
      *
      * @param Decisions $decisions The decisions made so far by the solver
      */
-    public function watch2OnHighest(Decisions $decisions)
+    public function watch2OnHighest(Decisions $decisions): void
     {
         $literals = $this->rule->getLiterals();
 
@@ -76,10 +76,8 @@ class RuleWatchNode
 
     /**
      * Returns the rule this node wraps
-     *
-     * @return Rule
      */
-    public function getRule()
+    public function getRule(): Rule
     {
         return $this->rule;
     }
@@ -90,9 +88,9 @@ class RuleWatchNode
      * @param  int $literal The watched literal that should not be returned
      * @return int A literal
      */
-    public function getOtherWatch($literal)
+    public function getOtherWatch(int $literal): int
     {
-        if ($this->watch1 == $literal) {
+        if ($this->watch1 === $literal) {
             return $this->watch2;
         }
 
@@ -105,9 +103,9 @@ class RuleWatchNode
      * @param int $from The previously watched literal
      * @param int $to   The literal to be watched now
      */
-    public function moveWatch($from, $to)
+    public function moveWatch(int $from, int $to): void
     {
-        if ($this->watch1 == $from) {
+        if ($this->watch1 === $from) {
             $this->watch1 = $to;
         } else {
             $this->watch2 = $to;

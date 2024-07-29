@@ -6,9 +6,8 @@
 [![composer.lock](https://poser.pugx.org/alibabacloud/client/composerlock)](https://packagist.org/packages/alibabacloud/client)
 [![Total Downloads](https://poser.pugx.org/alibabacloud/client/downloads)](https://packagist.org/packages/alibabacloud/client)
 [![License](https://poser.pugx.org/alibabacloud/client/license)](https://packagist.org/packages/alibabacloud/client)
-[![codecov](https://codecov.io/gh/aliyun/openapi-sdk-php-client/branch/master/graph/badge.svg)](https://codecov.io/gh/aliyun/openapi-sdk-php-client)
-[![Travis Build Status](https://travis-ci.org/aliyun/openapi-sdk-php-client.svg?branch=master)](https://travis-ci.org/aliyun/openapi-sdk-php-client)
-[![Appveyor Build Status](https://ci.appveyor.com/api/projects/status/qb8j3lhg8349k0hk/branch/master?svg=true)](https://ci.appveyor.com/project/aliyun/openapi-sdk-php-client/branch/master)
+[![codecov](https://codecov.io/gh/aliyun/openapi-sdk-php-client/branch/master/graph/badge.svg?token=90Yd5Bne3S)](https://codecov.io/gh/aliyun/openapi-sdk-php-client)
+[![PHP Version Require](http://poser.pugx.org/alibabacloud/client/require/php)](https://packagist.org/packages/alibabacloud/client)
 
 
 ![](https://aliyunsdk-pages.alicdn.com/icons/AlibabaCloud.svg)

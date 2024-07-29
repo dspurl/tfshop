@@ -95,7 +95,7 @@ abstract class AbstractSurrogate implements SurrogateInterface
         try {
             $response = $cache->handle($subRequest, HttpKernelInterface::SUB_REQUEST, true);
 
-            if (!$response->isSuccessful()) {
+            if (!$response->isSuccessful() && Response::HTTP_NOT_MODIFIED !== $response->getStatusCode()) {
                 throw new \RuntimeException(sprintf('Error when rendering "%s" (Status code is %d).', $subRequest->getUri(), $response->getStatusCode()));
             }
 
@@ -132,5 +132,16 @@ abstract class AbstractSurrogate implements SurrogateInterface
         } elseif (preg_match(sprintf('#content="%s/1.0",\s*#', $upperName), $value)) {
             $response->headers->set('Surrogate-Control', preg_replace(sprintf('#content="%s/1.0",\s*#', $upperName), '', $value));
         }
+    }
+
+    protected static function generateBodyEvalBoundary(): string
+    {
+        static $cookie;
+        $cookie = hash('md5', $cookie ?? $cookie = random_bytes(16), true);
+        $boundary = base64_encode($cookie);
+
+        \assert(HttpCache::BODY_EVAL_BOUNDARY_LENGTH === \strlen($boundary));
+
+        return $boundary;
     }
 }

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -19,23 +19,24 @@ class CurlResponse extends Response
 {
     /**
      * @see https://www.php.net/curl_getinfo
-     * @var CurlInfo
+     * @var array
+     * @phpstan-var CurlInfo
      */
     private $curlInfo;
 
     /**
-     * @param CurlInfo $curlInfo
+     * @phpstan-param CurlInfo $curlInfo
      */
-    public function __construct(array $request, $code, array $headers, $body, array $curlInfo)
+    public function __construct(array $request, ?int $code, array $headers, ?string $body, array $curlInfo)
     {
         parent::__construct($request, $code, $headers, $body);
         $this->curlInfo = $curlInfo;
     }
 
     /**
-     * @return CurlInfo
+     * @phpstan-return CurlInfo
      */
-    public function getCurlInfo()
+    public function getCurlInfo(): array
     {
         return $this->curlInfo;
     }

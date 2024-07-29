@@ -14,14 +14,14 @@
   ],
   "require": {
     "php": ">=7.4",
-    "illuminate/support": "^6.0|^7.0|^8.0",
-    "nikic/php-parser": "^4.10"
+    "illuminate/support": "^6.0|^7.0|^8.0|^9.0",
+    "nikic/php-parser": "^4.13"
   },
   "require-dev": {
     "dms/phpunit-arraysubset-asserts": "^0.2.0",
-    "pestphp/pest": "^1.10",
-    "phpstan/phpstan": "^0.12.90",
-    "spatie/ray": "^1.28"
+    "pestphp/pest": "^1.21",
+    "phpstan/phpstan": "^1.0",
+    "spatie/ray": "^1.33"
   },
   "autoload": {
     "psr-4": {
@@ -41,7 +41,10 @@
   "config": {
     "preferred-install": "dist",
     "sort-packages": true,
-    "process-timeout": 600
+    "process-timeout": 600,
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
   },
   "funding": [
     {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -12,20 +12,23 @@
 
 namespace Composer\Package\Version;
 
+use Composer\Pcre\Preg;
 use Composer\Repository\PlatformRepository;
 use Composer\Semver\VersionParser as SemverVersionParser;
 use Composer\Semver\Semver;
+use Composer\Semver\Constraint\ConstraintInterface;
 
 class VersionParser extends SemverVersionParser
 {
-    const DEFAULT_BRANCH_ALIAS = '9999999-dev';
+    public const DEFAULT_BRANCH_ALIAS = '9999999-dev';
 
-    private static $constraints = array();
+    /** @var array<string, ConstraintInterface> Constraint parsing cache */
+    private static $constraints = [];
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function parseConstraints($constraints)
+    public function parseConstraints($constraints): ConstraintInterface
     {
         if (!isset(self::$constraints[$constraints])) {
             self::$constraints[$constraints] = parent::parseConstraints($constraints);
@@ -40,46 +43,43 @@ class VersionParser extends SemverVersionParser
      * The parsing results in an array of arrays, each of which
      * contain a 'name' key with value and optionally a 'version' key with value.
      *
-     * @param array $pairs a set of package/version pairs separated by ":", "=" or " "
+     * @param string[] $pairs a set of package/version pairs separated by ":", "=" or " "
      *
-     * @return array[] array of arrays containing a name and (if provided) a version
+     * @return list<array{name: string, version?: string}>
      */
-    public function parseNameVersionPairs(array $pairs)
+    public function parseNameVersionPairs(array $pairs): array
     {
         $pairs = array_values($pairs);
-        $result = array();
+        $result = [];
 
         for ($i = 0, $count = count($pairs); $i < $count; $i++) {
-            $pair = preg_replace('{^([^=: ]+)[=: ](.*)$}', '$1 $2', trim($pairs[$i]));
-            if (false === strpos($pair, ' ') && isset($pairs[$i + 1]) && false === strpos($pairs[$i + 1], '/') && !preg_match('{(?<=[a-z0-9_/-])\*|\*(?=[a-z0-9_/-])}i', $pairs[$i + 1]) && !PlatformRepository::isPlatformPackage($pairs[$i + 1])) {
+            $pair = Preg::replace('{^([^=: ]+)[=: ](.*)$}', '$1 $2', trim($pairs[$i]));
+            if (false === strpos($pair, ' ') && isset($pairs[$i + 1]) && false === strpos($pairs[$i + 1], '/') && !Preg::isMatch('{(?<=[a-z0-9_/-])\*|\*(?=[a-z0-9_/-])}i', $pairs[$i + 1]) && !PlatformRepository::isPlatformPackage($pairs[$i + 1])) {
                 $pair .= ' '.$pairs[$i + 1];
                 $i++;
             }
 
             if (strpos($pair, ' ')) {
-                list($name, $version) = explode(' ', $pair, 2);
-                $result[] = array('name' => $name, 'version' => $version);
+                [$name, $version] = explode(' ', $pair, 2);
+                $result[] = ['name' => $name, 'version' => $version];
             } else {
-                $result[] = array('name' => $pair);
+                $result[] = ['name' => $pair];
             }
         }
 
         return $result;
     }
 
-    /**
-     * @return bool
-     */
-    public static function isUpgrade($normalizedFrom, $normalizedTo)
+    public static function isUpgrade(string $normalizedFrom, string $normalizedTo): bool
     {
         if ($normalizedFrom === $normalizedTo) {
             return true;
         }
 
-        if (in_array($normalizedFrom, array('dev-master', 'dev-trunk', 'dev-default'), true)) {
+        if (in_array($normalizedFrom, ['dev-master', 'dev-trunk', 'dev-default'], true)) {
             $normalizedFrom = VersionParser::DEFAULT_BRANCH_ALIAS;
         }
-        if (in_array($normalizedTo, array('dev-master', 'dev-trunk', 'dev-default'), true)) {
+        if (in_array($normalizedTo, ['dev-master', 'dev-trunk', 'dev-default'], true)) {
             $normalizedTo = VersionParser::DEFAULT_BRANCH_ALIAS;
         }
 
@@ -87,7 +87,7 @@ class VersionParser extends SemverVersionParser
             return true;
         }
 
-        $sorted = Semver::sort(array($normalizedTo, $normalizedFrom));
+        $sorted = Semver::sort([$normalizedTo, $normalizedFrom]);
 
         return $sorted[0] === $normalizedFrom;
     }

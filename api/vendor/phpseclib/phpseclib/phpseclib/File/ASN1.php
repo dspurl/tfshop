@@ -144,6 +144,16 @@ class ASN1
     var $filters;
 
     /**
+     * Current Location of most recent ASN.1 encode process
+     *
+     * Useful for debug purposes
+     *
+     * @var array
+     * @see self::encode_der()
+     */
+    var $location;
+
+    /**
      * Type mapping table for the ANY type.
      *
      * Structured or unknown types are mapped to a \phpseclib\File\ASN1\Element.
@@ -234,6 +244,9 @@ class ASN1
     {
         $current = array('start' => $start);
 
+        if (!isset($encoded[$encoded_pos])) {
+            return false;
+        }
         $type = ord($encoded[$encoded_pos++]);
         $startOffset = 1;
 
@@ -244,6 +257,9 @@ class ASN1
             $tag = 0;
             // process septets (since the eighth bit is ignored, it's not an octet)
             do {
+                if (!isset($encoded[$encoded_pos])) {
+                    return false;
+                }
                 $temp = ord($encoded[$encoded_pos++]);
                 $startOffset++;
                 $loop = $temp >> 7;
@@ -260,6 +276,9 @@ class ASN1
         $start+= $startOffset;
 
         // Length, as discussed in paragraph 8.1.3 of X.690-0207.pdf#page=13
+        if (!isset($encoded[$encoded_pos])) {
+            return false;
+        }
         $length = ord($encoded[$encoded_pos++]);
         $start++;
         if ($length == 0x80) { // indefinite length
@@ -1157,6 +1176,11 @@ class ASN1
         $oid = array();
         $pos = 0;
         $len = strlen($content);
+        // see https://github.com/openjdk/jdk/blob/2deb318c9f047ec5a4b160d66a4b52f93688ec42/src/java.base/share/classes/sun/security/util/ObjectIdentifier.java#L55
+        if ($len > 4096) {
+            //user_error('Object Identifier size is limited to 4096 bytes');
+            return false;
+        }
 
         if (ord($content[$len - 1]) & 0x80) {
             return false;
@@ -1422,7 +1446,7 @@ class ASN1
                         return false;
                     }
                     break;
-                case ($c & 0x80000000) != 0:
+                case ($c & (PHP_INT_SIZE == 8 ? 0x80000000 : (1 << 31))) != 0:
                     return false;
                 case $c >= 0x04000000:
                     $v .= chr(0x80 | ($c & 0x3F));

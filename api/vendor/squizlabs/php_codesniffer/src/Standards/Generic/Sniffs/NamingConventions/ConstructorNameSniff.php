@@ -8,7 +8,7 @@
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @author    Leif Wickland <lwickland@rightnow.com>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Generic\Sniffs\NamingConventions;
@@ -66,7 +66,12 @@ class ConstructorNameSniff extends AbstractScopeSniff
             return;
         }
 
-        $className = strtolower($phpcsFile->getDeclarationName($currScope));
+        $className = $phpcsFile->getDeclarationName($currScope);
+        if (empty($className) === false) {
+            // Not an anonymous class.
+            $className = strtolower($className);
+        }
+
         if ($className !== $this->currentClass) {
             $this->loadFunctionNamesInScope($phpcsFile, $currScope);
             $this->currentClass = $className;

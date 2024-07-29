@@ -3,7 +3,7 @@
 namespace AlibabaCloud\Client\Request;
 
 use Exception;
-use Stringy\Stringy;
+use AlibabaCloud\Client\Support\Stringy;
 use RuntimeException;
 use AlibabaCloud\Client\SDK;
 use AlibabaCloud\Client\Encode;
@@ -98,9 +98,7 @@ class RoaRequest extends Request
      */
     private function encodeBody(array $params)
     {
-        $stringy = Stringy::create($this->options['headers']['Content-Type']);
-
-        if ($stringy->contains('application/json', false)) {
+        if (Stringy::contains($this->options['headers']['Content-Type'], 'application/json', false)) {
             $this->options['body']                   = json_encode($params);
             $this->options['headers']['Content-MD5'] = base64_encode(md5($this->options['body'], true));
 

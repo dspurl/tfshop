@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -11,14 +11,16 @@
 
 namespace Psy\Command;
 
+use PhpParser\NodeTraverser;
+use PhpParser\PrettyPrinter\Standard as Printer;
 use Psy\CodeCleaner\NoReturnValue;
 use Psy\Context;
 use Psy\ContextAware;
 use Psy\Exception\ErrorException;
 use Psy\Exception\RuntimeException;
 use Psy\Exception\UnexpectedTargetException;
-use Psy\Reflection\ReflectionClassConstant;
-use Psy\Reflection\ReflectionConstant_;
+use Psy\Reflection\ReflectionConstant;
+use Psy\Sudo\SudoVisitor;
 use Psy\Util\Mirror;
 
 /**
@@ -37,6 +39,26 @@ abstract class ReflectingCommand extends Command implements ContextAware
      * @var Context
      */
     protected $context;
+
+    private $parser;
+    private $traverser;
+    private $printer;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __construct($name = null)
+    {
+        $this->parser = new CodeArgumentParser();
+
+        // @todo Pass visitor directly to once we drop support for PHP-Parser 4.x
+        $this->traverser = new NodeTraverser();
+        $this->traverser->addVisitor(new SudoVisitor());
+
+        $this->printer = new Printer();
+
+        parent::__construct($name);
+    }
 
     /**
      * ContextAware interface.
@@ -57,7 +79,7 @@ abstract class ReflectingCommand extends Command implements ContextAware
      *
      * @return array (class or instance name, member name, kind)
      */
-    protected function getTarget($valueName)
+    protected function getTarget(string $valueName): array
     {
         $valueName = \trim($valueName);
         $matches = [];
@@ -92,10 +114,8 @@ abstract class ReflectingCommand extends Command implements ContextAware
      *
      * @param string $name
      * @param bool   $includeFunctions (default: false)
-     *
-     * @return string
      */
-    protected function resolveName($name, $includeFunctions = false)
+    protected function resolveName(string $name, bool $includeFunctions = false): string
     {
         $shell = $this->getApplication();
 
@@ -140,10 +160,10 @@ abstract class ReflectingCommand extends Command implements ContextAware
     /**
      * Check whether a given name could be a class name.
      */
-    protected function couldBeClassName($name)
+    protected function couldBeClassName(string $name): bool
     {
         // Regex based on https://www.php.net/manual/en/language.oop5.basic.php#language.oop5.basic.class
-        return \preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/', $name);
+        return \preg_match('/^[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*(\\\\[a-zA-Z_\x80-\xff][a-zA-Z0-9_\x80-\xff]*)*$/', $name) === 1;
     }
 
     /**
@@ -153,7 +173,7 @@ abstract class ReflectingCommand extends Command implements ContextAware
      *
      * @return array (value, Reflector)
      */
-    protected function getTargetAndReflector($valueName)
+    protected function getTargetAndReflector(string $valueName): array
     {
         list($value, $member, $kind) = $this->getTarget($valueName);
 
@@ -169,11 +189,14 @@ abstract class ReflectingCommand extends Command implements ContextAware
      *
      * @return mixed Variable value
      */
-    protected function resolveCode($code)
+    protected function resolveCode(string $code)
     {
         try {
-            $value = $this->getApplication()->execute($code, true);
-        } catch (\Exception $e) {
+            // Add an implicit `sudo` to target resolution.
+            $nodes = $this->traverser->traverse($this->parser->parse($code));
+            $sudoCode = $this->printer->prettyPrint($nodes);
+            $value = $this->getApplication()->execute($sudoCode, true);
+        } catch (\Throwable $e) {
             // Swallow all exceptions?
         }
 
@@ -193,7 +216,7 @@ abstract class ReflectingCommand extends Command implements ContextAware
      *
      * @return object Variable instance
      */
-    private function resolveObject($code)
+    private function resolveObject(string $code)
     {
         $value = $this->resolveCode($code);
 
@@ -205,27 +228,13 @@ abstract class ReflectingCommand extends Command implements ContextAware
     }
 
     /**
-     * @deprecated Use `resolveCode` instead
-     *
-     * @param string $name
-     *
-     * @return mixed Variable instance
-     */
-    protected function resolveInstance($name)
-    {
-        @\trigger_error('`resolveInstance` is deprecated; use `resolveCode` instead.', \E_USER_DEPRECATED);
-
-        return $this->resolveCode($name);
-    }
-
-    /**
      * Get a variable from the current shell scope.
      *
      * @param string $name
      *
      * @return mixed
      */
-    protected function getScopeVariable($name)
+    protected function getScopeVariable(string $name)
     {
         return $this->context->get($name);
     }
@@ -235,7 +244,7 @@ abstract class ReflectingCommand extends Command implements ContextAware
      *
      * @return array
      */
-    protected function getScopeVariables()
+    protected function getScopeVariables(): array
     {
         return $this->context->getAll();
     }
@@ -291,7 +300,6 @@ abstract class ReflectingCommand extends Command implements ContextAware
 
             case \ReflectionProperty::class:
             case \ReflectionClassConstant::class:
-            case ReflectionClassConstant::class:
                 $classReflector = $reflector->getDeclaringClass();
                 $vars['__class'] = $classReflector->name;
                 if ($classReflector->inNamespace()) {
@@ -304,7 +312,7 @@ abstract class ReflectingCommand extends Command implements ContextAware
                 }
                 break;
 
-            case ReflectionConstant_::class:
+            case ReflectionConstant::class:
                 if ($reflector->inNamespace()) {
                     $vars['__namespace'] = $reflector->getNamespaceName();
                 }

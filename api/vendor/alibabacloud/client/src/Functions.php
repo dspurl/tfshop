@@ -3,7 +3,7 @@
 namespace AlibabaCloud\Client;
 
 use Closure;
-use Stringy\Stringy;
+use AlibabaCloud\Client\Support\Stringy;
 use League\CLImate\CLImate;
 use AlibabaCloud\Client\Exception\ClientException;
 
@@ -60,7 +60,7 @@ function inOpenBasedir($filename, $throwException = false)
 function inDir($filename, array $dirs)
 {
     foreach ($dirs as $dir) {
-        if (!Stringy::create($dir)->endsWith(DIRECTORY_SEPARATOR)) {
+        if (!Stringy::endsWith($dir, DIRECTORY_SEPARATOR)) {
             $dir .= DIRECTORY_SEPARATOR;
         }
 

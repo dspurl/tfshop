@@ -4,14 +4,19 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Generic\Tests\WhiteSpace;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
-class DisallowTabIndentUnitTest extends AbstractSniffUnitTest
+/**
+ * Unit test class for the DisallowTabIndent sniff.
+ *
+ * @covers \PHP_CodeSniffer\Standards\Generic\Sniffs\WhiteSpace\DisallowTabIndentSniff
+ */
+final class DisallowTabIndentUnitTest extends AbstractSniffUnitTest
 {
 
 
@@ -40,10 +45,10 @@ class DisallowTabIndentUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList($testFile='DisallowTabIndentUnitTest.inc')
+    public function getErrorList($testFile='')
     {
         switch ($testFile) {
-        case 'DisallowTabIndentUnitTest.inc':
+        case 'DisallowTabIndentUnitTest.1.inc':
             return [
                 5  => 2,
                 9  => 1,
@@ -83,23 +88,46 @@ class DisallowTabIndentUnitTest extends AbstractSniffUnitTest
                 92 => 1,
                 93 => 1,
             ];
-            break;
+
+        case 'DisallowTabIndentUnitTest.2.inc':
+            return [
+                6  => 1,
+                7  => 1,
+                8  => 1,
+                9  => 1,
+                10 => 1,
+                11 => 1,
+                12 => 1,
+                13 => 1,
+                19 => 1,
+            ];
+
+        case 'DisallowTabIndentUnitTest.3.inc':
+            if (PHP_VERSION_ID >= 70300) {
+                return [
+                    7  => 1,
+                    13 => 1,
+                ];
+            }
+
+            // PHP 7.2 or lower: PHP version which doesn't support flexible heredocs/nowdocs yet.
+            return [];
+
         case 'DisallowTabIndentUnitTest.js':
             return [
                 3 => 1,
                 5 => 1,
                 6 => 1,
             ];
-            break;
+
         case 'DisallowTabIndentUnitTest.css':
             return [
                 1 => 1,
                 2 => 1,
             ];
-            break;
+
         default:
             return [];
-            break;
         }//end switch
 
     }//end getErrorList()

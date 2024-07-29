@@ -468,3 +468,37 @@ $resource = new class() {
 
 $one       <<= 8;
 $onetwothree = 3;
+
+// Issue 3326.
+class Test
+{
+    public const DEFAULT = 'default';
+    public const SOS     = 'sos';
+    public const HELP    = 'help';
+
+    protected static $thisIsAReallyLongVariableName = [];
+}
+
+// Issue #3460.
+function issue3460_invalid() {
+    $a = static function ($variables = false) use ($foo) {
+        return $variables;
+    };
+    $b   = $a;
+}
+
+function issue3460_valid() {
+    $a = static function ($variables = false) use ($foo) {
+        return $variables;
+    };
+    $b = $a;
+}
+
+function makeSureThatAssignmentWithinClosureAreStillHandled() {
+    $a = static function ($variables = []) use ($temp) {
+        $a = 'foo';
+        $bar = 'bar';
+        $longer = 'longer';
+        return $variables;
+    };
+}

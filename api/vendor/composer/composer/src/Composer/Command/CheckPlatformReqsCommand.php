@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -15,22 +15,24 @@ namespace Composer\Command;
 use Composer\Package\Link;
 use Composer\Semver\Constraint\Constraint;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
+use Composer\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Composer\Repository\PlatformRepository;
 use Composer\Repository\RootPackageRepository;
 use Composer\Repository\InstalledRepository;
+use Composer\Json\JsonFile;
 
 class CheckPlatformReqsCommand extends BaseCommand
 {
-    protected function configure()
+    protected function configure(): void
     {
         $this->setName('check-platform-reqs')
-            ->setDescription('Check that platform requirements are satisfied.')
-            ->setDefinition(array(
+            ->setDescription('Check that platform requirements are satisfied')
+            ->setDefinition([
                 new InputOption('no-dev', null, InputOption::VALUE_NONE, 'Disables checking of require-dev packages requirements.'),
                 new InputOption('lock', null, InputOption::VALUE_NONE, 'Checks requirements only from the lock file, not from installed packages.'),
-            ))
+                new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Format of the output: text or json', 'text', ['json', 'text']),
+            ])
             ->setHelp(
                 <<<EOT
 Checks that your PHP and extensions versions match the platform requirements of the installed packages.
@@ -43,12 +45,12 @@ EOT
             );
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $composer = $this->getComposer();
+        $composer = $this->requireComposer();
 
-        $requires = array();
-        $removePackages = array();
+        $requires = [];
+        $removePackages = [];
         if ($input->getOption('lock')) {
             $this->getIO()->writeError('<info>Checking '.($input->getOption('no-dev') ? 'non-dev ' : '').'platform requirements using the lock file</info>');
             $installedRepo = $composer->getLocker()->getLockedRepository(!$input->getOption('no-dev'));
@@ -67,14 +69,12 @@ EOT
             }
         }
         if (!$input->getOption('no-dev')) {
-            $requires += $composer->getPackage()->getDevRequires();
+            foreach ($composer->getPackage()->getDevRequires() as $require => $link) {
+                $requires[$require] = [$link];
+            }
         }
 
-        foreach ($requires as $require => $link) {
-            $requires[$require] = array($link);
-        }
-
-        $installedRepo = new InstalledRepository(array($installedRepo, new RootPackageRepository($composer->getPackage())));
+        $installedRepo = new InstalledRepository([$installedRepo, new RootPackageRepository(clone $composer->getPackage())]);
         foreach ($installedRepo->getPackages() as $package) {
             if (in_array($package->getName(), $removePackages, true)) {
                 continue;
@@ -86,9 +86,9 @@ EOT
 
         ksort($requires);
 
-        $installedRepo->addRepository(new PlatformRepository(array(), array()));
+        $installedRepo->addRepository(new PlatformRepository([], []));
 
-        $results = array();
+        $results = [];
         $exitCode = 0;
 
         /**
@@ -98,7 +98,7 @@ EOT
             if (PlatformRepository::isPlatformPackage($require)) {
                 $candidates = $installedRepo->findPackagesWithReplacersAndProviders($require);
                 if ($candidates) {
-                    $reqResults = array();
+                    $reqResults = [];
                     foreach ($candidates as $candidate) {
                         $candidateConstraint = null;
                         if ($candidate->getName() === $require) {
@@ -120,24 +120,26 @@ EOT
 
                         foreach ($links as $link) {
                             if (!$link->getConstraint()->matches($candidateConstraint)) {
-                                $reqResults[] = array(
+                                $reqResults[] = [
                                     $candidate->getName() === $require ? $candidate->getPrettyName() : $require,
                                     $candidateConstraint->getPrettyString(),
                                     $link,
-                                    '<error>failed</error>'.($candidate->getName() === $require ? '' : ' <comment>provided by '.$candidate->getPrettyName().'</comment>'),
-                                );
+                                    '<error>failed</error>',
+                                    $candidate->getName() === $require ? '' : '<comment>provided by '.$candidate->getPrettyName().'</comment>',
+                                ];
 
                                 // skip to next candidate
                                 continue 2;
                             }
                         }
 
-                        $results[] = array(
+                        $results[] = [
                             $candidate->getName() === $require ? $candidate->getPrettyName() : $require,
                             $candidateConstraint->getPrettyString(),
                             null,
-                            '<info>success</info>'.($candidate->getName() === $require ? '' : ' <comment>provided by '.$candidate->getPrettyName().'</comment>'),
-                        );
+                            '<info>success</info>',
+                            $candidate->getName() === $require ? '' : '<comment>provided by '.$candidate->getPrettyName().'</comment>',
+                        ];
 
                         // candidate matched, skip to next requirement
                         continue 2;
@@ -150,38 +152,63 @@ EOT
                     continue;
                 }
 
-                $results[] = array(
+                $results[] = [
                     $require,
                     'n/a',
                     $links[0],
                     '<error>missing</error>',
-                );
+                    '',
+                ];
 
                 $exitCode = max($exitCode, 2);
             }
         }
 
-        $this->printTable($output, $results);
+        $this->printTable($output, $results, $input->getOption('format'));
 
         return $exitCode;
     }
 
-    protected function printTable(OutputInterface $output, $results)
+    /**
+     * @param mixed[] $results
+     */
+    protected function printTable(OutputInterface $output, array $results, string $format): void
     {
-        $rows = array();
+        $rows = [];
         foreach ($results as $result) {
             /**
              * @var Link|null $link
              */
-            list($platformPackage, $version, $link, $status) = $result;
-            $rows[] = array(
-                $platformPackage,
-                $version,
-                $link ? sprintf('%s %s %s (%s)', $link->getSource(), $link->getDescription(), $link->getTarget(), $link->getPrettyConstraint()) : '',
-                $status,
-            );
+            [$platformPackage, $version, $link, $status, $provider] = $result;
+
+            if ('json' === $format) {
+                $rows[] = [
+                    "name" => $platformPackage,
+                    "version" => $version,
+                    "status" => strip_tags($status),
+                    "failed_requirement" => $link instanceof Link ? [
+                        'source' => $link->getSource(),
+                        'type' => $link->getDescription(),
+                        'target' => $link->getTarget(),
+                        'constraint' => $link->getPrettyConstraint(),
+                    ] : null,
+                    "provider" => $provider === '' ? null : strip_tags($provider),
+                ];
+            } else {
+                $rows[] = [
+                    $platformPackage,
+                    $version,
+                    $link,
+                    $link ? sprintf('%s %s %s (%s)', $link->getSource(), $link->getDescription(), $link->getTarget(), $link->getPrettyConstraint()) : '',
+                    rtrim($status.' '.$provider),
+                ];
+            }
         }
 
-        $this->renderTable($rows, $output);
+        if ('json' === $format) {
+            $this->getIO()->write(JsonFile::encode($rows));
+        } else {
+            $this->renderTable($rows, $output);
+        }
     }
 }

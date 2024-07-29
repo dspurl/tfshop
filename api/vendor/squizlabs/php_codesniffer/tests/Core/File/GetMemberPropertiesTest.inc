@@ -39,7 +39,10 @@ class TestMemberProperties
     var static $varG = true;
 
     /* testPublicStatic */
-    public static $varH = true;
+    public // comment
+    // phpcs:ignore Stnd.Cat.Sniff -- For reasons.
+    static
+    $varH = true;
 
     /* testProtectedStatic */
     static protected $varI = true;
@@ -210,18 +213,19 @@ $anon = class() {
 
     /* testPHP8UnionTypesIllegalTypes */
     // Intentional fatal error - types which are not allowed for properties, but that's not the concern of the method.
-    public callable|static|void $unionTypesIllegalTypes;
+    // Note: static is also not allowed as a type, but using static for a property type is not supported by the tokenizer.
+    public callable|void $unionTypesIllegalTypes;
 
     /* testPHP8UnionTypesNullable */
     // Intentional fatal error - nullability is not allowed with union types, but that's not the concern of the method.
     public ?int|float $unionTypesNullable;
 
     /* testPHP8PseudoTypeNull */
-    // Intentional fatal error - null pseudotype is only allowed in union types, but that's not the concern of the method.
+    // PHP 8.0 - 8.1: Intentional fatal error - null pseudotype is only allowed in union types, but that's not the concern of the method.
     public null $pseudoTypeNull;
 
     /* testPHP8PseudoTypeFalse */
-    // Intentional fatal error - false pseudotype is only allowed in union types, but that's not the concern of the method.
+    // PHP 8.0 - 8.1: Intentional fatal error - false pseudotype is only allowed in union types, but that's not the concern of the method.
     public false $pseudoTypeFalse;
 
     /* testPHP8PseudoTypeFalseAndBool */
@@ -239,6 +243,31 @@ $anon = class() {
     /* testPHP8DuplicateTypeInUnionWhitespaceAndComment */
     // Intentional fatal error - duplicate types are not allowed in union types, but that's not the concern of the method.
     public int |string| /*comment*/ INT $duplicateTypeInUnion;
+
+    /* testPHP81Readonly */
+    public readonly int $readonly;
+
+    /* testPHP81ReadonlyWithNullableType */
+    public readonly ?array $readonlyWithNullableType;
+
+    /* testPHP81ReadonlyWithUnionType */
+    public readonly string|int $readonlyWithUnionType;
+
+    /* testPHP81ReadonlyWithUnionTypeWithNull */
+    protected ReadOnly string|null $readonlyWithUnionTypeWithNull;
+
+    /* testPHP81OnlyReadonlyWithUnionType */
+    readonly string|int $onlyReadonly;
+
+    /* testPHP81OnlyReadonlyWithUnionTypeMultiple */
+    readonly \InterfaceA|\Sub\InterfaceB|false
+        $onlyReadonly;
+
+    /* testPHP81ReadonlyAndStatic */
+    readonly private static ?string $readonlyAndStatic;
+
+    /* testPHP81ReadonlyMixedCase */
+    public ReadONLY static $readonlyMixedCase;
 };
 
 $anon = class {
@@ -256,3 +285,72 @@ $anon = class {
     ]
     private mixed $baz;
 };
+
+enum Suit
+{
+    /* testEnumProperty */
+    protected $anonymous;
+}
+
+enum Direction implements ArrayAccess
+{
+    case Up;
+    case Down;
+
+    /* testEnumMethodParamNotProperty */
+    public function offsetGet($val) { ... }
+}
+
+$anon = class() {
+    /* testPHP81IntersectionTypes */
+    public Foo&Bar $intersectionType;
+
+    /* testPHP81MoreIntersectionTypes */
+    public Foo&Bar&Baz $moreIntersectionTypes;
+
+    /* testPHP81IllegalIntersectionTypes */
+    // Intentional fatal error - types which are not allowed for intersection type, but that's not the concern of the method.
+    public int&string $illegalIntersectionType;
+
+    /* testPHP81NullableIntersectionType */
+    // Intentional fatal error - nullability is not allowed with intersection type, but that's not the concern of the method.
+    public ?Foo&Bar $nullableIntersectionType;
+};
+
+$anon = class() {
+    /* testPHP82PseudoTypeTrue */
+    public true $pseudoTypeTrue;
+
+    /* testPHP82NullablePseudoTypeTrue */
+    static protected ?true $pseudoTypeNullableTrue;
+
+    /* testPHP82PseudoTypeTrueInUnion */
+    private int|string|true $pseudoTypeTrueInUnion;
+
+    /* testPHP82PseudoTypeFalseAndTrue */
+    // Intentional fatal error - Type contains both true and false, bool should be used instead, but that's not the concern of the method.
+    readonly true|FALSE $pseudoTypeFalseAndTrue;
+};
+
+class WhitespaceAndCommentsInTypes {
+    /* testUnionTypeWithWhitespaceAndComment */
+    public int | /*comment*/ string $hasWhitespaceAndComment;
+
+    /* testIntersectionTypeWithWhitespaceAndComment */
+    public \Foo /*comment*/ & Bar $hasWhitespaceAndComment;
+}
+
+trait DNFTypes {
+    /* testPHP82DNFTypeStatic */
+    public static (Foo&\Bar)|bool $propA;
+
+    /* testPHP82DNFTypeReadonlyA */
+    protected readonly float|(Partially\Qualified&Traversable) $propB;
+
+    /* testPHP82DNFTypeReadonlyB */
+    private readonly (namespace\Foo&Bar)|string $propC;
+
+    /* testPHP82DNFTypeIllegalNullable */
+    // Intentional fatal error - nullable operator cannot be combined with DNF.
+    var ?(A&\Pck\B)|bool $propD;
+}

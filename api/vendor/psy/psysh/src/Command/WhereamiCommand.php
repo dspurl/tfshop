@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -25,10 +25,7 @@ class WhereamiCommand extends Command
 {
     private $backtrace;
 
-    /**
-     * @param string|null $colorMode (deprecated and ignored)
-     */
-    public function __construct($colorMode = null)
+    public function __construct()
     {
         $this->backtrace = \debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS);
 
@@ -67,7 +64,7 @@ HELP
      *
      * @return array
      */
-    protected function trace()
+    protected function trace(): array
     {
         foreach (\array_reverse($this->backtrace) as $stackFrame) {
             if ($this->isDebugCall($stackFrame)) {
@@ -78,7 +75,7 @@ HELP
         return \end($this->backtrace);
     }
 
-    private static function isDebugCall(array $stackFrame)
+    private static function isDebugCall(array $stackFrame): bool
     {
         $class = isset($stackFrame['class']) ? $stackFrame['class'] : null;
         $function = isset($stackFrame['function']) ? $stackFrame['function'] : null;
@@ -92,7 +89,7 @@ HELP
      *
      * @return array
      */
-    protected function fileInfo()
+    protected function fileInfo(): array
     {
         $stackFrame = $this->trace();
         if (\preg_match('/eval\(/', $stackFrame['file'])) {
@@ -109,8 +106,10 @@ HELP
 
     /**
      * {@inheritdoc}
+     *
+     * @return int 0 if everything went fine, or an exit code
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $info = $this->fileInfo();
         $num = $input->getOption('num');
@@ -142,10 +141,8 @@ HELP
      * Replace the given directory from the start of a filepath.
      *
      * @param string $file
-     *
-     * @return string
      */
-    private function replaceCwd($file)
+    private function replaceCwd(string $file): string
     {
         $cwd = \getcwd();
         if ($cwd === false) {

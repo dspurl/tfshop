@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.5.32 - 2022-12-08
+
+- Support PHP versions: From 5.5 up to 8.1
+
 ## 1.5.31 - 2021-05-13
 
 - Deprecate `\GuzzleHttp\Psr7\parse_query` method

@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -16,6 +16,7 @@ use PhpParser\Node\Arg;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\MethodCall;
+use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\PropertyFetch;
 use PhpParser\Node\Expr\StaticCall;
 use PhpParser\Node\Expr\StaticPropertyFetch;
@@ -41,9 +42,12 @@ class SudoVisitor extends NodeVisitorAbstract
     const STATIC_PROPERTY_ASSIGN = 'assignStaticProperty';
     const STATIC_CALL = 'callStatic';
     const CLASS_CONST_FETCH = 'fetchClassConst';
+    const NEW_INSTANCE = 'newInstance';
 
     /**
      * {@inheritdoc}
+     *
+     * @return int|Node|null Replacement node (or special return value)
      */
     public function enterNode(Node $node)
     {
@@ -111,10 +115,17 @@ class SudoVisitor extends NodeVisitorAbstract
             ];
 
             return $this->prepareCall(self::CLASS_CONST_FETCH, $args);
+        } elseif ($node instanceof New_) {
+            $args = $node->args;
+            $class = $node->class instanceof Name ? $node->class->toString() : $node->class;
+            \array_unshift($args, new Arg(\is_string($class) ? new String_($class) : $class));
+
+            // not using prepareCall because the $node->args we started with are already Arg instances
+            return new StaticCall(new FullyQualifiedName(Sudo::class), self::NEW_INSTANCE, $args);
         }
     }
 
-    private function prepareCall($method, $args)
+    private function prepareCall(string $method, array $args): StaticCall
     {
         return new StaticCall(new FullyQualifiedName(Sudo::class), $method, \array_map(function ($arg) {
             return new Arg($arg);

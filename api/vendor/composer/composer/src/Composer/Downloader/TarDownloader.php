@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -13,6 +13,7 @@
 namespace Composer\Downloader;
 
 use Composer\Package\PackageInterface;
+use React\Promise\PromiseInterface;
 
 /**
  * Downloader for tar files: tar, tar.gz or tar.bz2
@@ -22,14 +23,14 @@ use Composer\Package\PackageInterface;
 class TarDownloader extends ArchiveDownloader
 {
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    protected function extract(PackageInterface $package, $file, $path)
+    protected function extract(PackageInterface $package, string $file, string $path): PromiseInterface
     {
         // Can throw an UnexpectedValueException
         $archive = new \PharData($file);
         $archive->extractTo($path, null, true);
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 }

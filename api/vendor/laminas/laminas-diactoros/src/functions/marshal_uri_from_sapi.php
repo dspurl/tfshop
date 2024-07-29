@@ -7,23 +7,33 @@ namespace Laminas\Diactoros;
 use function array_change_key_case;
 use function array_key_exists;
 use function explode;
+use function gettype;
 use function implode;
 use function is_array;
+use function is_bool;
+use function is_string;
 use function ltrim;
 use function preg_match;
 use function preg_replace;
+use function sprintf;
 use function strlen;
 use function strpos;
+use function strrpos;
 use function strtolower;
 use function substr;
+
+use const CASE_LOWER;
 
 /**
  * Marshal a Uri instance based on the values presnt in the $_SERVER array and headers.
  *
+ * @deprecated This function is deprecated as of 2.11.1, and will be removed in
+ *     3.0.0. As of 2.11.1, it is no longer used internally.
+ *
  * @param array $server SAPI parameters
  * @param array $headers HTTP request headers
  */
-function marshalUriFromSapi(array $server, array $headers) : Uri
+function marshalUriFromSapi(array $server, array $headers): Uri
 {
     /**
      * Retrieve a header value from an array of headers using a case-insensitive lookup.
@@ -32,12 +42,11 @@ function marshalUriFromSapi(array $server, array $headers) : Uri
      * @param mixed $default Default value to return if header not found
      * @return mixed
      */
-    $getHeaderFromArray = function (string $name, array $headers, $default = null) {
+    $getHeaderFromArray = static function (string $name, array $headers, $default = null) {
         $header  = strtolower($name);
         $headers = array_change_key_case($headers, CASE_LOWER);
         if (array_key_exists($header, $headers)) {
-            $value = is_array($headers[$header]) ? implode(', ', $headers[$header]) : $headers[$header];
-            return $value;
+            return is_array($headers[$header]) ? implode(', ', $headers[$header]) : $headers[$header];
         }
 
         return $default;
@@ -49,13 +58,13 @@ function marshalUriFromSapi(array $server, array $headers) : Uri
      * @return array Array of two items, host and port, in that order (can be
      *     passed to a list() operation).
      */
-    $marshalHostAndPort = function (array $headers, array $server) use ($getHeaderFromArray) : array {
+    $marshalHostAndPort = static function (array $headers, array $server) use ($getHeaderFromArray): array {
         /**
-        * @param string|array $host
-        * @return array Array of two items, host and port, in that order (can be
-        *     passed to a list() operation).
-        */
-        $marshalHostAndPortFromHeader = function ($host) {
+         * @param string|array $host
+         * @return array Array of two items, host and port, in that order (can be
+         *     passed to a list() operation).
+         */
+        $marshalHostAndPortFromHeader = static function ($host) {
             if (is_array($host)) {
                 $host = implode(', ', $host);
             }
@@ -72,10 +81,10 @@ function marshalUriFromSapi(array $server, array $headers) : Uri
         };
 
         /**
-        * @return array Array of two items, host and port, in that order (can be
-        *     passed to a list() operation).
-        */
-        $marshalIpv6HostAndPort = function (array $server, ?int $port) : array {
+         * @return array Array of two items, host and port, in that order (can be
+         *     passed to a list() operation).
+         */
+        $marshalIpv6HostAndPort = static function (array $server, ?int $port): array {
             $host = '[' . $server['SERVER_ADDR'] . ']';
             $port = $port ?: 80;
             if ($port . ']' === substr($host, strrpos($host, ':') + 1)) {
@@ -105,7 +114,8 @@ function marshalUriFromSapi(array $server, array $headers) : Uri
         $host = $server['SERVER_NAME'];
         $port = isset($server['SERVER_PORT']) ? (int) $server['SERVER_PORT'] : null;
 
-        if (! isset($server['SERVER_ADDR'])
+        if (
+            ! isset($server['SERVER_ADDR'])
             || ! preg_match('/^\[[0-9a-fA-F\:]+\]$/', $host)
         ) {
             return [$host, $port];
@@ -128,7 +138,7 @@ function marshalUriFromSapi(array $server, array $headers) : Uri
      *
      * From Laminas\Http\PhpEnvironment\Request class
      */
-    $marshalRequestPath = function (array $server) : string {
+    $marshalRequestPath = static function (array $server): string {
         // IIS7 with URL Rewrite: make sure we get the unencoded url
         // (double slash problem).
         $iisUrlRewritten = $server['IIS_WasUrlRewritten'] ?? null;
@@ -154,8 +164,8 @@ function marshalUriFromSapi(array $server, array $headers) : Uri
     $uri = new Uri('');
 
     // URI scheme
-    $scheme = 'http';
-    $marshalHttpsValue = function ($https) : bool {
+    $scheme            = 'http';
+    $marshalHttpsValue = static function ($https): bool {
         if (is_bool($https)) {
             return $https;
         }
@@ -177,7 +187,8 @@ function marshalUriFromSapi(array $server, array $headers) : Uri
         $https = false;
     }
 
-    if ($https
+    if (
+        $https
         || strtolower($getHeaderFromArray('x-forwarded-proto', $headers, '')) === 'https'
     ) {
         $scheme = 'https';

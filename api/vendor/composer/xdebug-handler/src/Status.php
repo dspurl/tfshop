@@ -9,6 +9,8 @@
  * the LICENSE file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Composer\XdebugHandler;
 
 use Psr\Log\LoggerInterface;
@@ -29,33 +31,45 @@ class Status
     const RESTARTING = 'Restarting';
     const RESTARTED = 'Restarted';
 
+    /** @var bool */
     private $debug;
+
+    /** @var string */
     private $envAllowXdebug;
+
+    /** @var string|null */
     private $loaded;
+
+    /** @var LoggerInterface|null */
     private $logger;
+
+    /** @var bool */
     private $modeOff;
+
+     /** @var float */
     private $time;
 
     /**
-     * Constructor
-     *
      * @param string $envAllowXdebug Prefixed _ALLOW_XDEBUG name
      * @param bool $debug Whether debug output is required
      */
-    public function __construct($envAllowXdebug, $debug)
+    public function __construct(string $envAllowXdebug, bool $debug)
     {
         $start = getenv(self::ENV_RESTART);
         Process::setEnv(self::ENV_RESTART);
-        $this->time = $start ? round((microtime(true) - $start) * 1000) : 0;
+        $this->time = is_numeric($start) ? round((microtime(true) - $start) * 1000) : 0;
 
         $this->envAllowXdebug = $envAllowXdebug;
         $this->debug = $debug && defined('STDERR');
+        $this->modeOff = false;
     }
 
     /**
-     * @param LoggerInterface $logger
+     * Activates status message output to a PSR3 logger
+     *
+     * @return void
      */
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger): void
     {
         $this->logger = $logger;
     }
@@ -63,26 +77,48 @@ class Status
     /**
      * Calls a handler method to report a message
      *
-     * @param string $op The handler constant
-     * @param null|string $data Data required by the handler
+     * @throws \InvalidArgumentException If $op is not known
      */
-    public function report($op, $data)
+    public function report(string $op, ?string $data): void
     {
-        if ($this->logger || $this->debug) {
-            call_user_func(array($this, 'report'.$op), $data);
+        if ($this->logger !== null || $this->debug) {
+            $param = (string) $data;
+
+            switch($op) {
+                case self::CHECK:
+                    $this->reportCheck($param);
+                    break;
+                case self::ERROR:
+                    $this->reportError($param);
+                    break;
+                case self::INFO:
+                    $this->reportInfo($param);
+                    break;
+                case self::NORESTART:
+                    $this->reportNoRestart();
+                    break;
+                case self::RESTART:
+                    $this->reportRestart();
+                    break;
+                case self::RESTARTED:
+                    $this->reportRestarted();
+                    break;
+                case self::RESTARTING:
+                    $this->reportRestarting($param);
+                    break;
+                default:
+                    throw new \InvalidArgumentException('Unknown op handler: '.$op);
+            }
         }
     }
 
     /**
      * Outputs a status message
-     *
-     * @param string $text
-     * @param string $level
      */
-    private function output($text, $level = null)
+    private function output(string $text, ?string $level = null): void
     {
-        if ($this->logger) {
-            $this->logger->log($level ?: LogLevel::DEBUG, $text);
+        if ($this->logger !== null) {
+            $this->logger->log($level !== null ? $level: LogLevel::DEBUG, $text);
         }
 
         if ($this->debug) {
@@ -90,80 +126,97 @@ class Status
         }
     }
 
-    private function reportCheck($loaded)
+    /**
+     * Checking status message
+     */
+    private function reportCheck(string $loaded): void
     {
         list($version, $mode) = explode('|', $loaded);
 
-        if ($version) {
-            $this->loaded = '('.$version.')'.($mode ? ' mode='.$mode : '');
+        if ($version !== '') {
+            $this->loaded = '('.$version.')'.($mode !== '' ? ' xdebug.mode='.$mode : '');
         }
         $this->modeOff = $mode === 'off';
         $this->output('Checking '.$this->envAllowXdebug);
     }
 
-    private function reportError($error)
+    /**
+     * Error status message
+     */
+    private function reportError(string $error): void
     {
         $this->output(sprintf('No restart (%s)', $error), LogLevel::WARNING);
     }
 
-    private function reportInfo($info)
+    /**
+     * Info status message
+     */
+    private function reportInfo(string $info): void
     {
         $this->output($info);
     }
 
-    private function reportNoRestart()
+    /**
+     * No restart status message
+     */
+    private function reportNoRestart(): void
     {
         $this->output($this->getLoadedMessage());
 
-        if ($this->loaded) {
+        if ($this->loaded !== null) {
             $text = sprintf('No restart (%s)', $this->getEnvAllow());
-            if (!getenv($this->envAllowXdebug)) {
-                $text .= ' Allowed by '.($this->modeOff ? 'mode' : 'application');
+            if (!((bool) getenv($this->envAllowXdebug))) {
+                $text .= ' Allowed by '.($this->modeOff ? 'xdebug.mode' : 'application');
             }
             $this->output($text);
         }
     }
 
-    private function reportRestart()
+    /**
+     * Restart status message
+     */
+    private function reportRestart(): void
     {
         $this->output($this->getLoadedMessage());
         Process::setEnv(self::ENV_RESTART, (string) microtime(true));
     }
 
-    private function reportRestarted()
+    /**
+     * Restarted status message
+     */
+    private function reportRestarted(): void
     {
         $loaded = $this->getLoadedMessage();
         $text = sprintf('Restarted (%d ms). %s', $this->time, $loaded);
-        $level = $this->loaded ? LogLevel::WARNING : null;
+        $level = $this->loaded !== null ? LogLevel::WARNING : null;
         $this->output($text, $level);
     }
 
-    private function reportRestarting($command)
+    /**
+     * Restarting status message
+     */
+    private function reportRestarting(string $command): void
     {
         $text = sprintf('Process restarting (%s)', $this->getEnvAllow());
         $this->output($text);
-        $text = 'Running '.$command;
+        $text = 'Running: '.$command;
         $this->output($text);
     }
 
     /**
      * Returns the _ALLOW_XDEBUG environment variable as name=value
-     *
-     * @return string
      */
-    private function getEnvAllow()
+    private function getEnvAllow(): string
     {
         return $this->envAllowXdebug.'='.getenv($this->envAllowXdebug);
     }
 
     /**
      * Returns the Xdebug status and version
-     *
-     * @return string
      */
-    private function getLoadedMessage()
+    private function getLoadedMessage(): string
     {
-        $loaded = $this->loaded ? sprintf('loaded %s', $this->loaded) : 'not loaded';
+        $loaded = $this->loaded !== null ? sprintf('loaded %s', $this->loaded) : 'not loaded';
         return 'The Xdebug extension is '.$loaded;
     }
 }

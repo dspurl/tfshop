@@ -4,14 +4,19 @@
  *
  * @author    Juliette Reinders Folmer <phpcs_nospam@adviesenzo.nl>
  * @copyright 2017 Juliette Reinders Folmer. All rights reserved.
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Generic\Tests\VersionControl;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
-class GitMergeConflictUnitTest extends AbstractSniffUnitTest
+/**
+ * Unit test class for the GitMergeConflict sniff.
+ *
+ * @covers \PHP_CodeSniffer\Standards\Generic\Sniffs\VersionControl\GitMergeConflictSniff
+ */
+final class GitMergeConflictUnitTest extends AbstractSniffUnitTest
 {
 
 
@@ -25,7 +30,7 @@ class GitMergeConflictUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList($testFile='GitMergeConflictUnitTest.1.inc')
+    public function getErrorList($testFile='')
     {
         switch ($testFile) {
         case 'GitMergeConflictUnitTest.1.inc':
@@ -97,6 +102,16 @@ class GitMergeConflictUnitTest extends AbstractSniffUnitTest
                 28 => 1,
                 30 => 1,
                 32 => 1,
+            ];
+
+        case 'GitMergeConflictUnitTest.7.inc':
+            return [
+                3  => 1,
+                5  => 1,
+                7  => 1,
+                12 => 1,
+                14 => 1,
+                16 => 1,
             ];
 
         case 'GitMergeConflictUnitTest.1.css':

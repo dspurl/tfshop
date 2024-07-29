@@ -9,6 +9,7 @@ use PhpParser\Node;
 use PhpParser\NodeTraverser;
 use PhpParser\ParserFactory;
 use PhpParser\NodeVisitor;
+use PhpParser\PrettyPrinter;
 use PhpParser\Node\Stmt;
 
 trait ReadsAndWritesAsts

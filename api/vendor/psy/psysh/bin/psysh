@@ -4,7 +4,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2017 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -116,7 +116,7 @@ if (version_compare(PHP_VERSION, '5.3.6', '<')) {
 } elseif (version_compare(PHP_VERSION, '5.4.0', '<')) {
     $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS);
 } else {
-    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+    $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
 }
 
 if (Psy\Shell::isIncluded($trace)) {

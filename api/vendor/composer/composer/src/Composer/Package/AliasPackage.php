@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -20,11 +20,20 @@ use Composer\Package\Version\VersionParser;
  */
 class AliasPackage extends BasePackage
 {
+    /** @var string */
     protected $version;
+    /** @var string */
     protected $prettyVersion;
+    /** @var bool */
     protected $dev;
+    /** @var bool */
     protected $rootPackageAlias = false;
+    /**
+     * @var string
+     * @phpstan-var 'stable'|'RC'|'beta'|'alpha'|'dev'
+     */
     protected $stability;
+    /** @var bool */
     protected $hasSelfVersionRequires = false;
 
     /** @var BasePackage */
@@ -47,7 +56,7 @@ class AliasPackage extends BasePackage
      * @param string      $version       The version the alias must report
      * @param string      $prettyVersion The alias's non-normalized version
      */
-    public function __construct(BasePackage $aliasOf, $version, $prettyVersion)
+    public function __construct(BasePackage $aliasOf, string $version, string $prettyVersion)
     {
         parent::__construct($aliasOf->getName());
 
@@ -59,7 +68,7 @@ class AliasPackage extends BasePackage
 
         foreach (Link::$TYPES as $type) {
             $links = $aliasOf->{'get' . ucfirst($type)}();
-            $this->$type = $this->replaceSelfVersionDependencies($links, $type);
+            $this->{$type} = $this->replaceSelfVersionDependencies($links, $type);
         }
     }
 
@@ -72,76 +81,76 @@ class AliasPackage extends BasePackage
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getStability()
+    public function getStability(): string
     {
         return $this->stability;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getPrettyVersion()
+    public function getPrettyVersion(): string
     {
         return $this->prettyVersion;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function isDev()
+    public function isDev(): bool
     {
         return $this->dev;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getRequires()
+    public function getRequires(): array
     {
         return $this->requires;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      * @return array<string|int, Link>
      */
-    public function getConflicts()
+    public function getConflicts(): array
     {
         return $this->conflicts;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      * @return array<string|int, Link>
      */
-    public function getProvides()
+    public function getProvides(): array
     {
         return $this->provides;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      * @return array<string|int, Link>
      */
-    public function getReplaces()
+    public function getReplaces(): array
     {
         return $this->replaces;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getDevRequires()
+    public function getDevRequires(): array
     {
         return $this->devRequires;
     }
@@ -150,21 +159,16 @@ class AliasPackage extends BasePackage
      * Stores whether this is an alias created by an aliasing in the requirements of the root package or not
      *
      * Use by the policy for sorting manually aliased packages first, see #576
-     *
-     * @param bool $value
-     *
-     * @return mixed
      */
-    public function setRootPackageAlias($value)
+    public function setRootPackageAlias(bool $value): void
     {
-        return $this->rootPackageAlias = $value;
+        $this->rootPackageAlias = $value;
     }
 
     /**
      * @see setRootPackageAlias
-     * @return bool
      */
-    public function isRootPackageAlias()
+    public function isRootPackageAlias(): bool
     {
         return $this->rootPackageAlias;
     }
@@ -175,7 +179,7 @@ class AliasPackage extends BasePackage
      *
      * @return Link[]
      */
-    protected function replaceSelfVersionDependencies(array $links, $linkType)
+    protected function replaceSelfVersionDependencies(array $links, $linkType): array
     {
         // for self.version requirements, we use the original package's branch name instead, to avoid leaking the magic dev-master-alias to users
         $prettyVersion = $this->prettyVersion;
@@ -183,8 +187,8 @@ class AliasPackage extends BasePackage
             $prettyVersion = $this->aliasOf->getPrettyVersion();
         }
 
-        if (\in_array($linkType, array(Link::TYPE_CONFLICT, Link::TYPE_PROVIDE, Link::TYPE_REPLACE), true)) {
-            $newLinks = array();
+        if (\in_array($linkType, [Link::TYPE_CONFLICT, Link::TYPE_PROVIDE, Link::TYPE_REPLACE], true)) {
+            $newLinks = [];
             foreach ($links as $link) {
                 // link is self.version, but must be replacing also the replaced version
                 if ('self.version' === $link->getPrettyConstraint()) {
@@ -208,12 +212,12 @@ class AliasPackage extends BasePackage
         return $links;
     }
 
-    public function hasSelfVersionRequires()
+    public function hasSelfVersionRequires(): bool
     {
         return $this->hasSelfVersionRequires;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return parent::__toString().' ('.($this->rootPackageAlias ? 'root ' : ''). 'alias of '.$this->aliasOf->getVersion().')';
     }
@@ -222,167 +226,172 @@ class AliasPackage extends BasePackage
      * Wrappers around the aliased package *
      ***************************************/
 
-    public function getType()
+    public function getType(): string
     {
         return $this->aliasOf->getType();
     }
 
-    public function getTargetDir()
+    public function getTargetDir(): ?string
     {
         return $this->aliasOf->getTargetDir();
     }
 
-    public function getExtra()
+    public function getExtra(): array
     {
         return $this->aliasOf->getExtra();
     }
 
-    public function setInstallationSource($type)
+    public function setInstallationSource(?string $type): void
     {
         $this->aliasOf->setInstallationSource($type);
     }
 
-    public function getInstallationSource()
+    public function getInstallationSource(): ?string
     {
         return $this->aliasOf->getInstallationSource();
     }
 
-    public function getSourceType()
+    public function getSourceType(): ?string
     {
         return $this->aliasOf->getSourceType();
     }
 
-    public function getSourceUrl()
+    public function getSourceUrl(): ?string
     {
         return $this->aliasOf->getSourceUrl();
     }
 
-    public function getSourceUrls()
+    public function getSourceUrls(): array
     {
         return $this->aliasOf->getSourceUrls();
     }
 
-    public function getSourceReference()
+    public function getSourceReference(): ?string
     {
         return $this->aliasOf->getSourceReference();
     }
 
-    public function setSourceReference($reference)
+    public function setSourceReference(?string $reference): void
     {
         $this->aliasOf->setSourceReference($reference);
     }
 
-    public function setSourceMirrors($mirrors)
+    public function setSourceMirrors(?array $mirrors): void
     {
         $this->aliasOf->setSourceMirrors($mirrors);
     }
 
-    public function getSourceMirrors()
+    public function getSourceMirrors(): ?array
     {
         return $this->aliasOf->getSourceMirrors();
     }
 
-    public function getDistType()
+    public function getDistType(): ?string
     {
         return $this->aliasOf->getDistType();
     }
 
-    public function getDistUrl()
+    public function getDistUrl(): ?string
     {
         return $this->aliasOf->getDistUrl();
     }
 
-    public function getDistUrls()
+    public function getDistUrls(): array
     {
         return $this->aliasOf->getDistUrls();
     }
 
-    public function getDistReference()
+    public function getDistReference(): ?string
     {
         return $this->aliasOf->getDistReference();
     }
 
-    public function setDistReference($reference)
+    public function setDistReference(?string $reference): void
     {
         $this->aliasOf->setDistReference($reference);
     }
 
-    public function getDistSha1Checksum()
+    public function getDistSha1Checksum(): ?string
     {
         return $this->aliasOf->getDistSha1Checksum();
     }
 
-    public function setTransportOptions(array $options)
+    public function setTransportOptions(array $options): void
     {
         $this->aliasOf->setTransportOptions($options);
     }
 
-    public function getTransportOptions()
+    public function getTransportOptions(): array
     {
         return $this->aliasOf->getTransportOptions();
     }
 
-    public function setDistMirrors($mirrors)
+    public function setDistMirrors(?array $mirrors): void
     {
         $this->aliasOf->setDistMirrors($mirrors);
     }
 
-    public function getDistMirrors()
+    public function getDistMirrors(): ?array
     {
         return $this->aliasOf->getDistMirrors();
     }
 
-    public function getAutoload()
+    public function getAutoload(): array
     {
         return $this->aliasOf->getAutoload();
     }
 
-    public function getDevAutoload()
+    public function getDevAutoload(): array
     {
         return $this->aliasOf->getDevAutoload();
     }
 
-    public function getIncludePaths()
+    public function getIncludePaths(): array
     {
         return $this->aliasOf->getIncludePaths();
     }
 
-    public function getReleaseDate()
+    public function getPhpExt(): ?array
+    {
+        return $this->aliasOf->getPhpExt();
+    }
+
+    public function getReleaseDate(): ?\DateTimeInterface
     {
         return $this->aliasOf->getReleaseDate();
     }
 
-    public function getBinaries()
+    public function getBinaries(): array
     {
         return $this->aliasOf->getBinaries();
     }
 
-    public function getSuggests()
+    public function getSuggests(): array
     {
         return $this->aliasOf->getSuggests();
     }
 
-    public function getNotificationUrl()
+    public function getNotificationUrl(): ?string
     {
         return $this->aliasOf->getNotificationUrl();
     }
 
-    public function isDefaultBranch()
+    public function isDefaultBranch(): bool
     {
         return $this->aliasOf->isDefaultBranch();
     }
 
-    public function setDistUrl($url)
+    public function setDistUrl(?string $url): void
     {
         $this->aliasOf->setDistUrl($url);
     }
 
-    public function setDistType($type)
+    public function setDistType(?string $type): void
     {
         $this->aliasOf->setDistType($type);
     }
 
-    public function setSourceDistReferences($reference)
+    public function setSourceDistReferences(string $reference): void
     {
         $this->aliasOf->setSourceDistReferences($reference);
     }

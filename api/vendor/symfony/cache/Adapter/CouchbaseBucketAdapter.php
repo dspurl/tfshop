@@ -39,7 +39,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     private $bucket;
     private $marshaller;
 
-    public function __construct(\CouchbaseBucket $bucket, string $namespace = '', int $defaultLifetime = 0, MarshallerInterface $marshaller = null)
+    public function __construct(\CouchbaseBucket $bucket, string $namespace = '', int $defaultLifetime = 0, ?MarshallerInterface $marshaller = null)
     {
         if (!static::isSupported()) {
             throw new CacheException('Couchbase >= 2.6.0 < 3.0.0 is required.');
@@ -83,7 +83,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
 
             foreach ($servers as $dsn) {
                 if (0 !== strpos($dsn, 'couchbase:')) {
-                    throw new InvalidArgumentException(sprintf('Invalid Couchbase DSN: "%s" does not start with "couchbase:".', $dsn));
+                    throw new InvalidArgumentException('Invalid Couchbase DSN: it does not start with "couchbase:".');
                 }
 
                 preg_match($dsnPattern, $dsn, $matches);
@@ -182,7 +182,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    protected function doHave($id): bool
+    protected function doHave(string $id): bool
     {
         return false !== $this->bucket->get($id);
     }
@@ -190,7 +190,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    protected function doClear($namespace): bool
+    protected function doClear(string $namespace): bool
     {
         if ('' === $namespace) {
             $this->bucket->manager()->flush();
@@ -221,7 +221,7 @@ class CouchbaseBucketAdapter extends AbstractAdapter
     /**
      * {@inheritdoc}
      */
-    protected function doSave(array $values, $lifetime)
+    protected function doSave(array $values, int $lifetime)
     {
         if (!$values = $this->marshaller->marshall($values, $failed)) {
             return $failed;

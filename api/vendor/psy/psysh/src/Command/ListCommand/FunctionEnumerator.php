@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -22,7 +22,7 @@ class FunctionEnumerator extends Enumerator
     /**
      * {@inheritdoc}
      */
-    protected function listItems(InputInterface $input, \Reflector $reflector = null, $target = null)
+    protected function listItems(InputInterface $input, ?\Reflector $reflector = null, $target = null): array
     {
         // if we have a reflector, ensure that it's a namespace reflector
         if (($target !== null || $reflector !== null) && !$reflector instanceof ReflectionNamespace) {
@@ -67,7 +67,7 @@ class FunctionEnumerator extends Enumerator
      *
      * @return array
      */
-    protected function getFunctions($type = null)
+    protected function getFunctions(?string $type = null): array
     {
         $funcs = \get_defined_functions();
 
@@ -86,7 +86,7 @@ class FunctionEnumerator extends Enumerator
      *
      * @return array
      */
-    protected function prepareFunctions(array $functions, $prefix = null)
+    protected function prepareFunctions(array $functions, ?string $prefix = null): array
     {
         \natcasesort($functions);
 
@@ -105,8 +105,8 @@ class FunctionEnumerator extends Enumerator
                         'style' => self::IS_FUNCTION,
                         'value' => $this->presentSignature($name),
                     ];
-                } catch (\Exception $e) {
-                    // Ignore failures. HHVM does this sometimes for internal functions.
+                } catch (\Throwable $e) {
+                    // Ignore failures.
                 }
             }
         }

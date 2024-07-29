@@ -86,7 +86,7 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
     /**
      * {@inheritdoc}
      */
-    public function trans(string $id, array $parameters = [], string $domain = null, string $locale = null): string
+    public function trans(string $id, array $parameters = [], ?string $domain = null, ?string $locale = null): string
     {
         $trans = '';
         $visibleText = '';
@@ -123,7 +123,7 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
             return [[true, true, $originalTrans]];
         }
 
-        $html = mb_convert_encoding($originalTrans, 'HTML-ENTITIES', mb_detect_encoding($originalTrans, null, true) ?: 'UTF-8');
+        $html = mb_encode_numericentity($originalTrans, [0x80, 0x10FFFF, 0, 0x1FFFFF], mb_detect_encoding($originalTrans, null, true) ?: 'UTF-8');
 
         $useInternalErrors = libxml_use_internal_errors(true);
 
@@ -283,7 +283,7 @@ final class PseudoLocalizationTranslator implements TranslatorInterface
         }
 
         $visibleLength = $this->strlen($visibleText);
-        $missingLength = (int) (ceil($visibleLength * $this->expansionFactor)) - $visibleLength;
+        $missingLength = (int) ceil($visibleLength * $this->expansionFactor) - $visibleLength;
         if ($this->brackets) {
             $missingLength -= 2;
         }

@@ -1,6 +1,30 @@
 CHANGELOG
 =========
 
+# 2.3.1 (2023-07-26)
+
+* Don't rely on `Request::getPayload()` to populate the parsed body
+
+# 2.3.0 (2023-07-25)
+
+* Leverage `Request::getPayload()` to populate the parsed body of PSR-7 requests
+* Implement `ValueResolverInterface` introduced with Symfony 6.2
+
+# 2.2.0 (2023-04-21)
+
+* Drop support for Symfony 4
+* Bump minimum version of PHP to 7.2
+* Support version 2 of the psr/http-message contracts
+
+# 2.1.3 (2022-09-05)
+
+* Ignore invalid HTTP headers when creating PSR7 objects
+* Fix for wrong type passed to `moveTo()`
+
+# 2.1.2 (2021-11-05)
+
+* Allow Symfony 6
+
 # 2.1.0 (2021-02-17)
 
   * Added a `PsrResponseListener` to automatically convert PSR-7 responses returned by controllers

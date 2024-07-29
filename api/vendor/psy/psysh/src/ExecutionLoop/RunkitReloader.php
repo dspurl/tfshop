@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -17,6 +17,8 @@ use Psy\Shell;
 
 /**
  * A runkit-based code reloader, which is pretty much magic.
+ *
+ * @todo Remove RunkitReloader once we drop support for PHP 7.x :(
  */
 class RunkitReloader extends AbstractListener
 {
@@ -25,10 +27,8 @@ class RunkitReloader extends AbstractListener
 
     /**
      * Only enabled if Runkit is installed.
-     *
-     * @return bool
      */
-    public static function isSupported()
+    public static function isSupported(): bool
     {
         // runkit_import was removed in runkit7-4.0.0a1
         return \extension_loaded('runkit') || \extension_loaded('runkit7') && \function_exists('runkit_import');
@@ -36,13 +36,10 @@ class RunkitReloader extends AbstractListener
 
     /**
      * Construct a Runkit Reloader.
-     *
-     * @todo Pass in Parser Factory instance for dependency injection?
      */
     public function __construct()
     {
-        $parserFactory = new ParserFactory();
-        $this->parser = $parserFactory->createParser();
+        $this->parser = (new ParserFactory())->createParser();
     }
 
     /**
@@ -51,7 +48,7 @@ class RunkitReloader extends AbstractListener
      * @param Shell  $shell
      * @param string $input
      */
-    public function onInput(Shell $shell, $input)
+    public function onInput(Shell $shell, string $input)
     {
         $this->reload($shell);
     }
@@ -127,15 +124,13 @@ class RunkitReloader extends AbstractListener
      * Use PHP-Parser to ensure that the file is valid PHP.
      *
      * @param string $file
-     *
-     * @return bool
      */
-    private function lintFile($file)
+    private function lintFile(string $file): bool
     {
         // first try to parse it
         try {
             $this->parser->parse(\file_get_contents($file));
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
             return false;
         }
 

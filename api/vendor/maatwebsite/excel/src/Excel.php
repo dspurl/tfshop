@@ -80,6 +80,12 @@ class Excel implements Exporter, Importer
      */
     public function download($export, string $fileName, string $writerType = null, array $headers = [])
     {
+        // Clear output buffer to prevent stuff being prepended to the Excel output.
+        if (ob_get_length() > 0) {
+            ob_end_clean();
+            ob_start();
+        }
+
         return response()->download(
             $this->export($export, $fileName, $writerType)->getLocalPath(),
             $fileName,
@@ -89,16 +95,18 @@ class Excel implements Exporter, Importer
 
     /**
      * {@inheritdoc}
+     *
+     * @param  string|null  $disk  Fallback for usage with named properties
      */
-    public function store($export, string $filePath, string $diskName = null, string $writerType = null, $diskOptions = [])
+    public function store($export, string $filePath, string $diskName = null, string $writerType = null, $diskOptions = [], string $disk = null)
     {
         if ($export instanceof ShouldQueue) {
-            return $this->queue($export, $filePath, $diskName, $writerType, $diskOptions);
+            return $this->queue($export, $filePath, $diskName ?: $disk, $writerType, $diskOptions);
         }
 
         $temporaryFile = $this->export($export, $filePath, $writerType);
 
-        $exported = $this->filesystem->disk($diskName, $diskOptions)->copy(
+        $exported = $this->filesystem->disk($diskName ?: $disk, $diskOptions)->copy(
             $temporaryFile,
             $filePath
         );

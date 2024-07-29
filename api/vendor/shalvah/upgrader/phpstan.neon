@@ -1,10 +1,6 @@
 parameters:
     level: 5
-    excludePaths:
-      - './src/PrettyPrinter/Standard.php'
-    reportUnmatchedIgnoredErrors: false
+    reportUnmatchedIgnoredErrors: true
     inferPrivatePropertyTypeFromConstructor: true
     ignoreErrors:
     - '#Method .+ should return .+\|null but return statement is missing.#'
-    # The type from the lib isn't exactly correct. Should be a generic.
-    - '#Property Shalvah\\Upgrader\\Upgrader::\$userOldConfigFileAst \(array<PhpParser\\Node\\Stmt>\|null\) does not accept array<PhpParser\\Node>#'
