@@ -127,6 +127,7 @@ class LoginController extends Controller
                         $User->uuid = (string) Uuid::generate();
                         $User->name = $User->uuid;
                         $User->password = bcrypt($password);
+                        $User->cellphone = $request->cellphone;
                         $User->save();
                         // 将当前第三方账号绑定到当前账号中
                         $UserPlatform->user_id = $User->id;
@@ -140,9 +141,7 @@ class LoginController extends Controller
                         $User->uuid = (string) Uuid::generate();
                         $User->name = $User->uuid;
                         $User->password = bcrypt($password);
-                        if($request->has('cellphone')){
-                            $User->cellphone = $request->cellphone;
-                        }
+                        $User->cellphone = $request->cellphone;
                         $User->save();
                     }
                     $UserPlatform = new UserPlatform();
