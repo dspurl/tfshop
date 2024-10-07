@@ -10,7 +10,9 @@ TFSHOP商城系统
 <p align="center">
  <b>支持多语言</b> <b>易二开</b> <b>低代码</b> <b>跨终端</b>
 </p>
-
+<p align="center">
+ <b>✈✈✈TFSHOP PRO限制特惠：</b>源码(网页端+微信小程序+APP+收银端+全功能)+商业授权仅需888元，送<b>半年免费更新服务</b>
+</p>
 <div align="center" >
     <a href="https://www.dswjcms.com">
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
