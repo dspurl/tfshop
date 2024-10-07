@@ -30,12 +30,22 @@ class JsonParser
     const DETECT_KEY_CONFLICTS = 1;
     const ALLOW_DUPLICATE_KEYS = 2;
     const PARSE_TO_ASSOC = 4;
+    const ALLOW_COMMENTS = 8;
+    const ALLOW_DUPLICATE_KEYS_TO_ARRAY = 16;
 
+    /** @var Lexer */
     private $lexer;
 
+    /**
+     * @var int
+     * @phpstan-var int-mask-of<self::*>
+     */
     private $flags;
+    /** @var list<int> */
     private $stack;
+    /** @var list<stdClass|array<mixed>|int|bool|float|string|null> */
     private $vstack; // semantic value stack
+    /** @var list<array{first_line: int, first_column: int, last_line: int, last_column: int}> */
     private $lstack; // location stack
 
     /**
@@ -72,6 +82,7 @@ class JsonParser
 
     /**
      * @phpstan-var array<int, string>
+     * @const
      */
     private $terminals_ = array(
         2   => "error",
@@ -89,34 +100,77 @@ class JsonParser
         24  => "]",
     );
 
+    /**
+     * @phpstan-var array<int<1,21>, array{int, int}>
+     * @const
+     */
     private $productions_ = array(
-        0,
-        array(3, 1),
-        array(5, 1),
-        array(7, 1),
-        array(9, 1),
-        array(9, 1),
-        array(12, 2),
-        array(13, 1),
-        array(13, 1),
-        array(13, 1),
-        array(13, 1),
-        array(13, 1),
-        array(13, 1),
-        array(15, 2),
-        array(15, 3),
-        array(20, 3),
-        array(19, 1),
-        array(19, 3),
-        array(16, 2),
-        array(16, 3),
-        array(25, 1),
-        array(25, 3)
+        1 => array(3, 1),
+        2 => array(5, 1),
+        3 => array(7, 1),
+        4 => array(9, 1),
+        5 => array(9, 1),
+        6 => array(12, 2),
+        7 => array(13, 1),
+        8 => array(13, 1),
+        9 => array(13, 1),
+        10 => array(13, 1),
+        11 => array(13, 1),
+        12 => array(13, 1),
+        13 => array(15, 2),
+        14 => array(15, 3),
+        15 => array(20, 3),
+        16 => array(19, 1),
+        17 => array(19, 3),
+        18 => array(16, 2),
+        19 => array(16, 3),
+        20 => array(25, 1),
+        21 => array(25, 3)
     );
 
-    private $table = array(array(3 => 5, 4 => array(1,12), 5 => 6, 6 => array(1,13), 7 => 3, 8 => array(1,9), 9 => 4, 10 => array(1,10), 11 => array(1,11), 12 => 1, 13 => 2, 15 => 7, 16 => 8, 17 => array(1,14), 23 => array(1,15)), array( 1 => array(3)), array( 14 => array(1,16)), array( 14 => array(2,7), 18 => array(2,7), 22 => array(2,7), 24 => array(2,7)), array( 14 => array(2,8), 18 => array(2,8), 22 => array(2,8), 24 => array(2,8)), array( 14 => array(2,9), 18 => array(2,9), 22 => array(2,9), 24 => array(2,9)), array( 14 => array(2,10), 18 => array(2,10), 22 => array(2,10), 24 => array(2,10)), array( 14 => array(2,11), 18 => array(2,11), 22 => array(2,11), 24 => array(2,11)), array( 14 => array(2,12), 18 => array(2,12), 22 => array(2,12), 24 => array(2,12)), array( 14 => array(2,3), 18 => array(2,3), 22 => array(2,3), 24 => array(2,3)), array( 14 => array(2,4), 18 => array(2,4), 22 => array(2,4), 24 => array(2,4)), array( 14 => array(2,5), 18 => array(2,5), 22 => array(2,5), 24 => array(2,5)), array( 14 => array(2,1), 18 => array(2,1), 21 => array(2,1), 22 => array(2,1), 24 => array(2,1)), array( 14 => array(2,2), 18 => array(2,2), 22 => array(2,2), 24 => array(2,2)), array( 3 => 20, 4 => array(1,12), 18 => array(1,17), 19 => 18, 20 => 19 ), array( 3 => 5, 4 => array(1,12), 5 => 6, 6 => array(1,13), 7 => 3, 8 => array(1,9), 9 => 4, 10 => array(1,10), 11 => array(1,11), 13 => 23, 15 => 7, 16 => 8, 17 => array(1,14), 23 => array(1,15), 24 => array(1,21), 25 => 22 ), array( 1 => array(2,6)), array( 14 => array(2,13), 18 => array(2,13), 22 => array(2,13), 24 => array(2,13)), array( 18 => array(1,24), 22 => array(1,25)), array( 18 => array(2,16), 22 => array(2,16)), array( 21 => array(1,26)), array( 14 => array(2,18), 18 => array(2,18), 22 => array(2,18), 24 => array(2,18)), array( 22 => array(1,28), 24 => array(1,27)), array( 22 => array(2,20), 24 => array(2,20)), array( 14 => array(2,14), 18 => array(2,14), 22 => array(2,14), 24 => array(2,14)), array( 3 => 20, 4 => array(1,12), 20 => 29 ), array( 3 => 5, 4 => array(1,12), 5 => 6, 6 => array(1,13), 7 => 3, 8 => array(1,9), 9 => 4, 10 => array(1,10), 11 => array(1,11), 13 => 30, 15 => 7, 16 => 8, 17 => array(1,14), 23 => array(1,15)), array( 14 => array(2,19), 18 => array(2,19), 22 => array(2,19), 24 => array(2,19)), array( 3 => 5, 4 => array(1,12), 5 => 6, 6 => array(1,13), 7 => 3, 8 => array(1,9), 9 => 4, 10 => array(1,10), 11 => array(1,11), 13 => 31, 15 => 7, 16 => 8, 17 => array(1,14), 23 => array(1,15)), array( 18 => array(2,17), 22 => array(2,17)), array( 18 => array(2,15), 22 => array(2,15)), array( 22 => array(2,21), 24 => array(2,21)),
+    /**
+     * @var array<int<0, 31>, array<int, array<int>|int>> List of stateID=>symbolID=>actionIDs|actionID
+     * @const
+     */
+    private $table = array(
+        0 => array( 3 => 5, 4 => array(1,12), 5 => 6, 6 => array(1,13), 7 => 3, 8 => array(1,9), 9 => 4, 10 => array(1,10), 11 => array(1,11), 12 => 1, 13 => 2, 15 => 7, 16 => 8, 17 => array(1,14), 23 => array(1,15)),
+        1 => array( 1 => array(3)),
+        2 => array( 14 => array(1,16)),
+        3 => array( 14 => array(2,7), 18 => array(2,7), 22 => array(2,7), 24 => array(2,7)),
+        4 => array( 14 => array(2,8), 18 => array(2,8), 22 => array(2,8), 24 => array(2,8)),
+        5 => array( 14 => array(2,9), 18 => array(2,9), 22 => array(2,9), 24 => array(2,9)),
+        6 => array( 14 => array(2,10), 18 => array(2,10), 22 => array(2,10), 24 => array(2,10)),
+        7 => array( 14 => array(2,11), 18 => array(2,11), 22 => array(2,11), 24 => array(2,11)),
+        8 => array( 14 => array(2,12), 18 => array(2,12), 22 => array(2,12), 24 => array(2,12)),
+        9 => array( 14 => array(2,3), 18 => array(2,3), 22 => array(2,3), 24 => array(2,3)),
+        10 => array( 14 => array(2,4), 18 => array(2,4), 22 => array(2,4), 24 => array(2,4)),
+        11 => array( 14 => array(2,5), 18 => array(2,5), 22 => array(2,5), 24 => array(2,5)),
+        12 => array( 14 => array(2,1), 18 => array(2,1), 21 => array(2,1), 22 => array(2,1), 24 => array(2,1)),
+        13 => array( 14 => array(2,2), 18 => array(2,2), 22 => array(2,2), 24 => array(2,2)),
+        14 => array( 3 => 20, 4 => array(1,12), 18 => array(1,17), 19 => 18, 20 => 19 ),
+        15 => array( 3 => 5, 4 => array(1,12), 5 => 6, 6 => array(1,13), 7 => 3, 8 => array(1,9), 9 => 4, 10 => array(1,10), 11 => array(1,11), 13 => 23, 15 => 7, 16 => 8, 17 => array(1,14), 23 => array(1,15), 24 => array(1,21), 25 => 22 ),
+        16 => array( 1 => array(2,6)),
+        17 => array( 14 => array(2,13), 18 => array(2,13), 22 => array(2,13), 24 => array(2,13)),
+        18 => array( 18 => array(1,24), 22 => array(1,25)),
+        19 => array( 18 => array(2,16), 22 => array(2,16)),
+        20 => array( 21 => array(1,26)),
+        21 => array( 14 => array(2,18), 18 => array(2,18), 22 => array(2,18), 24 => array(2,18)),
+        22 => array( 22 => array(1,28), 24 => array(1,27)),
+        23 => array( 22 => array(2,20), 24 => array(2,20)),
+        24 => array( 14 => array(2,14), 18 => array(2,14), 22 => array(2,14), 24 => array(2,14)),
+        25 => array( 3 => 20, 4 => array(1,12), 20 => 29 ),
+        26 => array( 3 => 5, 4 => array(1,12), 5 => 6, 6 => array(1,13), 7 => 3, 8 => array(1,9), 9 => 4, 10 => array(1,10), 11 => array(1,11), 13 => 30, 15 => 7, 16 => 8, 17 => array(1,14), 23 => array(1,15)),
+        27 => array( 14 => array(2,19), 18 => array(2,19), 22 => array(2,19), 24 => array(2,19)),
+        28 => array( 3 => 5, 4 => array(1,12), 5 => 6, 6 => array(1,13), 7 => 3, 8 => array(1,9), 9 => 4, 10 => array(1,10), 11 => array(1,11), 13 => 31, 15 => 7, 16 => 8, 17 => array(1,14), 23 => array(1,15)),
+        29 => array( 18 => array(2,17), 22 => array(2,17)),
+        30 => array( 18 => array(2,15), 22 => array(2,15)),
+        31 => array( 22 => array(2,21), 24 => array(2,21)),
     );
 
+    /**
+     * @var array{16: array{2, 6}}
+     * @const
+     */
     private $defaultActions = array(
         16 => array(2, 6)
     );
@@ -125,6 +179,8 @@ class JsonParser
      * @param  string                $input JSON string
      * @param  int                   $flags Bitmask of parse/lint options (see constants of this class)
      * @return null|ParsingException null if no error is found, a ParsingException containing all details otherwise
+     *
+     * @phpstan-param int-mask-of<self::*> $flags
      */
     public function lint($input, $flags = 0)
     {
@@ -141,9 +197,15 @@ class JsonParser
      * @param  int              $flags Bitmask of parse/lint options (see constants of this class)
      * @return mixed
      * @throws ParsingException
+     *
+     * @phpstan-param int-mask-of<self::*> $flags
      */
     public function parse($input, $flags = 0)
     {
+        if (($flags & self::ALLOW_DUPLICATE_KEYS_TO_ARRAY) && ($flags & self::ALLOW_DUPLICATE_KEYS)) {
+            throw new \InvalidArgumentException('Only one of ALLOW_DUPLICATE_KEYS and ALLOW_DUPLICATE_KEYS_TO_ARRAY can be used, you passed in both.');
+        }
+
         $this->failOnBOM($input);
 
         $this->flags = $flags;
@@ -155,11 +217,10 @@ class JsonParser
         $yytext = '';
         $yylineno = 0;
         $yyleng = 0;
+        /** @var int<0,3> */
         $recovering = 0;
-        $TERROR = 2;
-        $EOF = 1;
 
-        $this->lexer = new Lexer();
+        $this->lexer = new Lexer($flags);
         $this->lexer->setInput($input);
 
         $yyloc = $this->lexer->yylloc;
@@ -167,15 +228,14 @@ class JsonParser
 
         $symbol = null;
         $preErrorSymbol = null;
-        $state = null;
         $action = null;
         $a = null;
         $r = null;
-        $yyval = new stdClass;
         $p = null;
         $len = null;
         $newState = null;
         $expected = null;
+        /** @var string|null */
         $errStr = null;
 
         while (true) {
@@ -186,15 +246,17 @@ class JsonParser
             if (isset($this->defaultActions[$state])) {
                 $action = $this->defaultActions[$state];
             } else {
-                if ($symbol == null) {
-                    $symbol = $this->lex();
+                if ($symbol === null) {
+                    $symbol = $this->lexer->lex();
                 }
                 // read action for current state and first input
+                /** @var array<int, int>|false */
                 $action = isset($this->table[$state][$symbol]) ? $this->table[$state][$symbol] : false;
             }
 
             // handle parse error
             if (!$action || !$action[0]) {
+                assert(isset($symbol));
                 if (!$recovering) {
                     // Report error
                     $expected = array();
@@ -231,7 +293,7 @@ class JsonParser
 
                     $this->parseError($errStr, array(
                         'text' => $this->lexer->match,
-                        'token' => !empty($this->terminals_[$symbol]) ? $this->terminals_[$symbol] : $symbol,
+                        'token' => isset($this->terminals_[$symbol]) ? $this->terminals_[$symbol] : $symbol,
                         'line' => $this->lexer->yylineno,
                         'loc' => $yyloc,
                         'expected' => $expected,
@@ -240,7 +302,7 @@ class JsonParser
 
                 // just recovered from another error
                 if ($recovering == 3) {
-                    if ($symbol == $EOF) {
+                    if ($symbol === Lexer::EOF) {
                         throw new ParsingException($errStr ?: 'Parsing halted.');
                     }
 
@@ -249,13 +311,13 @@ class JsonParser
                     $yytext = $this->lexer->yytext;
                     $yylineno = $this->lexer->yylineno;
                     $yyloc = $this->lexer->yylloc;
-                    $symbol = $this->lex();
+                    $symbol = $this->lexer->lex();
                 }
 
                 // try to recover from error
                 while (true) {
                     // check for error recovery rule in this state
-                    if (\array_key_exists($TERROR, $this->table[$state])) {
+                    if (\array_key_exists(Lexer::T_ERROR, $this->table[$state])) {
                         break;
                     }
                     if ($state == 0) {
@@ -266,9 +328,13 @@ class JsonParser
                 }
 
                 $preErrorSymbol = $symbol; // save the lookahead token
-                $symbol = $TERROR;         // insert generic error symbol as new lookahead
+                $symbol = Lexer::T_ERROR;         // insert generic error symbol as new lookahead
                 $state = $this->stack[\count($this->stack)-1];
-                $action = isset($this->table[$state][$TERROR]) ? $this->table[$state][$TERROR] : false;
+                /** @var array<int, int>|false */
+                $action = isset($this->table[$state][Lexer::T_ERROR]) ? $this->table[$state][Lexer::T_ERROR] : false;
+                if ($action === false) {
+                    throw new \LogicException('No table value found for '.$state.' => '.Lexer::T_ERROR);
+                }
                 $recovering = 3; // allow 3 real symbols to be shifted before reporting a new error
             }
 
@@ -279,6 +345,7 @@ class JsonParser
 
             switch ($action[0]) {
                 case 1: // shift
+                    assert(isset($symbol));
                     $this->stack[] = $symbol;
                     $this->vstack[] = $this->lexer->yytext;
                     $this->lstack[] = $this->lexer->yylloc;
@@ -292,7 +359,7 @@ class JsonParser
                         if ($recovering > 0) {
                             $recovering--;
                         }
-                    } else { // error just occurred, resume old lookahead f/ before error
+                    } else { // error just occurred, resume old lookahead from before error
                         $symbol = $preErrorSymbol;
                         $preErrorSymbol = null;
                     }
@@ -302,18 +369,18 @@ class JsonParser
                     $len = $this->productions_[$action[1]][1];
 
                     // perform semantic action
-                    $yyval->token = $this->vstack[\count($this->vstack) - $len]; // default to $$ = $1
+                    $currentToken = $this->vstack[\count($this->vstack) - $len]; // default to $$ = $1
                     // default location, uses first token for firsts, last for lasts
-                    $yyval->store = array( // _$ = store
+                    $position = array( // _$ = store
                         'first_line' => $this->lstack[\count($this->lstack) - ($len ?: 1)]['first_line'],
                         'last_line' => $this->lstack[\count($this->lstack) - 1]['last_line'],
                         'first_column' => $this->lstack[\count($this->lstack) - ($len ?: 1)]['first_column'],
                         'last_column' => $this->lstack[\count($this->lstack) - 1]['last_column'],
                     );
-                    $r = $this->performAction($yyval, $yytext, $yyleng, $yylineno, $action[1], $this->vstack);
+                    list($newToken, $actionResult) = $this->performAction($currentToken, $yytext, $yyleng, $yylineno, $action[1]);
 
-                    if (!$r instanceof Undefined) {
-                        return $r;
+                    if (!$actionResult instanceof Undefined) {
+                        return $actionResult;
                     }
 
                     if ($len) {
@@ -321,8 +388,9 @@ class JsonParser
                     }
 
                     $this->stack[] = $this->productions_[$action[1]][0];    // push nonterminal (reduce)
-                    $this->vstack[] = $yyval->token;
-                    $this->lstack[] = $yyval->store;
+                    $this->vstack[] = $newToken;
+                    $this->lstack[] = $position;
+                    /** @var int */
                     $newState = $this->table[$this->stack[\count($this->stack)-2]][$this->stack[\count($this->stack)-1]];
                     $this->stack[] = $newState;
                     break;
@@ -334,125 +402,161 @@ class JsonParser
         }
     }
 
-    protected function parseError($str, $hash)
+    /**
+     * @param  string $str
+     * @param  array{text: string, token: string|int, line: int, loc: array{first_line: int, first_column: int, last_line: int, last_column: int}, expected: string[]}|null $hash
+     * @return never
+     */
+    protected function parseError($str, $hash = null)
     {
-        throw new ParsingException($str, $hash);
+        throw new ParsingException($str, $hash ?: array());
     }
 
-    // $$ = $tokens // needs to be passed by ref?
-    // $ = $token
-    // _$ removed, useless?
-    private function performAction(stdClass $yyval, $yytext, $yyleng, $yylineno, $yystate, &$tokens)
+    /**
+     * @param  stdClass|array<mixed>|int|bool|float|string|null $currentToken
+     * @param  string   $yytext
+     * @param  int      $yyleng
+     * @param  int      $yylineno
+     * @param  int      $yystate
+     * @return array{stdClass|array<mixed>|int|bool|float|string|null, stdClass|array<mixed>|int|bool|float|string|null|Undefined}
+     */
+    private function performAction($currentToken, $yytext, $yyleng, $yylineno, $yystate)
     {
-        // $0 = $len
-        $len = \count($tokens) - 1;
+        $token = $currentToken;
+
+        $len = \count($this->vstack) - 1;
         switch ($yystate) {
         case 1:
             $yytext = preg_replace_callback('{(?:\\\\["bfnrt/\\\\]|\\\\u[a-fA-F0-9]{4})}', array($this, 'stringInterpolation'), $yytext);
-            $yyval->token = $yytext;
+            $token = $yytext;
             break;
         case 2:
             if (strpos($yytext, 'e') !== false || strpos($yytext, 'E') !== false) {
-                $yyval->token = \floatval($yytext);
+                $token = \floatval($yytext);
             } else {
-                $yyval->token = strpos($yytext, '.') === false ? \intval($yytext) : \floatval($yytext);
+                $token = strpos($yytext, '.') === false ? \intval($yytext) : \floatval($yytext);
             }
             break;
         case 3:
-            $yyval->token = null;
+            $token = null;
             break;
         case 4:
-            $yyval->token = true;
+            $token = true;
             break;
         case 5:
-            $yyval->token = false;
+            $token = false;
             break;
         case 6:
-            return $yyval->token = $tokens[$len-1];
+            $token = $this->vstack[$len-1];
+
+            return array($token, $token);
         case 13:
             if ($this->flags & self::PARSE_TO_ASSOC) {
-                $yyval->token = array();
+                $token = array();
             } else {
-                $yyval->token = new stdClass;
+                $token = new stdClass;
             }
             break;
         case 14:
-            $yyval->token = $tokens[$len-1];
+            $token = $this->vstack[$len-1];
             break;
         case 15:
-            $yyval->token = array($tokens[$len-2], $tokens[$len]);
+            $token = array($this->vstack[$len-2], $this->vstack[$len]);
             break;
         case 16:
+            assert(\is_array($this->vstack[$len]));
             if (PHP_VERSION_ID < 70100) {
-                $property = $tokens[$len][0] === '' ? '_empty_' : $tokens[$len][0];
+                $property = $this->vstack[$len][0] === '' ? '_empty_' : $this->vstack[$len][0];
             } else {
-                $property = $tokens[$len][0];
+                $property = $this->vstack[$len][0];
             }
             if ($this->flags & self::PARSE_TO_ASSOC) {
-                $yyval->token = array();
-                $yyval->token[$property] = $tokens[$len][1];
+                $token = array();
+                $token[$property] = $this->vstack[$len][1];
             } else {
-                $yyval->token = new stdClass;
-                $yyval->token->$property = $tokens[$len][1];
+                $token = new stdClass;
+                $token->$property = $this->vstack[$len][1];
             }
             break;
         case 17:
+            assert(\is_array($this->vstack[$len]));
             if ($this->flags & self::PARSE_TO_ASSOC) {
-                $yyval->token =& $tokens[$len-2];
-                $key = $tokens[$len][0];
-                if (($this->flags & self::DETECT_KEY_CONFLICTS) && isset($tokens[$len-2][$key])) {
+                assert(\is_array($this->vstack[$len-2]));
+                $token =& $this->vstack[$len-2];
+                $key = $this->vstack[$len][0];
+                if (($this->flags & self::DETECT_KEY_CONFLICTS) && isset($this->vstack[$len-2][$key])) {
                     $errStr = 'Parse error on line ' . ($yylineno+1) . ":\n";
                     $errStr .= $this->lexer->showPosition() . "\n";
-                    $errStr .= "Duplicate key: ".$tokens[$len][0];
-                    throw new DuplicateKeyException($errStr, $tokens[$len][0], array('line' => $yylineno+1));
-                } elseif (($this->flags & self::ALLOW_DUPLICATE_KEYS) && isset($tokens[$len-2][$key])) {
+                    $errStr .= "Duplicate key: ".$this->vstack[$len][0];
+                    throw new DuplicateKeyException($errStr, $this->vstack[$len][0], array('line' => $yylineno+1));
+                }
+                if (($this->flags & self::ALLOW_DUPLICATE_KEYS) && isset($this->vstack[$len-2][$key])) {
                     $duplicateCount = 1;
                     do {
                         $duplicateKey = $key . '.' . $duplicateCount++;
-                    } while (isset($tokens[$len-2][$duplicateKey]));
-                    $key = $duplicateKey;
-                }
-                $tokens[$len-2][$key] = $tokens[$len][1];
-            } else {
-                $yyval->token = $tokens[$len-2];
-                if (PHP_VERSION_ID < 70100) {
-                    $key = $tokens[$len][0] === '' ? '_empty_' : $tokens[$len][0];
+                    } while (isset($this->vstack[$len-2][$duplicateKey]));
+                    $this->vstack[$len-2][$duplicateKey] = $this->vstack[$len][1];
+                } elseif (($this->flags & self::ALLOW_DUPLICATE_KEYS_TO_ARRAY) && isset($this->vstack[$len-2][$key])) {
+                    if (!isset($this->vstack[$len-2][$key]['__duplicates__']) || !is_array($this->vstack[$len-2][$key]['__duplicates__'])) {
+                        $this->vstack[$len-2][$key] = array('__duplicates__' => array($this->vstack[$len-2][$key]));
+                    }
+                    $this->vstack[$len-2][$key]['__duplicates__'][] = $this->vstack[$len][1];
                 } else {
-                    $key = $tokens[$len][0];
+                    $this->vstack[$len-2][$key] = $this->vstack[$len][1];
                 }
-                if (($this->flags & self::DETECT_KEY_CONFLICTS) && isset($tokens[$len-2]->{$key})) {
+            } else {
+                assert($this->vstack[$len-2] instanceof stdClass);
+                $token = $this->vstack[$len-2];
+                if (PHP_VERSION_ID < 70100) {
+                    $key = $this->vstack[$len][0] === '' ? '_empty_' : $this->vstack[$len][0];
+                } else {
+                    $key = $this->vstack[$len][0];
+                }
+                if (($this->flags & self::DETECT_KEY_CONFLICTS) && isset($this->vstack[$len-2]->$key)) {
                     $errStr = 'Parse error on line ' . ($yylineno+1) . ":\n";
                     $errStr .= $this->lexer->showPosition() . "\n";
-                    $errStr .= "Duplicate key: ".$tokens[$len][0];
-                    throw new DuplicateKeyException($errStr, $tokens[$len][0], array('line' => $yylineno+1));
-                } elseif (($this->flags & self::ALLOW_DUPLICATE_KEYS) && isset($tokens[$len-2]->{$key})) {
+                    $errStr .= "Duplicate key: ".$this->vstack[$len][0];
+                    throw new DuplicateKeyException($errStr, $this->vstack[$len][0], array('line' => $yylineno+1));
+                }
+                if (($this->flags & self::ALLOW_DUPLICATE_KEYS) && isset($this->vstack[$len-2]->$key)) {
                     $duplicateCount = 1;
                     do {
                         $duplicateKey = $key . '.' . $duplicateCount++;
-                    } while (isset($tokens[$len-2]->$duplicateKey));
-                    $key = $duplicateKey;
+                    } while (isset($this->vstack[$len-2]->$duplicateKey));
+                    $this->vstack[$len-2]->$duplicateKey = $this->vstack[$len][1];
+                } elseif (($this->flags & self::ALLOW_DUPLICATE_KEYS_TO_ARRAY) && isset($this->vstack[$len-2]->$key)) {
+                    if (!isset($this->vstack[$len-2]->$key->__duplicates__)) {
+                        $this->vstack[$len-2]->$key = (object) array('__duplicates__' => array($this->vstack[$len-2]->$key));
+                    }
+                    $this->vstack[$len-2]->$key->__duplicates__[] = $this->vstack[$len][1];
+                } else {
+                    $this->vstack[$len-2]->$key = $this->vstack[$len][1];
                 }
-                $tokens[$len-2]->$key = $tokens[$len][1];
             }
             break;
         case 18:
-            $yyval->token = array();
+            $token = array();
             break;
         case 19:
-            $yyval->token = $tokens[$len-1];
+            $token = $this->vstack[$len-1];
             break;
         case 20:
-            $yyval->token = array($tokens[$len]);
+            $token = array($this->vstack[$len]);
             break;
         case 21:
-            $tokens[$len-2][] = $tokens[$len];
-            $yyval->token = $tokens[$len-2];
+            assert(\is_array($this->vstack[$len-2]));
+            $this->vstack[$len-2][] = $this->vstack[$len];
+            $token = $this->vstack[$len-2];
             break;
         }
 
-        return new Undefined();
+        return array($token, new Undefined());
     }
 
+    /**
+     * @param  string $match
+     * @return string
+     */
     private function stringInterpolation($match)
     {
         switch ($match[0]) {
@@ -477,6 +581,10 @@ class JsonParser
         }
     }
 
+    /**
+     * @param  int $n
+     * @return void
+     */
     private function popStack($n)
     {
         $this->stack = \array_slice($this->stack, 0, - (2 * $n));
@@ -484,24 +592,17 @@ class JsonParser
         $this->lstack = \array_slice($this->lstack, 0, - $n);
     }
 
-    private function lex()
-    {
-        $token = $this->lexer->lex() ?: 1; // $end = 1
-        // if token isn't its numeric value, convert
-        if (!is_numeric($token)) {
-            $token = isset($this->symbols[$token]) ? $this->symbols[$token] : $token;
-        }
-
-        return $token;
-    }
-
+    /**
+     * @param  string $input
+     * @return void
+     */
     private function failOnBOM($input)
     {
         // UTF-8 ByteOrderMark sequence
         $bom = "\xEF\xBB\xBF";
 
         if (substr($input, 0, 3) === $bom) {
-            $this->parseError("BOM detected, make sure your input does not include a Unicode Byte-Order-Mark", array());
+            $this->parseError("BOM detected, make sure your input does not include a Unicode Byte-Order-Mark");
         }
     }
 }

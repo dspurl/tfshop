@@ -36,8 +36,8 @@ class RedirectResponse extends Response
         if (! is_string($uri) && ! $uri instanceof UriInterface) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Uri provided to %s MUST be a string or Psr\Http\Message\UriInterface instance; received "%s"',
-                __CLASS__,
-                (is_object($uri) ? get_class($uri) : gettype($uri))
+                self::class,
+                is_object($uri) ? get_class($uri) : gettype($uri)
             ));
         }
 

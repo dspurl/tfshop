@@ -4,11 +4,11 @@ declare(strict_types=1);
 namespace Lcobucci\JWT\Token;
 
 use DateTimeInterface;
-use Lcobucci\JWT\UnencryptedToken;
+use Lcobucci\JWT\Token as TokenInterface;
 
 use function in_array;
 
-final class Plain implements UnencryptedToken
+final class Plain implements TokenInterface
 {
     private DataSet $headers;
     private DataSet $claims;

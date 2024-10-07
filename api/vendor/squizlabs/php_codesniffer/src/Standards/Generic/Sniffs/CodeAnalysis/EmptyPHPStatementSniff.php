@@ -2,12 +2,12 @@
 /**
  * Checks against empty PHP statements.
  *
- * - Check against two semi-colons with no executable code in between.
+ * - Check against two semicolons with no executable code in between.
  * - Check against an empty PHP open - close tag combination.
  *
  * @author    Juliette Reinders Folmer <phpcs_nospam@adviesenzo.nl>
  * @copyright 2017 Juliette Reinders Folmer. All rights reserved.
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Generic\Sniffs\CodeAnalysis;
@@ -23,7 +23,7 @@ class EmptyPHPStatementSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return int[]
+     * @return array<int|string>
      */
     public function register()
     {
@@ -76,7 +76,7 @@ class EmptyPHPStatementSniff implements Sniff
                     return;
                 }
 
-                // Else, it's something like `if (foo) {};` and the semi-colon is not needed.
+                // Else, it's something like `if (foo) {};` and the semicolon is not needed.
             }
 
             if (isset($tokens[$stackPtr]['nested_parenthesis']) === true) {
@@ -91,7 +91,7 @@ class EmptyPHPStatementSniff implements Sniff
             }
 
             $fix = $phpcsFile->addFixableWarning(
-                'Empty PHP statement detected: superfluous semi-colon.',
+                'Empty PHP statement detected: superfluous semicolon.',
                 $stackPtr,
                 'SemicolonWithoutCodeDetected'
             );
@@ -101,7 +101,7 @@ class EmptyPHPStatementSniff implements Sniff
                 if ($tokens[$prevNonEmpty]['code'] === T_OPEN_TAG
                     || $tokens[$prevNonEmpty]['code'] === T_OPEN_TAG_WITH_ECHO
                 ) {
-                    // Check for superfluous whitespace after the semi-colon which will be
+                    // Check for superfluous whitespace after the semicolon which will be
                     // removed as the `<?php ` open tag token already contains whitespace,
                     // either a space or a new line.
                     if ($tokens[($stackPtr + 1)]['code'] === T_WHITESPACE) {

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -13,11 +13,14 @@
 namespace Composer\Repository;
 
 use Composer\Config;
+use Composer\EventDispatcher\EventDispatcher;
 use Composer\IO\IOInterface;
 use Composer\Json\JsonFile;
 use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\Version\VersionGuesser;
 use Composer\Package\Version\VersionParser;
+use Composer\Pcre\Preg;
+use Composer\Util\HttpDownloader;
 use Composer\Util\Platform;
 use Composer\Util\ProcessExecutor;
 use Composer\Util\Filesystem;
@@ -53,6 +56,13 @@ use Composer\Util\Git as GitUtil;
  *             "symlink": false
  *         }
  *     },
+ *     {
+ *         "type": "path",
+ *         "url": "../../relative/path/to/package/",
+ *         "options": {
+ *             "reference": "none"
+ *         }
+ *     },
  * ]
  * @endcode
  *
@@ -78,7 +88,7 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
 
     /**
      * @var mixed[]
-     * @phpstan-var array{url: string, options?: array{symlink?: bool, relative?: bool, versions?: array<string, string>}}
+     * @phpstan-var array{url: string, options?: array{symlink?: bool, reference?: string, relative?: bool, versions?: array<string, string>}}
      */
     private $repoConfig;
 
@@ -88,18 +98,16 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
     private $process;
 
     /**
-     * @var array{symlink?: bool, relative?: bool, versions?: array<string, string>}
+     * @var array{symlink?: bool, reference?: string, relative?: bool, versions?: array<string, string>}
      */
     private $options;
 
     /**
      * Initializes path repository.
      *
-     * @param array       $repoConfig
-     * @param IOInterface $io
-     * @param Config      $config
+     * @param array{url?: string, options?: array{symlink?: bool, reference?: string, relative?: bool, versions?: array<string, string>}} $repoConfig
      */
-    public function __construct(array $repoConfig, IOInterface $io, Config $config)
+    public function __construct(array $repoConfig, IOInterface $io, Config $config, ?HttpDownloader $httpDownloader = null, ?EventDispatcher $dispatcher = null, ?ProcessExecutor $process = null)
     {
         if (!isset($repoConfig['url'])) {
             throw new \RuntimeException('You must specify the `url` configuration for the path repository');
@@ -107,10 +115,10 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
 
         $this->loader = new ArrayLoader(null, true);
         $this->url = Platform::expandPath($repoConfig['url']);
-        $this->process = new ProcessExecutor($io);
+        $this->process = $process ?? new ProcessExecutor($io);
         $this->versionGuesser = new VersionGuesser($config, $this->process, new VersionParser());
         $this->repoConfig = $repoConfig;
-        $this->options = isset($repoConfig['options']) ? $repoConfig['options'] : array();
+        $this->options = $repoConfig['options'] ?? [];
         if (!isset($this->options['relative'])) {
             $filesystem = new Filesystem();
             $this->options['relative'] = !$filesystem->isAbsolutePath($this->url);
@@ -119,12 +127,12 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
         parent::__construct();
     }
 
-    public function getRepoName()
+    public function getRepoName(): string
     {
         return 'path repo ('.Url::sanitize($this->repoConfig['url']).')';
     }
 
-    public function getRepoConfig()
+    public function getRepoConfig(): array
     {
         return $this->repoConfig;
     }
@@ -134,16 +142,16 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
      *
      * This method will basically read the folder and add the found package.
      */
-    protected function initialize()
+    protected function initialize(): void
     {
         parent::initialize();
 
         $urlMatches = $this->getUrlMatches();
 
         if (empty($urlMatches)) {
-            if (preg_match('{[*{}]}', $this->url)) {
+            if (Preg::isMatch('{[*{}]}', $this->url)) {
                 $url = $this->url;
-                while (preg_match('{[*{}]}', $url)) {
+                while (Preg::isMatch('{[*{}]}', $url)) {
                     $url = dirname($url);
                 }
                 // the parent directory before any wildcard exists, so we assume it is correctly configured but simply empty
@@ -165,21 +173,26 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
 
             $json = file_get_contents($composerFilePath);
             $package = JsonFile::parseJson($json, $composerFilePath);
-            $package['dist'] = array(
+            $package['dist'] = [
                 'type' => 'path',
                 'url' => $url,
-                'reference' => sha1($json . serialize($this->options)),
-            );
-            $package['transport-options'] = $this->options;
-            unset($package['transport-options']['versions']);
+            ];
+            $reference = $this->options['reference'] ?? 'auto';
+            if ('none' === $reference) {
+                $package['dist']['reference'] = null;
+            } elseif ('config' === $reference || 'auto' === $reference) {
+                $package['dist']['reference'] = sha1($json . serialize($this->options));
+            }
 
+            // copy symlink/relative options to transport options
+            $package['transport-options'] = array_intersect_key($this->options, ['symlink' => true, 'relative' => true]);
             // use the version provided as option if available
             if (isset($package['name'], $this->options['versions'][$package['name']])) {
                 $package['version'] = $this->options['versions'][$package['name']];
             }
 
             // carry over the root package version if this path repo is in the same git repository as root package
-            if (!isset($package['version']) && ($rootVersion = getenv('COMPOSER_ROOT_VERSION'))) {
+            if (!isset($package['version']) && ($rootVersion = Platform::getEnv('COMPOSER_ROOT_VERSION'))) {
                 if (
                     0 === $this->process->execute('git rev-parse HEAD', $ref1, $path)
                     && 0 === $this->process->execute('git rev-parse HEAD', $ref2)
@@ -190,7 +203,7 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
             }
 
             $output = '';
-            if (is_dir($path . DIRECTORY_SEPARATOR . '.git') && 0 === $this->process->execute('git log -n1 --pretty=%H'.GitUtil::getNoShowSignatureFlag($this->process), $output, $path)) {
+            if ('auto' === $reference && is_dir($path . DIRECTORY_SEPARATOR . '.git') && 0 === $this->process->execute('git log -n1 --pretty=%H'.GitUtil::getNoShowSignatureFlag($this->process), $output, $path)) {
                 $package['dist']['reference'] = trim($output);
             }
 
@@ -205,12 +218,15 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
 
                     $package['version'] = $versionData['pretty_version'];
                 } else {
-                    $package['version'] = 'dev-master';
+                    $package['version'] = 'dev-main';
                 }
             }
 
-            $package = $this->loader->load($package);
-            $this->addPackage($package);
+            try {
+                $this->addPackage($this->loader->load($package));
+            } catch (\Exception $e) {
+                throw new \RuntimeException('Failed loading the package in '.$composerFilePath, 0, $e);
+            }
         }
     }
 
@@ -219,7 +235,7 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
      *
      * @return string[]
      */
-    private function getUrlMatches()
+    private function getUrlMatches(): array
     {
         $flags = GLOB_MARK | GLOB_ONLYDIR;
 
@@ -230,7 +246,7 @@ class PathRepository extends ArrayRepository implements ConfigurableRepositoryIn
         }
 
         // Ensure environment-specific path separators are normalized to URL separators
-        return array_map(function ($val) {
+        return array_map(static function ($val): string {
             return rtrim(str_replace(DIRECTORY_SEPARATOR, '/', $val), '/');
         }, glob($this->url, $flags));
     }

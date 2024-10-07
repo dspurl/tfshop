@@ -42,12 +42,12 @@ class Caster
      *
      * @param bool $hasDebugInfo Whether the __debugInfo method exists on $obj or not
      */
-    public static function castObject(object $obj, string $class, bool $hasDebugInfo = false, string $debugClass = null): array
+    public static function castObject(object $obj, string $class, bool $hasDebugInfo = false, ?string $debugClass = null): array
     {
         if ($hasDebugInfo) {
             try {
                 $debugInfo = $obj->__debugInfo();
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
                 // ignore failing __debugInfo()
                 $hasDebugInfo = false;
             }
@@ -115,7 +115,7 @@ class Caster
      * @param array    $a                The array containing the properties to filter
      * @param int      $filter           A bit field of Caster::EXCLUDE_* constants specifying which properties to filter out
      * @param string[] $listedProperties List of properties to exclude when Caster::EXCLUDE_VERBOSE is set, and to preserve when Caster::EXCLUDE_NOT_IMPORTANT is set
-     * @param int      &$count           Set to the number of removed properties
+     * @param int|null &$count           Set to the number of removed properties
      */
     public static function filter(array $a, int $filter, array $listedProperties = [], ?int &$count = 0): array
     {

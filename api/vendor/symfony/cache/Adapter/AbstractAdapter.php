@@ -25,13 +25,13 @@ use Symfony\Contracts\Cache\CacheInterface;
  */
 abstract class AbstractAdapter implements AdapterInterface, CacheInterface, LoggerAwareInterface, ResettableInterface
 {
+    use AbstractAdapterTrait;
+    use ContractsTrait;
+
     /**
      * @internal
      */
     protected const NS_SEPARATOR = ':';
-
-    use AbstractAdapterTrait;
-    use ContractsTrait;
 
     private static $apcuSupported;
     private static $phpFilesSupported;
@@ -52,7 +52,7 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
                 // Detect wrapped values that encode for their expiry and creation duration
                 // For compactness, these values are packed in the key of an array using
                 // magic numbers in the form 9D-..-..-..-..-00-..-..-..-5F
-                if (\is_array($v) && 1 === \count($v) && 10 === \strlen($k = (string) key($v)) && "\x9D" === $k[0] && "\0" === $k[5] && "\x5F" === $k[9]) {
+                if (\is_array($v) && 1 === \count($v) && 10 === \strlen($k = (string) array_key_first($v)) && "\x9D" === $k[0] && "\0" === $k[5] && "\x5F" === $k[9]) {
                     $item->value = $v[$k];
                     $v = unpack('Ve/Nc', substr($k, 1, -1));
                     $item->metadata[CacheItem::METADATA_EXPIRY] = $v['e'] + CacheItem::METADATA_EXPIRY_OFFSET;
@@ -74,7 +74,7 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
                     $key = (string) $key;
                     if (null === $item->expiry) {
                         $ttl = 0 < $defaultLifetime ? $defaultLifetime : 0;
-                    } elseif (0 === $item->expiry) {
+                    } elseif (!$item->expiry) {
                         $ttl = 0;
                     } elseif (0 >= $ttl = (int) (0.1 + $item->expiry - $now)) {
                         $expiredIds[] = $getId($key);
@@ -101,7 +101,7 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
      *
      * @return AdapterInterface
      */
-    public static function createSystemCache(string $namespace, int $defaultLifetime, string $version, string $directory, LoggerInterface $logger = null)
+    public static function createSystemCache(string $namespace, int $defaultLifetime, string $version, string $directory, ?LoggerInterface $logger = null)
     {
         $opcache = new PhpFilesAdapter($namespace, $defaultLifetime, $directory, true);
         if (null !== $logger) {
@@ -112,11 +112,11 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
             return $opcache;
         }
 
-        if (\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) && !filter_var(ini_get('apc.enable_cli'), \FILTER_VALIDATE_BOOLEAN)) {
+        if (\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true) && !filter_var(\ini_get('apc.enable_cli'), \FILTER_VALIDATE_BOOLEAN)) {
             return $opcache;
         }
 
-        $apcu = new ApcuAdapter($namespace, (int) $defaultLifetime / 5, $version);
+        $apcu = new ApcuAdapter($namespace, intdiv($defaultLifetime, 5), $version);
         if (null !== $logger) {
             $apcu->setLogger($logger);
         }
@@ -126,17 +126,21 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
 
     public static function createConnection(string $dsn, array $options = [])
     {
-        if (0 === strpos($dsn, 'redis:') || 0 === strpos($dsn, 'rediss:')) {
+        if (str_starts_with($dsn, 'redis:') || str_starts_with($dsn, 'rediss:')) {
             return RedisAdapter::createConnection($dsn, $options);
         }
-        if (0 === strpos($dsn, 'memcached:')) {
+        if (str_starts_with($dsn, 'memcached:')) {
             return MemcachedAdapter::createConnection($dsn, $options);
         }
         if (0 === strpos($dsn, 'couchbase:')) {
-            return CouchbaseBucketAdapter::createConnection($dsn, $options);
+            if (CouchbaseBucketAdapter::isSupported()) {
+                return CouchbaseBucketAdapter::createConnection($dsn, $options);
+            }
+
+            return CouchbaseCollectionAdapter::createConnection($dsn, $options);
         }
 
-        throw new InvalidArgumentException(sprintf('Unsupported DSN: "%s".', $dsn));
+        throw new InvalidArgumentException('Unsupported DSN: it does not start with "redis[s]:", "memcached:" nor "couchbase:".');
     }
 
     /**
@@ -151,7 +155,12 @@ abstract class AbstractAdapter implements AdapterInterface, CacheInterface, Logg
         $retry = $this->deferred = [];
 
         if ($expiredIds) {
-            $this->doDelete($expiredIds);
+            try {
+                $this->doDelete($expiredIds);
+            } catch (\Exception $e) {
+                $ok = false;
+                CacheItem::log($this->logger, 'Failed to delete expired items: '.$e->getMessage(), ['exception' => $e, 'cache-adapter' => get_debug_type($this)]);
+            }
         }
         foreach ($byLifetime as $lifetime => $values) {
             try {

@@ -6,10 +6,12 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Generators;
+
+use DOMNode;
 
 class Text extends Generator
 {
@@ -24,7 +26,7 @@ class Text extends Generator
      *
      * @return void
      */
-    public function processSniff(\DOMNode $doc)
+    public function processSniff(DOMNode $doc)
     {
         $this->printTitle($doc);
 
@@ -48,7 +50,7 @@ class Text extends Generator
      *
      * @return void
      */
-    protected function printTitle(\DOMNode $doc)
+    protected function printTitle(DOMNode $doc)
     {
         $title    = $this->getTitle($doc);
         $standard = $this->ruleset->name;
@@ -69,7 +71,7 @@ class Text extends Generator
      *
      * @return void
      */
-    protected function printTextBlock(\DOMNode $node)
+    protected function printTextBlock(DOMNode $node)
     {
         $text = trim($node->nodeValue);
         $text = str_replace('<em>', '*', $text);
@@ -123,7 +125,7 @@ class Text extends Generator
      *
      * @return void
      */
-    protected function printCodeComparisonBlock(\DOMNode $node)
+    protected function printCodeComparisonBlock(DOMNode $node)
     {
         $codeBlocks = $node->getElementsByTagName('code');
         $first      = trim($codeBlocks->item(0)->nodeValue);

@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\Functions;
@@ -37,7 +37,7 @@ class MultiLineFunctionDeclarationSniff extends PEARFunctionDeclarationSniff
      * @param array                       $tokens      The stack of tokens that make up
      *                                                 the file.
      *
-     * @return void
+     * @return bool
      */
     public function isMultiLineDeclaration($phpcsFile, $stackPtr, $openBracket, $tokens)
     {
@@ -200,7 +200,7 @@ class MultiLineFunctionDeclarationSniff extends PEARFunctionDeclarationSniff
         // The open bracket should be the last thing on the line.
         if ($tokens[$openBracket]['line'] !== $tokens[$closeBracket]['line']) {
             $next = $phpcsFile->findNext(Tokens::$emptyTokens, ($openBracket + 1), null, true);
-            if ($tokens[$next]['line'] !== ($tokens[$openBracket]['line'] + 1)) {
+            if ($tokens[$next]['line'] === $tokens[$openBracket]['line']) {
                 $error = 'The first parameter of a multi-line '.$type.' declaration must be on the line after the opening bracket';
                 $fix   = $phpcsFile->addFixableError($error, $next, $errorPrefix.'FirstParamSpacing');
                 if ($fix === true) {

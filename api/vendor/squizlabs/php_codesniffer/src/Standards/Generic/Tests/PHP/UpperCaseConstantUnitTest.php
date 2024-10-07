@@ -4,14 +4,19 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Generic\Tests\PHP;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
-class UpperCaseConstantUnitTest extends AbstractSniffUnitTest
+/**
+ * Unit test class for the UpperCaseConstant sniff.
+ *
+ * @covers \PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\UpperCaseConstantSniff
+ */
+final class UpperCaseConstantUnitTest extends AbstractSniffUnitTest
 {
 
 
@@ -40,6 +45,13 @@ class UpperCaseConstantUnitTest extends AbstractSniffUnitTest
             48 => 1,
             70 => 1,
             71 => 1,
+            85 => 1,
+            87 => 1,
+            88 => 1,
+            90 => 2,
+            92 => 2,
+            93 => 1,
+            98 => 2,
         ];
 
     }//end getErrorList()

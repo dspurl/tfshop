@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -41,10 +41,8 @@ class ProcessForker extends AbstractListener
 
     /**
      * Process forker is supported if pcntl and posix extensions are available.
-     *
-     * @return bool
      */
-    public static function isSupported()
+    public static function isSupported(): bool
     {
         return self::isPcntlSupported() && !self::disabledPcntlFunctions() && self::isPosixSupported() && !self::disabledPosixFunctions();
     }
@@ -52,7 +50,7 @@ class ProcessForker extends AbstractListener
     /**
      * Verify that all required pcntl functions are, in fact, available.
      */
-    public static function isPcntlSupported()
+    public static function isPcntlSupported(): bool
     {
         foreach (self::$pcntlFunctions as $func) {
             if (!\function_exists($func)) {
@@ -74,7 +72,7 @@ class ProcessForker extends AbstractListener
     /**
      * Verify that all required posix functions are, in fact, available.
      */
-    public static function isPosixSupported()
+    public static function isPosixSupported(): bool
     {
         foreach (self::$posixFunctions as $func) {
             if (!\function_exists($func)) {
@@ -93,13 +91,13 @@ class ProcessForker extends AbstractListener
         return self::checkDisabledFunctions(self::$posixFunctions);
     }
 
-    private static function checkDisabledFunctions(array $functions)
+    private static function checkDisabledFunctions(array $functions): array
     {
         return \array_values(\array_intersect($functions, \array_map('strtolower', \array_map('trim', \explode(',', \ini_get('disable_functions'))))));
     }
 
     /**
-     * Forks into a master and a loop process.
+     * Forks into a main and a loop process.
      *
      * The loop process will handle the evaluation of all instructions, then
      * return its state via a socket upon completion.
@@ -250,10 +248,8 @@ class ProcessForker extends AbstractListener
      * we can.
      *
      * @param array $return
-     *
-     * @return string
      */
-    private function serializeReturn(array $return)
+    private function serializeReturn(array $return): string
     {
         $serializable = [];
 
@@ -268,14 +264,19 @@ class ProcessForker extends AbstractListener
                 continue;
             }
 
+            if (\version_compare(\PHP_VERSION, '8.1', '>=') && $value instanceof \UnitEnum) {
+                // Enums defined in the REPL session can't be unserialized.
+                $ref = new \ReflectionObject($value);
+                if (\strpos($ref->getFileName(), ": eval()'d code") !== false) {
+                    continue;
+                }
+            }
+
             try {
                 @\serialize($value);
                 $serializable[$key] = $value;
             } catch (\Throwable $e) {
                 // we'll just ignore this one...
-            } catch (\Exception $e) {
-                // and this one too...
-                // @todo remove this once we don't support PHP 5.x anymore :)
             }
         }
 

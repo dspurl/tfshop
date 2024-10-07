@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -39,28 +39,28 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
     /** @var Filesystem */
     protected $filesystem;
     /** @var array<string, true> */
-    protected $hasCleanedChanges = array();
+    protected $hasCleanedChanges = [];
 
-    public function __construct(IOInterface $io, Config $config, ProcessExecutor $process = null, Filesystem $fs = null)
+    public function __construct(IOInterface $io, Config $config, ?ProcessExecutor $process = null, ?Filesystem $fs = null)
     {
         $this->io = $io;
         $this->config = $config;
-        $this->process = $process ?: new ProcessExecutor($io);
-        $this->filesystem = $fs ?: new Filesystem($this->process);
+        $this->process = $process ?? new ProcessExecutor($io);
+        $this->filesystem = $fs ?? new Filesystem($this->process);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getInstallationSource()
+    public function getInstallationSource(): string
     {
         return 'source';
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function download(PackageInterface $package, $path, PackageInterface $prevPackage = null)
+    public function download(PackageInterface $package, string $path, ?PackageInterface $prevPackage = null): PromiseInterface
     {
         if (!$package->getSourceReference()) {
             throw new \InvalidArgumentException('Package '.$package->getPrettyName().' is missing reference information');
@@ -87,13 +87,13 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
             }
         }
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function prepare($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
+    public function prepare(string $type, PackageInterface $package, string $path, ?PackageInterface $prevPackage = null): PromiseInterface
     {
         if ($type === 'update') {
             $this->cleanChanges($prevPackage, $path, true);
@@ -104,26 +104,26 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
             $this->cleanChanges($package, $path, false);
         }
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function cleanup($type, PackageInterface $package, $path, PackageInterface $prevPackage = null)
+    public function cleanup(string $type, PackageInterface $package, string $path, ?PackageInterface $prevPackage = null): PromiseInterface
     {
         if ($type === 'update' && isset($this->hasCleanedChanges[$prevPackage->getUniqueName()])) {
             $this->reapplyChanges($path);
             unset($this->hasCleanedChanges[$prevPackage->getUniqueName()]);
         }
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function install(PackageInterface $package, $path)
+    public function install(PackageInterface $package, string $path): PromiseInterface
     {
         if (!$package->getSourceReference()) {
             throw new \InvalidArgumentException('Package '.$package->getPrettyName().' is missing reference information');
@@ -152,13 +152,13 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
             }
         }
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function update(PackageInterface $initial, PackageInterface $target, $path)
+    public function update(PackageInterface $initial, PackageInterface $target, string $path): PromiseInterface
     {
         if (!$target->getSourceReference()) {
             throw new \InvalidArgumentException('Package '.$target->getPrettyName().' is missing reference information');
@@ -194,13 +194,13 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
             $message = 'Pulling in changes:';
             $logs = $this->getCommitLogs($initial->getSourceReference(), $target->getSourceReference(), $path);
 
-            if (!trim($logs)) {
+            if ('' === trim($logs)) {
                 $message = 'Rolling back changes:';
                 $logs = $this->getCommitLogs($target->getSourceReference(), $initial->getSourceReference(), $path);
             }
 
-            if (trim($logs)) {
-                $logs = implode("\n", array_map(function ($line) {
+            if ('' !== trim($logs)) {
+                $logs = implode("\n", array_map(static function ($line): string {
                     return '      ' . $line;
                 }, explode("\n", $logs)));
 
@@ -216,19 +216,19 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
             throw $exception;
         }
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function remove(PackageInterface $package, $path)
+    public function remove(PackageInterface $package, string $path): PromiseInterface
     {
         $this->io->writeError("  - " . UninstallOperation::format($package));
 
         $promise = $this->filesystem->removeDirectoryAsync($path);
 
-        return $promise->then(function ($result) use ($path) {
+        return $promise->then(static function (bool $result) use ($path) {
             if (!$result) {
                 throw new \RuntimeException('Could not completely delete '.$path.', aborting.');
             }
@@ -236,9 +236,9 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getVcsReference(PackageInterface $package, $path)
+    public function getVcsReference(PackageInterface $package, string $path): ?string
     {
         $parser = new VersionParser;
         $guesser = new VersionGuesser($this->config, $this->process, $parser);
@@ -255,29 +255,28 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
     /**
      * Prompt the user to check if changes should be stashed/removed or the operation aborted
      *
-     * @param  PackageInterface  $package
-     * @param  string            $path
      * @param  bool              $update  if true (update) the changes can be stashed and reapplied after an update,
      *                                    if false (remove) the changes should be assumed to be lost if the operation is not aborted
+     *
      * @throws \RuntimeException in case the operation must be aborted
+     * @phpstan-return PromiseInterface<void|null>
      */
-    protected function cleanChanges(PackageInterface $package, $path, $update)
+    protected function cleanChanges(PackageInterface $package, string $path, bool $update): PromiseInterface
     {
         // the default implementation just fails if there are any changes, override in child classes to provide stash-ability
         if (null !== $this->getLocalChanges($package, $path)) {
             throw new \RuntimeException('Source directory ' . $path . ' has uncommitted changes.');
         }
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
      * Reapply previously stashes changes if applicable, only called after an update (regardless if successful or not)
      *
-     * @param  string            $path
      * @throws \RuntimeException in case the operation must be aborted or the patch does not apply cleanly
      */
-    protected function reapplyChanges($path)
+    protected function reapplyChanges(string $path): void
     {
     }
 
@@ -288,10 +287,9 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
      * @param string                $path        download path
      * @param string                $url         package url
      * @param PackageInterface|null $prevPackage previous package (in case of an update)
-     *
-     * @return PromiseInterface|null
+     * @phpstan-return PromiseInterface<void|null>
      */
-    abstract protected function doDownload(PackageInterface $package, $path, $url, PackageInterface $prevPackage = null);
+    abstract protected function doDownload(PackageInterface $package, string $path, string $url, ?PackageInterface $prevPackage = null): PromiseInterface;
 
     /**
      * Downloads specific package into specific folder.
@@ -299,10 +297,9 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
      * @param PackageInterface $package package instance
      * @param string           $path    download path
      * @param string           $url     package url
-     *
-     * @return PromiseInterface|null
+     * @phpstan-return PromiseInterface<void|null>
      */
-    abstract protected function doInstall(PackageInterface $package, $path, $url);
+    abstract protected function doInstall(PackageInterface $package, string $path, string $url): PromiseInterface;
 
     /**
      * Updates specific package in specific folder from initial to target version.
@@ -311,10 +308,9 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
      * @param PackageInterface $target  updated package
      * @param string           $path    download path
      * @param string           $url     package url
-     *
-     * @return PromiseInterface|null
+     * @phpstan-return PromiseInterface<void|null>
      */
-    abstract protected function doUpdate(PackageInterface $initial, PackageInterface $target, $path, $url);
+    abstract protected function doUpdate(PackageInterface $initial, PackageInterface $target, string $path, string $url): PromiseInterface;
 
     /**
      * Fetches the commit logs between two commits
@@ -322,23 +318,21 @@ abstract class VcsDownloader implements DownloaderInterface, ChangeReportInterfa
      * @param  string $fromReference the source reference
      * @param  string $toReference   the target reference
      * @param  string $path          the package path
-     * @return string
      */
-    abstract protected function getCommitLogs($fromReference, $toReference, $path);
+    abstract protected function getCommitLogs(string $fromReference, string $toReference, string $path): string;
 
     /**
      * Checks if VCS metadata repository has been initialized
      * repository example: .git|.svn|.hg
-     *
-     * @param  string $path
-     * @return bool
      */
-    abstract protected function hasMetadataRepository($path);
+    abstract protected function hasMetadataRepository(string $path): bool;
 
     /**
+     * @param string[] $urls
+     *
      * @return string[]
      */
-    private function prepareUrls(array $urls)
+    private function prepareUrls(array $urls): array
     {
         foreach ($urls as $index => $url) {
             if (Filesystem::isLocalPath($url)) {

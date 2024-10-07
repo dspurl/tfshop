@@ -9,7 +9,7 @@
  * @author    Johann-Peter Hartmann <hartmann@mayflower.de>
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2007-2014 Mayflower GmbH
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Generic\Sniffs\Metrics;
@@ -38,7 +38,7 @@ class CyclomaticComplexitySniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function register()
     {
@@ -71,15 +71,19 @@ class CyclomaticComplexitySniff implements Sniff
 
         // Predicate nodes for PHP.
         $find = [
-            T_CASE    => true,
-            T_DEFAULT => true,
-            T_CATCH   => true,
-            T_IF      => true,
-            T_FOR     => true,
-            T_FOREACH => true,
-            T_WHILE   => true,
-            T_DO      => true,
-            T_ELSEIF  => true,
+            T_CASE                     => true,
+            T_DEFAULT                  => true,
+            T_CATCH                    => true,
+            T_IF                       => true,
+            T_FOR                      => true,
+            T_FOREACH                  => true,
+            T_WHILE                    => true,
+            T_ELSEIF                   => true,
+            T_INLINE_THEN              => true,
+            T_COALESCE                 => true,
+            T_COALESCE_EQUAL           => true,
+            T_MATCH_ARROW              => true,
+            T_NULLSAFE_OBJECT_OPERATOR => true,
         ];
 
         $complexity = 1;

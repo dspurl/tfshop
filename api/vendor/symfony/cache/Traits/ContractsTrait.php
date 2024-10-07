@@ -31,7 +31,7 @@ trait ContractsTrait
         doGet as private contractsGet;
     }
 
-    private $callbackWrapper = [LockRegistry::class, 'compute'];
+    private $callbackWrapper;
     private $computing = [];
 
     /**
@@ -41,15 +41,23 @@ trait ContractsTrait
      */
     public function setCallbackWrapper(?callable $callbackWrapper): callable
     {
+        if (!isset($this->callbackWrapper)) {
+            $this->callbackWrapper = \Closure::fromCallable([LockRegistry::class, 'compute']);
+
+            if (\in_array(\PHP_SAPI, ['cli', 'phpdbg'], true)) {
+                $this->setCallbackWrapper(null);
+            }
+        }
+
         $previousWrapper = $this->callbackWrapper;
-        $this->callbackWrapper = $callbackWrapper ?? function (callable $callback, ItemInterface $item, bool &$save, CacheInterface $pool, \Closure $setMetadata, ?LoggerInterface $logger) {
+        $this->callbackWrapper = $callbackWrapper ?? static function (callable $callback, ItemInterface $item, bool &$save, CacheInterface $pool, \Closure $setMetadata, ?LoggerInterface $logger) {
             return $callback($item, $save);
         };
 
         return $previousWrapper;
     }
 
-    private function doGet(AdapterInterface $pool, string $key, callable $callback, ?float $beta, array &$metadata = null)
+    private function doGet(AdapterInterface $pool, string $key, callable $callback, ?float $beta, ?array &$metadata = null)
     {
         if (0 > $beta = $beta ?? 1.0) {
             throw new InvalidArgumentException(sprintf('Argument "$beta" provided to "%s::get()" must be a positive number, %f given.', static::class, $beta));
@@ -81,6 +89,10 @@ trait ContractsTrait
 
             $this->computing[$key] = $key;
             $startTime = microtime(true);
+
+            if (!isset($this->callbackWrapper)) {
+                $this->setCallbackWrapper($this->setCallbackWrapper(null));
+            }
 
             try {
                 $value = ($this->callbackWrapper)($callback, $item, $save, $pool, function (CacheItem $item) use ($setMetadata, $startTime, &$metadata) {

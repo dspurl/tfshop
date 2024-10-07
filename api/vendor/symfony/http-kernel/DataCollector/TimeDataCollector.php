@@ -27,16 +27,17 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
     private $kernel;
     private $stopwatch;
 
-    public function __construct(KernelInterface $kernel = null, Stopwatch $stopwatch = null)
+    public function __construct(?KernelInterface $kernel = null, ?Stopwatch $stopwatch = null)
     {
         $this->kernel = $kernel;
         $this->stopwatch = $stopwatch;
+        $this->data = ['events' => [], 'stopwatch_installed' => false, 'start_time' => 0];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function collect(Request $request, Response $response, \Throwable $exception = null)
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null)
     {
         if (null !== $this->kernel) {
             $startTime = $this->kernel->getStartTime();
@@ -57,7 +58,7 @@ class TimeDataCollector extends DataCollector implements LateDataCollectorInterf
      */
     public function reset()
     {
-        $this->data = [];
+        $this->data = ['events' => [], 'stopwatch_installed' => false, 'start_time' => 0];
 
         if (null !== $this->stopwatch) {
             $this->stopwatch->reset();

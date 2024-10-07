@@ -11,9 +11,7 @@ use Doctrine\Inflector\Rules\Word;
 
 class Inflectible
 {
-    /**
-     * @return Transformation[]
-     */
+    /** @return Transformation[] */
     public static function getSingular(): iterable
     {
         yield new Transformation(new Pattern('(s)tatuses$'), '\1\2tatus');
@@ -49,19 +47,19 @@ class Inflectible
         yield new Transformation(new Pattern('(analy|diagno|^ba|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$'), '\1\2sis');
         yield new Transformation(new Pattern('(tax)a$'), '\1on');
         yield new Transformation(new Pattern('(c)riteria$'), '\1riterion');
-        yield new Transformation(new Pattern('([ti])a$'), '\1um');
+        yield new Transformation(new Pattern('([ti])a(?<!regatta)$'), '\1um');
         yield new Transformation(new Pattern('(p)eople$'), '\1\2erson');
         yield new Transformation(new Pattern('(m)en$'), '\1an');
         yield new Transformation(new Pattern('(c)hildren$'), '\1\2hild');
         yield new Transformation(new Pattern('(f)eet$'), '\1oot');
         yield new Transformation(new Pattern('(n)ews$'), '\1\2ews');
         yield new Transformation(new Pattern('eaus$'), 'eau');
+        yield new Transformation(new Pattern('^tights$'), 'tights');
+        yield new Transformation(new Pattern('^shorts$'), 'shorts');
         yield new Transformation(new Pattern('s$'), '');
     }
 
-    /**
-     * @return Transformation[]
-     */
+    /** @return Transformation[] */
     public static function getPlural(): iterable
     {
         yield new Transformation(new Pattern('(s)tatus$'), '\1\2tatuses');
@@ -91,21 +89,23 @@ class Inflectible
         yield new Transformation(new Pattern('$'), 's');
     }
 
-    /**
-     * @return Substitution[]
-     */
+    /** @return Substitution[] */
     public static function getIrregular(): iterable
     {
         yield new Substitution(new Word('atlas'), new Word('atlases'));
+        yield new Substitution(new Word('axis'), new Word('axes'));
         yield new Substitution(new Word('axe'), new Word('axes'));
         yield new Substitution(new Word('beef'), new Word('beefs'));
+        yield new Substitution(new Word('blouse'), new Word('blouses'));
         yield new Substitution(new Word('brother'), new Word('brothers'));
         yield new Substitution(new Word('cafe'), new Word('cafes'));
+        yield new Substitution(new Word('cave'), new Word('caves'));
         yield new Substitution(new Word('chateau'), new Word('chateaux'));
         yield new Substitution(new Word('niveau'), new Word('niveaux'));
         yield new Substitution(new Word('child'), new Word('children'));
         yield new Substitution(new Word('canvas'), new Word('canvases'));
         yield new Substitution(new Word('cookie'), new Word('cookies'));
+        yield new Substitution(new Word('brownie'), new Word('brownies'));
         yield new Substitution(new Word('corpus'), new Word('corpuses'));
         yield new Substitution(new Word('cow'), new Word('cows'));
         yield new Substitution(new Word('criterion'), new Word('criteria'));
@@ -113,6 +113,7 @@ class Inflectible
         yield new Substitution(new Word('demo'), new Word('demos'));
         yield new Substitution(new Word('domino'), new Word('dominoes'));
         yield new Substitution(new Word('echo'), new Word('echoes'));
+        yield new Substitution(new Word('epoch'), new Word('epochs'));
         yield new Substitution(new Word('foot'), new Word('feet'));
         yield new Substitution(new Word('fungus'), new Word('fungi'));
         yield new Substitution(new Word('ganglion'), new Word('ganglions'));
@@ -151,6 +152,7 @@ class Inflectible
         yield new Substitution(new Word('runner-up'), new Word('runners-up'));
         yield new Substitution(new Word('safe'), new Word('safes'));
         yield new Substitution(new Word('sex'), new Word('sexes'));
+        yield new Substitution(new Word('sieve'), new Word('sieves'));
         yield new Substitution(new Word('soliloquy'), new Word('soliloquies'));
         yield new Substitution(new Word('son-in-law'), new Word('sons-in-law'));
         yield new Substitution(new Word('syllabus'), new Word('syllabi'));

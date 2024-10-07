@@ -26,7 +26,7 @@ class MessageClient extends BaseClient
      *
      * @var array
      */
-    protected $required = ['content', 'media_id', 'title', 'url', 'pic_media_id', 'appid', 'page'];
+    protected $required = ['media_id', 'title', 'url', 'pic_media_id', 'appid', 'page'];
 
     protected $textMessage = [
         'content' => '',
@@ -152,5 +152,20 @@ class MessageClient extends BaseClient
         }
 
         return $params;
+    }
+
+    /**
+     * 企业发表内容到客户的朋友圈
+     *
+     * @see https://developer.work.weixin.qq.com/document/path/95094
+     *
+     * @return array|\EasyWeChat\Kernel\Support\Collection|object|\Psr\Http\Message\ResponseInterface|string
+     *
+     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * @throws \GuzzleHttp\Exception\GuzzleException
+     */
+    public function moments(array $msg)
+    {
+        return $this->httpPostJson('cgi-bin/externalcontact/add_moment_task', $msg);
     }
 }

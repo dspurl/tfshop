@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -14,6 +14,7 @@ namespace Composer\Repository\Vcs;
 
 use Composer\Cache;
 use Composer\Config;
+use Composer\Pcre\Preg;
 use Composer\Util\ProcessExecutor;
 use Composer\Util\Filesystem;
 use Composer\IO\IOInterface;
@@ -23,9 +24,9 @@ use Composer\IO\IOInterface;
  */
 class FossilDriver extends VcsDriver
 {
-    /** @var array<string, string> Map of tag name to identifier */
+    /** @var array<int|string, string> Map of tag name to identifier */
     protected $tags;
-    /** @var array<string, string> Map of branch name to identifier */
+    /** @var array<int|string, string> Map of branch name to identifier */
     protected $branches;
     /** @var ?string */
     protected $rootIdentifier = null;
@@ -35,9 +36,9 @@ class FossilDriver extends VcsDriver
     protected $checkoutDir;
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function initialize()
+    public function initialize(): void
     {
         // Make sure fossil is installed and reachable.
         $this->checkFossil();
@@ -54,7 +55,7 @@ class FossilDriver extends VcsDriver
                 throw new \RuntimeException('FossilDriver requires a usable cache directory, and it looks like you set it to be disabled');
             }
 
-            $localName = preg_replace('{[^a-z0-9]}i', '-', $this->url);
+            $localName = Preg::replace('{[^a-z0-9]}i', '-', $this->url);
             $this->repoFile = $this->config->get('cache-repo-dir') . '/' . $localName . '.fossil';
             $this->checkoutDir = $this->config->get('cache-vcs-dir') . '/' . $localName . '/';
 
@@ -68,7 +69,7 @@ class FossilDriver extends VcsDriver
     /**
      * Check that fossil can be invoked via command line.
      */
-    protected function checkFossil()
+    protected function checkFossil(): void
     {
         if (0 !== $this->process->execute('fossil version', $ignoredOutput)) {
             throw new \RuntimeException("fossil was not found, check that it is installed and in your PATH env.\n\n" . $this->process->getErrorOutput());
@@ -78,7 +79,7 @@ class FossilDriver extends VcsDriver
     /**
      * Clone or update existing local fossil repository.
      */
-    protected function updateLocalRepo()
+    protected function updateLocalRepo(): void
     {
         $fs = new Filesystem();
         $fs->ensureDirectoryExists($this->checkoutDir);
@@ -114,9 +115,9 @@ class FossilDriver extends VcsDriver
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getRootIdentifier()
+    public function getRootIdentifier(): string
     {
         if (null === $this->rootIdentifier) {
             $this->rootIdentifier = 'trunk';
@@ -126,33 +127,33 @@ class FossilDriver extends VcsDriver
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getUrl()
+    public function getUrl(): string
     {
         return $this->url;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getSource($identifier)
+    public function getSource(string $identifier): array
     {
-        return array('type' => 'fossil', 'url' => $this->getUrl(), 'reference' => $identifier);
+        return ['type' => 'fossil', 'url' => $this->getUrl(), 'reference' => $identifier];
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getDist($identifier)
+    public function getDist(string $identifier): ?array
     {
         return null;
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getFileContent($file, $identifier)
+    public function getFileContent(string $file, string $identifier): ?string
     {
         $command = sprintf('fossil cat -r %s -- %s', ProcessExecutor::escape($identifier), ProcessExecutor::escape($file));
         $this->process->execute($command, $content, $this->checkoutDir);
@@ -165,23 +166,23 @@ class FossilDriver extends VcsDriver
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritDoc
      */
-    public function getChangeDate($identifier)
+    public function getChangeDate(string $identifier): ?\DateTimeImmutable
     {
         $this->process->execute('fossil finfo -b -n 1 composer.json', $output, $this->checkoutDir);
-        list(, $date) = explode(' ', trim($output), 3);
+        [, $date] = explode(' ', trim($output), 3);
 
-        return new \DateTime($date, new \DateTimeZone('UTC'));
+        return new \DateTimeImmutable($date, new \DateTimeZone('UTC'));
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getTags()
+    public function getTags(): array
     {
         if (null === $this->tags) {
-            $tags = array();
+            $tags = [];
 
             $this->process->execute('fossil tag list', $output, $this->checkoutDir);
             foreach ($this->process->splitLines($output) as $tag) {
@@ -195,16 +196,16 @@ class FossilDriver extends VcsDriver
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getBranches()
+    public function getBranches(): array
     {
         if (null === $this->branches) {
-            $branches = array();
+            $branches = [];
 
             $this->process->execute('fossil branch list', $output, $this->checkoutDir);
             foreach ($this->process->splitLines($output) as $branch) {
-                $branch = trim(preg_replace('/^\*/', '', trim($branch)));
+                $branch = trim(Preg::replace('/^\*/', '', trim($branch)));
                 $branches[$branch] = $branch;
             }
 
@@ -215,15 +216,15 @@ class FossilDriver extends VcsDriver
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public static function supports(IOInterface $io, Config $config, $url, $deep = false)
+    public static function supports(IOInterface $io, Config $config, string $url, bool $deep = false): bool
     {
-        if (preg_match('#(^(?:https?|ssh)://(?:[^@]@)?(?:chiselapp\.com|fossil\.))#i', $url)) {
+        if (Preg::isMatch('#(^(?:https?|ssh)://(?:[^@]@)?(?:chiselapp\.com|fossil\.))#i', $url)) {
             return true;
         }
 
-        if (preg_match('!/fossil/|\.fossil!', $url)) {
+        if (Preg::isMatch('!/fossil/|\.fossil!', $url)) {
             return true;
         }
 

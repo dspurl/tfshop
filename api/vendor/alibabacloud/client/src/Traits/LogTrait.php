@@ -55,7 +55,7 @@ trait LogTrait
         if (PHP_VERSION_ID < 70100) {
             self::$ts = DateTime::createFromFormat('U.u', sprintf('%.6F', microtime(true)), $timezone);
         } else {
-            self::$ts = new DateTime(null, $timezone);
+            self::$ts = new DateTime('now', $timezone);
         }
     }
 

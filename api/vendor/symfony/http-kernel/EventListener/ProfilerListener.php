@@ -15,6 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestMatcherInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\HttpFoundation\Session\Session;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\TerminateEvent;
@@ -47,7 +48,7 @@ class ProfilerListener implements EventSubscriberInterface
      * @param bool $onlyException    True if the profiler only collects data when an exception occurs, false otherwise
      * @param bool $onlyMainRequests True if the profiler only collects data when the request is the main request, false otherwise
      */
-    public function __construct(Profiler $profiler, RequestStack $requestStack, RequestMatcherInterface $matcher = null, bool $onlyException = false, bool $onlyMainRequests = false, string $collectParameter = null)
+    public function __construct(Profiler $profiler, RequestStack $requestStack, ?RequestMatcherInterface $matcher = null, bool $onlyException = false, bool $onlyMainRequests = false, ?string $collectParameter = null)
     {
         $this->profiler = $profiler;
         $this->matcher = $matcher;
@@ -96,8 +97,21 @@ class ProfilerListener implements EventSubscriberInterface
             return;
         }
 
-        if (!$profile = $this->profiler->collect($request, $event->getResponse(), $exception)) {
-            return;
+        $session = !$request->attributes->getBoolean('_stateless') && $request->hasPreviousSession() && $request->hasSession() ? $request->getSession() : null;
+
+        if ($session instanceof Session) {
+            $usageIndexValue = $usageIndexReference = &$session->getUsageIndex();
+            $usageIndexReference = \PHP_INT_MIN;
+        }
+
+        try {
+            if (!$profile = $this->profiler->collect($request, $event->getResponse(), $exception)) {
+                return;
+            }
+        } finally {
+            if ($session instanceof Session) {
+                $usageIndexReference = $usageIndexValue;
+            }
         }
 
         $this->profiles[$request] = $profile;

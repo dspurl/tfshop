@@ -34,7 +34,7 @@ abstract class AbstractSurrogateFragmentRenderer extends RoutableFragmentRendere
      *
      * @param FragmentRendererInterface $inlineStrategy The inline strategy to use when the surrogate is not supported
      */
-    public function __construct(SurrogateInterface $surrogate = null, FragmentRendererInterface $inlineStrategy, UriSigner $signer = null)
+    public function __construct(?SurrogateInterface $surrogate, FragmentRendererInterface $inlineStrategy, ?UriSigner $signer = null)
     {
         $this->surrogate = $surrogate;
         $this->inlineStrategy = $inlineStrategy;
@@ -89,9 +89,11 @@ abstract class AbstractSurrogateFragmentRenderer extends RoutableFragmentRendere
     private function containsNonScalars(array $values): bool
     {
         foreach ($values as $value) {
-            if (\is_array($value)) {
-                return $this->containsNonScalars($value);
-            } elseif (!is_scalar($value) && null !== $value) {
+            if (\is_scalar($value) || null === $value) {
+                continue;
+            }
+
+            if (!\is_array($value) || $this->containsNonScalars($value)) {
                 return true;
             }
         }

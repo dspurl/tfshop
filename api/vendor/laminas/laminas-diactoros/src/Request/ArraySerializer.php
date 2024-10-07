@@ -23,8 +23,17 @@ final class ArraySerializer
 {
     /**
      * Serialize a request message to an array.
+     *
+     * @return array{
+     *     method: string,
+     *     request_target: string,
+     *     uri: string,
+     *     protocol_version: string,
+     *     headers: array<array<string>>,
+     *     body: string
+     * }
      */
-    public static function toArray(RequestInterface $request) : array
+    public static function toArray(RequestInterface $request): array
     {
         return [
             'method'           => $request->getMethod(),
@@ -39,14 +48,14 @@ final class ArraySerializer
     /**
      * Deserialize a request array to a request instance.
      *
-     * @throws Exception\DeserializationException when cannot deserialize response
+     * @throws Exception\DeserializationException When the response cannot be deserialized.
      */
-    public static function fromArray(array $serializedRequest) : Request
+    public static function fromArray(array $serializedRequest): Request
     {
         try {
-            $uri             = self::getValueFromKey($serializedRequest, 'uri');
-            $method          = self::getValueFromKey($serializedRequest, 'method');
-            $body            = new Stream('php://memory', 'wb+');
+            $uri    = self::getValueFromKey($serializedRequest, 'uri');
+            $method = self::getValueFromKey($serializedRequest, 'method');
+            $body   = new Stream('php://memory', 'wb+');
             $body->write(self::getValueFromKey($serializedRequest, 'body'));
             $headers         = self::getValueFromKey($serializedRequest, 'headers');
             $requestTarget   = self::getValueFromKey($serializedRequest, 'request_target');
@@ -64,7 +73,7 @@ final class ArraySerializer
      * @return mixed
      * @throws Exception\DeserializationException
      */
-    private static function getValueFromKey(array $data, string $key, string $message = null)
+    private static function getValueFromKey(array $data, string $key, ?string $message = null)
     {
         if (isset($data[$key])) {
             return $data[$key];

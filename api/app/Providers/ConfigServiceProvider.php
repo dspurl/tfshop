@@ -46,7 +46,7 @@ class ConfigServiceProvider extends ServiceProvider
     {
         $redis = new RedisService();
 //        $redis->del('config');
-        if (!$redis->get('config')) {
+        if (!$redis->get('config') || config('app.debug')) {
             // 没有缓存说明配置有更新或未生成过
             // 导入配置到数据库
             $count = Config::count();
@@ -57,9 +57,8 @@ class ConfigServiceProvider extends ServiceProvider
             // 获取配置
             $config = Config::where('keys', '!=', null)->select('keys', 'value', 'lang')->get()->toArray();
             $redis->set('config', json_encode($config));
-        } else {
-            $config = collect(json_decode($redis->get('config'), true))->where('lang', App::getLocale())->toArray();
         }
+        $config = collect(json_decode($redis->get('config'), true))->where('lang', App::getLocale())->toArray();
         // 合并配置文件和数据库配置文件
         foreach ($config as $c) {
             config([$c['keys'] => $c['value']]);

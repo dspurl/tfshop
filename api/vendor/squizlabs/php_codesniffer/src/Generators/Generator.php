@@ -7,13 +7,15 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Generators;
 
-use PHP_CodeSniffer\Ruleset;
+use DOMDocument;
+use DOMNode;
 use PHP_CodeSniffer\Autoload;
+use PHP_CodeSniffer\Ruleset;
 
 abstract class Generator
 {
@@ -70,7 +72,7 @@ abstract class Generator
      *
      * @return string
      */
-    protected function getTitle(\DOMNode $doc)
+    protected function getTitle(DOMNode $doc)
     {
         return $doc->getAttribute('title');
 
@@ -90,7 +92,7 @@ abstract class Generator
     public function generate()
     {
         foreach ($this->docFiles as $file) {
-            $doc = new \DOMDocument();
+            $doc = new DOMDocument();
             $doc->load($file);
             $documentation = $doc->getElementsByTagName('documentation')->item(0);
             $this->processSniff($documentation);
@@ -111,7 +113,7 @@ abstract class Generator
      * @return void
      * @see    generate()
      */
-    abstract protected function processSniff(\DOMNode $doc);
+    abstract protected function processSniff(DOMNode $doc);
 
 
 }//end class

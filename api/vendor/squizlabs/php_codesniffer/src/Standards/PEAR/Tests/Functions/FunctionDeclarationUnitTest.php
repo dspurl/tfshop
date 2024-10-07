@@ -4,14 +4,19 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\PEAR\Tests\Functions;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
-class FunctionDeclarationUnitTest extends AbstractSniffUnitTest
+/**
+ * Unit test class for the FunctionDeclaration sniff.
+ *
+ * @covers \PHP_CodeSniffer\Standards\PEAR\Sniffs\Functions\FunctionDeclarationSniff
+ */
+final class FunctionDeclarationUnitTest extends AbstractSniffUnitTest
 {
 
 
@@ -25,10 +30,11 @@ class FunctionDeclarationUnitTest extends AbstractSniffUnitTest
      *
      * @return array<int, int>
      */
-    public function getErrorList($testFile='FunctionDeclarationUnitTest.inc')
+    public function getErrorList($testFile='')
     {
-        if ($testFile === 'FunctionDeclarationUnitTest.inc') {
-            $errors = [
+        switch ($testFile) {
+        case 'FunctionDeclarationUnitTest.1.inc':
+            return [
                 3   => 1,
                 4   => 1,
                 5   => 1,
@@ -82,9 +88,30 @@ class FunctionDeclarationUnitTest extends AbstractSniffUnitTest
                 309 => 1,
                 313 => 1,
                 314 => 1,
+                350 => 1,
+                351 => 1,
+                352 => 1,
+                353 => 1,
+                361 => 1,
+                362 => 1,
+                363 => 1,
+                364 => 1,
+                365 => 1,
+                366 => 1,
+                367 => 1,
+                368 => 1,
+                369 => 1,
+                370 => 1,
+                371 => 1,
+                402 => 1,
+                406 => 1,
+                475 => 1,
+                483 => 1,
+                490 => 2,
             ];
-        } else {
-            $errors = [
+
+        case 'FunctionDeclarationUnitTest.js':
+            return [
                 3  => 1,
                 4  => 1,
                 5  => 1,
@@ -96,9 +123,10 @@ class FunctionDeclarationUnitTest extends AbstractSniffUnitTest
                 41 => 1,
                 48 => 1,
             ];
-        }//end if
 
-        return $errors;
+        default:
+            return [];
+        }//end switch
 
     }//end getErrorList()
 

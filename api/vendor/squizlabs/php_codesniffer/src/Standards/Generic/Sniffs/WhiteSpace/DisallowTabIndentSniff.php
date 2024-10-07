@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Generic\Sniffs\WhiteSpace;
@@ -37,11 +37,14 @@ class DisallowTabIndentSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function register()
     {
-        return [T_OPEN_TAG];
+        return [
+            T_OPEN_TAG,
+            T_OPEN_TAG_WITH_ECHO,
+        ];
 
     }//end register()
 
@@ -53,7 +56,7 @@ class DisallowTabIndentSniff implements Sniff
      * @param int                         $stackPtr  The position of the current token in
      *                                               the stack passed in $tokens.
      *
-     * @return void
+     * @return int
      */
     public function process(File $phpcsFile, $stackPtr)
     {
@@ -73,6 +76,8 @@ class DisallowTabIndentSniff implements Sniff
             T_DOC_COMMENT_WHITESPACE => true,
             T_DOC_COMMENT_STRING     => true,
             T_COMMENT                => true,
+            T_END_HEREDOC            => true,
+            T_END_NOWDOC             => true,
         ];
 
         for ($i = 0; $i < $phpcsFile->numTokens; $i++) {
@@ -179,7 +184,7 @@ class DisallowTabIndentSniff implements Sniff
         }//end for
 
         // Ignore the rest of the file.
-        return ($phpcsFile->numTokens + 1);
+        return $phpcsFile->numTokens;
 
     }//end process()
 

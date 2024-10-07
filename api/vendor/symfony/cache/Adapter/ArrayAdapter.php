@@ -73,7 +73,7 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
     /**
      * {@inheritdoc}
      */
-    public function get(string $key, callable $callback, float $beta = null, array &$metadata = null)
+    public function get(string $key, callable $callback, ?float $beta = null, ?array &$metadata = null)
     {
         $item = $this->getItem($key);
         $metadata = $item->getMetadata();
@@ -81,7 +81,10 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
         // ArrayAdapter works in memory, we don't care about stampede protection
         if (\INF === $beta || !$item->isHit()) {
             $save = true;
-            $this->save($item->set($callback($item, $save)));
+            $item->set($callback($item, $save));
+            if ($save) {
+                $this->save($item);
+            }
         }
 
         return $item->get();
@@ -190,14 +193,14 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
 
         $now = microtime(true);
 
-        if (0 === $expiry) {
-            $expiry = \PHP_INT_MAX;
-        }
+        if (null !== $expiry) {
+            if (!$expiry) {
+                $expiry = \PHP_INT_MAX;
+            } elseif ($expiry <= $now) {
+                $this->deleteItem($key);
 
-        if (null !== $expiry && $expiry <= $now) {
-            $this->deleteItem($key);
-
-            return true;
+                return true;
+            }
         }
         if ($this->storeSerialized && null === $value = $this->freeze($value, $key)) {
             return false;
@@ -223,7 +226,7 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
         }
 
         $this->values[$key] = $value;
-        $this->expiries[$key] = null !== $expiry ? $expiry : \PHP_INT_MAX;
+        $this->expiries[$key] = $expiry ?? \PHP_INT_MAX;
 
         return true;
     }
@@ -306,7 +309,7 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
         $this->clear();
     }
 
-    private function generateItems(array $keys, $now, $f)
+    private function generateItems(array $keys, float $now, \Closure $f): \Generator
     {
         foreach ($keys as $i => $key) {
             if (!$isHit = isset($this->expiries[$key]) && ($this->expiries[$key] > $now || !$this->deleteItem($key))) {
@@ -336,7 +339,7 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
         }
     }
 
-    private function freeze($value, $key)
+    private function freeze($value, string $key)
     {
         if (null === $value) {
             return 'N;';
@@ -346,7 +349,7 @@ class ArrayAdapter implements AdapterInterface, CacheInterface, LoggerAwareInter
             if ('N;' === $value || (isset($value[2]) && ':' === $value[1])) {
                 return serialize($value);
             }
-        } elseif (!is_scalar($value)) {
+        } elseif (!\is_scalar($value)) {
             try {
                 $serialized = serialize($value);
             } catch (\Exception $e) {

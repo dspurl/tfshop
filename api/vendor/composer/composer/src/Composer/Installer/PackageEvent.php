@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -58,15 +58,9 @@ class PackageEvent extends Event
     /**
      * Constructor.
      *
-     * @param string               $eventName
-     * @param Composer             $composer
-     * @param IOInterface          $io
-     * @param bool                 $devMode
-     * @param RepositoryInterface  $localRepo
      * @param OperationInterface[] $operations
-     * @param OperationInterface   $operation
      */
-    public function __construct($eventName, Composer $composer, IOInterface $io, $devMode, RepositoryInterface $localRepo, array $operations, OperationInterface $operation)
+    public function __construct(string $eventName, Composer $composer, IOInterface $io, bool $devMode, RepositoryInterface $localRepo, array $operations, OperationInterface $operation)
     {
         parent::__construct($eventName);
 
@@ -78,34 +72,22 @@ class PackageEvent extends Event
         $this->operation = $operation;
     }
 
-    /**
-     * @return Composer
-     */
-    public function getComposer()
+    public function getComposer(): Composer
     {
         return $this->composer;
     }
 
-    /**
-     * @return IOInterface
-     */
-    public function getIO()
+    public function getIO(): IOInterface
     {
         return $this->io;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDevMode()
+    public function isDevMode(): bool
     {
         return $this->devMode;
     }
 
-    /**
-     * @return RepositoryInterface
-     */
-    public function getLocalRepo()
+    public function getLocalRepo(): RepositoryInterface
     {
         return $this->localRepo;
     }
@@ -113,17 +95,15 @@ class PackageEvent extends Event
     /**
      * @return OperationInterface[]
      */
-    public function getOperations()
+    public function getOperations(): array
     {
         return $this->operations;
     }
 
     /**
      * Returns the package instance.
-     *
-     * @return OperationInterface
      */
-    public function getOperation()
+    public function getOperation(): OperationInterface
     {
         return $this->operation;
     }

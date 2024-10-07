@@ -64,7 +64,7 @@ trait EndpointTrait
         if (self::resolveHostByStatic($productCode, $global)) {
             return true;
         }
-        $productCode = strtolower($productCode);
+        $productCode = null !== $productCode? strtolower($productCode) : null;
         return (bool)Config::get("endpoints.{$productCode}.{$global}");
     }
 

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -11,6 +11,8 @@
  */
 
 namespace Composer\Util;
+
+use Composer\Pcre\Preg;
 
 /**
  * Platform helper for uniform platform-specific tests.
@@ -25,13 +27,54 @@ class Platform
     private static $isWindowsSubsystemForLinux = null;
 
     /**
-     * putenv() equivalent but updates the runtime global variables too
+     * getcwd() equivalent which always returns a string
      *
-     * @param  string $name
-     * @param  string $value
-     * @return void
+     * @throws \RuntimeException
      */
-    public static function putEnv($name, $value)
+    public static function getCwd(bool $allowEmpty = false): string
+    {
+        $cwd = getcwd();
+
+        // fallback to realpath('') just in case this works but odds are it would break as well if we are in a case where getcwd fails
+        if (false === $cwd) {
+            $cwd = realpath('');
+        }
+
+        // crappy state, assume '' and hopefully relative paths allow things to continue
+        if (false === $cwd) {
+            if ($allowEmpty) {
+                return '';
+            }
+
+            throw new \RuntimeException('Could not determine the current working directory');
+        }
+
+        return $cwd;
+    }
+
+    /**
+     * getenv() equivalent but reads from the runtime global variables first
+     *
+     * @param non-empty-string $name
+     *
+     * @return string|false
+     */
+    public static function getEnv(string $name)
+    {
+        if (array_key_exists($name, $_SERVER)) {
+            return (string) $_SERVER[$name];
+        }
+        if (array_key_exists($name, $_ENV)) {
+            return (string) $_ENV[$name];
+        }
+
+        return getenv($name);
+    }
+
+    /**
+     * putenv() equivalent but updates the runtime global variables too
+     */
+    public static function putEnv(string $name, string $value): void
     {
         $value = (string) $value;
         putenv($name . '=' . $value);
@@ -40,11 +83,8 @@ class Platform
 
     /**
      * putenv('X') equivalent but updates the runtime global variables too
-     *
-     * @param  string $name
-     * @return void
      */
-    public static function clearEnv($name)
+    public static function clearEnv(string $name): void
     {
         putenv($name);
         unset($_SERVER[$name], $_ENV[$name]);
@@ -52,23 +92,23 @@ class Platform
 
     /**
      * Parses tildes and environment variables in paths.
-     *
-     * @param  string $path
-     * @return string
      */
-    public static function expandPath($path)
+    public static function expandPath(string $path): string
     {
-        if (preg_match('#^~[\\/]#', $path)) {
+        if (Preg::isMatch('#^~[\\/]#', $path)) {
             return self::getUserDirectory() . substr($path, 1);
         }
 
-        return preg_replace_callback('#^(\$|(?P<percent>%))(?P<var>\w++)(?(percent)%)(?P<path>.*)#', function ($matches) {
+        return Preg::replaceCallback('#^(\$|(?P<percent>%))(?P<var>\w++)(?(percent)%)(?P<path>.*)#', static function ($matches): string {
+            assert(is_string($matches['var']));
+            assert('' !== $matches['var']);
+
             // Treat HOME as an alias for USERPROFILE on Windows for legacy reasons
-            if (Platform::isWindows() && $matches['var'] == 'HOME') {
-                return (getenv('HOME') ?: getenv('USERPROFILE')) . $matches['path'];
+            if (Platform::isWindows() && $matches['var'] === 'HOME') {
+                return (Platform::getEnv('HOME') ?: Platform::getEnv('USERPROFILE')) . $matches['path'];
             }
 
-            return getenv($matches['var']) . $matches['path'];
+            return Platform::getEnv($matches['var']) . $matches['path'];
         }, $path);
     }
 
@@ -76,13 +116,13 @@ class Platform
      * @throws \RuntimeException If the user home could not reliably be determined
      * @return string            The formal user home as detected from environment parameters
      */
-    public static function getUserDirectory()
+    public static function getUserDirectory(): string
     {
-        if (false !== ($home = getenv('HOME'))) {
+        if (false !== ($home = self::getEnv('HOME'))) {
             return $home;
         }
 
-        if (self::isWindows() && false !== ($home = getenv('USERPROFILE'))) {
+        if (self::isWindows() && false !== ($home = self::getEnv('USERPROFILE'))) {
             return $home;
         }
 
@@ -98,7 +138,7 @@ class Platform
     /**
      * @return bool Whether the host machine is running on the Windows Subsystem for Linux (WSL)
      */
-    public static function isWindowsSubsystemForLinux()
+    public static function isWindowsSubsystemForLinux(): bool
     {
         if (null === self::$isWindowsSubsystemForLinux) {
             self::$isWindowsSubsystemForLinux = false;
@@ -111,8 +151,10 @@ class Platform
             if (
                 !ini_get('open_basedir')
                 && is_readable('/proc/version')
-                && false !== stripos(Silencer::call('file_get_contents', '/proc/version'), 'microsoft')
-                && !file_exists('/.dockerenv') // docker running inside WSL should not be seen as WSL
+                && false !== stripos((string)Silencer::call('file_get_contents', '/proc/version'), 'microsoft')
+                && !file_exists('/.dockerenv') // Docker and Podman running inside WSL should not be seen as WSL
+                && !file_exists('/run/.containerenv')
+                && !file_exists('/var/run/.containerenv')
             ) {
                 return self::$isWindowsSubsystemForLinux = true;
             }
@@ -124,16 +166,15 @@ class Platform
     /**
      * @return bool Whether the host machine is running a Windows OS
      */
-    public static function isWindows()
+    public static function isWindows(): bool
     {
         return \defined('PHP_WINDOWS_VERSION_BUILD');
     }
 
     /**
-     * @param  string $str
      * @return int    return a guaranteed binary length of the string, regardless of silly mbstring configs
      */
-    public static function strlen($str)
+    public static function strlen(string $str): int
     {
         static $useMbString = null;
         if (null === $useMbString) {
@@ -149,17 +190,19 @@ class Platform
 
     /**
      * @param  ?resource $fd Open file descriptor or null to default to STDOUT
-     * @return bool
      */
-    public static function isTty($fd = null)
+    public static function isTty($fd = null): bool
     {
         if ($fd === null) {
             $fd = defined('STDOUT') ? STDOUT : fopen('php://stdout', 'w');
+            if ($fd === false) {
+                return false;
+            }
         }
 
         // detect msysgit/mingw and assume this is a tty because detection
         // does not work correctly, see https://github.com/composer/composer/issues/9690
-        if (in_array(strtoupper(getenv('MSYSTEM') ?: ''), array('MINGW32', 'MINGW64'), true)) {
+        if (in_array(strtoupper(self::getEnv('MSYSTEM') ?: ''), ['MINGW32', 'MINGW64'], true)) {
             return true;
         }
 
@@ -180,9 +223,14 @@ class Platform
     }
 
     /**
-     * @return void
+     * @return bool Whether the current command is for bash completion
      */
-    public static function workaroundFilesystemIssues()
+    public static function isInputCompletionProcess(): bool
+    {
+        return '_complete' === ($_SERVER['argv'][1] ?? null);
+    }
+
+    public static function workaroundFilesystemIssues(): void
     {
         if (self::isVirtualBoxGuest()) {
             usleep(200000);
@@ -193,10 +241,8 @@ class Platform
      * Attempts detection of VirtualBox guest VMs
      *
      * This works based on the process' user being "vagrant", the COMPOSER_RUNTIME_ENV env var being set to "virtualbox", or lsmod showing the virtualbox guest additions are loaded
-     *
-     * @return bool
      */
-    private static function isVirtualBoxGuest()
+    private static function isVirtualBoxGuest(): bool
     {
         if (null === self::$isVirtualBoxGuest) {
             self::$isVirtualBoxGuest = false;
@@ -211,7 +257,7 @@ class Platform
                 }
             }
 
-            if (getenv('COMPOSER_RUNTIME_ENV') === 'virtualbox') {
+            if (self::getEnv('COMPOSER_RUNTIME_ENV') === 'virtualbox') {
                 return self::$isVirtualBoxGuest = true;
             }
 
@@ -228,5 +274,17 @@ class Platform
         }
 
         return self::$isVirtualBoxGuest;
+    }
+
+    /**
+     * @return 'NUL'|'/dev/null'
+     */
+    public static function getDevNull(): string
+    {
+        if (self::isWindows()) {
+            return 'NUL';
+        }
+
+        return '/dev/null';
     }
 }

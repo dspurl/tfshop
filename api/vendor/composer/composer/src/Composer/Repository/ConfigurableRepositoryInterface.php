@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -19,5 +19,8 @@ namespace Composer\Repository;
  */
 interface ConfigurableRepositoryInterface
 {
+    /**
+     * @return mixed[]
+     */
     public function getRepoConfig();
 }

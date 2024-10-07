@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -28,14 +28,15 @@ interface DownloaderInterface
      *
      * @return string "source" or "dist"
      */
-    public function getInstallationSource();
+    public function getInstallationSource(): string;
 
     /**
      * This should do any network-related tasks to prepare for an upcoming install/update
      *
-     * @return PromiseInterface|null
+     * @param  string $path download path
+     * @phpstan-return PromiseInterface<void|null|string>
      */
-    public function download(PackageInterface $package, $path, PackageInterface $prevPackage = null);
+    public function download(PackageInterface $package, string $path, ?PackageInterface $prevPackage = null): PromiseInterface;
 
     /**
      * Do anything that needs to be done between all downloads have been completed and the actual operation is executed
@@ -49,18 +50,18 @@ interface DownloaderInterface
      * @param  PackageInterface      $package     package instance
      * @param  string                $path        download path
      * @param  PackageInterface      $prevPackage previous package instance in case of an update
-     * @return PromiseInterface|null
+     * @phpstan-return PromiseInterface<void|null>
      */
-    public function prepare($type, PackageInterface $package, $path, PackageInterface $prevPackage = null);
+    public function prepare(string $type, PackageInterface $package, string $path, ?PackageInterface $prevPackage = null): PromiseInterface;
 
     /**
      * Installs specific package into specific folder.
      *
      * @param  PackageInterface      $package package instance
      * @param  string                $path    download path
-     * @return PromiseInterface|null
+     * @phpstan-return PromiseInterface<void|null>
      */
-    public function install(PackageInterface $package, $path);
+    public function install(PackageInterface $package, string $path): PromiseInterface;
 
     /**
      * Updates specific package in specific folder from initial to target version.
@@ -68,18 +69,18 @@ interface DownloaderInterface
      * @param  PackageInterface      $initial initial package
      * @param  PackageInterface      $target  updated package
      * @param  string                $path    download path
-     * @return PromiseInterface|null
+     * @phpstan-return PromiseInterface<void|null>
      */
-    public function update(PackageInterface $initial, PackageInterface $target, $path);
+    public function update(PackageInterface $initial, PackageInterface $target, string $path): PromiseInterface;
 
     /**
      * Removes specific package from specific folder.
      *
      * @param  PackageInterface      $package package instance
      * @param  string                $path    download path
-     * @return PromiseInterface|null
+     * @phpstan-return PromiseInterface<void|null>
      */
-    public function remove(PackageInterface $package, $path);
+    public function remove(PackageInterface $package, string $path): PromiseInterface;
 
     /**
      * Do anything to cleanup changes applied in the prepare or install/update/uninstall steps
@@ -92,7 +93,7 @@ interface DownloaderInterface
      * @param  PackageInterface      $package     package instance
      * @param  string                $path        download path
      * @param  PackageInterface      $prevPackage previous package instance in case of an update
-     * @return PromiseInterface|null
+     * @phpstan-return PromiseInterface<void|null>
      */
-    public function cleanup($type, PackageInterface $package, $path, PackageInterface $prevPackage = null);
+    public function cleanup(string $type, PackageInterface $package, string $path, ?PackageInterface $prevPackage = null): PromiseInterface;
 }

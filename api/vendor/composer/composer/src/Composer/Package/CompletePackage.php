@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -19,215 +19,227 @@ namespace Composer\Package;
  */
 class CompletePackage extends Package implements CompletePackageInterface
 {
-    protected $repositories = array();
-    protected $license = array();
-    protected $keywords = array();
-    protected $authors = array();
-    protected $description;
-    protected $homepage;
-    protected $scripts = array();
-    protected $support = array();
-    protected $funding = array();
+    /** @var mixed[] */
+    protected $repositories = [];
+    /** @var string[] */
+    protected $license = [];
+    /** @var string[] */
+    protected $keywords = [];
+    /** @var array<array{name?: string, homepage?: string, email?: string, role?: string}> */
+    protected $authors = [];
+    /** @var ?string */
+    protected $description = null;
+    /** @var ?string */
+    protected $homepage = null;
+    /** @var array<string, string[]> Map of script name to array of handlers */
+    protected $scripts = [];
+    /** @var array{issues?: string, forum?: string, wiki?: string, source?: string, email?: string, irc?: string, docs?: string, rss?: string, chat?: string, security?: string} */
+    protected $support = [];
+    /** @var array<array{url?: string, type?: string}> */
+    protected $funding = [];
+    /** @var bool|string */
     protected $abandoned = false;
-    protected $archiveName;
-    protected $archiveExcludes = array();
+    /** @var ?string */
+    protected $archiveName = null;
+    /** @var string[] */
+    protected $archiveExcludes = [];
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setScripts(array $scripts)
+    public function setScripts(array $scripts): void
     {
         $this->scripts = $scripts;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getScripts()
+    public function getScripts(): array
     {
         return $this->scripts;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setRepositories(array $repositories)
+    public function setRepositories(array $repositories): void
     {
         $this->repositories = $repositories;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getRepositories()
+    public function getRepositories(): array
     {
         return $this->repositories;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setLicense(array $license)
+    public function setLicense(array $license): void
     {
         $this->license = $license;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getLicense()
+    public function getLicense(): array
     {
         return $this->license;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setKeywords(array $keywords)
+    public function setKeywords(array $keywords): void
     {
         $this->keywords = $keywords;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getKeywords()
+    public function getKeywords(): array
     {
         return $this->keywords;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setAuthors(array $authors)
+    public function setAuthors(array $authors): void
     {
         $this->authors = $authors;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getAuthors()
+    public function getAuthors(): array
     {
         return $this->authors;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setDescription($description)
+    public function setDescription(?string $description): void
     {
         $this->description = $description;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setHomepage($homepage)
+    public function setHomepage(?string $homepage): void
     {
         $this->homepage = $homepage;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getHomepage()
+    public function getHomepage(): ?string
     {
         return $this->homepage;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setSupport(array $support)
+    public function setSupport(array $support): void
     {
         $this->support = $support;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getSupport()
+    public function getSupport(): array
     {
         return $this->support;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setFunding(array $funding)
+    public function setFunding(array $funding): void
     {
         $this->funding = $funding;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getFunding()
+    public function getFunding(): array
     {
         return $this->funding;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function isAbandoned()
+    public function isAbandoned(): bool
     {
         return (bool) $this->abandoned;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setAbandoned($abandoned)
+    public function setAbandoned($abandoned): void
     {
         $this->abandoned = $abandoned;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getReplacementPackage()
+    public function getReplacementPackage(): ?string
     {
         return \is_string($this->abandoned) ? $this->abandoned : null;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setArchiveName($name)
+    public function setArchiveName(?string $name): void
     {
         $this->archiveName = $name;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getArchiveName()
+    public function getArchiveName(): ?string
     {
         return $this->archiveName;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setArchiveExcludes(array $excludes)
+    public function setArchiveExcludes(array $excludes): void
     {
         $this->archiveExcludes = $excludes;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getArchiveExcludes()
+    public function getArchiveExcludes(): array
     {
         return $this->archiveExcludes;
     }

@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -32,9 +32,9 @@ class ProcOutputPager extends StreamOutput implements OutputPager
      * Constructor.
      *
      * @param StreamOutput $output
-     * @param string       $cmd    Pager process command (default: 'less -R -S -F -X')
+     * @param string       $cmd    Pager process command (default: 'less -R -F -X')
      */
-    public function __construct(StreamOutput $output, $cmd = 'less -R -S -F -X')
+    public function __construct(StreamOutput $output, string $cmd = 'less -R -F -X')
     {
         $this->stream = $output->getStream();
         $this->cmd = $cmd;
@@ -48,12 +48,13 @@ class ProcOutputPager extends StreamOutput implements OutputPager
      *
      * @throws \RuntimeException When unable to write output (should never happen)
      */
-    public function doWrite($message, $newline)
+    public function doWrite($message, $newline): void
     {
         $pipe = $this->getPipe();
         if (false === @\fwrite($pipe, $message.($newline ? \PHP_EOL : ''))) {
             // @codeCoverageIgnoreStart
             // should never happen
+            $this->close();
             throw new \RuntimeException('Unable to write output');
             // @codeCoverageIgnoreEnd
         }

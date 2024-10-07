@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -90,8 +90,10 @@ HELP
 
     /**
      * {@inheritdoc}
+     *
+     * @return int 0 if everything went fine, or an exit code
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $this->validateOnlyOne($input, ['show', 'head', 'tail']);
         $this->validateOnlyOne($input, ['save', 'replay', 'clear']);
@@ -156,7 +158,7 @@ HELP
      *
      * @return array [ start, end ]
      */
-    private function extractRange($range)
+    private function extractRange(string $range): array
     {
         if (\preg_match('/^\d+$/', $range)) {
             return [$range, $range + 1];
@@ -176,13 +178,13 @@ HELP
     /**
      * Retrieve a slice of the readline history.
      *
-     * @param string $show
-     * @param string $head
-     * @param string $tail
+     * @param string|null $show
+     * @param string|null $head
+     * @param string|null $tail
      *
-     * @return array A slilce of history
+     * @return array A slice of history
      */
-    private function getHistorySlice($show, $head, $tail)
+    private function getHistorySlice($show, $head, $tail): array
     {
         $history = $this->readline->listHistory();
 
@@ -241,7 +243,7 @@ HELP
         $this->readline->clearHistory();
     }
 
-    public static function escape($string)
+    public static function escape(string $string): string
     {
         return OutputFormatter::escape($string);
     }

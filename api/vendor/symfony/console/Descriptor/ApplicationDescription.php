@@ -43,7 +43,7 @@ class ApplicationDescription
      */
     private $aliases;
 
-    public function __construct(Application $application, string $namespace = null, bool $showHidden = false)
+    public function __construct(Application $application, ?string $namespace = null, bool $showHidden = false)
     {
         $this->application = $application;
         $this->namespace = $namespace;
@@ -131,7 +131,7 @@ class ApplicationDescription
         }
 
         if ($namespacedCommands) {
-            ksort($namespacedCommands);
+            ksort($namespacedCommands, \SORT_STRING);
             foreach ($namespacedCommands as $key => $commandsSet) {
                 ksort($commandsSet);
                 $sortedCommands[$key] = $commandsSet;

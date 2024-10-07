@@ -4,6 +4,7 @@
       <router-view :key="key" />
     </keep-alive>
     <router-view v-else :key="key" />
+    <div style="padding: 20px 0; text-align: center; color: #c4c3c3;font-size:14px;">Copyright © 2020 - 至今 <a href="https://www.dswjcms.com" target="_blank">TFSHOP 1.0.1</a></div>
   </section>
 </template>
 <script>

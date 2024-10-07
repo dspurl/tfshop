@@ -1,18 +1,20 @@
 # composer/xdebug-handler
 
-[![packagist](https://img.shields.io/packagist/v/composer/xdebug-handler.svg)](https://packagist.org/packages/composer/xdebug-handler)
-[![Continuous Integration](https://github.com/composer/xdebug-handler/workflows/Continuous%20Integration/badge.svg?branch=main)](https://github.com/composer/xdebug-handler/actions)
+[![packagist](https://img.shields.io/packagist/v/composer/xdebug-handler)](https://packagist.org/packages/composer/xdebug-handler)
+[![Continuous Integration](https://github.com/composer/xdebug-handler/actions/workflows/continuous-integration.yml/badge.svg?branch=main)](https://github.com/composer/xdebug-handler/actions?query=branch:main)
 ![license](https://img.shields.io/github/license/composer/xdebug-handler.svg)
-![php](https://img.shields.io/packagist/php-v/composer/xdebug-handler.svg?colorB=8892BF&label=php)
+![php](https://img.shields.io/packagist/php-v/composer/xdebug-handler?colorB=8892BF)
 
 Restart a CLI process without loading the Xdebug extension, unless `xdebug.mode=off`.
 
 Originally written as part of [composer/composer](https://github.com/composer/composer),
 now extracted and made available as a stand-alone library.
 
-### Version 2
+### Version 3
 
-Support added for Xdebug3. See [UPGRADE](UPGRADE.md) for more information.
+Removed support for legacy PHP versions and added type declarations.
+
+Long term support for version 2 (PHP 5.3.2 - 7.2.4) follows [Composer 2.2 LTS](https://blog.packagist.com/composer-2-2/) policy.
 
 ## Installation
 
@@ -24,7 +26,7 @@ $ composer require composer/xdebug-handler
 
 ## Requirements
 
-* PHP 5.3.2 minimum, although functionality is disabled below PHP 5.4.0. Using the latest PHP version is highly recommended.
+* PHP 7.2.5 minimum, although using the latest PHP version is highly recommended.
 
 ## Basic Usage
 ```php
@@ -49,6 +51,7 @@ The constructor takes a single parameter, `$envPrefix`, which is upper-cased and
 * [Process configuration](#process-configuration)
 * [Troubleshooting](#troubleshooting)
 * [Extending the library](#extending-the-library)
+* [Examples](#examples)
 
 ### How it works
 
@@ -62,23 +65,25 @@ A temporary ini file is created from the loaded (and scanned) ini files, with an
     * The application runs and exits.
 * The main process exits with the exit code from the restarted process.
 
+See [Examples](#examples) for further information.
+
 #### Signal handling
-From PHP 7.1 with the pcntl extension loaded, asynchronous signal handling is automatically enabled. `SIGINT` is set to `SIG_IGN` in the parent
+Asynchronous signal handling is automatically enabled if the pcntl extension is loaded. `SIGINT` is set to `SIG_IGN` in the parent
 process and restored to `SIG_DFL` in the restarted process (if no other handler has been set).
 
-From PHP 7.4 on Windows, `CTRL+C` and `CTRL+BREAK` handling is ignored in the parent process and automatically enabled in the restarted process.
+From PHP 7.4 on Windows, `CTRL+C` and `CTRL+BREAK` handling is automatically enabled in the restarted process and ignored in the parent process.
 
 ### Limitations
 There are a few things to be aware of when running inside a restarted process.
 
 * Extensions set on the command-line will not be loaded.
-* Ini file locations will be reported as per the restart - see [getAllIniFiles()](#getallinifiles).
+* Ini file locations will be reported as per the restart - see [getAllIniFiles()](#getallinifiles-array).
 * Php sub-processes may be loaded with Xdebug enabled - see [Process configuration](#process-configuration).
 
 ### Helper methods
 These static methods provide information from the current process, regardless of whether it has been restarted or not.
 
-#### _getAllIniFiles()_
+#### _getAllIniFiles(): array_
 Returns an array of the original ini file locations. Use this instead of calling `php_ini_loaded_file` and `php_ini_scanned_files`, which will report the wrong values in a restarted process.
 
 ```php
@@ -93,7 +98,7 @@ $scannedInis = $files;
 
 These locations are also available in the `MYAPP_ORIGINAL_INIS` environment variable. This is a path-separated string comprising the location returned from `php_ini_loaded_file`, which could be empty, followed by locations parsed from calling `php_ini_scanned_files`.
 
-#### _getRestartSettings()_
+#### _getRestartSettings(): ?array_
 Returns an array of settings that can be used with PHP [sub-processes](#sub-processes), or null if the process was not restarted.
 
 ```php
@@ -113,43 +118,48 @@ $settings = XdebugHandler::getRestartSettings();
  */
 ```
 
-#### _getSkippedVersion()_
-Returns the Xdebug version string that was skipped by the restart, or an empty value if there was no restart (or Xdebug is still loaded, perhaps by an extending class restarting for a reason other than removing Xdebug).
+#### _getSkippedVersion(): string_
+Returns the Xdebug version string that was skipped by the restart, or an empty string if there was no restart (or Xdebug is still loaded, perhaps by an extending class restarting for a reason other than removing Xdebug).
 
 ```php
 use Composer\XdebugHandler\XdebugHandler;
 
 $version = XdebugHandler::getSkippedVersion();
-# $version: '2.6.0' (for example), or an empty string
+# $version: '3.1.1' (for example), or an empty string
 ```
 
-#### _isXdebugActive()_
+#### _isXdebugActive(): bool_
 Returns true if Xdebug is loaded and is running in an active mode (if it supports modes). Returns false if Xdebug is not loaded, or it is running with `xdebug.mode=off`.
 
 ### Setter methods
 These methods implement a fluent interface and must be called before the main `check()` method.
 
-#### _setLogger($logger)_
+#### _setLogger(LoggerInterface $logger): self_
 Enables the output of status messages to an external PSR3 logger. All messages are reported with either `DEBUG` or `WARNING` log levels. For example (showing the level and message):
 
 ```
+// No restart
+DEBUG    Checking MYAPP_ALLOW_XDEBUG
+DEBUG    The Xdebug extension is loaded (3.1.1) xdebug.mode=off
+DEBUG    No restart (APP_ALLOW_XDEBUG=0) Allowed by xdebug.mode
+
 // Restart overridden
 DEBUG    Checking MYAPP_ALLOW_XDEBUG
-DEBUG    The Xdebug extension is loaded (2.5.0)
+DEBUG    The Xdebug extension is loaded (3.1.1) xdebug.mode=coverage,debug,develop
 DEBUG    No restart (MYAPP_ALLOW_XDEBUG=1)
 
 // Failed restart
 DEBUG    Checking MYAPP_ALLOW_XDEBUG
-DEBUG    The Xdebug extension is loaded (2.5.0)
+DEBUG    The Xdebug extension is loaded (3.1.0)
 WARNING  No restart (Unable to create temp ini file at: ...)
 ```
 
 Status messages can also be output with `XDEBUG_HANDLER_DEBUG`. See [Troubleshooting](#troubleshooting).
 
-#### _setMainScript($script)_
+#### _setMainScript(string $script): self_
 Sets the location of the main script to run in the restart. This is only needed in more esoteric use-cases, or if the `argv[0]` location is inaccessible. The script name `--` is supported for standard input.
 
-#### _setPersistent()_
+#### _setPersistent(): self_
 Configures the restart using [persistent settings](#persistent-settings), so that Xdebug is not loaded in any sub-process.
 
 Use this method if your application invokes one or more PHP sub-process and the Xdebug extension is not needed. This avoids the overhead of implementing specific [sub-process](#sub-processes) strategies.
@@ -193,12 +203,12 @@ Uses environment variables to remove Xdebug from the new process and persist the
 
 >_If the new process calls a PHP sub-process, Xdebug will not be loaded in that sub-process._
 
-This strategy can be used in the restart by calling [setPersistent()](#setpersistent).
+This strategy can be used in the restart by calling [setPersistent()](#setpersistent-self).
 
 #### Sub-processes
 The `PhpConfig` helper class makes it easy to invoke a PHP sub-process (with or without Xdebug loaded), regardless of whether there has been a restart.
 
-Each of its methods returns an array of PHP options (to add to the command-line) and sets up the environment for the required strategy. The [getRestartSettings()](#getrestartsettings) method is used internally.
+Each of its methods returns an array of PHP options (to add to the command-line) and sets up the environment for the required strategy. The [getRestartSettings()](#getrestartsettings-array) method is used internally.
 
 * `useOriginal()` - Xdebug will be loaded in the new process.
 * `useStandard()` - Xdebug will **not** be loaded in the new process - see [standard settings](#standard-settings).
@@ -234,13 +244,13 @@ The following environment settings can be used to troubleshoot unexpected behavi
 ### Extending the library
 The API is defined by classes and their accessible elements that are not annotated as @internal. The main class has two protected methods that can be overridden to provide additional functionality:
 
-#### _requiresRestart($default)_
+#### _requiresRestart(bool $default): bool_
 By default the process will restart if Xdebug is loaded and not running with `xdebug.mode=off`. Extending this method allows an application to decide, by returning a boolean (or equivalent) value.
 It is only called if `MYAPP_ALLOW_XDEBUG` is empty, so it will not be called in the restarted process (where this variable contains internal data), or if the restart has been overridden.
 
-Note that the [setMainScript()](#setmainscriptscript) and [setPersistent()](#setpersistent) setters can be used here, if required.
+Note that the [setMainScript()](#setmainscriptstring-script-self) and [setPersistent()](#setpersistent-self) setters can be used here, if required.
 
-#### _restart($command)_
+#### _restart(array $command): void_
 An application can extend this to modify the temporary ini file, its location given in the `tmpIni` property. New settings can be safely appended to the end of the data, which is `PHP_EOL` terminated.
 
 The `$command` parameter is an array of unescaped command-line arguments that will be used for the new process.
@@ -262,7 +272,7 @@ class MyRestarter extends XdebugHandler
 {
     private $required;
 
-    protected function requiresRestart($default)
+    protected function requiresRestart(bool $default): bool
     {
         if (Command::isHelp()) {
             # No need to disable Xdebug for this
@@ -273,7 +283,7 @@ class MyRestarter extends XdebugHandler
         return $this->required || $default;
     }
 
-    protected function restart($command)
+    protected function restart(array $command): void
     {
         if ($this->required) {
             # Add required ini setting to tmpIni
@@ -286,6 +296,10 @@ class MyRestarter extends XdebugHandler
     }
 }
 ```
+
+### Examples
+The `tests\App` directory contains command-line scripts that demonstrate the internal workings in a variety of scenarios.
+See [Functional Test Scripts](./tests/App/README.md).
 
 ## License
 composer/xdebug-handler is licensed under the MIT License, see the LICENSE file for details.

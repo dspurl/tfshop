@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -25,6 +25,8 @@ interface BinaryPresenceInterface
      * Make sure binaries are installed for a given package.
      *
      * @param PackageInterface $package package instance
+     *
+     * @return void
      */
     public function ensureBinariesPresence(PackageInterface $package);
 }

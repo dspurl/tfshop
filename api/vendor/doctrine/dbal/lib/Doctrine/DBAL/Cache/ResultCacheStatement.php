@@ -13,6 +13,7 @@ use Doctrine\DBAL\FetchMode;
 use InvalidArgumentException;
 use IteratorAggregate;
 use PDO;
+use ReturnTypeWillChange;
 
 use function array_map;
 use function array_merge;
@@ -109,6 +110,7 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
      *
      * @deprecated Use iterateNumeric(), iterateAssociative() or iterateColumn() instead.
      */
+    #[ReturnTypeWillChange]
     public function getIterator()
     {
         $data = $this->fetchAll();
@@ -299,7 +301,7 @@ class ResultCacheStatement implements IteratorAggregate, ResultStatement, Result
      * this behaviour is not guaranteed for all databases and should not be
      * relied on for portable applications.
      *
-     * @return int The number of rows.
+     * @return int|string The number of rows.
      */
     public function rowCount()
     {

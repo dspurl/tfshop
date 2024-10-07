@@ -25,7 +25,7 @@ class ApcuAdapter extends AbstractAdapter
     /**
      * @throws CacheException if APCu is not enabled
      */
-    public function __construct(string $namespace = '', int $defaultLifetime = 0, string $version = null, ?MarshallerInterface $marshaller = null)
+    public function __construct(string $namespace = '', int $defaultLifetime = 0, ?string $version = null, ?MarshallerInterface $marshaller = null)
     {
         if (!static::isSupported()) {
             throw new CacheException('APCu is not enabled.');
@@ -49,7 +49,7 @@ class ApcuAdapter extends AbstractAdapter
 
     public static function isSupported()
     {
-        return \function_exists('apcu_fetch') && filter_var(ini_get('apc.enabled'), \FILTER_VALIDATE_BOOLEAN);
+        return \function_exists('apcu_fetch') && filter_var(\ini_get('apc.enabled'), \FILTER_VALIDATE_BOOLEAN);
     }
 
     /**
@@ -60,7 +60,14 @@ class ApcuAdapter extends AbstractAdapter
         $unserializeCallbackHandler = ini_set('unserialize_callback_func', __CLASS__.'::handleUnserializeCallback');
         try {
             $values = [];
-            foreach (apcu_fetch($ids, $ok) ?: [] as $k => $v) {
+            $ids = array_flip($ids);
+            foreach (apcu_fetch(array_keys($ids), $ok) ?: [] as $k => $v) {
+                if (!isset($ids[$k])) {
+                    // work around https://github.com/krakjoe/apcu/issues/247
+                    $k = key($ids);
+                }
+                unset($ids[$k]);
+
                 if (null !== $v || $ok) {
                     $values[$k] = null !== $this->marshaller ? $this->marshaller->unmarshall($v) : $v;
                 }
@@ -87,8 +94,8 @@ class ApcuAdapter extends AbstractAdapter
      */
     protected function doClear(string $namespace)
     {
-        return isset($namespace[0]) && class_exists(\APCuIterator::class, false) && ('cli' !== \PHP_SAPI || filter_var(ini_get('apc.enable_cli'), \FILTER_VALIDATE_BOOLEAN))
-            ? apcu_delete(new \APCuIterator(sprintf('/^%s/', preg_quote($namespace, '/')), \APC_ITER_KEY))
+        return isset($namespace[0]) && class_exists(\APCUIterator::class, false) && ('cli' !== \PHP_SAPI || filter_var(\ini_get('apc.enable_cli'), \FILTER_VALIDATE_BOOLEAN))
+            ? apcu_delete(new \APCUIterator(sprintf('/^%s/', preg_quote($namespace, '/')), \APC_ITER_KEY))
             : apcu_clear_cache();
     }
 
@@ -122,7 +129,7 @@ class ApcuAdapter extends AbstractAdapter
         } catch (\Throwable $e) {
             if (1 === \count($values)) {
                 // Workaround https://github.com/krakjoe/apcu/issues/170
-                apcu_delete(key($values));
+                apcu_delete(array_key_first($values));
             }
 
             throw $e;

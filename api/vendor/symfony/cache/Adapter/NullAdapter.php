@@ -40,7 +40,7 @@ class NullAdapter implements AdapterInterface, CacheInterface
     /**
      * {@inheritdoc}
      */
-    public function get(string $key, callable $callback, float $beta = null, array &$metadata = null)
+    public function get(string $key, callable $callback, ?float $beta = null, ?array &$metadata = null)
     {
         $save = true;
 
@@ -141,7 +141,7 @@ class NullAdapter implements AdapterInterface, CacheInterface
         return $this->deleteItem($key);
     }
 
-    private function generateItems(array $keys)
+    private function generateItems(array $keys): \Generator
     {
         $f = self::$createCacheItem;
 

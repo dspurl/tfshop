@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\Scope;
@@ -54,17 +54,8 @@ class MethodScopeSniff extends AbstractScopeSniff
             return;
         }
 
-        $modifier = null;
-        for ($i = ($stackPtr - 1); $i > 0; $i--) {
-            if ($tokens[$i]['line'] < $tokens[$stackPtr]['line']) {
-                break;
-            } else if (isset(Tokens::$scopeModifiers[$tokens[$i]['code']]) === true) {
-                $modifier = $i;
-                break;
-            }
-        }
-
-        if ($modifier === null) {
+        $properties = $phpcsFile->getMethodProperties($stackPtr);
+        if ($properties['scope_specified'] === false) {
             $error = 'Visibility must be declared on method "%s"';
             $data  = [$methodName];
             $phpcsFile->addError($error, $stackPtr, 'Missing', $data);

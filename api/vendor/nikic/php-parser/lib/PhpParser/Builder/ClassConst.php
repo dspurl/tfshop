@@ -19,6 +19,8 @@ class ClassConst implements PhpParser\Builder
 
     /** @var Node\AttributeGroup[] */
     protected $attributeGroups = [];
+    /** @var Identifier|Node\Name|Node\ComplexType */
+    protected $type;
 
     /**
      * Creates a class constant builder
@@ -78,6 +80,17 @@ class ClassConst implements PhpParser\Builder
     }
 
     /**
+     * Makes the constant final.
+     *
+     * @return $this The builder instance (for fluid interface)
+     */
+    public function makeFinal() {
+        $this->flags = BuilderHelpers::addModifier($this->flags, Stmt\Class_::MODIFIER_FINAL);
+
+        return $this;
+    }
+
+    /**
      * Sets doc comment for the constant.
      *
      * @param PhpParser\Comment\Doc|string $docComment Doc comment to set
@@ -106,6 +119,19 @@ class ClassConst implements PhpParser\Builder
     }
 
     /**
+     * Sets the constant type.
+     *
+     * @param string|Node\Name|Identifier|Node\ComplexType $type
+     *
+     * @return $this
+     */
+    public function setType($type) {
+        $this->type = BuilderHelpers::normalizeType($type);
+
+        return $this;
+    }
+
+    /**
      * Returns the built class node.
      *
      * @return Stmt\ClassConst The built constant node
@@ -115,7 +141,8 @@ class ClassConst implements PhpParser\Builder
             $this->constants,
             $this->flags,
             $this->attributes,
-            $this->attributeGroups
+            $this->attributeGroups,
+            $this->type
         );
     }
 }

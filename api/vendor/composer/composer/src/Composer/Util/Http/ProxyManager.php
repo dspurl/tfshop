@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -14,7 +14,6 @@ namespace Composer\Util\Http;
 
 use Composer\Downloader\TransportException;
 use Composer\Util\NoProxyPattern;
-use Composer\Util\Url;
 
 /**
  * @internal
@@ -22,40 +21,42 @@ use Composer\Util\Url;
  */
 class ProxyManager
 {
-    private $error;
-    private $fullProxy;
-    private $safeProxy;
-    private $streams;
-    private $hasProxy;
-    private $info;
-    private $lastProxy;
+    /** @var ?string */
+    private $error = null;
+    /** @var ?ProxyItem */
+    private $httpProxy = null;
+    /** @var ?ProxyItem */
+    private $httpsProxy = null;
     /** @var ?NoProxyPattern */
     private $noProxyHandler = null;
 
-    /** @var ?ProxyManager */
+    /** @var ?self */
     private static $instance = null;
+
+    /** The following 3 properties can be removed after the transition period */
+
+    /** @var bool */
+    private $ignoreHttpsProxy = false;
+    /** @var bool */
+    private $isTransitional = false;
+    /** @var bool */
+    private $needsTransitionWarning = false;
 
     private function __construct()
     {
-        $this->fullProxy = $this->safeProxy = array(
-            'http' => null,
-            'https' => null,
-        );
+        // this can be removed after the transition period
+        $this->isTransitional = true;
 
-        $this->streams['http'] = $this->streams['https'] = array(
-            'options' => null,
-        );
-
-        $this->hasProxy = false;
-        $this->initProxyData();
+        try {
+            $this->getProxyData();
+        } catch (\RuntimeException $e) {
+            $this->error = $e->getMessage();
+        }
     }
 
-    /**
-     * @return ProxyManager
-     */
-    public static function getInstance()
+    public static function getInstance(): ProxyManager
     {
-        if (!self::$instance) {
+        if (self::$instance === null) {
             self::$instance = new self();
         }
 
@@ -65,7 +66,7 @@ class ProxyManager
     /**
      * Clears the persistent instance
      */
-    public static function reset()
+    public static function reset(): void
     {
         self::$instance = null;
     }
@@ -73,116 +74,131 @@ class ProxyManager
     /**
      * Returns a RequestProxy instance for the request url
      *
-     * @param  string       $requestUrl
-     * @return RequestProxy
+     * @param non-empty-string $requestUrl
      */
-    public function getProxyForRequest($requestUrl)
+    public function getProxyForRequest(string $requestUrl): RequestProxy
     {
-        if ($this->error) {
+        if ($this->error !== null) {
             throw new TransportException('Unable to use a proxy: '.$this->error);
         }
 
-        $scheme = parse_url($requestUrl, PHP_URL_SCHEME) ?: 'http';
-        $proxyUrl = '';
-        $options = array();
-        $formattedProxyUrl = '';
+        $scheme = (string) parse_url($requestUrl, PHP_URL_SCHEME);
+        $proxy = $this->getProxyForScheme($scheme);
 
-        if ($this->hasProxy && in_array($scheme, array('http', 'https'), true) && $this->fullProxy[$scheme]) {
-            if ($this->noProxy($requestUrl)) {
-                $formattedProxyUrl = 'excluded by no_proxy';
-            } else {
-                $proxyUrl = $this->fullProxy[$scheme];
-                $options = $this->streams[$scheme]['options'];
-                ProxyHelper::setRequestFullUri($requestUrl, $options);
-                $formattedProxyUrl = $this->safeProxy[$scheme];
+        if ($proxy === null) {
+            return RequestProxy::none();
+        }
+
+        if ($this->noProxy($requestUrl)) {
+            return RequestProxy::noProxy();
+        }
+
+        return $proxy->toRequestProxy($scheme);
+    }
+
+    /**
+     * Returns true if the user needs to set an https_proxy environment variable
+     *
+     * This method can be removed after the transition period
+     */
+    public function needsTransitionWarning(): bool
+    {
+        return $this->needsTransitionWarning;
+    }
+
+    /**
+     * Returns a ProxyItem if one is set for the scheme, otherwise null
+     */
+    private function getProxyForScheme(string $scheme): ?ProxyItem
+    {
+        if ($scheme === 'http') {
+            return $this->httpProxy;
+        }
+
+        if ($scheme === 'https') {
+            // this can be removed after the transition period
+            if ($this->isTransitional && $this->httpsProxy === null) {
+                if ($this->httpProxy !== null && !$this->ignoreHttpsProxy) {
+                    $this->needsTransitionWarning = true;
+
+                    return $this->httpProxy;
+                }
+            }
+
+            return $this->httpsProxy;
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds proxy values from the environment and sets class properties
+     */
+    private function getProxyData(): void
+    {
+        // Handle http_proxy/HTTP_PROXY on CLI only for security reasons
+        if (PHP_SAPI === 'cli' || PHP_SAPI === 'phpdbg') {
+            [$env, $name] = $this->getProxyEnv('http_proxy');
+            if ($env !== null) {
+                $this->httpProxy = new ProxyItem($env, $name);
             }
         }
 
-        return new RequestProxy($proxyUrl, $options, $formattedProxyUrl);
-    }
-
-    /**
-     * Returns true if a proxy is being used
-     *
-     * @return bool If false any error will be in $message
-     */
-    public function isProxying()
-    {
-        return $this->hasProxy;
-    }
-
-    /**
-     * Returns proxy configuration info which can be shown to the user
-     *
-     * @return string|null Safe proxy URL or an error message if setting up proxy failed or null if no proxy was configured
-     */
-    public function getFormattedProxy()
-    {
-        return $this->hasProxy ? $this->info : $this->error;
-    }
-
-    /**
-     * Initializes proxy values from the environment
-     */
-    private function initProxyData()
-    {
-        try {
-            list($httpProxy, $httpsProxy, $noProxy) = ProxyHelper::getProxyData();
-        } catch (\RuntimeException $e) {
-            $this->error = $e->getMessage();
-
-            return;
-        }
-
-        $info = array();
-
-        if ($httpProxy) {
-            $info[] = $this->setData($httpProxy, 'http');
-        }
-        if ($httpsProxy) {
-            $info[] = $this->setData($httpsProxy, 'https');
-        }
-        if ($this->hasProxy) {
-            $this->info = implode(', ', $info);
-            if ($noProxy) {
-                $this->noProxyHandler = new NoProxyPattern($noProxy);
+        // Handle cgi_http_proxy/CGI_HTTP_PROXY if needed
+        if ($this->httpProxy === null) {
+            [$env, $name] = $this->getProxyEnv('cgi_http_proxy');
+            if ($env !== null) {
+                $this->httpProxy = new ProxyItem($env, $name);
             }
         }
+
+        // Handle https_proxy/HTTPS_PROXY
+        [$env, $name] = $this->getProxyEnv('https_proxy');
+        if ($env !== null) {
+            $this->httpsProxy = new ProxyItem($env, $name);
+        }
+
+        // Handle no_proxy/NO_PROXY
+        [$env, $name] = $this->getProxyEnv('no_proxy');
+        if ($env !== null) {
+            $this->noProxyHandler = new NoProxyPattern($env);
+        }
     }
 
     /**
-     * Sets initial data
+     * Searches $_SERVER for case-sensitive values
      *
-     * @param string $url    Proxy url
-     * @param string $scheme Environment variable scheme
+     * @return array{0: string|null, 1: string} value, name
      */
-    private function setData($url, $scheme)
+    private function getProxyEnv(string $envName): array
     {
-        $safeProxy = Url::sanitize($url);
-        $this->fullProxy[$scheme] = $url;
-        $this->safeProxy[$scheme] = $safeProxy;
-        $this->streams[$scheme]['options'] = ProxyHelper::getContextOptions($url);
-        $this->hasProxy = true;
+        $names = [strtolower($envName), strtoupper($envName)];
 
-        return sprintf('%s=%s', $scheme, $safeProxy);
+        foreach ($names as $name) {
+            if (is_string($_SERVER[$name] ?? null)) {
+                if ($_SERVER[$name] !== '') {
+                    return [$_SERVER[$name], $name];
+                }
+                // this can be removed after the transition period
+                if ($this->isTransitional && strtolower($name) === 'https_proxy') {
+                    $this->ignoreHttpsProxy = true;
+                    break;
+                }
+            }
+        }
+
+        return [null, ''];
     }
 
     /**
      * Returns true if a url matches no_proxy value
-     *
-     * @param  string $requestUrl
-     * @return bool
      */
-    private function noProxy($requestUrl)
+    private function noProxy(string $requestUrl): bool
     {
-        if ($this->noProxyHandler) {
-            if ($this->noProxyHandler->test($requestUrl)) {
-                $this->lastProxy = 'excluded by no_proxy';
-
-                return true;
-            }
+        if ($this->noProxyHandler === null) {
+            return false;
         }
 
-        return false;
+        return $this->noProxyHandler->test($requestUrl);
     }
 }

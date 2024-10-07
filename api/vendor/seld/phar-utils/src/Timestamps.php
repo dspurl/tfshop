@@ -73,7 +73,11 @@ class Timestamps
             $pos += 4;
 
             // update timestamp to a fixed value
-            $this->contents = substr_replace($this->contents, pack('L', $timestamp), $pos, 4);
+            $timeStampBytes = pack('L', $timestamp);
+            $this->contents[$pos + 0] = $timeStampBytes[0];
+            $this->contents[$pos + 1] = $timeStampBytes[1];
+            $this->contents[$pos + 2] = $timeStampBytes[2];
+            $this->contents[$pos + 3] = $timeStampBytes[3];
 
             // skip timestamp, compressed file size, crc32 checksum and file flags
             $pos += 4*4;

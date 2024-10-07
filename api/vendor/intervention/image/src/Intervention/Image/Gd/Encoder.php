@@ -57,6 +57,11 @@ class Encoder extends \Intervention\Image\AbstractEncoder
         return $buffer;
     }
 
+    /**
+     * Processes and returns encoded image as WEBP string
+     *
+     * @return string
+     */
     protected function processWebp()
     {
         if ( ! function_exists('imagewebp')) {
@@ -142,8 +147,34 @@ class Encoder extends \Intervention\Image\AbstractEncoder
      */
     protected function processAvif()
     {
+	    if ( ! function_exists('imageavif')) {
+		    throw new NotSupportedException(
+		      "AVIF format is not supported by PHP installation."
+		    );
+	    }
+
+	    ob_start();
+        $resource = $this->image->getCore();
+	    imagepalettetotruecolor($resource);
+	    imagealphablending($resource, true);
+	    imagesavealpha($resource, true);
+	    imageavif($resource, null, $this->quality);
+	    $this->image->mime = defined('IMAGETYPE_AVIF') ? image_type_to_mime_type(IMAGETYPE_AVIF) : 'image/avif';
+	    $buffer = ob_get_contents();
+	    ob_end_clean();
+
+	    return $buffer;
+    }
+
+    /**
+     * Processes and returns encoded image as HEIC string
+     *
+     * @return string
+     */
+    protected function processHeic()
+    {
         throw new NotSupportedException(
-            "AVIF format is not supported by Gd Driver."
+            "HEIC format is not supported by Gd Driver."
         );
     }
 }

@@ -211,7 +211,7 @@ final class Utils
             $data = preg_replace_callback(
                 '/[\x80-\xFF]+/',
                 function ($m) {
-                    return utf8_encode($m[0]);
+                    return function_exists('mb_convert_encoding') ? mb_convert_encoding($m[0], 'UTF-8', 'ISO-8859-1') : utf8_encode($m[0]);
                 },
                 $data
             );
@@ -259,5 +259,26 @@ final class Utils
         }
 
         return $val;
+    }
+
+    /**
+     * @param array<mixed> $record
+     */
+    public static function getRecordMessageForException(array $record): string
+    {
+        $context = '';
+        $extra = '';
+        try {
+            if ($record['context']) {
+                $context = "\nContext: " . json_encode($record['context']);
+            }
+            if ($record['extra']) {
+                $extra = "\nExtra: " . json_encode($record['extra']);
+            }
+        } catch (\Throwable $e) {
+            // noop
+        }
+
+        return "\nThe exception occurred while attempting to log: " . $record['message'] . $context . $extra;
     }
 }

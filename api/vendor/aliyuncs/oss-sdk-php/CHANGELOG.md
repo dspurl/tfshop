@@ -1,5 +1,31 @@
 # ChangeLog - Aliyun OSS SDK for PHP
 
+## v2.7.1 / 2024-02-28
+* Fixed: fix deprecated
+
+## v2.7.0 / 2024-02-02
+* Added: support signature version 4.
+* Added: support checkObjectEndcoding option.
+* Added: support strictObjectName option.
+* Added: support filePathCompatible option.
+* Added: support path style.
+* Added: support environment variables credentials provider.
+* Update: add filed for some api.
+* Fixed: fix some bugs.
+
+## v2.6.0 / 2022-08-03
+* Added: support credentials provider.
+* Fixed: compatible with swoole curl handler.
+* Added: support more bucket stat info.
+
+## v2.5.0 / 2022-05-13
+* Added: support bucket transfer acceleration.
+* Added: support bucket cname token.
+* Added: support listobjectsV2.
+
+## v2.4.3 / 2021-08-25
+* Fixed: integer overflow in PHP5.x.
+
 ## v2.4.2 / 2021-06-04
 * Compatible with PHP8.
 * Fixed: compatible with PHP5.4.

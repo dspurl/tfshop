@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -21,7 +21,7 @@ use Composer\Package\AliasPackage;
  */
 class MarkAliasUninstalledOperation extends SolverOperation implements OperationInterface
 {
-    const TYPE = 'markAliasUninstalled';
+    protected const TYPE = 'markAliasUninstalled';
 
     /**
      * @var AliasPackage
@@ -35,18 +35,16 @@ class MarkAliasUninstalledOperation extends SolverOperation implements Operation
 
     /**
      * Returns package instance.
-     *
-     * @return AliasPackage
      */
-    public function getPackage()
+    public function getPackage(): AliasPackage
     {
         return $this->package;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function show($lock)
+    public function show($lock): string
     {
         return 'Marking <info>'.$this->package->getPrettyName().'</info> (<comment>'.$this->package->getFullPrettyVersion().'</comment>) as uninstalled, alias of <info>'.$this->package->getAliasOf()->getPrettyName().'</info> (<comment>'.$this->package->getAliasOf()->getFullPrettyVersion().'</comment>)';
     }

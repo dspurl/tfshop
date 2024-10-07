@@ -11,15 +11,9 @@ use function stream_get_contents;
  */
 class PhpInputStream extends Stream
 {
-    /**
-     * @var string
-     */
-    private $cache = '';
+    private string $cache = '';
 
-    /**
-     * @var bool
-     */
-    private $reachedEof = false;
+    private bool $reachedEof = false;
 
     /**
      * @param  string|resource $stream
@@ -32,7 +26,7 @@ class PhpInputStream extends Stream
     /**
      * {@inheritdoc}
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         if ($this->reachedEof) {
             return $this->cache;
@@ -45,7 +39,7 @@ class PhpInputStream extends Stream
     /**
      * {@inheritdoc}
      */
-    public function isWritable() : bool
+    public function isWritable(): bool
     {
         return false;
     }
@@ -53,7 +47,7 @@ class PhpInputStream extends Stream
     /**
      * {@inheritdoc}
      */
-    public function read($length) : string
+    public function read($length): string
     {
         $content = parent::read($length);
         if (! $this->reachedEof) {
@@ -70,7 +64,7 @@ class PhpInputStream extends Stream
     /**
      * {@inheritdoc}
      */
-    public function getContents($maxLength = -1) : string
+    public function getContents($maxLength = -1): string
     {
         if ($this->reachedEof) {
             return $this->cache;

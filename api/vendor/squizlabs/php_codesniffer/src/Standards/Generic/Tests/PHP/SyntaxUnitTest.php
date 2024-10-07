@@ -5,14 +5,19 @@
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @author    Blaine Schmeisser <blainesch@gmail.com>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Generic\Tests\PHP;
 
 use PHP_CodeSniffer\Tests\Standards\AbstractSniffUnitTest;
 
-class SyntaxUnitTest extends AbstractSniffUnitTest
+/**
+ * Unit test class for the Syntax sniff.
+ *
+ * @covers \PHP_CodeSniffer\Standards\Generic\Sniffs\PHP\SyntaxSniff
+ */
+final class SyntaxUnitTest extends AbstractSniffUnitTest
 {
 
 
@@ -22,11 +27,20 @@ class SyntaxUnitTest extends AbstractSniffUnitTest
      * The key of the array should represent the line number and the value
      * should represent the number of errors that should occur on that line.
      *
+     * @param string $testFile The name of the file being tested.
+     *
      * @return array<int, int>
      */
-    public function getErrorList()
+    public function getErrorList($testFile='')
     {
-        return [3 => 1];
+        switch ($testFile) {
+        case 'SyntaxUnitTest.1.inc':
+        case 'SyntaxUnitTest.2.inc':
+            return [3 => 1];
+
+        default:
+            return [];
+        }
 
     }//end getErrorList()
 

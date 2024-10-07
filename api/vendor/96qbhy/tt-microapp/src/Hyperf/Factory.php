@@ -22,7 +22,7 @@ class Factory extends BaseFactory
         parent::__construct($config->get('tt-app', []));
     }
 
-    public function make(?string $name = null)
+    public function make(?string $name = null, ?array $config = null)
     {
         $app = parent::make($name);
 

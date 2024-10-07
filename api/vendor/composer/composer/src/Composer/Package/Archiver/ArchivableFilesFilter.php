@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -13,17 +13,22 @@
 namespace Composer\Package\Archiver;
 
 use FilterIterator;
+use Iterator;
 use PharData;
+use SplFileInfo;
 
+/**
+ * @phpstan-extends FilterIterator<string, SplFileInfo, Iterator<string, SplFileInfo>>
+ */
 class ArchivableFilesFilter extends FilterIterator
 {
-    private $dirs = array();
+    /** @var string[] */
+    private $dirs = [];
 
     /**
      * @return bool true if the current element is acceptable, otherwise false.
      */
-    #[\ReturnTypeWillChange]
-    public function accept()
+    public function accept(): bool
     {
         $file = $this->getInnerIterator()->current();
         if ($file->isDir()) {
@@ -35,7 +40,7 @@ class ArchivableFilesFilter extends FilterIterator
         return true;
     }
 
-    public function addEmptyDir(PharData $phar, $sources)
+    public function addEmptyDir(PharData $phar, string $sources): void
     {
         foreach ($this->dirs as $filepath) {
             $localname = str_replace($sources . "/", '', $filepath);

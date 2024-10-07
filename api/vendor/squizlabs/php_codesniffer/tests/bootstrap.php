@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2017 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 if (defined('PHP_CODESNIFFER_IN_TESTS') === false) {
@@ -19,11 +19,7 @@ if (defined('PHP_CODESNIFFER_VERBOSITY') === false) {
     define('PHP_CODESNIFFER_VERBOSITY', 0);
 }
 
-if (is_file(__DIR__.'/../autoload.php') === true) {
-    include_once __DIR__.'/../autoload.php';
-} else {
-    include_once 'PHP/CodeSniffer/autoload.php';
-}
+require_once __DIR__.'/../autoload.php';
 
 $tokens = new \PHP_CodeSniffer\Util\Tokens();
 
@@ -42,13 +38,6 @@ if (class_exists('PHPUnit_TextUI_TestRunner') === true && class_exists('PHPUnit\
 
 if (class_exists('PHPUnit_Framework_TestResult') === true && class_exists('PHPUnit\Framework\TestResult') === false) {
     class_alias('PHPUnit_Framework_TestResult', 'PHPUnit'.'\Framework\TestResult');
-}
-
-// Determine whether this is a PEAR install or not.
-$GLOBALS['PHP_CODESNIFFER_PEAR'] = false;
-
-if (is_file(__DIR__.'/../autoload.php') === false) {
-    $GLOBALS['PHP_CODESNIFFER_PEAR'] = true;
 }
 
 

@@ -3,7 +3,7 @@
 /*
  * This file is part of Psy Shell.
  *
- * (c) 2012-2020 Justin Hileman
+ * (c) 2012-2023 Justin Hileman
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -14,6 +14,7 @@ namespace Psy\CodeCleaner;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\Array_;
+use PhpParser\Node\Expr\ArrayDimFetch;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Expr\MethodCall;
@@ -33,6 +34,8 @@ class PassableByReferencePass extends CodeCleanerPass
      * @throws FatalErrorException if non-variables are passed by reference
      *
      * @param Node $node
+     *
+     * @return int|Node|null Replacement node (or special return value)
      */
     public function enterNode(Node $node)
     {
@@ -56,18 +59,23 @@ class PassableByReferencePass extends CodeCleanerPass
                 return;
             }
 
+            $args = [];
+            foreach ($node->args as $position => $arg) {
+                $args[$arg->name !== null ? $arg->name->name : $position] = $arg;
+            }
+
             foreach ($refl->getParameters() as $key => $param) {
-                if (\array_key_exists($key, $node->args)) {
-                    $arg = $node->args[$key];
+                if (\array_key_exists($key, $args) || \array_key_exists($param->name, $args)) {
+                    $arg = $args[$param->name] ?? $args[$key];
                     if ($param->isPassedByReference() && !$this->isPassableByReference($arg)) {
-                        throw new FatalErrorException(self::EXCEPTION_MESSAGE, 0, \E_ERROR, null, $node->getLine());
+                        throw new FatalErrorException(self::EXCEPTION_MESSAGE, 0, \E_ERROR, null, $node->getStartLine());
                     }
                 }
             }
         }
     }
 
-    private function isPassableByReference(Node $arg)
+    private function isPassableByReference(Node $arg): bool
     {
         // Unpacked arrays can be passed by reference
         if ($arg->value instanceof Array_) {
@@ -81,7 +89,8 @@ class PassableByReferencePass extends CodeCleanerPass
             $arg->value instanceof Variable ||
             $arg->value instanceof FuncCall ||
             $arg->value instanceof MethodCall ||
-            $arg->value instanceof StaticCall;
+            $arg->value instanceof StaticCall ||
+            $arg->value instanceof ArrayDimFetch;
     }
 
     /**
@@ -108,7 +117,7 @@ class PassableByReferencePass extends CodeCleanerPass
             } elseif (++$nonPassable > 2) {
                 // There can be *at most* two non-passable-by-reference args in a row. This is about
                 // as close as we can get to validating the arguments for this function :-/
-                throw new FatalErrorException(self::EXCEPTION_MESSAGE, 0, \E_ERROR, null, $node->getLine());
+                throw new FatalErrorException(self::EXCEPTION_MESSAGE, 0, \E_ERROR, null, $node->getStartLine());
             }
         }
     }

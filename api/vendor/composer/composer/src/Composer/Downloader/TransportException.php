@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -17,57 +17,77 @@ namespace Composer\Downloader;
  */
 class TransportException extends \RuntimeException
 {
-    /** @var ?array<string, string> */
+    /** @var ?array<string> */
     protected $headers;
     /** @var ?string */
     protected $response;
     /** @var ?int */
     protected $statusCode;
-    /** @var ?array<mixed> */
-    protected $responseInfo = array();
+    /** @var array<mixed> */
+    protected $responseInfo = [];
 
-    public function setHeaders($headers)
+    public function __construct(string $message = "", int $code = 400, \Throwable $previous = null)
+    {
+        parent::__construct($message, $code, $previous);
+    }
+
+    /**
+     * @param array<string> $headers
+     */
+    public function setHeaders(array $headers): void
     {
         $this->headers = $headers;
     }
 
-    public function getHeaders()
+    /**
+     * @return ?array<string>
+     */
+    public function getHeaders(): ?array
     {
         return $this->headers;
     }
 
-    public function setResponse($response)
+    public function setResponse(?string $response): void
     {
         $this->response = $response;
     }
 
-    public function getResponse()
+    /**
+     * @return ?string
+     */
+    public function getResponse(): ?string
     {
         return $this->response;
     }
 
-    public function setStatusCode($statusCode)
+    /**
+     * @param ?int $statusCode
+     */
+    public function setStatusCode($statusCode): void
     {
         $this->statusCode = $statusCode;
     }
 
-    public function getStatusCode()
+    /**
+     * @return ?int
+     */
+    public function getStatusCode(): ?int
     {
         return $this->statusCode;
     }
 
     /**
-     * @return array
+     * @return array<mixed>
      */
-    public function getResponseInfo()
+    public function getResponseInfo(): array
     {
         return $this->responseInfo;
     }
 
     /**
-     * @param array $responseInfo
+     * @param array<mixed> $responseInfo
      */
-    public function setResponseInfo(array $responseInfo)
+    public function setResponseInfo(array $responseInfo): void
     {
         $this->responseInfo = $responseInfo;
     }

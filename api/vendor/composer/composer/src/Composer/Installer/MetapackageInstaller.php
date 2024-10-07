@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -35,15 +35,15 @@ class MetapackageInstaller implements InstallerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function supports($packageType)
+    public function supports(string $packageType)
     {
         return $packageType === 'metapackage';
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function isInstalled(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
@@ -51,34 +51,34 @@ class MetapackageInstaller implements InstallerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function download(PackageInterface $package, PackageInterface $prevPackage = null)
+    public function download(PackageInterface $package, ?PackageInterface $prevPackage = null)
     {
         // noop
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function prepare($type, PackageInterface $package, PackageInterface $prevPackage = null)
+    public function prepare($type, PackageInterface $package, ?PackageInterface $prevPackage = null)
     {
         // noop
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function cleanup($type, PackageInterface $package, PackageInterface $prevPackage = null)
+    public function cleanup($type, PackageInterface $package, ?PackageInterface $prevPackage = null)
     {
         // noop
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function install(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
@@ -86,11 +86,11 @@ class MetapackageInstaller implements InstallerInterface
 
         $repo->addPackage(clone $package);
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
     {
@@ -103,11 +103,11 @@ class MetapackageInstaller implements InstallerInterface
         $repo->removePackage($initial);
         $repo->addPackage(clone $target);
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
     public function uninstall(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
@@ -119,14 +119,16 @@ class MetapackageInstaller implements InstallerInterface
 
         $repo->removePackage($package);
 
-        return \React\Promise\resolve();
+        return \React\Promise\resolve(null);
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
+     *
+     * @return null
      */
     public function getInstallPath(PackageInterface $package)
     {
-        return '';
+        return null;
     }
 }

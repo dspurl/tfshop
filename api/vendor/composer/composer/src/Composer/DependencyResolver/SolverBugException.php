@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -17,7 +17,7 @@ namespace Composer\DependencyResolver;
  */
 class SolverBugException extends \RuntimeException
 {
-    public function __construct($message)
+    public function __construct(string $message)
     {
         parent::__construct(
             $message."\nThis exception was most likely caused by a bug in Composer.\n".

@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -12,6 +12,7 @@
 
 namespace Composer\Util;
 
+use Composer\Pcre\Preg;
 use stdClass;
 
 /**
@@ -22,12 +23,12 @@ class NoProxyPattern
     /**
      * @var string[]
      */
-    protected $hostNames = array();
+    protected $hostNames = [];
 
     /**
      * @var (null|object)[]
      */
-    protected $rules = array();
+    protected $rules = [];
 
     /**
      * @var bool
@@ -37,20 +38,16 @@ class NoProxyPattern
     /**
      * @param string $pattern NO_PROXY pattern
      */
-    public function __construct($pattern)
+    public function __construct(string $pattern)
     {
-        $this->hostNames = preg_split('{[\s,]+}', $pattern, -1, PREG_SPLIT_NO_EMPTY);
+        $this->hostNames = Preg::split('{[\s,]+}', $pattern, -1, PREG_SPLIT_NO_EMPTY);
         $this->noproxy = empty($this->hostNames) || '*' === $this->hostNames[0];
     }
 
     /**
      * Returns true if a URL matches the NO_PROXY pattern
-     *
-     * @param string $url
-     *
-     * @return bool
      */
-    public function test($url)
+    public function test(string $url): bool
     {
         if ($this->noproxy) {
             return true;
@@ -72,11 +69,9 @@ class NoProxyPattern
     /**
      * Returns false is the url cannot be parsed, otherwise a data object
      *
-     * @param string $url
-     *
      * @return bool|stdClass
      */
-    protected function getUrlData($url)
+    protected function getUrlData(string $url)
     {
         if (!$host = parse_url($url, PHP_URL_HOST)) {
             return false;
@@ -96,7 +91,7 @@ class NoProxyPattern
         }
 
         $hostName = $host . ($port ? ':' . $port : '');
-        list($host, $port, $err) = $this->splitHostPort($hostName);
+        [$host, $port, $err] = $this->splitHostPort($hostName);
 
         if ($err || !$this->ipCheckData($host, $ipdata)) {
             return false;
@@ -107,14 +102,8 @@ class NoProxyPattern
 
     /**
      * Returns true if the url is matched by a rule
-     *
-     * @param int      $index
-     * @param string   $hostName
-     * @param stdClass $url
-     *
-     * @return bool
      */
-    protected function match($index, $hostName, $url)
+    protected function match(int $index, string $hostName, stdClass $url): bool
     {
         if (!$rule = $this->getRule($index, $hostName)) {
             // Data must have been misformatted
@@ -147,17 +136,21 @@ class NoProxyPattern
 
     /**
      * Returns true if the target ip is in the network range
-     *
-     * @param stdClass $network
-     * @param stdClass $target
-     *
-     * @return bool
      */
-    protected function matchRange(stdClass $network, stdClass $target)
+    protected function matchRange(stdClass $network, stdClass $target): bool
     {
         $net = unpack('C*', $network->ip);
         $mask = unpack('C*', $network->netmask);
         $ip = unpack('C*', $target->ip);
+        if (false === $net) {
+            throw new \RuntimeException('Could not parse network IP '.$network->ip);
+        }
+        if (false === $mask) {
+            throw new \RuntimeException('Could not parse netmask '.$network->netmask);
+        }
+        if (false === $ip) {
+            throw new \RuntimeException('Could not parse target IP '.$target->ip);
+        }
 
         for ($i = 1; $i < 17; ++$i) {
             if (($net[$i] & $mask[$i]) !== ($ip[$i] & $mask[$i])) {
@@ -171,19 +164,16 @@ class NoProxyPattern
     /**
      * Finds or creates rule data for a hostname
      *
-     * @param int    $index
-     * @param string $hostName
-     *
      * @return null|stdClass Null if the hostname is invalid
      */
-    private function getRule($index, $hostName)
+    private function getRule(int $index, string $hostName): ?stdClass
     {
         if (array_key_exists($index, $this->rules)) {
             return $this->rules[$index];
         }
 
         $this->rules[$index] = null;
-        list($host, $port, $err) = $this->splitHostPort($hostName);
+        [$host, $port, $err] = $this->splitHostPort($hostName);
 
         if ($err || !$this->ipCheckData($host, $ipdata, true)) {
             return null;
@@ -197,13 +187,12 @@ class NoProxyPattern
     /**
      * Creates an object containing IP data if the host is an IP address
      *
-     * @param string        $host
      * @param null|stdClass $ipdata      Set by method if IP address found
      * @param bool          $allowPrefix Whether a CIDR prefix-length is expected
      *
      * @return bool False if the host contains invalid data
      */
-    private function ipCheckData($host, &$ipdata, $allowPrefix = false)
+    private function ipCheckData(string $host, ?stdClass &$ipdata, bool $allowPrefix = false): bool
     {
         $ipdata = null;
         $netmask = null;
@@ -212,7 +201,7 @@ class NoProxyPattern
 
         // Check for a CIDR prefix-length
         if (strpos($host, '/') !== false) {
-            list($host, $prefix) = explode('/', $host);
+            [$host, $prefix] = explode('/', $host);
 
             if (!$allowPrefix || !$this->validateInt($prefix, 0, 128)) {
                 return false;
@@ -226,7 +215,7 @@ class NoProxyPattern
             return !$modified;
         }
 
-        list($ip, $size) = $this->ipGetAddr($host);
+        [$ip, $size] = $this->ipGetAddr($host);
 
         if ($prefix !== null) {
             // Check for a valid prefix
@@ -234,7 +223,7 @@ class NoProxyPattern
                 return false;
             }
 
-            list($ip, $netmask) = $this->ipGetNetwork($ip, $size, $prefix);
+            [$ip, $netmask] = $this->ipGetNetwork($ip, $size, $prefix);
         }
 
         $ipdata = $this->makeIpData($ip, $size, $netmask);
@@ -248,17 +237,15 @@ class NoProxyPattern
      * IPv4 addresses are always mapped to IPv6, which simplifies handling
      * and comparison.
      *
-     * @param string $host
-     *
      * @return mixed[] in_addr, size
      */
-    private function ipGetAddr($host)
+    private function ipGetAddr(string $host): array
     {
         $ip = inet_pton($host);
         $size = strlen($ip);
         $mapped = $this->ipMapTo6($ip, $size);
 
-        return array($mapped, $size);
+        return [$mapped, $size];
     }
 
     /**
@@ -266,10 +253,8 @@ class NoProxyPattern
      *
      * @param int $prefix CIDR prefix-length
      * @param int $size   Byte size of in_addr
-     *
-     * @return string
      */
-    private function ipGetMask($prefix, $size)
+    private function ipGetMask(int $prefix, int $size): string
     {
         $mask = '';
 
@@ -295,7 +280,7 @@ class NoProxyPattern
      *
      * @return string[] network in_addr, binary mask
      */
-    private function ipGetNetwork($rangeIp, $size, $prefix)
+    private function ipGetNetwork(string $rangeIp, int $size, int $prefix): array
     {
         $netmask = $this->ipGetMask($prefix, $size);
 
@@ -303,12 +288,18 @@ class NoProxyPattern
         $mask = unpack('C*', $netmask);
         $ip = unpack('C*', $rangeIp);
         $net = '';
+        if (false === $mask) {
+            throw new \RuntimeException('Could not parse netmask '.$netmask);
+        }
+        if (false === $ip) {
+            throw new \RuntimeException('Could not parse range IP '.$rangeIp);
+        }
 
         for ($i = 1; $i < 17; ++$i) {
             $net .= chr($ip[$i] & $mask[$i]);
         }
 
-        return array($net, $netmask);
+        return [$net, $netmask];
     }
 
     /**
@@ -319,7 +310,7 @@ class NoProxyPattern
      *
      * @return string Mapped or existing in_addr
      */
-    private function ipMapTo6($binary, $size)
+    private function ipMapTo6(string $binary, int $size): string
     {
         if ($size === 4) {
             $prefix = str_repeat(chr(0), 10) . str_repeat(chr(255), 2);
@@ -331,21 +322,15 @@ class NoProxyPattern
 
     /**
      * Creates a rule data object
-     *
-     * @param string        $host
-     * @param int           $port
-     * @param null|stdClass $ipdata
-     *
-     * @return stdClass
      */
-    private function makeData($host, $port, $ipdata)
+    private function makeData(string $host, int $port, ?stdClass $ipdata): stdClass
     {
-        return (object) array(
+        return (object) [
             'host' => $host,
             'name' => '.' . ltrim($host, '.'),
             'port' => $port,
             'ipdata' => $ipdata,
-        );
+        ];
     }
 
     /**
@@ -354,29 +339,25 @@ class NoProxyPattern
      * @param string      $ip      in_addr
      * @param int         $size    Byte size of in_addr
      * @param null|string $netmask Network mask
-     *
-     * @return stdClass
      */
-    private function makeIpData($ip, $size, $netmask)
+    private function makeIpData(string $ip, int $size, ?string $netmask): stdClass
     {
-        return (object) array(
+        return (object) [
             'ip' => $ip,
             'size' => $size,
             'netmask' => $netmask,
-        );
+        ];
     }
 
     /**
      * Splits the hostname into host and port components
      *
-     * @param string $hostName
-     *
      * @return mixed[] host, port, if there was error
      */
-    private function splitHostPort($hostName)
+    private function splitHostPort(string $hostName): array
     {
         // host, port, err
-        $error = array('', '', true);
+        $error = ['', '', true];
         $port = 0;
         $ip6 = '';
 
@@ -411,26 +392,20 @@ class NoProxyPattern
 
         $host = $ip6 . $hostName;
 
-        return array($host, $port, false);
+        return [$host, $port, false];
     }
 
     /**
      * Wrapper around filter_var FILTER_VALIDATE_INT
-     *
-     * @param string $int
-     * @param int    $min
-     * @param int    $max
-     *
-     * @return bool
      */
-    private function validateInt($int, $min, $max)
+    private function validateInt(string $int, int $min, int $max): bool
     {
-        $options = array(
-            'options' => array(
+        $options = [
+            'options' => [
                 'min_range' => $min,
                 'max_range' => $max,
-            ),
-        );
+            ],
+        ];
 
         return false !== filter_var($int, FILTER_VALIDATE_INT, $options);
     }

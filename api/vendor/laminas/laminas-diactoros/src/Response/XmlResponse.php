@@ -34,7 +34,7 @@ class XmlResponse extends Response
      * @param string|StreamInterface $xml String or stream for the message body.
      * @param int $status Integer status code for the response; 200 by default.
      * @param array $headers Array of headers to use at initialization.
-     * @throws Exception\InvalidArgumentException if $text is neither a string or stream.
+     * @throws Exception\InvalidArgumentException If $text is neither a string or stream.
      */
     public function __construct(
         $xml,
@@ -52,9 +52,9 @@ class XmlResponse extends Response
      * Create the message body.
      *
      * @param string|StreamInterface $xml
-     * @throws Exception\InvalidArgumentException if $xml is neither a string or stream.
+     * @throws Exception\InvalidArgumentException If $xml is neither a string or stream.
      */
-    private function createBody($xml) : StreamInterface
+    private function createBody($xml): StreamInterface
     {
         if ($xml instanceof StreamInterface) {
             return $xml;
@@ -63,8 +63,8 @@ class XmlResponse extends Response
         if (! is_string($xml)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid content (%s) provided to %s',
-                (is_object($xml) ? get_class($xml) : gettype($xml)),
-                __CLASS__
+                is_object($xml) ? get_class($xml) : gettype($xml),
+                self::class
             ));
         }
 

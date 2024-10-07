@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -28,7 +28,7 @@ class PreFileDownloadEvent extends Event
     private $httpDownloader;
 
     /**
-     * @var string
+     * @var non-empty-string
      */
     private $processedUrl;
 
@@ -50,18 +50,16 @@ class PreFileDownloadEvent extends Event
     /**
      * @var mixed[]
      */
-    private $transportOptions = array();
+    private $transportOptions = [];
 
     /**
      * Constructor.
      *
-     * @param string         $name           The event name
-     * @param HttpDownloader $httpDownloader
-     * @param string         $processedUrl
-     * @param string         $type
-     * @param mixed          $context
+     * @param string           $name           The event name
+     * @param mixed            $context
+     * @param non-empty-string $processedUrl
      */
-    public function __construct($name, HttpDownloader $httpDownloader, $processedUrl, $type, $context = null)
+    public function __construct(string $name, HttpDownloader $httpDownloader, string $processedUrl, string $type, $context = null)
     {
         parent::__construct($name);
         $this->httpDownloader = $httpDownloader;
@@ -70,10 +68,7 @@ class PreFileDownloadEvent extends Event
         $this->context = $context;
     }
 
-    /**
-     * @return HttpDownloader
-     */
-    public function getHttpDownloader()
+    public function getHttpDownloader(): HttpDownloader
     {
         return $this->httpDownloader;
     }
@@ -81,9 +76,9 @@ class PreFileDownloadEvent extends Event
     /**
      * Retrieves the processed URL that will be downloaded.
      *
-     * @return string
+     * @return non-empty-string
      */
-    public function getProcessedUrl()
+    public function getProcessedUrl(): string
     {
         return $this->processedUrl;
     }
@@ -91,19 +86,17 @@ class PreFileDownloadEvent extends Event
     /**
      * Sets the processed URL that will be downloaded.
      *
-     * @param string $processedUrl New processed URL
+     * @param non-empty-string $processedUrl New processed URL
      */
-    public function setProcessedUrl($processedUrl)
+    public function setProcessedUrl(string $processedUrl): void
     {
         $this->processedUrl = $processedUrl;
     }
 
     /**
      * Retrieves a custom package cache key for this download.
-     *
-     * @return string|null
      */
-    public function getCustomCacheKey()
+    public function getCustomCacheKey(): ?string
     {
         return $this->customCacheKey;
     }
@@ -113,17 +106,15 @@ class PreFileDownloadEvent extends Event
      *
      * @param string|null $customCacheKey New cache key
      */
-    public function setCustomCacheKey($customCacheKey)
+    public function setCustomCacheKey(?string $customCacheKey): void
     {
         $this->customCacheKey = $customCacheKey;
     }
 
     /**
      * Returns the type of this download (package, metadata).
-     *
-     * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -146,9 +137,9 @@ class PreFileDownloadEvent extends Event
      *
      * Only available for events with type metadata, for packages set the transport options on the package itself.
      *
-     * @return array
+     * @return mixed[]
      */
-    public function getTransportOptions()
+    public function getTransportOptions(): array
     {
         return $this->transportOptions;
     }
@@ -158,9 +149,9 @@ class PreFileDownloadEvent extends Event
      *
      * Only available for events with type metadata, for packages set the transport options on the package itself.
      *
-     * @param array $options
+     * @param mixed[] $options
      */
-    public function setTransportOptions(array $options)
+    public function setTransportOptions(array $options): void
     {
         $this->transportOptions = $options;
     }

@@ -5,7 +5,7 @@
 ![Awesome][awesome-shield]
 [![License][license-shield]](LICENSE.md)
 
-[![Travis][travis-shield]][travis]
+[![Tests][ghactionstest-shield]][ghactions]
 [![Scrutinizer][scrutinizer-shield]][scrutinizer]
 [![Latest Version on Packagist][packagist-version-shield]][packagist-version]
 [![Packagist][packagist-shield]][packagist]
@@ -17,8 +17,6 @@ This composer installer plugin allows for easy installation of [PHP_CodeSniffer]
 No more symbolic linking of directories, checking out repositories on specific locations or changing
 the `phpcs` configuration.
 
-_Note: This plugin is compatible with both version 2.x and 3.x of_ [PHP_CodeSniffer][codesniffer]
-
 ## Usage
 
 Installation can be done with [Composer][composer], by requiring this package as a development dependency:
@@ -27,13 +25,42 @@ Installation can be done with [Composer][composer], by requiring this package as
 composer require --dev dealerdirect/phpcodesniffer-composer-installer
 ```
 
+When using Composer 2.2 or higher, Composer will [ask for your permission](https://blog.packagist.com/composer-2-2/#more-secure-plugin-execution) to allow this plugin to execute code. For this plugin to be functional, permission needs to be granted.
+
+When permission has been granted, the following snippet will automatically be added to your `composer.json` file by Composer:
+```json
+{
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    }
+}
+```
+
+When using Composer < 2.2, you can add the permission flag ahead of the upgrade to Composer 2.2, by running:
+```bash
+composer config allow-plugins.dealerdirect/phpcodesniffer-composer-installer true
+```
+
 That's it.
+
+### Compatibility
+
+This plugin is compatible with:
+
+- PHP **5.x**, **7.x**, and **8.x** (Support for PHP v8 is available since [`v0.7.0`][v0.7])
+- [Composer][composer] **1.x** and **2.x** (Support for Composer v2 is available since [`v0.7.0`][v0.7])
+- [PHP_CodeSniffer][codesniffer] **2.x** and **3.x** (Support for PHP_CodeSniffer v3 is available since [`v0.4.0`][v0.4])
+
+
+> **ℹ️ Please Note:** [Composer treats _minor_ releases below 1.0.0 as _major_ releases][composer-manual-caret]. So version `0.7.x` (or higher) of this plugin must be _explicitly_ set as version constraint when using Composer 2.x or PHP 8.0. In other words: using `^0.6` will **not** work with Composer 2.x or PHP 8.0.
 
 ### How it works
 
 Basically, this plugin executes the following steps:
 
-- This plugin searches for `phpcodesniffer-standard` packages in all of your currently installed Composer packages.
+- This plugin searches for [`phpcodesniffer-standard` packages][] in all of your currently installed Composer packages.
 - Matching packages and the project itself are scanned for PHP_CodeSniffer rulesets.
 - The plugin will call PHP_CodeSniffer and configure the `installed_paths` option.
 
@@ -53,6 +80,11 @@ multiple `phpcodesniffer-standard` packages.
         "object-calisthenics/phpcs-calisthenics-rules": "*",
         "phpcompatibility/php-compatibility": "*",
         "wp-coding-standards/wpcs": "*"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
 ```
@@ -61,8 +93,8 @@ After running `composer install` PHP_CodeSniffer just works:
 
 ```bash
 $ ./vendor/bin/phpcs -i
-The installed coding standards are MySource, PEAR, PSR1, PSR2, Squiz, Zend, PHPCompatibility, WordPress,
-WordPress-Core, WordPress-Docs, WordPress-Extra and WordPress-VIP
+The installed coding standards are MySource, PEAR, PSR1, PSR2, PSR12, Squiz, Zend, ObjectCalisthenics,
+PHPCompatibility, WordPress, WordPress-Core, WordPress-Docs and WordPress-Extra
 ```
 
 ### Calling the plugin directly
@@ -84,7 +116,6 @@ section of the `composer.json`:
         ]
     }
 }
-
 ```
 
 The command can then be called using `composer run-script install-codestandards` or
@@ -101,7 +132,6 @@ referenced from other script configurations, as follows:
         ]
     }
 }
-
 ```
 
 For more details about Composer scripts, please refer to [the section on scripts
@@ -139,8 +169,8 @@ Create a composer package of your coding standard by adding a `composer.json` fi
   "name" : "acme/phpcodesniffer-our-standards",
   "description" : "Package contains all coding standards of the Acme company",
   "require" : {
-    "php" : ">=5.4.0,<8.0.0-dev",
-    "squizlabs/php_codesniffer" : "^3.0"
+    "php" : ">=5.4.0",
+    "squizlabs/php_codesniffer" : "^3.6"
   },
   "type" : "phpcodesniffer-standard"
 }
@@ -178,7 +208,7 @@ via `require`, **not** `require-dev`.
 > ```bash
 > composer require dealerdirect/phpcodesniffer-composer-installer:"*"
 > composer require dealerdirect/phpcodesniffer-composer-installer:"0.*"
-> composer require dealerdirect/phpcodesniffer-composer-installer:"^0.4 || ^0.5 || ^0.6"
+> composer require dealerdirect/phpcodesniffer-composer-installer:"^0.4.1 || ^0.5 || ^0.6 || ^0.7"
 > ```
 
 ## Changelog
@@ -205,7 +235,7 @@ For a full list of all author and/or contributors, check [the contributors page]
 
 The MIT License (MIT)
 
-Copyright (c) 2016-2020 Dealerdirect B.V.
+Copyright (c) 2016-2022 Dealerdirect B.V.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -231,6 +261,7 @@ THE SOFTWARE.
 [code-of-conduct]: CODE_OF_CONDUCT.md
 [codesniffer]: https://github.com/squizlabs/PHP_CodeSniffer
 [composer-manual-scripts]: https://getcomposer.org/doc/articles/scripts.md
+[composer-manual-caret]: https://getcomposer.org/doc/articles/versions.md#caret-version-range-
 [composer]: https://getcomposer.org/
 [contributing-guidelines]: CONTRIBUTING.md
 [contributors]: https://github.com/Dealerdirect/phpcodesniffer-composer-installer/graphs/contributors
@@ -242,10 +273,13 @@ THE SOFTWARE.
 [packagist-version-shield]: https://img.shields.io/packagist/v/dealerdirect/phpcodesniffer-composer-installer.svg
 [packagist-version]: https://packagist.org/packages/dealerdirect/phpcodesniffer-composer-installer
 [packagist]: https://packagist.org/packages/dealerdirect/phpcodesniffer-composer-installer
+[`phpcodesniffer-standard` packages]: https://packagist.org/explore/?type=phpcodesniffer-standard
 [project-stage-shield]: https://img.shields.io/badge/Project%20Stage-Development-yellowgreen.svg
 [scrutinizer-shield]: https://img.shields.io/scrutinizer/g/dealerdirect/phpcodesniffer-composer-installer.svg
 [scrutinizer]: https://scrutinizer-ci.com/g/dealerdirect/phpcodesniffer-composer-installer/
-[travis-shield]: https://img.shields.io/travis/Dealerdirect/phpcodesniffer-composer-installer.svg
-[travis]: https://travis-ci.org/Dealerdirect/phpcodesniffer-composer-installer
+[ghactionstest-shield]: https://github.com/Dealerdirect/phpcodesniffer-composer-installer/actions/workflows/integrationtest.yml/badge.svg
+[ghactions]: https://github.com/Dealerdirect/phpcodesniffer-composer-installer/actions/workflows/integrationtest.yml
 [tutorial]: https://github.com/squizlabs/PHP_CodeSniffer/wiki/Coding-Standard-Tutorial
 [using-composer-plugins]: https://getcomposer.org/doc/articles/plugins.md#using-plugins
+[v0.4]: https://github.com/Dealerdirect/phpcodesniffer-composer-installer/releases/tag/v0.4.0
+[v0.7]: https://github.com/Dealerdirect/phpcodesniffer-composer-installer/releases/tag/v0.7.0

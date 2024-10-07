@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -12,11 +12,9 @@
 
 namespace Composer\DependencyResolver;
 
-use Composer\Package\BasePackage;
-use Composer\Package\Link;
-
 /**
  * @author Nils Adermann <naderman@naderman.de>
+ * @phpstan-import-type ReasonData from Rule
  */
 class Rule2Literals extends Rule
 {
@@ -26,10 +24,12 @@ class Rule2Literals extends Rule
     protected $literal2;
 
     /**
-     * @param int              $literal1
-     * @param int              $literal2
+     * @param Rule::RULE_* $reason A RULE_* constant
+     * @param mixed $reasonData
+     *
+     * @phpstan-param ReasonData $reasonData
      */
-    public function __construct($literal1, $literal2, $reason, $reasonData)
+    public function __construct(int $literal1, int $literal2, $reason, $reasonData)
     {
         parent::__construct($reason, $reasonData);
 
@@ -42,13 +42,17 @@ class Rule2Literals extends Rule
         }
     }
 
-    /** @return int[] */
-    public function getLiterals()
+    /**
+     * @return list<int>
+     */
+    public function getLiterals(): array
     {
-        return array($this->literal1, $this->literal2);
+        return [$this->literal1, $this->literal2];
     }
 
-    /** @return string */
+    /**
+     * @inheritDoc
+     */
     public function getHash()
     {
         return $this->literal1.','.$this->literal2;
@@ -62,7 +66,7 @@ class Rule2Literals extends Rule
      * @param  Rule $rule The rule to check against
      * @return bool Whether the rules are equal
      */
-    public function equals(Rule $rule)
+    public function equals(Rule $rule): bool
     {
         // specialized fast-case
         if ($rule instanceof self) {
@@ -78,7 +82,7 @@ class Rule2Literals extends Rule
         }
 
         $literals = $rule->getLiterals();
-        if (2 != \count($literals)) {
+        if (2 !== \count($literals)) {
             return false;
         }
 
@@ -94,17 +98,15 @@ class Rule2Literals extends Rule
     }
 
     /** @return false */
-    public function isAssertion()
+    public function isAssertion(): bool
     {
         return false;
     }
 
     /**
      * Formats a rule as a string of the format (Literal1|Literal2|...)
-     *
-     * @return string
      */
-    public function __toString()
+    public function __toString(): string
     {
         $result = $this->isDisabled() ? 'disabled(' : '(';
 

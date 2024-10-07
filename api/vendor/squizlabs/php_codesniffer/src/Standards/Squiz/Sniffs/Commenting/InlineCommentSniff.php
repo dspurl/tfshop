@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\Commenting;
@@ -30,7 +30,7 @@ class InlineCommentSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function register()
     {
@@ -49,7 +49,7 @@ class InlineCommentSniff implements Sniff
      * @param int                         $stackPtr  The position of the current token in the
      *                                               stack passed in $tokens.
      *
-     * @return void
+     * @return void|int
      */
     public function process(File $phpcsFile, $stackPtr)
     {
@@ -59,17 +59,22 @@ class InlineCommentSniff implements Sniff
         // We are only interested in inline doc block comments, which are
         // not allowed.
         if ($tokens[$stackPtr]['code'] === T_DOC_COMMENT_OPEN_TAG) {
-            $nextToken = $phpcsFile->findNext(
-                Tokens::$emptyTokens,
-                ($stackPtr + 1),
-                null,
-                true
-            );
+            $nextToken = $stackPtr;
+            do {
+                $nextToken = $phpcsFile->findNext(Tokens::$emptyTokens, ($nextToken + 1), null, true);
+                if ($tokens[$nextToken]['code'] === T_ATTRIBUTE) {
+                    $nextToken = $tokens[$nextToken]['attribute_closer'];
+                    continue;
+                }
+
+                break;
+            } while (true);
 
             $ignore = [
                 T_CLASS,
                 T_INTERFACE,
                 T_TRAIT,
+                T_ENUM,
                 T_FUNCTION,
                 T_CLOSURE,
                 T_PUBLIC,
@@ -78,6 +83,7 @@ class InlineCommentSniff implements Sniff
                 T_FINAL,
                 T_STATIC,
                 T_ABSTRACT,
+                T_READONLY,
                 T_CONST,
                 T_PROPERTY,
                 T_INCLUDE,

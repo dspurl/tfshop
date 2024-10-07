@@ -3,7 +3,7 @@
 namespace AlibabaCloud\Client\Request\Traits;
 
 use Exception;
-use Stringy\Stringy;
+use AlibabaCloud\Client\Support\Stringy;
 use AlibabaCloud\Client\Result\Result;
 use AlibabaCloud\Client\Filter\ClientFilter;
 use AlibabaCloud\Client\Exception\ClientException;
@@ -109,7 +109,7 @@ trait RetryTrait
         }
 
         foreach ($this->serverRetryStrings as $message) {
-            if (Stringy::create($result->getBody())->contains($message)) {
+            if (Stringy::contains($result->getBody(), $message)) {
                 $this->serverRetry--;
 
                 return true;
@@ -137,7 +137,7 @@ trait RetryTrait
         }
 
         foreach ($this->clientRetryStrings as $message) {
-            if (Stringy::create($exception->getMessage())->contains($message)) {
+            if (Stringy::contains($exception->getMessage(), $message)) {
                 $this->clientRetry--;
 
                 return true;

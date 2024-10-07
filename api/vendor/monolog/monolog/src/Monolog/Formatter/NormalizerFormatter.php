@@ -174,6 +174,9 @@ class NormalizerFormatter implements FormatterInterface
             if ($data instanceof \JsonSerializable) {
                 /** @var null|scalar|array<array|scalar|null> $value */
                 $value = $data->jsonSerialize();
+            } elseif (\get_class($data) === '__PHP_Incomplete_Class') {
+                $accessor = new \ArrayObject($data);
+                $value = (string) $accessor['__PHP_Incomplete_Class_Name'];
             } elseif (method_exists($data, '__toString')) {
                 /** @var string $value */
                 $value = $data->__toString();
@@ -198,6 +201,10 @@ class NormalizerFormatter implements FormatterInterface
      */
     protected function normalizeException(Throwable $e, int $depth = 0)
     {
+        if ($depth > $this->maxNormalizeDepth) {
+            return ['Over ' . $this->maxNormalizeDepth . ' levels deep, aborting normalization'];
+        }
+
         if ($e instanceof \JsonSerializable) {
             return (array) $e->jsonSerialize();
         }
@@ -267,13 +274,17 @@ class NormalizerFormatter implements FormatterInterface
         return $date->format($this->dateFormat);
     }
 
-    public function addJsonEncodeOption(int $option): void
+    public function addJsonEncodeOption(int $option): self
     {
         $this->jsonEncodeOptions |= $option;
+
+        return $this;
     }
 
-    public function removeJsonEncodeOption(int $option): void
+    public function removeJsonEncodeOption(int $option): self
     {
         $this->jsonEncodeOptions &= ~$option;
+
+        return $this;
     }
 }

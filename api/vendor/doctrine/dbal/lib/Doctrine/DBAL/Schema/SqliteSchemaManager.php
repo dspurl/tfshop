@@ -12,7 +12,6 @@ use function array_change_key_case;
 use function array_map;
 use function array_merge;
 use function array_reverse;
-use function array_values;
 use function explode;
 use function file_exists;
 use function preg_match;
@@ -196,7 +195,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
         );
 
         foreach ($indexArray as $indexColumnRow) {
-            if ($indexColumnRow['pk'] === '0') {
+            if ($indexColumnRow['pk'] === 0 || $indexColumnRow['pk'] === '0') {
                 continue;
             }
 
@@ -262,7 +261,7 @@ class SqliteSchemaManager extends AbstractSchemaManager
         $autoincrementCount  = 0;
 
         foreach ($tableColumns as $tableColumn) {
-            if ($tableColumn['pk'] === '0') {
+            if ($tableColumn['pk'] === 0 || $tableColumn['pk'] === '0') {
                 continue;
             }
 
@@ -434,16 +433,21 @@ class SqliteSchemaManager extends AbstractSchemaManager
                 ];
             }
 
-            $list[$name]['local'][]   = $value['from'];
+            $list[$name]['local'][] = $value['from'];
+
+            if ($value['to'] === null) {
+                continue;
+            }
+
             $list[$name]['foreign'][] = $value['to'];
         }
 
         $result = [];
         foreach ($list as $constraint) {
             $result[] = new ForeignKeyConstraint(
-                array_values($constraint['local']),
+                $constraint['local'],
                 $constraint['foreignTable'],
-                array_values($constraint['foreign']),
+                $constraint['foreign'],
                 $constraint['name'],
                 [
                     'onDelete' => $constraint['onDelete'],

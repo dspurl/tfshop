@@ -4,7 +4,7 @@
  *
  * @author    Greg Sherwood <gsherwood@squiz.net>
  * @copyright 2006-2015 Squiz Pty Ltd (ABN 77 084 670 600)
- * @license   https://github.com/squizlabs/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
+ * @license   https://github.com/PHPCSStandards/PHP_CodeSniffer/blob/master/licence.txt BSD Licence
  */
 
 namespace PHP_CodeSniffer\Standards\Squiz\Sniffs\Classes;
@@ -20,7 +20,7 @@ class ValidClassNameSniff implements Sniff
     /**
      * Returns an array of tokens this test wants to listen for.
      *
-     * @return array
+     * @return array<int|string>
      */
     public function register()
     {
@@ -28,6 +28,7 @@ class ValidClassNameSniff implements Sniff
             T_CLASS,
             T_INTERFACE,
             T_TRAIT,
+            T_ENUM,
         ];
 
     }//end register()
@@ -58,7 +59,7 @@ class ValidClassNameSniff implements Sniff
         // starting with the number will be multiple tokens.
         $opener    = $tokens[$stackPtr]['scope_opener'];
         $nameStart = $phpcsFile->findNext(T_WHITESPACE, ($stackPtr + 1), $opener, true);
-        $nameEnd   = $phpcsFile->findNext(T_WHITESPACE, $nameStart, $opener);
+        $nameEnd   = $phpcsFile->findNext([T_WHITESPACE, T_COLON], $nameStart, $opener);
         if ($nameEnd === false) {
             $name = $tokens[$nameStart]['content'];
         } else {

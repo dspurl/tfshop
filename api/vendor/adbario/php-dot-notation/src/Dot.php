@@ -29,14 +29,25 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      */
     protected $items = [];
 
+
+    /**
+     * The delimiter (alternative to a '.') to be used.
+     *
+     * @var string
+     */
+    protected $delimiter = '.';
+
+
     /**
      * Create a new Dot instance
      *
      * @param mixed $items
+     * @param string $delimiter
      */
-    public function __construct($items = [])
+    public function __construct($items = [], $delimiter = '.')
     {
         $this->items = $this->getArrayItems($items);
+        $this->delimiter = strlen($delimiter) ? $delimiter : '.';
     }
 
     /**
@@ -104,7 +115,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
             }
 
             $items = &$this->items;
-            $segments = explode('.', $key);
+            $segments = explode($this->delimiter, $key);
             $lastSegment = array_pop($segments);
 
             foreach ($segments as $segment) {
@@ -148,6 +159,10 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
             $items = $this->items;
         }
 
+        if (!func_num_args()) {
+            $delimiter = $this->delimiter;
+        }
+
         foreach ($items as $key => $value) {
             if (is_array($value) && !empty($value)) {
                 $flatten = array_merge(
@@ -179,13 +194,13 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
             return $this->items[$key];
         }
 
-        if (strpos($key, '.') === false) {
+        if (strpos($key, $this->delimiter) === false) {
             return $default;
         }
 
         $items = $this->items;
 
-        foreach (explode('.', $key) as $segment) {
+        foreach (explode($this->delimiter, $key) as $segment) {
             if (!is_array($items) || !$this->exists($items, $segment)) {
                 return $default;
             }
@@ -234,7 +249,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
                 continue;
             }
 
-            foreach (explode('.', $key) as $segment) {
+            foreach (explode($this->delimiter, $key) as $segment) {
                 if (!is_array($items) || !$this->exists($items, $segment)) {
                     return false;
                 }
@@ -446,7 +461,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
 
         $items = &$this->items;
 
-        foreach (explode('.', $keys) as $key) {
+        foreach (explode($this->delimiter, $keys) as $key) {
             if (!isset($items[$key]) || !is_array($items[$key])) {
                 $items[$key] = [];
             }
@@ -507,6 +522,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      * @param  int|string $key
      * @return bool
      */
+    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return $this->has($key);
@@ -518,6 +534,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      * @param  int|string $key
      * @return mixed
      */
+    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->get($key);
@@ -529,6 +546,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      * @param int|string|null $key
      * @param mixed           $value
      */
+    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (is_null($key)) {
@@ -545,6 +563,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      *
      * @param int|string $key
      */
+    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         $this->delete($key);
@@ -562,6 +581,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      * @param  int|string|null $key
      * @return int
      */
+    #[\ReturnTypeWillChange]
     public function count($key = null)
     {
         return count($this->get($key));
@@ -578,6 +598,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      *
      * @return \ArrayIterator
      */
+    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->items);
@@ -594,6 +615,7 @@ class Dot implements ArrayAccess, Countable, IteratorAggregate, JsonSerializable
      *
      * @return array
      */
+    #[\ReturnTypeWillChange]
     public function jsonSerialize()
     {
         return $this->items;

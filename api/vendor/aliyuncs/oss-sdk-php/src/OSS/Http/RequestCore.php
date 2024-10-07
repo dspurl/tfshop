@@ -170,7 +170,7 @@ class RequestCore
     public $registered_streaming_write_callback = null;
 
     /**
-     * The request timeout time, which is 5,184,000 seconds,that is, 6 days by default
+     * The request timeout time, which is 5,184,000 seconds,that is, 60 days by default
      *
      * @var int
      */
@@ -789,7 +789,7 @@ class RequestCore
         }
 
         // As long as this came back as a valid resource or CurlHandle instance...
-        if (is_resource($curl_handle) || (is_object($curl_handle) && get_class($curl_handle) === 'CurlHandle')) {
+        if (is_resource($curl_handle) || (is_object($curl_handle) && in_array(get_class($curl_handle),array('CurlHandle','Swoole\Curl\Handler', 'Swoole\Coroutine\Curl\Handle'),true))) {
             // Determine what's what.
             $header_size = curl_getinfo($curl_handle, CURLINFO_HEADER_SIZE);
             $this->response_headers = substr($this->response, 0, $header_size);

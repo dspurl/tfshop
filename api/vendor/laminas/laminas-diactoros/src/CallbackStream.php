@@ -15,13 +15,10 @@ use const SEEK_SET;
  */
 class CallbackStream implements StreamInterface
 {
-    /**
-     * @var callable|null
-     */
+    /** @var callable|null */
     protected $callback;
 
     /**
-     * @param callable $callback
      * @throws Exception\InvalidArgumentException
      */
     public function __construct(callable $callback)
@@ -32,7 +29,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function __toString() : string
+    public function __toString(): string
     {
         return $this->getContents();
     }
@@ -40,17 +37,19 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function close() : void
+    public function close(): void
     {
         $this->callback = null;
     }
 
     /**
      * {@inheritdoc}
+     *
+     * @return null|callable
      */
-    public function detach() : ?callable
+    public function detach(): ?callable
     {
-        $callback = $this->callback;
+        $callback       = $this->callback;
         $this->callback = null;
         return $callback;
     }
@@ -58,7 +57,7 @@ class CallbackStream implements StreamInterface
     /**
      * Attach a new callback to the instance.
      */
-    public function attach(callable $callback) : void
+    public function attach(callable $callback): void
     {
         $this->callback = $callback;
     }
@@ -66,7 +65,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function getSize() : ?int
+    public function getSize(): ?int
     {
         return null;
     }
@@ -74,7 +73,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function tell() : int
+    public function tell(): int
     {
         throw Exception\UntellableStreamException::forCallbackStream();
     }
@@ -82,7 +81,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function eof() : bool
+    public function eof(): bool
     {
         return empty($this->callback);
     }
@@ -90,13 +89,14 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function isSeekable() : bool
+    public function isSeekable(): bool
     {
         return false;
     }
 
     /**
      * {@inheritdoc}
+     *
      * @param int $offset
      * @param int $whence
      * @return void
@@ -109,7 +109,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function rewind() : void
+    public function rewind(): void
     {
         throw Exception\UnrewindableStreamException::forCallbackStream();
     }
@@ -117,7 +117,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function isWritable() : bool
+    public function isWritable(): bool
     {
         return false;
     }
@@ -125,7 +125,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function write($string) : void
+    public function write($string): void
     {
         throw Exception\UnwritableStreamException::forCallbackStream();
     }
@@ -133,7 +133,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function isReadable() : bool
+    public function isReadable(): bool
     {
         return false;
     }
@@ -141,7 +141,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function read($length) : string
+    public function read($length): string
     {
         throw Exception\UnreadableStreamException::forCallbackStream();
     }
@@ -149,7 +149,7 @@ class CallbackStream implements StreamInterface
     /**
      * {@inheritdoc}
      */
-    public function getContents() : string
+    public function getContents(): string
     {
         $callback = $this->detach();
         $contents = $callback ? $callback() : '';
@@ -162,9 +162,9 @@ class CallbackStream implements StreamInterface
     public function getMetadata($key = null)
     {
         $metadata = [
-            'eof' => $this->eof(),
+            'eof'         => $this->eof(),
             'stream_type' => 'callback',
-            'seekable' => false
+            'seekable'    => false,
         ];
 
         if (null === $key) {

@@ -28,9 +28,16 @@ trait Test
     /**
      * A test Carbon instance to be returned when now instances are created.
      *
-     * @var static
+     * @var Closure|static|null
      */
     protected static $testNow;
+
+    /**
+     * The timezone to resto to when clearing the time mock.
+     *
+     * @var string|null
+     */
+    protected static $testDefaultTimezone;
 
     /**
      * Set a Carbon instance (real or mock) to be returned when a "now"
@@ -52,15 +59,13 @@ trait Test
      *
      * /!\ Use this method for unit tests only.
      *
-     * @param Closure|static|string|false|null $testNow real or mock Carbon instance
+     * @param DateTimeInterface|Closure|static|string|false|null $testNow real or mock Carbon instance
      */
     public static function setTestNow($testNow = null)
     {
-        if ($testNow === false) {
-            $testNow = null;
-        }
-
-        static::$testNow = \is_string($testNow) ? static::parse($testNow) : $testNow;
+        static::$testNow = $testNow instanceof self || $testNow instanceof Closure
+            ? $testNow
+            : static::make($testNow);
     }
 
     /**
@@ -80,10 +85,14 @@ trait Test
      *
      * /!\ Use this method for unit tests only.
      *
-     * @param Closure|static|string|false|null $testNow real or mock Carbon instance
+     * @param DateTimeInterface|Closure|static|string|false|null $testNow real or mock Carbon instance
      */
     public static function setTestNowAndTimezone($testNow = null, $tz = null)
     {
+        if ($testNow) {
+            self::$testDefaultTimezone = self::$testDefaultTimezone ?? date_default_timezone_get();
+        }
+
         $useDateInstanceTimezone = $testNow instanceof DateTimeInterface;
 
         if ($useDateInstanceTimezone) {
@@ -94,7 +103,12 @@ trait Test
 
         if (!$useDateInstanceTimezone) {
             $now = static::getMockedTestNow(\func_num_args() === 1 ? null : $tz);
-            self::setDefaultTimezone($now->tzName, $now);
+            $tzName = $now ? $now->tzName : null;
+            self::setDefaultTimezone($tzName ?? self::$testDefaultTimezone ?? 'UTC', $now);
+        }
+
+        if (!$testNow) {
+            self::$testDefaultTimezone = null;
         }
     }
 
@@ -105,16 +119,22 @@ trait Test
      *
      * /!\ Use this method for unit tests only.
      *
-     * @param Closure|static|string|false|null $testNow  real or mock Carbon instance
-     * @param Closure|null                     $callback
+     * @template T
      *
-     * @return mixed
+     * @param DateTimeInterface|Closure|static|string|false|null $testNow  real or mock Carbon instance
+     * @param Closure(): T                                       $callback
+     *
+     * @return T
      */
-    public static function withTestNow($testNow = null, $callback = null)
+    public static function withTestNow($testNow, $callback)
     {
         static::setTestNow($testNow);
-        $result = $callback();
-        static::setTestNow();
+
+        try {
+            $result = $callback();
+        } finally {
+            static::setTestNow();
+        }
 
         return $result;
     }

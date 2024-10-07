@@ -35,7 +35,7 @@ class HtmlResponse extends Response
      * @param string|StreamInterface $html HTML or stream for the message body.
      * @param int $status Integer status code for the response; 200 by default.
      * @param array $headers Array of headers to use at initialization.
-     * @throws Exception\InvalidArgumentException if $html is neither a string or stream.
+     * @throws Exception\InvalidArgumentException If $html is neither a string or stream.
      */
     public function __construct($html, int $status = 200, array $headers = [])
     {
@@ -50,9 +50,9 @@ class HtmlResponse extends Response
      * Create the message body.
      *
      * @param string|StreamInterface $html
-     * @throws Exception\InvalidArgumentException if $html is neither a string or stream.
+     * @throws Exception\InvalidArgumentException If $html is neither a string or stream.
      */
-    private function createBody($html) : StreamInterface
+    private function createBody($html): StreamInterface
     {
         if ($html instanceof StreamInterface) {
             return $html;
@@ -61,8 +61,8 @@ class HtmlResponse extends Response
         if (! is_string($html)) {
             throw new Exception\InvalidArgumentException(sprintf(
                 'Invalid content (%s) provided to %s',
-                (is_object($html) ? get_class($html) : gettype($html)),
-                __CLASS__
+                is_object($html) ? get_class($html) : gettype($html),
+                self::class
             ));
         }
 

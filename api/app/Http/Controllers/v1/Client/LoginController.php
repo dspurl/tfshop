@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
@@ -9,6 +10,7 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Client;
 
 use App\Code;
@@ -111,13 +113,26 @@ class LoginController extends Controller
                 if ($UserPlatform) {
                     // 如果第三方账号已存在，用户也已经注册，则将用户同步到第三方账号（第一次第三方账号创建的用户将失效）
                     if ($User) {
+                        // 如果当前账号已存在，则更新当前第三方账号绑定到当前账号中
+                        $UserPlatform->user_id = $User->id;
+                        $UserPlatform->save();
+                        // 修改登录时间
+                        $User = User::find($UserPlatform->user_id);
+                        $User->updated_at = Carbon::now()->toDateTimeString();
+                        $User->save();
+                    }else{
+                        // 当前账号未生成，则生成
+                        $User = new User();
+                        $User->lang = $request->lang ?? App::getLocale();
+                        $User->uuid = (string) Uuid::generate();
+                        $User->name = $User->uuid;
+                        $User->password = bcrypt($password);
+                        $User->cellphone = $request->cellphone;
+                        $User->save();
+                        // 将当前第三方账号绑定到当前账号中
                         $UserPlatform->user_id = $User->id;
                         $UserPlatform->save();
                     }
-                    // 修改登录时间
-                    $User = User::find($UserPlatform->user_id);
-                    $User->updated_at = Carbon::now()->toDateTimeString();
-                    $User->save();
                 } else {
                     // 如果手机号未注册，则注册第三方账号和用户
                     if (!$User) {
@@ -126,6 +141,7 @@ class LoginController extends Controller
                         $User->uuid = (string) Uuid::generate();
                         $User->name = $User->uuid;
                         $User->password = bcrypt($password);
+                        $User->cellphone = $request->cellphone;
                         $User->save();
                     }
                     $UserPlatform = new UserPlatform();

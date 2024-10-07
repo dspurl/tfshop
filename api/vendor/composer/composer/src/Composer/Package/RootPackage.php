@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 /*
  * This file is part of Composer.
@@ -19,107 +19,113 @@ namespace Composer\Package;
  */
 class RootPackage extends CompletePackage implements RootPackageInterface
 {
-    const DEFAULT_PRETTY_VERSION = '1.0.0+no-version-set';
+    public const DEFAULT_PRETTY_VERSION = '1.0.0+no-version-set';
 
+    /** @var string */
     protected $minimumStability = 'stable';
+    /** @var bool */
     protected $preferStable = false;
-    protected $stabilityFlags = array();
-    protected $config = array();
-    protected $references = array();
-    protected $aliases = array();
+    /** @var array<string, BasePackage::STABILITY_*> Map of package name to stability constant */
+    protected $stabilityFlags = [];
+    /** @var mixed[] */
+    protected $config = [];
+    /** @var array<string, string> Map of package name to reference/commit hash */
+    protected $references = [];
+    /** @var list<array{package: string, version: string, alias: string, alias_normalized: string}> */
+    protected $aliases = [];
 
     /**
-     * {@inerhitDoc}
+     * @inheritDoc
      */
-    public function setMinimumStability($minimumStability)
+    public function setMinimumStability(string $minimumStability): void
     {
         $this->minimumStability = $minimumStability;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getMinimumStability()
+    public function getMinimumStability(): string
     {
         return $this->minimumStability;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function setStabilityFlags(array $stabilityFlags)
+    public function setStabilityFlags(array $stabilityFlags): void
     {
         $this->stabilityFlags = $stabilityFlags;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getStabilityFlags()
+    public function getStabilityFlags(): array
     {
         return $this->stabilityFlags;
     }
 
     /**
-     * {@inerhitDoc}
+     * @inheritDoc
      */
-    public function setPreferStable($preferStable)
+    public function setPreferStable(bool $preferStable): void
     {
         $this->preferStable = $preferStable;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getPreferStable()
+    public function getPreferStable(): bool
     {
         return $this->preferStable;
     }
 
     /**
-     * {@inerhitDoc}
+     * @inheritDoc
      */
-    public function setConfig(array $config)
+    public function setConfig(array $config): void
     {
         $this->config = $config;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return $this->config;
     }
 
     /**
-     * {@inerhitDoc}
+     * @inheritDoc
      */
-    public function setReferences(array $references)
+    public function setReferences(array $references): void
     {
         $this->references = $references;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getReferences()
+    public function getReferences(): array
     {
         return $this->references;
     }
 
     /**
-     * {@inerhitDoc}
+     * @inheritDoc
      */
-    public function setAliases(array $aliases)
+    public function setAliases(array $aliases): void
     {
         $this->aliases = $aliases;
     }
 
     /**
-     * {@inheritDoc}
+     * @inheritDoc
      */
-    public function getAliases()
+    public function getAliases(): array
     {
         return $this->aliases;
     }
