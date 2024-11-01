@@ -38,6 +38,9 @@
           <el-checkbox v-model="loginForm.remember">{{ $t('login.form.checkbox.remember_password') }}</el-checkbox>
         </el-form-item>
         <el-button :loading="loading" type="primary" style="width:100%;margin-bottom:30px;" @click.native.prevent="handleLogin">{{ $t('login.form.button.log_in') }}</el-button>
+        <el-alert
+          title="演示站无法编辑，需要完整功能，请自行搭建项目"
+          type="warning"/>
       </el-form>
     </div>
   </div>

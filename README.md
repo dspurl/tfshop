@@ -79,7 +79,9 @@ node= 14.18.3
 ### 开源版演示
 > 开源版小程序无演示，请查看H5的演示效果，和PRO的区别除了功能外，没区别
 
-暂无体验，请自行下载体验或查看PRO演示
+管理后台： https://tfshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
+
+H5端：[https://tfshop.dswjcms.com/h5](https://tfshop.dswjcms.com/h5)（移动端打开）
 
 ### PRO版演示
 
@@ -87,13 +89,13 @@ node= 14.18.3
 |-|-|
 |<img src="https://dspurl.github.io/tfshop/image/gh_e79e7cd855e7_258.jpg">|<img src="https://dspurl.github.io/tfshop/image/13.png">|
 
-管理后台： https://tfshop.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
+管理后台： https://tfshop-pro.dswjcms.com/admin 账号：abcd12345 密码：abcd12345
 
-收银台： https://tfshop.dswjcms.com/cashier 账号：abcd12345 密码：abcd12345
+收银台： https://tfshop-pro.dswjcms.com/cashier 账号：abcd12345 密码：abcd12345
 
-H5端：[https://tfshop.dswjcms.com/h5](https://tfshop.dswjcms.com/h5)（移动端打开）
+H5端：[https://tfshop-pro.dswjcms.com/h5](https://tfshop-pro.dswjcms.com/h5)（移动端打开）
 
-PC端：[https://tfshop.dswjcms.com/](https://tfshop.dswjcms.com/)（电脑端打开）
+PC端：[https://tfshop-pro.dswjcms.com/](https://tfshop-pro.dswjcms.com/)（电脑端打开）
 
 ### 页面展示
 (页面仅展示部分UI)
