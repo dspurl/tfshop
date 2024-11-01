@@ -4,7 +4,7 @@ yarn-debug.log*
 yarn-error.log*
 **/*.log
 node_modules/.cache
-
+dis
 test/unit/coverage
 test/e2e/reports
 selenium-debug.log
