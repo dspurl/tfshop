@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
@@ -18,7 +19,6 @@ use App\Models\v1\AuthGroupAuthRule;
 use App\Models\v1\AuthRule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 
 /**
@@ -34,50 +34,12 @@ class PowerController extends Controller
      * @param Request $request
      * @queryParam limit int 每页显示条数
      * @queryParam page string 页码
-     * @queryParam pid int 分组ID
-     * @queryParam title string ID、权限名称、API名称
      * @return string
      */
     public function list(Request $request)
     {
-        /*$AuthRuleAll = AuthRule::where('pid', 0)->with(['children'])->get();
-        function children($data, $pid=0){
-            foreach ($data as $a){
-                $AuthRule = new AuthRule();
-                $AuthRule->title = $a->title;
-                $AuthRule->url = $a->url;
-                $AuthRule->icon = $a->icon;
-                $AuthRule->sort = $a->sort;
-                $AuthRule->api = $a->api;
-                $AuthRule->pid = $pid;
-                $AuthRule->state = $a->state;
-                $AuthRule->lang = 'en';
-                $AuthRule->lang_parent_id = $a->id;
-                $AuthRule->save();
-                if(isset($a->children)){
-                    children($a->children, $AuthRule->id);
-                }
-            }
-        }
-        children($AuthRuleAll);*/
-
-
-        $q = AuthRule::query();
-        $limit = $request->limit;
-        $q->orderBy('pid', 'asc');
-        $q->orderBy('sort', 'asc');
-        $q->orderBy('id', 'asc');
-        if ($request->title) {
-            $q->where('id', $request->title)->orWhere('title', 'like', '%' . $request->title . '%')->orWhere('api', 'like', '%' . $request->title . '%');
-        }
-        if (isset($request->pid)) {
-            $q->where('pid', collect($request->pid)->last());
-        }
-        $q->where('lang', App::getLocale());
-        $q->with(['Language']);
-        $paginate['data'] = $q->paginate($limit)->toArray();
-        $paginate['options'] = AuthRule::where('pid', 0)->with(['children'])->get();
-        return resReturn(1, $paginate);
+        $AuthRule = AuthRule::where('pid', 0)->with(['children'])->orderBy('sort', 'ASC')->get();
+        return resReturn(1, $AuthRule);
     }
 
     /**
@@ -85,29 +47,43 @@ class PowerController extends Controller
      * 创建权限
      * @param SubmitPowerRequest $request
      * @queryParam  title string 权限名称
-     * @queryParam  url string 外链
+     * @queryParam  api string 别名
+     * @queryParam  path string 路由
+     * @queryParam  active string 菜单高亮
+     * @queryParam  redirect_url string 重定向
+     * @queryParam  view string 视图
      * @queryParam  icon string 图标
-     * @queryParam  sort string 排序
-     * @queryParam  api string API
-     * @queryParam  pid int 权限组ID
-     * @queryParam  state int 显示在菜单栏：1是0否
+     * @queryParam  color string 颜色值
+     * @queryParam  pid int 父ID
+     * @queryParam  type int 类型:1=菜单-menu,2=iframe-iframe,3=外链-link
+     * @queryParam  is_hidden int 是否在菜单隐藏:1=是-yes,0=否-no
+     * @queryParam  is_hidden_breadcrumb int 是否隐藏面包屑:1=是-yes,0=否-no
+     * @queryParam  is_affix int 是否固定:1=是-yes,0=否-no
+     * @queryParam  is_full_page int 是否整页打开路由:1=是-yes,0=否-no
+     * @queryParam  sort int 排序
      * @return string
      */
     public function create(SubmitPowerRequest $request)
     {
-        $authRule = new AuthRule;
-        $authRule->title = $request->title;
-        $authRule->url = $request->url ? $request->url : '';
-        $authRule->icon = $request->icon ? $request->icon : '';
-        $authRule->sort = $request->sort ? $request->sort : 0;
-        $authRule->api = $request->api;
-        $pid = collect($request->pid)->last();
-        $authRule->pid = $pid > 0 ? $pid : 0;
-        $authRule->state = $request->state;
-        $authRule->lang = $request->lang ?? App::getLocale();
-        $authRule->lang_parent_id = $request->lang_parent_id ?? 0;
-        $authRule->save();
-        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
+        $sort = AuthRule::where('pid', $request->pid)->count();
+        $AuthRule = new AuthRule;
+        $AuthRule->title = $request->title;
+        $AuthRule->api = '';
+        $AuthRule->path = '';
+        $AuthRule->active = '';
+        $AuthRule->redirect_url = '';
+        $AuthRule->view = '';
+        $AuthRule->icon = '';
+        $AuthRule->color = '';
+        $AuthRule->pid = $request->pid;
+        $AuthRule->type = $request->type;
+        $AuthRule->is_hidden = AuthRule::AUTH_RULE_IS_HIDDEN_NO;
+        $AuthRule->is_hidden_breadcrumb = AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
+        $AuthRule->is_affix = AuthRule::AUTH_RULE_IS_AFFIX_NO;
+        $AuthRule->is_full_page = AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
+        $AuthRule->sort = $sort + 1;
+        $AuthRule->save();
+        return resReturn(1, $AuthRule);
     }
 
     /**
@@ -118,43 +94,122 @@ class PowerController extends Controller
      * @return string
      * @queryParam  id int 权限ID
      * @queryParam  title string 权限名称
-     * @queryParam  url string 外链
+     * @queryParam  api string 别名
+     * @queryParam  path string 路由
+     * @queryParam  active string 菜单高亮
+     * @queryParam  redirect_url string 重定向
+     * @queryParam  view string 视图
      * @queryParam  icon string 图标
-     * @queryParam  sort string 排序
-     * @queryParam  api string API
-     * @queryParam  pid int 权限组ID
-     * @queryParam  state int 显示在菜单栏：1是0否
+     * @queryParam  color string 颜色值
+     * @queryParam  pid int 父ID
+     * @queryParam  type int 类型:1=菜单-menu,2=iframe-iframe,3=外链-link
+     * @queryParam  is_hidden int 是否在菜单隐藏:1=是-yes,0=否-no
+     * @queryParam  is_hidden_breadcrumb int 是否隐藏面包屑:1=是-yes,0=否-no
+     * @queryParam  is_affix int 是否固定:1=是-yes,0=否-no
+     * @queryParam  is_full_page int 是否整页打开路由:1=是-yes,0=否-no
+     * @queryParam  sort int 排序
      */
     public function edit($id, SubmitPowerRequest $request)
     {
-        $authRule = AuthRule::find($id);
-        $authRule->title = $request->title;
-        $authRule->api = $request->api;
-        $pid = collect($request->pid)->last();
-        $authRule->pid = $pid > 0 ? $pid : 0;
-        $authRule->url = $request->url ? $request->url : '';
-        $authRule->icon = $request->icon ? $request->icon : '';
-        $authRule->sort = $request->sort ? $request->sort : 0;
-        $authRule->state = $request->state;
-        $authRule->save();
-        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.amend')]));
+        $AuthRule = AuthRule::find($id);
+        $AuthRule->title = $request->title;
+        $AuthRule->api = $request->api ?? '';
+        $AuthRule->path = $request->path ?? '';
+        $AuthRule->pid = $request->pid ?? 0;
+        $AuthRule->active = $request->active ?? '';
+        $AuthRule->redirect_url = $request->redirect_url ?? '';
+        $AuthRule->view = $request->view ?? '';
+        $AuthRule->icon = $request->icon ?? '';
+        $AuthRule->color = $request->color ?? '';
+        $AuthRule->type = $request->type;
+        $AuthRule->is_hidden = $request->is_hidden ? AuthRule::AUTH_RULE_IS_HIDDEN_YES : AuthRule::AUTH_RULE_IS_HIDDEN_NO;
+        $AuthRule->is_hidden_breadcrumb = $request->is_hidden_breadcrumb ? AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_YES : AuthRule::AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO;
+        $AuthRule->is_affix = $request->is_affix ? AuthRule::AUTH_RULE_IS_AFFIX_YES : AuthRule::AUTH_RULE_IS_AFFIX_NO;
+        $AuthRule->is_full_page = $request->is_full_page ? AuthRule::AUTH_RULE_IS_FULL_PAGE_YES : AuthRule::AUTH_RULE_IS_FULL_PAGE_NO;
+        $AuthRule->sort = $request->sort;
+        $AuthRule->save();
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
+    }
+
+    /**
+     * PowerSort
+     * 权限排序
+     * @param Request $request
+     * @return string
+     * @throws \Exception
+     * @queryParam  draggingNode array 拖拽对象
+     * @queryParam  dropNode array 释放对象
+     * @queryParam  dropType string 释放对象的位置
+     */
+    public function sort(Request $request)
+    {
+        if (!$request->has('draggingNode')) {
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('power.dragging_node')]), Code::CODE_WRONG);
+        }
+        if (!$request->has('dropNode')) {
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('power.drop_node')]), Code::CODE_WRONG);
+        }
+        if (!$request->has('dropType')) {
+            throw new \Exception(__('hint.error.mistake', ['attribute' => __('power.drop_type')]), Code::CODE_WRONG);
+        }
+        DB::transaction(function () use ($request) {
+            $draggingNodeData = $request->draggingNode;
+            $dropNodeData = $request->dropNode;
+            $pid = $dropNodeData['pid'];
+            if ($request->dropType == 'inner') {    // 里面
+                $draggingNodeData['sort'] = count($dropNodeData['children']);
+                $pid = $dropNodeData['id'];
+                $draggingNode = AuthRule::find($draggingNodeData['id']);
+                $draggingNode->sort = $draggingNodeData['sort'];
+                $draggingNode->pid = $pid;
+                $draggingNode->save();
+            } else {
+                $brother = AuthRule::where('pid', $dropNodeData['pid'])->where('id', '!=', $draggingNodeData['id'])->orderBy('sort', 'ASC')->get()->toArray();
+                $draggingNode = AuthRule::find($draggingNodeData['id']);
+                $draggingNode->pid = $pid;
+                $draggingNode->save();
+                // 处理排序
+                if ($request->dropType == 'before') { // 之前
+                    array_splice($brother, $dropNodeData['sort'] - 1, 0, [$draggingNode->toArray()]);
+                } else {  // 之后
+                    array_splice($brother, $dropNodeData['sort'], 0, [$draggingNode->toArray()]);
+                }
+                // 重新排序
+                foreach ($brother as $id => $b) {
+                    $AuthRule = AuthRule::find($b['id']);
+                    $AuthRule->sort = $id + 1;
+                    $AuthRule->save();
+                }
+            }
+        }, 5);
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
     }
 
     /**
      * PowerDestroy
      * 删除权限
-     * @param $id
-     * @return string
+     * @param int $id
+     * @param Request $request
+     * @return \Illuminate\Http\Response
+     * @queryParam  id int 权限ID
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        DB::transaction(function () use ($id) {
-            if (!$id) {
-                return resReturn(0, __('common.arguments'), Code::CODE_PARAMETER_WRONG);
+        DB::transaction(function () use ($id, $request) {
+            if ($id > 0) {
+                $arr = (new AuthRule())->obtainAllChildPermissions($id);
+                AuthRule::whereIn('id', $arr)->delete();
+                AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
+            } else {
+                if (!$request->has('ids')) {
+                    return resReturn(0, __('hint.error.selects', ['attribute' => __('common.operation_content')]), Code::CODE_WRONG);
+                }
+                foreach ($request->ids as $ids) {
+                    $arr = (new AuthRule())->obtainAllChildPermissions($ids);
+                    AuthRule::whereIn('id', $arr)->delete();
+                    AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
+                }
             }
-            $arr = (new AuthRule())->obtainAllChildPermissions($id);
-            AuthRule::whereIn('id', $arr)->delete();
-            AuthGroupAuthRule::whereIn('auth_rule_id', $arr)->delete();
         }, 5);
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }

@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
@@ -37,15 +38,25 @@ class RegionController extends Controller
     public function list(Request $request)
     {
         $q = Region::query();
+        $limit = $request->limit;
         $q->where('parent_id', $request->has('parent_id') ? $request->parent_id : 0);
-        if(isset($request->all)){
-            $q->with(['parent','children']);
-        }else{
-            $q->with(['parent','child']);
+        if (isset($request->all)) {
+            $q->with(['parent', 'children']);
+        } else {
+            $q->with(['parent', 'child']);
         }
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
+        }
+        if ($request->keyword) {
+            $q->orWhere('name', $request->keyword)->orWhere('value', $request->keyword);
+        }
+        if ($request->keyword) {
+            $q->where(function ($q1) use ($request) {
+                $q1->orWhere('name', $request->keyword)
+                    ->orWhere('value', $request->keyword);
+            });
         }
         $q->where('lang', App::getLocale());
         $paginate = $q->get();
@@ -111,9 +122,10 @@ class RegionController extends Controller
             if ($id) {
                 Region::where('id', $id)->delete();
             } else {
-                foreach ($request as $data) {
-                    Region::where('id', $data['id'])->delete();
+                if (!$request->has('ids')) {
+                    return resReturn(0, __('hint.error.selects', ['attribute' => __('common.operation_content')]), Code::CODE_WRONG);
                 }
+                Region::whereIn('id', $request->ids)->delete();
             }
         }, 5);
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));

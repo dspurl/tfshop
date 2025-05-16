@@ -17,7 +17,7 @@
 		<view class="a-t">
 			<image :src="specificationDefaultDisplay.img" @click="previewImage(specificationDefaultDisplay.img)"></image>
 			<view class="right">
-				<template v-if="getLists.price_show && specificationDefaultDisplay.price_show">
+				<template v-if="getLists.price && specificationDefaultDisplay.price_show">
 					<text class="price" v-if="specificationDefaultDisplay.price_show.length > 1">{{$t('common.unit')}}{{specificationDefaultDisplay.price_show[0]}} - {{specificationDefaultDisplay.price_show[1]}}</text>
 					<text class="price" v-else-if="specificationDefaultDisplay.price_show.length === 1">{{$t('common.unit')}}{{specificationDefaultDisplay.price_show[0]}}</text>
 				</template>
@@ -177,7 +177,7 @@ export default{
 				})
 				// 规格默认属性
 				this.specificationDefaultDisplay = {
-					img: this.getLists.resources_many[0].img,
+					img: this.getLists.img[0],
 					price_show: this.getLists.price_show,
 					inventory_show: this.getLists.inventory_show,
 					selected: this.$t('common.select') + ' ' + this.noSelectedName
@@ -185,9 +185,9 @@ export default{
 				this.$emit('purchasePattern',this.$t('common.select') + ' ' + this.noSelectedName)
 			}else{
 				this.specificationDefaultDisplay = {
-					img: this.getLists.resources_many[0].img,
-					price_show: this.getLists.price_show,
-					inventory_show: this.getLists.inventory_show
+					img: this.getLists.img[0],
+					price_show: this.getLists.price,
+					inventory_show: this.getLists.inventory
 				}
 				this.cartGood.price = this.getLists.price
 			}
@@ -199,7 +199,6 @@ export default{
 					}
 				}
 			}
-			
 		},
 		//初始化选中项
 		initSelectSpec(newVal){
@@ -319,7 +318,7 @@ export default{
 
 			if(this.noSelectedName.length > 0){
 				this.specificationDefaultDisplay = {
-					img: this.getLists.resources_many[0].img,
+					img: this.getLists.img[0],
 					price_show: this.getLists.price_show,
 					inventory_show: this.getLists.inventory_show,
 					selected: this.$t('common.select') + ' ' + this.noSelectedName
@@ -398,7 +397,7 @@ export default{
 							selectedName.push(items.v)
 						})
 						this.specificationDefaultDisplay = {
-							img: this.productSkus[i].resources ? this.productSkus[i].resources.img : this.getLists.resources_many[0].img,
+							img: this.productSkus[i].img,
 							price_show: [this.productSkus[i].price],
 							inventory_show: this.productSkus[i].inventory,
 							selected: this.$t('common.selected') + ' ' + selectedName.join(";"),
@@ -445,10 +444,8 @@ export default{
 				if(this.order){	//订单更新，直接返回更新后的数据
 					// 非SKU商品不允许订单下修改，故不做处理
 					if(this.getLists.good_sku.length>0){
-						let img = this.getLists.resources_many[0].img
-						if(this.shoppingAttributes.resources){
-							img = this.shoppingAttributes.resources.img
-						}
+						let img = this.getLists.img[0]
+						img = this.shoppingAttributes.img[0]
 						let cart={
 							id: this.cartDetails.id ? this.cartDetails.id : 0,
 							name: this.getLists.name,
@@ -477,12 +474,10 @@ export default{
 						  cartMap.set('id' + item.good_id,item)
 						}
 					})
-					let img = this.getLists.resources_many[0].img
+					let img = this.getLists.img[0]
 					//Sku
 					if(this.getLists.good_sku.length>0){
-						if(this.shoppingAttributes.resources){
-							img = this.shoppingAttributes.resources.img
-						}
+						img = this.shoppingAttributes.img
 						if(this.update){ //更新
 							// 判断用户是否更改了SKU
 							if(this.good_sku.id !== this.shoppingAttributes.id){
@@ -540,7 +535,7 @@ export default{
 							cartMap.get('id' + this.getLists.id).img = img
 						}else{
 							cartMap.set('id' + this.getLists.id,{
-								price: this.cartGood.price,
+								price: this.cartGood.price[0],
 								number: this.cartGood.number,
 								name: this.getLists.name,
 								good_id: this.getLists.id,

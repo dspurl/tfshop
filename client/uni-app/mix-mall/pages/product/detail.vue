@@ -1,33 +1,38 @@
 <template>
 	<view class="container">
 		<view class="carousel">
-			<video v-if="video" id="showVideo" :src="video" :poster="poster" class="showVideo"/>
+			<video v-if="video" id="showVideo" :src="getList.video" :poster="poster" class="showVideo"/>
 			<view v-if="video" class="showVideoClose" @click.stop="closeVideo">{{$t('common.close')}}</view>
-			<swiper indicator-dots circular="true" duration="400" v-if="getList.resources_many" @change="imgCtu">
-				<swiper-item class="swiper-item" v-for="(item, index) in resources_many" :key="index" @click="showVideo">
-					<view v-if="item.type === 'img'" class="image-wrapper" @click="imgList()"><image :src="item.img" class="loaded" mode="aspectFill" lazy-load></image></view>
-					<view v-else class="image-wrapper">
+			<swiper indicator-dots circular="true" duration="400" v-if="getList.img" @change="imgCtu">
+				<swiper-item v-if="getList.video_img" class="swiper-item" @click="showVideo">
+					<image :src="getList.video_img" lazy-load class="loaded" mode="aspectFill"></image>
+					<view class="playVideo text-white cuIcon-videofill"></view>
+				</swiper-item>
+				<swiper-item class="swiper-item" v-for="(item, index) in getList.img" :key="index">
+					<view class="image-wrapper" @click="imgList()"><image :src="item" class="loaded" mode="aspectFill" lazy-load></image></view>
+					<!-- <view v-else class="image-wrapper">
 						<image :src="poster" lazy-load class="loaded" mode="aspectFill"></image>
-					</view>
-					<view v-if="item.type === 'video'" class="playVideo text-white cuIcon-videofill"></view>
+					</view> -->
+					<!--  -->
 				</swiper-item>
 			</swiper>
 		</view>
 		<view class="introduce-section">
 			<text class="title">{{ getList.name }}</text>
-			<view class="price-box" v-if="inventoryFlag">
+			<view class="price-box" v-if="getList.inventory >0">
 				<text class="price-tip">{{$t('common.unit')}}</text>
-				<template v-if="getList.price_show">
-					<text class="price" v-if="getList.price_show.length > 1">{{ getList.price_show[0] }} - {{ getList.price_show[1] }}</text>
-					<text class="price" v-else-if="getList.price_show.length === 1">{{ getList.price_show[0] }}</text>
+				<template v-if="getList.price.length > 1">
+					<text class="price">{{ getList.price[0] }}</text><text class="price-tip">起</text>
 				</template>
-				<template v-if="getList.good_sku.length > 0 && getList.market_price_show">
-					<text class="m-price" v-if="getList.market_price_show.length > 1">{{$t('common.unit')}}{{ getList.market_price_show[1] }}</text>
-					<text class="m-price" v-else-if="getList.market_price_show.length === 1">{{$t('common.unit')}}{{ getList.market_price_show[0] }}</text>
+				<template v-else>
+					<text class="price">{{ getList.price[0] }}</text>
+				</template>
+				<template>
+					<text class="m-price">{{$t('common.unit')}}{{ getList.market_price[0] }}</text>
 				</template>
 			</view>
 			<view class="bot-row">
-				<text>{{$t('good.table.inventory')}}: {{ getList.inventory_show }}</text>
+				<text>{{$t('good.table.inventory')}}: {{ getList.inventory }}</text>
 				<text>{{$t('product.sales')}}: {{ getList.sales}}</text>
 			</view>
 		</view>
@@ -70,7 +75,7 @@
 				<text class="yticon icon-shoucang"></text>
 				<text>{{$t('product.menu.collect')}}</text>
 			</view>
-			<view class="action-btn-group" v-if="getList.is_delete  || getList.is_show !== 1 || !inventoryFlag">
+			<view class="action-btn-group" v-if="getList.is_delete  || getList.is_show !== '已上架' || getList.inventory === 0">
 				<button type="primary" class=" action-btn no-border buy-now-btn" disabled>{{$t('product.menu.buy')}}</button>
 				<button type="primary" class=" action-btn no-border add-cart-btn" disabled>{{$t('product.menu.add_cart')}}</button>
 			</view>
@@ -83,21 +88,23 @@
 		<!-- 规格-模态层弹窗 -->
 		<view class="popup spec" :class="specClass" @touchmove.stop.prevent="stopPrevent" @click="toggleSpec">
 			<view class="mask"></view>
-			<view class="layer attr-content" @click.stop="stopPrevent"><sku ref="sku" :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku></view>
+			<view class="layer attr-content" @click.stop="stopPrevent">
+				<sku ref="sku" :getList="getList" :buy="buy" @toggleSpec="toggleSpec" @purchasePattern="purchasePattern"></sku>
+			</view>
 		</view>
 		<!-- 已删除或还未发布-->
 		<view v-if="getList.is_show === 0" class="sold-out padding-sm">{{$t('product.sold_out')}}~</view>
-		<view v-if="inventoryFlag == false" class="sold-out padding-sm">{{$t('product.sell_out')}}~</view>
+		<view v-if="getList.inventory === 0" class="sold-out padding-sm">{{$t('product.sell_out')}}~</view>
 	</view>
 </template>
 
 <script>
 import uParse from '@/components/gaoyia-parse/parse.vue'
-import Good from '../../api/good';
+import Good from '@/api/good';
 import share from '@/components/share';
 import sku from '@/components/sku';
-import Browse from '../../api/browse';
-import Collect from '../../api/collect';
+import Browse from '@/api/browse';
+import Collect from '@/api/collect';
 import {
 		mapState
 	} from 'vuex';
@@ -114,11 +121,11 @@ export default {
 			specClass: 'none',
 			specificationDefaultDisplay: '', // 规格默认显示
 			getList:{
+				price: [],
 				is_delete:0,
 				is_show:1,
 				good_sku: []
 			},
-			inventoryFlag: true, //true有货; false 无货
 			shoppingAttributes: [], //购物属性
 			favorite: false,
 			shareList: [],
@@ -167,25 +174,7 @@ export default {
 			// 商品详情
 			const that = this;
 			await Good.detail(id, {}, async function(res) {
-				if (res.resources_many.length > 0) {
-					res.resources_many.forEach((item,index)=>{
-						if(item.depict.indexOf('_video') !== -1){
-							item.type = 'video'
-							that.resources_many.unshift(item)
-						} else if(item.depict.indexOf('_poster') !== -1){
-							that.poster = item.img
-						} else {
-							item.type = 'img'
-							that.resources_many.push(item)
-						}
-					})
-				}
 				that.getList = res
-				if(that.getList.good_sku.length === 0){
-					if(that.getList.inventory === 0){
-						that.inventoryFlag = false
-					}
-				}
 				if (that.hasLogin){
 					that.browse()
 				}
@@ -206,10 +195,7 @@ export default {
 		},
 		// 点击视频弹出视频播放器（因swiper内套video无法点击播放按钮，故采用此解决方案）
 		showVideo(){
-			const resources_many = this.resources_many[this.index]
-			if(resources_many.type === 'video'){
-				this.video = resources_many.img
-			}
+			this.video = this.getList.video_img
 		},
 		// 关闭视频
 		closeVideo(){
@@ -222,14 +208,8 @@ export default {
 		},
 		// 图片预览
 		imgList() {
-			const img_lest = [];
-			this.resources_many.forEach(item => {
-				if (item.type !== 'video') {
-					img_lest.push(item.img)
-				}
-			})
 			uni.previewImage({
-				urls: img_lest,
+				urls: this.getList.img,
 				longPressActions: {
 					success: function(data) {},
 					fail: function(err) {}

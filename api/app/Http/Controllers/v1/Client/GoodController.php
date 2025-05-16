@@ -16,6 +16,8 @@ use App\Models\v1\Category;
 use App\Models\v1\Good;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GoodCollection;
+use App\Http\Resources\GoodResources;
 use Illuminate\Support\Facades\App;
 
 /**
@@ -88,26 +90,19 @@ class GoodController extends Controller
         }
         // 获取指定分类下的商品
         if ($request->has('category_id')) {
-            $Category = Category::where('state', Category::CATEGORY_STATE_YES)->select('id', 'pid')->get();
+            $Category = Category::where('state', Category::CATEGORY_STATE_YES)->select('id', 'parent_id')->get();
             $allSublevel = allSublevel($Category->toArray(), [$request->category_id]);
             if (count($allSublevel) > 0) {
                 $q->whereIn('category_id', $allSublevel);
             }
         }
         $q->where('lang', App::getLocale());
-        $paginate = $q->with(['resources' => function ($q) {
-            $q->where('depict', 'like', '%_zimg');
-        }, 'goodSku' => function ($q) {
-            $q->select('good_id', 'price', 'inventory', 'market_price');
-        }])->select('updated_at', 'id', 'name', 'number', 'market_price', 'sales', 'order_price', 'brand_id', 'price', 'is_show', 'is_recommend', 'is_new', 'is_hot', 'sort', 'time')->paginate($limit);
-        if ($paginate) {
-            foreach ($paginate as $id => $p) {
-                $paginate[$id]['price_show'] = (new Good())->getPriceShow($p);
-                $paginate[$id]['original_price_show'] = (new Good())->getMarketPriceShow($p);
-                $paginate[$id]['inventory_show'] = (new Good())->getInventoryShow($p);
-            }
-        }
-        return resReturn(1, $paginate);
+        $paginate = $q->with(['Category'=>function($q){
+            $q->with(['fathers']);
+        },'goodSku' => function ($q) {
+            $q->select('good_id', 'price', 'inventory', 'cost_price');
+        }])->paginate($limit);
+        return resReturn(1, new GoodCollection($paginate));
     }
 
     /**
@@ -121,49 +116,9 @@ class GoodController extends Controller
     {
         Good::$withoutAppends = false;
         GoodSku::$withoutAppends = false;
-        $Good = Good::with(['resourcesMany', 'resources', 'goodSku' => function ($q) {
-            $q->with(['resources' => function ($q) {
-                $q->where('depict', '!=', 'product_sku_file');
-            }])->where('inventory', '>', 0);
+        $Good = Good::with(['goodSku' => function ($q) {
+            $q->where('inventory', '>', 0);
         }])->find($id);
-        $Good['price_show'] = (new Good())->getPriceShow($Good);
-        $Good['market_price_show'] = (new Good())->getMarketPriceShow($Good);
-        $Good['inventory_show'] = (new Good())->getInventoryShow($Good);
-        return resReturn(1, $Good);
-    }
-
-    /**
-     * GoodCategory
-     * 商品分类
-     * @param Request $request
-     * @return \Illuminate\Http\Response
-     * @queryParam  tree boolean 返回格式是否为树状结构
-     * @queryParam  is_recommend int 是否首页展示
-     * @queryParam  limit int 每页显示条数
-     * @queryParam  sort string 排序
-     * @queryParam  page string 页码
-     */
-    public function category(Request $request)
-    {
-        $q = Category::query();
-        $q->where('state', Category::CATEGORY_STATE_YES);
-        if ($request->has('is_recommend')) {
-            $q->where('is_recommend', $request->is_recommend);
-            $q->with(['Category' => function ($q) {
-                $q->select('id', 'pid');
-            }]);
-        }
-        if ($request->has('sort')) {
-            $sortFormatConversion = sortFormatConversion($request->sort);
-            $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
-        } else {
-            $q->orderBy('sort', 'ASC')->orderBy('id', 'ASC');
-        }
-        $q->where('lang', App::getLocale());
-        $paginate = $q->with(['resources'])->get();
-        if ($request->has('tree')) {
-            $paginate = genTree($paginate->toArray(), 'pid');
-        }
-        return resReturn(1, $paginate);
+        return resReturn(1, new GoodResources($Good));
     }
 }

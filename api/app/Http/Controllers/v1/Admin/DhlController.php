@@ -16,7 +16,6 @@ use App\Models\v1\Dhl;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @group [ADMIN]Dhl(快递公司管理)
@@ -44,8 +43,8 @@ class DhlController extends Controller
                 $sortFormatConversion = sortFormatConversion($request->sort);
                 $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
             }
-            if ($request->title) {
-                $q->where('name', 'like', '%' . $request->title . '%');
+            if ($request->keyword) {
+                $q->where('name', 'like', '%' . $request->keyword . '%');
             }
             $limit = $request->limit;
             $q->where('lang', App::getLocale());
@@ -64,6 +63,7 @@ class DhlController extends Controller
      * @return \Illuminate\Http\Response
      * @queryParam  name string 快递公司名称
      * @queryParam  abbreviation string 快递公司英文缩写
+     * @queryParam  img string 图片
      * @queryParam  state string 状态
      * @queryParam  sort string 排序
      */
@@ -75,6 +75,7 @@ class DhlController extends Controller
         $Dhl = new Dhl();
         $Dhl->name = $request->name;
         $Dhl->abbreviation = $request->abbreviation;
+        $Dhl->img = $request->img;
         $Dhl->state = $request->state;
         $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
@@ -92,6 +93,7 @@ class DhlController extends Controller
      * @return \Illuminate\Http\Response
      * @queryParam  name string 快递公司名称
      * @queryParam  abbreviation string 快递公司英文缩写
+     * @queryParam  img string 图片
      * @queryParam  state string 状态
      * @queryParam  sort string 排序
      */
@@ -104,6 +106,7 @@ class DhlController extends Controller
         $Dhl->name = $request->name;
         $Dhl->abbreviation = $request->abbreviation;
         $Dhl->state = $request->state;
+        $Dhl->img = $request->img;
         $Dhl->is_default = $request->is_default;
         $Dhl->sort = $request->sort;
         $Dhl->save();
@@ -117,9 +120,16 @@ class DhlController extends Controller
      * @return \Illuminate\Http\Response
      * @queryParam  id int 快递公司ID
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        Dhl::destroy($id);
+        if ($id) {
+            Dhl::destroy($id);
+        } else {
+            if (!$request->has('ids')) {
+                return resReturn(0, __('hint.error.selects', ['attribute' => __('common.operation_content')]), Code::CODE_WRONG);
+            }
+            Dhl::destroy($request->ids);
+        }
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

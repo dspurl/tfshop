@@ -15,12 +15,10 @@ TFSHOP商城系统
     <a href="https://www.dswjcms.com">
         <img src="https://img.shields.io/badge/License-MIT-yellow.svg" />
     </a>
-    <a href="https://www.dswjcms.com/download">
-        <img src="https://img.shields.io/badge/Edition-3.4.6-blue.svg" />
+    <img src="https://img.shields.io/badge/Edition-2.0.0-blue.svg" />
+    <a href="https://github.com/laravel/framework">
+      <img src="https://img.shields.io/badge/laravel-7.30.6-brightgreen.svg" alt="laravel">
     </a>
-      <a href="https://github.com/laravel/framework">
-    <img src="https://img.shields.io/badge/laravel-7.30.6-brightgreen.svg" alt="laravel">
-  </a>
   <a href="https://github.com/vuejs/vue">
     <img src="https://img.shields.io/badge/vue-2.5.17-brightgreen.svg" alt="vue">
   </a>

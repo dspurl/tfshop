@@ -89,6 +89,9 @@
             "maps" : {
                 "qqmap" : {
                     "key" : "lbs_qq_key"
+                },
+                "tencent" : {
+                    "key" : "BHBBZ-25TCP-YRODO-VQXIO-RZKP6-AEBEC"
                 }
             }
         }

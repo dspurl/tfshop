@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
@@ -17,7 +18,6 @@ use App\Http\Resources\LanguageResources;
 use App\Models\v1\Language;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @group [ADMIN]Language(地区管理)
@@ -39,6 +39,12 @@ class LanguageController extends Controller
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
+        if ($request->keyword) {
+            $q->where(function ($q1) use ($request) {
+                $q1->orWhere('name', $request->keyword)
+                    ->orWhere('code', $request->keyword);
+            });
+        }
         $paginate = $q->get();
         return resReturn(1, LanguageResources::collection($paginate));
     }
@@ -54,12 +60,10 @@ class LanguageController extends Controller
      */
     public function create(SubmitLanguageRequest $request)
     {
-        DB::transaction(function () use ($request) {
-            $Language = new Language();
-            $Language->name = $request->name;
-            $Language->code = $request->code;
-            $Language->save();
-        }, 5);
+        $Language = new Language();
+        $Language->name = $request->name;
+        $Language->code = $request->code;
+        $Language->save();
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
     }
 
@@ -76,12 +80,10 @@ class LanguageController extends Controller
      */
     public function edit(SubmitLanguageRequest $request, $id)
     {
-        DB::transaction(function () use ($request, $id) {
-            $Language = Language::find($id);
-            $Language->name = $request->name;
-            $Language->code = $request->code;
-            $Language->save();
-        }, 5);
+        $Language = Language::find($id);
+        $Language->name = $request->name;
+        $Language->code = $request->code;
+        $Language->save();
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
     }
 
@@ -95,15 +97,14 @@ class LanguageController extends Controller
      */
     public function destroy($id, Request $request)
     {
-        DB::transaction(function () use ($request, $id) {
-            if ($id) {
-                Language::where('id', $id)->delete();
-            } else {
-                foreach ($request as $data) {
-                    Language::where('id', $data['id'])->delete();
-                }
+        if ($id) {
+            Language::where('id', $id)->delete();
+        } else {
+            if (!$request->has('ids')) {
+                return resReturn(0, __('hint.error.selects', ['attribute' => __('common.operation_content')]), Code::CODE_WRONG);
             }
-        }, 5);
+            Language::whereIn('id', $request->ids)->delete();
+        }
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

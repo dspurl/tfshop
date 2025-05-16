@@ -8,8 +8,8 @@
 					<image class="portrait" :src="user.portrait || '/static/missing-face.png'" lazy-load></image>
 				</view>
 				<view class="info-box">
-					<text v-if="user.nickname || user.user_platform.platform" class="username">{{ user.nickname ||
-						user.user_platform.platform + '用户' }}</text>
+					<text v-if="user.nickname || user.user_platform.platform" class="username">
+					{{ user.nickname || user.user_platform.platform + '用户' }}</text>
 					<text @click="navTo()" class="username" v-else>去登录</text>
 				</view>
 			</view>
@@ -64,7 +64,7 @@
 				<scroll-view scroll-x class="h-list">
 					<image v-for="(item, index) in browseList" :key="index" v-if="item.good"
 						@click="navTo('/pages/product/detail?id=' + item.good_id)"
-						:src="item.good.resources.img | smallImage" mode="aspectFill" lazy-load></image>
+						:src="item.good.img[0]" mode="aspectFill" lazy-load></image>
 				</scroll-view>
 				<list-cell icon="icon-iconfontweixin" iconColor="#e07472" :title="$t('user.bill')"
 					@eventClick="navTo('/pages/finance/bill')"></list-cell>

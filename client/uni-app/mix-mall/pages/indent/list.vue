@@ -25,7 +25,7 @@
 				<view>
 					<view v-for="(goodsItem, goodsIndex) in item.goods_list" :key="goodsIndex">
 						<view @tap="goShowOrder(item)" class="goods-box-single">
-							<image class="goods-img" :src="goodsItem.img | smallImage" mode="aspectFill" lazy-load></image>
+							<image class="goods-img" :src="goodsItem.img" mode="aspectFill" lazy-load></image>
 							<view class="right">
 								<text class="title clamp">{{goodsItem.name}}</text>
 								<text class="attr-box clamp">{{goodsItem.specification}}</text>

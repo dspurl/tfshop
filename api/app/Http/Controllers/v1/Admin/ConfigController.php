@@ -41,10 +41,7 @@ class ConfigController extends Controller
     {
         Config::$withoutAppends = false;
         $q = Config::query();
-        $q->where('parent_id', 0);
-        $q->with(['children']);
-        $q->where('lang', App::getLocale());
-        $paginate = $q->where('parent_id', 0)->with(['children'])->get();
+        $paginate = $q->where('lang', App::getLocale())->where('parent_id', 0)->with(['children'])->get();
         return resReturn(1, ConfigResources::collection($paginate));
     }
 
@@ -64,24 +61,19 @@ class ConfigController extends Controller
             $redis = new RedisService();
             foreach ($request->children as $children) {
                 if ($children['required'] && !isset($children['value'])) {
-                    throw new \Exception(__('hint.error.not_null', ['attribute' => $children['name']]), Code::CODE_WRONG);
+                    throw new \Exception($children['name'] . '不能为空', Code::CODE_WRONG);
                 }
                 // 重置
-                if ($children['keys'] == 'tfshop.reset' && $children['value']) {
+                if ($children['keys'] == 'dsshop.reset' && $children['value']) {
                     Config::where('id', '>', 0)->delete();
-                    $redis->del('config');
-                    return true;
-                } else if ($children['keys'] == 'tfshop.sync' && $children['value']) {
-                    // 同步
-                    $config = config('tfshop.config');
-                    $this->addConfig($config);
+                    $redis->del('dsadmin.config');
                     return true;
                 }
                 // 有子级的，父类不更新
                 if (isset($children['children'])) {
                     foreach ($children['children'] as $c) {
                         if ($c['required'] && !isset($c['value'])) {
-                            throw new \Exception(__('hint.error.not_null', ['attribute' => $c['name']]), Code::CODE_WRONG);
+                            throw new \Exception($c['name'] . '不能为空', Code::CODE_WRONG);
                         }
                         $Config = Config::find($c['id']);
                         $Config->value = $c['value'];
@@ -92,37 +84,9 @@ class ConfigController extends Controller
                     $Config->value = $children['value'];
                     $Config->save();
                 }
-                $redis->del('config');
+                $redis->del('dsadmin.config');
             }
         }, 5);
-        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
-    }
-
-    protected function addConfig($configs, $ids = 0)
-    {
-        $id = $ids;
-        foreach ($configs as $c) {
-            $lang = $c['lang'] ?? App::getLocale();
-            $Config = Config::where('lang', $lang)->where('name', $c['name'])->first();
-            // 已存在的不进行处理
-            if (!$Config) {
-                $Config = new Config();
-                $Config->name = $c['name'];
-                $Config->lang = $lang;
-                $Config->parent_id = $id;
-                $Config->maxlength = isset($c['maxlength']) ? $c['maxlength'] : null;
-                $Config->required = isset($c['required']) ? $c['required'] : 0;
-                $Config->remark = isset($c['remark']) ? $c['remark'] : null;
-                $Config->input_type = isset($c['input_type']) ? $c['input_type'] : null;
-                $Config->input_option = isset($c['input_option']) ? $c['input_option'] : null;
-                $Config->keys = isset($c['keys']) ? $c['keys'] : null;
-                $Config->value = isset($c['value']) ? $c['value'] : null;
-                $Config->style = isset($c['style']) ? $c['style'] : null;
-                $Config->save();
-                if (isset($c['children'])) {
-                    $this->addConfig($c['children'], $Config->id);
-                }
-            }
-        }
+        return resReturn(1, '更新成功');
     }
 }

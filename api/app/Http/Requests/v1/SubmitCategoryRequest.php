@@ -52,7 +52,8 @@ class SubmitCategoryRequest extends Request
                             'string',
                             'max:30',
                         ],
-                        'pid' => 'required|numeric',
+                        'img' => 'nullable|url',
+                        'parent_id' => 'required|numeric',
                         'sort' => 'required|numeric',
                         'state' => 'required|numeric'
                     ];
@@ -66,7 +67,8 @@ class SubmitCategoryRequest extends Request
                             'string',
                             'max:30',
                         ],
-                        'pid' => 'required|numeric',
+                        'img' => 'nullable|url',
+                        'parent_id' => 'required|numeric',
                         'sort' => 'required|numeric',
                         'state' => 'required|numeric'
                     ];
@@ -86,8 +88,9 @@ class SubmitCategoryRequest extends Request
             'name.string' =>__('hint.error.wrong_format', ['attribute' => __('category.name')]),
             'name.unique' => __('hint.error.exist', ['attribute' => __('category.name')]),
             'name.max' =>__('hint.error.max', ['attribute' => __('category.name'), 'place' => 30]),
-            'pid.required' =>__('hint.error.not_null', ['attribute' => __('category.pid')]),
-            'pid.numeric' =>__('hint.error.wrong_format', ['attribute' => __('category.pid')]),
+            'img.url' => __('hint.error.wrong_format', ['attribute' => "图片"]),
+            'parent_id.required' =>__('hint.error.not_null', ['attribute' => __('category.pid')]),
+            'parent_id.numeric' =>__('hint.error.wrong_format', ['attribute' => __('category.pid')]),
             'sort.required' =>__('hint.error.not_null', ['attribute' => __('common.sort')]),
             'sort.numeric' =>__('hint.error.wrong_format', ['attribute' => __('common.sort')]),
             'state.required' =>__('hint.error.not_null', ['attribute' => __('common.state')]),

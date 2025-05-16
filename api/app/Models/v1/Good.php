@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
@@ -9,6 +10,7 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Models\v1;
 
 use App\Traits\CommonTrait;
@@ -47,10 +49,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property int lang_parent_id
  * @property int freight_type
  * @property int freight
- *
- * @method static find(int $id)
- * @method static count()
- * @method static where(string $string, string $getLocale)
  */
 class Good extends Model
 {
@@ -68,15 +66,13 @@ class Good extends Model
     const GOOD_RECOMMEND_NO = 0; //推荐：否
     const GOOD_RECOMMEND_YES = 1; //推荐：是
     const GOOD_NEW_NO = 0; //新品：否
-    const GOOD_NEW_YES = 1; //推荐：是
+    const GOOD_NEW_YES = 1; //新品：是
     const GOOD_HOT_NO = 0; //热销：否
     const GOOD_HOT_YES = 1; //热销：是
     const GOOD_IS_INVENTORY_NO = 0; //减库存方式：拍下减库存
     const GOOD_IS_INVENTORY_FILM = 1; //减库存方式：付款减库存
     const GOOD_FREIGHT_TYPE_FIXED = 0; //运费方式：固定邮费
     const GOOD_FREIGHT_TYPE_TEMPLATE = 1; //运费方式：运费模板
-
-    protected $appends = ['putaway_show', 'is_inventory_show'];
 
     /**
      * Prepare a date for array / JSON serialization.
@@ -89,29 +85,7 @@ class Good extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    /**
-     * 获取单张图片
-     */
-    public function resources()
-    {
-        return $this->morphOne('App\Models\v1\Resource', 'image');
-    }
 
-    /**
-     * 获取多张图片
-     */
-    public function resourcesMany()
-    {
-        return $this->morphMany('App\Models\v1\Resource', 'image');
-    }
-
-    /**
-     * 获取商品规格
-     */
-    public function goodSpecificationOld()
-    {
-        return $this->hasMany(GoodSpecification::class);
-    }
 
     /**
      * 获取商品访问记录
@@ -145,61 +119,13 @@ class Good extends Model
         return $this->hasMany(GoodSku::class);
     }
 
-    /**
-     * 获取品牌
-     */
-    public function brand()
-    {
-        return $this->belongsTo(Brand::class);
-    }
 
     /**
      * 分类
      */
-    public function category()
+    public function Category()
     {
         return $this->belongsTo(Category::class);
-    }
-
-    /**
-     * 主图
-     *
-     * @param $imgList //资源组
-     * @return array
-     */
-    public function getImg($imgList)
-    {
-        $return = [
-            'img' => '',
-            'video' => '',
-            'videoArr' => '',
-            'poster' => '',
-            'posterArr' => '',
-            'imgArr' => '',
-            'imgList' => []
-        ];
-        if (count($imgList) > 0) {
-            foreach ($imgList as $l) {
-                if (strpos($l, '_zimg') !== false) {
-                    $return['imgArr'] = $l;
-                    $return['img'] = $l['img'];
-                } else if (strpos($l, '_video') !== false) {
-                    $return['videoArr'] = $l;
-                    $return['video'] = $l['img'];
-                } else if (strpos($l, '_poster') !== false) {
-                    $return['posterArr'] = $l;
-                    $return['poster'] = $l['img'];
-                } else {
-                    $return['imgList'][] = array(
-                        'response' => $l['img'],
-                        'url' => $l['img'],
-                        'id' => $l['id'],
-                    );
-                }
-            }
-        }
-
-        return $return;
     }
 
     public function getTypeAttribute()
@@ -226,52 +152,83 @@ class Good extends Model
             return $name;
         }
     }
-
-    /**
-     * 商品展示价格
-     *
-     * @param $row
-     * @return array
-     */
-    public function getPriceShow($row)
+    public function getIsRecommendAttribute()
     {
-        $return = [];
-        if ($row->goodSku) {
-            if (count($row->goodSku) > 0) {
-                $return[] = $row->goodSku->min('price');
-                $return[] = $row->goodSku->max('price');
-                if ($return[0] == $return[1]) {
-                    $return = [$return[0]];
-                }
-            } else {
-                $return[] = $row->price;
+        if (isset($this->attributes['is_recommend'])) {
+            if (self::$withoutAppends) {
+                return $this->attributes['is_recommend'];
             }
-        } else {
-            $return[] = $row->price;
+            $name = "";
+            switch ($this->attributes['is_recommend']) {
+                case static::GOOD_RECOMMEND_NO:
+                    $name = "否";
+                    break;
+                case static::GOOD_RECOMMEND_YES:
+                    $name = "是";
+                    break;
+            }
+            return $name;
         }
-        return $return;
     }
-
-    /**
-     * 商品展示市场价
-     *
-     * @param $row
-     * @return array
-     */
-    public function getMarketPriceShow($row)
+    public function getIsShowAttribute()
     {
-        $return = [];
-
-        if (count($row->goodSku) > 0) {
-            $return[] = $row->goodSku->min('market_price');
-            $return[] = $row->goodSku->max('market_price');
-            if ($return[0] == $return[1]) {
-                $return = [$return[0]];
+        if (isset($this->attributes['is_show'])) {
+            if (self::$withoutAppends) {
+                return $this->attributes['is_show'];
+            } else {
+                $name = "";
+                switch ($this->attributes['is_show']) {
+                    case static::GOOD_SHOW_ENTREPOT:
+                        $name = "仓库中";
+                        break;
+                    case static::GOOD_SHOW_PUTAWAY:
+                        $name = "已上架";
+                        break;
+                    case static::GOOD_SHOW_TIMING:
+                        $name = "定时上架";
+                        break;
+                }
+                return $name;
             }
-        } else {
-            $return[] = $row->market_price;
         }
-        return $return;
+    }
+    public function getFreightTypeAttribute()
+    {
+        if (isset($this->attributes['freight_type'])) {
+            if (self::$withoutAppends) {
+                return $this->attributes['freight_type'];
+            } else {
+                $name = "";
+                switch ($this->attributes['freight_type']) {
+                    case static::GOOD_FREIGHT_TYPE_FIXED:
+                        $name = "固定邮费";
+                        break;
+                    case static::GOOD_FREIGHT_TYPE_TEMPLATE:
+                        $name = "运费模板";
+                        break;
+                }
+                return $name;
+            }
+        }
+    }
+    public function getIsInventoryAttribute()
+    {
+        if (isset($this->attributes['is_inventory'])) {
+            if (self::$withoutAppends) {
+                return $this->attributes['is_inventory'];
+            } else {
+                $name = "";
+                switch ($this->attributes['is_inventory']) {
+                    case static::GOOD_IS_INVENTORY_NO:
+                        $name = "拍下减库存";
+                        break;
+                    case static::GOOD_IS_INVENTORY_FILM:
+                        $name = "付款减库存";
+                        break;
+                }
+                return $name;
+            }
+        }
     }
 
     /**
@@ -280,7 +237,7 @@ class Good extends Model
      * @param $row
      * @return int
      */
-    public function getInventoryShow($row)
+    public function getInventory($row)
     {
         if (count($row->goodSku) > 0) {
             $return = $row->goodSku->sum('inventory');
@@ -309,34 +266,6 @@ class Good extends Model
                         break;
                 }
             }
-
-        }
-    }
-
-    /**
-     * 市场价
-     *
-     * @return float|int
-     */
-    public function getPutawayShowAttribute()
-    {
-        if (isset($this->attributes['is_show'])) {
-            if (self::$withoutAppends) {
-                return '';
-            } else {
-                switch ($this->attributes['is_show']) {
-                    case self::GOOD_SHOW_ENTREPOT:
-                        return __('good.is_show.entrepot');
-                        break;
-                    case self::GOOD_SHOW_PUTAWAY:
-                        return __('good.is_show.putaway');
-                        break;
-                    case self::GOOD_SHOW_TIMING:
-                        return __('good.is_show.timing');
-                        break;
-                }
-            }
-
         }
     }
 
@@ -451,5 +380,18 @@ class Good extends Model
     public function setOrderPriceAttribute($value)
     {
         $this->attributes['order_price'] = sprintf("%01.2f", $value) * 100;
+    }
+    public function setImgAttribute($value)
+    {
+        if ($value) {
+            $this->attributes['img'] = json_encode($value);
+        }
+    }
+
+    public function getImgAttribute()
+    {
+        if (isset($this->attributes['img'])) {
+            return json_decode($this->attributes['img']);
+        }
     }
 }

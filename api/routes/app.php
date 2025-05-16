@@ -10,6 +10,7 @@
  * +----------------------------------------------------------------------
  */
 //如果有版本控制的话，请复制以下代码，修改版本号;访问地址把v1换成设置的版本号即可
+use Illuminate\Support\Facades\Route;
 Route::prefix('v'.config('tfshop.versions'))->namespace('v'.config('tfshop.versions'))->group(function () {
     // 无需任何验证
     Route::prefix('app')->namespace('Client')->group(function () {
@@ -34,7 +35,7 @@ Route::prefix('v'.config('tfshop.versions'))->namespace('v'.config('tfshop.versi
         Route::post('user/notification', 'UserController@notification')->name('client.notification');    //更新通知状态
         Route::get('good', 'GoodController@list')->name('client.goodList');    //商品列表
         Route::get('good/{id}', 'GoodController@detail')->name('client.goodDetail');    //商品详情
-        Route::get('goodCategory', 'GoodController@category')->name('client.goodCategory');    //商品分类展示
+        Route::get('goodCategory', 'CategoryController@list')->name('client.goodCategory');    //分类
         Route::get('banner', 'BannerController@list')->name('client.bannerList');    //轮播列表
         Route::get('project/{id}', 'ProjectController@detail')->name('client.projectDetail');    //商城详情
         Route::get('lang', 'LanguageController@list')->name('client.languageList');    //语言列表

@@ -226,11 +226,7 @@ class GoodIndentController extends Controller
         GoodSku::$withoutAppends = false;
         GoodIndent::$withoutAppends = false;
         $GoodIndent = GoodIndent::with(['goodsList' => function ($q) {
-            $q->with(['good' => function ($q) {
-                $q->with(['resourcesMany', 'goodSku' => function ($q) {
-                    $q->with('resources')->where('inventory', '>', 0);
-                }]);
-            }, 'goodSku']);
+            $q->with(['good', 'goodSku']);
         }, 'GoodLocation', 'GoodCode', 'Dhl'])->find($id);
         foreach ($GoodIndent->goodsList as $commodity) {
             if ($commodity->good) {

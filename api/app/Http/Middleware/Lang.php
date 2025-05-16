@@ -29,6 +29,7 @@ class Lang
     {
         $lang = $request->header('Lang');
         if ($lang) {
+            $lang = $lang == 'cn' ? 'zh' : $lang;
             App::setLocale($lang);
         }
         return $next($request);

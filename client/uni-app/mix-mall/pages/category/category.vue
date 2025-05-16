@@ -26,7 +26,7 @@
 						<text class="s-item">{{item.name}}</text>
 						<view class="t-list">
 							<view @click="navToList(item.id, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
-								<image :src="titem.resources.img  | smallImage(80)" lazy-load></image>
+								<image :src="titem.img" lazy-load></image>
 								<text class="text-cut text-center">{{titem.name}}</text>
 							</view>
 						</view>
@@ -37,7 +37,7 @@
 						<text class="s-item"></text>
 						<view class="t-list">
 							<view @click="navToList(0, titem.id)" v-if="titem.pid === item.id" class="t-item text-cut" v-for="titem in tlist" :key="titem.id">
-								<image mode="aspectFit" :src="titem.resources.img  | smallImage(80)" lazy-load></image>
+								<image mode="aspectFit" :src="titem.img" lazy-load></image>
 								<text class="text-cut text-center">{{titem.name}}</text>
 							</view>
 						</view>
@@ -50,12 +50,12 @@
 				<view class="good-list">
 					<view class="good-item" @click="navTo(`/pages/product/detail?id=${item.id}`)" v-for="(item,index) in goodsList" :key="index">
 						<view class="img">
-							<image :src="item.resources.img | smallImage" mode="aspectFill"></image>
+							<image :src="item.img" mode="aspectFill"></image>
 						</view>
 						<view class="info">
 							<view class="name">{{item.name}}</view>
 							<view class="price-box">
-								<view class="price text-red text-bold">{{$t('common.unit')}}{{item.order_price | 1000}}</view>
+								<view class="price text-red text-bold">{{$t('common.unit')}}{{item.price | 1000}}</view>
 								<button class="sm cu-btn cuIcon bg-red text-xxl">
 									<text class="cuIcon-cart"></text>
 								</button>

@@ -1,0 +1,208 @@
+// flex布局
+.flex,
+.flex-column {
+    display: flex;
+
+    &.inline {
+        display: inline-flex;
+    }
+
+    //折行
+    &.flex-nowrap {
+        flex-wrap: nowrap;
+    }
+    &.flex-wrap {
+        flex-wrap: wrap;
+    }
+    &.flex-wrap-reverse {
+        flex-wrap: wrap-reverse;
+    }
+    //横向对齐方式
+    &.row-left {
+        justify-content: flex-start;
+    }
+    &.row-right {
+        justify-content: flex-end;
+    }
+    &.row-center {
+        justify-content: center;
+    }
+    &.row-between {
+        justify-content: space-between;
+    }
+    &.row-around {
+        justify-content: space-around;
+    }
+    //纵向对齐方式
+    &.col-top {
+        align-items: flex-start;
+    }
+    &.col-bottom {
+        align-items: flex-end;
+    }
+    &.col-center {
+        align-items: center;
+    }
+    &.col-baseline {
+        align-items: baseline;
+    }
+    &.col-stretch {
+        align-items: stretch;
+    }
+
+    // 纵向flex
+    &.flex-column {
+        flex-direction: column;
+        //横向对齐方式
+        &.row-center {
+            align-items: center;
+        }
+        &.row-left {
+            align-items: flex-start;
+        }
+        &.row-right {
+            align-items: flex-end;
+        }
+        &.row-between {
+            align-items: stretch;
+        }
+        &.col-center {
+            justify-content: center;
+        }
+        &.col-top {
+            justify-content: flex-start;
+        }
+        &.col-bottom {
+            justify-content: flex-end;
+        }
+    }
+}
+
+// flex 占比
+@for $i from 0 through 10 {
+    .flex-#{$i} {
+        flex: $i;
+    }
+}
+
+// flex居中
+.flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+/* 边距 */
+.m10{margin:10px}
+.m15{margin:15px}
+.m30{margin:30px}
+.mt5{margin-top:5px}
+.mt0{margin-top:0}
+.mt10{margin-top:10px}
+.mt15{margin-top:15px}
+.mt20{margin-top:20px}
+.mt30{margin-top:30px}
+.mb5{margin-bottom:5px}
+.mb10{margin-bottom:10px}
+.mb15{margin-bottom:15px}
+.mb20{margin-bottom:20px}
+.mb30{margin-bottom:30px}
+.ml5{margin-left:5px}
+.ml10{margin-left:10px}
+.ml15{margin-left:15px}
+.ml20{margin-left:20px}
+.ml30{margin-left:30px}
+.mr5{margin-right:5px}
+.mr10{margin-right:10px}
+.mr15{margin-right:15px}
+.mr20{margin-right:20px}
+.mr30{margin-right:30px}
+.p10{padding:10px}
+.p15{padding:15px}
+.p30{padding:30px}
+.pt5{padding-top:5px}
+.pt10{padding-top:10px}
+.pt15{padding-top:15px}
+.pt20{padding-top:20px}
+.pt30{padding-top:30px}
+.pb5{padding-bottom:5px}
+.pb10{padding-bottom:10px}
+.pb15{padding-bottom:15px}
+.pb20{padding-bottom:20px}
+.pb30{padding-bottom:30px}
+.pl5{padding-left:5px}
+.pl10{padding-left:10px}
+.pl15{padding-left:15px}
+.pl20{padding-left:20px}
+.pl30{padding-left:30px}
+.pr5{padding-right:5px}
+.pr10{padding-right:10px}
+.pr15{padding-right:15px}
+.pr20{padding-right:20px}
+.pr30{padding-right:30px}
+.w70 {width: 70px}
+.w120 {width: 120px}
+.f-bold{font-weight: bold}
+.f11{font-size:11px;}
+.f12{font-size:12px;}
+.f13{font-size:13px;}
+.f14{font-size:14px;}
+.f15{font-size:15px;}
+.f16{font-size:16px;}
+.f17{font-size:17px;}
+.f18{font-size:18px;}
+.f19{font-size:19px;}
+.f20{font-size:20px;}
+.h20{height: 20px;}
+.h21{height: 21px;}
+.h22{height: 22px;}
+.h23{height: 23px;}
+.h24{height: 24px;}
+.h25{height: 25px;}
+.h26{height: 26px;}
+.h27{height: 27px;}
+.h28{height: 28px;}
+.h29{height: 29px;}
+.h30{height: 30px;}
+.h31{height: 31px;}
+.h32{height: 32px;}
+.h33{height: 33px;}
+.h34{height: 34px;}
+.h35{height: 35px;}
+.h36{height: 36px;}
+.h37{height: 37px;}
+.h38{height: 38px;}
+.h39{height: 39px;}
+.h40{height: 40px;}
+.h41{height: 41px;}
+.h42{height: 42px;}
+.h43{height: 43px;}
+.h44{height: 44px;}
+.h45{height: 45px;}
+.lh20{line-height: 20px;}
+.lh21{line-height: 21px;}
+.lh22{line-height: 22px;}
+.lh23{line-height: 23px;}
+.lh24{line-height: 24px;}
+.lh25{line-height: 25px;}
+.lh26{line-height: 26px;}
+.lh27{line-height: 27px;}
+.lh28{line-height: 28px;}
+.lh29{line-height: 29px;}
+.lh30{line-height: 30px;}
+.lh31{line-height: 31px;}
+.lh32{line-height: 32px;}
+.lh33{line-height: 33px;}
+.lh34{line-height: 34px;}
+.lh35{line-height: 35px;}
+.lh36{line-height: 36px;}
+.lh37{line-height: 37px;}
+.lh38{line-height: 38px;}
+.lh39{line-height: 39px;}
+.lh40{line-height: 40px;}
+.lh41{line-height: 41px;}
+.lh42{line-height: 42px;}
+.lh43{line-height: 43px;}
+.lh44{line-height: 44px;}
+.lh45{line-height: 45px;}
+.f-grey {color: #969799;}
+.f-red{color: #ee0a24;}

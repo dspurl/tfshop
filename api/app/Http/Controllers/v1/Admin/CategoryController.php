@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
@@ -9,18 +10,16 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers\v1\Admin;
 
 use App\Code;
 use App\Http\Requests\v1\SubmitCategoryRequest;
-use App\Models\v1\Specification;
-use App\Models\v1\Brand;
 use App\Models\v1\Category;
-use App\Models\v1\Resource;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResources;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\DB;
 
 /**
  * @group [ADMIN]Category(分类管理)
@@ -42,7 +41,6 @@ class CategoryController extends Controller
     public function list(Request $request)
     {
         $q = Category::query();
-        $limit = $request->limit;
         if ($request->has('sort')) {
             if ($request->sort) {
                 $sortFormatConversion = sortFormatConversion($request->sort);
@@ -50,25 +48,22 @@ class CategoryController extends Controller
             } else {
                 $q->orderBy('sort', 'ASC')->orderBy('id', 'ASC');
             }
-        }
-        if ($request->has('title')) {
-            $q->where('name', 'like', '%' . $request->title . '%');
-        }
-        if ($request->has('pid')) {
-            $q->where('pid', $request->pid[count($request->pid) - 1]);
         } else {
-            $q->where('pid', 0);
+            $q->orderBy('sort', 'ASC')->orderBy('id', 'ASC');
+        }
+        $q->where('parent_id', $request->has('parent_id') ? $request->parent_id : 0);
+        if (isset($request->all)) {
+            $q->with(['parent', 'children']);
+        } else {
+            $q->with(['parent', 'child']);
+        }
+        if ($request->keyword) {
+            $q->where('name', 'like', '%' . $request->keyword . '%');
         }
         $q->where('lang', App::getLocale());
-        $q->with(['Language'=>function($q){
-            $q->with(['SpecificationOn', 'BrandOn']);
-        }]);
-        $paginate = $q->with(['resources', 'SpecificationOn', 'BrandOn'])->paginate($limit);
-        $return['options'] = (new Category())->getAllCategory();
-        $return['brand'] = Brand::with(['resources'])->select('id', 'name', 'lang')->get();
-        $return['paginate'] = $paginate;
-        $return['specification'] = Specification::orderBy('sort', 'ASC')->orderBy('id', 'ASC')->get();
-        return resReturn(1, $return);
+        $q->with(['Language']);
+        $paginate = $q->get();
+        return resReturn(1, CategoryResources::collection($paginate));
     }
 
     /**
@@ -77,6 +72,7 @@ class CategoryController extends Controller
      * @param SubmitCategoryRequest $request
      * @return \Illuminate\Http\JsonResponse
      * @queryParam  name string 分类名称
+     * @queryParam  img string 分类图标
      * @queryParam  pid int 分类上级ID
      * @queryParam  sort int 分类排序
      * @queryParam  is_recommend int 是否推荐
@@ -86,52 +82,17 @@ class CategoryController extends Controller
      */
     public function create(SubmitCategoryRequest $request)
     {
-        $return = DB::transaction(function () use ($request) {
-            $Category = new Category();
-            $Category->name = $request->name;
-            $Category->pid = $request->pid;
-            $Category->sort = $request->sort;
-            $Category->is_recommend = $request->is_recommend;
-            $Category->state = $request->state;
-            $Category->lang = $request->lang ?? App::getLocale();
-            $Category->lang_parent_id = $request->lang_parent_id ?? 0;
-            $Category->save();
-            if ($request->logo) {
-                $Resource = new Resource();
-                $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                $Resource->depict = 'category_' . $Category->id;
-                $Resource->image_id = $Category->id;
-                $Resource->image_type = 'App\Models\v1\Category';
-                $Resource->img = imgPathShift('category', $request->logo);
-                $Resource->save();
-            }
-            if ($request->specification) {
-                foreach ($request->specification as $id => $r) {
-                    $data[] = array(
-                        'specification_id' => $r,
-                        'category_id' => $Category->id,
-                    );
-                }
-                DB::table('category_specifications')->insert($data);
-            }
-            unset($data);
-            if ($request->brand) {
-                foreach ($request->brand as $id => $r) {
-                    $data[] = array(
-                        'brand_id' => $r,
-                        'category_id' => $Category->id,
-                    );
-                }
-                DB::table('category_brands')->insert($data);
-            }
-            unset($data);
-            return 1;
-        }, 5);
-        if ($return == 1) {
-            return resReturn(1, __('common.succeed'));
-        } else {
-            return resReturn(0, __('hint.succeed.fail', ['attribute' => __('common.add')]), Code::CODE_PARAMETER_WRONG);
-        }
+        $Category = new Category();
+        $Category->name = $request->name;
+        $Category->img = $request->img;
+        $Category->parent_id = $request->parent_id;
+        $Category->sort = $request->sort;
+        $Category->is_recommend = $request->is_recommend;
+        $Category->state = $request->state;
+        $Category->lang = $request->lang ?? App::getLocale();
+        $Category->lang_parent_id = $request->lang_parent_id ?? 0;
+        $Category->save();
+        return resReturn(1, __('common.succeed'));
     }
 
     /**
@@ -142,7 +103,8 @@ class CategoryController extends Controller
      * @return \Illuminate\Http\Response
      * @queryParam  id int 分类ID
      * @queryParam  name string 分类名称
-     * @queryParam  pid int 分类上级ID
+     * @queryParam  img string 分类图标
+     * @queryParam  parent_id int 分类上级ID
      * @queryParam  sort int 分类排序
      * @queryParam  is_recommend int 是否推荐
      * @queryParam  state int 是否显示
@@ -151,95 +113,15 @@ class CategoryController extends Controller
      */
     public function edit(SubmitCategoryRequest $request, $id)
     {
-        $return = DB::transaction(function () use ($request, $id) {
-            $Category = Category::find($id);
-            $Category->name = $request->name;
-            $Category->pid = $request->pid;
-            $Category->sort = $request->sort;
-            $Category->state = $request->state;
-            $Category->is_recommend = $request->is_recommend;
-            $Category->save();
-            if ($request->resources && $request->logo) {
-                $Resource = Resource::find($request->resources['id']);
-                if ($request->logo != $Resource->img) {
-                    resourceAutoDelete($Resource->img);
-                }
-                $Resource->img = imgPathShift('category', $request->logo);
-                $Resource->save();
-            } else {
-                if ($request->logo) {
-                    $Resource = new Resource();
-                    $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                    $Resource->depict = 'category_' . $Category->id;
-                    $Resource->image_id = $Category->id;
-                    $Resource->image_type = 'App\Models\v1\Category';
-                    $Resource->img = imgPathShift('category', $request->logo);
-                    $Resource->save();
-                }
-            }
-
-            //获取已存在数据库的规格ID
-            $category_specification = DB::table('category_specifications')->where('category_id', $Category->id)->get()->pluck('specification_id');
-            $delete = [];
-            $specification = $request->specification;
-
-            foreach ($category_specification as $c) {
-                $key = array_search($c, $specification);
-                if ($key === false) { //已经被删除
-                    $delete[] = $c;
-                } else {  //已存在
-                    unset($specification[$key]);
-                }
-            }
-            // 没有添加的规格进行添加
-            if (count($specification)) {
-                foreach ($specification as $id => $r) {
-                    $data[] = array(
-                        'specification_id' => $r,
-                        'category_id' => $Category->id,
-                    );
-                }
-                DB::table('category_specifications')->insert($data);
-            }
-            //删除掉被删除掉的规格
-            if (count($delete) > 0) {
-                DB::table('category_specifications')->where('category_id', $Category->id)->whereIn('specification_id', $delete)->delete();
-            }
-            //获取已存在数据库的品牌ID
-            $category_brand = DB::table('category_brands')->where('category_id', $Category->id)->get()->pluck('brand_id');
-            $delete = [];
-            $brand = $request->brand;
-
-            foreach ($category_brand as $c) {
-                $key = array_search($c, $brand);
-                if ($key === false) { //已经被删除
-                    $delete[] = $c;
-                } else {  //已存在
-                    unset($brand[$key]);
-                }
-            }
-            // 没有添加的品牌进行添加
-            $data = [];
-            if (count($brand)) {
-                foreach ($brand as $id => $r) {
-                    $data[] = array(
-                        'brand_id' => $r,
-                        'category_id' => $Category->id,
-                    );
-                }
-                DB::table('category_brands')->insert($data);
-            }
-            //删除掉被删除掉的品牌
-            if (count($delete) > 0) {
-                DB::table('category_brands')->where('category_id', $Category->id)->whereIn('brand_id', $delete)->delete();
-            }
-            return 1;
-        }, 5);
-        if ($return == 1) {
-            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
-        } else {
-            return resReturn(0, __('hint.succeed.fail', ['attribute' => __('common.update')]), Code::CODE_PARAMETER_WRONG);
-        }
+        $Category = Category::find($id);
+        $Category->name = $request->name;
+        $Category->img = $request->img;
+        $Category->parent_id = $request->parent_id;
+        $Category->sort = $request->sort;
+        $Category->state = $request->state;
+        $Category->is_recommend = $request->is_recommend;
+        $Category->save();
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
     }
 
     /**
@@ -250,14 +132,16 @@ class CategoryController extends Controller
      * @queryParam  id int 分类ID
      * @throws \Exception
      */
-    public function destroy($id)
+    public function destroy($id, Request $request)
     {
-        // 判断是否存在子类目
-        $count = Category::where('pid', $id)->count();
-        if ($count) {
-            throw new \Exception(__('category.error.destroy'), Code::CODE_WRONG);
+        if ($id) {
+            Category::destroy($id);
+        } else {
+            if (!$request->has('ids')) {
+                return resReturn(0, __('hint.error.selects', ['attribute' => __('common.operation_content')]), Code::CODE_WRONG);
+            }
+            Category::destroy($request->ids);
         }
-        Category::destroy($id);
         return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.delete')]));
     }
 }

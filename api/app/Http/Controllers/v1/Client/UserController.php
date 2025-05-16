@@ -18,6 +18,7 @@ use App\common\RedisService;
 use App\Models\v1\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\v1\UserPlatform;
 use Webpatser\Uuid\Uuid;
 
 /**

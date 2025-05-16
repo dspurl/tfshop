@@ -30,7 +30,7 @@ class CreateFreightWaysTable extends Migration
             $table->integer('first_cost')->default(0)->comment('首费');
             $table->integer('add_piece')->default(0)->comment('续件');
             $table->integer('add_cost')->default(0)->comment('续费');
-            $table->text('location')->comment('送货到json');
+            $table->json('location')->comment('送货到json');
             $table->timestamps();
             $table->unique('id');
         });

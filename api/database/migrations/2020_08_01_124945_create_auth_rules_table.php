@@ -26,13 +26,21 @@ class CreateAuthRulesTable extends Migration
             $table->id();
             $table->string('lang', 60)->default('zh')->comment('语言');
             $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
-            $table->string('api', 200)->comment('对应前端的模板名');
-            $table->string('url', 255)->nullable()->comment('外链地址');
-            $table->string('icon', 20)->nullable()->comment('菜单小图标');
-            $table->string('title', 30)->comment('权限名称');
-            $table->integer('pid')->comment('分组');
-            $table->tinyInteger('state')->default(0)->comment('是否显示在菜单栏，顶级类目不受此约束；1为显示0为隐藏');
-            $table->integer('sort')->default(0)->comment('排序：同级有效');
+            $table->string('title', 50)->comment("权限名称");
+            $table->string('api', 255)->comment("对应前端的模板名");
+            $table->string('path', 255)->comment("路由");
+            $table->string('active', 255)->comment("菜单高亮");
+            $table->string('redirect_url', 255)->comment("重定向");
+            $table->string('view', 255)->comment("视图");
+            $table->string('icon', 20)->comment("菜单小图标");
+            $table->char('color', 7)->comment("颜色值");
+            $table->unsignedBigInteger('pid')->default('0')->comment("父ID");
+            $table->unsignedTinyInteger('type')->default('1')->comment("类型:1=菜单-menu,2=iframe-iframe,3=外链-link");
+            $table->unsignedTinyInteger('is_hidden')->default('0')->comment("是否在菜单隐藏:1=是-yes,0=否-no");
+            $table->unsignedTinyInteger('is_hidden_breadcrumb')->default('0')->comment("是否隐藏面包屑:1=是-yes,0=否-no");
+            $table->unsignedTinyInteger('is_affix')->default('0')->comment("是否固定:1=是-yes,0=否-no");
+            $table->unsignedTinyInteger('is_full_page')->default('0')->comment("是否整页打开路由:1=是-yes,0=否-no");
+            $table->unsignedTinyInteger('sort')->default('1')->comment("排序：同级有效");
             $table->unique('id');
         });
     }

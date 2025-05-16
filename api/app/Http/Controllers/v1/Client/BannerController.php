@@ -49,7 +49,7 @@ class BannerController extends Controller
         }
         $limit = $request->limit;
         $q->where('lang', App::getLocale());
-        $paginate = $q->with(['resources'])->paginate($limit);
+        $paginate = $q->paginate($limit);
         return resReturn(1, $paginate);
     }
 }

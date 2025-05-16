@@ -31,10 +31,20 @@ class AuthRule extends Model
     use CommonTrait;
     const UPDATED_AT = null;
     const CREATED_AT = null;
-    const AUTH_RULE_STATE_ON = 1;
-    const AUTH_RULE_STATE_OFF = 0;
-    protected $appends = ['state_show'];
-    protected $fillable = ['api', 'url', 'icon', 'title', 'pid', 'state', 'sort'];
+    const AUTH_RULE_TYPE_MENU = 1;  // 类型:菜单
+    const AUTH_RULE_TYPE_IFRAME = 2;  // 类型:iframe
+    const AUTH_RULE_TYPE_LINK = 3;  // 类型:外链
+    const AUTH_RULE_TYPE_BUTTON = 4;  // 类型:按钮
+    const AUTH_RULE_TYPE_PAGE = 5;  // 类型:页面
+    const AUTH_RULE_IS_HIDDEN_YES = 1;  // 是否在菜单隐藏:是
+    const AUTH_RULE_IS_HIDDEN_NO = 0;  // 是否在菜单隐藏:否
+    const AUTH_RULE_IS_HIDDEN_BREADCRUMB_YES = 1;  // 是否隐藏面包屑:是
+    const AUTH_RULE_IS_HIDDEN_BREADCRUMB_NO = 0;  // 是否在菜单隐藏:否
+    const AUTH_RULE_IS_AFFIX_YES = 1;  // 是否固定:是
+    const AUTH_RULE_IS_AFFIX_NO = 0;  // 是否固定:否
+    const AUTH_RULE_IS_FULL_PAGE_YES = 1;  // 是否整页打开路由:是
+    const AUTH_RULE_IS_FULL_PAGE_NO = 0;  // 是否整页打开路由:否
+    protected $fillable = ['api', 'path', 'active', 'redirect_url', 'view', 'icon', 'color', 'type', 'is_hidden', 'is_hidden_breadcrumb', 'is_affix', 'is_full_page', 'title', 'pid', 'sort'];
 
     /**
      * Prepare a date for array / JSON serialization.
@@ -47,35 +57,38 @@ class AuthRule extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    /**
-     * 数组中的属性会被展示。
-     *
-     * @var array
-     */
-//    protected $visible = ['api'];
-    /**
-     * 数组中的属性会被隐藏。
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
-     * @var array
-     */
-//    protected $hidden = ['password'];
-    public function AuthGroup()
+    public function getIsHiddenAttribute()
     {
-        return $this->belongsToMany(AuthGroup::class, 'auth_group_auth_rules');
+        return $this->attributes['is_hidden'] ? true : false;
     }
 
-    //是否显示在菜单栏state_show
-    public function getStateShowAttribute()
+    public function getIsHiddenBreadcrumbAttribute()
     {
-        if (isset($this->attributes['state'])) {
-            if ($this->attributes['state'] == AuthRule::AUTH_RULE_STATE_ON) {
-                return __('common.is_show');
-            } else {
-                return __('common.is_hide');
-            }
-        }
+        return $this->attributes['is_hidden_breadcrumb'] ? true : false;
+    }
 
+    public function getIsAffixAttribute()
+    {
+        return $this->attributes['is_affix'] ? true : false;
+    }
+
+    public function getIsFullPageAttribute()
+    {
+        return $this->attributes['is_full_page'] ? true : false;
+    }
+    public function parent()
+    {
+        return $this->belongsTo(get_class($this), 'pid')->with('parent');
+    }
+
+    public function child()
+    {
+        return $this->hasMany(get_class($this), 'pid')->orderBy('sort', 'ASC');
+    }
+
+    public function children()
+    {
+        return $this->child()->with('children')->orderBy('sort', 'ASC');
     }
 
     /**
@@ -84,24 +97,15 @@ class AuthRule extends Model
      * @param array $arr
      * @return array
      */
-    public function obtainAllChildPermissions($id, &$arr= []){
+    public function obtainAllChildPermissions($id, &$arr = [])
+    {
         $authRule = AuthRule::where('pid', $id)->get();
-        $arr[]=$id;
-        if($authRule){
-            foreach ($authRule as $a){
+        $arr[] = $id;
+        if ($authRule) {
+            foreach ($authRule as $a) {
                 $this->obtainAllChildPermissions($a->id, $arr);
             }
         }
         return $arr;
-    }
-
-    public function child()
-    {
-        return $this->hasMany(get_class($this), 'pid');
-    }
-
-    public function children()
-    {
-        return $this->child()->with('children');
     }
 }

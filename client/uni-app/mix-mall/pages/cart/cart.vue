@@ -19,9 +19,9 @@
 					<view
 						class="cart-item" 
 						:class="{'b-b': index!==cartList.length-1}"
-					@click.stop="goProduct(item)">
+						@click.stop="goProduct(item)">
 						<view class="image-wrapper">
-							<image :src="item.img  | smallImage" 
+							<image :src="item.img" 
 								:class="[item.loaded]"
 								mode="aspectFill" 
 								lazy-load 
@@ -174,7 +174,7 @@
 							})
 							res[k].specification = res[k].specification.substr(0,res[k].specification.length-1)
 						}
-						if(res[k].good.is_delete === 1 || res[k].good.is_show !== 1){
+						if(res[k].good.is_delete === 1 || res[k].good.is_show !== '已上架'){
 							res[k].invalid = true
 						}
 						if(res[k].invalid === true){ //失效的商品

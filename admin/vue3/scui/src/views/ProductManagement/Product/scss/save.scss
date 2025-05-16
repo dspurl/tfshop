@@ -1,0 +1,24 @@
+.container-main {
+    overflow: auto;
+    flex: 1;
+}
+.container-box {
+    display: flex;
+    flex-wrap: wrap;
+}
+.mobile-container {
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    background-color: #f4f4f4;
+}
+.header {
+    background-color: #409eff;
+    color: white;
+    text-align: center;
+    padding: 8px 0;
+}
+.main-content {
+    flex: 1;
+    overflow-y: auto;
+}

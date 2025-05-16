@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | 公共方法
  * +----------------------------------------------------------------------
@@ -11,17 +12,20 @@
  * | Author: Purl <383354826@qq.com>
  * +----------------------------------------------------------------------
  */
+
 namespace App\Http\Controllers;
 
 use App\Code;
-use function EasyWeChat\Kernel\Support\str_random;
+use App\Http\Requests\v1\SubmitResourceUploadRequest;
+use App\Models\v1\Resource;
+use App\Models\v1\ResourceType;
+
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Http\Request;
-use EasyWeChat\Factory;
+
 /**
  * @group [PUBLIC]Controller(公共方法)
  * Class Controller
@@ -32,125 +36,221 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
-     * Upload
-     * 上传
-     * @param Request $request
-     * @bodyParam   file file 上传的文件
-     * @queryParam  type int 1图片2自定义文件
-     * @queryParam  size int 前端文件大小
-     * @queryParam  full boolean    是否显示详细结果
-     * @return mixed|string
-     * @throws \EasyWeChat\Kernel\Exceptions\InvalidConfigException
+     * 资源上传
+     * Resource upload
+     * @param SubmitResourceUploadRequest $request
+     * @return string
      * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
-    public function uploadPictures(Request $request)
+    public function resourceUpload(SubmitResourceUploadRequest $request)
     {
-
         $file = $request->file('file');
-        // 判断图片有效性
         if (!$file->isValid()) {
-            return resReturn(0, __('upload_pictures.is_valid.error'), Code::CODE_PARAMETER_WRONG);
+            return resReturn(0, '上传文件无效', Code::CODE_PARAMETER_WRONG);
         }
-        $extension = $request->file->extension();
-        if (!isset($request->type)) {
-            return resReturn(0, __('upload_pictures.type.error'), Code::CODE_PARAMETER_WRONG);
+        $ResourceType = ResourceType::where('uuid', $request->uuid)->first();
+        if (!$ResourceType) {
+            return resReturn(0, '资源分类有误', Code::CODE_PARAMETER_WRONG);
         }
-        //验证尺寸
-        if (!isset($request->size)) {
-            return resReturn(0, __('upload_pictures.size.error'), Code::CODE_PARAMETER_WRONG);
+        $info = [
+            'extension' => $file->extension(),
+            'size' => $file->getSize(),
+            'type' => $file->getClientMimeType(),
+            'originalName' => $file->getClientOriginalName()
+        ];
+        if (count($ResourceType->extension) != 0 && !in_array($info['extension'], $ResourceType->extension)) {
+            return resReturn(0, '文件格式有误' . $info['extension'], Code::CODE_PARAMETER_WRONG);
         }
-        if ($request->size < $request->file->getSize()) {
-            return resReturn(0, __('upload_pictures.get_size.error'), Code::CODE_PARAMETER_WRONG);
+        if ($ResourceType->size != 0 && $info['size'] > $ResourceType->size) {
+            return resReturn(0, '资源大小超出配置大小' . $ResourceType->size . 'B', Code::CODE_PARAMETER_WRONG);
         }
-        if ($request->type == 1) { //验证图片
-            $name = 'image';
-        } else if ($request->type == 2) {  // 自定义文件
-            $name = 'custom';
+        $randFileName = random_int(10000, 99999) . time();
+        if ($ResourceType->alias === 'resource') {    //如果别名是资源的话，不上传到临时目录中
+            $pathName = 'resource/';
         } else {
-            return resReturn(0, __('upload_pictures.type_inexistence.error'), Code::CODE_PARAMETER_WRONG);
+            $pathName = 'temporary/';
         }
-        if (!in_array($extension, explode(',', config("tfshop.file.$name.extension")))) {
-            return resReturn(0, __('upload_pictures.extension.error'), Code::CODE_PARAMETER_WRONG);
-        }
-        if ($request->file->getSize() > config("tfshop.file.$name.size")) {
-            return resReturn(0, __('upload_pictures.admin_size.error') . (config("tfshop.file.$name.size") / 1024 / 1024) . 'M', Code::CODE_PARAMETER_WRONG);
-        }
-        $url = $this->uploadFiles($file, $request);
-        if ($url['state'] != 'SUCCESS') {
-            return resReturn(0, $url['msg'], Code::CODE_PARAMETER_WRONG);
-        }
+        // 文件保存到指定目录
+        $resourceInfo = $this->localResourceHandling($file, $pathName, $randFileName, $ResourceType);
         //微信小程序图片安全内容检测
         $config = config('wechat.mini_program.default');
-        if ($request->header('apply-secret') && $config['app_id'] && $request->type == 1) {
+        // 如果是前端用户，且上传为图片才触发
+        if ($request->header('apply-secret') && $config['app_id'] && $ResourceType->alias === 'image') {
             $miniProgram = Factory::miniProgram($config); // 小程序
-            $result = $miniProgram->content_security->checkImage('storage/temporary/' . $url['title']);
+            $result = $miniProgram->content_security->checkImage("storage/$pathName" . $resourceInfo['fileName']);
             if ($result['errcode'] == 87014) {
-                return resReturn(0, __('upload_pictures.mini_program.error'), Code::CODE_PARAMETER_WRONG);
+                return resReturn(0, '图片含有敏感信息，请重新上传', Code::CODE_PARAMETER_WRONG);
             }
         }
-        // 显示文件详细数据
-        if ($request->has('full')) {
-            return $url;
-        } else {
-            return $url['url'];
+        // 如果是资源库上传，直接写入资源表中
+        /*if ($ResourceType->alias === 'resource') {
+            $Resource = (new Resource())->create([
+                'resource_type_id' => $ResourceType->id,
+                'resource_group_id' => 0,
+                'name' => $resourceInfo['fileName'],
+                'url' => $resourceInfo['url'],
+                'info' => $info,
+            ]);
+            $Resource['id'] = $Resource->id;
+        }*/
+        $Resource = (new Resource())->create([
+            'resource_type_id' => $ResourceType->id,
+            'resource_group_id' => 0,
+            'name' => $resourceInfo['fileName'],
+            'url' => $resourceInfo['url'],
+            'info' => $info,
+        ]);
+        $Resource['id'] = $Resource->id;
+        return resReturn(1, [
+            "id" => $Resource['id'],
+            "state" => "SUCCESS",                               //上传状态，上传成功时必须返回"SUCCESS"
+            "url" => $resourceInfo['url'],                      //返回的地址
+            "name" => $resourceInfo['fileName'],                //新文件名
+            "original" => $info['originalName'],                //原始文件名
+            "type" => $info['type'],                            //文件类型
+            "size" => $info['size']                             //文件大小
+        ]);
+    }
+
+
+    /**
+     * 本地资源处理
+     * Resource upload
+     * @param $file
+     * @param $pathName
+     * @param $randFileName
+     * @param $ResourceType
+     * @return mixed
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    protected function localResourceHandling($file, $pathName, $randFileName, $ResourceType)
+    {
+        $info = [
+            'extension' => $file->extension(),
+            'size' => $file->getSize(),
+            'type' => $file->getClientMimeType(),
+            'originalName' => $file->getClientOriginalName(),
+        ];
+        $data['fileName'] = $randFileName . '.' . $info['extension'];
+        $files = file_get_contents($file->getRealPath());
+        $disk = Storage::disk('public');
+        $disk->put($pathName . $data['fileName'], $files);
+        $data['url'] = request()->root() . '/storage/' . $pathName . $data['fileName'];
+        $data['id'] = '';
+        // 多规格图片处理，只有配置了资源格式规格(图片)的才处理
+        if (count($ResourceType->specification) > 0 && in_array($ResourceType->extension, array('gif', 'jpg', 'jpeg', 'bmp', 'png'))) {
+            $specification = $ResourceType->specification;
+            rsort($specification);
+            $realBasePath = public_path() . '/storage/';
+            $imgSmall = \Image::make($disk->get($pathName . $data['fileName']));
+            foreach ($specification as $s) {
+                $imgSmall->widen($s);
+                $imgSmall->save($realBasePath . $pathName . $randFileName . "_$s." . $info['extension']);
+            }
         }
+        return $data;
     }
 
     /**
-     * Upload processing
-     * 上传处理
-     * @param $file
-     * @param $request
-     * @return array|string[]
+     * 自定义条件筛选，支持关联表查询
+     * Custom filter criteria, support associated table query
+     * @param $q
+     * @param $filter
+     * @return mixed
+     * @throws \Exception
      */
-    protected function uploadFiles($file, $request)
+    protected function customFilterCriteria($q, $filter)
     {
-        //生成文件名
-        $extension = $file->getClientOriginalExtension();
-        if ($extension == "") {//前端批量上传组件在拖动改变图片排序后, 扩展名会为空, 这里修补一下
-            $extension = $request->file->extension();
-            if ($extension == 'jpeg') $extension = 'jpg';
+        if (!is_array($filter)) {
+            throw new \Exception('请求的filter格式有误', Code::CODE_WRONG);
         }
-        $randFileName = str_random(5) . time();
-        $fileName = $randFileName . '.' . $extension;
-
-        $pathName = 'temporary/' . $fileName;
-        // 获取文件在临时文件中的地址
-        $files = file_get_contents($file->getRealPath());
-        $disk = Storage::disk('public');
-        $disk->put($pathName, $files);
-        // 根据前端传递值动态生成多规格图片
-        if ($request->type == 1 && $request->has('specification')) {
-//            if($extension != 'png'){
-//                throw new \Exception(__('upload_pictures.specification_png.error'), Code::CODE_WRONG);
-//            }
-            $specificationArr = explode(',', $request->specification);
-            if (count($specificationArr) < 1) {
-                return array(
-                    "state" => 'no',
-                    'msg' => __('upload_pictures.specification.error')
-                );
+        foreach ($filter as $id => $f) {
+            $value = explode('|', $f);
+            if (count($value) === 1) {
+                throw new \Exception('缺少分割符|', Code::CODE_WRONG);
             }
-            $realBasePath = public_path() . '/storage/';
-            $imgSmall = \Image::make($realBasePath . $pathName);
-            $imageSpecification = config('image.specification');
-            rsort($specificationArr);   //将前端输入的规格按大到小排序，不然将导致先生成小图片后再生成大图模糊的问题
-            foreach ($specificationArr as $specification) {
-                if (in_array($specification, $imageSpecification)) {
-                    $imgSmall->widen($specification);
-                    $imgSmall->save($realBasePath . 'temporary/' . $randFileName . "_$specification." . $extension);
+
+            $more = explode(',', $value[0]);
+            // 关联查询
+            if (strpos($id, '.') !== false) {
+                $join = explode('.', $id);
+                $condition = $join[count($join) - 1];   //获取字段名
+
+                unset($join[count($join) - 1]); //删除字段名
+                $nest = implode('.', $join);    //获取嵌套的关联表名
+                $q->whereHas($nest, function ($query) use ($condition, $value, $more) {
+                    switch ($value[1]) {
+                        case '=':
+                            // 日期区间处理
+                            if (count($more) > 1) {
+                                $query->where($condition, '>=', $more[0])->where($condition, '<=', $more[1]);
+                            } else {
+                                $query->where($condition, $value[0]);
+                            }
+                            break;
+                        case '!=':
+                        case '>':
+                        case '>=':
+                        case '<':
+                        case '<=':
+                            $query->where($condition, $value[1], $value[0]);
+                            break;
+                        case 'include':
+                            // 多个值
+                            if (count($more) > 1) {
+                                $query->whereIn($condition, $more);
+                            } else {
+                                $query->where($condition, 'like', "%$value[0]%");
+                            }
+                            break;
+                        case 'notinclude':
+                            // 多个值
+                            if (count($more) > 1) {
+                                $query->whereNotIn($condition, $more);
+                            } else {
+                                $query->where($condition, 'not like', "%$value[0]%");
+                            }
+                            break;
+                    }
+                });
+            } else {
+                switch ($value[1]) {
+                    case '=':
+                        // 日期区间处理
+                        if (count($more) > 1) {
+                            $q->where($id, '>=', $more[0])->where($id, '<=', $more[1]);
+                        } else {
+                            $q->where($id, $value[0]);
+                        }
+                        break;
+                    case '!=':
+                    case '>':
+                    case '>=':
+                    case '<':
+                    case '<=':
+                        $q->where($id, $value[1], $value[0]);
+                        break;
+                    case 'include':
+                        // 多个值
+                        if (count($more) > 1) {
+                            $q->whereIn($id, $more);
+                        } else {
+                            $q->where($id, 'like', "%$value[0]%");
+                        }
+                        break;
+                    case 'notinclude':
+                        // 多个值
+                        if (count($more) > 1) {
+                            $q->whereNotIn($id, $more);
+                        } else {
+                            $q->where($id, 'not like', "%$value[0]%");
+                        }
+                        break;
                 }
             }
         }
-        $url = request()->root() . '/storage/' . $pathName;
-        return array(
-            "state" => "SUCCESS",        //上传状态，上传成功时必须返回"SUCCESS"
-            "url" => $url,            //返回的地址
-            "title" => $fileName,       //新文件名
-            "original" => $file->getClientOriginalName(),       //原始文件名
-            "type" => $file->getClientMimeType(),            //文件类型
-            "size" => $file->getSize()           //文件大小
-        );
+        return $q;
     }
 
     /**
@@ -182,7 +282,8 @@ class Controller extends BaseController
      * 获取协议
      * @return string
      */
-    public function scheme(){
+    public function scheme()
+    {
         if (isset($_SERVER['HTTP_X_CLIENT_SCHEME'])) {
             $scheme = $_SERVER['HTTP_X_CLIENT_SCHEME'] . '://';
         } elseif (isset($_SERVER['REQUEST_SCHEME'])) {

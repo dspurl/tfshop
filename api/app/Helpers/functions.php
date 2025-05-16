@@ -93,7 +93,7 @@ function allSublevel($items, $map)
     $i = 0;
     foreach ($items as $id => $it) {
         // 获取子级数据
-        if (in_array($it['pid'], $map)) {
+        if (in_array($it['parent_id'], $map)) {
             $i++;
             array_unshift($map, $it['id']);
             unset($items[$id]);

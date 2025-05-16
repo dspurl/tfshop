@@ -1,0 +1,20 @@
+.price {
+    font-size: 18px;
+    line-height: 35px;
+}
+.name {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    line-clamp: 2;
+    -webkit-line-clamp: 2;
+    line-height: 18px;
+}
+.category{
+    line-height: 18px;
+}
+.number{
+    color: #909399;
+    line-height: 18px;
+}

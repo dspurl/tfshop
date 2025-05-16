@@ -20,7 +20,7 @@
 			<view class="titleNview-background"></view>
 			<swiper class="carousel" circular @change="swiperChange">
 				<swiper-item v-for="(item, index) in carouselList" :key="index" class="carousel-item" @click="navToWwiperPage({item})">
-					<image :src="item.resources.img"/>
+					<image :src="item.img"/>
 				</swiper-item>
 			</swiper>
 			<!-- 自定义swiper指示器 -->
@@ -33,12 +33,12 @@
 		<!-- 分类 -->
 		<view class="cate-section" v-if="ctegory.length">
 			<view v-for="item in ctegory" :key="item.id" class="cate-item" @click="navTo('/pages/product/list?fid='+(item.category ? item.category.pid : 0)+'&sid='+item.pid+'&tid='+item.id)">
-				<image v-if="item.resources" :src="item.resources.img | smallImage(80)" lazy-load style="padding:20rpx;"></image>
+				<image v-if="item.img" :src="item.img" lazy-load style="padding:20rpx;"></image>
 				<text>{{item.name}}</text>
 			</view>
 		</view>
-		<view class="ad-1" v-if="adData.resources">
-			<image :src="adData.resources.img" mode="scaleToFill" lazy-load  @click="navTo(adData.url)"></image>
+		<view class="ad-1" v-if="adData">
+			<image :src="adData.img" mode="scaleToFill" lazy-load  @click="navTo(adData.url)"></image>
 		</view>
 		<!-- 为你推荐 -->
 		<view class="f-header m-t" v-if="goodsList.length">
@@ -56,10 +56,10 @@
 				@click="navToDetailPage(item)"
 			>
 				<view class="image-wrapper">
-					<image :src="item.resources.img | smallImage(250)" mode="aspectFill" lazy-load></image>
+					<image :src="item.img" mode="aspectFill" lazy-load></image>
 				</view>
 				<text class="title clamp">{{item.name}}</text>
-				<text class="price">{{$t('common.unit')}}{{item.order_price | 1000}}</text>
+				<text class="price">{{$t('common.unit')}}{{item.price | 1000}}</text>
 			</view>
 		</view>
 		

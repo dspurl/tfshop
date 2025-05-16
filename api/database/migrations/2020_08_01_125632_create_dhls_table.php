@@ -29,6 +29,7 @@ class CreateDhlsTable extends Migration
             $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->string('name', 30)->comment('快递公司名称');
             $table->string('abbreviation', 80)->comment('快递公司英文缩写');
+            $table->string('img', 255)->nullable()->comment('图片');
             $table->tinyInteger('is_default')->default(0)->comment('是否默认 0 普通 1默认');
             $table->tinyInteger('state')->default(0)->comment('状态0显示1隐藏');
             $table->integer('sort')->default(5)->comment('排序');

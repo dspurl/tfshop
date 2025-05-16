@@ -24,7 +24,7 @@
 		<view class="goods-section">
 			<!-- 商品列表 -->
 			<view class="g-item padding-top-sm" v-for="(item,index) in goodList" :key="index">
-				<image :src="item.img | smallImage" lazy-load></image>
+				<image :src="item.img" lazy-load></image>
 				<view class="right">
 					<text class="title clamp">{{item.name}}</text>
 					<text class="spec">{{item.specification}}</text>
@@ -81,7 +81,6 @@
 	export default {
 		data() {
 			return {
-				maskState: 0, //优惠券面板显示状态
 				desc: '', //备注
 				payType: 1, //1微信 2支付宝
 				goodList: [],

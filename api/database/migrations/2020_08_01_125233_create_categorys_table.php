@@ -28,7 +28,8 @@ class CreateCategorysTable extends Migration
             $table->string('lang', 60)->default('zh')->comment('语言');
             $table->unsignedBigInteger('lang_parent_id')->default('0')->comment('翻译原始数据ID');
             $table->string('name', 30)->comment('类目名称');
-            $table->integer('pid')->default(0)->comment('上级类目');
+            $table->integer('parent_id')->default(0)->comment('上级类目');
+            $table->string('img', 255)->nullable()->comment('图片');
             $table->integer('sort')->default(0)->comment('排序');
             $table->tinyInteger('state')->default(0)->comment('是否显示0显示1不显示');
             $table->tinyInteger('is_recommend')->default(0)->comment('首页推荐0否1是');

@@ -39,8 +39,6 @@ class Category extends Model
     const CATEGORY_IS_RECONMEND_YES = 1; //首页推荐：是
     protected $table = 'categorys';
 
-    protected $appends = ['state_show'];
-
     /**
      * Prepare a date for array / JSON serialization.
      *
@@ -52,11 +50,11 @@ class Category extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    public function getStateShowAttribute()
+    public function getStateAttribute()
     {
         if (isset($this->attributes['state'])) {
             if (self::$withoutAppends) {
-                return ' ';
+                return $this->attributes['state'];
             } else {
                 if ($this->attributes['state'] == static::CATEGORY_STATE_YES) {
                     return __('common.is_show');
@@ -67,59 +65,37 @@ class Category extends Model
         }
     }
 
-    /**
-     * 获取分类图片
-     */
-    public function resources()
+    public function getIsRecommendAttribute()
     {
-        return $this->morphOne('App\Models\v1\Resource', 'image');
-    }
-
-    /**
-     * 获取父分类
-     */
-    public function Category()
-    {
-        return $this->hasOne('App\Models\v1\Category', 'id', 'pid');
-    }
-
-    /**
-     * 已选的规格
-     */
-    public function SpecificationOn()
-    {
-        return $this->belongsToMany(Specification::class, 'category_specifications');
-    }
-
-    /**
-     * 已选的品牌
-     */
-    public function BrandOn()
-    {
-        return $this->belongsToMany(Brand::class, 'category_brands');
-    }
-
-    /**
-     * 获取所有的分类
-     */
-    public function getAllCategory()
-    {
-        $Category = static::get();
-        $options = [];
-        if ($Category) {
-            foreach ($Category as $p) {
-                $options[] = array(
-                    'lang' => $p['lang'],
-                    'value' => $p['id'],
-                    'label' => $p['name'],
-                    'pid' => $p['pid'],
-                    'id' => $p['id']
-                );
+        if (isset($this->attributes['is_recommend'])) {
+            if (self::$withoutAppends) {
+                return $this->attributes['is_recommend'];
+            } else {
+                if ($this->attributes['is_recommend'] == static::CATEGORY_IS_RECONMEND_YES) {
+                    return '推荐';
+                } else if ($this->attributes['is_recommend'] == static::CATEGORY_IS_RECONMEND_NO) {
+                    return '不推荐';
+                }
             }
-            return genTree($options, 'pid');
-        } else {
-            return true;
         }
+    }
 
+    public function parent(){
+        return $this->hasOne(Category::class,'id','parent_id');
+    }
+
+    public function fathers()
+    {
+        return $this->belongsTo(get_class($this), 'parent_id')->with('fathers');
+    }
+
+    public function child()
+    {
+        return $this->hasMany(get_class($this), 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->child()->with('children');
     }
 }

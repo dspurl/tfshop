@@ -22,7 +22,6 @@ use Illuminate\Database\Eloquent\Model;
  * @property int valuation
  * @property string lang
  * @property int lang_parent_id
- * @method static get()
  */
 class Freight extends Model
 {

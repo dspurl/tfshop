@@ -51,7 +51,7 @@ class BrowseController extends Controller
         }
         $q->where('lang', App::getLocale());
         $paginate = $q->with(['Good' => function ($q) {
-            $q->select('id', 'order_price', 'name')->with(['resources']);
+            $q->select('id', 'order_price', 'name', 'img');
         }])->paginate($limit);
         return resReturn(1, $paginate);
     }

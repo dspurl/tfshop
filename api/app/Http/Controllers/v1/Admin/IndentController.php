@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
@@ -53,11 +54,11 @@ class IndentController extends Controller
         GoodIndentCommodity::$withoutAppends = false;
         $q = GoodIndent::query();
         $q->withTrashed();
-        if ($request->activeIndex) {
-            if ($request->activeIndex == 7) {
+        if ($request->state) {
+            if ($request->state == 7) {
                 $q->whereRaw('(state=7 OR state=8)');
             } else {
-                $q->where('state', $request->activeIndex);
+                $q->where('state', $request->state);
             }
         }
         if ($request->has('type')) {
@@ -87,7 +88,7 @@ class IndentController extends Controller
         $q->where('lang', App::getLocale());
         $paginate = $q->with(['goodsList' => function ($q) {
             $q->with(['goodSku', 'good']);
-        }, 'GoodLocation', 'Dhl'])->paginate($limit);
+        }, 'GoodLocation', 'Dhl', 'User'])->paginate($limit);
         return resReturn(1, $paginate);
     }
 

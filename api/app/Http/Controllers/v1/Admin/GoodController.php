@@ -1,4 +1,5 @@
 <?php
+
 /** +----------------------------------------------------------------------
  * | TFSHOP [ 轻量级易扩展低代码开源商城系统 ]
  * +----------------------------------------------------------------------
@@ -26,6 +27,7 @@ use App\Models\v1\Good;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\GoodCollection;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -55,78 +57,24 @@ class GoodController extends Controller
         GoodSku::$withoutAppends = false;
         $q = Good::query();
         $limit = $request->limit;
-        if ($request->activeIndex != 1) {
-            if ($request->activeIndex == 2) {
-                $q->where('is_show', Good::GOOD_SHOW_PUTAWAY);
-            } else if ($request->activeIndex == 3) {
-                $q->where('is_show', Good::GOOD_SHOW_ENTREPOT);
-            } else if ($request->activeIndex == 4) {
-                $q->where('inventory', '<', config('tfshop.lowInventory'))
-                    ->where(function ($query) {
-                        $query->whereHas('goodSku', function ($subquery) {
-                            $subquery->where('inventory', '<', config('tfshop.lowInventory'));
-                        })
-                            ->orWhereDoesntHave('goodSku');
-                    });
-            } else if ($request->activeIndex == 5) {
-                $q->where('inventory', 0)
-                    ->where(function ($query) {
-                        $query->whereHas('goodSku', function ($subquery) {
-                            $subquery->where('inventory', 0);
-                        })
-                            ->orWhereDoesntHave('goodSku');
-                    });
-            }
-
-        }
-        if ($request->title) {
+        if ($request->has('keyword')) {
             $q->where(function ($q1) use ($request) {
-                $q1->where('name', 'like', '%' . $request->title . '%')
-                    ->orWhere('number', $request->title);
+                $q1->orWhere('name', 'like', "%$request->keyword%")
+                    ->orWhere('number', 'like', "%$request->keyword%");
             });
-            //全文索引需要MyISAM的支持
-            /*$q->where(function ($q1) use ($request) {
-                $q1->orWhereRaw('MATCH (name,keywords,number) AGAINST (\'' . $request->title . '\' IN NATURAL LANGUAGE MODE)')
-                    ->orWhere('number', $request->title);
-            });*/
-        }
-        if ($request->cateId) {
-            $q->where('category_id', collect($request->cateId)->last());
         }
         if ($request->has('sort')) {
             $sortFormatConversion = sortFormatConversion($request->sort);
             $q->orderBy($sortFormatConversion[0], $sortFormatConversion[1]);
         }
-        // 如果有设置商品ID组的话，如果无值的话，不展示数据
-        if ($request->has('ids')) {
-            if ($request->ids) {
-                $q->whereIn('id', $request->ids);
-            } else {
-                $q->where('id', 0);
-            }
-        }
-        if ($request->has('notInId')) {
-            if ($request->notInId) {
-                $q->whereNotIn('id', $request->notInId);
-            }
-        }
         $q->where('lang', App::getLocale());
         $q->with(['Language']);
-        $paginate = $q->with(['resources' => function ($q) {
-            $q->where('depict', 'like', '%_zimg');
+        $paginate = $q->with(['Category' => function ($q) {
+            $q->with(['fathers']);
         }, 'goodSku' => function ($q) {
             $q->select('good_id', 'price', 'inventory', 'cost_price');
-        }, 'category'])->paginate($limit);
-        if ($paginate) {
-            foreach ($paginate as $id => $p) {
-                $paginate[$id]['price_show'] = (new Good())->getPriceShow($p);
-                $paginate[$id]['inventory_show'] = (new Good())->getInventoryShow($p);
-                $paginate[$id]['putaway'] = false;
-                $paginate[$id]['entrepot'] = false;
-                $paginate[$id]['delete'] = false;
-            }
-        }
-        return resReturn(1, $paginate);
+        }])->paginate($limit);
+        return resReturn(1, new GoodCollection($paginate));
     }
 
     /**
@@ -163,17 +111,22 @@ class GoodController extends Controller
      * @param SubmitGoodRequest $request
      * @return \Illuminate\Http\Response
      * @queryParam  name string 商品名称
+     * @queryParam  img array 图片
+     * @queryParam  video_img string 视频缩略图
+     * @queryParam  video string 视频
+     * @queryParam  download string 下载内容
      * @queryParam  number string 货号
-     * @queryParam  type int    类型
-     * @queryParam  freight_id int    运费模板ID
      * @queryParam  category_id int 分类ID
-     * @queryParam  brand_id int 品牌ID
      * @queryParam  is_inventory int 减库存方式
      * @queryParam  keywords string 关键字
      * @queryParam  short_description string 短描述
      * @queryParam  details string 详情
+     * @queryParam  market_price string 市场价
+     * @queryParam  cost_price string 成本价
+     * @queryParam  price string 销售价
      * @queryParam  is_show int 是否上架
      * @queryParam  is_recommend int 是否推荐
+     * @queryParam  type int 类型:0=普通商品-common,1虚拟商品,2卡密/网盘,3下载商品
      * @queryParam  is_new int 是否新品
      * @queryParam  is_hot int 是否热销
      * @queryParam  sort int 排序
@@ -181,6 +134,7 @@ class GoodController extends Controller
      * @queryParam  timing string 定时上架时间
      * @queryParam  good_specification array 商品规格
      * @queryParam  good_sku array 商品SKU
+     * @queryParam  freight_id int    运费模板ID
      * @queryParam  freight_type int 运费方式:0固定邮费,1运费模板
      * @queryParam  freight int 运费
      */
@@ -194,7 +148,12 @@ class GoodController extends Controller
                 return resReturn(0, __('good.error.timing'), Code::CODE_PARAMETER_WRONG);
             }
         }
-        $return = DB::transaction(function () use ($request) {
+        if ($request->video) {
+            if (!$request->video_img) {
+                return resReturn(0, '请上传商品视频缩略图', Code::CODE_PARAMETER_WRONG);
+            }
+        }
+        DB::transaction(function () use ($request) {
             $Good = new Good();
             $Good->identification = orderNumber();
             $Good->name = $request->name;
@@ -211,87 +170,34 @@ class GoodController extends Controller
             }
             $Good->lang = $request->lang ?? App::getLocale();
             $Good->lang_parent_id = $request->lang_parent_id ?? 0;
-            $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
             $Good->is_inventory = $request->is_inventory;
+            $Good->inventory = $request->inventory ? $request->inventory : 0;
             $Good->keywords = $request->keywords;
             $Good->short_description = $request->short_description;
-            $Good->details = imgFindReplaceUpdate($request->details, 'good_details');
+            $Good->details = $request->details ? $request->details : "";
             $Good->is_show = $request->is_show;
             $Good->is_recommend = $request->is_recommend;
-            $Good->is_new = $request->is_new;
-            $Good->is_hot = $request->is_hot;
             $Good->sort = $request->sort;
-            $Good->time = $request->is_show == 1 ? Carbon::now()->toDateTimeString() : null;
-            $Good->timing = $request->timing;
-            $Good->order_price = $request->price;
+            $Good->time = $request->is_show == Good::GOOD_SHOW_PUTAWAY ? Carbon::now()->toDateTimeString() : null;
+            $Good->timing = $request->is_show == Good::GOOD_SHOW_TIMING ? $request->timing : null;
             $Good->freight_type = $request->freight_type;
             $Good->freight = $request->freight_type === Good::GOOD_FREIGHT_TYPE_FIXED ? $request->freight : 0;
+            $Good->video_img = $request->video_img;
+            $Good->video = $request->video;
+            $Good->img = $request->img;
             if (count($request->good_sku) == 0) {
                 $Good->price = $request->price;
-                $Good->inventory = $request->inventory;
+                $Good->market_price = $request->market_price;
+                $Good->cost_price = $request->cost_price;
+                $Good->code_type = $request->code_type;
+                $Good->is_fixed = $request->is_fixed;
+                $Good->download = $request->download;
             }
             $Good->save();
-            // 商品规格处理
-            if (count($request->good_specification) > 0) {
-
-                foreach ($request->good_specification as $id => $specification) {
-                    $GoodSpecification = new GoodSpecification();
-                    $GoodSpecification->good_id = $Good->id;
-                    $GoodSpecification->specification_id = $specification['specification_id'];
-                    $GoodSpecification->data = $specification['data'];
-                    $GoodSpecification->save();
-                }
-            }
-            // 商品主图处理
-            if ($request->img) {
-                $Resource = new Resource();
-                $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                $Resource->depict = 'goods_' . $Good->id . '_zimg';
-                $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
-                $Resource->img = imgPathShift('good', $request->img);
-                $Resource->save();
-            }
-            // 视频处理
-            if ($request->video) {
-                $Resource = new Resource();
-                $Resource->type = Resource::RESOURCE_TYPE_VIDEO;
-                $Resource->depict = 'goods_' . $Good->id . '_video';
-                $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
-                $Resource->img = $request->video;
-                $Resource->save();
-            }
-            // 视频封面处理
-            if ($request->poster) {
-                $Resource = new Resource();
-                $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                $Resource->depict = 'goods_' . $Good->id . '_poster';
-                $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
-                $Resource->img = $request->poster;
-                $Resource->save();
-            }
-            // 图片列表处理
-            if ($request->imgList > 0) {
-                foreach ($request->imgList as $id => $imgList) {
-                    $Resource = new Resource();
-                    $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                    $Resource->depict = 'goods_' . $Good->id;
-                    $Resource->image_id = $Good->id;
-                    $Resource->image_type = 'App\Models\v1\Good';
-                    $Resource->img = imgPathShift('good', $imgList['response']);
-                    $Resource->save();
-                }
-            }
             // sku处理
-            $order_price = 0;
+            $inventory = 0;
             if (count($request->good_sku) > 0) {
                 foreach ($request->good_sku as $id => $good_sku) {
-                    //获取最低售价
-                    if ($order_price == 0 || $order_price > $good_sku['price']) {
-                        $order_price = $good_sku['price'];
-                    }
                     $GoodSku = new GoodSku();
                     $GoodSku->good_id = $Good->id;
                     $GoodSku->market_price = $good_sku['market_price'];
@@ -299,6 +205,8 @@ class GoodController extends Controller
                     $GoodSku->price = $good_sku['price'];
                     $GoodSku->inventory = $good_sku['inventory'];
                     $GoodSku->product_sku = $good_sku['product_sku'];
+                    $GoodSku->img = $good_sku['img'];
+                    $inventory += $good_sku['inventory'];
                     // 卡密
                     if ($Good->type == Good::GOOD_TYPE_KEYS) {
                         if (!array_key_exists("good_code", $good_sku)) {
@@ -323,44 +231,12 @@ class GoodController extends Controller
                             $GoodCode->save();
                         }
                     }
-                    if (array_key_exists("img", $good_sku)) {
-                        $Resource = new Resource();
-                        $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                        $Resource->depict = 'product_sku_' . $GoodSku->id;
-                        $Resource->image_id = $GoodSku->id;
-                        $Resource->image_type = 'App\Models\v1\GoodSku';
-                        $Resource->img = imgPathShift('product_sku', $good_sku['img']);
-                        $Resource->save();
-                    }
-                    // 下载商品
-                    if ($Good->type == Good::GOOD_TYPE_DOWNLOAD) {
-                        // 处理下载商品
-                        if (!array_key_exists("file", $good_sku)) {
-                            throw new \Exception(__('good.error.file'), Code::CODE_WRONG);
-                        }
-                        if (!array_key_exists("file_name", $good_sku)) {
-                            throw new \Exception(__('good.error.file_name'), Code::CODE_WRONG);
-                        }
-                        $Resource = new Resource();
-                        $Resource->type = Resource::RESOURCE_TYPE_FILE;
-                        $Resource->name = $good_sku['file_name'];
-                        $Resource->depict = 'product_sku_file';
-                        $Resource->image_id = $GoodSku->id;
-                        $Resource->image_type = 'App\Models\v1\GoodSku';
-                        $Resource->img = filePathShift('productSku', $good_sku['file']);
-                        $Resource->save();
-                    }
                 }
-                $Good->order_price = $order_price;
+                $Good->inventory = $inventory;
                 $Good->save();
             }
-            return 1;
         }, 5);
-        if ($return == 1) {
-            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
-        } else {
-            return resReturn(0, $return[0], $return[1]);
-        }
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.add')]));
     }
 
     /**
@@ -371,17 +247,22 @@ class GoodController extends Controller
      * @return \Illuminate\Http\Response
      * @queryParam  id int 商品ID
      * @queryParam  name string 商品名称
+     * @queryParam  img array 图片
+     * @queryParam  video_img string 视频缩略图
+     * @queryParam  video string 视频
+     * @queryParam  download string 下载内容
      * @queryParam  number string 货号
-     * @queryParam  type int    类型
-     * @queryParam  freight_id int    运费模板ID
      * @queryParam  category_id int 分类ID
-     * @queryParam  brand_id int 品牌ID
      * @queryParam  is_inventory int 减库存方式
      * @queryParam  keywords string 关键字
      * @queryParam  short_description string 短描述
      * @queryParam  details string 详情
+     * @queryParam  market_price string 市场价
+     * @queryParam  cost_price string 成本价
+     * @queryParam  price string 销售价
      * @queryParam  is_show int 是否上架
      * @queryParam  is_recommend int 是否推荐
+     * @queryParam  type int 类型:0=普通商品-common,1虚拟商品,2卡密/网盘,3下载商品
      * @queryParam  is_new int 是否新品
      * @queryParam  is_hot int 是否热销
      * @queryParam  sort int 排序
@@ -389,6 +270,7 @@ class GoodController extends Controller
      * @queryParam  timing string 定时上架时间
      * @queryParam  good_specification array 商品规格
      * @queryParam  good_sku array 商品SKU
+     * @queryParam  freight_id int    运费模板ID
      * @queryParam  freight_type int 运费方式:0固定邮费,1运费模板
      * @queryParam  freight int 运费
      */
@@ -402,8 +284,13 @@ class GoodController extends Controller
                 return resReturn(0, __('good.error.timing'), Code::CODE_PARAMETER_WRONG);
             }
         }
+        if ($request->video) {
+            if (!$request->video_img) {
+                return resReturn(0, '请上传商品视频缩略图', Code::CODE_PARAMETER_WRONG);
+            }
+        }
         $Good = Good::find($id);
-        $return = DB::transaction(function () use ($request, $Good) {
+        DB::transaction(function () use ($request, $Good) {
             if (is_array($request->category_id)) {
                 $category_id = $request->category_id;
                 $Good->category_id = end($category_id);
@@ -416,128 +303,49 @@ class GoodController extends Controller
             if ($Good->type == Good::GOOD_TYPE_COMMON) {
                 $Good->freight_id = $request->freight_type === Good::GOOD_FREIGHT_TYPE_TEMPLATE ? $request->freight_id : 0;
             }
-            $Good->brand_id = $request->brand_id ? $request->brand_id : 0;
             $Good->is_inventory = $request->is_inventory;
+            $Good->inventory = $request->inventory ? $request->inventory : 0;
             $Good->keywords = $request->keywords;
             $Good->short_description = $request->short_description;
-            $Good->details = imgFindReplaceUpdate($request->details, 'good_details');
+            $Good->details = $request->details ? $request->details : "";
             $Good->is_show = $request->is_show;
             $Good->is_recommend = $request->is_recommend;
-            $Good->is_new = $request->is_new;
-            $Good->is_hot = $request->is_hot;
             $Good->sort = $request->sort;
-            $Good->time = $request->is_show == 1 ? Carbon::now()->toDateTimeString() : null;
-            $Good->timing = $request->timing;
-            $Good->order_price = $request->price;
+            $Good->time = $request->is_show == Good::GOOD_SHOW_PUTAWAY ? Carbon::now()->toDateTimeString() : null;
+            $Good->timing = $request->is_show == Good::GOOD_SHOW_TIMING ? $request->timing : null;
             $Good->freight_type = $request->freight_type;
             $Good->freight = $request->freight_type === Good::GOOD_FREIGHT_TYPE_FIXED ? $request->freight : 0;
+            $Good->video_img = $request->video_img;
+            $Good->video = $request->video;
+            $Good->img = $request->img;
             if (count($request->good_sku) == 0) {
                 $Good->price = $request->price;
-                $Good->inventory = $request->inventory;
+                $Good->market_price = $request->market_price;
+                $Good->cost_price = $request->cost_price;
+                $Good->code_type = $request->code_type;
+                $Good->is_fixed = $request->is_fixed;
+                $Good->download = $request->download;
             }
             $Good->save();
-            // 商品规格处理
-            if (count($request->good_specification) > 0) {
-                foreach ($request->good_specification as $id => $specification) {
-                    if (array_key_exists("id", $specification)) {
-                        $GoodSpecification = GoodSpecification::find($specification['id']);
-                    } else {
-                        $GoodSpecification = new GoodSpecification();
-                        $GoodSpecification->good_id = $Good->id;
-                        $GoodSpecification->specification_id = $specification['specification_id'];
-                    }
-                    $GoodSpecification->data = $specification['data'];
-                    $GoodSpecification->save();
-                }
-            }
-            // 商品主图处理
-            if ($request->imgArr && $request->img) {
-                $Resource = Resource::find($request->imgArr['id']);
-                if ($request->img != $Resource->img) {
-                    imgPathDelete('good', $Resource->img);
-                }
-                $Resource->img = imgPathShift('good', $request->img);
-                $Resource->save();
-
-            }
-            // 视频处理
-            if ($request->videoArr && $request->video) {
-                $Resource = Resource::find($request->videoArr['id']);
-                $Resource->img = $request->video;
-                $Resource->save();
-            } else if ($request->video) {
-                $Resource = new Resource();
-                $Resource->type = Resource::RESOURCE_TYPE_VIDEO;
-                $Resource->depict = 'goods_' . $Good->id . '_video';
-                $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
-                $Resource->img = $request->video;
-                $Resource->save();
-            }
-            // 视频封面处理
-            if ($request->posterArr && $request->poster) {
-                $Resource = Resource::find($request->posterArr['id']);
-                $Resource->img = $request->poster;
-                $Resource->save();
-            } else if ($request->poster) {
-                $Resource = new Resource();
-                $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                $Resource->depict = 'goods_' . $Good->id . '_poster';
-                $Resource->image_id = $Good->id;
-                $Resource->image_type = 'App\Models\v1\Good';
-                $Resource->img = $request->poster;
-                $Resource->save();
-            }
-            // 图片列表处理
-            if ($request->imgList > 0) {
-                $ResourceAll = [];
-                foreach ($request->imgList as $id => $imgList) {
-                    if (array_key_exists("id", $imgList)) {
-                        $Resource = Resource::find($imgList['id']);
-                        if ($imgList['response'] != $Resource->img) {
-                            imgPathDelete('good', $Resource->img);
-                        }
-                    } else {
-                        $Resource = new Resource();
-                        $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                        $Resource->depict = 'goods_' . $Good->id;
-                        $Resource->image_id = $Good->id;
-                        $Resource->image_type = 'App\Models\v1\Good';
-                    }
-                    $Resource->img = imgPathShift('good', $imgList['response']);
-                    $Resource->save();
-                    $ResourceAll[] = $Resource->id;
-                }
-                //删除去除的资源
-                $ResourceDelete = Resource::where('image_id', $Good->id)->where('image_type', 'App\Models\v1\Good')->where('depict', 'not like', '%_zimg')->where('depict', 'not like', '%_video')->where('depict', 'not like', '%_poster')->whereNotIn('id', $ResourceAll)->get();
-                if ($ResourceDelete) {
-                    foreach ($ResourceDelete as $r) {
-                        imgPathDelete('good', $r->img);
-                    }
-                }
-                Resource::where('image_id', $Good->id)->where('image_type', 'App\Models\v1\Good')->where('depict', 'not like', '%_zimg')->where('depict', 'not like', '%_video')->where('depict', 'not like', '%_poster')->whereNotIn('id', $ResourceAll)->delete();
-            }
             // sku处理
+            $inventory = 0;
+            $GoodSkuAll = [];
             if (count($request->good_sku) > 0) {
-                $GoodSkuAll = [];
-                $ResourceAll = [];
-                $order_price = 0;
-                foreach ($request->good_sku as $id => $good_sku) {
-                    //获取最低售价
-                    if ($order_price == 0 || $order_price > $good_sku['price']) {
-                        $order_price = $good_sku['price'];
-                    }
+                foreach ($request->good_sku as $good_sku) {
                     if (array_key_exists("id", $good_sku)) {
                         $GoodSku = GoodSku::find($good_sku['id']);
                     } else {
                         $GoodSku = new GoodSku();
                         $GoodSku->good_id = $Good->id;
                     }
+                    $GoodSkuAll[] = $GoodSku->id;
                     $GoodSku->market_price = $good_sku['market_price'];
                     $GoodSku->cost_price = $good_sku['cost_price'];
                     $GoodSku->price = $good_sku['price'];
                     $GoodSku->inventory = $good_sku['inventory'];
                     $GoodSku->product_sku = $good_sku['product_sku'];
+                    $GoodSku->img = $good_sku['img'];
+                    $inventory += $good_sku['inventory'];
                     // 卡密
                     if ($Good->type == Good::GOOD_TYPE_KEYS) {
                         if (!array_key_exists("good_code", $good_sku)) {
@@ -553,78 +361,23 @@ class GoodController extends Controller
                         $GoodSku->is_fixed = $good_sku['is_fixed'];
                     }
                     $GoodSku->save();
-                    $GoodCodeAll = [];
                     if ($Good->type == Good::GOOD_TYPE_KEYS) {
                         foreach ($good_sku['good_code'] as $g) {
-                            if (array_key_exists("id", $g)) {
-                                $GoodCode = GoodCode::find($g['id']);
-                            } else {
-                                $GoodCode = new GoodCode();
-                                $GoodCode->good_sku_id = $GoodSku->id;
-                            }
+                            $GoodCode = new GoodCode();
+                            $GoodCode->good_sku_id = $GoodSku->id;
                             $GoodCode->name = $g['name'];
                             $GoodCode->code = $g['code'];
                             $GoodCode->save();
-                            $GoodCodeAll[] = $GoodCode->id;
                         }
-                        GoodCode::where('good_sku_id', $GoodSku->id)->whereNotIn('id', $GoodCodeAll)->delete();
-                    }
-                    $GoodSkuAll[] = $GoodSku->id;
-                    if (array_key_exists("img", $good_sku) && $good_sku['img']) {
-                        $OriginalResource = Resource::where('image_type', 'App\Models\v1\GoodSku')->where('image_id', $good_sku['id'])->first();
-                        if ($OriginalResource) {
-                            $Resource = Resource::find($OriginalResource->id);
-                            $count = Resource::where('img', $Resource->img)->count();
-                            // 当有其它sku商品在用图片时不进行删除
-                            if ($good_sku['img'] != $Resource->img && $count <= 1) {
-                                imgPathDelete('product_sku', $Resource->img);
-                            }
-                        } else {
-                            $Resource = new Resource();
-                            $Resource->type = Resource::RESOURCE_TYPE_IMG;
-                            $Resource->depict = 'product_sku_' . $GoodSku->id;
-                            $Resource->image_id = $GoodSku->id;
-                            $Resource->image_type = 'App\Models\v1\GoodSku';
-                        }
-                        $Resource->img = imgPathShift('product_sku', $good_sku['img']);
-                        $Resource->save();
-                        $ResourceAll[] = $Resource->id;
-                    }
-                    // 下载商品
-                    if ($Good->type == Good::GOOD_TYPE_DOWNLOAD) {
-                        // 处理下载商品
-                        if (!array_key_exists("file", $good_sku)) {
-                            throw new \Exception(__('good.error.file'), Code::CODE_WRONG);
-                        }
-                        if (!array_key_exists("file_name", $good_sku)) {
-                            throw new \Exception(__('good.error.file_name'), Code::CODE_WRONG);
-                        }
-                        if (array_key_exists('file_id', $good_sku)) {
-                            $Resource = Resource::find($good_sku['file_id']);
-                        } else {
-                            $Resource = new Resource();
-                            $Resource->type = Resource::RESOURCE_TYPE_FILE;
-                            $Resource->image_id = $GoodSku->id;
-                            $Resource->image_type = 'App\Models\v1\GoodSku';
-                            $Resource->depict = 'product_sku_file';
-                        }
-                        $Resource->name = $good_sku['file_name'];
-                        $Resource->img = filePathShift('productSku', $good_sku['file']);
-                        $Resource->save();
                     }
                 }
-                $Good->order_price = $order_price;
+                $Good->inventory = $inventory;
                 $Good->save();
                 //删除去除的SKU
                 GoodSku::where('good_id', $Good->id)->whereNotIn('id', $GoodSkuAll)->update(['deleted_at' => Carbon::now()->toDateTimeString()]);
             }
-            return 1;
         }, 5);
-        if ($return == 1) {
-            return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
-        } else {
-            return resReturn(0, $return[0], $return[1]);
-        }
+        return resReturn(1, __('hint.succeed.win', ['attribute' => __('common.update')]));
     }
 
     /**

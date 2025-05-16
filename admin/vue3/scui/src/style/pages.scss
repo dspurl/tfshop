@@ -1,0 +1,43 @@
+/* USERCENTER */
+.page-user {
+	.user-info-top {text-align: center;}
+	.user-info-top h2 {font-size: 18px;margin-top: 5px;}
+	.user-info-top p {margin: 8px 0 10px 0;}
+	.menu {background: none;}
+	.menu .el-menu-item {font-size: 12px;--el-menu-item-height:50px;}
+	.menu .el-menu-item-group {border-top: 1px solid var(--el-border-color-light);}
+	.menu .el-menu-item-group:first-child {border: 0;}
+}
+
+/*static-table*/
+.static-table {border-collapse: collapse;width: 100%;font-size: 14px;margin-bottom: 45px;line-height: 1.5em;}
+.static-table th {text-align: left;white-space: nowrap;color: #909399;font-weight: 400;border-bottom: 1px solid #dcdfe6;padding: 15px;max-width: 250px;}
+.static-table td {border-bottom: 1px solid #dcdfe6;padding: 15px;max-width: 250px;color: #606266;}
+
+/*header-tabs*/
+.header-tabs {padding:10px 0 0 0;display:block;border:0!important;height:50px;background: none;}
+.header-tabs .el-tabs__header {padding-left:10px;margin: 0;}
+.header-tabs .el-tabs__content {display: none;}
+.header-tabs .el-tabs__nav {border-radius: 0 !important;}
+.header-tabs .el-tabs__item {font-size: 13px;}
+.header-tabs .el-tabs__item.is-active {background-color: var(--el-bg-color-overlay);}
+
+/*common-page*/
+.common-header-left {display: flex;align-items: center;}
+.common-header-logo {display: flex;align-items: center;}
+.common-header-logo img {height:30px;margin-right: 10px;vertical-align: bottom;}
+.common-header-logo label {font-size: 20px;}
+.common-header-title {font-size: 16px;border-left: 1px solid var(--el-border-color-light);margin-left: 15px;padding-left: 15px;}
+.common-header-right {display: flex;align-items: center;}
+.common-header-right a {font-size: 14px;color: var(--el-color-primary);cursor: pointer;}
+.common-header-right a:hover {color: var(--el-color-primary-light-3);}
+.common-container {max-width: 1240px;margin:30px auto 30px auto;}
+.common-main {padding:20px;}
+.common-title {font-size: 26px;margin-bottom: 20px;font-weight: normal;}
+.common-main .el-form {width: 500px;margin:30px auto;}
+.common-main .el-steps .el-step__title {font-size: 14px;}
+.common-main .el-steps .el-step__icon {border: 1px solid;}
+.common-main .yzm {display: flex;width: 100%;}
+.common-main .yzm .el-button {margin-left: 10px;}
+.common-main .link {color: var(--el-color-primary);cursor: pointer;}
+.common-main .link:hover {color: var(--el-color-primary-light-3);}

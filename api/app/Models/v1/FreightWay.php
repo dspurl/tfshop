@@ -26,7 +26,6 @@ use Illuminate\Support\Facades\App;
 class FreightWay extends Model
 {
     public static $withoutAppends = true;
-    protected $appends = ['location_name'];
 
     /**
      * Prepare a date for array / JSON serialization.
@@ -39,29 +38,7 @@ class FreightWay extends Model
         return $date->format('Y-m-d H:i:s');
     }
 
-    /**
-     * 送货到
-     * @return array
-     */
-    public function getLocationNameAttribute()
-    {
-        if (!self::$withoutAppends) {
-            if (isset($this->attributes['location'])) {
-                $provinces =Region::where('lang', App::getLocale())->get();
-                $provincesArray = [];
-                $location = json_decode($this->attributes['location'], true);
-                $locationNamej = [];
-                foreach ($provinces as $p) {
-                    $provincesArray[$p['id']] = $p['name'];
-                }
-                foreach ($location as $l) {
-                    $locationNamej[] = $provincesArray[$l];
-                }
-                return $locationNamej;
-            }
-        }
-    }
-
+    
     /**
      * 送货到
      * @return void

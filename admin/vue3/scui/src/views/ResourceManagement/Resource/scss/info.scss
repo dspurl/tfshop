@@ -1,0 +1,14 @@
+.img-box{
+    margin: 10px 0;
+    text-align: center;
+}
+.descriptions{
+    overflow-x: scroll;
+    overflow-y: hidden;
+}
+.descriptions::-webkit-scrollbar {
+    display: none;
+}
+.a{
+    color: #409eff;
+}

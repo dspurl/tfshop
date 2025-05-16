@@ -178,7 +178,6 @@ class ShippingController extends Controller
         } else {
             $return['shipping'] = Shipping::where('defaults', Shipping::SHIPPING_DEFAULTS_YES)->where('user_id', auth('web')->user()->id)->first();
         }
-
         if ($return['shipping']) {
             if (count(explode("省", $return['shipping']['address'])) > 1) {
                 $name = explode("省", $return['shipping']['address'])[0] . '省';
@@ -200,7 +199,7 @@ class ShippingController extends Controller
             $carriage = 0;
             $list = [];
             foreach ($request->all() as $all) {
-                if ($all['freight_id']) {
+                if (array_key_exists('freight_id', $all)) {
                     // 运费模板
                     if (array_key_exists($all['freight_id'], $list)) {
                         $list[$all['freight_id']] += $all['number'];
@@ -241,6 +240,7 @@ class ShippingController extends Controller
             }
             $return['carriage'] = $carriage;
         }
+        
         return resReturn(1, $return);
     }
 

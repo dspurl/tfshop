@@ -6,9 +6,9 @@
 			<block v-for="(item, index) in cartList" :key="index">
 				<view
 					class="cart-item" 
-				@click.stop="goProduct(item)">
+					@click.stop="goProduct(item)">
 					<view class="image-wrapper">
-						<image :src="item.good.resources.img | smallImage"
+						<image :src="item.good.img[0]"
 							class="loaded"
 							mode="aspectFill" 
 							lazy-load

@@ -31,8 +31,8 @@ class UserPlatform extends Model
     const USER_PLATFORM_PLATFORM_MINI_WEIXIN = 'miniweixin'; //平台标识:微信小程序
     const USER_PLATFORM_PLATFORM_MINI_ALIPAY = 'minialipay'; //平台标识:支付宝小程序
     const USER_PLATFORM_PLATFORM_MINI_TOUTIAO = 'minitoutiao'; //平台标识:头条小程序
-    const USER_PLATFORM_PLATFORM_PC = 'pc'; //平台标识:网站
-    const USER_PLATFORM_PLATFORM_H5 = 'h5'; //平台标识:H5
+    const USER_PLATFORM_PLATFORM_PC = 'PC'; //平台标识:网站
+    const USER_PLATFORM_PLATFORM_H5 = 'H5'; //平台标识:H5
     public static $withoutAppends = true;
 
     /**

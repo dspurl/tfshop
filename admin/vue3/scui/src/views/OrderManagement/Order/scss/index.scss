@@ -1,0 +1,36 @@
+.good_list {
+    display: flex;
+    margin-bottom: 10px;
+    .name {
+        margin-left: 10px;
+        flex: 1;
+        width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        cursor:pointer;
+    }
+    .number{
+        width: 60px;
+        text-align: center;
+        line-height: 45px;
+    }
+    .price{
+        width: 80px;
+        line-height: 45px;
+    }
+}
+.other{
+    display: flex;
+    margin-bottom: 10px;
+}
+.el-dropdown-link {
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--el-color-primary);
+    display: flex;
+    align-items: center;
+    line-height: 19px;
+  }

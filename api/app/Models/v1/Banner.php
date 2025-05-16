@@ -36,7 +36,6 @@ class Banner extends Model
     const BANNER_TYPE_INDEX_LINK = 3; //类型：友情链接
     const BANNER_STAE_SHOW = 0; //状态：显示
     const BANNER_STAE_HIDE = 1; //状态：隐藏
-    protected $appends = ['type_show', 'state_show'];
 
     /**
      * Prepare a date for array / JSON serialization.
@@ -50,18 +49,10 @@ class Banner extends Model
     }
 
     /**
-     * 获取单张图片
-     */
-    public function resources()
-    {
-        return $this->morphOne('App\Models\v1\Resource', 'image');
-    }
-
-    /**
      * 类型
      * @return string
      */
-    protected function getTypeShowAttribute()
+    protected function getTypeAttribute()
     {
         if (isset($this->attributes['type'])) {
             if (self::$withoutAppends) {
@@ -84,7 +75,7 @@ class Banner extends Model
      * 状态
      * @return string
      */
-    protected function getStateShowAttribute()
+    protected function getStateAttribute()
     {
         if (isset($this->attributes['state'])) {
             if (self::$withoutAppends) {

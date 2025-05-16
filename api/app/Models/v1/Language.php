@@ -17,8 +17,6 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property string name
  * @property string code
- * @method static find($id)
- * @method static where(string $string, $id)
  */
 class Language extends Model
 {
